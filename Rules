@@ -13,7 +13,15 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
-compile '/style/' do
+compile '/styles/app/' do
+  case item[:extension]
+  when /sass|scss/
+    filter :sass, syntax: :scss, style: :compact
+  end
+end
+
+compile '/styles/*' do
+  nil
 end
 
 compile '*' do
@@ -26,8 +34,6 @@ compile '*' do
         filter :erb
       when 'md'
         filter :redcarpet
-      when /sass|scss/
-        filter :sass, syntax: :scss
       end
     end
 
@@ -35,8 +41,8 @@ compile '*' do
   end
 end
 
-route '/style/' do
-  '/style.css'
+route '/styles/app/' do
+  '/app.css'
 end
 
 route '*' do
@@ -50,3 +56,4 @@ route '*' do
 end
 
 layout '*', :erb
+

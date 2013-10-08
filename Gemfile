@@ -7,3 +7,5 @@ gem 'nanoc-toolbox'
 gem 'adsf'
 gem 'redcarpet'
 gem 'mime-types'
+gem 'sass'
+
