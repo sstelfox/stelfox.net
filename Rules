@@ -13,14 +13,20 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
-compile '/styles/app/' do
-  case item[:extension]
-  when /sass|scss/
-    filter :sass, syntax: :scss, style: :compact
-  end
+compile '/styles/root/' do
+  filter :sass, syntax: :scss, style: :compact if item[:extension] == 'scss'
 end
 
 compile '/styles/*' do
+  nil
+end
+
+compile '/javascripts/root/' do
+  filter :coffeescript if item[:extension] == 'coffee'
+  #filter :uglifyjs
+end
+
+compile '/javascripts/*' do
   nil
 end
 
@@ -29,20 +35,20 @@ compile '*' do
     # don’t filter binary items
   else
     item[:extension].split('.').reverse_each do |e|
-      case e
-      when 'erb'
-        filter :erb
-      when 'md'
-        filter :redcarpet
-      end
+      filter :erb if e == 'erb'
+      filter :redcarpet if e == 'md'
     end
 
     layout 'default'
   end
 end
 
-route '/styles/app/' do
-  '/app.css'
+route '/styles/root/' do
+  '/c.css'
+end
+
+route '/javascripts/root/' do
+  '/j.js'
 end
 
 route '*' do

@@ -9,3 +9,6 @@ gem 'redcarpet'
 gem 'mime-types'
 gem 'sass'
 
+gem 'uglifier'
+gem 'coffee-script'
+
