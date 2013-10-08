@@ -10,5 +10,6 @@ gem 'mime-types'
 gem 'sass'
 
 gem 'uglifier'
+gem 'therubyracer'
 gem 'coffee-script'
 
