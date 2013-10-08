@@ -34,7 +34,7 @@ compile '/javascripts/*' do
     filter :coffeescript if e == 'coffee'
   end
 
-  #filter :uglify_js, compress: true, mangle: true
+  filter :uglify_js, compress: true, mangle: true
   #filter :uglify_js, output: { beautify: true, bracketize: true, semicolons: true }
 end
 
@@ -42,7 +42,6 @@ route '/javascripts/*' do
   path = item.identifier.split('/').reject { |r| r.empty? }
   next nil if path.include?('_includes')
 
-  item.attributes[:name] = path[1]
   "/#{item.raw_content.checksum}.js"
 end
 
