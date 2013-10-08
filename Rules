@@ -13,15 +13,24 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
-compile '/stylesheet/' do
-  # don’t filter or layout
+compile '/style/' do
 end
 
 compile '*' do
   if item.binary?
     # don’t filter binary items
   else
-    filter :redcarpet
+    item[:extension].split('.').reverse_each do |e|
+      case e
+      when 'erb'
+        filter :erb
+      when 'md'
+        filter :redcarpet
+      when /sass|scss/
+        filter :sass, syntax: :scss
+      end
+    end
+
     layout 'default'
   end
 end
