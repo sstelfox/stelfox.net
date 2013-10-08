@@ -27,6 +27,10 @@ compile '/javascripts/root/' do
   filter :uglify_js, output: { beautify: true, bracketize: true, semicolons: true }
 end
 
+compile '/javascripts/modernizr/' do
+  filter :uglify_js, compress: true, mangle: true
+end
+
 compile '/javascripts/*' do
   nil
 end
@@ -50,6 +54,10 @@ end
 
 route '/javascripts/root/' do
   '/j.js'
+end
+
+route '/javascripts/modernizr/' do
+  '/m.js'
 end
 
 route '*' do

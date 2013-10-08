@@ -1,13 +1,37 @@
-<!DOCTYPE HTML>
-<html lang="en">
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <title><%= @item[:title] %></title>
 
+    <meta name="description" content="<%= @item[:description] %>">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
     <link rel="stylesheet" href="<%= @items['/styles/root/'].path %>" />
-    <script type="text/javascript" src="<%= @items['/javascripts/root/'].path %>"></script>
+    <script src="<%= @items['/javascripts/modernizr/'].path %>"></script>
   </head>
   <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
     <%= yield %>
+
+    <script src="<%= @items['/javascripts/root/'].path %>"></script>
+    <script type="text/javascript">
+      // UA-32188490-1
+      var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-XXXXX-X"]);_gaq.push(["_trackPageview"]);
+      (function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;
+      e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+
+      ".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];
+      t.parentNode.insertBefore(e,t)})()
+    </script>
   </body>
 </html>
