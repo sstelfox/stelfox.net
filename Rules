@@ -15,19 +15,13 @@
 
 # Handle processing of stylesheets
 compile '/styles/root/' do
+  next nil unless item.identifier == '/styles/root/'
   filter :sass, syntax: :scss, style: :compact if item[:extension] == 'scss'
 end
 
-compile '/styles/*' do
-  nil
-end
-
-route '/styles/root/' do
-  '/c.css'
-end
-
 route '/styles/*' do
-  nil
+  next nil unless item.identifier == '/styles/root/'
+  "/c.#{item.raw_content.checksum}.css"
 end
 
 # Handle processing of javascripts
