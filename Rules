@@ -21,36 +21,32 @@ end
 
 route '/styles/*' do
   next nil unless item.identifier == '/styles/root/'
-  "/c.#{item.raw_content.checksum}.css"
+  "/#{item.raw_content.checksum}.css"
 end
 
 # Handle processing of javascripts
-compile '/javascripts/root/' do
-  filter :coffeescript if item[:extension] == 'coffee'
-  #filter :uglify_js, compress: true, mangle: true
-  filter :uglify_js, output: { beautify: true, bracketize: true, semicolons: true }
-end
-
-compile '/javascripts/modernizr/' do
-  filter :uglify_js, compress: true, mangle: true
-end
-
 compile '/javascripts/*' do
-  nil
-end
+  path = item.identifier.split('/').reject { |r| r.empty? }
+  next nil if path.include?('_includes')
 
-route '/javascripts/root/' do
-  '/j.js'
-end
+  item[:extension].split('.').reverse_each do |e|
+    filter :erb if e == 'erb'
+    filter :coffeescript if e == 'coffee'
+  end
 
-route '/javascripts/modernizr/' do
-  '/m.js'
+  #filter :uglify_js, compress: true, mangle: true
+  #filter :uglify_js, output: { beautify: true, bracketize: true, semicolons: true }
 end
 
 route '/javascripts/*' do
-  nil
+  path = item.identifier.split('/').reject { |r| r.empty? }
+  next nil if path.include?('_includes')
+
+  item.attributes[:name] = path[1]
+  "/#{item.raw_content.checksum}.js"
 end
 
+# The htaccess file
 compile '/htaccess/' do
   nil
 end
