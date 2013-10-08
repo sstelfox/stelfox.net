@@ -44,7 +44,7 @@ compile '*' do
       filter :redcarpet if e == 'md'
     end
 
-    layout 'default'
+    layout 'default' unless item[:extension] == 'txt'
   end
 end
 
@@ -61,7 +61,7 @@ route '/javascripts/modernizr/' do
 end
 
 route '*' do
-  if item.binary?
+  if item.binary? || item[:extension] == 'txt'
     # Write item with identifier /foo/ to /foo.ext
     item.identifier.chop + '.' + item[:extension]
   else
