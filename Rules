@@ -13,6 +13,8 @@
 #   item, use the pattern “/about/*/”; “/about/*” will also select the parent,
 #   because “*” matches zero or more characters.
 
+excluded_extensions = %w{ txt xml }
+
 compile '/styles/root/' do
   filter :sass, syntax: :scss, style: :compact if item[:extension] == 'scss'
 end
@@ -44,7 +46,7 @@ compile '*' do
       filter :redcarpet if e == 'md'
     end
 
-    layout 'default' unless item[:extension] == 'txt'
+    layout 'default' unless excluded_extensions.include?(item[:extension])
   end
 end
 
@@ -69,7 +71,7 @@ route '/javascripts/*' do
 end
 
 route '*' do
-  if item.binary? || item[:extension] == 'txt'
+  if item.binary? || excluded_extensions.include?(item[:extension])
     # Write item with identifier /foo/ to /foo.ext
     item.identifier.chop + '.' + item[:extension]
   else
