@@ -13,3 +13,5 @@ gem 'uglifier'
 gem 'therubyracer'
 gem 'coffee-script'
 
+gem 'pry'
+
