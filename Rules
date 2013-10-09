@@ -27,7 +27,7 @@ route "/styles/_includes/*" do
 end
 
 route "/styles/*" do
-  item.identifier.chop + "." + "css"
+  "/css/#{item.raw_content.checksum}.css"
 end
 
 # Handle processing of javascripts
@@ -42,7 +42,7 @@ route "/javascripts/_includes/*" do
 end
 
 route "/javascripts/*" do
-  item.identifier.chop + "." + "js"
+  "/js/#{item.raw_content.checksum}.js"
 end
 
 # Yeah htaccess!

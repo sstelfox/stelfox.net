@@ -1,5 +1,5 @@
 ---
-title: Stelfox Athenaeum - Unfolding the Questions
+title: Unfolding the Questions
 ---
 
 # Something

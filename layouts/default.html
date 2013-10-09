@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title><%= @item[:title] %></title>
+    <title><%= "#{@item[:title]} - " if @item[:title] %><%= @site.config[:title] %></title>
 
     <meta name="description" content="<%= @item[:description] %>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,10 +18,6 @@
     <script src="<%= @items['/javascripts/modernizr/'].path %>"></script>
   </head>
   <body>
-    <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
     <div class='row'>
       <div class='col-2'>
         <ul>
