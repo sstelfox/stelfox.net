@@ -18,10 +18,6 @@ compile '/styles/root/' do
   filter :sass, syntax: :scss, style: :compact if item[:extension] == 'scss'
 end
 
-compile '/styles/*' do
-  nil
-end
-
 route '/styles/root/' do
   '/c.css'
 end
@@ -39,10 +35,6 @@ end
 
 compile '/javascripts/modernizr/' do
   filter :uglify_js, compress: true, mangle: true
-end
-
-compile '/javascripts/*' do
-  nil
 end
 
 route '/javascripts/root/' do
