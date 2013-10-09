@@ -14,16 +14,20 @@
 #   because “*” matches zero or more characters.
 
 # Handle processing of stylesheets
-compile "/styles/root/" do
+compile "/styles/_includes/*" do
+  nil
+end
+
+compile "/styles/*" do
   filter :sass, syntax: :scss, style: :compact if item[:extension] == "scss"
 end
 
-route "/styles/root/" do
-  "/c.css"
+route "/styles/_includes/*" do
+  nil
 end
 
 route "/styles/*" do
-  nil
+  item.identifier.chop + "." + "css"
 end
 
 # Handle processing of javascripts
