@@ -37,12 +37,12 @@ compile "/javascripts/*" do
     filter :erb if e == "erb"
   end
 
-  #filter :uglify_js, compress: true, mangle: true
-  filter :uglify_js, output: { beautify: true, bracketize: true, semicolons: true }
-end
+  # If mangling is enabled each javascript file needs to be self-contained as
+  # coffee will not directly create top-level objects (the only thing excluded
+  # from mangling)
 
-route "/javascripts/_includes/*" do
-  nil
+  #filter :uglify_js, compress: true, mangle: false
+  filter :uglify_js, mangle: false, output: { beautify: true, bracketize: true, semicolons: true }
 end
 
 route "/javascripts/*" do
