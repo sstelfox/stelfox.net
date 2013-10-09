@@ -37,18 +37,15 @@ compile "/javascripts/modernizr/" do
   filter :uglify_js, compress: true, mangle: true
 end
 
-route "/javascripts/root/" do
-  "/j.js"
-end
-
-route "/javascripts/modernizr/" do
-  "/m.js"
-end
-
-route "/javascripts/*" do
+route "/javascripts/_includes/*" do
   nil
 end
 
+route "/javascripts/*" do
+  item.identifier.chop + "." + "js"
+end
+
+# Yeah htaccess!
 compile "/htaccess/" do
   nil
 end
