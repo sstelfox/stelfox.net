@@ -14,71 +14,75 @@
 #   because “*” matches zero or more characters.
 
 # Handle processing of stylesheets
-compile '/styles/root/' do
-  next nil unless item.identifier == '/styles/root/'
-  filter :sass, syntax: :scss, style: :compact if item[:extension] == 'scss'
-end
-
-route '/styles/*' do
-  next nil unless item.identifier == '/styles/root/'
-  "/#{item.raw_content.checksum}.css"
-end
-
-# Handle processing of javascripts
-compile '/javascripts/*' do
-  path = item.identifier.split('/').reject { |r| r.empty? }
-  next nil if path.include?('_includes')
-
-  item[:extension].split('.').reverse_each do |e|
-    filter :erb if e == 'erb'
-    filter :coffeescript if e == 'coffee'
-  end
-
-  filter :uglify_js, compress: true, mangle: true
-  #filter :uglify_js, output: { beautify: true, bracketize: true, semicolons: true }
-end
-
-route '/javascripts/*' do
-  path = item.identifier.split('/').reject { |r| r.empty? }
-  next nil if path.include?('_includes')
-
-  "/#{item.raw_content.checksum}.js"
-end
-
-# The htaccess file
-compile '/htaccess/' do
+compile "/styles/_includes/*" do
   nil
 end
 
-route '/htaccess/' do
-  '/.htaccess'
+compile "/styles/*" do
+  filter :sass, syntax: :scss, style: :compact if item[:extension] == "scss"
+end
+
+route "/styles/_includes/*" do
+  nil
+end
+
+route "/styles/*" do
+  "/css/#{item.raw_content.checksum}.css"
+end
+
+# Handle processing of javascripts
+compile "/javascripts/*" do
+  item[:extension].split('.').reverse_each do |e|
+    filter :coffeescript if e == "coffee"
+    filter :erb if e == "erb"
+  end
+
+  # If mangling is enabled each javascript file needs to be self-contained as
+  # coffee will not directly create top-level objects (the only thing excluded
+  # from mangling)
+
+  #filter :uglify_js, compress: true, mangle: false
+  filter :uglify_js, mangle: false, output: { beautify: true, bracketize: true, semicolons: true }
+end
+
+route "/javascripts/*" do
+  "/js/#{item.raw_content.checksum}.js"
+end
+
+# Yeah htaccess!
+compile "/htaccess/" do
+  nil
+end
+
+route "/htaccess/" do
+  "/.htaccess"
 end
 
 # Handle remaining items
 excluded_extensions = %w{ txt xml }
 
-compile '*' do
+compile "*" do
   if item.binary?
     # don’t filter binary items
   else
-    item[:extension].split('.').reverse_each do |e|
-      filter :erb if e == 'erb'
-      filter :redcarpet if e == 'md'
+    item[:extension].split(".").reverse_each do |e|
+      filter :erb if e == "erb"
+      filter :redcarpet if e == "md"
     end
 
-    layout 'default' unless excluded_extensions.include?(item[:extension])
+    layout "default" unless excluded_extensions.include?(item[:extension])
   end
 end
 
-route '*' do
+route "*" do
   if item.binary? || excluded_extensions.include?(item[:extension])
     # Write item with identifier /foo/ to /foo.ext
-    item.identifier.chop + '.' + item[:extension]
+    item.identifier.chop + "." + item[:extension]
   else
     # Write item with identifier /foo/ to /foo/index.html
-    item.identifier + 'index.html'
+    item.identifier + "index.html"
   end
 end
 
-layout '*', :erb
+layout "*", :erb
 
