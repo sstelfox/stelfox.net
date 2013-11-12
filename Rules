@@ -58,6 +58,14 @@ route "/htaccess/" do
   "/.htaccess"
 end
 
+compile "/sitemap" do
+  filter :erb
+end
+
+route "/sitemap" do
+  "/sitemap.xml"
+end
+
 # Handle remaining items
 excluded_extensions = %w{ txt xml }
 
