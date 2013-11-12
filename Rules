@@ -59,7 +59,13 @@ route "/htaccess/" do
 end
 
 compile "/sitemap" do
-  filter :erb
+  # Remove items explicitely hidden, binary items and anything with an
+  # extension that probably shouldn't be indexed by a search engine.
+  items = @items.reject { |i| i.path.nil? || i[:is_hidden] || i.binary? }
+  excluded_extensions = %w{ js css txt xml }
+  items.reject! { |i| excluded_extensions.include?(i.path.split('.').last) }
+
+  filter :erb, { locals: {sitemap_items: items } }
 end
 
 route "/sitemap" do
