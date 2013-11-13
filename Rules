@@ -88,6 +88,12 @@ compile "*" do
   end
 end
 
+route "/posts/*" do
+  time = item[:date]
+  slug = item[:title].to_url
+  "/#{time.year}/#{time.month}/#{slug}/index.html"
+end
+
 route "*" do
   if item.binary? || excluded_extensions.include?(item[:extension])
     # Write item with identifier /foo/ to /foo.ext

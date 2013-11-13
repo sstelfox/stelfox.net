@@ -10,6 +10,7 @@ gem 'mime-types'
 gem 'sass'
 
 gem 'builder'
+gem 'stringex'
 
 gem 'uglifier'
 gem 'therubyracer'
