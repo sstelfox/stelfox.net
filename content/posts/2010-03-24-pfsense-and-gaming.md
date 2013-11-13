@@ -1,5 +1,6 @@
 ---
 created_at: 2010-03-24 14:18:00+00:00
+kind: article
 title: 'pfSense and Gaming'
 tags:
 - gaming

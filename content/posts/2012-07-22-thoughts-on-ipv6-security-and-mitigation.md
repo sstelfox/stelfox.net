@@ -1,5 +1,6 @@
 ---
 created_at: 2012-07-22 03:07:42+00:00
+kind: article
 title: 'Thoughts on IPv6 Security and Mitigation'
 tags:
 - networking

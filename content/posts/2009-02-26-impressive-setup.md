@@ -1,5 +1,6 @@
 ---
 created_at: 2009-02-26 20:10:34+00:00
+kind: article
 title: 'Impressive Setup...'
 tags:
 - development-environment

@@ -1,5 +1,6 @@
 ---
 created_at: 2010-06-18 16:39:56+00:00
+kind: article
 title: 'Nice Update'
 tags:
 - updates

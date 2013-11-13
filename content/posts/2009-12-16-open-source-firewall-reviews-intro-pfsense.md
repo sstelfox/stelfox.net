@@ -1,5 +1,6 @@
 ---
 created_at: 2009-12-16 15:58:15+00:00
+kind: article
 title: 'Open Source Firewall Reviews: Intro & pfSense'
 tags:
 - firewall

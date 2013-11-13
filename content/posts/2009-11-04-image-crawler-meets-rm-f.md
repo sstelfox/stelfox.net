@@ -1,5 +1,6 @@
 ---
 created_at: 2009-11-04 21:36:45+00:00
+kind: article
 title: 'Image Crawler Meets rm -f *'
 tags:
 - linux
