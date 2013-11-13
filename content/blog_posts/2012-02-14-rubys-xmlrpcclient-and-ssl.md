@@ -1,5 +1,6 @@
 ---
 created_at: 2012-02-14 18:08:51+00:00
+updated_at: 2012-02-14 18:08:51+00:00
 kind: article
 title: "Ruby's XMLRPC::Client and SSL"
 ---

@@ -1,5 +1,6 @@
 ---
 created_at: 2012-02-20 04:13:48+00:00
+updated_at: 2012-02-20 04:13:48+00:00
 kind: article
 title: 'Updating to a Newer Rails on DreamHost'
 tags:
