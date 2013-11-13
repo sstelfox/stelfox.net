@@ -7,7 +7,7 @@ class HTMLWithCoderay < Redcarpet::Render::HTML
     if language.nil?
       "<pre><code>#{code}</code></pre>"
     else
-      CodeRay.scan(code, language).div(css: :class)
+      CodeRay.scan(code, language).div(css: :class, line_numbers: :table)
     end
   end
 end
