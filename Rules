@@ -27,6 +27,8 @@ route "/styles/_includes/*" do
 end
 
 route "/styles/*" do
+  # TODO: This only changes when the content of the individual file changes, we
+  # need it after it's been processed :(
   "/css/#{item.raw_content.checksum}.css"
 end
 
@@ -62,7 +64,7 @@ compile "/sitemap" do
   # Remove items explicitely hidden, binary items and anything with an
   # extension that probably shouldn't be indexed by a search engine.
   items = @items.reject { |i| i.path.nil? || i[:is_hidden] || i.binary? }
-  excluded_extensions = %w{ js css txt xml }
+  excluded_extensions = %w{ js css txt xml ttf }
   items.reject! { |i| excluded_extensions.include?(i.path.split('.').last) }
 
   filter :erb, { locals: {sitemap_items: items } }
@@ -81,7 +83,7 @@ route "/atom" do
 end
 
 # Handle remaining items
-excluded_extensions = %w{ txt xml }
+excluded_extensions = %w{ txt xml ttf }
 
 compile "*" do
   if item.binary?
