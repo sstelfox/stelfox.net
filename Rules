@@ -89,9 +89,10 @@ compile "*" do
 end
 
 route "/posts/*" do
-  time = item[:date]
+  puts item[:title]
+  time = item[:created_at]
   slug = item[:title].to_url
-  "/#{time.year}/#{time.month}/#{slug}/index.html"
+  "/#{time.year}/#{sprintf("%02d", time.month)}/#{slug}/index.html"
 end
 
 route "*" do
