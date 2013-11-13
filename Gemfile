@@ -6,6 +6,7 @@ gem 'nanoc-toolbox'
 
 gem 'adsf'
 gem 'redcarpet'
+gem 'coderay'
 gem 'mime-types'
 gem 'sass'
 

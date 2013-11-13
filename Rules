@@ -91,14 +91,16 @@ compile "*" do
       filter :erb if e == "erb"
 
       if e == "md"
-        filter :redcarpet, options: {
-          fenced_code_blocks: true,
-          no_intra_emphasis: true,
-          space_after_headers: true,
-          strikethrough: true,
-          superscripts: true,
-          underline: false
-        }
+        filter :redcarpet,
+          options: {
+            fenced_code_blocks: true,
+            no_intra_emphasis: true,
+            space_after_headers: true,
+            strikethrough: true,
+            superscripts: true,
+            underline: false
+          },
+          renderer: HTMLWithCoderay
       end
     end
 
