@@ -72,6 +72,14 @@ route "/sitemap" do
   "/sitemap.xml"
 end
 
+compile "/atom" do
+  filter :erb
+end
+
+route "/atom" do
+  "/atom.xml"
+end
+
 # Handle remaining items
 excluded_extensions = %w{ txt xml }
 
@@ -88,10 +96,9 @@ compile "*" do
   end
 end
 
-route "/posts/*" do
-  time = item[:created_at]
-  slug = item[:title].to_url
-  "/#{time.year}/#{sprintf("%02d", time.month)}/#{slug}/index.html"
+route "/blog_posts/*" do
+  time, slug = item[:created_at], item[:title].to_url
+  "/blog/#{time.year}/#{sprintf("%02d", time.month)}/#{slug}/index.html"
 end
 
 route "*" do
