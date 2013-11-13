@@ -89,7 +89,17 @@ compile "*" do
   else
     item[:extension].split(".").reverse_each do |e|
       filter :erb if e == "erb"
-      filter :redcarpet if e == "md"
+
+      if e == "md"
+        filter :redcarpet, options: {
+          fenced_code_blocks: true,
+          no_intra_emphasis: true,
+          space_after_headers: true,
+          strikethrough: true,
+          superscripts: true,
+          underline: false
+        }
+      end
     end
 
     layout "default" unless excluded_extensions.include?(item[:extension])
