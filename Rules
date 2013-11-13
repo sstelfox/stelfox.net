@@ -16,19 +16,17 @@
 preprocess do
   def create_tag_pages
     # Build up a reverse association between tags and items
-    tagged_items = items.each_with_object(Hash.new([])) do |i, o| 
-      tag_list = (i[:tags] || []).uniq
-      tag_list.each do |t|
-        o[t.to_s] << i
-      end
+    tag_list = []
+    items.each do |i|
+      tag_list += (i[:tags] || [])
     end
 
-    tagged_items.keys.each do |t|
-      content = "TODO: Content"
-      attrs = {title: "Pages Tagged with #{t}"}
-      path = "/tags/#{tag.downcase}/"
+    tag_list.uniq.each do |t|
+      content = "<%= render 'tag_page', { tag: @tag, tagged_items: @tagged_items } %>"
+      attrs = {extension: "md", type: 'tag_page', title: "Pages Tagged with #{t}"}
+      path = "/tags/#{t.to_url}/"
 
-      items << Nanoc3::Item.new(content, attrs, path)
+      @items << Nanoc3::Item.new(content, attrs, path)
     end
   end
 
@@ -89,7 +87,7 @@ compile "/sitemap" do
   excluded_extensions = %w{ js css txt xml ttf }
   items.reject! { |i| excluded_extensions.include?(i.path.split('.').last) }
 
-  filter :erb, { locals: {sitemap_items: items } }
+  filter :erb, { locals: { sitemap_items: items } }
 end
 
 route "/sitemap" do
@@ -102,6 +100,15 @@ end
 
 route "/atom" do
   "/atom.xml"
+end
+
+# Compile tag specific pages
+compile "/tags/*" do
+  tag = item.identifier.match(%r{/tags/(.+)/}).captures.first
+  tagged_items = items.select { |i| (i[:tags] || []).include?(tag) }
+
+  filter :erb, { locals: { tag: tag, tagged_items: tagged_items } }
+  layout "default"
 end
 
 # Handle remaining items
