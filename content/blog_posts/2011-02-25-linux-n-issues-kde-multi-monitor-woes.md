@@ -30,7 +30,9 @@ The next day I received my the logwatch from my laptop (Yes, my laptop sends
 it's logs to my email) and it mentioned more than 20,000 new entries of an
 error I've never seen before:
 
-> iwlagn 0000:03:00.0: BA scd_flow 0 does not match txq_id 10
+```
+iwlagn 0000:03:00.0: BA scd_flow 0 does not match txq_id 10
+```
 
 After poking around a bit online I found that the issue is with a recent kernel
 update (I'm currently running 2.6.35.11-83) changing the behavior of some
@@ -50,9 +52,11 @@ I was unsure if there was something specific I had to name the file or if it
 needed to be in one of the existing files. I ended up creating the
 file */etc/modprobe.d/iwlagn.conf* and putting the following in it:
 
-> options iwlagn 11n_disable=1
-> # This one might be needed instead
-> #options iwlagn 11n_disable50=1
+```
+options iwlagn 11n_disable=1
+# This one might be needed instead
+#options iwlagn 11n_disable50=1
+```
 
 After I rebooted the problem vanished like it was never there. If you notice
 there is a second option in there that is commented out. I found some people
@@ -87,7 +91,9 @@ easy (though it appears you have to do it everytime).
 To set the primary monitor to my laptop screen (LCDS1) I just opened a shell
 and put this in:
 
-> xrandr --output LCDS1 --primary
+```
+xrandr --output LCDS1 --primary
+```
 
 Poof! Everything is all set and I'm happy once again. I hope that the KDE
 developers put back the primary display selection in the settings but for now

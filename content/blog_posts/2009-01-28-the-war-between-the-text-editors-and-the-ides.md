@@ -25,8 +25,8 @@ All the time he spent setting up his computer was lost development time on his
 various freelance projects. This is when it came around to development and
 development environments.
 
-> Anyway, it is obvious to anyone who works with computers that a great deal of
-> time can be spent on installing, configuring, and maintaining (upgrading)
+> It is obvious to anyone who works with computers that a great deal of time
+> can be spent on installing, configuring, and maintaining (upgrading)
 > software. Since no real work is accomplished by this, such time can be
 > thought of overhead time or as part of the "cost" of doing business in the
 > computer field.
