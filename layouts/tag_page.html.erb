@@ -1,7 +1,11 @@
 
-<h2><%= @tag %></h2>
-<ul>
-<% (@tagged_items || []).each do |i| %>
-  <li><%= i.identifier %></li>
+<h1><%= @tag %></h1>
+<% @tagged_items.each do |post| %>
+  <div class='post'>
+    <h2><%= link_to post[:title], post.path %></h1>
+    <aside>Posted at: <%= post[:created_at] %></aside>
+    <article>
+      <%= post.compiled_content %>
+    </article>
+  </div>
 <% end %>
-</ul>
