@@ -1,6 +1,5 @@
 ---
 created_at: 2011-02-17 18:15:02+00:00
-layout: post
 title: 'The Home Network and NAT as a Security Layer'
 ---
 

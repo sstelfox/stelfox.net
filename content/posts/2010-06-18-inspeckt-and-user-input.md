@@ -1,6 +1,5 @@
 ---
 created_at: 2010-06-18 17:10:33+00:00
-layout: post
 title: 'Inspeckt and User Input'
 ---
 
