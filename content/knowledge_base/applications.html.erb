@@ -1,0 +1,9 @@
+---
+title: Application Knowledge Base
+---
+
+<ul>
+<% @items.select { |i| i.identifier =~ %r{^/knowledge_base/applications/.+/$} }.each do |section| %>
+  <li><%= link_to(section[:title], section) %></li>
+<% end %>
+</ul>
