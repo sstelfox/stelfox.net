@@ -20,6 +20,13 @@
   </head>
   <body>
     <div class='row'>
+      <div class='col-12'>
+        <% breadcrumbs_trail.each do |i| %>
+          <%= link_to(i[:title], i) unless i.nil? %>
+        <% end %>
+      </div>
+    </div>
+    <div class='row'>
       <div class='col-2'>
         <ul>
           <li><%= link_to("Home", @items["/"]) %></li>
