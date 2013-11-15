@@ -2,9 +2,12 @@
 title: Google Chrome
 ---
 
+# Google Chrome
+
 ## Install The Repository
 
-Put the contents of the following file into /etc/yum.repos.d/google-chrome.repo
+Put the contents of the following file into
+`/etc/yum.repos.d/google-chrome.repo`
 
 ```ini
 [google-chrome]

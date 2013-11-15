@@ -2,6 +2,8 @@
 title: Google Earth
 ---
 
+# Google Earth
+
 ## Installation on Fedora
 
 Create /etc/yum.repos.d/google-earth.repo with the following contents:

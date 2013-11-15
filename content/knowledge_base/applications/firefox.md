@@ -2,6 +2,8 @@
 title: Firefox
 ---
 
+# Firefox
+
 ## Plugins
 
 First off disable all the plugins that come with firefox, none of them are good
@@ -12,10 +14,12 @@ for me. I want my media in my media applications. If you've already installed
 Install the following plugins:
 
 * Adblock Plus
-  * After installation and restarting Firefox turn Automatic Updates on for this plugin.
+  * After installation and restarting Firefox turn Automatic Updates on for
+    this plugin.
 * Firebug
 * Flashblock
-  * After installation and restarting Firefox, tell it to block silverlight as well (this isn't as important on Linux distros)
+  * After installation and restarting Firefox, tell it to block silverlight as
+    well (this isn't as important on Linux distros)
   * Add 'reddit.com' and 'youtube.com' to it's whitelist.
 * HTTPS-Everywhere (https://www.eff.org/https-everywhere)
 * Reddit Enhancement Suite (http://redditenhancementsuite.com/)
