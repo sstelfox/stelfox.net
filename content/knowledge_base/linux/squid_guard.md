@@ -731,7 +731,7 @@ want to access directly in my whitelist file.
 
 ## Sample Error Page
 
-```
+```php
 <?php
   function uuid() {
     return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
