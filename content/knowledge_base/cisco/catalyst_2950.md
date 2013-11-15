@@ -2,6 +2,8 @@
 title: Catalyst 2950
 ---
 
+# Catalyst 2950
+
 ## Configuration Wipe
 
 ```sh
@@ -18,8 +20,8 @@ cisco2950# reload
 
 A firmware upgrade requires a TFTP server running locally. In the examples
 below the TFTP server is running on 192.168.0.103. The tar upgrade file is
-named "c2950-i6q4l2-tar.121-22.EA7.tar" on the TFTP server. The bin upgrade
-file is named "c2950-i6q4l2-mz.121-22.EA7.bin"
+named `c2950-i6q4l2-tar.121-22.EA7.tar` on the TFTP server. The bin upgrade
+file is named `c2950-i6q4l2-mz.121-22.EA7.bin`
 
 Because of potential incompatibilities between firmware versions it's always a
 good idea to clear the configuration before rebooting. This is included in the
@@ -60,7 +62,7 @@ Connection closed by foreign host.
 
 ### Bin Upgrade
 
-A Bin upgrade ''does not'' include html files for the web interface. Do not
+A Bin upgrade ***does not*** include html files for the web interface. Do not
 remove them if there is need for a web interface.
 
 ```sh
