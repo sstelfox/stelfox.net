@@ -1,3 +1,6 @@
+---
+title: Markdown Quick Reference
+---
 
 # Markdown Quick Reference
 

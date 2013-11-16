@@ -2,7 +2,7 @@
 title: Initial Gem Setup
 ---
 
-# Gem Initial Setup
+# Initial Gem Setup
 
 This is the process I go through when inititially setting up a gem. For this I
 will be creating a gem named `super_g`.

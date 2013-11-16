@@ -2,6 +2,8 @@
 title: Stringer Setup
 ---
 
+# Stringer Setup
+
 * Forked the project on github (https://github.com/swanson/stringer.git)
 * Cloned the project to my local box:
   * git clone git@github.com:sstelfox/stringer.git ~/Documents/ruby/stringer
