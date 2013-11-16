@@ -2,6 +2,8 @@
 title: BIOS
 ---
 
+# BIOS Security
+
 ## Security Notes
 
 Most BIOS's have a few settings that can make it more difficult for a physical
@@ -10,20 +12,24 @@ attacker to gain entry to the system. These are:
 * Ensure system devices are running latest firmware
 * Disable all but the default boot device (especially PXE boot)
 * Disable unused SATA/IDE controllers
-* Protect BIOS settings with a strong password (usually referred to as the "setup" password)
+* Protect BIOS settings with a strong password (usually referred to as the
+  "setup" password)
 * Turn off keyboard alerts
 * Turn on extended memory testing
 * Disable wake on ethernet if not needed for the machine's operation
 * Turn on hard drive monitoring if available (SMART)
 * Turn on case intrusion detection if available
-* Turn on [[Security/TPM]] module if available
+* Turn on [Security/TPM][1] module if available
 * Disable virtualization extensions if not needed
+
+[1]: ../../security/tpm/
+[2]: ../../security/physical/
 
 Even if the BIOS is secure it can be reset back to the factory default by
 removing the BIOS battery from the mother board for a few seconds and inserting
-it back in. This can be prevented through good [[Security/Physical]].
+it back in. This can be prevented through good [Security/Physical][2].
 
-If the machine has a [[Security/TPM]] module and configured to use it, it is
+If the machine has a [Security/TPM][1] module and configured to use it, it is
 possible to detect these kinds of resets and prevent the system from booting
 into the OS afterwards, however, it won't protect against an attacker from
 booting their own OS. This can be mitigated by implementing some form of
