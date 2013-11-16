@@ -2,7 +2,7 @@
 title: Steam Mashing
 ---
 
-Source http://www.homebrewtalk.com/f11/steam-injected-mash-system-18008
+[Source][1]
 
 In case someone is interested, I've done the preliminary analysis and
 investigation and I'm going to be building a steam boiler from a corny keg to
@@ -89,7 +89,7 @@ Here is an email I sent a guy on this topic.
 So here is my attempt at mash boiler thermodynamics. Be kind… I am really rusty
 with my steam calcs.
 
-My data source is http://www.chesterton.com/interactive/tables/steam/
+My data source is [Chesterton Steam Table][2]
 
 Water and steam at 1atm, 212F. The liquid has an enthalpy of 180 btu/lb and the
 steam portion has energy of 1150 btu/lb
@@ -106,12 +106,12 @@ So to heat water (our mash) from 126 to 170F takes 138-94 = 44 btu per pound.
 Which makes sense because the temp spread is 44F and water has a specific heat
 of 1btu/lb.
 
-Lets say we are brewing a beer that uses 10 pounds of grains. Using this page
-http://www.rackers.org/calcs.shtml and a water ratio of 1.25 q/lb, it will take
-3.93 gallons of volume. Lets say that is all water at 8.33 pounds per gallon,
-we'd have 32.7 pounds of “water”. In reality, it will be both lighter than that
-and have a lower heat capacity. But using these numbers, the total energy to
-raise our mash from 126 to 170 would be 32.7 x 44 btu = 1440 btu.
+Lets say we are brewing a beer that uses 10 pounds of grains. Using [this
+page][3] and a water ratio of 1.25 q/lb, it will take 3.93 gallons of volume.
+Lets say that is all water at 8.33 pounds per gallon, we'd have 32.7 pounds of
+“water”. In reality, it will be both lighter than that and have a lower heat
+capacity. But using these numbers, the total energy to raise our mash from 126
+to 170 would be 32.7 x 44 btu = 1440 btu.
 
 If we were direct heating, a 4.5KW element puts out 15,354 btu/hour or 256
 btu/minute. Our water weighs 32.7 pounds so we would get 256/32.7 = 7.8F per
@@ -121,7 +121,7 @@ minute. That is a pretty good heating rate as far as these systems go. Most are
 Now cooling steam from 240F to water at 170F will release 1160-138 = 1022
 btu/lb. We need 1440 btu, so that is 1440/1022 = 1.4 pounds of steam = 0.17
 gallons = 0.676 quarts. A little over 2 cups of water. Pretty incredible, isn't
-it !
+it!
 
 Now how much energy is stored in the corny ? Assume we have 10L of water (22
 pounds) and 9L of steam.
@@ -146,7 +146,7 @@ engine.
 That is much different than a pressure cooker principle, where one is just
 capturing what the stove is boiling off as it boils.
 
-Now… if one had the whole corny full of 240F water, then we'd have 19L x 2.2
+Now... if one had the whole corny full of 240F water, then we'd have 19L x 2.2
 lbs/litre x 28 btu/lb = 1170 btu stored up ready to go. Almost enough to do our
 whole batch. We need 1440 btu to go from 128 to 170F.
 
@@ -164,7 +164,7 @@ is going into the mash from the boiler temp change if you wanted to get fancy !
 The computer could measure the temp before and then watch it until it drops the
 right amount.
 
-Now… how much energy are we putting into heating the water ?
+Now... how much energy are we putting into heating the water ?
 
 19L x 2.2 = 41.8 pounds. The temp rise will be 240-60F = 180 btu/lb. So 41.8 x
 180 = 7524 btu. 1 KWhr is 3412 btu/hr so 2.2 KW Hr of power or about 20 cents
@@ -177,7 +177,7 @@ sterilizing a counter flow chiller by pumping that water through it. I also
 capture the water that goes through the counterflow chiller in the HLT for
 washing purposes, so neither of that energy is totally wasted.
 
-So… did I get my math and thermodynamics right ?
+So... did I get my math and thermodynamics right ?
 
 What do you think of the boiler operation ?
 
@@ -256,15 +256,17 @@ will only generate 10PSI of pressure.
 
 There are 2 sorts of things that could go wrong with my steam vessel.
 
-1) leakage or failure at rated pressure, 10PSI. Corny kegs are rated to 130PSI.
-I'll be pressure testing mine to 30PSI. People carbonate beer at 15 PSI all the
-time. When was the last time you heard of a corny failing doing this ?
+1. Leakage or failure at rated pressure, 10PSI. Corny kegs are rated to 130PSI.
+   I'll be pressure testing mine to 30PSI. People carbonate beer at 15 PSI all
+   the time. When was the last time you heard of a corny failing doing this ?
+2. Failure because of over pressure. My kegs setup will have 3 things to
+   prevent this.
+  1. A pressure relief valve.
+  2. A temperature sensor
+  3. A mechanical pressure gage.
 
-2) failure because of over pressure. My kegs setup will have 3 things to
-prevent this. 1. A pressure relief valve. 2. A temperature sensor 3. A
-mechanical pressure gage. Multiple things have to fail and the temperature
-would really have to rise before my corny would get to an over pressure
-situation.
+Multiple things have to fail and the temperature would really have to rise
+before my corny would get to an over pressure situation.
 
 I think my steam boiler will be a lot safer than working under an HLT suspended
 6 feet in the air.
@@ -279,7 +281,7 @@ leakage loses.
 
 My corny will have a 4.5KW element in it. So even if I didn't store any
 superheated water, I'll be heating my mash with 4.5KW of power, less any
-losses. That is nothing to sneeze at !
+losses. That is nothing to sneeze at!
 
 Storing the superheated water is icing on the cake. I'll dough in and do a
 protein rest while the heating element in my boiler is getting the water up to
@@ -330,4 +332,8 @@ element. 4500 Watts, $6.50 ea. Uses 1” NPSM threads.
 
 I'll let you know how the drilling and pressure testing goes. I'll do the
 element hole first.
+
+[1]: http://www.homebrewtalk.com/f11/steam-injected-mash-system-18008
+[2]: http://www.chesterton.com/interactive/tables/steam/
+[3]: http://www.rackers.org/calcs.shtml 
 

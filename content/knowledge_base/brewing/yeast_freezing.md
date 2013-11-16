@@ -2,5 +2,7 @@
 title: Yeast Freezing
 ---
 
-http://www.homebrewtalk.com/f13/guide-making-frozen-yeast-bank-35891/
+[Yeast Freezing][1]
+
+[1]: http://www.homebrewtalk.com/f13/guide-making-frozen-yeast-bank-35891/
 

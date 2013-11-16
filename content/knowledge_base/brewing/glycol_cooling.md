@@ -2,6 +2,8 @@
 title: Glycol Cooling
 ---
 
+# Glycol Cooling
+
 ## DIY Glycol Power Pack (Chiller) for Beer Line Cooling
 
 * http://stan.theblossers.net/2011/03/diy-glycol-power-pack-for-beer-line.html
@@ -88,10 +90,10 @@ Others in the home brewing community, as well as those looking for DIY options
 for aquarium chillers, have converted window A/C units for use as liquid
 chillers.  Even small window air conditioners are rated 5000 BTU/hr and
 greater.  Given I needed to move approximately 250 BTU/hr, I found that to be
-overkill.  Had I went that route, I probably would have ended up with something
-only running for a few minutes each hour, and as any mechanical engineer will
-tell you, compressed refrigerant systems are most efficient in steady state
-running and not cycling frequently.
+overkill.  Had I went that route, I probably would have ended up with
+something only running for a few minutes each hour, and as any mechanical
+engineer will tell you, compressed refrigerant systems are most efficient in
+steady state running and not cycling frequently.
 
 I did however find one web site that gave me the idea of converting a
 dehumidifier instead.  Much smaller in regards to BTU capacity, and without the
