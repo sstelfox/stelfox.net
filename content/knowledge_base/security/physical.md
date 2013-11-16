@@ -1,6 +1,8 @@
 ---
-title: Physical
+title: Physical Security
 ---
+
+# Physical Security
 
 ## Computer Security
 
@@ -36,5 +38,7 @@ recommended.
 
 ## Lockpicking
 
-See more in the [[Security/Lockpicking]] article on this wiki.
+See more in the [Security/Lockpicking][1] article on this wiki.
+
+[1]: ../../security/lockpicking/
 

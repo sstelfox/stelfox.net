@@ -2,6 +2,8 @@
 title: Passwords
 ---
 
+# Password Security
+
 ## Random Password Generation
 
 This little ruby snippet generates a random 31 character string consisting of
@@ -50,7 +52,7 @@ at his disposal or none at all; as long as he has less than t shares, there is
 no better option than guessing to find out the secret.
 ```
 
-There is a fedora package named '''ssss''' that can split a string up to 128
+There is a fedora package named `ssss` that can split a string up to 128
 characters long into X pieces, requiring at least Y pieces to recover it.
 Assuming the pieces are broken up over several different locations and stored
 in different manners it's a fairly strong way to store passwords or other

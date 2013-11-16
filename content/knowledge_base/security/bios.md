@@ -1,5 +1,5 @@
 ---
-title: BIOS
+title: BIOS Security
 ---
 
 # BIOS Security
@@ -19,28 +19,25 @@ attacker to gain entry to the system. These are:
 * Disable wake on ethernet if not needed for the machine's operation
 * Turn on hard drive monitoring if available (SMART)
 * Turn on case intrusion detection if available
-* Turn on [Security/TPM][1] module if available
+* Turn on [TPM][1] module if available
 * Disable virtualization extensions if not needed
-
-[1]: ../../security/tpm/
-[2]: ../../security/physical/
 
 Even if the BIOS is secure it can be reset back to the factory default by
 removing the BIOS battery from the mother board for a few seconds and inserting
-it back in. This can be prevented through good [Security/Physical][2].
+it back in. This can be prevented through good [Physical][2].
 
-If the machine has a [Security/TPM][1] module and configured to use it, it is
-possible to detect these kinds of resets and prevent the system from booting
-into the OS afterwards, however, it won't protect against an attacker from
-booting their own OS. This can be mitigated by implementing some form of
-[[Security/Encryption]]. If the hard disk can be encrypted based off a key
-stored in the TPM device, tampering would effectively permanently destroy
-access to all data on the hard drive (so you better have off-site backups).
+If the machine has a [TPM][1] module and configured to use it, it is possible
+to detect these kinds of resets and prevent the system from booting into the OS
+afterwards, however, it won't protect against an attacker from booting their
+own OS. This can be mitigated by implementing some form of [Encryption][3]. If
+the hard disk can be encrypted based off a key stored in the TPM device,
+tampering would effectively permanently destroy access to all data on the hard
+drive (so you better have off-site backups).
 
 Most new machines have a place for a padlock to be connected. An extremely
 determined physical attacker can either cut these off or if they are skilled in
-[[Security/Lockpicking]] pick the lock. This shouldn't be necessary however in
-the machine is already in a physically secured location.
+[Lockpicking][4] pick the lock. This shouldn't be necessary however in the
+machine is already in a physically secured location.
 
 ## Default Passwords
 
@@ -67,4 +64,9 @@ below:
 * shift + s y x z
 
 It is a good idea to test and see if the BIOS has this kind of vulnerability.
+
+[1]: ../../security/tpm/
+[2]: ../../security/physical/
+[3]: ../../security/encryption/
+[4]: ../../security/lockpicking/
 

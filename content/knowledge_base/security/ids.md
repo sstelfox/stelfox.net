@@ -2,32 +2,51 @@
 title: IDS
 ---
 
-[http://securityonion.blogspot.com/ Security Onion] is kind of awesome. It's a
-live CD with a lot of IDS and log management tools pre-configured and
-pre-installed with a quick setup. It might be a good reference or a good quick
-IDS when one is needed.
+[Security Onion][1] is kind of awesome. It's a live CD with a lot of IDS and
+log management tools pre-configured and pre-installed with a quick setup. It
+might be a good reference or a good quick IDS when one is needed.
 
 ## Network
 
-* [[Linux/Bro]]
-  * [http://www.bro-ids.org/ Bro-IDS]
-* [http://labs.snort.org/razorback/ Razorback]
-* [[Linux/Labrea]]
-  * [http://labrea.sourceforge.net/labrea-info.html Labrea]
-* [http://oinkmaster.sourceforge.net/ Oinkmaster]
-* [[Linux/p0f]]
-  * [http://lcamtuf.coredump.cx/p0f3/ p0f]
-* [http://sguil.sourceforge.net/ Sguil]
-* [http://snorby.org/ Snorby]
-* [http://www.snort.org/ Snort]
-* [http://doc.emergingthreats.net/bin/view/Main/SnortValidator Snort Validator]
-* [http://www.squertproject.org/ Squert]
-* [[Linux/Suricata]]
-  * [http://www.openinfosecfoundation.org/ Suricata]
-* [http://sourceforge.net/projects/vortex-ids/ Vortex]
+* [Bro][2]
+  * [Bro-IDS][3]
+* [Razorback][4]
+* [Labrea][5]
+  * [Labrea][6]
+* [Oinkmaster][7]
+* [p0f][8]
+  * [p0f][9]
+* [Sguil][10]
+* [Snorby][11]
+* [Snort][12]
+* [Snort Validator][13]
+* [Squert][14]
+* [Suricata][15]
+  * [Suricata][16]
+* [Vortex][17]
 
 ## Host Based
 
-* [[Linux/AIDE]]
-* [http://www.ossec.net/ OSSEC]
+* [AIDE][18]
+* [OSSEC][19]
+
+[1]: http://securityonion.blogspot.com/
+[2]: ../../linux/bro/
+[3]: http://www.bro-ids.org/
+[4]: http://labs.snort.org/razorback/
+[5]: ../../linux/labrea/
+[6]: http://labrea.sourceforge.net/labrea-info.html 
+[7]: http://oinkmaster.sourceforge.net/
+[8]: ../../linux/p0f/
+[9]: http://lcamtuf.coredump.cx/p0f3/
+[10]: http://sguil.sourceforge.net/
+[11]: http://snorby.org/
+[12]: http://www.snort.org/
+[13]: http://doc.emergingthreats.net/bin/view/Main/SnortValidator
+[14]: http://www.squertproject.org/
+[15]: ../../linux/suricata/
+[16]: http://www.openinfosecfoundation.org/
+[17]: http://sourceforge.net/projects/vortex-ids/
+[18]: ../../linux/aide/
+[19]: http://www.ossec.net/
 

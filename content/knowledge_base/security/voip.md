@@ -2,16 +2,17 @@
 title: VOIP
 ---
 
+# VOIP
+
 Sensitive information can be transmitted through phone systems, POTS lines can
 also be very very expensive if anonymous calls are allowed through the POTS
 line. Mitigations must be implemented in the network, network perimeter,
 servers, and phones. Mitigations in the network aim to deny access to attackers
-through virtual separation of data and phone networks using
-[[Networking/VLANs]], and perimeter security devices such as firewalls and
-filtering routers. Servers AND phones must be security hardened. Phones must
-require strong authentication and authorization of users to prevent identity
-spoofing. Phones should also encrypt voice streams through high risk
-environments such as the internet.
+through virtual separation of data and phone networks using [VLANs][1], and
+perimeter security devices such as firewalls and filtering routers. Servers AND
+phones must be security hardened. Phones must require strong authentication and
+authorization of users to prevent identity spoofing. Phones should also encrypt
+voice streams through high risk environments such as the internet.
 
 ## Authentication
 
@@ -20,6 +21,7 @@ Additionally devices should ensure the validity of the server before allow user
 authentication.
 
 ## Network Separation
+
 ### VLANs
 
 Dividing the network into multiple VLANs does not provide any benefit if the
@@ -36,9 +38,9 @@ between phones and the telephony server.
 An attacker who has physical access to the network may bypass any VLAN
 separation by simply unplugging an IP phone and introducing a malicious
 machine. A simple solution would be to only allow know MAC addresses, however,
-this too could be fooled quite trivially. The solution to this is
-[[Security/8021X|802.1X]] authentication. Additional trickery can be added
-using various switch port security features such as dhcp client sniffing.
+this too could be fooled quite trivially. The solution to this is [802.1X][2]
+authentication. Additional trickery can be added using various switch port
+security features such as dhcp client sniffing.
 
 ### Services
 
@@ -54,7 +56,7 @@ any external SIP clients, or to receive voice calls from outside the local
 voice network, then having the services separated allows for total network
 isolation. Even with external SIP clients it can be made so that there is
 exactly one point where external data can get into the voice network and out of
-it. This provides a very nice and convienient place to drop an [[Linux/IDS]].
+it. This provides a very nice and convienient place to drop an [IDS][3].
 
 ## Call Eavesdropping
 
@@ -116,6 +118,7 @@ to send spoofed messages to the telephony server and potentially reroute a
 user's calls.
 
 ## Call Plan Security
+
 ### Outgoing PIN
 
 A neat little trick that could be accomplished to greatly increase the security
@@ -148,4 +151,8 @@ certain extent that would probably be acceptable to most users.
 This is one of those security measures I wouldn't want to relax quite this much
 unless things such as the outgoing pin, a strong IDS, and firewall logs had
 been implemented.
+
+[1]: ../../networking/vlan/
+[2]: ../../security/801x/
+[3]: ../../linux/ids/
 

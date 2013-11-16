@@ -2,6 +2,8 @@
 title: TPM
 ---
 
+# TPM
+
 TPM is an advanced feature that establishes a chain of trust between the a chip
 on the motherboard, the BIOS, the bootloader, and the OS. Properly configuring
 TPM can be time consuming and needs to be done carefully. In the event that an
