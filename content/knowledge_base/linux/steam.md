@@ -2,7 +2,10 @@
 title: Steam
 ---
 
+# Steam
+
 ## Installation
+
 ### Thing that Didn't Work
 
 Ensure you have the RPMFusion repositories setup.
@@ -10,17 +13,19 @@ Ensure you have the RPMFusion repositories setup.
 Install the dependencies:
 
 ```
-yum install libtxc_dxtn.{i686,x86_64} mesa-libGL-devel.{i686,x86_64}\ openal-soft.i686 mate-dialogs mesa-libGLU.{x86_64,i686} xorg-x11-fonts-100dpi -y
+yum install libtxc_dxtn.{i686,x86_64} mesa-libGL-devel.{i686,x86_64} \
+  openal-soft.i686 mate-dialogs mesa-libGLU.{x86_64,i686} \
+  xorg-x11-fonts-100dpi -y
 ```
 
 Ensure the 100dpi fonts are in your font path. Add the following line to the
-end of the ~/.xinitrc file:
+end of the `~/.xinitrc` file:
 
 ```
 xset +fp /usr/share/fonts/X11/100dpi
 ```
 
-Add the OpenSUSE Fedora game repository, /etc/yum.repos.d/games.repo:
+Add the OpenSUSE Fedora game repository, `/etc/yum.repos.d/games.repo`:
 
 ```
 [games]name=Games (Fedora_17)

@@ -241,7 +241,7 @@ request_header_access WWW-Authenticate allow all
 request_header_access All deny all
 ```
 
-For URL filtering please refer to the [[Linux/SquidGuard]] page.
+For URL filtering please refer to the [SquidGuard][1] page.
 
 ## A Note on Non-Standard Ports
 
@@ -357,6 +357,7 @@ need to make sure that squid's external IP is listed in the "localhost" alias
 as well.
 
 ## Configuration
+
 ### /etc/sysconfig/squid
 
 ```
@@ -421,4 +422,6 @@ If authentication is required the two following lines can always be added:
 proxy_username=username
 proxy_password=password
 ```
+
+[1]: ../squid_guard/
 

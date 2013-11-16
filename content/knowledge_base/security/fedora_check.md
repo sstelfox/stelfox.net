@@ -1,6 +1,8 @@
 ---
-title: Fedora Check
+title: Fedora Check Script
 ---
+
+# Fedora Check Script
 
 ## TODO
 

@@ -2,6 +2,8 @@
 title: SSHd
 ---
 
+# SSHd
+
 Secure Shell or SSH is a network protocol that allows data to be exchanged
 using a secure channel between two networked devices. Used primarily on
 GNU/Linux and Unix based systems to access shell accounts, SSH was designed as
@@ -17,9 +19,9 @@ equivalent to letting an attacker have physical access to the box.
 
 ## Firewall Adjustments
 
-My default [IPTables](iptables) firewall already has the following rules in
-place to allow access to SSH by default while still providing a modicum of
-protection from attackers.
+My default [IPTables][1] firewall already has the following rules in place to
+allow access to SSH by default while still providing a modicum of protection
+from attackers.
 
 ```
 # Allow SSH, but no more than 5 new connections every minute
@@ -251,8 +253,8 @@ functionality. Multiple verifications of the same type do not count towards the
 number of verification schemes in use (for example both firewall and restrict
 by user are both ACLs and thus count as one verification scheme) although they
 can still increase the security of the box. Assuming that the server is
-configured according to the guidelines on this wiki in regards to
-[[Linux/IPTables]] and SSH, then it already has the following:
+configured according to the guidelines on this wiki in regards to [IPTables][1]
+and SSH, then it already has the following:
 
 * limit access by group with the "AllowGroups" directive (whitelist - access
   control)
@@ -267,8 +269,8 @@ system by disabling password based access and requiring the following:
 * force a script to run on login that will ask questions of the user (logical
   authentication of a constantly changing answer)
 
-The first can be done using [IPTables](iptables) and the rules are mentioned in
-the firewall section of this page. I will cover the rest in the following two
+The first can be done using [IPTables][1] and the rules are mentioned in the
+firewall section of this page. I will cover the rest in the following two
 sub-sections.
 
 ### SSH Authorized Keys
@@ -279,11 +281,11 @@ is left without a pass-phrase, anyone who manages to get access to the system
 can immediately login as that user anywhere they have deployed the key. ENSURE
 THERE IS A STRONG PASS-PHRASE ON THE KEY.
 
-The keys are normally created as ~/.ssh/id_rsa and ~/.ssh/id_rsa.pub, however I
-like to physically separate my keys from my computers so I'll give my keys a
-descriptive name of username@host.key and put them on a pendrive located at
-/media/pendrive. Personally I to use keys with 4096 bits. The following command
-will create the public/private keys:
+The keys are normally created as `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`,
+however I like to physically separate my keys from my computers so I'll give my
+keys a descriptive name of `username@host.key` and put them on a pendrive
+located at `/media/pendrive`. Personally I to use keys with 4096 bits. The
+following command will create the public / private keys:
 
 ```
 [user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
@@ -300,11 +302,11 @@ Now that we have a strong key we just need to place it on the servers we want
 to access. Conveniently enough there is a utility that makes this quick and
 simple, if for some reason you don't trust this utility or want to do it by
 hand just copy the contents of username@host.key.pub into
-~/.ssh/authorized_keys on the remote host and make sure the file's permissions
-are set to 0400.
+`~/.ssh/authorized_keys` on the remote host and make sure the file's
+permissions are set to 0400.
 
 You can use the utility by performing the following command, replacing
-'remoteuser@remotehost' with a valid username and hostname for the remote host.
+`remoteuser@remotehost` with a valid username and hostname for the remote host.
 
 ```
 [user@localhost ~]$ ssh-copy-id -i /media/pendrive/username@host.key.pub remoteuser@remotehost
@@ -322,7 +324,7 @@ Enter passphrase for key '/media/pendrive/username@remotehost.key':
 
 Once your sure that the key based login is working you can safely disable
 password based logins through ssh to the system entirely by changing the
-following line in /etc/ssh/sshd_config:
+following line in `/etc/ssh/sshd_config`:
 
 ```
 PasswordAuthentication yes
@@ -358,7 +360,7 @@ would defeat the purpose of having it in the first place. You'll have to come
 up with your own question and answer sections, though this is a good template
 to start from.
 
-```
+```bash
 #!/bin/sh
 # Gatekeeper.sh - Post-login authentication script
 
@@ -381,7 +383,8 @@ if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
     CORRECT_ANSWER="muffins"
 
     # Message displayed to the user before being prompted, I'm going to assume
-    # the user knows the question in this case what's the admin's favorite breakfast
+    # the user knows the question in this case what's the admin's favorite
+    # breakfast
     echo -n "Gatekeeper token authentication required: "
 
     # Get the user's answer. If the answer is correct execute the command.
@@ -416,10 +419,10 @@ kill -9 $PPID
 exit 0
 ```
 
-Put this script in /etc/ssh/gatekeeper.sh and change it's permissions to 755
+Put this script in `/etc/ssh/gatekeeper.sh` and change it's permissions to 755
 with the owner being root. To make the SSH server pass off control to the
 Gatekeeper script once it's done authenticating a user, we'll use the
-'ForceCommand' command in SSHd's config file (/etc/ssh/sshd_config). Add the
+'ForceCommand' command in SSHd's config file (`/etc/ssh/sshd_config`). Add the
 following line to the end of the config and restart the SSH daemon.
 
 ```
@@ -450,10 +453,10 @@ the jail.
 [root@localhost]# mknod -m 666 /var/jail/dev/null c 1 3
 ```
 
-There is something serious to note here. The [partitioning](partitioning)
-security guidelines add two flags to the mount options of the /var partition.
-You will need to remove the 'nosuid', and 'noexec' options from this partition
-to be able use a chroot jail.
+There is something serious to note here. The [partitioning][2] security
+guidelines add two flags to the mount options of the /var partition.  You will
+need to remove the 'nosuid', and 'noexec' options from this partition to be
+able use a chroot jail.
 
 Next we need to copy a few minimum files into the jail's etc directory. Hard
 links may work better for these as they will get properly updated with the rest
@@ -465,8 +468,8 @@ of the system, however, I am unsure whether or not that would actually work.
 
 At this point you need to decide what commands you want you're user to have
 access too and copy the appropriate binaries into place. You can use the
-'which' command to locate a binary and then copy it into the same directory
-within the jail. The following is an example for moving 'bash' over.
+`which` command to locate a binary and then copy it into the same directory
+within the jail. The following is an example for moving `bash` over.
 
 ```
 [root@localhost]# which bash
@@ -476,7 +479,7 @@ within the jail. The following is an example for moving 'bash' over.
 
 The trickiest part of setting up a jail is the required libraries for the
 allowed executables. Conveniently, all the Linux distributions that I have
-tried come with a tool too determine what libraries are required. "ldd". Here's
+tried come with a tool too determine what libraries are required. `ldd`. Here's
 a little snippet that will give you a run down of the counts for the number of
 times each library is used by a system:
 
@@ -517,4 +520,8 @@ A few references:
 ## LXC Specific
 
 If you want to run sshd in a LXC container you will need to disable
-pam_loginuid.so in /etc/pam.d/sshd by commenting out the appropriate line.
+`pam_loginuid.so` in `/etc/pam.d/sshd` by commenting out the appropriate line.
+
+[1]: ../iptables/
+[2]: ../partitioning/
+

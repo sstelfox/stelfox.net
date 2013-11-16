@@ -2,6 +2,8 @@
 title: Squid Guard
 ---
 
+# Squid Guard
+
 Squid Guard is officially a "URL Rewrite Program". It takes information about
 the requested page coming in and checks it against a series of ACLs,
 blacklists, and whitelists in an order specified by the administrator. The
@@ -10,9 +12,9 @@ hosted site outside of squid).
 
 ## Installation
 
-NOTICE: Don't user the "squidGuard" service, it is incorrectly defined, looking
+Don't use the "squidGuard" service, it is incorrectly defined, looking
 for non-existant files, and is poorly implemented. Call squidGuard directly
-from the squid config (see [[Linux/Squid]]).
+from the squid config (see [Squid][1]).
 
 NOTICE: To use squid guard at all you need to have a web server setup to
 redirect sites that are denied. For this purpose I decided to install apache,
@@ -42,8 +44,7 @@ however they shouldn't differ much between different lists.
 [root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls
 ```
 
-Download a blacklist file, [http://www.shallalist.de/ Shalla List] seems to be
-the defacto/good one.
+Download a blacklist file, [Shalla List][2] seems to be the defacto/good one.
 
 ```
 [root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2>/dev/null
@@ -66,11 +67,11 @@ Now that we've verified the blacklists lets extract them.
 
 ## Configuration
 
-By default, squidGuard tries to store it's logfiles in /var/log/squidGuard,
+By default, squidGuard tries to store it's logfiles in `/var/log/squidGuard`,
 however, since squid starts up squidGuard, squidGuard will be running under the
 squid user. This is important as the squid user won't have permission to
-/var/log/squidGuard. We should switch it too /var/log/squid, and ensure that
-/var/squidGuard/blacklists are owned by squid with the squid group.
+`/var/log/squidGuard`. We should switch it too `/var/log/squid`, and ensure
+that `/var/squidGuard/blacklists` are owned by squid with the squid group.
 
 ```
 # Configure locations for the rest of squidGuard's files
@@ -925,4 +926,7 @@ want to access directly in my whitelist file.
   </body>
 </html>
 ```
+
+[1]: ../squid/
+[2]: http://www.shallalist.de/
 
