@@ -2,17 +2,19 @@
 title: OpenVAS
 ---
 
+# OpenVAS
+
 ## Setup
 
-Install the packages nikto, openvas-scanner, openvas-manager, and
-openvas-client.
+Install the packages `nikto`, `openvas-scanner`, `openvas-manager`, and
+`openvas-client`.
 
-### Scanner
+## Scanner
 
 As root run openvas-mkcert like the following:
 
 ```
-[root@localhost ~]# openvas-mkcert 
+[root@localhost ~]# openvas-mkcert
 -------------------------------------------------------------------------------
                         Creation of the OpenVAS SSL Certificate
 -------------------------------------------------------------------------------
@@ -39,7 +41,7 @@ Certification authority:
    Certificate = /etc/pki/openvas/CA/cacert.pem
    Private key = /etc/pki/openvas/private/CA/cakey.pem
 
-OpenVAS Server : 
+OpenVAS Server :
     Certificate = /etc/pki/openvas/CA/servercert.pem
     Private key = /etc/pki/openvas/private/CA/serverkey.pem
 
@@ -48,7 +50,7 @@ Press [ENTER] to exit
 [root@localhost ~]#
 ```
 
-As root get the NVT feed by running the command "openvas-nvt-sync".
+As root get the NVT feed by running the command `openvas-nvt-sync`.
 
 Create a certificate for the OpenVAS-Manager to connect to the scanner like so:
 
@@ -240,6 +242,7 @@ Really sign? (y/N) y
 Alright now we need to start up the scanner service for the first time. It will
 take a LONG time the first time and a significant amount of time everytime
 there are updates to the NVT feed, though not nearly as long for the updates.
+
 It takes so long that the service script will think that it failed. It HASN'T,
 it's still doing it magic in the background, it's easiest to just watch it go
 with top. When it finally settles down it'll be ready for the next step.
@@ -274,32 +277,32 @@ leave this alone.
 I personally prefer using certificate for authentication against the server.
 Easier than typing in a password every time and more secure in some ways. To
 create a user that authenticates with a certificate you need to use the
-"openvas-mkcert-client" command like so:
+`openvas-mkcert-client` command like so:
 
 ```
-[root@localhost ~]# openvas-mkcert-client 
+[root@localhost ~]# openvas-mkcert-client
 This script will now ask you the relevant information to create the SSL client certificates for OpenVAS.
 
-Client certificates life time in days [365]: 
+Client certificates life time in days [365]:
 Your country (two letter code) [DE]: US
 Your state or province name [none]: Some State
 Your location (e.g. town) [Berlin]: Some City
 Your organization [none]: Example.net
-Your organizational unit [none]: 
+Your organizational unit [none]:
 **********
-We are going to ask you some question for each client certificate. 
+We are going to ask you some question for each client certificate.
 
 If some question has a default answer, you can force an empty answer by entering a single dot '.'
 
 *********
 OpenVAS username for the new user: <username>
-Client certificates life time in days [365]: 
-Country (two letter code) [US]: 
-State or province name [Some State]: 
-Location (e.g. town) [Some City]: 
-Organization [Example.net]: 
-Organization unit []: 
-e-Mail []: 
+Client certificates life time in days [365]:
+Country (two letter code) [US]:
+State or province name [Some State]:
+Location (e.g. town) [Some City]:
+Organization [Example.net]:
+Organization unit []:
+e-Mail []:
 Generating RSA private key, 1024 bit long modulus
 ....++++++
 ............................................++++++
@@ -471,8 +474,7 @@ echo "Step 1: Checking OpenVAS Scanner ... "
 
 echo "Checking for old OpenVAS Scanner <= 2.0 ..." >> $LOG
 openvasd -V >> $LOG 2>&1
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]: then
   log_and_print "ERROR: Old version of OpenVAS Scanner detected."
   log_and_print "FIX: Please remove the installation of the old OpenVAS Scanner (openvasd)."
   check_failed
@@ -481,8 +483,7 @@ echo "" >> $LOG
 
 echo "Checking presence of OpenVAS Scanner ..." >> $LOG
 openvassd --version >> $LOG 2>&1
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
   log_and_print "ERROR: No OpenVAS Scanner (openvassd) found."
   log_and_print "FIX: Please install OpenVAS Scanner."
   check_failed
@@ -493,8 +494,7 @@ echo "Checking OpenVAS Scanner version ..." >> $LOG
 
 VERSION=`openvassd --version | head -1 | sed -e "s/OpenVAS Scanner //"`
 
-if [ `echo $VERSION | grep "^$SCANNER_MAJOR\.$SCANNER_MINOR" | wc -l` -ne "1" ]
-then
+if [ `echo $VERSION | grep "^$SCANNER_MAJOR\.$SCANNER_MINOR" | wc -l` -ne "1" ]; then
   log_and_print "ERROR: OpenVAS Scanner too old or too new: $VERSION"
   log_and_print "FIX: Please install OpenVAS Scanner $SCANNER_MAJOR.$SCANNER_MINOR."
   check_failed
@@ -507,8 +507,7 @@ openvassd -s >> $LOG
 
 echo "Checking OpenVAS Scanner CA cert ..." >> $LOG
 CAFILE=`openvassd -s | grep ca_file | sed -e "s/^ca_file = //"`
-if [ ! -e $CAFILE ]
-then
+if [ ! -e $CAFILE ]; then
   log_and_print "ERROR: No CA certificate file of OpenVAS Scanner found."
   log_and_print "FIX: Run 'openvas-mkcert'."
   check_failed
@@ -518,24 +517,24 @@ echo "" >> $LOG
 log_and_print "OK: OpenVAS Scanner CA Certificate is present as $CAFILE."
 
 echo "Checking NVT collection ..." >> $LOG
+
 PLUGINSFOLDER=`openvassd -s | grep plugins_folder | sed -e "s/^plugins_folder = //"`
-if [ ! -d $PLUGINSFOLDER ]
-then
+if [ ! -d $PLUGINSFOLDER ]; then
   log_and_print "ERROR: Directory containing the NVT collection not found."
   log_and_print "FIX: Run a synchronization script like openvas-nvt-sync or greenbone-nvt-sync."
   check_failed
 fi
+
 OLDPLUGINSFOLDER=`echo "$PLUGINSFOLDER" | grep -q -v "/var/" 2>&1`
-if [ $? -eq 0 ]
-then
+if [ $? -eq 0 ]: then
   CONFFILE=`openvassd -s | grep config_file | sed -e "s/^config_file = //"`
   log_and_print "ERROR: Your OpenVAS Scanner configuration seems to be from a pre-OpenVAS-4 installation and contains non-FHS compliant paths."
   log_and_print "FIX: Delete your OpenVAS Scanner Configuration file ($CONFFILE)."
   check_failed
 fi
+
 NVTCOUNT=`find $PLUGINSFOLDER -name "*nasl" | wc -l`
-if [ $NVTCOUNT -lt 10 ]
-then
+if [ $NVTCOUNT -lt 10 ]; then
   log_and_print "ERROR: The NVT collection is very small."
   log_and_print "FIX: Run a synchronization script like openvas-nvt-sync or greenbone-nvt-sync."
   check_failed
@@ -546,19 +545,20 @@ log_and_print "OK: NVT collection in $PLUGINSFOLDER contains $NVTCOUNT NVTs."
 
 echo "Checking status of signature checking in OpenVAS Scanner ..." >> $LOG
 NOSIGCHECK=`openvassd -s | grep nasl_no_signature_check | sed -e "s/^nasl_no_signature_check = //"`
-if [ $NOSIGCHECK != "no" ]
-then
+
+if [ $NOSIGCHECK != "no" ]; then
   log_and_print "WARNING: Signature checking of NVTs is not enabled in OpenVAS Scanner."
   log_and_print "SUGGEST: Enable signature checking (see http://www.openvas.org/trusted-nvts.html)."
 else
   log_and_print "OK: Signature checking of NVTs is enabled in OpenVAS Scanner."
 fi
+
 echo "" >> $LOG
 echo "Step 2: Checking OpenVAS Manager ... "
 echo "Checking presence of OpenVAS Manager ..." >> $LOG
 openvasmd --version >> $LOG 2>&1
-if [ $? -ne 0 ]
-then
+
+if [ $? -ne 0 ]; then
   log_and_print "ERROR: No OpenVAS Manager (openvasmd) found."
   log_and_print "FIX: Please install OpenVAS Manager."
   check_failed
@@ -567,8 +567,7 @@ echo "" >> $LOG
 
 VERSION=`openvasmd --version | head -1 | sed -e "s/OpenVAS Manager //"`
 
-if [ `echo $VERSION | grep "^$MANAGER_MAJOR\.$MANAGER_MINOR" | wc -l` -ne "1" ]
-then
+if [ `echo $VERSION | grep "^$MANAGER_MAJOR\.$MANAGER_MINOR" | wc -l` -ne "1" ]; then
   log_and_print "ERROR: OpenVAS Manager too old or too new: $VERSION"
   log_and_print "FIX: Please install OpenVAS Manager $MANAGER_MAJOR.$MANAGER_MINOR."
   check_failed
@@ -580,8 +579,8 @@ log_and_print "OK: OpenVAS Manager is present in version $VERSION."
 echo "Checking OpenVAS Manager client certificate ..." >> $LOG
 CERTDIR=`dirname $CAFILE`
 CLIENTCERTFILE="$CERTDIR/clientcert.pem"
-if [ ! -e $CLIENTCERTFILE ]
-then
+
+if [ ! -e $CLIENTCERTFILE ]: then
   log_and_print "ERROR: No client certificate file of OpenVAS Manager found."
   log_and_print "FIX: Run 'openvas-mkcert-client -n om -i'"
   check_failed
@@ -594,8 +593,8 @@ echo "Checking OpenVAS Manager database ..." >> $LOG
 # Guess openvas state dir from $PLUGINSFOLDER
 STATEDIR=`dirname $PLUGINSFOLDER`
 TASKSDB="$STATEDIR/mgr/tasks.db"
-if [ ! -e $TASKSDB ]
-then
+
+if [ ! -e $TASKSDB ]; then
   log_and_print "ERROR: No OpenVAS Manager database found. (Tried: $TASKSDB)"
   log_and_print "FIX: Run 'openvasmd --rebuild' while OpenVAS Scanner is running."
   check_failed
@@ -606,8 +605,7 @@ log_and_print "OK: OpenVAS Manager database found in $TASKSDB."
 
 echo "Checking access rights of OpenVAS Manager database ..." >> $LOG
 TASKSDBPERMS=`stat -c "%a" "$TASKSDB"`
-if [ "$TASKSDBPERMS" != "600" ]
-then
+if [ "$TASKSDBPERMS" != "600" ]; then
   log_and_print "ERROR: The access rights of the OpenVAS Manager database are incorrect."
   log_and_print "FIX: Run 'chmod 600 $TASKSDB'."
   check_failed
@@ -618,8 +616,7 @@ log_and_print "OK: Access rights for the OpenVAS Manager database are correct."
 
 echo "Checking sqlite3 presence ..." >> $LOG
 SQLITE3=`type sqlite3 2> /dev/null`
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]: then
   log_and_print "WARNING: Could not find sqlite3 binary, extended manager checks of the OpenVAS Manager installation are disabled."
   log_and_print "SUGGEST: Install sqlite3."
   HAVE_SQLITE=0
@@ -629,40 +626,41 @@ else
 fi
 echo "" >> $LOG
 
-if [ $HAVE_SQLITE -eq 1 ]
-then
+if [ $HAVE_SQLITE -eq 1 ]; then
   echo "Checking OpenVAS Manager database revision ..." >> $LOG
   TASKSDBREV=`sqlite3 $TASKSDB "select value from meta where name='database_version';"`
-  if [ -z $TASKSDBREV ]
-  then
+
+  if [ -z $TASKSDBREV ]; then
     log_and_print "ERROR: Could not determine database revision, database corrupt or in invalid format."
     log_and_print "FIX: Delete database at $TASKSDB and rebuild it."
     check_failed
   else
     log_and_print "OK: OpenVAS Manager database is at revision $TASKSDBREV."
   fi
+
   echo "Checking database revision expected by OpenVAS Manager ..." >> $LOG
   MANAGERDBREV=`openvasmd --version | grep "Manager DB revision" | sed -e "s/.*\ //"`
-  if [ -z $MANAGERDBREV ]
-  then
+
+  if [ -z $MANAGERDBREV ]; then
     log_and_print "ERROR: Could not determine database revision expected by OpenVAS Manager."
     log_and_print "FIX: Ensure OpenVAS Manager is installed correctly."
     check_failed
   else
     log_and_print "OK: OpenVAS Manager expects database at revision $MANAGERDBREV."
   fi
-  if [ $TASKSDBREV -lt $MANAGERDBREV ]
-  then
+
+  if [ $TASKSDBREV -lt $MANAGERDBREV ]; then
     log_and_print "ERROR: Database schema is out of date."
     log_and_print "FIX: Run 'openvasmd --migrate'."
     check_failed
   else
     log_and_print "OK: Database schema is up to date."
   fi
+
   echo "Checking OpenVAS Manager database (NVT data) ..." >> $LOG
   DBNVTCOUNT=`sqlite3 $TASKSDB "select count(*) from nvts;"`
-  if [ $DBNVTCOUNT -lt 20000 ]
-  then
+
+  if [ $DBNVTCOUNT -lt 20000 ]; then
     log_and_print "ERROR: The number of NVTs in the OpenVAS Manager database is too low."
     log_and_print "FIX: Make sure OpenVAS Scanner is running with an up-to-date NVT collection and run 'openvasmd --rebuild'."
     check_failed
@@ -673,19 +671,20 @@ fi
 
 echo "Checking xsltproc presence ..." >> $LOG
 XSLTPROC=`type xsltproc 2> /dev/null`
-if [ $? -ne 0 ]
-then
+
+if [ $? -ne 0 ]; then
   log_and_print "WARNING: Could not find xsltproc binary, most report formats will not work."
   log_and_print "SUGGEST: Install xsltproc."
 else
   log_and_print "OK: xsltproc found."
 fi
+
 echo "" >> $LOG
 echo "Step 3: Checking OpenVAS Administrator ... "
 echo "Checking presence of OpenVAS Administrator ..." >> $LOG
 openvasad --version >> $LOG 2>&1
-if [ $? -ne 0 ]
-then
+
+if [ $? -ne 0 ]; then
   log_and_print "ERROR: No OpenVAS Administrator (openvasad) found."
   log_and_print "FIX: Please install OpenVAS Administrator."
   check_failed
@@ -694,8 +693,7 @@ echo "" >> $LOG
 
 VERSION=`openvasad --version | head -1 | sed -e "s/OpenVAS Administrator //"`
 
-if [ `echo $VERSION | grep "^$ADMINISTRATOR_MAJOR\.$ADMINISTRATOR_MINOR" | wc -l` -ne "1" ]
-then
+if [ `echo $VERSION | grep "^$ADMINISTRATOR_MAJOR\.$ADMINISTRATOR_MINOR" | wc -l` -ne "1" ]; then
   log_and_print "ERROR: OpenVAS Administrator too old or too new: $VERSION"
   log_and_print "FIX: Please install OpenVAS Administrator $ADMINISTRATOR_MAJOR.$ADMINISTRATOR_MINOR."
   check_failed
@@ -706,8 +704,7 @@ log_and_print "OK: OpenVAS Administrator is present in version $VERSION."
 
 echo "Checking if users exist ..." >> $LOG
 USERCOUNT=`openvasad -c "list_users" | sed -e "/^$/d" | wc -l`
-if [ $USERCOUNT -eq 0 ]
-then
+if [ $USERCOUNT -eq 0 ]; then
   log_and_print "ERROR: No users found. You need to create at least one user to log in."
   log_and_print "FIX: Create a user using 'openvasad -c 'add_user' -n <name>'"
   check_failed
@@ -718,20 +715,20 @@ echo "" >> $LOG
 
 echo "Checking if at least one admin user exists ..." >> $LOG
 ADMINEXISTS=`ls $STATEDIR/users/*/isadmin 2> /dev/null`
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
   log_and_print "ERROR: No admin user found. You need to create at least one admin user to log in."
   log_and_print "FIX: Create a user using 'openvasad -c 'add_user' -n <name> -r Admin'"
   check_failed
 else
   log_and_print "OK: At least one admin user exists."
 fi
+
 echo "" >> $LOG
 echo "Step 4: Checking Greenbone Security Assistant (GSA) ... "
 echo "Checking presence of Greenbone Security Assistant ..." >> $LOG
 gsad --version >> $LOG 2>&1
-if [ $? -ne 0 ]
-then
+
+if [ $? -ne 0 ]; then
   log_and_print "ERROR: No Greenbone Security Assistant (gsad) found."
   log_and_print "FIX: Please install Greenbone Security Assistant."
   check_failed
@@ -740,8 +737,7 @@ echo "" >> $LOG
 
 VERSION=`gsad --version | head -1 | sed -e "s/Greenbone Security Assistant //"`
 
-if [ `echo $VERSION | grep "^$GSA_MAJOR\.$GSA_MINOR" | wc -l` -ne "1" ]
-then
+if [ `echo $VERSION | grep "^$GSA_MAJOR\.$GSA_MINOR" | wc -l` -ne "1" ]; then
   log_and_print "ERROR: Greenbone Security Assistant too old or too new: $VERSION"
   log_and_print "FIX: Please install Greenbone Security Assistant $GSA_MAJOR.$GSA_MINOR."
   check_failed
@@ -752,12 +748,11 @@ log_and_print "OK: Greenbone Security Assistant is present in version $VERSION."
 
 echo "Step 5: Checking OpenVAS CLI ... "
 
-if [ "$MODE" != "server" ]
-then
+if [ "$MODE" != "server" ]; then
   echo "Checking presence of OpenVAS CLI ..." >> $LOG
   omp --version >> $LOG 2>&1
-  if [ $? -ne 0 ]
-  then
+
+  if [ $? -ne 0 ]; then
     log_and_print "ERROR: No OpenVAS CLI (omp) found."
     log_and_print "FIX: Please install OpenVAS CLI."
     check_failed
@@ -766,8 +761,7 @@ then
 
   VERSION=`omp --version | head -1 | sed -e "s/OMP Command Line Interface //"`
 
-  if [ `echo $VERSION | grep "^$CLI_MAJOR\.$CLI_MINOR" | wc -l` -ne "1" ]
-  then
+  if [ `echo $VERSION | grep "^$CLI_MAJOR\.$CLI_MINOR" | wc -l` -ne "1" ]; then
     log_and_print "ERROR: OpenVAS CLI too old or too new: $VERSION"
     log_and_print "FIX: Please install OpenVAS CLI $CLI_MAJOR.$CLI_MINOR."
     check_failed
@@ -781,12 +775,11 @@ fi
 
 echo "Step 6: Checking Greenbone Security Desktop (GSD) ... "
 
-if [ "$MODE" != "server" ]
-then
+if [ "$MODE" != "server" ]; then
   echo "Checking presence of Greenbone Security Desktop ..." >> $LOG
   DISPLAY=fake gsd --version >> $LOG 2>&1
-  if [ $? -ne 0 ]
-  then
+
+  if [ $? -ne 0 ]; then
     log_and_print "ERROR: No Greenbone Security Desktop (gsd) found or too old."
     log_and_print "FIX: Please install Greenbone Security Desktop 1.1.0."
     check_failed
@@ -795,11 +788,9 @@ then
 
   VERSION=`gsd --version | head -1 | sed -e "s/Greenbone Security Desktop //"`
 
-  if [ `echo $VERSION | grep "^$GSD_MAJOR\.$GSD_MINOR" | wc -l` -ne "1" ]
-  then
+  if [ `echo $VERSION | grep "^$GSD_MAJOR\.$GSD_MINOR" | wc -l` -ne "1" ]; then
     # a special exception rule for v4 where also another release is OK
-    if [ $VER -eq "4" -a `echo $VERSION | grep "^1\.1" | wc -l` -ne "1" ]
-    then
+    if [ $VER -eq "4" -a `echo $VERSION | grep "^1\.1" | wc -l` -ne "1" ]; then
       log_and_print "ERROR: Greenbone Security Desktop too old or too new: $VERSION"
       log_and_print "FIX: Please install Greenbone Security Desktop $GSD_MAJOR.$GSD_MINOR."
       check_failed
@@ -814,9 +805,9 @@ fi
 
 echo "Step 7: Checking if OpenVAS services are up and running ... "
 echo "Checking netstat presence ..." >> $LOG
+
 NETSTAT=`type netstat 2> /dev/null`
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
   log_and_print "WARNING: Could not find netstat binary, checks of the OpenVAS services are disabled."
   log_and_print "SUGGEST: Install netstat."
   HAVE_NETSTAT=0
@@ -826,8 +817,7 @@ else
 fi
 echo "" >> $LOG
 
-if [ $HAVE_NETSTAT -eq 1 ]
-then
+if [ $HAVE_NETSTAT -eq 1 ]; then
   netstat -A inet -ntlp 2> /dev/null >> $LOG
   OPENVASSD_HOST=`netstat -A inet -ntlp 2> /dev/null | grep openvassd | awk -F\  '{print $4}' | awk -F: '{print $1}'`
   OPENVASSD_PORT=`netstat -A inet -ntlp 2> /dev/null | grep openvassd | awk -F\  '{print $4}' | awk -F: '{print $2}'`
@@ -843,6 +833,7 @@ then
     "127.0.0.1") log_and_print "OK: OpenVAS Scanner is running and listening only on the local interface." ;;
     "") log_and_print "ERROR: OpenVAS Scanner is NOT running!" ; log_and_print "FIX: Start OpenVAS Scanner (openvassd)." ; OPENVASSD_PORT=-1 ;;
   esac
+
   case $OPENVASSD_PORT in
     -1) ;;
     9391) log_and_print "OK: OpenVAS Scanner is listening on port 9391, which is the default port." ;;
@@ -856,11 +847,17 @@ then
                  log_and_print "SUGGEST: Ensure that OpenVAS Manager listens on all interfaces." ;;
     "") log_and_print "ERROR: OpenVAS Manager is NOT running!" ; log_and_print "FIX: Start OpenVAS Manager (openvasmd)." ; OPENVASMD_PORT=-1 ;;
   esac
+
   case $OPENVASMD_PORT in
-    -1) ;;
-    9390) log_and_print "OK: OpenVAS Manager is listening on port 9390, which is the default port." ;;
-    *) log_and_print "WARNING: OpenVAS Manager is listening on port $OPENVASMD_PORT, which is NOT the default port!"
-       log_and_print "SUGGEST: Ensure OpenVAS Manager is listening on port 9390." ;;
+    -1)
+      ;;
+    9390)
+      log_and_print "OK: OpenVAS Manager is listening on port 9390, which is the default port."
+      ;;
+    *)
+      log_and_print "WARNING: OpenVAS Manager is listening on port $OPENVASMD_PORT, which is NOT the default port!"
+      log_and_print "SUGGEST: Ensure OpenVAS Manager is listening on port 9390."
+      ;;
   esac
 
   case "$OPENVASAD_HOST" in
@@ -868,6 +865,7 @@ then
     "127.0.0.1") log_and_print "OK: OpenVAS Administrator is running and listening only on the local interface." ;;
     "") log_and_print "ERROR: OpenVAS Administrator is NOT running!" ; log_and_print "FIX: Start OpenVAS Administrator (openvasad)." ; OPENVASAD_PORT=-1 ;;
   esac
+
   case $OPENVASAD_PORT in
     -1) ;;
     9393) log_and_print "OK: OpenVAS Administrator is listening on port 9393, which is the default port." ;;
@@ -881,6 +879,7 @@ then
                  log_and_print "SUGGEST: Ensure that Greenbone Security Assistant listens on all interfaces." ;;
     "") log_and_print "ERROR: Greenbone Security Assistant is NOT running!" ; log_and_print "FIX: Start Greenbone Security Assistant (gsad)." ; GSAD_PORT=-1 ;;
   esac
+
   case $GSAD_PORT in
     -1) ;;
     80|443|9392) log_and_print "OK: Greenbone Security Assistant is listening on port $GSAD_PORT, which is the default port." ;;
@@ -888,37 +887,34 @@ then
        log_and_print "SUGGEST: Ensure Greenbone Security Assistant is listening on one of the following ports: 80, 443, 9392." ;;
   esac
 
-  if [ $OPENVASSD_PORT -eq -1 ] || [ $OPENVASMD_PORT -eq -1 ] || [ $OPENVASAD_PORT -eq -1 ] || [ $GSAD_PORT -eq -1 ]
-  then
+  if [ $OPENVASSD_PORT -eq -1 ] || [ $OPENVASMD_PORT -eq -1 ] || [ $OPENVASAD_PORT -eq -1 ] || [ $GSAD_PORT -eq -1 ]; then
     check_failed
   fi
-
 fi
 
 echo "Step 8: Checking nmap installation ..."
 echo "Checking presence of nmap ..." >> $LOG
 VERSION=`nmap --version | awk '/Nmap version/ { print $3 }'`
 
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
   log_and_print "WARNING: No nmap installation found."
   log_and_print "SUGGEST: You should install nmap for comprehensive network scanning (see http://nmap.org)"
 else
-  if [ `echo $VERSION | grep "5\.51" | wc -l` -ne "1" ]
-  then
+  if [ `echo $VERSION | grep "5\.51" | wc -l` -ne "1" ]; then
     log_and_print "WARNING: Your version of nmap is not fully supported: $VERSION"
     log_and_print "SUGGEST: You should install nmap 5.51."
   else
     log_and_print "OK: nmap is present in version $VERSION."
   fi
 fi
+
 echo "" >> $LOG
 
 echo "Step 9: Checking presence of optional tools ..."
 echo "Checking presence of pdflatex ..." >> $LOG
 PDFLATEX=`type pdflatex 2> /dev/null`
-if [ $? -ne 0 ]
-then
+
+if [ $? -ne 0 ]; then
   log_and_print "WARNING: Could not find pdflatex binary, the PDF report format will not work."
   log_and_print "SUGGEST: Install pdflatex."
   HAVE_PDFLATEX=0
@@ -928,8 +924,7 @@ else
 fi
 echo "" >> $LOG
 
-if [ $HAVE_PDFLATEX -eq 1 ]
-then
+if [ $HAVE_PDFLATEX -eq 1 ]; then
   echo "Checking presence of LaTeX packages required for PDF report generation ..." >> $LOG
   PDFTMPDIR=`mktemp -d -t openvas-check-setup-tmp.XXXXXXXXXX`
   TEXFILE="$PDFTMPDIR/test.tex"
@@ -982,16 +977,16 @@ then
 This is a test of the PDF generation capabilities of your OpenVAS installation. Please ignore.
 \end{document}
 EOT
+
   pdflatex -interaction batchmode -output-directory $PDFTMPDIR $TEXFILE > /dev/null 2>&1
-  if [ ! -f "$PDFTMPDIR/test.pdf" ]
-  then
+  if [ ! -f "$PDFTMPDIR/test.pdf" ]; then
     log_and_print "WARNING: PDF generation failed, most likely due to missing LaTeX packages. The PDF report format will not work."
     log_and_print "SUGGEST: Install required LaTeX packages."
   else
     log_and_print "OK: PDF generation successful. The PDF report format is likely to work."
   fi
-  if [ -f "$PDFTMPDIR/test.log" ]
-  then
+
+  if [ -f "$PDFTMPDIR/test.log" ]; then
     cat $PDFTMPDIR/test.log >> $LOG
   fi
   rm -rf $PDFTMPDIR
@@ -999,8 +994,7 @@ fi
 
 echo "Checking presence of ssh-keygen ..." >> $LOG
 SSHKEYGEN=`type ssh-keygen 2> /dev/null`
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
   log_and_print "WARNING: Could not find ssh-keygen binary, LSC credential generation for GNU/Linux targets will not work."
   log_and_print "SUGGEST: Install ssh-keygen."
   HAVE_SSHKEYGEN=0
@@ -1010,12 +1004,10 @@ else
 fi
 echo "" >> $LOG
 
-if [ $HAVE_SSHKEYGEN -eq 1 ]
-then
+if [ $HAVE_SSHKEYGEN -eq 1 ]; then
   echo "Checking presence of rpm ..." >> $LOG
   RPM=`type rpm 2> /dev/null`
-  if [ $? -ne 0 ]
-  then
+  if [ $? -ne 0 ]; then
     log_and_print "WARNING: Could not find rpm binary, LSC credential package generation for RPM and DEB based targets will not work."
     log_and_print "SUGGEST: Install rpm."
     HAVE_RPM=0
@@ -1025,12 +1017,11 @@ then
   fi
   echo "" >> $LOG
 
-  if [ $HAVE_RPM -eq 1 ]
-  then
+  if [ $HAVE_RPM -eq 1 ]; then
     echo "Checking presence of alien ..." >> $LOG
     ALIEN=`type alien 2> /dev/null`
-    if [ $? -ne 0 ]
-    then
+
+    if [ $? -ne 0 ]; then
       log_and_print "WARNING: Could not find alien binary, LSC credential package generation for DEB based targets will not work."
       log_and_print "SUGGEST: Install alien."
       HAVE_ALIEN=0
@@ -1044,8 +1035,7 @@ fi
 
 echo "Checking presence of nsis ..." >> $LOG
 NSIS=`type makensis 2> /dev/null`
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
   log_and_print "WARNING: Could not find makensis binary, LSC credential package generation for Microsoft Windows targets will not work."
   log_and_print "SUGGEST: Install nsis."
   HAVE_NSIS=0
@@ -1107,9 +1097,10 @@ settings. Adjust the target selection and make scan specific adjustments then
 Launch!
 
 ## Configuration
+
 ### /etc/openvas/openvassd.conf
 
-```
+```ini
 # Configuration file of the OpenVAS Security Scanner
 
 # Every line starting with a '#' is a comment
@@ -1204,7 +1195,6 @@ kb_dont_replay_attacks = no
 kb_dont_replay_denials = no
 kb_max_age = 864000
 #--- end of the KB section
-
 
 # If this option is set, OpenVAS will not scan a network incrementally
 # (10.0.0.1, then 10.0.0.2, 10.0.0.3 and so on..) but will attempt to
