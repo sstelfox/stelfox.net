@@ -2,12 +2,14 @@
 title: Festival
 ---
 
+# Festival
+
 Festival is packaged in a way on Fedora in a standalone mode, it does not come
 with an init script to startup it's server on boot so the following is an
 adaptation of another one custom written to handle this. It's primarily used in
 Fedora for Gnome's usability support which doesn't run the server as a daemon.
 
-Listening to the samples of the stock voices, I've found that 'ked' sounds the
+Listening to the samples of the stock voices, I've found that `ked` sounds the
 best in my opinion and at least until we here try and make our own diphone
 database this is the voice that I'm going to use.
 
@@ -18,12 +20,14 @@ Packages:
 * festvox-ked-diphone
 
 In Fedora the voices are stored in the directory
-'/usr/share/festival/lib/voices/*/' directories. These are the voice that you
+`/usr/share/festival/lib/voices/*/` directories. These are the voice that you
 have to choose from when configuring festival. The configuration files live in
-'/etc/festival/'. We're only interested in '/etc/festival/festival.scm' which
-doesn't exist by default. The following file has the 'ked' voice set to be the
-default. I left the other voice in there commented out in case I wanted to
-switch back some other time.
+`/etc/festival/`.
+
+We're only interested in `/etc/festival/festival.scm` which doesn't exist by
+default. The following file has the `ked` voice set to be the default. I left
+the other voice in there commented out in case I wanted to switch back some
+other time.
 
 ```
 (defvar server_home ".")

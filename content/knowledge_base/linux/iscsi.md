@@ -2,8 +2,10 @@
 title: iSCSI
 ---
 
-This is the client configuration for iSCSI, please refer to [[Linux/iSCSId]]
-for the server portion.
+# iSCSI
+
+This is the client configuration for iSCSI, please refer to [iSCSId][1] for the
+server portion.
 
 ## Configuration
 
@@ -60,4 +62,6 @@ node.session.iscsi.FastAbort = Yes
 [root@localhost ~]# service iscsid start
 [root@localhost ~]# iscsiadm --mode discovery --type sendtargets --portal <service_ip>
 ```
+
+[1]: ../iscsid/
 
