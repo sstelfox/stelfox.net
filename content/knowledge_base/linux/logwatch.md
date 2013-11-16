@@ -2,6 +2,8 @@
 title: Logwatch
 ---
 
+# Logwatch
+
 ## Configuration
 
 ### /etc/logwatch/conf/logwatch.conf

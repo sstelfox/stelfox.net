@@ -2,6 +2,8 @@
 title: Netdisco
 ---
 
+# Netdisco
+
 ## Notes
 
 IPTables gets stopped before running the netdisco configuration utility as it

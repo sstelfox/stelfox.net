@@ -2,6 +2,8 @@
 title: Data Recovery
 ---
 
+# Data Recovery
+
 ## Recovering Data from Swap
 
 Sometimes useful bits of information can be recovered from swap. Whether it's

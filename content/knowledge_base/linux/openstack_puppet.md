@@ -2,4 +2,6 @@
 title: Openstack Puppet
 ---
 
-https://github.com/stackforge/puppet-openstack
+# Openstack Puppet
+
+* https://github.com/stackforge/puppet-openstack
