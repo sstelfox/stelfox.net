@@ -2,16 +2,18 @@
 title: PAM
 ---
 
+# PAM
+
 ## Overview
 
-/etc/pam.d/ directory contains the PAM configuration files for each PAM-aware
+`/etc/pam.d/` directory contains the PAM configuration files for each PAM-aware
 application. Each pam aware configuration file has lines in the format of:
 
 ```
 <module interface> <control flag> <module> <module arguments>
 ```
 
-### Module Interfaces
+## Module Interfaces
 
 There are only four module interfaces:
 
@@ -29,7 +31,7 @@ Module interface directives can be 'stacked' so that multiple modules are used
 together for one purpose. The order of these directives. Commented out lines
 start with '#'.
 
-### Control flags
+## Control flags
 
 * include - The module name that is provided will not load a module, but rather
   include another pam configuration file at this point in the config.
@@ -46,10 +48,10 @@ start with '#'.
   required have failed, then no other results are required and the request
   succeeds.
 
-### Module
+## Module
 
-Available modules can be found in /lib/security or /lib64/security depending on
-the system architecture.
+Available modules can be found in `/lib/security` or `/lib64/security`
+depending on the system architecture.
 
 ### Module Arguments
 
@@ -63,31 +65,31 @@ account [default=bad success=ok user_unknown=ignore] pam_krb5.so
 
 ## pam_cracklib
 
-pam_cracklib allows for quick quality control settings of passwords. It allows
-minimum requirements of the number of different types of characters that need
-to be used in a password before it can be used. It also checks the password
-against a dictionary.
+`pam_cracklib` allows for quick quality control settings of passwords. It
+allows minimum requirements of the number of different types of characters that
+need to be used in a password before it can be used. It also checks the
+password against a dictionary.
 
 By default it checks against a dictionary but that really isn't enough for good
 password security. Further password control can be accomplished using
-pam_passwdqc.
+`pam_passwdqc`.
 
 Default:
 
 ```
-password    requisite     pam_cracklib.so try_first_pass retry=3 type=
+password  requisite  pam_cracklib.so try_first_pass retry=3 type=
 ```
 
 Recommended (require one of each type, minimum length 14):
 
 ```
-password    requisite     pam_cracklib.so try_first_pass retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1
+password  requisite  pam_cracklib.so try_first_pass retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1
 ```
 
 Other (credit based):
 
 ```
-password    requisite     pam_cracklib.so try_first_pass retry=3 minlen=22 dcredit=2 ocredit=4
+password  requisite  pam_cracklib.so try_first_pass retry=3 minlen=22 dcredit=2 ocredit=4
 ```
 
 The credit based system requires a bit of explaining, it requires a 22
@@ -97,13 +99,13 @@ password which isn't secure...
 
 ## pam_passwdqc
 
-pam_passwdqc replaces pam_cracklib in checking the quality of the password. To
-use it you need to comment out pam_cracklib in /etc/pam.d/system-auth.
+`pam_passwdqc` replaces `pam_cracklib` in checking the quality of the password.
+To use it you need to comment out `pam_cracklib` in `/etc/pam.d/system-auth`.
 
-You'll need to add this line to the /etc/pam.d/system-auth:
+You'll need to add this line to the `/etc/pam.d/system-auth`:
 
 ```
-password    requisite     pam_passwdqc.so retry=3 min=disabled,disabled,22,16,12 passphrase=4 similar=deny enforce=users
+password  requisite  pam_passwdqc.so retry=3 min=disabled,disabled,22,16,12 passphrase=4 similar=deny enforce=users
 ```
 
 What this does is it prevent any passwords with one or two character types.
@@ -116,20 +118,21 @@ passphrase option.
 
 It denies similar passwords as previous ones and only enforces quality control
 for root passwords (since they're sha512 hashes they only have two character
-classes and would thus be denied).
+  classes and would thus be denied).
 
 This is untested but to the best of my knowledge passphrases still need to be
 at least three character classes (since one and two are disabled).
 
 ## pam_tally2
 
-pam_tally2 comes with Fedora's pam package so it will be installed. It's very
+`pam_tally2` comes with Fedora's pam package so it will be installed. It's very
 useful to prevent bruteforce attempts BUT it can also used to lock access out
 to a legitimate user. It is recommended to not turn this on for the entire
 system but just remote login services that use pam (for example SSH).
 
 To use it you need to add the following line to the services pam file. So for
-SSH the file would be /etc/pam.d/sshd. The following is what needs to be added:
+SSH the file would be `/etc/pam.d/sshd`. The following is what needs to be
+added:
 
 ```
 auth    required     pam_tally2.so deny=5 onerr=fail audit silent
@@ -158,7 +161,7 @@ auth     required     pam_deny.so
 
 ### Resetting a User's Account
 
-Information about users password tally can be found in /var/log/tallylog.
+Information about users password tally can be found in `/var/log/tallylog`.
 
 ```
 [root@localhost ~]# /sbin/pam_tally2 --user username --reset
@@ -166,6 +169,6 @@ Information about users password tally can be found in /var/log/tallylog.
 
 ### Automatic Unlocking
 
-Additionally adding "unlock_time=1800". This allows the user to log back in
+Additionally adding `unlock_time=1800`. This allows the user to log back in
 half an hour after the account has been locked.
 

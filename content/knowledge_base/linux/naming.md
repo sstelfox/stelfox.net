@@ -2,6 +2,8 @@
 title: Naming
 ---
 
+# Naming
+
 ## Mythological Naming
 
 Most of my personal machines, servers, and network devices are named after
@@ -75,6 +77,7 @@ an underground chamber in a wood where one thousand of Arthur's men sleep until
 they are needed by Wales.
 
 ### Ethos
+
 ### Iris
 
 In Greek mythology, Iris is the personified goddess of the rainbow. She is
@@ -99,7 +102,9 @@ permission. This is because he holds the key to the gate separating the humans'
 world and the world of the gods. 
 
 ### Logos
+
 ### Pathos
+
 ### Talos
 
 Talos was a gigantic bronze creature, the guardian of the island Crete,

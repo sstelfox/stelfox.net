@@ -2,6 +2,8 @@
 title: GPIO
 ---
 
+# GPIO
+
 I came across this python script that accesses GPIO pins in linux. It's
 potentially very useful so I'm including it here, in it's entirety. I can later
 on reference this for use in my own programs.
@@ -16,52 +18,54 @@ OUTPUT = "OUTPUT"
 INPUT = "INPUT"
 pinList = [] # needed for unexport()
 startTime = time.time() # needed for millis()
-digitalPinDef = { 
-    "P8.3":   38,
-    "P8.4":   39,
-    "P8.5":   34,
-    "P8.6":   35,
-    "P8.11":  45,
-    "P8.12":  44,
-    "P8.14":  26,
-    "P8.15":  47,
-    "P8.16":  46,
-    "P8.17":  27,
-    "P8.18":  65,
-    "P8.20":  63,
-    "P8.21":  62,
-    "P8.22":  37,
-    "P8.23":  36,
-    "P8.24":  33,
-    "P8.25":  32,
-    "P8.26":  61,
-    "P8.27":  86,
-    "P8.28":  88,
-    "P8.29":  87,
-    "P8.30":  89,
-    "P8.39":  76,
-    "P8.40":  77,
-    "P8.41":  74,
-    "P8.42":  75,
-    "P8.43":  72,
-    "P8.44":  73,
-    "P8.45":  70,
-    "P8.46":  71,
-    "P9.12":  60,
-    "P9.15":  48,
-    "P9.23":  49,
-    "P9.25":  117,
-    "P9.27":  115,
-    "P9.42":  7}
+digitalPinDef = {
+  "P8.3":   38,
+  "P8.4":   39,
+  "P8.5":   34,
+  "P8.6":   35,
+  "P8.11":  45,
+  "P8.12":  44,
+  "P8.14":  26,
+  "P8.15":  47,
+  "P8.16":  46,
+  "P8.17":  27,
+  "P8.18":  65,
+  "P8.20":  63,
+  "P8.21":  62,
+  "P8.22":  37,
+  "P8.23":  36,
+  "P8.24":  33,
+  "P8.25":  32,
+  "P8.26":  61,
+  "P8.27":  86,
+  "P8.28":  88,
+  "P8.29":  87,
+  "P8.30":  89,
+  "P8.39":  76,
+  "P8.40":  77,
+  "P8.41":  74,
+  "P8.42":  75,
+  "P8.43":  72,
+  "P8.44":  73,
+  "P8.45":  70,
+  "P8.46":  71,
+  "P9.12":  60,
+  "P9.15":  48,
+  "P9.23":  49,
+  "P9.25":  117,
+  "P9.27":  115,
+  "P9.42":  7
+}
 
 analogPinDef = {
-    "P9.33":  "ain4",
-    "P9.35":  "ain6",
-    "P9.36":  "ain5",
-    "P9.37":  "ain2",
-    "P9.38":  "ain3",
-    "P9.39":  "ain0",
-    "P9.40":  "ain1"}
+  "P9.33":  "ain4",
+  "P9.35":  "ain6",
+  "P9.36":  "ain5",
+  "P9.37":  "ain2",
+  "P9.38":  "ain3",
+  "P9.39":  "ain0",
+  "P9.40":  "ain1"
+}
 
 def pinMode(pin, direction):
   """pinMode(pin, direction) opens (exports)  a pin for use and 

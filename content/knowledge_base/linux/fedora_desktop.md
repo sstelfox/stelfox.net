@@ -2,6 +2,8 @@
 title: Fedora Desktop
 ---
 
+# Fedora Desktop
+
 This page just notes some of the steps broken out about setting up my Fedora
 desktop/laptops (basically anything not acting as a server). It's a good idea
 to reboot the system fresh after performing all of these.
@@ -14,7 +16,7 @@ This was last tested and was working with Fedora 17.
 
 ## Fast and hard updated version
 
-```sh
+```
 sudo yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm -y
 sudo yum localinstall --nogpgcheck http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-stable.noarch.rpm -y
 sudo yum update -y
@@ -34,13 +36,13 @@ $HOME/.dotfiles/install
 
 Edit: $HOME/.dotfiles/system-specific/git-user-info.sh
 
-```sh
+```
 curl https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer | bash -s stable
 ```
 
 Close and reopen your terminal
 
-```sh
+```
 echo -e "bundler\npry" > ~/.rvm/gemsets/global.gems
 
 rvm install ruby-2.0.0-p247
@@ -51,7 +53,7 @@ rvm gemset use global
 gem install bundler pry
 ```
 
-Put the following information in /etc/yum.repos.d/google-chome.repo
+Put the following information in `/etc/yum.repos.d/google-chome.repo`
 
 ```ini
 [google-chrome]
@@ -61,7 +63,7 @@ enabled=1
 gpgcheck=1
 ```
 
-```sh
+```
 sudo yum install google-chrome-stable --nogpgcheck -y
 ```
 
@@ -69,7 +71,7 @@ Open Chrome and install a few plugins available at the following URLs:
 
 * http://redditenhancementsuite.com/download-chrome.html
 
-```sh
+```
 sudo yum install levien-inconsolata-fonts freetype-freeworld -y
 
 gsettings set org.gnome.settings-daemon.plugins.xsettings hinting slight
@@ -92,13 +94,13 @@ settings match:
 * Built-in schemes: XTerm
 * Scrolling -> Scrollback is unlimited
 
-```sh
-sudo yum install virt-manager kvm libvirtd libvirt libvirt-daemon-kvm libvirt-daemon-lxc libvirt-daemon-qemu libvirt-sandbox -y
+```
+sudo yum install virt-manager kvm libvirtd libvirt libvirt-daemon-kvm \
+  libvirt-daemon-lxc libvirt-daemon-qemu libvirt-sandbox -y
 
 sudo systemctl enable libvirtd.service
 sudo systemctl start libvirtd.service
 ```
-
 
 ## Update
 
@@ -110,13 +112,13 @@ sudo yum update -y
 
 ## Supporting TRIM for SSDs
 
-Add "noatime,discard" to every fstab entry of partitions that live on the hard
+Add `noatime,discard` to every fstab entry of partitions that live on the hard
 drive and disable the swap partition.
 
 ## RPM Fusion Repository
 
 The following command needs to be run as root and will install the
-[http://rpmfusion.org/ RPMFusion] free and non-free repositories. 
+[RPMFusion][1] free and non-free repositories.
 
 ```
 yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-stable.noarch.rpm -y
@@ -136,12 +138,13 @@ yum localinstall --nogpgcheck http://rpm.livna.org/livna-release.rpm -y
 yum install libdvdcss -y
 ```
 
-## Install Standard Package Set ##
+## Install Standard Package Set
 
-''Requires RPM Fusion repository''
+Requires RPM Fusion repository
 
 ```
-yum install vlc pidgin gstreamer-plugins-{bad,bad-free,bad-nonfree,good,ugly} tmux vim-enhanced git ruby bash-completion -y
+yum install vlc pidgin gstreamer-plugins-{bad,bad-free,bad-nonfree,good,ugly} \
+  tmux vim-enhanced git ruby bash-completion -y
 ```
 
 ## Generate a new SSH key ##
@@ -161,16 +164,16 @@ git clone git://github.com/sstelfox/dotfiles.git ~/.dotfiles
 ~/.dotfiles/install
 ```
 
-Edit ~/.dotfiles/system-specific/git-user-info.sh to reflect your email and
+Edit `~/.dotfiles/system-specific/git-user-info.sh` to reflect your email and
 name.
 
 ## Install Flash
 
-Please note that as of [[Applications/Google_Chrome]] version 20, you do not
-need to install the unsupported and unupdated version of Adobe flash. Google
-Chrome 20 for linux comes with a secure updated and sandboxed version of flash
-that is fully compatible with Adobe flash. If you need flash for any other
-applications then you'll need to install this.
+Please note that as of [Google Chrome][2] version 20, you do not need to
+install the unsupported and unupdated version of Adobe flash. Google Chrome 20
+for linux comes with a secure updated and sandboxed version of flash that is
+fully compatible with Adobe flash. If you need flash for any other applications
+then you'll need to install this.
 
 ```
 yum localinstall http://linuxdownload.adobe.com/linux/x86_64/adobe-release-x86_64-1.0-1.noarch.rpm -y
@@ -206,10 +209,19 @@ And finally reboot.
 
 ## Optional Post-Install Steps
 
-* Configure [[Applications/Google_Chrome]]
-* Configure [[Applications/Firefox]]
-* Configure [[Applications/Google_Earth]]
-* Configure [[Applications/Pidgin]]
-* Configure [[Applications/Thunderbird]]
-* Setup [[Linux/Arduino]] Development Environment
+* Configure [Google Chrome][2]
+* Configure [Firefox][3]
+* Configure [Google Earth][4]
+* Configure [Pidgin][5]
+* Configure [Thunderbird][6]
+* Setup [Arduino][7] Development Environment
+
+[1]: http://rpmfusion.org/
+[2]: ../../applications/google_chrome/
+[3]: ../../applications/firefox/
+[4]: ../../applications/google_earth/
+[5]: ../../applications/pidgin/
+[6]: ../../applications/thunderbird/
+[7]: ../arduino/
+
 
