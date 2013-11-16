@@ -2,6 +2,8 @@
 title: Nagios
 ---
 
+# Nagios
+
 ```
 yum install nagios nagios-plugins httpd nagios-plugins-load \
   nagios-plugins-users nagios-plugins-http nagios-plugins-ping \
@@ -9,7 +11,9 @@ yum install nagios nagios-plugins httpd nagios-plugins-load \
   nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y
 ```
 
+```
 rm -f /etc/httpd/conf.d/welcome.conf
+```
 
 There is also an undeclared depedency:
 
@@ -22,8 +26,8 @@ htpasswd -c /etc/nagios/passwd nagiosadmin
 ```
 
 Updates are going to be handled by yum exclusively, so the first change is
-adjusting 'check_for_updates=1' to '0', and for good measure
-'bare_update_check=0' to '1' in /etc/nagios/nagios.cfg.
+adjusting `check_for_updates=1` to `0`, and for good measure
+`bare_update_check=0` to `1` in `/etc/nagios/nagios.cfg`.
 
 ```
 systemctl enable httpd.service
@@ -68,5 +72,4 @@ chmod 0640 /etc/nagios/private/resource.cfg /etc/nagios/passwd
 # And restore any selinux attributes on the files
 restorecon -R /etc/nagios
 ```
-
 

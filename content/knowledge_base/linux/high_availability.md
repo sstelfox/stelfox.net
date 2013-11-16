@@ -2,6 +2,8 @@
 title: High Availability
 ---
 
+# High Availability
+
 Packages of interest:
 
 * keepalived
@@ -41,7 +43,7 @@ That didn't work so I rebooted to clear it all out.
 yum install keepalived -y
 ```
 
-Ah ha, Eureka moment. Inside the LXC container I can unmount the /proc/sys
+Ah ha, Eureka moment. Inside the LXC container I can unmount the `/proc/sys`
 overlay as long as I'm root...
 
 ```

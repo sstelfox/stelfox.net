@@ -2,14 +2,16 @@
 title: EZStream
 ---
 
+# EZStream
+
 EZStream is a media streamer and re-encoder that can be used to feed
-[[Linux/Icecast]].
+[Icecast][1].
 
 ## Mounting Content
 
-I have a [[Linux/Samba]] share "Media" setup on the server "samba-srv" that
-holds all my media and allows anonymous read access to the content. You'll need
-to install "cifs-utils" to mount the samba share. To make it available to my
+I have a [Samba][2] share "Media" setup on the server "samba-srv" that holds
+all my media and allows anonymous read access to the content. You'll need to
+install `cifs-utils` to mount the samba share. To make it available to my
 stream server I've performed the following:
 
 ```
@@ -17,12 +19,12 @@ mkdir /media/content
 mount -t cifs -o username=guest //samba-srv/Media /media/content
 ```
 
-The above command could be added to an init script like an rc.local or
-alternatively you can do it right and add it to the [[Linux/fstab]] file to be
-mounted automatically. You'll want to add the following to /etc/fstab:
+The above command could be added to an init script like an `rc.local` or
+alternatively you can do it right and add it to the [fstab][3] file to be
+mounted automatically. You'll want to add the following to `/etc/fstab`:
 
 ```
-//samba-srv/Media        /media/content        cifs        auto,guest,_netdev        0 0
+//samba-srv/Media  /media/content  cifs  auto,guest,_netdev  0 0
 ```
 
 Nice and easy.
@@ -39,43 +41,47 @@ ezstream.xml
 
 ```xml
 <ezstream>
-    <url>http://127.0.0.1:8000/automation.ogg</url>
-    
-    <sourceuser>automation</sourceuser>
-    <sourcepassword>hackme</sourcepassword>
+  <url>http://127.0.0.1:8000/automation.ogg</url>
 
-    <format>VORBIS</format>
+  <sourceuser>automation</sourceuser>
+  <sourcepassword>hackme</sourcepassword>
 
-    <filename>./song_request.rb</filename>
-    <playlist_program>1</playlist_program>
-    
-    <svrinfobitrate>128</svrinfobitrate>
-    <svrinfochannels>2</svrinfochannels>
-    <svrinfosamplerate>44100</svrinfosamplerate>
+  <format>VORBIS</format>
 
-    <metadata_format>@a@ - @t@</metadata_format>
+  <filename>./song_request.rb</filename>
+  <playlist_program>1</playlist_program>
 
-    <reencode>
-        <enable>1</enable>
-        <encdec>
-            <format>FLAC</format>
-            <match>.flac</match>
-            <decode>flac -s -d --force-raw-format --sign=signed --endian=little -o - "@T@"</decode>
-            <encode>Not supported Yet</encode>
-        </encdec>
-        <encdec>
-            <format>MP3</format>
-            <match>.mp3</match>
-            <decode>madplay -b 16 -R 44100 -S -o raw:- "@T@"</decode>
-            <encode>Not supported Yet</encode>
-        </encdec>
-        <encdec>
-            <format>VORBIS</format>
-            <match>.ogg</match>
-            <decode>oggdec -R -b 16 -e 0 -s 1 -o - "@T@"</decode>
-            <encode>oggenc -r -B 16 -C 2 -R 44100 --raw-endianness 0 -q 1.5 -t "@M@" -</encode>
-        </encdec>
-    </reencode>
+  <svrinfobitrate>128</svrinfobitrate>
+  <svrinfochannels>2</svrinfochannels>
+  <svrinfosamplerate>44100</svrinfosamplerate>
+
+  <metadata_format>@a@ - @t@</metadata_format>
+
+  <reencode>
+    <enable>1</enable>
+    <encdec>
+      <format>FLAC</format>
+      <match>.flac</match>
+      <decode>flac -s -d --force-raw-format --sign=signed --endian=little -o - "@T@"</decode>
+      <encode>Not supported Yet</encode>
+    </encdec>
+    <encdec>
+      <format>MP3</format>
+      <match>.mp3</match>
+      <decode>madplay -b 16 -R 44100 -S -o raw:- "@T@"</decode>
+      <encode>Not supported Yet</encode>
+    </encdec>
+    <encdec>
+      <format>VORBIS</format>
+      <match>.ogg</match>
+      <decode>oggdec -R -b 16 -e 0 -s 1 -o - "@T@"</decode>
+      <encode>oggenc -r -B 16 -C 2 -R 44100 --raw-endianness 0 -q 1.5 -t "@M@" -</encode>
+    </encdec>
+  </reencode>
 </ezstream>
 ```
+
+[1]: ../icecast/
+[2]: ../samba/
+[3]: ../fstab/
 
