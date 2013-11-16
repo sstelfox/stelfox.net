@@ -2,6 +2,8 @@
 title: VLAN
 ---
 
+# VLAN
+
 I use a fairly simple scheme to assign VLAN ID's based on the Class C subnet.
 Valid VLAN numbers range from 1 - 1024 (A 10-bit number). Not all of these are
 available for use however.
@@ -27,46 +29,13 @@ and are noted in the reserved section.
 
 The table below lists all the VLANs that are reserved and why.
 
-{| class="wikitable" border="1"
-|-
-!ID
-!Encoded Binary
-!Affected Subnets
-!Description
-|-
-|0
-|0000000000
-|*.*.0.* / 0
-|This is not a real VLAN however I've included it since subnet 0 can only have 3 sub-networks due to this
-|-
-|1
-|0000000001
-|*.*.1.* / 0
-|VLAN 1 is the default VLAN that traffic lives on when not tagged. This can be changed though it is against best practices. It should not be used
-|-
-|1002
-|1111101010
-|*.*.235.* / 3
-|Cisco legacy reserved for: fddi-default
-|-
-|1003
-|1111101011
-|*.*.236.* / 3
-|Cisco legacy reserved for: trcrf-default
-|-
-|1004
-|1111101100
-|*.*.237.* / 3
-|Cisco legacy reserved for: fddinet-default
-|-
-|1005
-|1111101101
-|*.*.238.* / 3
-|Cisco legacy reserved for: trbrf-default
-|-
-|1006-1023
-|1111101101-1111111111
-|*.*.239-255.* / 3
-|Not actually available on Cisco switches
-|}
+| ID        | Encoded Binary        | Affected Subnets  | Description                                                                                                                                      |
+| --------- | --------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 0         | 0000000000            | *.*.0.* / 0       | This is not a real VLAN however I've included it since subnet 0 can only have 3 sub-networks due to this                                         |
+| 1         | 0000000001            | *.*.1.* / 0       | VLAN 1 is the default VLAN that traffic lives on when not tagged. This can be changed though it is against best practices. It should not be used |
+| 1002      | 1111101010            | *.*.235.* / 3     | Cisco legacy reserved for: fddi-default                                                                                                          |
+| 1003      | 1111101011            | *.*.236.* / 3     | Cisco legacy reserved for: trcrf-default                                                                                                         |
+| 1004      | 1111101100            | *.*.237.* / 3     | Cisco legacy reserved for: fddinet-default                                                                                                       |
+| 1005      | 1111101101            | *.*.238.* / 3     | Cisco legacy reserved for: trbrf-default                                                                                                         |
+| 1006-1023 | 1111101101-1111111111 | *.*.239-255.* / 3 | Not actually available on Cisco switches                                                                                                         |
 
