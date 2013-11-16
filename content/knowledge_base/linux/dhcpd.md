@@ -2,6 +2,8 @@
 title: DHCPd
 ---
 
+# DHCPd
+
 ## Firewall Adjustments
 
 ```
@@ -10,6 +12,7 @@ title: DHCPd
 ```
 
 ## Configuration
+
 ### /etc/dhcp/dhcpd.conf
 
 ```

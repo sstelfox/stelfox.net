@@ -7,14 +7,14 @@ title: Trim
 ## Configuring
 
 This page is referring to TRIM support for SSDs. To enable it add
-"noatime,discard" to the options on all of the fstab partition entries that
+`noatime,discard` to the options on all of the fstab partition entries that
 live on the drive. Be sure to disable any swap partitions that live on that
 drive as well.
 
 ### Note on Encrypted Drives
 
 Turning TRIM support on for an encrypted hard drive will not actually do
-anything. "discard" is a file system level option and full disk encryption
+anything. `discard` is a file system level option and full disk encryption
 lives below that. It makes sense that it doesn't work, writing a sector full of
 0s to an encrypted partition will result in a sector of encrypted 0s which will
 look more or less like random garbage.
@@ -22,9 +22,10 @@ look more or less like random garbage.
 There is a trick to allow this to work but I'm not will to go that route due to
 the security implications of allowing attackers to see where the data lives on
 my hard drive and where it doesn't, but for completeness, I'm documenting
-(untested) what needs to be done to enable this. You'll need to replace
-<your_device> with the DM mapper crypted partition such as
-`/dev/mapper/vg_desktop-lv_root`. You'll want to do this for all of the
+(untested) what needs to be done to enable this.
+
+You'll need to replace <your_device> with the DM mapper crypted partition such
+as `/dev/mapper/vg_desktop-lv_root`. You'll want to do this for all of the
 encrypted partitions on the drive.
 
 ```
@@ -59,7 +60,7 @@ trimtest:
            0   25565616   25565623          8
 ```
 
-The important thing to take into account is the "begin_LBA" column make note of
+The important thing to take into account is the `begin_LBA` column make note of
 this number and use it in place in the following commands. You'll need to
 replace `/dev/sda` with the device name matching your SSD.
 
