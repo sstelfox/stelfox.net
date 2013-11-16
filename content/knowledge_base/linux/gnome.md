@@ -2,6 +2,8 @@
 title: Gnome
 ---
 
+# Gnome
+
 ## Gnome Tweak Tool
 
 ```
@@ -20,9 +22,10 @@ The settings I use in it:
 
 I manually and automatically update my software and I do not want any
 background process holding the yum lock. To disable PackageKit checking for
-software open the application "Software Settings" or /usr/bin/gpk-prefs. Change
-"Check for updates" to Never, Automatically install "Nothing, and "Check for
-major upgrades" to Never.
+software open the application "Software Settings" or `/usr/bin/gpk-prefs`.
+
+Change "Check for updates" to Never, Automatically install "Nothing, and "Check
+for major upgrades" to Never.
 
 ## Prevent Applications from Stealing Focus
 

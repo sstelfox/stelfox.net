@@ -2,21 +2,24 @@
 title: Iodine
 ---
 
+# Iodine
+
 On the server side:
 
+```
 yum install iodine-server -y
+```
 
-Edit the /etc/sysconfig/iodine-server file and put the following options in:
+Edit the `/etc/sysconfig/iodine-server` file and put the following options in:
 
 ```
 OPTIONS="-P somepassword 172.16.0.1 t.0x378.net"
 ```
 
-Create an A or CNAME record for iodine-01.0x378.net pointing at the FQDN of the
-server running iodine and a NS record pointing at iodine-01.0x378.net for the
-domain t.0x378.net (shorter is better, allows for higher speed).
-
-Wooo SELINUX issues..... maybe not...?
+Create an `A` or `CNAME` record for `iodine-01.0x378.net` pointing at the FQDN
+of the server running `iodine` and a `NS` record pointing at
+`iodine-01.0x378.net` for the domain `t.0x378.net` (shorter is better, allows
+for higher speed).
 
 And firewall rules...
 
@@ -43,3 +46,4 @@ nat table:
 
 COMMIT
 ```
+
