@@ -1,25 +1,31 @@
 ---
-title: Raspberry PI
+title: Raspberry Pi
 ---
 
-Downloaded the ArchLinux version from here:
+# Raspberry Pi
 
-http://www.raspberrypi.org/downloads
+Downloaded the ArchLinux version [from here][1]
 
 used the following command to get the image on:
 
-    dd if=archlinux-hf-2013-07-22.img | pv | sudo dd of=/dev/mmcblk0 bs=4M
+```
+dd if=archlinux-hf-2013-07-22.img | pv | sudo dd of=/dev/mmcblk0 bs=4M
+```
 
 used the following to update the partitions on the device, and mount the
 rootfs:
 
-    partprobe /dev/mmcblk0
-    mount /dev/mmcbl0p5 /mnt
+```
+partprobe /dev/mmcblk0
+mount /dev/mmcbl0p5 /mnt
+```
 
-I edited /etc/iptables/simple_firewall.rules and added the following after the
-ctstate line:
+I edited `/etc/iptables/simple_firewall.rules` and added the following after
+the ctstate line:
 
-    -A INPUT -m tcp -p tcp --dport 22 -j ACCEPT
+```
+-A INPUT -m tcp -p tcp --dport 22 -j ACCEPT
+```
 
 (Turns out the above wasnt needed as it defaults to wide-open).
 
@@ -29,23 +35,27 @@ it (didnt bother too look up what the defaults were).
 Ran sync on the card, removed it installed it in the RPi, connected its
 ethernet jack and power. Scanned for port 22 and found it.
 
+```
 ssh root@<rpi>
 
 pacman -Syu
 hostnamectl set-hostname io.0x378.net
+```
 
-Created network config file /etc/conf.d/network@eth0 with the following contents:
+Created network config file `/etc/conf.d/network@eth0` with the following
+contents:
 
-<<EOS
+```ini
 address=192.168.0.15
 netmask=24
 broadcast=192.168.0.255
 gateway=192.168.0.1
-EOS
+```
 
-And a systemd file at /etc/systemd/system/network@.service with the following config:
+And a systemd file at `/etc/systemd/system/network@.service` with the following
+config:
 
-<<EOS
+```ini
 [Unit]
 Description=Network connectivity (%i)
 Wants=network.target
@@ -67,11 +77,15 @@ ExecStop=/usr/bin/ip link set dev %i down
 
 [Install]
 WantedBy=multi-user.target
-EOS
+```
 
+```
 systemctl enable network@eth0.service
 systemctl start network@eth0.service
 systemctl disable dhcpcd@eth0.service
+```
 
 At this point I switched to the arch linux notes.
+
+[1]: http://www.raspberrypi.org/downloads
 

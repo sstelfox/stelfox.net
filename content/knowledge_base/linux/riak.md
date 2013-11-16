@@ -2,25 +2,34 @@
 title: Riak
 ---
 
+# Riak
+
 ## Source RPM Source:
 
-http://yum.basho.com/el/6/products/SRPMS/index.html
+* http://yum.basho.com/el/6/products/SRPMS/index.html
 
 ## Installation notes
 
+```
 sudo yum update -y
 sudo yum install riak -y
+```
 
+```
 cat > /etc/security/limits.d/85-file_descriptors.conf << EOS
 *      hard      nofile      8192
 *      soft      nofile      4096
 EOS
+```
 
+```
 ln -s /usr/lib64/erlang/erts-5.10.2 /usr/lib64/riak/erts-5.10.2
+```
 
-# For the curb gem:
+For the curb gem:
+
+```
 yum install libcurl-devel -y
-
 gem install rails
 rails new proj --skip-test-unit --skip-active-record --skip-bundle
 
@@ -57,4 +66,5 @@ end
 EOS
 
 bundle
+```
 

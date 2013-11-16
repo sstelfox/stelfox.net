@@ -2,6 +2,8 @@
 title: Software RAID
 ---
 
+# Software RAID
+
 ## Installation
 
 The mdadm package is required for software RAID:
@@ -10,7 +12,7 @@ The mdadm package is required for software RAID:
 yum install mdadm -y
 ```
 
-### Array Creation
+## Array Creation
 
 ```
 mdadm --create /dev/md0 --verbose --level=1 --raid-devices=2 /dev/sda /dev/sdb
@@ -27,9 +29,10 @@ size <= 256 (maybe even 128 if you're still getting errors) otherwise ZFS will
 warn about issues creating it's partitions.
 
 ## Troubleshooting
+
 ## Status Check
 
-You can view the status of the RAID by cat'ing /proc/mdstat. You can see more
+You can view the status of the RAID by cat'ing `/proc/mdstat`. You can see more
 details by using the mdadm utility like so:
 
 ```
@@ -39,6 +42,7 @@ mdadm --misc --detail /dev/md0
 As long as the state is clean you're golden.
 
 ## Recovery
+
 ### Configuration File
 
 During initial setup the /etc/mdadm.conf is created automatically. All this

@@ -2,6 +2,8 @@
 title: Sox
 ---
 
+# Sox
+
 ## Installation
 
 ```

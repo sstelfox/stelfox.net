@@ -2,6 +2,8 @@
 title: Suricata
 ---
 
+# Suricata
+
 ## Installation
 
 ```
@@ -9,6 +11,7 @@ yum install suricata -y
 ```
 
 ## Configuration
+
 ### Network Configuration for IPS
 
 I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode.
@@ -18,7 +21,7 @@ addressable on it's sniffing interfaces. The bridge interface that will handle
 the filtering, sniffing etc will be br256. Here are the various configuration
 files:
 
-/etc/sysconfig/network-scripts/ifcfg-p1p1:
+#### /etc/sysconfig/network-scripts/ifcfg-p1p1
 
 ```
 DEVICE="p1p1"
@@ -35,7 +38,7 @@ IPV6_AUTOCONF=no
 NAME="Transparent TAP"
 ```
 
-/etc/sysconfig/network-scripts/ifcfg-p2p1:
+#### /etc/sysconfig/network-scripts/ifcfg-p2p1
 
 ```
 DEVICE="p2p1"
@@ -52,7 +55,7 @@ IPV6_AUTOCONF=no
 NAME="Transparent TAP"
 ```
 
-/etc/sysconfig/network-scripts/ifcfg-br256:
+#### /etc/sysconfig/network-scripts/ifcfg-br256
 
 ```
 # br256 - No VLAN - Transparent Intercept Bridge

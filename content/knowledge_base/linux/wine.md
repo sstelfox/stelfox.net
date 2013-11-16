@@ -2,6 +2,8 @@
 title: Wine
 ---
 
+# Wine
+
 ## Installation
 
 ```
@@ -22,5 +24,5 @@ wine msiexec /i SteamInstall.msi
 
 The tahoma.ttf font is not included in the Microsoft core fonts package. To get
 the font, google for "filetype:ttf inurl:tahoma", download it and put it into
-your ~/.wine/drive_c/windows/fonts directory.
+your `~/.wine/drive_c/windows/fonts` directory.
 

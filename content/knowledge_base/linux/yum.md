@@ -2,6 +2,8 @@
 title: Yum
 ---
 
+# Yum
+
 Package update/installation utility.
 
 ## Security Notes
@@ -21,7 +23,7 @@ yum install yum-plugin-fastestmirror yum-plugin-security yum-presto \
 
 ### /etc/yum.conf
 
-```
+```ini
 [main]
 cachedir=/var/cache/yum/$basearch/$releasever
 keepcache=0
@@ -37,7 +39,7 @@ metadata_expire=90m
 
 ### /etc/yum/pluginconf.d/changelog.conf
 
-```
+```ini
 [main]
 enabled=1
 when=pre
@@ -46,7 +48,7 @@ always=true
 
 ### /etc/yum/pluginconf.d/fastestmirror.conf
 
-```
+```ini
 [main]
 enabled=1
 verbose=1
@@ -61,21 +63,21 @@ include_only=.org,.edu,.com,.net
 
 ### /etc/yum/pluginconf.d/presto.conf
 
-```
+```ini
 [main]
 enabled=1
 ```
 
 ### /etc/yum/pluginconf.d/protectbase.conf
 
-```
+```ini
 [main]
 enabled = 1
 ```
 
 ### /etc/yum/pluginconf.d/security.conf
 
-```
+```ini
 [main]
 enabled=1
 ```
@@ -224,7 +226,7 @@ createrepo .
 
 You will also need to distribute a repository file that points at the server:
 
-```
+```ini
 [0x378]
 name=0x378 Private Repo $releasever - $basearch
 failovermethod=priority

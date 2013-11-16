@@ -2,6 +2,8 @@
 title: Samba
 ---
 
+# Samba
+
 FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
 
 ## SELinux Adjustments
@@ -11,7 +13,7 @@ access the contents of a samba share you need to label the share. The easiest
 way to make this persistent is by adjusting the targeted SELinux config. In the
 following example the only samba share is location at /media/sharing.
 
-Add this to /etc/selinux/targeted/contexts/files/file_contexts:
+Add this to `/etc/selinux/targeted/contexts/files/file_contexts`:
 
 ```
 /media/storage(/.*)?    system_u:object_r:samba_share_t:s0
@@ -52,6 +54,7 @@ To delete a samba user:
 ```
 
 ## Configuration
+
 ### /etc/samba/smb.conf
 
 ```ini

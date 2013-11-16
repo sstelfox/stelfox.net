@@ -2,6 +2,8 @@
 title: XFS
 ---
 
+# XFS
+
 ## Installation/Setup
 
 ```

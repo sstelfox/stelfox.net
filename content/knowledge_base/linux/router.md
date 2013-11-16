@@ -2,6 +2,8 @@
 title: Router
 ---
 
+# Router
+
 Resources:
 
 * http://www.fclose.com/816/port-forwarding-using-iptables/
@@ -44,7 +46,7 @@ For this eth0 is the external network connection and eth1 is the internal
 network. These will have 192.168.122.10 as the external IP address and 10.0.0.1
 for the internal IP address.
 
-/etc/sysconfig/iptables:
+## /etc/sysconfig/iptables
 
 ```
 *filter

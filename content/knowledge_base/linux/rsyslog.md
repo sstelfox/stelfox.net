@@ -2,6 +2,8 @@
 title: RSyslog
 ---
 
+# RSyslog
+
 RSyslog is a more advanced replacement for the aging klogd and syslogd. It
 supports useful features such as attribute filtering and logging to a database.
 
@@ -19,7 +21,7 @@ By default RSyslog doesn't need any ports opened. If you intend to send your
 logs over the network, it will depend on how you're doing it. UDP is the most
 error prone but the least processor intensive. TCP is a bit more reliable. You
 can also encrypt syslog messages over TCP using TLS. This however requires
-there to be a trusted [[Linux/Certificate_Authority]] to create and sign
+there to be a trusted [Certificate_Authority][1] to create and sign
 certificates. TCP is also not supported by all syslog hosts, usually resulting
 in a mixed mode setup.
 
@@ -56,10 +58,10 @@ To allow TCP/TLS:
 
 There is a handy service that can forward syslog events from the Windows Event
 subsystem built into windows to a syslog server. It's called
-[http://code.google.com/p/eventlog-to-syslog/ eventlog-to-syslog] and seems to
-be under active development (good thing).
+[eventlog-to-syslog][2] and seems to be under active development (good thing).
 
 ## Configuration
+
 ### /etc/rsyslog.conf
 
 ```
@@ -141,7 +143,7 @@ $ActionResumeRetryCount -1
 ### MySQL Schema
 
 The extension "rsyslog-mysql" will need to be installed and loaded in the
-"MODULES" section of /etc/rsyslog.conf using the following line:
+"MODULES" section of `/etc/rsyslog.conf` using the following line:
 
 ```
 $ModLoad ommysql.so
@@ -157,17 +159,17 @@ CREATE DATABASE IF NOT EXISTS syslog;
 use syslog;
 DROP TABLE IF EXISTS syslog_events;
 CREATE TABLE syslog_events (
-        id int unsigned not null auto_increment primary key,
-        receivedAt varchar(60) NULL,
-        deviceReportedTime varchar(60) NULL,
-        facility smallint NULL,
-        severity smallint NULL,
-        program varchar(60) NULL,
-        hostname varchar(60) NULL,
-        srcHost varchar(60) NULL,
-        srcIP varchar(60) NULL,
-        message text NOT NULL,
-        inputName varchar(60)
+  id int unsigned not null auto_increment primary key,
+  receivedAt varchar(60) NULL,
+  deviceReportedTime varchar(60) NULL,
+  facility smallint NULL,
+  severity smallint NULL,
+  program varchar(60) NULL,
+  hostname varchar(60) NULL,
+  srcHost varchar(60) NULL,
+  srcIP varchar(60) NULL,
+  message text NOT NULL,
+  inputName varchar(60)
 );
 ```
 
@@ -186,8 +188,8 @@ last line in this will prevent remote syslog messages from flooding the
 log-text files of the server.
 
 ```
-# MySQL Message queue, this will prevent data loss if we aren't able to write to
-# the database fast enough
+# MySQL Message queue, this will prevent data loss if we aren't able to write
+# to the database fast enough
 $WorkDirectory /var/spool/rsyslog
 $ActionQueueMaxDiskSpace 1g
 $ActionQueueSaveOnShutdown on
@@ -200,8 +202,8 @@ $ActionResumeRetryCount -1
 :fromhost-ip, !isequal, "127.0.0.1" ~
 ```
 
-I also created /etc/rsyslog.d/remote_hosts.conf on the central syslog server to
-create a log file dedicated to each host.
+I also created `/etc/rsyslog.d/remote_hosts.conf` on the central syslog server
+to create a log file dedicated to each host.
 
 ```
 $template DailyPerHostLogs,"/var/log/hosts/%$YEAR%/%$MONTH%/%$DAY%/%FROMHOST-IP%/messages.log"
@@ -251,4 +253,6 @@ And ensure the client can make the connection:
 -A OUTPUT -m tcp -tcp --dport 20514 -d <syslog-ip> -j ACCEPT
 ```
 
+[1]: ../certificate_authority/
+[2]: http://code.google.com/p/eventlog-to-syslog/
 

@@ -2,6 +2,8 @@
 title: Xen
 ---
 
+# Xen
+
 Full Xen dom0 support was added in the Linux 3.0 kernel. This means there's no
 longer a need to drag patches forward from old kernels and work from special
 branches and git repositories when building a kernel for dom0.
@@ -52,7 +54,7 @@ set to a reasonable number if you need to temporarily switch back to your
 original grub entry at boot time. (Hey, we all make mistakes.)
 
 I take one extra precaution and change the UPDATEDEFAULT=yes line to no in
-/etc/sysconfig/kernel. This ensures that future kernel updates don't trample
+`/etc/sysconfig/kernel`. This ensures that future kernel updates don't trample
 the entry you've just made. Keep in mind that you'll need to manually update
 your grub configuration when you do kernel upgrades later.
 
@@ -100,5 +102,7 @@ You should have a VM installation underway pretty quickly and it will be
 visible via port 5905 on the local host. Enjoy the power and freedom of your
 brand new type 1 hypervisor.
 
-[http://fclose.com/b/linux/2258/managing-xen-dom0s-cpu-and-memory/ Additional notes about dom0's CPU and memory]
+[Additional notes about dom0's CPU and memory][1]
+
+[1]: http://fclose.com/b/linux/2258/managing-xen-dom0s-cpu-and-memory/
 

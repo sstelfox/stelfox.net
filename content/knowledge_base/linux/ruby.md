@@ -2,6 +2,8 @@
 title: Ruby
 ---
 
+# Ruby
+
 ## RVM
 
 If using Gnome terminal, you have to set the 'Run command as login shell' check
@@ -43,8 +45,8 @@ gem install bundler pry
 ```
 
 To make sure these get installed automatically for any other ruby versions that
-get installed you can use some nifty information pulled from
-[https://rvm.io//gemsets/initial/ RVM's Documentation].
+get installed you can use some nifty information pulled from [RVM's
+Documentation][1].
 
 ```
 echo -e "bundler\npry" > ~/.rvm/gemsets/global.gems
@@ -82,7 +84,11 @@ probably out of date and needs to be updated. On one machine I received the
 following error:
 
 ```
-Error running 'CFLAGS=-march=native -O2 ./configure --prefix=/home/user/.rvm/rubies/ruby-1.9.3-p194-turbo --enable-shared --disable-install-doc --with-libyaml --with-opt-dir=/home/user/.rvm/usr ', please read /home/user/.rvm/log/ruby-1.9.3-p194-turbo/configure.logThere has been an error while running configure. Halting the installation.
+Error running 'CFLAGS=-march=native -O2 ./configure
+--prefix=/home/user/.rvm/rubies/ruby-1.9.3-p194-turbo --enable-shared
+--disable-install-doc --with-libyaml --with-opt-dir=/home/user/.rvm/usr ',
+please read /home/user/.rvm/log/ruby-1.9.3-p194-turbo/configure.logThere has
+been an error while running configure. Halting the installation.
 ```
 
 Which was quickly solved by running the following command and trying again:
@@ -97,4 +103,6 @@ I suspect the error was unrelated.
 ## RBEnv
 
 http://hmarr.com/2012/nov/08/rubies-and-bundles/
+
+[1]: https://rvm.io//gemsets/initial/
 

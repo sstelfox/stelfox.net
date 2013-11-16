@@ -2,7 +2,9 @@
 title: Splunk
 ---
 
-Download the RPM from: http://www.splunk.com/download
+# Splunk
+
+[Download the RPM][1]
 
 ```
 sudo yum localinstall splunk*.rpm -y
@@ -15,7 +17,7 @@ sudo /opt/splunk/bin/splunk enable boot-start
 /etc/init.d/splunk start
 ```
 
-You'll need to open up port tcp/8000 as well (which is where the interface
+You'll need to open up port `tcp/8000` as well (which is where the interface
 lives).
 
 When you access the interface for the first time, you'll need to login with
@@ -45,4 +47,6 @@ indexing if free disk space (in MB) falls below" from 5000 to 2000 (I had 5.2Gb
 of disk free but maybe it was close enough).
 
 I now have events!
+
+[1]: http://www.splunk.com/download
 

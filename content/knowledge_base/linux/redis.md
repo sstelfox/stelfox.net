@@ -2,6 +2,8 @@
 title: Redis
 ---
 
+# Redis
+
 ## Installation
 
 ```
@@ -520,8 +522,9 @@ activerehashing yes
 Open up incoming connections from the app servers (or the app server network)
 to port 6379.
 
-Use the default 'redis.conf' file in this repository, but change the requirepass
-to something random and difficult and set masterauth to match the value.
+Use the default 'redis.conf' file in this repository, but change the
+requirepass to something random and difficult and set masterauth to match the
+value.
 
 ## Slaves
 

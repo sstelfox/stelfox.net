@@ -2,6 +2,8 @@
 title: RPM Build
 ---
 
+# RPM Build
+
 Sources:
 
 * https://fedoraproject.org/wiki/How_to_create_an_RPM_package
@@ -123,11 +125,13 @@ of the ./configure flags (I Choose after the --with-pcre flag) add the
 following lines:
 
 ```
-    --add-module=./ngx_devel_kit-0.2.19 \
-    --add-module=./lua-nginx-module-0.9.0 \
+  --add-module=./ngx_devel_kit-0.2.19 \
+  --add-module=./lua-nginx-module-0.9.0 \
 ```
 
-# lua lua-socket lua-devel
+```
+yum install lua lua-socket lua-devel -y
+```
 
 ## Signing Packages
 

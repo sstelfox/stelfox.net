@@ -2,6 +2,8 @@
 title: Tmux
 ---
 
+# Tmux
+
 ## Installation
 
 ```
@@ -36,7 +38,7 @@ shared group like so:
 usermod -a -G shared <username>
 ```
 
-Add this line to the /etc/sudoers to allow any user added to the shared group
+Add this line to the `/etc/sudoers` to allow any user added to the shared group
 to be able to switch to it without a password:
 
 ```
@@ -54,10 +56,9 @@ mkdir /home/shared/.bin
 
 Inside of that create a file "shared-tmux" with the following contents and make
 it executable. This is a simplified version of a more flexible shared tmux
-session script I found on the
-[https://wiki.archlinux.org/index.php/Tmux#Clients_simultaneously_interacting_with_various_windows_of_a_session
-Arch Linux Wiki] which has a ridiculous amount of very good information that I
-strongly recommend people reference with any questions.
+session script I found on the [Arch Linux Wiki][1] which has a ridiculous
+amount of very good information that I strongly recommend people reference with
+any questions.
 
 ```
 #!/bin/bash
@@ -112,8 +113,8 @@ fi
 ```
 
 I also created a small shell script to make it easier for user's to make use of
-the shared session in /bin/shared. The contents are below, make sure to make it
-executable:
+the shared session in `/bin/shared`. The contents are below, make sure to make
+it executable:
 
 ```
 #!/bin/bash
@@ -129,7 +130,7 @@ I made a few compromises on my vim and tmux configuration to work with a
 co-worker and tried to keep it simple at the same time, so I'm including their
 configuration.
 
-Here is the tmux configuration /home/shared/.tmux.conf, there are two
+Here is the tmux configuration `/home/shared/.tmux.conf`, there are two
 configuration items that are relevant to the shared session configuration and
 should be included even if you don't use any of the rest of it. The two
 relevant configuration lines are the "setw -g aggressive-resize on" and the
@@ -201,4 +202,6 @@ set ffs=unix,dos,mac
 set lbr
 set laststatus=2
 ```
+
+[1]: https://wiki.archlinux.org/index.php/Tmux#Clients_simultaneously_interacting_with_various_windows_of_a_session
 

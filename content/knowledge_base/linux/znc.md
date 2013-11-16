@@ -2,6 +2,8 @@
 title: ZNC
 ---
 
+# ZNC
+
 ## Installation
 
 ```

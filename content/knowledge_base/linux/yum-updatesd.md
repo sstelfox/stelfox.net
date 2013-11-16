@@ -2,9 +2,11 @@
 title: yum-updatesd
 ---
 
-'''PLEASE NOTE''': yum-updatesd is currently broken on Fedora 17 so I've
-replaced it on my current systems with the following daily cron script which I
-drop into the file /etc/cron.daily/00update-system with execute permissions
+# yum-updatesd
+
+PLEASE NOTE: yum-updatesd is currently broken on Fedora 17 so I've replaced it
+on my current systems with the following daily cron script which I drop into
+the file `/etc/cron.daily/00update-system` with execute permissions
 
 ```
 #!/bin/bash
@@ -30,9 +32,9 @@ updates.
 
 ## Configuration
 
-You'll want to ensure /etc/yum/yum-updatesd.conf looks like below:
+You'll want to ensure `/etc/yum/yum-updatesd.conf` looks like below:
 
-```
+```ini
 [main]
 # Check for updates automatically every hour (in seconds)
 run_interval = 3600

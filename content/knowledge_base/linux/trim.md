@@ -2,6 +2,8 @@
 title: Trim
 ---
 
+# Trim
+
 ## Configuring
 
 This page is referring to TRIM support for SSDs. To enable it add
@@ -22,7 +24,7 @@ the security implications of allowing attackers to see where the data lives on
 my hard drive and where it doesn't, but for completeness, I'm documenting
 (untested) what needs to be done to enable this. You'll need to replace
 <your_device> with the DM mapper crypted partition such as
-"/dev/mapper/vg_desktop-lv_root". You'll want to do this for all of the
+`/dev/mapper/vg_desktop-lv_root`. You'll want to do this for all of the
 encrypted partitions on the drive.
 
 ```
@@ -36,7 +38,7 @@ performance improvements.
 
 ## Testing
 
-This requires you install the "hdparm" package on Fedora.
+This requires you install the `hdparm` package on Fedora.
 
 To test and make sure that trim support is working, make sure you're in a
 directory that lives on a partition on the SSD, then create a test file like
@@ -59,7 +61,7 @@ trimtest:
 
 The important thing to take into account is the "begin_LBA" column make note of
 this number and use it in place in the following commands. You'll need to
-replace /dev/sda with the device name matching your SSD.
+replace `/dev/sda` with the device name matching your SSD.
 
 ```
 hdparm --read-sector 25565616 /dev/sda

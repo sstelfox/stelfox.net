@@ -2,7 +2,9 @@
 title: Session Recording
 ---
 
-### Bash Builtins
+# Session Recording
+
+## Bash Builtins
 
 The script utility which I've found in Fedora as a default package (or it's a
 bash builtin). You can record a session and the timing data about it exit and

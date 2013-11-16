@@ -2,14 +2,16 @@
 title: Swap
 ---
 
+# Swap
+
 ## Security
 
 If at any point a decryption key is needed to access a file, it will be stored
 in RAM. If an otherwise encrypted file is edited it will get stored in RAM
 before being saved. Without warning at any time that RAM can be swapped out to
 disk, at which point there is now a recoverable copy of an encryption key or
-sections of an encrypted document plain text on disk that can be recovered
-<ref>[[Linux/Data_Recovery]]</ref>.
+sections of an encrypted document plain text on disk that [can be
+recovered][1].
 
 To prevent this I strongly recommend encrypting the swap. During a standard
 install of Fedora if you want to accomplish this you have to use dirty
@@ -33,7 +35,7 @@ look like the following:
 ```
 
 Your going to need to know what partitions your swap lives on. In the above
-example swap lives on /dev/sda3, it is very likely that your's will live on a
+example swap lives on `/dev/sda3`, it is very likely that your's will live on a
 different device/partition.
 
 First we're going to want to fill the swap space with junk to make sure that
@@ -50,7 +52,7 @@ you do it on the wrong partition! Double check before executing it!
 Next we'll want to make one of the boot scripts initialize encryption and mount
 the swap, there is a specific boot script created explicitly for user
 modification that other packages won't touch. We're going to use that one which
-is /etc/rc.d/rc.local. You'll want to add the following lines to it.
+is `/etc/rc.d/rc.local`. You'll want to add the following lines to it.
 
 ```
 cryptsetup -c blowfish -h sha256 -d /dev/urandom create swap /dev/sda3
@@ -69,11 +71,14 @@ cryptsetup -c aes-xts-plain -s 256 -h sha256 -d /dev/urandom create swap /dev/sd
 ```
 
 Additional ciphers that can be used including speed tests can be found on the
-[[Security/Encryption]] wiki page.
+[Encryption][2] page.
 
 Fedora has device mapper support built into the kernel, however if your
 distribution doesn't have device mapper support active by default, in the line
 right before the cryptsetup invocation add the line "modprobe dm-mod" to load
 the kernel module. Otherwise you'll get a "Command failed: Incompatible
 libdevmapper" error.
+
+[1]: ../data_recovery/
+[2]: ../../security/encryption/
 
