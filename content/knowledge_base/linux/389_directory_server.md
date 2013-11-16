@@ -2,19 +2,19 @@
 title: 389 Directory Server
 ---
 
-The 389 Directory Server is an LDAP server and thus the central hub for all
-user and group information on a network. This can also be used by
-[Asterisk](asterisk) for routing calls and voicemails to users.
+# 389 Directory Server
 
-http://docs.redhat.com/docs/en-US/Red_Hat_Directory_Server/
+The [389 Directory Server][1] is an LDAP server and thus the central hub for
+all user and group information on a network. This can also be used by
+[Asterisk][2] for routing calls and voicemails to users.
 
 ## Service Prerequisites
 
-* [Bind](bind) - This is optional if host files are used to store the FQDN of
-   the server on the server and it's clients.
-* [Certificate Authority](certificate_authority) - This is optional if the
-   directory is not intended to be part of a PKI system. It can be added to the
-   PKI system, though this may have ramifications for clients.
+* [Bind][3] - This is optional if host files are used to store the FQDN of the
+  server on the server and it's clients.
+* [Certificate Authority][4] - This is optional if the directory is not
+  intended to be part of a PKI system. It can be added to the PKI system,
+  though this may have ramifications for clients.
 
 ## Security Notes
 
@@ -26,8 +26,7 @@ allowed on the local network. 636 is LDAP over SSL and can be exposed a bit
 more loosely though I would try and limit it as much as possible. 9830 is the
 administration port and should be limited to only those machines that will be
 used to administrate the directory server. Account management can be done over
-389 and 636 using additional tools such as
-[http://directory.apache.org/studio/index.html Apache Directory Studio].
+389 and 636 using additional tools such as [Apache Directory Studio][5].
 
 ## Setup Log
 
@@ -92,7 +91,8 @@ environment.
 
 NOTICE : System is x86_64-unknown-linux2.6.38.8-32.fc15.x86_64 (1 processor).
 
-WARNING: 365MB of physical memory is available on the system. 1024MB is recommended for best performance on large production system.
+WARNING: 365MB of physical memory is available on the system. 1024MB is
+recommended for best performance on large production system.
 
 WARNING  : The warning messages above should be reviewed before proceeding.
 
@@ -414,4 +414,10 @@ port, to do the latter you NEED to create the SSH tunnel from the root account.
 ```sh
 ldapsearch -x -b '{Search Path (OU)}' -s sub -h {Host} -D {Username} -W '{Filter}'
 ```
+
+[1]: http://docs.redhat.com/docs/en-US/Red_Hat_Directory_Server/
+[2]: ../asterisk/
+[3]: ../bind/
+[4]: ../certificate_authority/
+[5]: http://directory.apache.org/studio/index.html
 
