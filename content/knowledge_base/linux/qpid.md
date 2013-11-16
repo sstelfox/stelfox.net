@@ -2,6 +2,8 @@
 title: Qpid
 ---
 
+# Qpid
+
 Qpid is an open source AMQP broker, providing transaction management, queuing,
 distribution, security, management, clustering, and federation.
 
@@ -10,11 +12,12 @@ distribution, security, management, clustering, and federation.
 
 ## Installation
 
-Fedora provides a package for qpid called "qpid-cpp-server" which can be
+Fedora provides a package for qpid called `qpid-cpp-server` which can be
 installed like so:
 
 ```
-yum install qpid-cpp-server qpid-cpp-server-ssl qpid-cpp-server-store qpid-cpp-server-ha -y
+yum install qpid-cpp-server qpid-cpp-server-ssl qpid-cpp-server-store \
+  qpid-cpp-server-ha -y
 ```
 
 Additional packages that may be of use:
@@ -25,11 +28,10 @@ Additional packages that may be of use:
 ## Configuration
 
 The following configuration file assumes the rest of the configuration on this
-page. You'll want to replace the existing configuration at /etc/qpidd.conf with
-the following:
+page. You'll want to replace the existing configuration at `/etc/qpidd.conf`
+with the following:
 
 ```ini
-
 ##### General Configuration #####
 
 # Directory to contain persistent data
@@ -65,7 +67,8 @@ enable-timestamp=yes
 
 ##### Management Options #####
 
-# Enable management, publishing data every 10 seconds, with QMF protocol 1 and 2
+# Enable management, publishing data every 10 seconds, with QMF protocol 1 and
+# 2
 mgmt-enable=yes
 mgmt-publish=yes
 mgmt-pub-interval=10
@@ -146,8 +149,8 @@ ssl-cert-db=/var/lib/qpidd
 ssl-cert-name=agni
 
 # Whether or not the server will accept unencrypted connections, there is of
-# course overhead to encrypted connections and if the only services that will be
-# talking to it will be the localhost then there is no need to require it...
+# course overhead to encrypted connections and if the only services that will
+# be talking to it will be the localhost then there is no need to require it...
 # External connections should of course be encrypted wherever possible.
 require-encryption=no
 ```
@@ -164,7 +167,7 @@ systemctl start qpidd.service
 By default only ANONYMOUS authentication is enabled which isn't good for any
 production systems... Qpid uses SASL for user authentication and that is how we
 need to configure what system to make use of. Open up the file
-/etc/sasl2/qpidd.conf and replace it's contents with the following:
+`/etc/sasl2/qpidd.conf` and replace it's contents with the following:
 
 ```
 auxprop_plugin: sasldb
@@ -201,14 +204,14 @@ chown qpidd:qpidd /var/lib/qpidd/qpidd.sasldb
 chmod 0640 /var/lib/qpidd/qpidd.sasldb
 ```
 
-If you have started Qpid with auth=yes configured before creating the account
+If you have started Qpid with `auth=yes` configured before creating the account
 it will automatically create this file and add a user with the username and
 password 'guest'.
 
 ### Listing Users
 
-You can list all the configured realm/username combinations with the following
-command:
+You can list all the configured realm / username combinations with the
+following command:
 
 ```
 sasldblistusers2 -f /var/lib/qpidd/qpidd.sasldb
@@ -217,7 +220,7 @@ sasldblistusers2 -f /var/lib/qpidd/qpidd.sasldb
 ### User ACLs
 
 The ACL files are pretty straight-forward and plain text. The file lives at
-/var/lib/qpidd/qpid.acl which doesn't exist initially and will need to be
+`/var/lib/qpidd/qpid.acl` which doesn't exist initially and will need to be
 created. This is a solid initial ACL allowing the admin and openstack access to
 any permissions they need while preventing anything else.
 
@@ -272,141 +275,46 @@ acl permission {<group-name>|<user-name>|"all"} {action|"all"} [object|"all"
 
 #### Action Listing
 
-{| class="wikitable" border="1"
-|-
-! Action
-! Description
-|-
-| consume
-| Applied when subscriptions are created
-|-
-| publish
-| Applied on a per message basis on publish message transfers, this rule consumes the most resources
-|-
-| create
-| Applied when an object is created, such as bindings, queues, exchanges, links
-|-
-| access
-| Applied when an object is read or accessed
-|-
-| bind
-| Applied when objects are bound together
-|-
-| unbind
-| Applied when objects are unbound
-|-
-| delete
-| Applied when objects are deleted
-|-
-| purge
-| Similar to delete but the action is performed on more than one object
-|-
-| update
-| Applied when an object is updated
-|}
+| Action  | Description                                                                                        |
+| ------- | -------------------------------------------------------------------------------------------------- |
+| consume | Applied when subscriptions are created                                                             |
+| publish | Applied on a per message basis on publish message transfers, this rule consumes the most resources |
+| create  | Applied when an object is created, such as bindings, queues, exchanges, links                      |
+| access  | Applied when an object is read or accessed                                                         |
+| bind    | Applied when objects are bound together                                                            |
+| unbind  | Applied when objects are unbound                                                                   |
+| delete  | Applied when objects are deleted                                                                   |
+| purge   | Similar to delete but the action is performed on more than one object                              |
+| update  | Applied when an object is updated                                                                  |
 
 #### Object Listing
 
-{| class="wikitable" border="1"
-|-
-! Object
-! Description
-|-
-| queue
-| A queue
-|-
-| exchange
-| An exchange
-|-
-| broker
-| The broker
-|-
-| link
-| A federation or inter-broker link
-|-
-| method
-| Management or agent or broker method
-|}
+| Object   | Description                          |
+| -------- | ------------------------------------ |
+| queue    | A queue                              |
+| exchange | An exchange                          |
+| broker   | The broker                           |
+| link     | A federation or inter-broker link    |
+| method   | Management or agent or broker method |
 
 #### Property Listing
 
-{| class="wikitable" border="1"
-|-
-! Property
-! Type
-! Description
-! Usage
-|-
-| name
-| String
-| Object name, such as a queue name or exchange name.
-| 
-|-
-| durable
-| Boolean
-| Indicates the object is durable
-| CREATE QUEUE, CREATE EXCHANGE
-|-
-| routingkey
-| String
-| Specifies routing key
-| BIND EXCHANGE, UNBIND EXCHANGE, ACCESS EXCHANGE
-|-
-| autodelete
-| Boolean
-| Indicates whether or not the object gets deleted when the connection is closed
-| CREATE QUEUE
-|-
-| exclusive
-| Boolean
-| Indicates the presence of anexclusive flag
-| CREATE QUEUE
-|-
-| type
-| String
-| Type of exchange, such as topic, fanout, or xml
-| CREATE EXCHANGE
-|-
-| alternate
-| String
-| Name of the alternate exchange
-| CREATE EXCHANGE, CREATE QUEUE
-|-
-| queuename
-| String
-| Name of the queue
-| ACCESS EXCHANGE
-|-
-| schemapackage
-| String
-| QMF schema package name
-| ACCESS METHOD
-|-
-| schemaclass
-| String
-| QMF schema class name
-| ACCESS METHOD
-|-
-| queuemaxsizelowerlimit
-| Integer
-| Minimum value for queue.max_size
-| CREATE QUEUE
-|-
-| queuemaxsizeupperlimit
-| Integer
-| Maximum value for queue.max_size
-| CREATE QUEUE
-|-
-| queuemaxcountlowerlimit
-| Integer
-| Minimum value for queue.max_count
-| CREATE QUEUE
-|-
-| queuemaxcountupperlimit
-| Integer
-| Maximum value for queue.max_count
-| CREATE QUEUE
-|}
+| Property                | Type    | Description                                                                    | Usage                                           |
+| ----------------------- | ------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |
+| name                    | String  | Object name, such as a queue name or exchange name.                            |                                                 |
+| durable                 | Boolean | Indicates the object is durable                                                | CREATE QUEUE, CREATE EXCHANGE                   |
+| routingkey              | String  | Specifies routing key                                                          | BIND EXCHANGE, UNBIND EXCHANGE, ACCESS EXCHANGE |
+| autodelete              | Boolean | Indicates whether or not the object gets deleted when the connection is closed | CREATE QUEUE                                    |
+| exclusive               | Boolean | Indicates the presence of an exclusive flag                                     | CREATE QUEUE                                    |
+| type                    | String  | Type of exchange, such as topic, fanout, or xml                                | CREATE EXCHANGE                                 |
+| alternate               | String  | Name of the alternate exchange                                                 | CREATE EXCHANGE, CREATE QUEUE                   |
+| queuename               | String  | Name of the queue                                                              | ACCESS EXCHANGE                                 |
+| schemapackage           | String  | QMF schema package name                                                        | ACCESS METHOD                                   |
+| schemaclass             | String  | QMF schema class name                                                          | ACCESS METHOD                                   |
+| queuemaxsizelowerlimit  | Integer | Minimum value for queue.max_size                                               | CREATE QUEUE                                    |
+| queuemaxsizeupperlimit  | Integer | Maximum value for queue.max_size                                               | CREATE QUEUE                                    |
+| queuemaxcountlowerlimit | Integer | Minimum value for queue.max_count                                              | CREATE QUEUE                                    |
+| queuemaxcountupperlimit | Integer | Maximum value for queue.max_count                                              | CREATE QUEUE                                    |
 
 ### SSL
 
@@ -421,9 +329,9 @@ certutil -N -d /var/lib/qpidd/
 ```
 
 Provide a strong password to the database and put a copy in the file
-/var/lib/qpidd/ssl-db-pass on it's own with no newline.
+`/var/lib/qpidd/ssl-db-pass` on it's own with no newline.
 
-I already have PKI in place and a trusted [[Linux/Certificate Authority]], so I
+I already have PKI in place and a trusted [Certificate Authority][1], so I
 just have to import my trusted certificate authority chain. Generate a
 certificate for this server and import it's certificate and chain.
 
@@ -468,4 +376,6 @@ chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
 # accessed remotely)
 -A SERVICE -m tcp -p tcp --dport 5671 -j ACCEPT
 ```
+
+[1]: ../certificate_authority/
 
