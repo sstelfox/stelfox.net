@@ -9,20 +9,19 @@ capable of rebroadcasting video streams with or without audio.
 ## Setup Process
 
 As of this writing Fedora 16 comes with Icecast version 2.3.2, the associated
-documentation can be found on the
-[http://www.icecast.org/docs/icecast-2.3.2/icecast2_config_file.html Icecast
-Website]. I found some documentation had been removed rather than updated along
-with the software and that documentation can be found in
-[http://www.icecast.org/docs/icecast-2.0.1/icecast2_config_file.html version
-2.0.1's] documentation.
+documentation can be found on the [Icecast Website][1]. I found some
+documentation had been removed rather than updated along with the software and
+that documentation can be found in [version 2.0.1's][2] documentation.
 
 ### Networking
 
 Setup a dedicated IP for use by the Icecast server (this is optional but a good
 practice even if it's just an internal address). You'll want to note this down
-for what the server will bind it's addresses to later on. For the purposes of
-this example configuration I'm using eth0:1 interface with an IP Address of
-192.168.20.45 configured like so in /etc/sysconfig/network-script/ifcfg-eth0:1
+for what the server will bind it's addresses to later on.
+
+For the purposes of this example configuration I'm using `eth0:1` interface
+with an IP Address of 192.168.20.45 configured like so in
+`/etc/sysconfig/network-script/ifcfg-eth0:1`
 
 ```
 # eth0:1 - For Icecast Server
@@ -49,7 +48,7 @@ configuration file. This example will use streams.example.org for the hostname.
 
 ### Firewall
 
-Add the following [[Linux/IPTables]] rules:
+Add the following [IPTables][3] rules:
 
 ```
 -A SERVICES -d 192.168.20.45 -m tcp -p tcp --dport 8000 -j ACCEPT
@@ -59,7 +58,7 @@ Add the following [[Linux/IPTables]] rules:
 ### Setup the chroot Environment
 
 The configuration I have here uses a chrooted environment within
-/usr/share/icecast. By default it isn't fully setup.
+`/usr/share/icecast`. By default it isn't fully setup.
 
 ```
 mkdir /usr/share/icecast/log
@@ -74,9 +73,9 @@ ln -s /usr/share/icecast/log/ /var/log/icecast
 yum install icecast -y
 ```
 
-Replace /etc/icecast.xml with the following minimized (read comments and mount
-points removed) configuration. You'll need to change the values, especially
-[[Security/Passwords]] listed in the configuration before making it live.
+Replace `/etc/icecast.xml` with the following minimized (read comments and
+mount points removed) configuration. You'll need to change the values,
+especially [passwords][4] listed in the configuration before making it live.
 
 ```xml
 <icecast>
@@ -151,60 +150,62 @@ If you configured everything properly you now have a happy Icecast server ready
 to have a source authenticate to it and listeners receive it.
 
 ## Example Mount Definitions
+
 ### LiveDJ with Automation Fallback
 
 The following configuration provides a public and a hidden mount. If there is a
 live DJ authenticated and streaming content it will pull users out of the
 automated stream and to listen to the live DJ, if the automated DJ goes down it
 will play silence but won't kill the stream. This requires that you put a file
-in the web directory named 'silence.ogg'. You can download the one I use here:
-[http://assets.stelfox.net/wiki/audio/silence.ogg]. With this you'll want to
-use the URL http://streams.example.org/radio.ogg.m3u to access the stream.
+in the web directory named 'silence.ogg'.
+
+You can download the one [I use here][5].  With this you'll want to use the URL
+`http://streams.example.org/radio.ogg.m3u` to access the stream.
 
 ```xml
-  <mount>
-    <mount-name>/automation.ogg</mount-name>
+<mount>
+  <mount-name>/automation.ogg</mount-name>
 
-    <username>automation</username>
-    <password>robot-password-hackme</password>
+  <username>automation</username>
+  <password>robot-password-hackme</password>
 
-    <fallback-mount>/silence.ogg</fallback-mount>
-    <fallback-override>1</fallback-override>
+  <fallback-mount>/silence.ogg</fallback-mount>
+  <fallback-override>1</fallback-override>
 
-    <charset>UTF8</charset>
+  <charset>UTF8</charset>
 
-    <stream-name>Radio - Automation System</stream-name>
-    <stream-description>A Radio Station Automaton</stream-description>
-    <stream-url>http://streams.example.org/</stream-url>
-    <genre>A Genre!</genre>
+  <stream-name>Radio - Automation System</stream-name>
+  <stream-description>A Radio Station Automaton</stream-description>
+  <stream-url>http://streams.example.org/</stream-url>
+  <genre>A Genre!</genre>
 
-    <bitrate>128</bitrate>
+  <bitrate>128</bitrate>
 
-    <public>0</public>
-    <hidden>1</hidden>
-  </mount>
+  <public>0</public>
+  <hidden>1</hidden>
+</mount>
 
-  <mount>
-    <mount-name>/radio.ogg</mount-name>
+<mount>
+  <mount-name>/radio.ogg</mount-name>
 
-    <username>livedj</username>
-    <password>the-live-djs-password</password>
+  <username>livedj</username>
+  <password>the-live-djs-password</password>
 
-    <fallback-mount>/automation.ogg</fallback-mount>
-    <fallback-override>1</fallback-override>
+  <fallback-mount>/automation.ogg</fallback-mount>
+  <fallback-override>1</fallback-override>
 
-    <charset>UTF8</charset>
+  <charset>UTF8</charset>
 
-    <stream-name>Radio - Automation System</stream-name>
-    <stream-description>A Radio Station Automaton</stream-description>
-    <stream-url>http://streams.example.org/</stream-url>
-    <genre>A Genre!</genre>
+  <stream-name>Radio - Automation System</stream-name>
+  <stream-description>A Radio Station Automaton</stream-description>
+  <stream-url>http://streams.example.org/</stream-url>
+  <genre>A Genre!</genre>
 
-    <bitrate>128</bitrate>
+  <bitrate>128</bitrate>
 
-    <public>1</public>
-    <hidden>0</hidden>
-  </mount>
+  <public>1</public>
+  <hidden>0</hidden>
+</mount>
 ```
 
 ## Logrotate Stanza
@@ -216,12 +217,13 @@ TODO
 TODO
 
 ## Using Icecast stream in HTML5
+
 ### Audio
 
 Here is a snippet of HTML5 for connecting to the stream
-http://streams.example.org:8000/radio.ogg with some javascript controls, pretty
-straight forward. The loop is included in case the stream dies or is currently
-in fallback mode to a file.
+`http://streams.example.org:8000/radio.ogg` with some javascript controls,
+pretty straight forward. The loop is included in case the stream dies or is
+currently in fallback mode to a file.
 
 ```html
 <!DOCTYPE html>
@@ -299,12 +301,12 @@ Todo...
     This is an alternative to the shoutcast-compat approach as this implicitly
     defines the second listening socket and allows for specifying multiple
     sockets using different mountpoints for shoutcast source clients.
-    
+
     The shoutcast-mount outside of a listen-socket group is the global setting of
     the mountpoint to use. 
   -->
   <shoutcast-mount>/stream</shoutcast-mount>
-  
+
   <!--
     The listen-sockets define the ports and addresses that the daemon will listen
     on. Best practice dictates that you bind a service only to the IP addresses
@@ -400,7 +402,7 @@ Todo...
       distribution contains these files. 
     -->
     <adminroot>/admin</adminroot>
-    
+
     <!--
       This path specifies the base directory used for logging. Both the error.log
       and access.log will be created relative to this directory. 
@@ -470,7 +472,7 @@ Todo...
       Into this file, a log of all metadata for each mountpoint will be written.
       The developers note that the format of this logfile will most likely
       change over time as they haven't decided on a format.
-      
+
       Currently, the file is pipe delimited. This option is optional.
     -->
     <playlistlog>playlist.log</playlistlog>
@@ -572,11 +574,11 @@ Todo...
     -->
     <source-timeout>10</source-timeout>
 
-                <!--
-                        This setting is really just an alias for burst-size. When enabled the
-                        burst-size is 64 kbytes and disabled the burst-size is 0 kbytes. This option
-                        is deprecated, use burst-size instead.
-                -->
+    <!--
+      This setting is really just an alias for burst-size. When enabled the
+      burst-size is 64 kbytes and disabled the burst-size is 0 kbytes. This option
+      is deprecated, use burst-size instead.
+    -->
     <burst-on-connect>1</burst-on-connect>
 
     <!--
@@ -1048,7 +1050,7 @@ Todo...
 
       <!--
         This URL is for when a listener connection closes.
-        
+
         listener_remove also provides the client, user, pass, and duration. I'm
         assuming client is the same number as that sent in listener_add, user and
         pass are the same as for listener_add in that I assume it's the clients
@@ -1105,4 +1107,10 @@ Todo...
 
 * http://koorenneef.nl/content/run-your-own-online-radio-station-icecast2-and-ezstream-howto
 * http://www.linuxcertif.com/man/1/ezstream/
+
+[1]: http://www.icecast.org/docs/icecast-2.3.2/icecast2_config_file.html
+[2]: http://www.icecast.org/docs/icecast-2.0.1/icecast2_config_file.html
+[3]: ../iptables/
+[4]: ../../security/passwords/
+[5]: http://assets.stelfox.net/wiki/audio/silence.ogg
 
