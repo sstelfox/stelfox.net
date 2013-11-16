@@ -2,39 +2,27 @@
 title: NSLU2
 ---
 
+# NSLU2
+
 Neat little NAS for USB 2.0 hard drives. Very convenient for backups.
 
-### Hardware Information
+## Hardware Information
 
 Please note that your hardware may differ if you have a different version.
 
-{| class="wikitable" border="1"
-|-
-! CPU
-| Intel IXP420, 133 or 266 MHz
-|-
-! RAM
-| 32Mb
-|-
-! Flash ROM
-| 8Mb
-|-
-! Ethernet
-| 10/100, (integrated SoC)
-|-
-! USB
-| 2x USB 2.0, NEC USB
-|-
-! Real Time Clock
-| Xicor X1205 RTC
-|-
-! Boot Loader
-| RedBoot
-|}
+| Component       | Details                      |
+| ---------------:| ---------------------------- |
+| CPU             | Intel IXP420, 133 or 266 MHz |
+| RAM             | 32Mb                         |
+| Flash ROM       | 8Mb                          |
+| Ethernet        | 10/100 (integrated SoC)      |
+| USB             | 2x USB 2.0, NEC USB          |
+| Real Time Clock | Xicor X1205 RTC              |
+| Bootloader      | RedBoot                      |
 
-### OpenWRT Installation
+## OpenWRT Installation
 
-Download the firmware: http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin
+[Download the firmware][1]
 
 Install the upslug2 utility (available in the Fedora package repositories).
 
@@ -48,14 +36,19 @@ By default upslug2 will use eth0 as the network device to look for the NSLU2,
 in my case I needed to switch that interface to use em1. Run the following
 command to identify the slug device on your network:
 
+```
 sudo upslug2 --device em1
+```
 
 Copy the MAC address of the NSLU2 device that you will be upgrading. Navigate
 to the directory where the kernel and firmware were downloaded and run the
 following command replacing the argument to target with the MAC address
 received above:
 
-sudo upslug2 --device em1 --target xx:xx:xx:xx:xx:xx --image openwrt-nslu2-squashfs.bin
+```
+sudo upslug2 --device em1 --target xx:xx:xx:xx:xx:xx \
+  --image openwrt-nslu2-squashfs.bin
+```
 
 After rebooting I did not have the status light come on and the device had the
 static address of 192.168.1.1. If that happens to be your router address (it
@@ -63,13 +56,15 @@ wasn't for me) you should be able to talk to it directly by setting a static
 arp entry like so (replacing the xx:xx... with the MAC address you retrieved
 above):
 
+```
 arp -s 192.168.1.1 xx:xx:xx:xx:xx:xx
+```
 
 ### Initial Configuration
 
-Telnet into the device and set a password like so: '''Remember:''' This
-password is being sent in clear text so ensure that you are on a fully trusted
-(and preferably switched) network segment before setting it or change it to
+Telnet into the device and set a password like so: *Remember:* This password is
+being sent in clear text so ensure that you are on a fully trusted (and
+preferably switched) network segment before setting it or change it to
 something else over SSH after you set the initial password.
 
 ```
@@ -89,7 +84,8 @@ root@OpenWrt:/# exit
 Connection closed by foreign host.
 ```
 
-I'm paranoid so I will change the password after I SSH back in anyway like so:
+It's best practice to change the password over the newly established encryption
+communication channel.
 
 ```
 [user@example-host ~]$ ssh root@192.168.1.1
@@ -243,30 +239,29 @@ reboot
 ### LEDs
 
 The available LED names in the NSLU2 go by the sys names of
-"nslu2:green:disk-1", "nslu2:green:disk-2", "nslu2:green:ready",
-"nslu2:red:status". The ready and status light are the same. The first light,
+`nslu2:green:disk-1`, `nslu2:green:disk-2`, `nslu2:green:ready`,
+`nslu2:red:status`. The ready and status light are the same. The first light,
 when they're both on it will appear green just slightly brighter than with just
 the ready on. If you want it to show up as red, you have to turn off the ready
 light.
 
 You can manually change the lights on and off by echoing a 0 and 1 into the
-system file located at "/sys/class/leds/{LED NAME}/brightness".
+system file located at `/sys/class/leds/{LED NAME}/brightness`.
 
 To check the available triggers on each LED cat the trigger file located in the
 same directory as the LED name. I added the following to the end of
-/etc/config/system:
+`/etc/config/system`:
 
 ```
 config 'led'
-        option 'name'           'Ready'
-        option 'sysfs'          'nslu2:green:ready'
-        option 'default'        '1'
-        option 'trigger'        'default-on'
+  option 'name'           'Ready'
+  option 'sysfs'          'nslu2:green:ready'
+  option 'default'        '1'
+  option 'trigger'        'default-on'
 ```
 
-Additional configuration information can be found on the
-[http://wiki.openwrt.org/doc/uci/system#leds OpenWRT UCI/System page under
-LEDs].
+Additional configuration information can be found on the [OpenWRT UCI/System
+page under LEDs][2].
 
 ### USB Disk Setup
 
@@ -275,13 +270,15 @@ usable as a NAS again. First we need to setup USB storage like the following:
 
 ```
 opkg update
-opkg install kmod-usb-core kmod-usb-ohci kmod-usb-uhci kmod-usb2 kmod-ledtrig-usbdev usbutils kmod-usb-storage cfdisk kmod-fs-ext4 e2fsprogs block-mount
+opkg install kmod-usb-core kmod-usb-ohci kmod-usb-uhci kmod-usb2 \
+  kmod-ledtrig-usbdev usbutils kmod-usb-storage cfdisk kmod-fs-ext4 e2fsprogs \
+  block-mount
 ```
 
-Ensure your USB drive is plugged in. Mine showed up as /dev/sda and that will
+Ensure your USB drive is plugged in. Mine showed up as `/dev/sda` and that will
 be used for the remainder of this page. Now we'll need to configure the
 partitions. We now have cfdisk to do that. I had an issue where my SSH
-connection was passing xterm-256color as the TERM variable which as causing
+connection was passing `xterm-256color` as the `TERM` variable which as causing
 issues with starting cfdisk. The first command alleviates this issue:
 
 ```
@@ -293,7 +290,7 @@ Use the interface to create a 512Mb swap partition (type 82), and the rest as
 an ext4 partition (type 83). Make sure not to mark either partition as bootable
 as it has weird effects on the NSLU2...
 
-For me /dev/sda1 is the swap and /dev/sda2 is the ext4 data partition. Both
+For me `/dev/sda1` is the swap and `/dev/sda2` is the ext4 data partition. Both
 partitions need to be formatted like so:
 
 ```
@@ -301,7 +298,7 @@ mkswap /dev/sda1
 mkfs.ext4 /dev/sda2
 ```
 
-I'm going to be mounting the storage partition at /mnt/storage so that
+I'm going to be mounting the storage partition at `/mnt/storage` so that
 directory needs to exist...
 
 ```
@@ -316,28 +313,27 @@ blkid /dev/sda1
 blkid /dev/sda2
 ```
 
-Filesystem configuration is handled by the UCI file /etc/config/fstab extensive
-details can be found on the [http://wiki.openwrt.org/doc/uci/fstab OpenWRT
-wiki].
+Filesystem configuration is handled by the UCI file `/etc/config/fstab`
+extensive details can be found on the [OpenWRT wiki][3].
 
 ```
 config 'global' 'automount'
-        option 'from_fstab'     '1'
-        option 'anon_mount'     '0'
+  option 'from_fstab'     '1'
+  option 'anon_mount'     '0'
 
 config 'global' 'autoswap'
-        option 'from_fstab'     '1'
-        option 'anon_swap'      '0'
+  option 'from_fstab'     '1'
+  option 'anon_swap'      '0'
 
 config 'mount'
-        option 'uuid'           '<uuid of ext4 partition>'
-        option 'target'         '/mnt/storage'
-        option 'fstype'         'ext4'
-        option 'options'        'nodev,noexec,nosuid,noatime,rw,sync'
-        option 'enabled_fsck'   '1'
+  option 'uuid'           '<uuid of ext4 partition>'
+  option 'target'         '/mnt/storage'
+  option 'fstype'         'ext4'
+  option 'options'        'nodev,noexec,nosuid,noatime,rw,sync'
+  option 'enabled_fsck'   '1'
 
 config 'swap'
-        option 'uuid'   '<uuid of swap partition>'
+  option 'uuid'   '<uuid of swap partition>'
 ```
 
 Get the storage all happy and setup with the following command:
@@ -401,9 +397,9 @@ mount -o loop /mnt/storage/package_partition.disk /mnt/packages
 ```
 
 We need to make sure that the package partition exists after boot up so the
-mount line needs to be added to /etc/rc.local before the "exit 0" line.
+mount line needs to be added to `/etc/rc.local` before the "exit 0" line.
 
-Append the following line to /etc/opkg.conf:
+Append the following line to `/etc/opkg.conf`:
 
 ```
 dest usb /mnt/packages
@@ -421,7 +417,7 @@ opkg -dest usb install package-name
 We'll need to put Dropbear on a different port to get OpenSSH on it. So first
 things first we need to add a firewall rule allowing access to the new port.
 I've chosen port 2222 as the other port so I've added this rule to
-/etc/config/firewall:
+`/etc/config/firewall`:
 
 ```
 config 'rule'
@@ -439,7 +435,7 @@ And the firewall needs to be restarted like so:
 ```
 
 Alright down to business. Change the dropbear config file at
-/etc/config/dropbear to:
+`/etc/config/dropbear` to:
 
 ```
 config 'dropbear'
@@ -475,7 +471,7 @@ Finally enable the server and set it to start at boot:
 ```
 
 You'll want to config the SSH server with the standard config file located at
-[[Linux/SSHd|/etc/ssh/sshd_config]].
+[/etc/ssh/sshd_config][4].
 
 Finally remove the firewall rule we added earlier and then disable and stop the
 dropbear service. You mind as well remove the config file as well like so:
@@ -487,12 +483,12 @@ dropbear service. You mind as well remove the config file as well like so:
 
 I like rebooting after a major service change just to be on the safe side.
 
-=== Authentication ===
+### Authentication
 
 Since this system is intended for backups, I created a backup user by manually
-editing /etc/passwd, /etc/groups, and setting a password for the user.
+editing `/etc/passwd`, `/etc/groups`, and setting a password for the user.
 
-Append the following to /etc/passwd:
+Append the following to `/etc/passwd`:
 
 ```
 backup-user:x:500:500:backup-user:/mnt/storage/backups:/bin/false
@@ -532,15 +528,15 @@ chmod 0640 /mnt/storage/backups/.ssh/authorized_keys
 
 So I need to explain a bit about that set of commands. Because I chroot the
 backups user to the backups directory the backups directory needs to be owned
-by root and have permissions set to 0750. This requirement is imposed by the
+by root and have permissions set to `0750`. This requirement is imposed by the
 SSH daemon if you want to login and necessitates the additional backups
 directory if I want to allow the backup-user write access to anything and thus
 giving the backup user ownership over the backups directory. However, I do not
 want the backup user to be able to arbitrarily edit or replace it's authorized
 keys files. I'll leave that to be a root administration task and thus the
-ownership and permissions on the .ssh directory and contents.
+ownership and permissions on the `.ssh` directory and contents.
 
-With that setup here is the tail end of my /etc/ssh/sshd_config file which
+With that setup here is the tail end of my `/etc/ssh/sshd_config` file which
 handles the chroot and command enforcement as well as the SFTP definition (I
 use the internal SFTP server rather than the external one for convienience):
 
@@ -555,8 +551,8 @@ Match User backup-user
 
 You now have a user that is highly isolated and able to write to single
 directory on the NAS. It still needs at least one authorized key added to
-/mnt/storage/backups/.ssh/authorized_keys before any backups can take place but
-that will get covered with some additional notes in the next section...
+`/mnt/storage/backups/.ssh/authorized_keys` before any backups can take place
+but that will get covered with some additional notes in the next section...
 
 ### Backing Up to the NSLU2
 
@@ -569,11 +565,12 @@ backups, they also have the permission to delete backups which I'm sure any
 malicious attacker would happily do for you.
 
 Ideally I'd be able to set the +a attribute (append only) on the
-/mnt/storage/backups/backups directory only allowing the backup-user to create
-and append to existing files without the ability to delete them, however,
-OpenWRT's e2fsprogs doesn't compile with chattr and short of plugging in the
-external drive on another machine and setting the attribute, we can't set that
-(though that is a possible solution and one I've chosen to employ).
+`/mnt/storage/backups/backups` directory only allowing the backup-user to
+create and append to existing files without the ability to delete them,
+however, OpenWRT's `e2fsprogs` doesn't compile with chattr and short of
+plugging in the external drive on another machine and setting the attribute, we
+can't set that (though that is a possible solution and one I've chosen to
+employ).
 
 You can create an SSH key for the backups using the following commands on a
 linux system:
@@ -582,8 +579,8 @@ linux system:
 ssh-keygen -b 4096 -f ~/.ssh/backups_key
 ```
 
-Copy the key out of ~/.ssh/backups_key.pub and as the root user on the NSLU2
-paste the key at the end of /mnt/storage/backups/.ssh/authorized_keys. I add
+Copy the key out of `~/.ssh/backups_key.pub` and as the root user on the NSLU2
+paste the key at the end of `/mnt/storage/backups/.ssh/authorized_keys`. I add
 the following command prefix to key, ensuring that is all the key will every be
 able to do like so:
 
@@ -597,7 +594,7 @@ server config is modified in the future.
 
 At this point you can safely append any files you'd like from any backup
 software you'd like that makes use of SFTP as the transfer mechanism. I'm
-personally preferential to [[Linux/Duplicity]], which is a clean command line
+personally preferential to [duplicity][5], which is a clean command line
 utility that encrypts and signs all your backups locally before sending them
 along to the remote server and supports incremental backups as well.
 
@@ -618,7 +615,7 @@ download). In my case it says "24 or 25 computed checksums did NOT match".
 
 sysupgrade unfortunately doesn't support the NSLU2, and using mtd requires the
 use of the "firmware" named mtd partition. You can see the available mtd
-partitions by catting /proc/mtd like so:
+partitions by catting `/proc/mtd` like so:
 
 ```
 root@nas:/mnt/storage# cat /proc/mtd
@@ -634,18 +631,16 @@ mtd6: 00020000 00020000 "FIS directory"
 
 This unfortunately means that I don't know how to upgrade to a new firmware on
 the device... Since RedBoot is still there however I should still be able to
-use the upslug2 utility to update the whole device, though this will be at the
-expense of all configuration on the device.
+use the `upslug2` utility to update the whole device, though this will be at
+the expense of all configuration on the device.
 
 ### Upslug2 && RedBoot
 
 You'll need to install upslug2 if you don't have it already, and download the
-most recent snapshot for the NSLU2
-[http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin
-here]. Open up a console and change to the directory you downloaded the
-firmware.
+most recent snapshot for the NSLU2 [here][6]. Open up a console and change to
+the directory you downloaded the firmware.
 
-For me the interface I want to use is em1 so that is what I've used in the
+For me the interface I want to use is `em1` so that is what I've used in the
 following commands. You'll need to get the MAC address of the device that you
 want to upgrade with the first command like so:
 
@@ -659,107 +654,30 @@ NSLU2     xx:xx:xx:xx:xx:xx Product ID: 1 Protocol ID: 0 Firmware Version: R23V6
 
 ### IXP420 GPIO Pins
 
-{| class="wikitable" border="1"
-! GPIO
-! IXP Ball
-! Function
-! Connected to:
-! Configured as:
-|-
-| GPIO[0]
-| Y22
-| Red Status LED (1 = On)
-| Status LED
-| Output
-|-
-| GPIO[1]
-| W21
-| Green Ready LED (1 = On)
-| Ready LED
-| Output
-|-
-| GPIO[2]
-| AC26
-| Disk 2 LED (0 = On)
-| Disk 2 LED
-| Output
-|-
-| GPIO[3]
-| AA24
-| Disk 1 LED (0 = On)
-| Disk 1 LED
-| Output
-|-
-| GPIO[4]
-| AB26
-| Buzzer
-| Buzzer
-| Output
-|-
-| GPIO[5]
-| Y25
-| Power Button (Pulse when state change)
-| Power Button via flipflop
-| Input
-|-
-| GPIO[6]
-| V21
-| I²C SCL
-| X1205 RTC - SCL - Pin 6
-| Output
-|-
-| GPIO[7]
-| AA26
-| I²C SDA
-| X1205 RTC - SDA - Pin 5
-| Tristate
-|-
-| GPIO[8]
-| W23
-| Power Off (1 = Turn Off)
-| R10
-| Output
-|-
-| GPIO[9]
-| V22
-| PCI INTC
-| uPD720101 USB (EHCI) - INTC0 - Pin 43
-| Input
-|-
-| GPIO[10]
-| Y26
-| PCI INTB
-| uPD720101 USB (OHCI #2) - INTB0 - Pin 88
-| Input
-|-
-| GPIO[11]
-| W25
-| PCI INTA
-| uPD720101 USB (OHCI #1) - INTA0 - Pin 125
-| Input
-|-
-| GPIO[12]
-| W26
-| Reset Button (0 = Pressed)
-| Reset Button
-| Input
-|-
-| GPIO[13]
-| V24
-| PCI Reset
-| uPD720101 USB - VBBRST0 - Pin 87
-| Output
-|-
-| GPIO[14]
-| U22
-| PCI Clock (33MHz)
-| uPD720101 USB - PCLK - Pin 42
-| Output
-|-
-| GPIO[15]
-| U25
-| Expansion Bus Clock (33MHz)
-| IXP420 - EX_CLK - Ball M32
-| Output
-|}
+|          |          |                                        |                                           |                |
+| -------- | -------- | -------------------------------------- | ----------------------------------------- | -------------- |
+| GPIO     | IXP Ball | Function                               | Connected to:                             | Configured as: |
+| GPIO0    | Y22      | Red Status LED (1 = On)                | Status LED                                | Output         |
+| GPIO1    | W21      | Green Ready LED (1 = On)               | Ready LED                                 | Output         |
+| GPIO2    | AC26     | Disk 2 LED (0 = On)                    | Disk 2 LED                                | Output         |
+| GPIO3    | AA24     | Disk 1 LED (0 = On)                    | Disk 1 LED                                | Output         |
+| GPIO4    | AB26     | Buzzer                                 | Buzzer                                    | Output         |
+| GPIO5    | Y25      | Power Button (Pulse when state change) | Power Button via flipflop                 | Input          |
+| GPIO6    | V21      | I²C SCL                                | X1205 RTC - SCL - Pin 6                   | Output         |
+| GPIO7    | AA26     | I²C SDA                                | X1205 RTC - SDA - Pin 5                   | Tristate       |
+| GPIO8    | W23      | Power Off (1 = Turn Off)               | R10                                       | Output         |
+| GPIO9    | V22      | PCI INTC                               | uPD720101 USB (EHCI) - INTC0 - Pin 43     | Input          |
+| GPIO10   | Y26      | PCI INTB                               | uPD720101 USB (OHCI #2) - INTB0 - Pin 88  | Input          |
+| GPIO11   | W25      | PCI INTA                               | uPD720101 USB (OHCI #1) - INTA0 - Pin 125 | Input          |
+| GPIO12   | W26      | Reset Button (0 = Pressed)             | Reset Button                              | Input          |
+| GPIO13   | V24      | PCI Reset                              | uPD720101 USB - VBBRST0 - Pin 87          | Output         |
+| GPIO14   | U22      | PCI Clock (33MHz)                      | uPD720101 USB - PCLK - Pin 42             | Output         |
+| GPIO15   | U25      | Expansion Bus Clock (33MHz)            | IXP420 - EX_CLK - Ball M32                | Output         |
+
+[1]: http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin
+[2]: http://wiki.openwrt.org/doc/uci/system#leds
+[3]: http://wiki.openwrt.org/doc/uci/fstab
+[4]: ../../linux/sshd/
+[5]: ../../linux/duplicity/
+[6]: http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin
 

@@ -2,6 +2,8 @@
 title: Sipura SPA3000
 ---
 
+# Sipura SPA3000
+
 Getting this working properly with incoming, and outgoing calls through the FXO
 port and as a standard extension through the FXS port was quite a trick so I've
 documented all of my configuration notes of what was required to get it too
@@ -9,8 +11,7 @@ work here. They're pretty crude but you can follow them easy enough, each
 indentation level indicates a tab or section, while the actual settings are
 reflected in a key: value pair.
 
-For SPA3000 on [http://wiki.freeswitch.org/wiki/SPA3102_FreeSwitch_HowTo
-FreeSWITCH]
+For SPA3000 on [FreeSWITCH][1]
 
 ```
 [Working Sipura Configuration]
@@ -103,4 +104,6 @@ To perform a factory reset, make sure the line cable is disconnect and a touch
 tone phone is plugged into the phone port. Pick up the receiver and dial
 '****'. This will take you to the sipura configuration menu. Dial '110#' and it
 will read out the IP address one digit at a time.
+
+[1]: http://wiki.freeswitch.org/wiki/SPA3102_FreeSwitch_HowTo
 
