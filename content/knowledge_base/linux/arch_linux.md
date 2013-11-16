@@ -1,6 +1,8 @@
 ---
-title: Arch Linux Notes
+title: Arch Linux
 ---
+
+# Arch Linux
 
 ## Updating
 
