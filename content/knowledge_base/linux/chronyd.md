@@ -2,6 +2,8 @@
 title: Chronyd
 ---
 
+# Chronyd
+
 Replacement for the ntpd daemon. This doesn't seem to be "production ready".
 
 ## Installation

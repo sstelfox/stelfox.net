@@ -2,12 +2,15 @@
 title: NTPd
 ---
 
+# NTPd
+
 The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of
 computer systems over packet-switched, variable-latency data networks. NTP uses
 UDP on port 123 as its transport layer. It is designed particularly to resist
-the effects of variable latency by using a jitter buffer. NTP also refers to a
-reference software implementation that is distributed by the NTP Public
-Services Project.
+the effects of variable latency by using a jitter buffer.
+
+NTP also refers to a reference software implementation that is distributed by
+the NTP Public Services Project.
 
 ## Security Notes
 
@@ -30,14 +33,14 @@ locally run server.
 
 ## Firewall Adjustments
 
-NTP synchronizations are allowed through my default [[Linux/IPTables]] firewall
+NTP synchronizations are allowed through my default [IPTables][1] firewall
 script. By default it is unrestricted and should be configured to be more
 restrictive by replacing it with the one below. You should replace the address
 with your time server's address.
 
 ```
-# Allow time sync updates, once an ntp server is setup this
-# can be further restricted to only update from there.
+# Allow time sync updates, once an ntp server is setup this can be further
+# restricted to only update from there.
 -A OUTPUT -m udp -p udp --dport 123 -j ACCEPT
 ```
 
@@ -46,13 +49,14 @@ connections on the local subnets. The following firewall rules should be added
 to the firewall.
 
 ```
-# Allow other servers and clients on the local subnet to
-# synchronize their clocks to this server using ntp
+# Allow other servers and clients on the local subnet to synchronize their
+# clocks to this server using ntp
 -A SERVICES -m udp -p udp -s 10.13.37.0/24 --dport 123 -j ACCEPT
 -A SERVICES -m udp -p udp -s 10.13.38.0/24 --dport 123 -j ACCEPT
 ```
 
 ## Configuration
+
 ### /etc/ntp.conf
 
 A standard configuration of ntp is shown below, there isn't a whole lot to
@@ -106,16 +110,17 @@ The server will need to be set to start automatically on boot. Use the
 following command to do this:
 
 ```
-[root@localhost ~]# chkconfig --level 345 ntpd on
+chkconfig --level 345 ntpd on
 ```
 
 ### /etc/ntp/keys
 
 A keyfile needs to be created for local and remote administration of the
 service. To do this generate a random 8 character alphanumeric password and
-replace the 'xxxxxxxx' in the file /etc/ntp/keys. This file should also be
-protected from read/write from unauthorized users (600) with chmod. The
-contents are below:
+replace the 'xxxxxxxx' in the file `/etc/ntp/keys`.
+
+This file should also be protected from read / write from unauthorized users
+`600` with chmod. The contents are below:
 
 ```
 1      M       xxxxxxxx
@@ -123,8 +128,8 @@ contents are below:
 
 ## Checking Server Status
 
-On the server running ntpd you can use the ntpq utility to check the current
-status of the ntpd service like so:
+On the server running `ntpd` you can use the `ntpq` utility to check the
+current status of the ntpd service like so:
 
 ```
 [root@localhost ~]# ntpq -p 127.0.0.1
@@ -136,4 +141,6 @@ status of the ntpd service like so:
  bonehed.lcs.mit .PPS.            1 u    2   64    1   16.254   -1.620   1.396
  gnomon.cc.colum .USNO.           1 u    1   64    1   51.110  -15.607   2.697
 ```
+
+[1]: ../iptables/
 

@@ -2,11 +2,13 @@
 title: Mutt
 ---
 
+# Mutt
+
 ```
 yum install mutt -y
 ```
 
-Do a basic configuration in ~/.muttrc
+Do a basic configuration in `~/.muttrc`
 
 ```
 # Name to be displayed on sent emails:
@@ -141,7 +143,7 @@ color tree brightblue black
 color normal white black
 color tilde green black
 color bold brightyellow black
-#color underline magenta black                                                                                                                                            
+#color underline magenta black
 color markers brightcyan black
 color status green black
 color indicator default red

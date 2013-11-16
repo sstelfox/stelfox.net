@@ -2,6 +2,8 @@
 title: NGinx
 ---
 
+# NGinx
+
 ## Dynamic Backend w/ Fallback
 
 Sources:
@@ -50,8 +52,8 @@ server {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-Proto $scheme; # Should always be https
 
-    # Intercept all errors, if one matches the error block sent the request to a
-    # different backend
+    # Intercept all errors, if one matches the error block sent the request to
+    # a different backend
     proxy_intercept_errors on;
     error_page 502 = @fallback;
 
@@ -59,8 +61,8 @@ server {
   }
 
   location @fallback {
-    # Look this up, but pretty sure it means don't allow clients / HTTP requests
-    # to access this.
+    # Look this up, but pretty sure it means don't allow clients / HTTP
+    # requests to access this.
     internal;
     proxy_pass http://fall-back-host.i.0x378.net:80/;
   }
@@ -70,7 +72,8 @@ server {
 ## Cert
 
 ```
-echo -e "AC\n\n \n \n\n*.i.0x378.net\n\n" | openssl req -new -x509 -newkey rsa:2048 -keyout server.key -nodes -days 365 -out server.crt
+echo -e "AC\n\n \n \n\n*.i.0x378.net\n\n" | openssl req -new -x509 \
+  -newkey rsa:2048 -keyout server.key -nodes -days 365 -out server.crt
 ```
 
 And include some DH parameters.
@@ -79,7 +82,7 @@ And include some DH parameters.
 openssl dhparam -rand - 2048 > server_dh.pem
 ```
 
-I just dropped `server.{key,cert}` into /etc/nginx/, and a quick SSL
+I just dropped `server.{key,cert}` into `/etc/nginx/`, and a quick SSL
 configuration to dump into the nginx configuration.
 
 ```

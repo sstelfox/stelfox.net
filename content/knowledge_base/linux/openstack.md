@@ -2,6 +2,8 @@
 title: Openstack
 ---
 
+# Openstack
+
 This is a mostly (95%) script-less installation and setup of OpenStack from
 scratch on a single host, though done in a way that the services could each be
 very easily broken out on to their own machines or multiple machines.
@@ -29,22 +31,23 @@ The various services should be configured in the order of the sections listed
 here.
 
 ### Network Setup
-#### Service/Management
 
 For the sake of knowing exactly what is going, what connections are being made
 and between what services I've elected to put every individual service on it's
 own IP address. This separation also makes it easy to break individual services
 off on to other machines if they become a bottleneck and need a more
-distributed setup. Since this was initially done on a development machine I
-also created a bridge to act as a virtual ethernet adapter that was only
-available locally named br-mgmt which also hosts all of the service's. The
-address range chosen for this development test was 10.100.0.0/24 as it
-generally doesn't interfere with any networks I normally encounter.
+distributed setup.
+
+Since this was initially done on a development machine I also created a bridge
+to act as a virtual ethernet adapter that was only available locally named
+`br-mgmt` which also hosts all of the service's. The address range chosen for
+this development test was `10.100.0.0/24` as it generally doesn't interfere
+with any networks I normally encounter.
 
 The main bridge was setup using the following configuration file which was
-written to /etc/sysconfig/network-scripts/ifcfg-br-mgmt
+written to `/etc/sysconfig/network-scripts/ifcfg-br-mgmt`.
 
-<pre>
+```
 NM_CONTROLLED=no
 ONBOOT=yes
 TYPE=Bridge
@@ -59,13 +62,13 @@ IPV6INIT=yes
 IPV6_PRIVACY=rfc3041
 
 NAME=ManagementNet
-</pre>
+```
 
 Subsequent IP addresses were added to the bridge by creating files at
-/etc/sysconfig/network-scripts/ifcfg-br-mgmt:{id} replacing {id} with 1 through
-9 with the following contents:
+`/etc/sysconfig/network-scripts/ifcfg-br-mgmt:{id}` replacing {id} with 1
+through 9 with the following contents:
 
-<pre>
+```
 DEVICE={Interface Name}
 NM_CONTROLLED=no
 ONBOOT=yes
@@ -78,73 +81,42 @@ IPV6INIT=yes
 IPV6_PRIVACY=rfc3041
 
 NAME={Service}
-</pre>
+```
 
 The following table show the address allocations I used, and what I intend the
 address be used for:
 
-{| class="wikitable" border="1"
-|-
-! Interface Name
-! IP Address
-! Service
-|-
-| br-mgmt:1
-| 10.100.0.11
-| MySQLd
-|-
-| br-mgmt:2
-| 10.100.0.12
-| Qpidd
-|-
-| br-mgmt:3
-| 10.100.0.13
-| Keystone/Identity
-|-
-| br-mgmt:4
-| 10.100.0.14
-| Memcached
-|-
-| br-mgmt:5
-| 10.100.0.15
-| Nova/Compute
-|-
-| br-mgmt:6
-| 10.100.0.16
-| Cinder/Volume
-|-
-| br-mgmt:7
-| 10.100.0.17
-| Glance/Image
-|-
-| br-mgmt:8
-| 10.100.0.18
-| EC2
-|-
-| br-mgmt:9
-| 10.100.0.19
-| Quantum/Network
-|}
+| Interface Name | IP Address  | Service           |
+| -------------- | ----------- | ----------------- |
+| br-mgmt:1      | 10.100.0.11 | MySQLd            |
+| br-mgmt:2      | 10.100.0.12 | Qpidd             |
+| br-mgmt:3      | 10.100.0.13 | Keystone/Identity |
+| br-mgmt:4      | 10.100.0.14 | Memcached         |
+| br-mgmt:5      | 10.100.0.15 | Nova/Compute      |
+| br-mgmt:6      | 10.100.0.16 | Cinder/Volume     |
+| br-mgmt:7      | 10.100.0.17 | Glance/Image      |
+| br-mgmt:8      | 10.100.0.18 | EC2               |
+| br-mgmt:9      | 10.100.0.19 | Quantum/Network   |
 
 ### Service Pre-Requisites
 
 When configuring the following service be sure to bind them to the address
 listed in the table above in the Service/Management network section.
 
-* Install [[Linux/Mysqld|Mysql Server]]
-* Install [[Linux/Qpid|Qpid Message Broker]]
-* Install [[Linux/Chronyd|Chrony NTP Server]]
-* Install [[Linux/Memcached|Memcache]]
+* Install [Mysql Server][1]
+* Install [Qpid Message Broker][2]
+* Install [Chrony NTP Server][3]
+* Install [Memcache][4]
 
 ### Keystone/Identity
 
 Keystone is the OpenStack Identity service and it's configuration is documented
-on [[Linux/Openstack Keystone|it's wiki page]]
+on [it's wiki page][5].
 
 ### Glance/Image Service
 
 Glance is the OpenStack Image service and it's configuration is documented on
-[[Linux/Openstack Glance|it's wiki page]]
+[it's wiki page][6]
 
 ### Horizon/Dashboard
 
@@ -152,15 +124,22 @@ Notes for when I get to this:
 
 I should make use of the Cached Database session backend:
 
-http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-cached-database.html
+* http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-cached-database.html
 
 It will need to have memcache configured as if it was going to be the session
 storage:
 
-http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-memcache.html
+* http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-memcache.html
 
 Additional notes:
 
 * http://docs.openstack.org/trunk/openstack-object-storage/admin/content/memcached-considerations.html
 * http://www.cybera.ca/tech-radar/using-memcached-openstack-nova
+
+[1]: ../mysqld/
+[2]: ../qpid/
+[3]: ../chronyd/
+[4]: ../memcached/
+[5]: ../openstack_keystone/
+[6]: ../openstack_glance/
 
