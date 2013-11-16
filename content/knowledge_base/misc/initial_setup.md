@@ -23,7 +23,8 @@ rm -f spec/super_g_spec.rb
 * Write the README
 * Clean the comments out of lib/super_g.rb
 * Fix up the gemspec file
-* Configure rspec, travis-ci, coveralls, codeclimate, gemnasium, rubygems, and yard
+* Configure rspec, travis-ci, coveralls, codeclimate, gemnasium, rubygems, and
+  yard
 
 Make the initial commit:
 
@@ -117,7 +118,7 @@ browser.
 
 Setting up the service is still a TODO but part of it was done in RSpec already.
 
-https://coveralls.io/docs/ruby
+* https://coveralls.io/docs/ruby
 
 ## Configure CodeClimate
 
