@@ -2,6 +2,8 @@
 title: Amanda
 ---
 
+# Amanda
+
 Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open
 source computer archiving tool that is able to back up data residing on
 multiple computers on a network.
@@ -23,16 +25,26 @@ is my only defence against this evil service.
 
 ```
 yum install amanda amanda-client amanda-server
-Edit /etc/xinetd.d/amanda and change disable to 'no'
-Started xinetd
-Verified it opened port 10080/udp
-Opened port 10080/udp on firewall for server subnet
-Added to /var/lib/amanda/.amandahosts: "localhost                               amandabackup
-backup                                  amandabackup
-backup.home.bedroomprogrammers.net      amandabackup
-legba                                   root"
-Set permissions on /var/lib/amanda/.amandahosts to 600
-created folder /opt/backups and changed owner to amandabackup
-and then i fucked up...
 ```
+
+Edit `/etc/xinetd.d/amanda` and change disable to 'no'.
+
+Started xinetd
+
+Verified it opened port `10080/udp`
+
+Opened port `10080/udp` on firewall for server subnet
+
+Added to `/var/lib/amanda/.amandahosts`:
+
+```
+localhost                          amandabackup
+backup                             amandabackup
+backup.home.bedroomprogrammers.net amandabackup
+legba                              root
+```
+
+Set permissions on `/var/lib/amanda/.amandahosts` to `600` created folder
+`/opt/backups` and changed owner to `amandabackup` and then I messed something
+up... and didn't document it...
 

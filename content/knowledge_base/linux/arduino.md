@@ -2,6 +2,8 @@
 title: Arduino
 ---
 
+# Arduino
+
 ## GUI
 
 The screen package isn't necessary but it's useful as a way to access the
@@ -17,7 +19,7 @@ Add the required groups to your user account.
 sudo usermod -a -G uucp,dialout,lock $USER
 ```
 
-You'll need to log out of your Desktop Environment and back in for the group
+You'll need to log out of your desktop environment and back in for the group
 settings to take effect.
 
 ## Command-line Replacement
@@ -29,4 +31,5 @@ cd ino
 sudo make install
 ```
 
-http://inotool.org/
+* http://inotool.org/
+

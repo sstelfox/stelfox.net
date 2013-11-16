@@ -23,9 +23,11 @@ yum install rng-tools -y
 
 If you don't have a hardware random number generator (which is very common
 especially with virtual machines), you'll need to use `/dev/urandom` to seed
-`/dev/random`. You should probably and test the quality of those waters before
-drinking them, the following shows a test of the quality of random numbers
-using the `rngtest` utility provided by the `rng-tools` package.
+`/dev/random`.
+
+You should probably and test the quality of those waters before drinking them,
+the following shows a test of the quality of random numbers using the `rngtest`
+utility provided by the `rng-tools` package.
 
 ```
 cat /dev/urandom | rngtest -c 1000

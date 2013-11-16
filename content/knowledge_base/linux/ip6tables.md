@@ -2,18 +2,21 @@
 title: IP6Tables
 ---
 
+# ip6tables
+
 IP6Tables is the firewall that will directly effect IPv6 traffic. This is
-restricted to a point of uselessness since IPv6 is not used in any of the
-bedroomprogrammers.net networks.
+sample configuration is restricted to allow normal client activity but has no
+open ports.
 
 ## Security Notes
 
 While turning off IPv6 is definitely one way to handle blocking IPv6 traffic,
 if I left ip6tables off or in it's default state and an update re-enabled IPv6
 in the networking stack somehow it would be as good as having no firewall
-against any attacker that noticed. This could be a serious security threat
-allowing someone to bypass my carefully configured [IPTables](iptables)
-firewall.
+against any attacker that noticed.
+
+This could be a serious security threat allowing someone to bypass my carefully
+configured [IPTables][1] firewall.
 
 ## /etc/sysconfig/ip6tables
 
@@ -36,4 +39,6 @@ firewall.
 
 COMMIT
 ```
+
+[1]: ../iptables/
 
