@@ -2,6 +2,8 @@
 title: Hell Banning
 ---
 
+# Hell Banning
+
 A hellbanned user is invisible to all other users, but crucially, not himself.
 From their perspective, they are participating normally in the community but
 nobody ever responds to them. They can no longer disrupt the community because

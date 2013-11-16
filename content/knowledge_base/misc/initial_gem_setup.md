@@ -1,5 +1,5 @@
 ---
-title: Initial Setup
+title: Initial Gem Setup
 ---
 
 # Gem Initial Setup
@@ -116,7 +116,8 @@ browser.
 
 ## Configure Coveralls
 
-Setting up the service is still a TODO but part of it was done in RSpec already.
+Setting up the service is still a TODO but part of it was done in RSpec
+already.
 
 * https://coveralls.io/docs/ruby
 

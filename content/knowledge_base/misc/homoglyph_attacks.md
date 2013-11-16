@@ -2,7 +2,9 @@
 title: Homoglyph Attacks
 ---
 
-A [homoglyph](1) attack is making use of common UTF-8 high order characters
+# Homoglyph Attacks
+
+A [homoglyph][1] attack is making use of common UTF-8 high order characters
 that look virtually identical to different ASCII characters. For example
 decimal character 1029 looks like an uppercase S. Demonstrated in the following
 snippet:
@@ -19,6 +21,5 @@ this in a ruby interpreter shell by issueing the following commands:
 => 1029
 ```
 
-Reference:
+[1][http://www.irongeek.com/homoglyph-attack-generator.php]
 
-  [1][http://www.irongeek.com/homoglyph-attack-generator.php]
