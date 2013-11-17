@@ -116,5 +116,5 @@ cat export.asc | gpg2 --decrypt --batch --passphrase "PASSWORD" | gpg2 \
 ```
 
 [1]: ../../devices/nslu2/
-[2]: ../rng-tools/
+[2]: ../rng_tools/
 
