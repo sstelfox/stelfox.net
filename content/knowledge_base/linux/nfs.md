@@ -44,5 +44,5 @@ dmesg | tail  or so
 * http://www.server-world.info/en/note?os=Fedora_15&p=nfs
 * http://tldp.org/HOWTO/NFS-HOWTO/security.html
 * http://www.linuxjournal.com/article/4880
-* http://www.copiouscom.com/2010/05/open-directory-kerberos-single-sign-on-sso-and-centos-with-ssh-and-kerberized-nfs-home-directories/
+* `http://www.copiouscom.com/2010/05/open-directory-kerberos-single-sign-on-sso-and-centos-with-ssh-and-kerberized-nfs-home-directories/` (Dead link)
 

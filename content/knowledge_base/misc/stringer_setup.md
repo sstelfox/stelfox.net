@@ -36,7 +36,7 @@ title: Stringer Setup
     Real User Apdex T score to 4.0 and the App server to 0.25.
   * heroku addons:add pgbackups:auto-month
   * heroku addons:add papertrail:choklad
-* Opened up http://feeds.stelfox.net/ and set a password
+* Opened up `http://feeds.stelfox.net/` and set a password
 * Dont import feeds
 * Refresh the page -> Then go add some feeds.
 * Run by hand: heroku run rake fetch_feeds
