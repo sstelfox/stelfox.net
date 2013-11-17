@@ -14,6 +14,6 @@ blog.
 Thanks DreamHost for staying on top of technology like this! You never
 disappoint.
 
-[1]: http://www.dreamhost.com/r.cgi?71008
+[1]: http://www.dreamhost.com/redir.cgi?ad=rewards%7C71008
 [2]: http://blog.dreamhost.com/2011/02/03/ipv6-now-available-from-dreamhost/
 
