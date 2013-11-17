@@ -2,7 +2,7 @@
 require 'nanoc/tasks'
 require 'rake/clean'
 
-CLEAN.include("output/**")
+CLEAN.include("output/**", "tmp/**", "*.log")
 
 desc "Compile site HTML using nanoc."
 task :compile do
