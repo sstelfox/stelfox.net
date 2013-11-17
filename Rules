@@ -38,8 +38,18 @@ preprocess do
     )
   end
 
-  create_tag_pages
+  def create_knowledge_base_indexes
+    kb_pages = @items.select { |i| i.identifier.to_s.start_with?("/knowledge_base/") }
+    kb_pages.map! { |i| i.identifier.split("/")[0...-1].join("/") + "/" }
 
+    kb_pages.uniq.sort.each do |i|
+      next if @items[i] # If there is already a page don't create anything
+      puts "Creating KB index: #{i}"
+    end
+  end
+
+  create_tag_pages
+  create_knowledge_base_indexes
   #@items.each { |i| puts "#{i.identifier}-->#{(i[:title] || "").titleize}<--" }
 end
 
