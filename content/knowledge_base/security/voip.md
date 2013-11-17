@@ -153,6 +153,6 @@ unless things such as the outgoing pin, a strong IDS, and firewall logs had
 been implemented.
 
 [1]: ../../networking/vlan/
-[2]: ../../security/801x/
-[3]: ../../linux/ids/
+[2]: ../801x/
+[3]: ../ids/
 
