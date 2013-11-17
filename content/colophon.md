@@ -2,6 +2,8 @@
 title: Colophon
 ---
 
+# Colophon
+
 While I was building this site I had a few requirements:
 
 * It needed to be fast and easy to host
