@@ -539,9 +539,9 @@ settings can be found in `/etc/security/limits.conf`
 [19]: ../yum-updatesd/
 [20]: ../mysql/
 [21]: ../../security/fedora_check/
-[22]: ../../security/pam_cracklib/
-[23]: ../../security/pam_passwdqc/
-[24]: ../../security/pam_tally2/
+[22]: ../pam_cracklib/
+[23]: ../pam_passwdqc/
+[24]: ../pam_tally2/
 [25]: ../certificate_authority/
 [26]: ../sysctl/
 

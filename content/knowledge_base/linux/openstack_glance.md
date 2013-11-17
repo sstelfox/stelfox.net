@@ -23,6 +23,6 @@ GRANT ALL ON glance.* TO 'glance'@'10.100.0.%' IDENTIFIED BY 'LongStrongUniquePa
 FLUSH PRIVILEGES;
 ```
 
-[1]: ../mysqld/
+[1]: ../mysql/
 [2]: ../openstack/
 
