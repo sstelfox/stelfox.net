@@ -2,7 +2,10 @@
 title: MySQL
 ---
 
+# MySQL
+
 ## Server
+
 ### Installation
 
 Install the package.
@@ -28,8 +31,8 @@ mysql_secure_installation
 
 ### Configuration
 
-Before applying the following configuration file in /etc/my.cnf. Safely
-shutdown the server and delete the logfiles /var/lib/mysql/ib_logfile*. This
+Before applying the following configuration file in `/etc/my.cnf`. Safely
+shutdown the server and delete the logfiles `/var/lib/mysql/ib_logfile*`. This
 configuration file will change the size of the log buffer and it will cause an
 error when starting the server backup that will look like:
 
@@ -40,17 +43,14 @@ InnoDB: than specified in the .cnf file 0 67108864 bytes!
 
 There is still one major security feature that I haven't added to this
 configuration yet. Running the mysql daemon in a chroot environment. Details on
-setting up a chroot environment for mysql can be found,
-[http://www.symantec.com/connect/articles/securing-mysql-step-step here], and
-[http://www.webhostingskills.com/articles/mysql_in_a_chrooted_environment
-here],
+setting up a chroot environment for mysql can be found, [here][1], and
+[here][2].
 
 Detailed information on all of the configuration options can be found
-[http://dev.mysql.com/doc/refman/5.5/en/dynamic-system-variables.html here].
-There is a script that can assist in tuning larger production databases I've
-stored in this wiki [[Linux/MySQL Tuning|here]].
+[here][3].  There is a script that can assist in tuning larger production
+databases I've stored [here][4].
 
-```
+```ini
 [mysqld]
 # Bind only to expected address. You can not bind to multiple addresses, it's
 # none, 1 or all (0.0.0.0)
@@ -215,7 +215,7 @@ prompt=(\\u@\\h) [\\d]>\\_
 There is some additional configuration in the systemd init script, specifically
 which user/group the service will fork too (default is mysql/mysql). If you
 need to change this you'll need to make the adjustment in
-/etc/systemd/system/multi-user.target.wants/mysqld.service
+`/etc/systemd/system/multi-user.target.wants/mysqld.service`.
 
 ### Firewall
 
@@ -241,8 +241,8 @@ mysql -u root
 ```
 
 Refer to the section on changing a user's password at this point. When done be
-sure to kill the mysqld_safe instance, start up the daemon normally and restore
-access to the server.
+sure to kill the `mysqld_safe` instance, start up the daemon normally and
+restore access to the server.
 
 ### Quick Self Signed SSL Cert w/ Client
 
@@ -254,33 +254,40 @@ used for user authentication.
 First the CA:
 
 ```
-openssl req -new -x509 -newkey rsa:4096 -keyout ca.key -nodes -days 365 -out ca.crt
+openssl req -new -x509 -newkey rsa:4096 -keyout ca.key -nodes -days 365 \
+  -out ca.crt
 ```
 
 Then the server cert:
 
 ```
-openssl req -newkey rsa:4096 -keyout server.key -nodes -days 365 -out server.csr
-openssl x509 -req -in server.csr -days 365 -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
+openssl req -newkey rsa:4096 -keyout server.key -nodes -days 365 \
+  -out server.csr
+openssl x509 -req -in server.csr -days 365 -CA ca.crt -CAkey ca.key \
+  -set_serial 01 -out server.crt
 rm server.csr
 ```
 
 Then the client cert:
 
 ```
-openssl req -newkey rsa:4096 -keyout client.key -nodes -days 365 -out client.csr
-openssl x509 -req -in client.csr -days 365 -CA ca.crt -CAkey ca.key -set_serial 02 -out client.crt
+openssl req -newkey rsa:4096 -keyout client.key -nodes -days 365 \
+  -out client.csr
+openssl x509 -req -in client.csr -days 365 -CA ca.crt -CAkey ca.key \
+  -set_serial 02 -out client.crt
 rm client.csr
 ```
 
 ## Client
+
 ### Remotely Calculate the Size of a Database
 
 Paste the following query into an interactive console session to collect the
 sizes of all databases the current user has access to:
 
 ```
-SELECT table_schema "Database Name", SUM(data_length + index_length) / 1024 / 1024 "Size in Mb" FROM information_schema.TABLES GROUP BY table_schema;
+SELECT table_schema "Database Name", SUM(data_length + index_length) / 1024
+  / 1024 "Size in Mb" FROM information_schema.TABLES GROUP BY table_schema;
 ```
 
 ### Drop Tables
@@ -289,21 +296,23 @@ Without being able to drop a database and create a new one it can be kind of
 frustrating to empty a database of all it's tables so I've written a quick
 script to drop all the tables from a specified database.
 
-```sh
+```
 #!/bin/bash
+
 DBUSER="$1"
 DBPASS="$2"
 DBNAME="$3"
 DBHOST="$4"
- 
+
 if [ $# -ne 4 ]; then
   echo "Usage: $0 {username} {password} {database} {hostname}"
   echo "Drops all tables from a MySQL"
   exit 1
 fi
- 
-TABLES=$(mysql -u $DBUSER -p$DBPASS -h$DBHOST $DBNAME -e 'show tables;' | awk '{ print $1}' | grep -v '^Tables' )
- 
+
+TABLES=$(mysql -u $DBUSER -p$DBPASS -h$DBHOST $DBNAME -e 'show tables;' |
+  awk '{ print $1}' | grep -v '^Tables' )
+
 for t in $TABLES; do
   echo "Deleting $t table from $MDB database..."
   mysql -u $DBUSER -p$DBPASS -h$DBHOST $DBNAME -e "drop table $t;"
@@ -317,7 +326,8 @@ channel. See the section on Using SSL.
 
 ```
 CREATE DATABASE example;
-GRANT ALL ON example.* TO 'some-example-user'@'%.home-network.net' IDENTIFIED BY 'mYsUperSt0ngpassWordD0ntcoPyM3!';
+GRANT ALL ON example.* TO 'some-example-user'@'%.home-network.net' IDENTIFIED
+  BY 'mYsUperSt0ngpassWordD0ntcoPyM3!';
 FLUSH PRIVILEGES;
 ```
 
@@ -327,20 +337,21 @@ Note: For security reasons this password update should be performed over an
 encrypted channel. See the section on Using SSL.
 
 ```
-UPDATE mysql.user SET password=PASSWORD("my-new-super-secure-password") where user='some-user-name';
+UPDATE mysql.user SET password=PASSWORD("my-new-super-secure-password") WHERE
+  user='some-user-name';
 ```
 
 ### Configuration
 
 Quick and simple change I make to my client configuration to make the prompt a
-little more verbose. Create the following file in ~/.my.cnf:
+little more verbose. Create the following file in `~/.my.cnf`:
 
 ```
 [mysql]prompt=(\\u@\\h) [\\d]>\\_
 ```
 
-This can also be set system wide in /etc/my.cnf for all users by appending the
-above (which I do in all my server configurations).
+This can also be set system wide in `/etc/my.cnf` for all users by appending
+the above (which I do in all my server configurations).
 
 ### Using SSL
 
@@ -380,4 +391,9 @@ query timing.
 * https://code.google.com/p/gperftools/
 
 MORE TODO
+
+[1]: http://www.symantec.com/connect/articles/securing-mysql-step-step
+[2]: http://www.webhostingskills.com/articles/mysql_in_a_chrooted_environment
+[3]: http://dev.mysql.com/doc/refman/5.5/en/dynamic-system-variables.html
+[4]: ../mysql_tuning/
 

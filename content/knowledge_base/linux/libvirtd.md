@@ -2,6 +2,8 @@
 title: libvirtd
 ---
 
+# libvirtd
+
 libvirt is an open source API and management tool for managing platform
 virtualization. It is used to manage Linux KVM and Xen virtual machines through
 graphical interfaces such as Virtual Machine Manager and higher level tools
@@ -16,17 +18,20 @@ through the use of CGroups this can be accomplished.
 Networking is a tricky topic as there are several ways to do this in libvirtd.
 My personal choice is to make the host completely transparent in regards to the
 networking and that is bridge mode. There is also routed and NAT either way
-exposes the host's IP. Routed mode also requires additional configuration in
-the network hardware or on the client machines and NAT requires port forwarding
-within the host machine. I will not cover either of these in this wiki.
+exposes the host's IP.
+
+Routed mode also requires additional configuration in the network hardware or
+on the client machines and NAT requires port forwarding within the host
+machine. I will not cover either of these in this wiki.
 
 Privilege separation is very important. In the event that a guest gets
 compromised and the attacker finds a way to break the virtualization's jail,
-they should not immediately gain root privileges. Luckily this is already
-covered by default (at least with Fedora 12 installs) in which libvirt will
-drop it's privileges to the qemu user for every guest that it spawns. Each
-guest is also automatically given it's own SELinux label. This will further
-isolate each guest.
+they should not immediately gain root privileges.
+
+Luckily this is already covered by default (at least with Fedora 12 installs)
+in which libvirt will drop it's privileges to the qemu user for every guest
+that it spawns. Each guest is also automatically given it's own SELinux label.
+This will further isolate each guest.
 
 ## Firewall Adjustments
 
@@ -34,7 +39,7 @@ Regardless of the type of network that is chosen for guests all of their
 traffic goes through the forwarding chain of iptables. While I really strongly
 advocate against any default allow policies on anything, this is one place
 where I personally am willing to make an exception. To allow guests to talk to
-the network make the following change to the default [[Linux/IPTables]] rules:
+the network make the following change to the default [IPTables][1] rules:
 
 ```
 :FORWARD DROP [0:0]
@@ -76,8 +81,6 @@ Which are in my humble opinion the most important for our task.
 
 http://berrange.com/posts/2009/12/03/using-cgroups-with-libvirt-and-lxckvm-guests-in-fedora-12/
 
-## Configuration
-### /etc/sysconfig/libvirtd
 ## Initial Setup
 
 Before creating your first guest there are a few things that I like to do.
@@ -89,9 +92,10 @@ it is done outside of the virtualization console.
 Since I use bridge networking and that is the only way I want my guests to talk
 to each other and the rest of the world, I want to get rid of the default
 network which performs NAT'ing so that the VMs don't suddenly get a second
-network interface that I don't know about. To do this I'll want to drop into a
-virsh shell and issue a few commands. You can see an entire session of me
-removing the default network here:
+network interface that I don't know about.
+
+To do this I'll want to drop into a virsh shell and issue a few commands. You
+can see an entire session of me removing the default network here:
 
 ```
 [root@localhost ~]# virsh
@@ -180,13 +184,13 @@ configuration to match what your network has. This example is also specific to
 the RedHat architecture. The configuration will be different than it is here
 (and I have not documented it).
 
-You will need to make sure that the package "bridge-utils" is installed on the
+You will need to make sure that the package `bridge-utils` is installed on the
 server. I think this is a dependency of libvirt but I could be wrong so it's
 best to double check.
 
 First eth1 needs to be configured (or unconfigured in this case). This can be
-done by editing /etc/sysconfig/network-scripts/ifcfg-eth1. The entirety of the
-files contents should be replaced with the following:
+done by editing `/etc/sysconfig/network-scripts/ifcfg-eth1`. The entirety of
+the files contents should be replaced with the following:
 
 ```
 DEVICE=eth1
@@ -196,7 +200,7 @@ ONBOOT=yes
 ```
 
 Next we need to tell the server about the VLAN. Create the file
-/etc/sysconfig/network-scripts/ifcfg-vlan20 if it doesn't exist already, and
+`/etc/sysconfig/network-scripts/ifcfg-vlan20` if it doesn't exist already, and
 populate it with the following:
 
 ```
@@ -213,9 +217,11 @@ BRIDGE=br20
 Note above that I've specified which bridge the vlan device is going to be
 connected to. The 20 in br20 can be changed to any other number you'd like,
 however for simplicity sake I like to have the bridge reflect what VLAN it is
-connected to. The last step is to configure the bridge interface. This is
-needed so that a guest may make a connection to it. Create the file
-/etc/sysconfig/network-scripts/ifcfg-br20 if it doesn't already exist and
+connected to.
+
+The last step is to configure the bridge interface. This is needed so that a
+guest may make a connection to it. Create the file
+`/etc/sysconfig/network-scripts/ifcfg-br20` if it doesn't already exist and
 replace the contents with the following:
 
 ```
@@ -258,9 +264,9 @@ give the guest an interface on the appropriate VLAN:
 ```
 
 You can also define a network in virsh so that it'll show up to utilities like
-virt-manager by putting the following in an xml file and running 'virsh
-net-define bridge20.xml' assuming you name the file bridge20.xml, and 'virsh
-net-autostart LANBridge' which assumes you use the same name that I've chosen
+virt-manager by putting the following in an xml file and running `virsh
+net-define bridge20.xml` assuming you name the file `bridge20.xml`, and `virsh
+net-autostart LANBridge` which assumes you use the same name that I've chosen
 for this bridge below:
 
 ```xml
@@ -309,10 +315,12 @@ well. Depending on the function of the server I usually give my guests between
 Disk space will have to be determined on a guest by guest basis, however I do
 like to the qcow2 image for my disk images for a variety of reasons. Snapshots,
 compression, encryption, and copy-on-write images are all handy little features
-of the qcow2 image format. There is a small performance hit, I've measured that
-a qcow2 image is about 8% slower on reads, and about 12% slower on writes. The
-added bonuses however more than make up for that for me. You'll have to decide
-on your own how you'd like to handle it.
+of the qcow2 image format.
+
+There is a small performance hit, I've measured that a qcow2 image is about 8%
+slower on reads, and about 12% slower on writes. The added bonuses however more
+than make up for that for me. You'll have to decide on your own how you'd like
+to handle it.
 
 I have never used more than one core for a guest as they've never needed it,
 I've also heard some things that I've never checked into that some guests
@@ -377,4 +385,6 @@ virt-install --connect qemu:///system \
 ## LXC
 
 * https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/
+
+[1]: ../iptables/
 

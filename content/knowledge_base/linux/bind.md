@@ -2,6 +2,8 @@
 title: Bind
 ---
 
+# Bind
+
 ## Security Notes
 
 Phew, where do I start. DNS can be used to enumerate machines and services on a
@@ -11,7 +13,7 @@ providing an internal set of records for all of your systems and an external
 set of records only containing the addresses required to be used externally.
 I'll elaborate more some other time.
 
-### Firewall Adjustments
+## Firewall Adjustments
 
 A DNS server isn't very good unless other machines are able to query it. The
 following allows incoming DNS queries universally.
@@ -74,7 +76,7 @@ logging {
   };
 
   category default      { default_syslog; };
-  
+
   category client       { audit_syslog; };
   category config       { default_syslog; };
   category dnssec       { audit_syslog; };
@@ -106,9 +108,9 @@ options {
   // More efficient zone transfers
   transfer-format many-answers;
 
-  // Set the maximum time a zone transfer can take. Any zone transfer that takes
-  // longer than 15 minutes is unlikely to ever complete. If there are HUGE zone
-  // files this may become an issue.
+  // Set the maximum time a zone transfer can take. Any zone transfer that
+  // takes longer than 15 minutes is unlikely to ever complete. If there are
+  // HUGE zone files this may become an issue.
   max-transfer-time-in 15;
 
   // With no dynamic interfaces, bind doesn't need to poll for interface state
@@ -118,7 +120,7 @@ options {
   dnssec-validation yes;
   dnssec-lookaside  auto;
 
-  /* ISC DLV key */
+  // ISC DLV key
   bindkeys-file           "/etc/named.iscdlv.key";
   managed-keys-directory  "/var/named/dynamic";
 
@@ -127,8 +129,8 @@ options {
   allow-query-cache { trusted; };
 };
 
-// Trusted portion of the split-horizon DNS containing internal domains, private
-// records, as well as allow recursive lookups.
+// Trusted portion of the split-horizon DNS containing internal domains,
+// private records, as well as allow recursive lookups.
 view "internal-in" in {
   match-clients { trusted; };
   recursion yes;
@@ -217,10 +219,15 @@ command:
 rndc-confgen -b 512 > /etc/rndc.conf
 ```
 
-The commented out code belongs in /etc/named.conf, just replace the following
-comment with the code: '## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##'. 512
-is unfortunately the strongest bit size available for authentication so it is
-strongly recommended to firewall off and limit the IP addresses the control
+The commented out code belongs in `/etc/named.conf`, just replace the following
+comment with the code:
+
+```
+## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##
+```
+
+512 is unfortunately the strongest bit size available for authentication so it
+is strongly recommended to firewall off and limit the IP addresses the control
 channel is running on. By default this is exclusively the IPv4 loopback
 address.
 
@@ -238,8 +245,8 @@ $TTL 86400
 
     NS    @
 
-version.bind.   CHAOS TXT "It's over 9000" 
-authors.bind.   CHAOS TXT "Unlisted"
+version.bind.   CHAOS TXT "It's over 9000"
+authors.bind.   CHAOS TXT "Nom de plume"
 ```
 
 ### /var/named/data/internal/1057.name.zone.db
@@ -331,7 +338,7 @@ $TTL 86400
 
 ## LDAP Backend
 
-Using the package bind-dyndb-ldap, an ldap backend can be used either
+Using the package `bind-dyndb-ldap`, an ldap backend can be used either
 exclusively or in addition to other zones. Configuring a simple authenticated
 ldap lookup can be done with something along the line of the following
 configuration:
@@ -348,11 +355,12 @@ dynamic-db "my_db_name" {
 
 With this configuration, the LDAP back-end will try to connect to server
 ldap.example.com with simple authentication, without any password. It will then
-do an LDAP subtree search in the "cn=dns,dc=example,dc=com" base for entries
+do an LDAP subtree search in the `cn=dns,dc=example,dc=com` base for entries
 with object class idnsZone, for which the idnsZoneActive attribute is set to
-True. For each entry it will find, it will register a new zone with BIND. The
-LDAP back-end will keep each record it gets from LDAP in its cache for 5
-minutes.
+True.
+
+For each entry it will find, it will register a new zone with BIND. The LDAP
+back-end will keep each record it gets from LDAP in its cache for 5 minutes.
 
 It also supports SASL authentication methods which means we can use encrypted
 authentication and/or kerberos.
@@ -361,12 +369,13 @@ authentication and/or kerberos.
 
 If there is a local IPv6 network but it is unrouted bind will regularily
 attempt to contact other nameservers using IPv6 and doesn't seem to cache
-whether it was able to reach them or not. This has a dramatically visible
-impact on the time it takes to query for a name. To prevent this there are
-really only two options, the first is to make the IPv6 network routeable, and
-the second is to put bind in IPv4 only mode. Neither solution is good, but the
-latter is the only feasible one (This does mean it won't even listen on an IPv6
-port).
+whether it was able to reach them or not.
+
+This has a dramatically visible impact on the time it takes to query for a
+name. To prevent this there are really only two options, the first is to make
+the IPv6 network routeable, and the second is to put bind in IPv4 only mode.
+Neither solution is good, but the latter is the only feasible one (This does
+mean it won't even listen on an IPv6 port).
 
 ```
 echo 'OPTIONS="-4"' >> /etc/sysconfig/named

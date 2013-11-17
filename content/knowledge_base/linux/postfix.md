@@ -5,30 +5,21 @@ title: Postfix
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
 written with security in mind.
 
-[https://grepular.com/Automatically_Encrypting_all_Incoming_Email Something
-that would be good] to port over to Fedora/Postfix with a nice Stelfox spin,
-and it's
-[https://grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2 follow
-up].
+[Something that would be good][1] to port over to Fedora/Postfix with a nice
+Stelfox spin, and it's [follow up][2].
 
-[https://grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks
-This] is what originally turned me on to that.
+[This][3] is what originally turned me on to that.
 
-[http://library.linode.com/email/postfix/dovecot-mysql-centos-5 This]] will
-help setup a mail gateway.
+[This][4] will help setup a mail gateway.
 
-I can use [http://library.linode.com/email/fetchmail this] to centralize my
-email.
+I can use [this][5] to centralize my email.
 
-This [http://rimuhosting.com/support/settingupemail.jsp?mta=postfix site] has
-some diagnostic information that may be useful.
+This [site][6] has some diagnostic information that may be useful.
 
 As for Dovecot, while not being Postfix, is still an important piece of this
-puzzle. The [http://wiki.dovecot.org/MailLocation/ Mail Location] for Dovecot
-will need to be considered, so far I'm leaning towards
-[http://wiki2.dovecot.org/MailboxFormat/dbox sdbox], however, it is not
-compatible with mutt which is my ideal client. My next alternative would be the
-[http://wiki.dovecot.org/MailboxFormat/Maildir Maildir].
+puzzle. The [Mail Location][7] for Dovecot will need to be considered, so far
+I'm leaning towards [sdbox][8], however, it is not compatible with mutt which
+is my ideal client. My next alternative would be the [Maildir][9].
 
 ## General Host MTA
 
@@ -43,10 +34,10 @@ compatible with mutt which is my ideal client. My next alternative would be the
 The following configuration was used as a temporary mail relay. It does not
 filter spam and was done fast so there are probably problems in the
 configuration that were missed. Proceed with caution. A tool that was
-invaluable to me in diagnosing queueing issues was "qshape" which is part of
-the package "postfix-perl-scripts" in Fedora 15.
+invaluable to me in diagnosing queueing issues was `qshape` which is part of
+the package `postfix-perl-scripts` in Fedora 15.
 
-```
+```ini
 myhostname = mailrelay.example.org
 
 command_directory = /usr/sbin
@@ -93,7 +84,7 @@ mailq_path = /usr/bin/mailq.postfix
 
 ## Full Local Client MTA w/ Relaying
 
-```
+```ini
 queue_directory = /var/spool/postfix
 command_directory = /usr/sbin
 daemon_directory = /usr/libexec/postfix
@@ -143,38 +134,44 @@ systemctl start postfix.service
 
 ## Creating a catch-all
 
-```sh
+```
 groupadd -g 201 collector
 useradd -u 201 -g 201 collector
 passwd collector
 mkdir /var/spool/mail/all
 chown collector:collector /var/spool/mail/all
+yum install postfix -y
 ```
 
-yum install postfix -y
-
-Edit /etc/postfix/main.cf
+Edit `/etc/postfix/main.cf`
 
 Created lines:
 
-  myhostname = postfix-catch-all.i.0x378.net
-  home_mailbox = Maildir/
-  #local_recipient_maps = # Intentionally unset
-  virtual_mailbox_maps = regexp:/etc/postfix/virtual_mailbox_regexes.txt
-  virtual_mailbox_base = /home
-  virtual_uid_maps = static:201 # The UID of the mailtrap user
-  virtual_gid_maps = static:201 # The GID of postfix
-  virtual_minimum_uid = 200
+```
+myhostname = postfix-catch-all.i.0x378.net
+home_mailbox = Maildir/
+#local_recipient_maps = # Intentionally unset
+virtual_mailbox_maps = regexp:/etc/postfix/virtual_mailbox_regexes.txt
+virtual_mailbox_base = /home
+virtual_uid_maps = static:201 # The UID of the mailtrap user
+virtual_gid_maps = static:201 # The GID of postfix
+virtual_minimum_uid = 200
+```
 
 Changed lines:
 
-  inet_interfaces = all
+```
+inet_interfaces = all
+```
 
-Created the file /etc/postfix/virtual_mailbox_regexes.txt with the following contents:
+Created the file `/etc/postfix/virtual_mailbox_regexes.txt` with the following
+contents:
 
-  /.*/  collector/Maildir/
+```
+/.*/  collector/Maildir/
+```
 
-Opened port 25 on the firewall
+Opened port `25/tcp` on the firewall.
 
 ## Round 2
 
@@ -182,7 +179,7 @@ Opened port 25 on the firewall
 yum install postfix -y
 ```
 
-Edit /etc/postfix/main.cf
+Edit `/etc/postfix/main.cf`
 
 Created lines:
 
@@ -202,26 +199,32 @@ inet_interfaces = all
 
 Make sure `mydestination` is unset
 
-Created the file /etc/postfix/virtual_aliases with the following contents:
+Created the file `/etc/postfix/virtual_aliases` with the following contents:
 
-  /.*/  root
+```
+/.*/  root
+```
 
-Opened port 25 on the firewall
+Opened port `25/tcp` on the firewall.
 
 Great success! The local root account is now receiving emails to literally any
 address. In production this probably shouldn't be the root user....
 
 ## Notes on Building the App
 
-yum install ruby git rubygem-bundler ruby-devel make gcc openssl-devel openssh-server -y
+```
+yum install ruby git rubygem-bundler ruby-devel make gcc openssl-devel \
+  openssh-server -y
 
 systemctl enable sshd.service
 systemctl start sshd.service
+```
 
 Temporarily allow HTTPS for gem installation...
 
 On development box...
 
+```
 rails new parcel_pot --skip-test-unit --skip-bundle
 cd parcel_pot
 
@@ -263,6 +266,7 @@ require 'capistrano/rails/migrations'
 
 Dir.glob('lib/capistrano/tasks/*.cap').each { |r| import r } 
 EOS
+```
 
 ## Potentially Useful Links
 
@@ -306,7 +310,8 @@ postsuper -d ALL
 
 ## Greylisting
 
-milter-greylist, sqlgrey
+* milter-greylist
+* sqlgrey
 
 ## SSL
 
@@ -334,13 +339,14 @@ smtpd_tls_key_file = /etc/postfix/key.pem
 ## Anti-Virus & Spam Filtering
 
 ```
-yum install amavisd-new spamassassin clamav clamav-update clamav-server-sysvinit -y
+yum install amavisd-new spamassassin clamav clamav-update \
+  clamav-server-sysvinit -y
 ```
 
 I opened up `/etc/sysconfig/freshclam` and commented out the last line.
 
-Edited $mydomain variable in /etc/amavisd/amavisd.conf to be '0x378.net' and
-finally enable and start the services.
+Edited `$mydomain` variable in `/etc/amavisd/amavisd.conf` to be `0x378.net`
+and finally enable and start the services.
 
 ```
 systemctl enable amavisd.service
@@ -353,12 +359,15 @@ systemctl start spamassassin.service
 
 Additional things to consider:
 
-bogofilter spambayes spamprobe dspam
+* bogofilter
+* spambayes
+* spamprobe
+* dspam
 
 ## DKIM
 
-There are two postfix DKIM milters available, opendkim, and dkim-milter. The
-former is a fork of the latter, has fewer bugs, and is under a much tighter
+There are two postfix DKIM milters available, `opendkim`, and `dkim-milter`.
+The former is a fork of the latter, has fewer bugs, and is under a much tighter
 release schedule.
 
 ```
@@ -372,53 +381,34 @@ yum install opendkim -y
 ## SPF Validation
 
 There are two postfix SPF filters available as well. The first one is
-perl-Mail-SPF and the other is pypolicyd-spf. From what I can tell the latter
-is significantly more sophisticated and it provides a saner set of defaults so
-thats the choice I'm going with.
+`perl-Mail-SPF` and the other is `pypolicyd-spf`. From what I can tell the
+latter is significantly more sophisticated and it provides a saner set of
+defaults so thats the choice I'm going with.
 
 The following is a set of the valid SPF keywords and their modifiers.
 
-```
-v=spf1  ->  Specifies this is an SPF record, and we're using version 1 of it.
-all       ->  Matches everything not specifically matched.
-a         ->  Match the A record of the domain by default, additionally an
-              other domain can be specified, and a CIDR network prefix can be
-              applied to the resolved address. (ex: a a:other.tld a/24
-              a:test.tld/24)
-mx        ->  Match the MX records of the domain by default, additional domains
-              and CIDR suffixes can be applied like the a record. (ex: mx
-              mx:other.tld mx/28 mx:something.tld/24)
-ip4       ->  IPv4 address or network (CIDR format) (ex: ip4:192.168.0.0/24)
-ip6       ->  IPv6 address or network (CIDR format) (ex:
-              ip6:2001:51b2:200C::/64)
-ptr       ->  ptr, without an argument this validates that at least one of the
-              domains resolved by looking up the client's IP address resolves
-              back to the current domain. When a domain is provided it
-              validates the reverse lookups match that domain instead.
-exists    ->  Matches successfully if the provided domain successfully resolves
-              to an address (it doesn't matter what address). This is valuable
-              for use with macros, allowing RBL-style reversed-IP lookups.
-include   ->  Additionally add the SPF record from another domain. If that
-              other domain doesn't include an SPF record the result will be a
-              PermError. (ex: include:example.com).
-redirect  ->  ignore this SPF record and use the SPF record at the provided
-              domain instead. If the provided domain doesn't have an spf record
-              the result is unknown. (ex: redirect=example.com)
-exp       ->  If an SMTP receiver rejects a message, it can direct
-              non-conforming users to a web page that provides further
-              instructions. When the domain is expanded; a TXT lookup is
-              performed, the result of the TXT query is then macro expanded and
-              shown to the sender (ex: exp=explain._spf.%{d})
-```
+|          |                                                                                                                                                                                                                                                                                            |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| v=spf1   | Specifies this is an SPF record, and we're using version 1 of it.                                                                                                                                                                                                                          |
+| all      | Matches everything not specifically matched.                                                                                                                                                                                                                                               |
+| a        | Match the A record of the domain by default, additionally an other domain can be specified, and a CIDR network prefix can be applied to the resolved address. (ex: a a:other.tld a/24 a:test.tld/24)                                                                                       |
+| mx       | Match the MX records of the domain by default, additional domains and CIDR suffixes can be applied like the a record. (ex: mx mx:other.tld mx/28 mx:something.tld/24)                                                                                                                      |
+| ip4      | IPv4 address or network (CIDR format) (ex: ip4:192.168.0.0/24)                                                                                                                                                                                                                             |
+| ip6      | IPv6 address or network (CIDR format) (ex: ip6:2001:51b2:200C::/64)                                                                                                                                                                                                                        |
+| ptr      | ptr, without an argument this validates that at least one of the domains resolved by looking up the client's IP address resolves back to the current domain. When a domain is provided it validates the reverse lookups match that domain instead.                                         |
+| exists   | Matches successfully if the provided domain successfully resolves to an address (it doesn't matter what address). This is valuable for use with macros, allowing RBL-style reversed-IP lookups.                                                                                            |
+| include  | Additionally add the SPF record from another domain. If that other domain doesn't include an SPF record the result will be a PermError. (ex: include:example.com).                                                                                                                         |
+| redirect | ignore this SPF record and use the SPF record at the provided domain instead. If the provided domain doesn't have an spf record the result is unknown. (ex: redirect=example.com)                                                                                                          |
+| exp      | If an SMTP receiver rejects a message, it can direct non-conforming users to a web page that provides further instructions. When the domain is expanded; a TXT lookup is performed, the result of the TXT query is then macro expanded and shown to the sender (ex: exp=explain._spf.%{d}) |
 
 Expressions:
 
-```
--     Fail
-~     Soft-fail (accept but mark)
-+     Pass
-?     Neutral
-```
+|   |                             |
+|---|-----------------------------|
+| - | Fail                        |
+| ~ | Soft-fail (accept but mark) |
+| + | Pass                        |
+| ? | Neutral                     |
 
 Install SPF stuff:
 
@@ -438,4 +428,14 @@ Looking into the 'layers' thing a little bit deeper, it seems that SPF use the
 SMTP protocol's "MAIL FROM" envelope address to perform the validation while
 SenderID uses the headers in the body content. Definitely smarter on the SPF
 front.
+
+[1]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email
+[2]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2
+[3]: https://grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks
+[4]: http://library.linode.com/email/postfix/dovecot-mysql-centos-5
+[5]: http://library.linode.com/email/fetchmail
+[6]: http://rimuhosting.com/support/settingupemail.jsp?mta=postfix
+[7]: http://wiki.dovecot.org/MailLocation/
+[8]: http://wiki2.dovecot.org/MailboxFormat/dbox
+[9]: http://wiki.dovecot.org/MailboxFormat/Maildir
 

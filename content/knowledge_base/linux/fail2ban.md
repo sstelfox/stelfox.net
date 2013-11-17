@@ -2,18 +2,19 @@
 title: fail2ban
 ---
 
+# Fail2Ban
+
 fail2ban provides a vital service of blocking troublesome IPs from attempting
 brute force logins.
 
 My immediate issue is that it requires a few packages off the bat that I do not
 want on my system. Specifically tcpwrappers and shorewall. My firewall scripts
 are stronger, easier to use, and IMHO more secure than what shorewall provides
-and I don't need it. Neither does the fail2ban package as indicated in
-[[https://bugzilla.redhat.com/show_bug.cgi?id=244275|this ticket]] on the
-redhat bug tracker.
+and I don't need it. Neither does the fail2ban package as indicated in [this
+ticket][1] on the redhat bug tracker.
 
-TODO: [[Linux/MySQL|MySQL]] logs now that the documented configuration logs
-authorization failures.
+TODO: [MySQL][2] logs now that the documented configuration logs authorization
+failures.
 
 ## Installation
 
@@ -27,7 +28,7 @@ using the following commands:
 [root@localhost ~]# rpm -v --nodeps -e shorewall tcp_wrappers
 ```
 
-Finally add this line to /etc/yum.conf
+Finally add this line to `/etc/yum.conf`.
 
 ```
 exclude=fail2ban shorewall tcp_wrappers
@@ -166,26 +167,29 @@ which are now below. They are perfectly backwards compatible with older
 versions of asterisk that may not include the port and as a bonus will match
 against syslog output if you are logging to syslog as well.
 
-```
+```ini
 [INCLUDES]
 before = common.conf
 
 [Definition]
 _daemon = asterisk
 
-# These are the regular expressions that will trigger fail2ban into blocking an IP address for an asterisk 1.8
-# installation. The first regular expression should match against the following line taken directly from a
-# misconfigured client:
-# Nov  9 18:47:21 pbx asterisk[3432]: NOTICE[3445]: chan_sip.c:24331 in handle_request_register: Registration from 'INCOMING CALL <sip:SPA3000_PSTN@10.13.37.102>' failed for '10.13.37.101:5061' - No matching peer found
+# These are the regular expressions that will trigger fail2ban into blocking an
+# IP address for an asterisk 1.8 installation. The first regular expression
+# should match against the following line taken directly from a misconfigured
+# client:
 #
+# Nov  9 18:47:21 pbx asterisk[3432]: NOTICE[3445]: chan_sip.c:24331 in handle_request_register: Registration from 'INCOMING CALL <sip:SPA3000_PSTN@10.13.37.102>' failed for '10.13.37.101:5061' - No matching peer found
 failregex = ^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_register: Registration from '.*' failed for '<HOST>(:[0-9]+)?' - No matching peer found\s*$
 #
-# The following should match against the following line log taken directly from an attack:
+# The following should match against the following line log taken directly from
+# an attack:
 # Nov 14 06:32:16 pbx asterisk: NOTICE[1640]: chan_sip.c:21975 in handle_request_invite: Sending fake auth rejection for device "sip" <sip:sip@91.226.97.107>;tag=L7922NDHSn
             ^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_invite: Sending fake auth rejection for device ".*" <sip:.*@<HOST>>;tag=[a-zA-Z0-9]+\s*$
 #
-# The following regexes were provided through an asterisk forum, they are a bit sloppy and might be outdated. I've
-# already updated one (the first one above) to reflect what I actually see in my logs. The rest will be updated as
+# The following regexes were provided through an asterisk forum, they are a bit
+# sloppy and might be outdated. I've already updated one (the first one above)
+# to reflect what I actually see in my logs. The rest will be updated as
 # I see the attacks
 #
 #           ^%(__prefix_line)s?NOTICE.*: Registration from '.*' failed for '<HOST>(:[0-9]+)?' - Wrong Password\s*$
@@ -201,14 +205,17 @@ ignoreregex =
 
 Some notes on this specific file. I found 'pre-made' asterisk configurations
 for fail2ban on the internet and found them to be very lacking. The did not
-deal with an attack log I saw actually hitting my server the 'Sending fake auth
-rejection' log specifically. I was also greatly displeased by their
-performance. By making the regular expression more specific (without
-sacrificing positive matches) I was able to get a real world performance
-increase of 442%. This was measured using the unix 'time' program and
-fail2ban's regular expression tester 'fail2ban-regex'. As an example with one
-rule (the 'No matching peer found' log) turned on in each test, first the old
-than my updated one gave the following results:
+deal with an attack log I saw actually hitting my server the 'Sending fake
+auth rejection' log specifically.
+
+I was also greatly displeased by their performance. By making the regular
+expression more specific (without sacrificing positive matches) I was able to
+get a real world performance increase of 442%.
+
+This was measured using the unix 'time' program and fail2ban's regular
+expression tester 'fail2ban-regex'. As an example with one rule (the 'No
+matching peer found' log) turned on in each test, first the old than my updated
+one gave the following results:
 
 ```
 [root@localhost ~]# time fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/old-asterisk.conf > /dev/null
@@ -225,7 +232,7 @@ sys     0m0.047s
 
 ### /etc/fail2ban/actions.d/iptables.conf
 
-```
+```ini
 [Init]
 # The following had defaults that I wasn't happy with, but now they're not being
 # used anyways as I don't want offending hosts talking to *any* service on this
@@ -281,13 +288,15 @@ friendly but it'll do in a pinch.
 
 First off you'll need a sample of the log that your going to be matching
 against. If the message is already in your log more power to you, you can use
-that logfile as the input (and it's what I did). As for the regex, the tool
-supports passing the full thing on the command line HOWEVER it doesn't expand
-fail2ban REGEX variables beyond <HOST> (that is those defined in the
-common.conf file) which means you won't get an accurate representation on a
-match. The best way is to define the regex in a filter file for fail2ban and
-run the tool like so (This is from me testing asterisk with the output from my
-test):
+that logfile as the input (and it's what I did).
+
+As for the regex, the tool supports passing the full thing on the command line
+HOWEVER it doesn't expand fail2ban REGEX variables beyond <HOST> (that is those
+defined in the common.conf file) which means you won't get an accurate
+representation on a match.
+
+The best way is to define the regex in a filter file for fail2ban and run the
+tool like so (This is from me testing asterisk with the output from my test):
 
 ```
 [root@localhost ~]# fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/asterisk.conf
@@ -338,75 +347,8 @@ Addresses found:
     X.X.X.X (Mon Nov 07 11:55:38 2011)
     X.X.X.X (Mon Nov 07 11:55:39 2011)
     X.X.X.X (Mon Nov 07 11:55:39 2011)
-    X.X.X.X (Mon Nov 07 11:56:44 2011)
-    X.X.X.X (Mon Nov 07 11:56:44 2011)
-    X.X.X.X (Mon Nov 07 11:56:45 2011)
-    X.X.X.X (Mon Nov 07 11:56:45 2011)
-    X.X.X.X (Mon Nov 07 11:57:59 2011)
-    X.X.X.X (Mon Nov 07 11:58:00 2011)
-    X.X.X.X (Mon Nov 07 11:58:00 2011)
-    X.X.X.X (Mon Nov 07 11:58:01 2011)
-    X.X.X.X (Mon Nov 07 11:58:03 2011)
-    X.X.X.X (Mon Nov 07 11:58:04 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:13:16 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:13:16 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:13:35 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:13:35 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:13:35 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:33:35 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:33:35 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:53:35 2011)
-    Y.Y.Y.Y (Tue Nov 08 23:53:35 2011)
-    Y.Y.Y.Y (Wed Nov 09 00:13:35 2011)
-    Y.Y.Y.Y (Wed Nov 09 00:13:35 2011)
-    Y.Y.Y.Y (Wed Nov 09 00:33:35 2011)
-    Y.Y.Y.Y (Wed Nov 09 00:33:35 2011)
-    Y.Y.Y.Y (Wed Nov 09 00:53:35 2011)
-    Y.Y.Y.Y (Wed Nov 09 00:53:35 2011)
-    Y.Y.Y.Y (Wed Nov 09 01:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 01:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 01:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 01:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 01:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 01:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 02:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 02:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 02:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 02:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 02:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 02:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 03:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 03:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 03:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 03:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 03:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 03:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 04:13:36 2011)
     Y.Y.Y.Y (Wed Nov 09 04:13:36 2011)
     Y.Y.Y.Y (Wed Nov 09 04:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 04:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 04:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 04:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 05:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 05:13:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 05:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 05:33:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 05:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 05:53:36 2011)
-    Y.Y.Y.Y (Wed Nov 09 06:13:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 06:13:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 06:33:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 06:33:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 06:53:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 06:53:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 07:13:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 07:13:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 07:33:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 07:33:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 07:53:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 07:53:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 08:13:37 2011)
-    Y.Y.Y.Y (Wed Nov 09 08:13:37 2011)
     Y.Y.Y.Y (Wed Nov 09 08:33:37 2011)
     Y.Y.Y.Y (Wed Nov 09 08:33:37 2011)
 [3]
@@ -435,10 +377,13 @@ Date template hits:
 
 Success, the total number of match is 75
 
-However, look at the above section 'Running tests' which could contain important
-information.
+However, look at the above section 'Running tests' which could contain
+important information.
 ```
 
 The above shows that I have 75 matches and the IPs (removed) that matched
 against which rule.
+
+[1]: https://bugzilla.redhat.com/show_bug.cgi?id=244275
+[2]: ../mysql/
 

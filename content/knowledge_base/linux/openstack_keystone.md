@@ -2,6 +2,8 @@
 title: Openstack Keystone
 ---
 
+# Openstack Keystone
+
 ## Installation/Configuration
 
 Install the required packages with the following command:
@@ -10,28 +12,31 @@ Install the required packages with the following command:
 yum install openstack-utils openstack-keystone python-keystoneclient -y
 ```
 
-Generate a long, strong unique password for keystone's [[Linux/Mysqld|MySQL]]
-user (MySQL should already be setup at this point and bound to 10.100.0.11 if
-you're following along from the [[Linux/Openstack|Openstack]] page. Open up a
-MySQL console as the root user and run the following commands:
+Generate a long, strong unique password for keystone's [MySQL][1] user (MySQL
+should already be setup at this point and bound to `10.100.0.11` if you're
+following along from the [Openstack][2] page. Open up a MySQL console as the
+root user and run the following commands:
 
-Important Note: Openstack has a convenient command 'openstack-db' that does the
-following for you, however, when it creates the user it uses 'keystone' for a
+Important Note: Openstack has a convenient command `openstack-db` that does the
+following for you, however, when it creates the user it uses `keystone` for a
 password and doesn't restrict the hosts that can use that account (globally
 available). It seems a bit excessive to me to have a script for those three
 MySQL commands:
 
 ```
 CREATE DATABASE keystone;
-GRANT ALL ON keystone.* TO 'keystone'@'10.100.0.%' IDENTIFIED BY 'LongStrongUniquePasswordYouGenerated';
+GRANT ALL ON keystone.* TO 'keystone'@'10.100.0.%' IDENTIFIED BY
+  'LongStrongUniquePasswordYouGenerated';
 FLUSH PRIVILEGES;
 ```
 
 Generate a token to be used as the 'admin' global token. When used this will
 give you full admin credentials on the keystone service regardless of whether
-or not an admin exists. This is needed for the initial administration of the
-keystone service once we get it up and running. I save it directly to the root
-user's bashrc file as it it'll be useful to have later on:
+or not an admin exists.
+
+This is needed for the initial administration of the keystone service once we
+get it up and running. I save it directly to the root user's bashrc file as it
+it'll be useful to have later on:
 
 ```
 echo export ADMIN_TOKEN=$(openssl rand -hex 32) > /root/.bashrc
@@ -45,9 +50,9 @@ echo $ADMIN_TOKEN
 f35fb1205820907c2ddd1eb046f6ba2de1e5b729d6b7aedc5b0959156013f4a3
 ```
 
-Open up the keystone configuration file at: /etc/keystone/keystone.conf and
+Open up the keystone configuration file at: `/etc/keystone/keystone.conf` and
 replace it with the following (changing appropriate variables for your
-installation such as admin_token and the MySQL password:
+installation such as `admin_token` and the MySQL password:
 
 ```ini
 [DEFAULT]
@@ -199,14 +204,16 @@ Please note that I haven't yet delved into the Compositions, Filters, Apps or
 Pipelines and don't have a handle on what exactly they're doing. As far as
 configuration documentation goes there is much to be desired in Keystone...
 
-We need to create a full [[Linux/Certificate_Authority]] in
-/etc/keystone/ssl/certs. Ideally the CA itself would be signed by a higher CA
+We need to create a full [certificate authority][3] in
+`/etc/keystone/ssl/certs`. Ideally the CA itself would be signed by a higher CA
 of our control. A keystone SSL cert and key will also need to be created (and
-signed by the CA). The cert and key file should be placed at
-/etc/keystone/ssl/certs/signing_cert.pem and
-/etc/keystone/ssl/private/signing_key.pem respectively. You'll also want to
-ensure the [signing] portion of the keystone.conf file reflects the actual size
-of the key.
+signed by the CA).
+
+The cert and key file should be placed at
+`/etc/keystone/ssl/certs/signing_cert.pem` and
+`/etc/keystone/ssl/private/signing_key.pem` respectively. You'll also want to
+ensure the `[signing]` portion of the `keystone.conf` file reflects the actual
+size of the key.
 
 ```
 keystone-manage db_sync
@@ -290,21 +297,21 @@ keystone user-role-add --user-id 2e981959c1d54789a3ae6a88611cc0db --role-id df6b
 
 ## Potentially Old Information
 
-```sh
+```
 get_tenant_id() {
-    echo `keystone tenant-list | grep $@ | awk '{ print $2 }'`
+  echo `keystone tenant-list | grep $@ | awk '{ print $2 }'`
 }
 
 get_user_id() {
-    echo `keystone user-list | grep $@ | awk '{ print $2 }'`
+  echo `keystone user-list | grep $@ | awk '{ print $2 }'`
 }
 
 get_role_id() {
-    echo `keystone role-list | grep $@ | awk '{ print $2 }'`
+  echo `keystone role-list | grep $@ | awk '{ print $2 }'`
 }
 
 get_service_id() {
-    echo `keystone service-list | grep $@ | awk '{ print $2 }'`
+  echo `keystone service-list | grep $@ | awk '{ print $2 }'`
 }
 ```
 
@@ -342,9 +349,9 @@ keystone user-create --name=cinder --pass=password5 --tenant_id $(get_tenant_id 
 
 ### Granting Roles
 
-Grant the admin user the admin, KeystoneAdmin, and KeystoneServiceAdmin roles
-within the admin tenant and the service accounts the admin role within the
-service tenant.
+Grant the admin user the `admin`, `KeystoneAdmin`, and `KeystoneServiceAdmin`
+roles within the admin tenant and the service accounts the admin role within
+the service tenant.
 
 ```
 keystone user-role-add --user $(get_user_id admin) --role $(get_role_id admin) --tenant_id $(get_tenant_id admin)
@@ -373,9 +380,11 @@ keystone service-create --name quantum --type network --description 'OpenStack N
 End points are the next thing to be defined, they require that a region be
 specified. This is an arbitrary string that can be used to delinieate between
 service regions that could be data centers, portions of a data-center or what
-have you. Since I'm not working on an installation large enough to really need
-multiple regions this name is more or less useless for me so I chose to just
-use Primary as the region name.
+have you.
+
+Since I'm not working on an installation large enough to really need multiple
+regions this name is more or less useless for me so I chose to just use Primary
+as the region name.
 
 ```
 keystone endpoint-create --region Primary --service_id $(get_service_id compute) \
@@ -435,7 +444,8 @@ You can also specify those options via the command line if you don't want to
 set the  environment variables like so:
 
 ```
-keystone --os_username admin --os_password password1 --os_tenant_name admin --os_auth_url http://10.100.0.13:5000/v2.0/ tenant-list
+keystone --os_username admin --os_password password1 --os_tenant_name admin \
+  --os_auth_url http://10.100.0.13:5000/v2.0/ tenant-list
 +----------------------------------+---------+---------+
 |                id                |   name  | enabled |
 +----------------------------------+---------+---------+
@@ -456,4 +466,8 @@ general. These features that I haven't documented here yet are as follows:
 * Detailed policy.json evaluation
   * Breaking out permissions into more explicit roles
   * What can I actually accomplish with this file?
+
+[1]: ../mysql/
+[2]: ../openstack/
+[3]: ../certificate_authority/
 

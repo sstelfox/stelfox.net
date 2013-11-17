@@ -2,31 +2,38 @@
 title: Network
 ---
 
+# Network
+
 ## RedHat Based Systems
+
 ### Simple Static IP Address
 
 You'll need to find the interface name of your primary ethernet card. Generally
-this can be done with the "ipaddr show" command. The device name will more
-likely than not be either "eth0" or "em1", though occasionally I've seen
-ethernet addresses along the lines of p12p1 (which is a terrible naming
+this can be done with the `ipaddr show` command. The device name will more
+likely than not be either `eth0` or `em1`, though occasionally I've seen
+ethernet addresses along the lines of `p12p1` (which is a terrible naming
 convention that bothers the hell out of me but I understand why the linux
 developers switched to this naming convention).
 
-This is going to assume that you want to set a static address on "eth0", it's
+This is going to assume that you want to set a static address on `eth0`, it's
 going to be the primary interface (in that it will have the default gateway).
-You'll want to edit the file /etc/sysconfig/network-scripts/ifcfg-eth0 in this
-case. Make sure that the device name at the end of the file AND the one in the
-config match. You'll also need to make sure the mac address of the card matches
-the HWADDR in the file otherwise the network script will throw a fit and will
-either fail to bring up the interface or just complain and use the real
-hardware address anyway. You can not use this script to "spoof" mac addresses.
+You'll want to edit the file `/etc/sysconfig/network-scripts/ifcfg-eth0` in
+this case. Make sure that the device name at the end of the file AND the one in
+the config match.
 
-The contents of the following file set the static IP address 10.13.37.200 on
-the interface with 10.13.37.1 as the default gateway, and two nameservers
-8.8.8.8 and 4.2.2.2. This also tells the network that we're on a /24 network
-the interface should start up when the machine does and that if this fails to
-come up the rest of the boot scripts that rely on a network should be skipped
-(That's the IPV4_FAILURE_FATAL command).
+You'll also need to make sure the mac address of the card matches the `HWADDR`
+in the file otherwise the network script will throw a fit and will either fail
+to bring up the interface or just complain and use the real hardware address
+anyway. You can not use this script to "spoof" mac addresses.
+
+The contents of the following file set the static IP address `10.13.37.200` on
+the interface with `10.13.37.1` as the default gateway, and two nameservers
+`8.8.8.8` and `4.2.2.2`.
+
+This also tells the network that we're on a `/24` network the interface should
+start up when the machine does and that if this fails to come up the rest of
+the boot scripts that rely on a network should be skipped (That's the
+`IPV4_FAILURE_FATAL` command).
 
 ```
 # /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -65,16 +72,16 @@ following example I'm going to be created an additional IP on the eth0
 interface assuming we're using the same eth0 described in the last section.
 
 Too add an IP address to the eth0 interface we simply create a new one by
-copying that file into a new one and adding a ":1" to the name additional
+copying that file into a new one and adding a `:1` to the name additional
 addresses would need to increment this number. So like so:
 
 ```
-[root@localhost ~]# cp /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth0:1
+cp /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth0:1
 ```
 
 You'll need to open up the new file and change a few things. Specifically you
 want to get rid of the "HWADDR" variable, change the IP to whatever the second
-IP will be and change the device name to reflect the ":1". The new file will
+IP will be and change the device name to reflect the `:1`. The new file will
 look like this:
 
 ```
@@ -97,7 +104,7 @@ NAME="Standard LAN"
 Bring it up like so:
 
 ```
-[root@localhost ~]# ifup eth0:1
+ifup eth0:1
 ```
 
 Bam. Done.
@@ -110,8 +117,17 @@ eth0:1    Link encap:Ethernet  HWaddr 12:34:56:78:90:AB
 ```
 
 ### Bridges
+
+TODO
+
 #### Spanning Tree
+
+TODO
+
 ### NIC Bonding
+
+TODO
+
 ### Routing
 
 This section describes how to turn a linux system into a basic router. This
@@ -120,16 +136,16 @@ already including what needs to be routed.
 
 Note: I noticed that my port forwarding issue seemed to go away after
 installing the iptstate package. This may be because it installed
-'libnetfilter_conntrack' as a dependency. Based on the 'yum info' description I
+`libnetfilter_conntrack` as a dependency. Based on the `yum info` description I
 don't believe this to be the case. Further testing may be required.
 
 #### Configuration
+
 ##### /etc/sysctl.conf
 
 The following settings need to be changed/added to securely handle the routing.
-Detailed information about the individual options is
-[http://www.frozentux.net/ipsysctl-tutorial/ipsysctl-tutorial.html available]
-as well as [http://www.faqs.org/rfcs/rfc1812.html Routing RFC information].
+Detailed information about the individual options is [available][1] as well as
+[Routing RFC information][2].
 
 ```
 # Controls IP packet forwarding
@@ -366,7 +382,8 @@ COMMIT
 -A FORWARD -i eth1 -o eth2 -s 10.13.37.128/26 -d 10.13.37.192/26 -j ACCEPT
 -A FORWARD -i eth2 -o eth1 -s 10.13.37.192/26 -d 10.13.37.128/26 -j ACCEPT
 
-# Forward traffic from the DMZ subnet and the server subnet, this will need to be restricted more later
+# Forward traffic from the DMZ subnet and the server subnet, this will need to
+# be restricted more later
 -A FORWARD -i eth3 -o eth2 -s 10.13.37.64/26 -d 10.13.37.192/26 -j ACCEPT
 -A FORWARD -i eth2 -o eth3 -s 10.13.37.192/26 -d 10.13.37.64/26 -j ACCEPT
 
@@ -395,4 +412,7 @@ COMMIT
 * dstat
 
 ### VLANs
+
+[1]: http://www.frozentux.net/ipsysctl-tutorial/ipsysctl-tutorial.html
+[2]: http://www.faqs.org/rfcs/rfc1812.html
 

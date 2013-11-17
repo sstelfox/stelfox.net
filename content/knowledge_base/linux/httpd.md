@@ -2,6 +2,8 @@
 title: HTTPd
 ---
 
+# HTTPd
+
 Apache or httpd is a strong and well tested webserver.
 
 ## Installation
@@ -10,12 +12,13 @@ To install the Apache web server for this hardening guide on fedora run the
 following command as root:
 
 ```
-[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security mod_selinux
+[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security \
+  mod_selinux -y
 ```
 
 A few modules I need to look into (TODO):
 
-* mod_log_post
+* `mod_log_post`
 
 ## Security Notes
 
@@ -30,11 +33,12 @@ chosen wisely and hardened appropriately.
 
 User credentials can be passed through the web server so it is strongly
 recommended that SSL certificates be used. If SSL certificates are available
-there are very few reasons not to use SSL everywhere. The only exception I have
-been able to come up with is for an application that is extremely latency
-sensitive, contains no sensitive data, and have the data verified in a
-different way (through data signatures like HMAC or GPG). The latter is not
-necessarily required.
+there are very few reasons not to use SSL everywhere.
+
+The only exception I have been able to come up with is for an application that
+is extremely latency sensitive, contains no sensitive data, and have the data
+verified in a different way (through data signatures like HMAC or GPG). The
+latter is not necessarily required.
 
 ### Firewall Adjustments
 
@@ -53,20 +57,21 @@ bypass the anti-flood rules.
 
 ## Performance Notes
 
-If you use mod_security you should note that in my testing each Apache thread
+If you use `mod_security` you should note that in my testing each Apache thread
 increases it's resident memory size by ~27Mb using the stock configuration. For
 servers that need to handle a high volume of requests this may not be
-acceptable. If using mod_security you DEFINITELY need to adjust the ServerLimit
-and MaxClients (they are aliases of each other so should always be the same).
+acceptable. If using `mod_security` you DEFINITELY need to adjust the
+`ServerLimit` and `MaxClients` (they are aliases of each other so should always
+be the same).
 
 ### Tuning ServerLimit/MaxClients with the worker MPM
 
 * Start up the apache server
-* Use the 'ps' utility to determine the size of client threads (will be in Kb)
+* Use the `ps` utility to determine the size of client threads (will be in Kb)
 * Determine that max amount of RAM the apache process should be allowed to use
-* Subtract the 'parent' processes RAM from that
+* Subtract the `parent` processes RAM from that
 * Divide the remaining RAM by the size of the client threads, this is your
-  ServerLimit/MaxClient value
+  ServerLimit / MaxClient value
 
 An example of this is provided below:
 
@@ -108,8 +113,8 @@ modules are loaded. This preserves compatibility with any functionality I may
 need in the future while removing the bloat of the modules.
 
 To use this configuration you'll need to create the directory
-/var/www/html/default. Any additional domains should be created in
-/var/www/html with their domain name as the folder name.
+`/var/www/html/default`. Any additional domains should be created in
+`/var/www/html` with their domain name as the folder name.
 
 ```
 ### Section 1: Global Environment
@@ -131,7 +136,8 @@ KeepAliveTimeout 5
   MaxRequestsPerChild 5000
 </IfModule>
 
-# This isn't used by default in Fedora but can be by adjusting /etc/sysconfig/httpd
+# This isn't used by default in Fedora but can be by adjusting
+# /etc/sysconfig/httpd
 <IfModule worker.c>
   StartServers    4
   MaxClients    300
@@ -359,13 +365,13 @@ ServerSignature Off
 AddDefaultCharset UTF-8
 
 # Compressed
-AddType application/x-tar   .tgz
-AddType application/x-compress    .Z
-AddType application/x-gzip    .gz .tgz
+AddType application/x-tar      .tgz
+AddType application/x-compress .Z
+AddType application/x-gzip     .gz .tgz
 
 # Certificates
-AddType application/x-x509-ca-cert  .crt
-AddType application/x-pkcs7-crl   .crl
+AddType application/x-x509-ca-cert .crt
+AddType application/x-pkcs7-crl    .crl
 
 # Audio
 AddType audio/ogg     oga ogg
@@ -373,26 +379,26 @@ AddType audio/ogg     oga ogg
 # Video
 AddType video/ogg     ogv
 AddType video/mp4     mp4
-AddType video/webm      webm
+AddType video/webm    webm
 
 # SVG
-AddType image/svg+xmlsvg    svgz
-AddEncoding gzip      svgz
+AddType image/svg+xmlsvg svgz
+AddEncoding gzip         svgz
 
 # Web Fonts
 AddType application/vnd.ms-fontobject eot
-AddType font/truetype     ttf
-AddType font/opentype     otf
-AddType application/x-font-woff   woff
+AddType font/truetype                 ttf
+AddType font/opentype                 otf
+AddType application/x-font-woff       woff
 
 # Assorted
-AddType image/x-icon      ico
-AddType image/webp      webp
-AddType text/cache-manifest   appcache manifest
-AddType text/x-component    htc
-AddType application/x-chrome-extension  crx
-AddType application/x-xpinstall   xpi
-AddType application/octet-stream  safariextz
+AddType image/x-icon                   ico
+AddType image/webp                     webp
+AddType text/cache-manifest            appcache manifest
+AddType text/x-component               htc
+AddType application/x-chrome-extension crx
+AddType application/x-xpinstall        xpi
+AddType application/octet-stream       safariextz
 
 # Add a bunch of compression directives
 <IfModule mod_deflate.c>
@@ -405,6 +411,7 @@ AddType application/octet-stream  safariextz
       RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
     </IfModule>
   </IfModule>
+
   # html, txt, css, js, json, xml, etc:
   <IfModule filter_module>
     FilterDeclare COMPRESS
@@ -502,7 +509,7 @@ DirectoryIndex index.php
 
 ### /etc/httpd/conf.d/mod_evasive.conf
 
-mod_evasive is a crafty little module designed to limit the impact of DoS and
+`mod_evasive` is a crafty little module designed to limit the impact of DoS and
 DDoS attacks. This won't stop them but it will help defend against them. It
 will also send notices to an admin if desired (it's an optional feature which
 can be disabled).
@@ -533,7 +540,7 @@ LoadModule evasive20_module modules/mod_evasive20.so
 ### /etc/httpd/conf.d/mod_gnutls.conf
 
 The GnuTLS module provides SSL encryption for web requests. It's quite a bit
-more flexible than mod_ssl though it hasn't been audited as thoroughly. It is
+more flexible than `mod_ssl` though it hasn't been audited as thoroughly. It is
 also considered an 'experimental' module for apache even though it's been in
 the wild for two years.
 
@@ -554,42 +561,47 @@ settings accordingly. This may have a huge impact on high-traffic sites.
 
 With that out of the way this is a very good application firewall to have as
 part of the defense-in-depth doctrine, though it's configuration can be a
-burden. The mod_security module gives your Apache Web server increased ability
-to inspect and process input from Web clients before it's acted on by the
-scripts or processes waiting for the input. The mod_security module even lets
-you inspect Web server output before it's transmitted back to clients. I love
-this feature: it allows you to watch out for server responses that might
-indicate that other filters have failed and an attack has succeeded!
+burden. The `mod_security` module gives your Apache Web server increased
+ability to inspect and process input from Web clients before it's acted on by
+the scripts or processes waiting for the input.
+
+The `mod_security` module even lets you inspect Web server output before it's
+transmitted back to clients. I love this feature: it allows you to watch out
+for server responses that might indicate that other filters have failed and an
+attack has succeeded!
 
 With that said this isn't the file you should actually be looking at. Yes this
-is where everything will get loaded but the stock Fedora mod_security for the
-most parts loads up mod_security rules in other places including the Core
+is where everything will get loaded but the stock Fedora `mod_security` for the
+most parts loads up `mod_security` rules in other places including the Core
 ModSecurity Rule Set which will get updated with the rest of your server.
 
 The variables that you'll want to play around with are located in
-/etc/httpd/modsecurity.d/modsecurity_crs_10_config.conf and if you want to
-write your own rules in /etc/httpd/modsecurity.d/modsecurity_localrules.conf.
+`/etc/httpd/modsecurity.d/modsecurity_crs_10_config.conf` and if you want to
+write your own rules in `/etc/httpd/modsecurity.d/modsecurity_localrules.conf`.
 
 Some changes I'd recommend in
-/etc/httpd/modsecurity.d/modsecurity_crs_10_config.conf:
+`/etc/httpd/modsecurity.d/modsecurity_crs_10_config.conf`:
 
 * Uncomment the rule that limits argument name length to 100 characters
-* Uncomment the rule that limits the value of an argument's length to 400 characters
+* Uncomment the rule that limits the value of an argument's length to 400
+  characters
 * Uncomment the rule that limits the total argument length to 64000 characters
 * Review the restricted extension types
 
 After keeping an eye on the logs for a few weeks and ensuring that there aren't
-any false positives, you should change the line 'SecDefaultAction
-"phase:2,pass' to 'SecDefaultAction "phase:2,deny,log,status:403"'.
+any false positives, you should change the line `SecDefaultAction
+"phase:2,pass` to `SecDefaultAction "phase:2,deny,log,status:403"`.
 
 ### /etc/httpd/conf.d/mod_selinux.conf
 
-The mod_selinux module allows us to extend SELinux contexts into individual web
-applications or virtual hosts without impacting the memory usage of individual
-child processes (The parent process seems to use about 100Kb of memory more but
-this is negligible). Since I don't use the built in apache authentication I'm
-limited to restrictions based on virtual hosts, which is still a rather large
-gain of security.
+The `mod_selinux` module allows us to extend SELinux contexts into individual
+web applications or virtual hosts without impacting the memory usage of
+individual child processes (The parent process seems to use about 100Kb of
+memory more but this is negligible).
+
+Since I don't use the built in apache authentication I'm limited to
+restrictions based on virtual hosts, which is still a rather large gain of
+security.
 
 You can additionally adjust contexts based on the IP the user is connecting
 from.
@@ -601,10 +613,10 @@ selinuxServerDomain *:s0
 selinuxDomainEnv  SELINUX_DOMAIN
 ```
 
-If you enable the environment module (env_module) in apache the domain may be
-available for use within the application (it would be SELINUX_DOMAIN). This
-hasn't been tested. With PHP you may need to add the 'E' to the string
-'variable_order', and adjust 'auto_globals_jit' in the php.ini file.
+If you enable the environment module (`env_module`) in apache the domain may be
+available for use within the application (it would be `SELINUX_DOMAIN`). This
+hasn't been tested. With PHP you may need to add the `E` to the string
+`variable_order`, and adjust `auto_globals_jit` in the `php.ini` file.
 
 Changing contexts with the stock SELinux rules is denied! You will need to
 create a SELinux policy to allow it.
@@ -612,8 +624,8 @@ create a SELinux policy to allow it.
 #### Virtual Host Contexts
 
 To make use of this feature you need to define contexts within each of the
-virtual host configuration directives after enabling mod_selinux by adding the
-following line:
+virtual host configuration directives after enabling `mod_selinux` by adding
+the following line:
 
 ```
 selinuxDomainVal    *:s0:c1
@@ -675,17 +687,16 @@ Delete this file, it has no use and should be removed.
 ## Virtual Hosts
 
 Please note that name based virtual hosts are not supported on SSL connections
-when using mod_ssl. They work quite well with mod_gnutls and browsers that
+when using `mod_ssl`. They work quite well with `mod_gnutls` and browsers that
 support SNI (Server Name Indication, as described in section 3.1 of
-[http://www.ietf.org/rfc/rfc3546.txt RFC3546]). Compatibility with older
-browsers may be impacted.
+[RFC3546][1]). Compatibility with older browsers may be impacted.
 
 ### Name Based
 
 Name based virtual hosts allow you to re-use an IP to host multiple websites.
 This is only officially supported for unencrypted connections, however by using
 the GnuTLS module you can easily set this up with SSL based hosts as well. An
-example of how to use this can be seen in the virtual_hosts.conf file on this
+example of how to use this can be seen in the `virtual_hosts.conf` file on this
 page.
 
 ### IP Based
@@ -713,10 +724,10 @@ Additional PHP packages that may be needed and that I've found very useful:
 
 ### /etc/php.ini
 
-The following is for production use, 'display_errors',
-'display_startup_errors', 'mysql.trace_mode' may be useful in development.
+The following is for production use, `display_errors`,
+`display_startup_errors`, `mysql.trace_mode` may be useful in development.
 
-```
+```ini
 [PHP]
 short_open_tag = Off
 asp_tags = Off
@@ -895,7 +906,7 @@ suhosin.upload.disallow_elf = On
 Sometimes it's just needed to prevent access to something for a little while,
 HTTP basic authentication can help! If you're using the hardened configuration
 above you'll need to enable a few modules to actually use it and make sure that
-a .htaccess file has permission to override 'AuthConfig'. Add the following
+a .htaccess file has permission to override `AuthConfig`. Add the following
 lines if they aren't already there in the section where you load modules:
 
 ```
@@ -916,10 +927,10 @@ First create a user to use for the login:
 htpasswd -c .htpasswd demouser
 ```
 
-Additional users can be added by omitting the '-c'.
+Additional users can be added by omitting the `-c`.
 
-Create or append the following to a .htaccess file in the directory you want to
-protect:
+Create or append the following to a `.htaccess` file in the directory you want
+to protect:
 
 ```
 AuthType Basic
@@ -929,7 +940,7 @@ Require valid-user
 ```
 
 That's it you'll have HTTP Basic authentication. If you want to use a group
-file you'll need to change the setting in the .htaccess file to match:
+file you'll need to change the setting in the `.htaccess` file to match:
 
 ```
 AuthType Basic
@@ -939,7 +950,7 @@ AuthGroupFile /path/to/.htgroups
 Require group demogroup
 ```
 
-And create a group file '.htgroups' with the following:
+And create a group file `.htgroups` with the following:
 
 ```
 demogroup: demouser someotheruser
@@ -952,7 +963,7 @@ http://www.grolmsnet.de/kerbtut/
 ## Passenger
 
 Before going through this you need to ensure that the tools for compiling ruby
-are installed on the system these are listed in [[Linux/Ruby]].
+are installed on the system these are listed in [Ruby][2].
 
 Ensure that ruby is installed on the system as well as the development headers
 needed to compile the passenger module, this is all done as root:
@@ -968,4 +979,7 @@ passenger-install-apache2-module
 
 I wasn't able to get this working at the current time as there is a bug in
 passenger 3.0.12 that prevents it from being compiled with GCC 4.6.
+
+[1]: http://www.ietf.org/rfc/rfc3546.txt
+[2]: ../ruby/
 
