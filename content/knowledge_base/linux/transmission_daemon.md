@@ -225,8 +225,8 @@ really give the torrent a meaningful name with the "-n" flag. Additionally a
 comment on the torrent is usually welcome with "-c".
 
 With my current private tracker when creating a torrent you get a unique
-tracker link that looks something like "http://tracker.<site>.org:34000/<Your
-private 32 character ID string>/announce", so you need to get that before you
+tracker link that looks something like `http://tracker.<site>.org:34000/<Your
+private 32 character ID string>/announce`, so you need to get that before you
 can finish setting up the torrent. Pass it as an option to the "-a" flag
 
 Make sure all the files you want in the torrent are in the same directory
@@ -247,14 +247,22 @@ you gave mktorrent with the -n flag.
 
 ## Security Notes
 
-* The transmission-daemon doesn't support multiple users, so either a shared password needs to be provided, none configured or a reverse proxy needs to be setup in front of it that has basic authentication.
-  * A lot of the clients can support basic authentication by using the format: http://username:password@torrentbox.local/ for the "host".
+* The transmission-daemon doesn't support multiple users, so either a shared
+  password needs to be provided, none configured or a reverse proxy needs to be
+  setup in front of it that has basic authentication.
+  * A lot of the clients can support basic authentication by using the format:
+    `http://username:password@torrentbox.local/` for the "host".
   * A reverse proxy can also be used to provide HTTPS access to the interface
-  * A reverse proxy can safely make the interface available to the outside world by putting restrictions on it
-* The transmission daemon can restrict access to certain things based on IP masks, these should be configured appropriately
-* Blocklists can be used to eliminate potential corporation spies that'll do bad things to you
-* I strongly encourage preferring or enforcing encryption as it will reduce what is visible to ISPs
-* All of the torrent traffic could potentially be pushed through an anonymising VPN such as that provided by xerobank.com
+  * A reverse proxy can safely make the interface available to the outside
+    world by putting restrictions on it
+* The transmission daemon can restrict access to certain things based on IP
+  masks, these should be configured appropriately
+* Blocklists can be used to eliminate potential corporation spies that'll do
+  bad things to you
+* I strongly encourage preferring or enforcing encryption as it will reduce
+  what is visible to ISPs
+* All of the torrent traffic could potentially be pushed through an anonymising
+  VPN such as that provided by xerobank.com
 
 ## Firewall Adjustments
 

@@ -13,7 +13,7 @@ need:
 
 * http://docs.openstack.org/essex/openstack-compute/install/yum/content/compute-system-requirements.html
 * http://fedoraproject.org/wiki/Getting_started_with_OpenStack_on_Fedora_17
-* http://docs.openstack.org/trunk/openstack-compute/admin/content/configuration-qpid.html
+* `http://docs.openstack.org/trunk/openstack-compute/admin/content/configuration-qpid.html` (Dead link)
 * https://cwiki.apache.org/qpid/qpid-design-configuration.html
 * http://wiki.openstack.org/QpidSupport
 * https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst
@@ -133,7 +133,7 @@ storage:
 
 Additional notes:
 
-* http://docs.openstack.org/trunk/openstack-object-storage/admin/content/memcached-considerations.html
+* `http://docs.openstack.org/trunk/openstack-object-storage/admin/content/memcached-considerations.html` (Dead link)
 * http://www.cybera.ca/tech-radar/using-memcached-openstack-nova
 
 [1]: ../mysql/
