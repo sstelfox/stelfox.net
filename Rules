@@ -32,8 +32,8 @@ preprocess do
 
     # Create a tag index page
     @items << Nanoc3::Item.new(
-      "<%= render 'tag_list', { tag_list: #{tag_list.inspect} } %>",
-      {extension: "erb", type: 'tag_list', title: "Tag List"},
+      "<%= render 'tag_index', { tag_list: #{tag_list.inspect} } %>",
+      {extension: "erb", type: 'tag_index', title: "Tag List"},
       "/tags/"
     )
   end
@@ -44,7 +44,13 @@ preprocess do
 
     kb_pages.uniq.sort.each do |i|
       next if @items[i] # If there is already a page don't create anything
-      puts "Creating KB index: #{i}"
+      puts i
+
+      #@items << Nanoc3::Item.new(
+      #  "<%= render 'kb_index' %>",
+      #  {extension: "erb", type: 'kb_index', title: i.split("/")[-1].titleize },
+      #  i
+      #)
     end
   end
 
