@@ -18,5 +18,6 @@ gem 'therubyracer'
 gem 'coffee-script'
 gem 'rainpress'
 
+gem 'thin'
 gem 'pry'
 
