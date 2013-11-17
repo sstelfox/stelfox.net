@@ -21,9 +21,8 @@
   <body>
     <div class='row'>
       <div class='col-12'>
-        <% breadcrumbs_trail.each do |i| %>
-          <%= link_to(i[:title], i) unless i.nil? %>
-        <% end %>
+        <% bct = breadcrumbs_trail.map { |i| link_to(i[:title], i) unless i.nil? } %>
+        <%= bct.reject { |i| i.nil? }.join(" &raquo; ") %>
       </div>
     </div>
     <div class='row'>

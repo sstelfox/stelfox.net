@@ -25,7 +25,7 @@ preprocess do
     tag_list.uniq.each do |t|
       @items << Nanoc3::Item.new(
         "<%= render 'tag_page', { tag: @tag, tagged_items: @tagged_items } %>",
-        {extension: "erb", type: 'tag_page', title: t},
+        {extension: "erb", type: 'tag_page', title: t.gsub("-", " ").titleize },
         "/tags/#{t.to_url}/"
       )
     end
