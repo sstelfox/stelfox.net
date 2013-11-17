@@ -15,11 +15,11 @@ The first character is actually the unicode version. It is very easy to verify
 this in a ruby interpreter shell by issueing the following commands:
 
 ```ruby
-[1] pry(main)> 1029.chr('UTF-8')                                                                         
+[1] pry(main)> 1029.chr('UTF-8')
 => "Ѕ"
 [2] pry(main)> _.ord
 => 1029
 ```
 
-[1][http://www.irongeek.com/homoglyph-attack-generator.php]
+[1]: http://www.irongeek.com/homoglyph-attack-generator.php
 
