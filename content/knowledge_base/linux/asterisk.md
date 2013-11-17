@@ -47,7 +47,6 @@ call.
 * http://www.asteriskdocs.org/
 * http://www.voip-info.org/
 * http://nerdvittles.com/index.php?p=65
-* http://jeremy-mcnamara.com/asterisk/how-to-configure-asterisk/
 * http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP
 * http://download.ag-projects.com/
 

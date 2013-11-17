@@ -6,7 +6,9 @@ title: Glycol Cooling
 
 ## DIY Glycol Power Pack (Chiller) for Beer Line Cooling
 
-* http://stan.theblossers.net/2011/03/diy-glycol-power-pack-for-beer-line.html
+This content originally appeared on the following link:
+`http://stan.theblossers.net/2011/03/diy-glycol-power-pack-for-beer-line.html`.
+I'm glad I mirrored it as the articles have since been returning 404s.
 
 ### First Post
 

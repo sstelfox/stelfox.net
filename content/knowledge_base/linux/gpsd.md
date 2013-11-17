@@ -116,7 +116,6 @@ TODO
 TODO
 
 * http://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol
-* http://www.rtcm-ntrip.org/home
 * http://igs.bkg.bund.de/ntrip/caster
 * http://www.linuxcertif.com/man/5/rtcm-104/173922/
 * http://software.rtcm-ntrip.org/ (BNC is the relevant one)

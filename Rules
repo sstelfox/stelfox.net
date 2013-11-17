@@ -126,6 +126,14 @@ route "/atom" do
   "/atom.xml"
 end
 
+compile "/static/*" do
+  # Do nothing
+end
+
+route "/static/*" do
+  item.identifier.chop + "." + item[:extension]
+end
+
 # Compile tag specific pages
 compile "/tags/*/" do
   tag = item.identifier.match(%r{/tags/(.+)/}).captures.first

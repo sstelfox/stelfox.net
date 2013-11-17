@@ -89,7 +89,9 @@ Here is an email I sent a guy on this topic.
 So here is my attempt at mash boiler thermodynamics. Be kind… I am really rusty
 with my steam calcs.
 
-My data source is [Chesterton Steam Table][2]
+My data source was the Chesterton Steam Table which used to live at
+`http://www.chesterton.com/interactive/tables/steam/`. The link has since
+started 404'ing.
 
 Water and steam at 1atm, 212F. The liquid has an enthalpy of 180 btu/lb and the
 steam portion has energy of 1150 btu/lb
@@ -107,7 +109,7 @@ Which makes sense because the temp spread is 44F and water has a specific heat
 of 1btu/lb.
 
 Lets say we are brewing a beer that uses 10 pounds of grains. Using [this
-page][3] and a water ratio of 1.25 q/lb, it will take 3.93 gallons of volume.
+page][2] and a water ratio of 1.25 q/lb, it will take 3.93 gallons of volume.
 Lets say that is all water at 8.33 pounds per gallon, we'd have 32.7 pounds of
 “water”. In reality, it will be both lighter than that and have a lower heat
 capacity. But using these numbers, the total energy to raise our mash from 126
@@ -334,6 +336,5 @@ I'll let you know how the drilling and pressure testing goes. I'll do the
 element hole first.
 
 [1]: http://www.homebrewtalk.com/f11/steam-injected-mash-system-18008
-[2]: http://www.chesterton.com/interactive/tables/steam/
-[3]: http://www.rackers.org/calcs.shtml 
+[2]: http://www.rackers.org/calcs.shtml
 
