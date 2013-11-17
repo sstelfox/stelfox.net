@@ -1,5 +1,5 @@
 ---
-title: Certificate Authority
+title: Building a Certificate Authority
 ---
 
 # Building a Certificate Authority
@@ -40,7 +40,7 @@ user's home drive in a folder called pki. It adjusts the permissions on the
 folders to ensure that it is somewhat protected (though not protected from the
 root user). Once again this should be performed on a trusted machine.
 
-```sh
+```
 mkdir -p ~/pki/root/{certs,crl,newcerts,private}
 chown -R `id -u`:`id -g` ~/pki
 chmod -R 700 ~/pki
@@ -150,8 +150,8 @@ challengePassword_max = 24
 [ usr_cert ]
 basicConstraints = CA:false
 
-# These two are the only expected use cases at the time for this CA. If it is omitted
-# the certificate can be used for anything *except* object signing.
+# These two are the only expected use cases at the time for this CA. If it is
+# omitted the certificate can be used for anything *except* object signing.
 # nsCertType = server
 # nsCertType = client, email, objsign
 
@@ -246,14 +246,17 @@ proxyCertInfo=critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo
 
 ### Create CA Key & Certificate
 
-This section creates the CA private key, public certificate, and serial file using the openssl.cnf file above.
+This section creates the CA private key, public certificate, and serial file
+using the `openssl.cnf` file above.
 
-```sh
+```
 openssl req -new -keyout private/ca.key -out ca.csr -config openssl.cnf
-openssl ca -create_serial -config ./openssl.cnf -out ca.crt -days 1095 -batch -keyfile private/ca.key -selfsign -extensions v3_ca -infiles ca.csr
+openssl ca -create_serial -config ./openssl.cnf -out ca.crt -days 1095 -batch \
+  -keyfile private/ca.key -selfsign -extensions v3_ca -infiles ca.csr
 ```
 
-You will now want to distribute "ca.crt" to any client that will use a service with your CA.
+You will now want to distribute "ca.crt" to any client that will use a service
+with your CA.
 
 ## Common Tasks
 
@@ -264,15 +267,16 @@ itself. It may be easier if the CA config (openssl.cnf) was distributed as well
 as there are some strict signing requirements in the above configuration where
 the country, state, and org name need to match exactly.
 
-```sh
+```
 openssl genrsa 2048 > host.example.org.key
-openssl req -new -key host.example.org.key -out host.example.org.csr -extensions v3_req
+openssl req -new -key host.example.org.key -out host.example.org.csr \
+  -extensions v3_req
 ```
 
 Once the CSR has been generated transfer it to the host containing the CA, this
 assumes you have placed the file (and are currently within) the CA's directory.
 
-```sh
+```
 openssl ca -config ./openssl.cnf -out host.example.org.crt -days 365 -batch \
   -keyfile private/ca.key -cert ca.crt -infiles host.example.org.csr
 ```
@@ -281,18 +285,20 @@ openssl ca -config ./openssl.cnf -out host.example.org.crt -days 365 -batch \
 
 Creating a certificate with multiple domains requires one extra step, create a
 key and certificate as normal but create an additional file
-'test.domain.net.cnf' that includes something along the following lines:
+`test.domain.net.cnf` that includes something along the following lines:
 
-```sh
+```
 subjectAltName=DNS:www.test.domain.net,DNS:*.test.domain.net,DNS:other.domain.net
 ```
 
-When you sign the key you'll need to add the flag -extfile and specify the file
-with the above contents. This will append those domains to the certificate. An
-example way to sign the CSR:
+When you sign the key you'll need to add the flag `-extfile` and specify the
+file with the above contents. This will append those domains to the
+certificate. An example way to sign the CSR:
 
-```sh
-openssl ca -config ./openssl.cnf -out test.domain.net.crt -days 365 -batch -keyfile private/ca.key -cert ca.crt -infiles test.domain.net.csr -extfile test.domain.net.cnf
+```
+openssl ca -config ./openssl.cnf -out test.domain.net.crt -days 365 -batch \
+  -keyfile private/ca.key -cert ca.crt -infiles test.domain.net.csr \
+  -extfile test.domain.net.cnf
 ```
 
 ### Convert a Certificate for Microsoft Certificate Store
@@ -300,7 +306,7 @@ openssl ca -config ./openssl.cnf -out test.domain.net.crt -days 365 -batch -keyf
 This will convert a standard OpenSSL certificate/key pair into a pfx for use by
 Microsoft products (fuck them for being different).
 
-```sh
+```
 openssl pkcs12 -export -out keycert.pfx -inkey priv.key -in cert.crt
 ```
 
@@ -308,20 +314,21 @@ openssl pkcs12 -export -out keycert.pfx -inkey priv.key -in cert.crt
 
 To view the text content of a certificate you can use the following command:
 
-```sh
+```
 openssl x509 -text -noout -in cert.crt
 ```
 
 You can also view the contents of a signing request using:
 
-```sh
+```
 openssl req -text -noout -in cert.csr
 ```
 
 ## Quick Self Signed Cert
 
-```sh
-openssl req -new -x509 -newkey rsa:4096 -keyout server.key -nodes -days 365 -out server.crt
+```
+openssl req -new -x509 -newkey rsa:4096 -keyout server.key -nodes -days 365 \
+  -out server.crt
 ```
 
 ## Notes

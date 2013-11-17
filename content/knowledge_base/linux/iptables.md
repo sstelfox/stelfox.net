@@ -2,6 +2,8 @@
 title: IPTables
 ---
 
+# iptables
+
 iptables is the bread and butter linux firewall and the last defence before
 traffic gets to the applications themselves.
 
@@ -23,14 +25,13 @@ been excluded from this rule.
 
 IPTables doesn't provide a way to change the facility that it uses to log
 messages, however you can get around this limitation if you are using
-[RSyslog](RSyslog). Rsyslog can match based on a known prefix within the
-message, IPTables can also be configured to prepend a configurable prefix to a
-log file.
+[RSyslog][1]. Rsyslog can match based on a known prefix within the message,
+IPTables can also be configured to prepend a configurable prefix to a log file.
 
 ### RSyslog
 
 First we'll tell RSyslog what to do with the messages when they are received.
-The following configuration should be added near the top of /etc/rsyslog.conf
+The following configuration should be added near the top of `/etc/rsyslog.conf`
 but after loading any modules, this will prevent RSyslog from logging the
 firewall messages anywhere else.
 
@@ -40,7 +41,7 @@ firewall messages anywhere else.
 & ~
 ```
 
-If you want the messages to appear in other logs leave out the line "&~".
+If you want the messages to appear in other logs leave out the line "& ~".
 
 You'll need to reload RSyslog at this point for the changes to go into effect.
 
@@ -50,7 +51,7 @@ We also need to tell logrotate how to handle the log file. These options are
 configurable, as it stands the configuration below saves one week worth of
 logs, and rotates them daily. After rotating it sends a HUP signal to rsyslog
 so that they release their file handles and start logging in the new files.
-This should be placed in /etc/logrotate.d/iptables.
+This should be placed in `/etc/logrotate.d/iptables`.
 
 ```
 /var/log/iptables.log {
@@ -59,8 +60,8 @@ This should be placed in /etc/logrotate.d/iptables.
   notifempty
   daily
   postrotate
-  /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
-  /bin/kill -HUP `cat /var/run/rsyslogd.pid 2> /dev/null` 2> /dev/null || true
+    /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+    /bin/kill -HUP `cat /var/run/rsyslogd.pid 2> /dev/null` 2> /dev/null || true
   endscript
 }
 ```
@@ -68,7 +69,7 @@ This should be placed in /etc/logrotate.d/iptables.
 ### IPTables Logs
 
 The final step is actually making iptables log the information you want. This
-is as simple as appending '--log-prefix "iptables: "' to whatever LOG targets
+is as simple as appending `--log-prefix "iptables: "` to whatever LOG targets
 you have configured. Like so:
 
 ```
@@ -261,13 +262,12 @@ COMMIT
 ## Blocking ISPs/AS Numbers
 
 The following script generates rules to block the subnets associates with given
-AS numbers. AS numbers can be found on [ftp://ftp.arin.net/info/asn.txt Arin's
-website] and [http://www.team-cymru.org/Services/ip-to-asn.html Team Cymru]
+AS numbers. AS numbers can be found on [Arin's website][2] and [Team Cymru][3]
 keeps a list of other places that keep this information.
 
 block_as.sh:
 
-```bash
+```
 #!/bin/bash
 
 ASLIST="$@"
@@ -290,7 +290,7 @@ for ASNO in $ASLIST; do
 done
 ```
 
-It fetches all network via whois and generates appropriate ip[6]tables rules.
+It fetches all network via whois and generates appropriate iptables rules.
 Maybe you have to adjust your whois-Query since I only ran tests against the
 ripe db.
 
@@ -315,4 +315,8 @@ iptables -A reject_as6724 -s 85.214.0.0/15 -j REJECT
 iptables -A reject_as6724 -s 81.169.128.0/17 -j REJECT
 ip6tables -A reject_as6724 -s 2a01:238::/32 -j REJECT
 ```
+
+[1]: ../rsyslog/
+[2]: ftp://ftp.arin.net/info/asn.txt
+[3]: http://www.team-cymru.org/Services/ip-to-asn.html
 

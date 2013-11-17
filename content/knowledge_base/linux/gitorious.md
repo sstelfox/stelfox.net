@@ -2,13 +2,14 @@
 title: Gitorious
 ---
 
+# Gitorious
+
 ## Initial Setup
 
-* Create a new shell account (See [[Linux/Gitorious#A_Note_on_SSH_Keys]] for
-  why)
+* Create a new shell account
 * Created new dreamhost domain "git.example.org" with passenger enabled
 * Created new database for the gitorious site, added gitorious mysql user
-* ''Waited for dreamhost to create site''
+* Waited for dreamhost to create site
 * Added IPv6 address for the domain (optional)
 
 Create a directory for the repositories, and tarballs to live:
@@ -32,7 +33,7 @@ cp config/broker.yml.example config/broker.yml
 cp config/gitorious.sample.yml config/gitorious.yml
 ```
 
-Change config/database.yml to be:
+Change `config/database.yml` to be:
 
 ```yml
 development:
@@ -66,10 +67,10 @@ You'll want to collect a few pieces of information for the next config file:
   "7e:af:8d:ec:f0:39:5e:ba:52:16:ce:19:fa:d4:b8:7d" the default), if you've
   SSH'd to it from where you are you can look up it's fingerprint like so:
   * `ssh-keygen -l -F git.example.org`
-* Full path to where the repositories will live (following this guide it will be
-  /home/<username>/.repositories
+* Full path to where the repositories will live (following this guide it will
+  be `/home/<username>/.repositories`
 * Full path for tar ball work directories (following this guide it will be
-  /home/<username>/.git-tarballs and /home/<username>/.git-tarballs-work
+  `/home/<username>/.git-tarballs` and `/home/<username>/.git-tarballs-work`
 * User's email to receive exception notifications (probably your email, this
   guide uses me@example.org)
 * What email address you want support requests to arrive at (This guide uses
@@ -80,22 +81,24 @@ production:
   gitorious_client_port: 80
   gitorious_client_host: git.example.org
   gitorious_host: git.example.org
-  
+
   repository_base_path: "/home/<username>/.repositories"
   archive_cache_dir: "/home/<username>/.git-tarballs"
   archive_work_dir: "/home/<username>/.git-tarballs-work"
-  
+
   cookie_secret: # Generate random 64 character string for this
   use_ssl: false
-  
+
   gitorious_user: <username>
   exception_notification_emails: me@example.org
-  
-  messaging_adapter: sync # IMPORTANT: "sync" doesn't require a daemon to run (which is needed on shared hosting)
-  
+
+  # IMPORTANT: "sync" doesn't require a daemon to run (which is needed on
+  # shared hosting)
+  messaging_adapter: sync
+
   disable_record_throttling: false
   merge_request_diff_timeout: 10
-  
+
   public_mode: true
   enable_private_repositories: true
   only_site_admins_can_create_projects: true
@@ -144,6 +147,7 @@ production:
     - Other/Proprietary License
     - Other/Multiple
     - None
+
   default_license: MIT License
 
   # Stuff that's in the html <head>. custom stats javascript code etc
@@ -162,18 +166,18 @@ production:
   # provide /about/tos as the URL. 
   #terms_of_service_url: http://en.gitorious.org/tos
   #privacy_policy_url: http://en.gitorious.org/privacy_policy
-  
+
   site_name: My Git Repositories
 
   favicon_url: http://example.org/favicon.png
   logo_url: http://example.org/logo.png
 ```
 
-Make sure you have a ~/.ssh directory with permissions set to 0700 and add the
-authorized keys for your admins (NOTE: THIS WILL GIVE THEM FULL ACCESS TO YOUR
-SHELL ACCOUNT)
+Make sure you have a `~/.ssh` directory with permissions set to `0700` and add
+the authorized keys for your admins (NOTE: THIS WILL GIVE THEM FULL ACCESS TO
+YOUR SHELL ACCOUNT)
 
-Add the following to your ~/.bash_profile and ~/.bashrc script
+Add the following to your `~/.bash_profile` and `~/.bashrc` script.
 
 ```
 export PATH="$HOME/git.example.com/script:$PATH"
@@ -182,7 +186,8 @@ export RAILS_ENV="production"
 
 ```
 gem install bundler
-bundle install --path vendor/bundlerake db:migrate RAILS_ENV=productionruby1.8 script/create_admin
+bundle install --path vendor/bundlerake db:migrate \
+  RAILS_ENV=productionruby1.8 script/create_admin
 ```
 
 Answer the questions
@@ -197,11 +202,13 @@ this setup for the following reason:
 Gitorious will add SSH keys to your authorized keys files every time a user
 adds an SSH public key. These are added with a forced command and some
 meta-data about the user that added it. This has the consequence of forcing an
-option on you. If you use SSH keys to login normally then this will either
-prevent you from logging in with that key (triggering the forced command) or
-alternatively prevent you from being able to push to git repositories (by
-logging in normally, rather than triggering the forced command). When added the
-keys will looks like this in the authorized keys file:
+option on you.
+
+If you use SSH keys to login normally then this will either prevent you from
+logging in with that key (triggering the forced command) or alternatively
+prevent you from being able to push to git repositories (by logging in
+normally, rather than triggering the forced command). When added the keys will
+looks like this in the authorized keys file:
 
 ```
 ### START KEY 1 ###
@@ -216,6 +223,7 @@ application this can be done by cd'ing into the git site's directory and
 running the following commands:
 
 ```
-rm -f public/javascripts/all.js; rm -f public/stylesheets/all.css; touch tmp/restart.txt
+rm -f public/javascripts/all.js public/stylesheets/all.css
+touch tmp/restart.txt
 ```
 

@@ -1,6 +1,8 @@
 ---
-title: krb5kdc
+title: Kerberos
 ---
+
+# Kerberos
 
 Kerberos is a network authentication system.
 
@@ -12,11 +14,11 @@ The servers require the following packages be installed:
 * krb5-server
 * krb5-workstation
 
-It is very important that [[Linux/NTPdate]] is already configured and running
-on all of the client systems as well as the server. Kerberos is heavily
-dependant on synchronized clocks.
+It is very important that [NTPdate][1] is already configured and running on all
+of the client systems as well as the server. Kerberos is heavily dependant on
+synchronized clocks.
 
-### Master Configuration
+## Master Configuration
 
 Edit the configuration files (provided at the bottom).
 
@@ -24,7 +26,7 @@ Create the initial database for the realm, it will ask for a master password
 for the database. DO NOT FORGET THIS!!
 
 ```
-[root@localhost ~]# kdb5_util create -s
+kdb5_util create -s
 ```
 
 Create an administrator user, it will ask for the password ensure that it is
@@ -32,16 +34,16 @@ strong as this account will be able to create, delete, and see principal's
 keys.
 
 ```
-[root@localhost ~]# kadmin.local -q "addprinc <<username>>/admin"
+kadmin.local -q "addprinc <<username>>/admin"
 ```
 
 Set the services to startup automatically and start them up:
 
 ```
-[root@localhost ~]# chkconfig krb5kdc on
-[root@localhost ~]# chkconfig kadmin on
-[root@localhost ~]# /etc/init.d/krb5kdc start
-[root@localhost ~]# /etc/init.d/kadmin start
+chkconfig krb5kdc on
+chkconfig kadmin on
+/etc/init.d/krb5kdc start
+/etc/init.d/kadmin start
 ```
 
 After the database has been started you'll need to create at least one normal
@@ -57,8 +59,8 @@ kadmin:  addprinc <<username>>
 Please note these instructions are untested but they are believed to be
 correct.
 
-First we'll need to create an ACL file for the replication utility 'kprop'. It
-should live /var/Kerberos/krb5kdc/kpropd.acl and have the contents:
+First we'll need to create an ACL file for the replication utility `kprop`. It
+should live `/var/Kerberos/krb5kdc/kpropd.acl` and have the contents:
 
 ```
 host/kdc1.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET
@@ -97,12 +99,12 @@ kdc on the slave server:
 [root@slave ~]# /etc/init.d/krb5kdc start
 ```
 
-Once the Slave is setup you'll need to modify the /etc/krb5.conf on the client
-machines and the master machine to include the FQDN of the slave in the
-"[realms]" section for the appropriate domain. The "[realms]" section would
+Once the Slave is setup you'll need to modify the `/etc/krb5.conf` on the
+client machines and the master machine to include the FQDN of the slave in the
+`[realms]` section for the appropriate domain. The `[realms]` section would
 then look like:
 
-```
+```ini
 [realms]
   BEDROOMPROGRAMMERS.NET = {
     kdc = kdc1.home.bedroomprogrammers.net
@@ -113,10 +115,10 @@ then look like:
 
 ## Adding a New Host to the Domain
 
-Hosts need 'krb5-workstation' and 'krb5-libs' installed. Make sure the client
+Hosts need `krb5-workstation` and `krb5-libs` installed. Make sure the client
 firewall rules have been applied.
 
-Be sure to copy the config file /etc/krb5.conf mentioned on this page to each
+Be sure to copy the config file `/etc/krb5.conf` mentioned on this page to each
 client machine.
 
 ```
@@ -129,6 +131,7 @@ You'll need to replace <<FQDN>> with the domain name of the host you're adding.
 It will need a DNS entry matching this hostname.
 
 ## Firewall Configuration
+
 ### Server Adjustments
 
 ```
@@ -154,9 +157,10 @@ as well:
 ```
 
 ## Configuration Files
+
 ### /etc/krb5.conf
 
-```
+```ini
 [logging]
   default = FILE:/var/log/krb5libs.log
   kdc = FILE:/var/log/krb5kdc.log
@@ -208,7 +212,7 @@ as well:
 
 ## References
 
-* [http://cryptnet.net/fdp/admin/kerby-infra/en/kerby-infra.html#configure Kerberos Infrastructure Howto]
+* [Kerberos Infrastructure Howto][2]
 * http://linsec.ca/Using_Kerberos_5_for_Single_Sign-On_Authentication
 
 ## Notes on Cached Client Login
@@ -217,4 +221,7 @@ as well:
 * http://ubuntuforums.org/showthread.php?t=1205604
 * http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127
 * http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html
+
+[1]: ../ntpdate/
+[2]: http://cryptnet.net/fdp/admin/kerby-infra/en/kerby-infra.html#configure
 
