@@ -41,16 +41,13 @@ preprocess do
   def create_knowledge_base_indexes
     kb_pages = @items.select { |i| i.identifier.to_s.start_with?("/knowledge_base/") }
     kb_pages.map! { |i| i.identifier.split("/")[0...-1].join("/") + "/" }
-
-    kb_pages.uniq.sort.each do |i|
-      next if @items[i] # If there is already a page don't create anything
-      puts i
-
-      #@items << Nanoc3::Item.new(
-      #  "<%= render 'kb_index' %>",
-      #  {extension: "erb", type: 'kb_index', title: i.split("/")[-1].titleize },
-      #  i
-      #)
+    kb_pages.uniq!.sort!.reject! { |i| @items[i] }
+    kb_pages.each do |k|
+      @items << Nanoc3::Item.new(
+        "<%= render 'kb_index' %>",
+        {extension: "erb", type: 'kb_index', title: k.split("/")[-1].titleize},
+        k
+      )
     end
   end
 
