@@ -42,7 +42,7 @@ title: Stringer Setup
 * Run by hand: heroku run rake fetch_feeds
 * Installed the meltdown android app
 * Configured the meltdown android app:
-  * Server URL: http://feeds.stelfox.net/fever
+  * Server URL: `http://feeds.stelfox.net/fever`
   * Email:      stringer
   * Password:   (The provided password)
 
