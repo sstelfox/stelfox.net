@@ -16,6 +16,7 @@ gem 'stringex'
 gem 'uglifier'
 gem 'therubyracer'
 gem 'coffee-script'
+gem 'rainpress'
 
 gem 'pry'
 
