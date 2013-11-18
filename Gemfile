@@ -18,6 +18,8 @@ gem 'therubyracer'
 gem 'coffee-script'
 gem 'rainpress'
 
+gem 'w3c_validators'
+
 gem 'thin'
 gem 'pry'
 
