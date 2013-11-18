@@ -1,52 +1,94 @@
 
-/* Attribute selector */
+$column_padding: 10px;
+
+// Float the columns to the left, and add the standard padding to them
 [class*='col-'] {
   float:   left;
-  padding: 10px;
+  padding: $column_padding;
+
+  h1, h2, h3, h4, h5, h6, p {
+    margin-bottom: 1.0em;
+  }
 }
 
-/* Floats last ".bit-" to the right */
+// Floats last column off to the right
 [class*='col-']:last-of-type {
-  padding-right: 10px;
   float:         right;
+  padding-right: $column_padding;
 }
 
-/* Clearfix */
+// Column clearfix
 .row:after {
+  clear:    both;
   content:  "";
   display:  table;
-  clear:    both;
 }
 
-/* The various column sizes */
-.col-1  { width:   8.3333333333%; }
-.col-2  { width:  16.6666666667%; }
-.col-3  { width:  25%; }
-.col-4  { width:  33.3333333333%; }
-.col-5  { width:  41.6666666667%; }
-.col-6  { width:  50%; }
-.col-7  { width:  58.3333333333%; }
-.col-8  { width:  66.6666666666%; }
-.col-9  { width:  75%; }
-.col-10 { width:  83.3333333333%; }
-.col-11 { width:  91.6666666666%; }
-.col-12 { width: 100%; }
-
-/* Base tablet to small desktop styles */
-@media (min-width: 800px) and (max-width: 1100px) {
-  // Todo
+// Mobile first, nothing special each column will take up the whole width of
+// the screen.
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9,
+.col-10, .col-11, .col-12 {
+  width: 100%;
 }
 
-/* Base tablet styles */
-@media (max-width: 800px) {
-  // Todo
+nav#sidebar {
+  background: #444444;
+  height: 100%;
+  left: 0px;
+  padding: 15px 0px;
+  position: fixed;
+  top: 0px;
+
+  ul#site-nav {
+    list-style-type: none;
+    list-style-position: outside;
+
+    li {
+
+      a {
+        color: #fdfdfd;
+        padding: 5px 10px 5px 10px;
+        text-decoration: none;
+        text-shadow: 0px 1px 0px #222222;
+      }
+    }
+  }
 }
 
-/* Base mobile styles - Everything 100% */
-@media (max-width: 480px) {
-  .bit-1, .bit-2, .bit-3, .bit-4, .bit-5, .bit-6, .bit-7, .bit-8, .bit-9,
-  .bit-10, .bit-11, .bit-12 {
-    width: 100%;
-  } 
+div#main {
+  margin: auto;
+  width: 70%;
+  margin-bottom: -50px;
+  min-height: 100%;
+  padding: 50px 0;
+
+  &:after {
+    height: 50px;
+    content: "";
+  }
+}
+
+// Base tablet sizes and small desktops
+@media (min-width: 480px) and (max-width: 800px) {
+  .col-3, .col-4  { width:  25%; }
+  .col-1, .col-2, .col-5, .col-6, .col-7  { width:  50%; }
+  .col-8, .col-9  { width:  75%; }
+  .col-10, .col-11, .col-12 { width: 100%; }
+}
+
+// Full desktop views
+@media (min-width: 800px) {
+  .col-1  { width:   8.3333333333%; }
+  .col-2  { width:  16.6666666667%; }
+  .col-3  { width:  25%; }
+  .col-4  { width:  33.3333333333%; }
+  .col-5  { width:  41.6666666667%; }
+  .col-6  { width:  50%; }
+  .col-7  { width:  58.3333333333%; }
+  .col-8  { width:  66.6666666666%; }
+  .col-9  { width:  75%; }
+  .col-10 { width:  83.3333333333%; }
+  .col-11 { width:  91.6666666666%; }
+  .col-12 { width: 100%; }
 }
 

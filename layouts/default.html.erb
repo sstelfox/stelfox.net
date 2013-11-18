@@ -20,24 +20,25 @@
   </head>
   <body>
     <!-- Tagline: Unfolding the Questions -->
-    <div class='row'>
-      <div class='col-12'>
-        <% bct = breadcrumbs_trail.map { |i| link_to(i[:title], i) unless i.nil? } %>
-        <%= bct.reject { |i| i.nil? }.join(" &raquo; ") %>
+    <nav id="sidebar">
+      <ul id="site-nav">
+        <li><%= link_to("Home", @items["/"]) %></li>
+        <li><%= link_to("About", @items["/about/"]) %></li>
+        <li><%= link_to("Blog", @items["/blog/"]) %></li>
+        <li><%= link_to("Knowledge Base", @items["/knowledge_base/"]) %></li>
+      </ul>
+    </nav>
+    <div id="main">
+      <div class='row'>
+        <div class='col-12'>
+          <% bct = breadcrumbs_trail.map { |i| link_to(i[:title], i) unless i.nil? } %>
+          <%= bct.reject { |i| i.nil? }.join(" &raquo; ") %>
+        </div>
       </div>
-    </div>
-    <div class='row'>
-      <div class='col-2'>
-        <ul>
-          <li><%= link_to("Home", @items["/"]) %></li>
-          <li><%= link_to("About", @items["/about/"]) %></li>
-          <li><%= link_to("Blog", @items["/blog/"]) %></li>
-          <li><%= link_to("Tags", @items["/tags/"]) %></li>
-          <li><%= link_to("Knowledge Base", @items["/knowledge_base/"]) %></li>
-        </ul>
-      </div>
-      <div class='col-9'>
-        <%= yield %>
+      <div class='row'>
+        <div class='col-12'>
+          <%= yield %>
+        </div>
       </div>
     </div>
 
