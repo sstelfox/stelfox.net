@@ -9,10 +9,12 @@ also be very very expensive if anonymous calls are allowed through the POTS
 line. Mitigations must be implemented in the network, network perimeter,
 servers, and phones. Mitigations in the network aim to deny access to attackers
 through virtual separation of data and phone networks using [VLANs][1], and
-perimeter security devices such as firewalls and filtering routers. Servers AND
-phones must be security hardened. Phones must require strong authentication and
-authorization of users to prevent identity spoofing. Phones should also encrypt
-voice streams through high risk environments such as the internet.
+perimeter security devices such as firewalls and filtering routers.
+
+Servers AND phones must be security hardened. Phones must require strong
+authentication and authorization of users to prevent identity spoofing. Phones
+should also encrypt voice streams through high risk environments such as the
+internet.
 
 ## Authentication
 
