@@ -107,7 +107,7 @@ end
 compile "/sitemap" do
   # Remove items explicitely hidden, binary items and anything with an
   # extension that probably shouldn't be indexed by a search engine.
-  items = @items.reject { |i| i.path.nil? || i[:is_hidden] || i.binary? }
+  items = @items.reject { |i| i.path.nil? || i[:hidden] || i.binary? }
   excluded_extensions = %w{ js css txt xml ttf }
   items.reject! { |i| excluded_extensions.include?(i.path.split('.').last) }
 
