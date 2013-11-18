@@ -12,14 +12,18 @@ gem 'sass'
 
 gem 'builder'
 gem 'stringex'
+gem 'systemu'
 
 gem 'uglifier'
 gem 'therubyracer'
 gem 'coffee-script'
 gem 'rainpress'
 
+# Needed for the CSS and HTML `nanoc check`s
 gem 'w3c_validators'
 
-gem 'thin'
-gem 'pry'
+group :development do
+  gem 'thin'
+  gem 'pry'
+end
 
