@@ -44,5 +44,7 @@ namespace :new do
       post.puts '- default'
       post.puts "---\n\n"
     end
+
+    exec "vim #{filename}"
   end
 end
