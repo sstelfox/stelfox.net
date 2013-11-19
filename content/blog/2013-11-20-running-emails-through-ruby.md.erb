@@ -1,0 +1,38 @@
+---
+title: 'Running Emails Through Ruby'
+created_at: 2013-11-20 06:32:05 -0500
+updated_at: 2013-11-20 06:32:05 -0500
+kind: article
+type: post
+published: false
+tags:
+- ruby
+- email
+---
+
+```ruby
+# Get the email message from STDIN / Passed filename
+message = ""
+while input = ARGF.gets
+  message += input
+end
+
+# Do stuff with the mail message, in this case we're just counting how many
+we've processed.
+count_file = "#{ENV['HOME']}/mail_counter.txt"
+count = File.exists?(count_file) ? File.read(count_file).to_i : 0
+File.write(count_file, (count + 1).to_s)
+
+# Put the (presumably manipulated) message back out to $stdout
+begin
+  $stdout.puts message
+rescue Errno::EPIPE
+  exit(74)
+end
+```
+
+Sources:
+
+* http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby
+* http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines
+

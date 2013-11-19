@@ -15,9 +15,10 @@ This evening [Gabe Koss][1] and myself gave a lightning talk on [Riak][2] at
 the [Burlington Web Applications Group][3]. Due too time constraints there was
 a lot of material that we simply weren't able to cover.
 
-# TODO
+I'm [hosting the slides][4] here on this site.
 
 [1]: http://gabekoss.com/
 [2]: http://basho.com/riak/
 [3]: http://www.btvwag.org/
+[4]: <%= @items['/static/20131118-riak-talk-slides'].path %>
 
