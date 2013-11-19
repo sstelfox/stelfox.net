@@ -51,9 +51,13 @@ preprocess do
     end
   end
 
+  def reject_unpublished
+    @items.reject! { |i| i[:published] == false }
+  end
+
+  reject_unpublished
   create_tag_pages
   create_knowledge_base_indexes
-  #@items.each { |i| puts "#{i.identifier}-->#{(i[:title] || "").titleize}<--" }
 end
 
 # Handle processing of stylesheets

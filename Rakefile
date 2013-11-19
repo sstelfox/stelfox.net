@@ -2,6 +2,7 @@
 require 'nanoc/tasks'
 require 'rake/clean'
 require 'stringex'
+require './lib/titleize'
 
 CLEAN.include("output/**", "tmp/**", "*.log")
 
@@ -35,10 +36,11 @@ namespace :new do
     puts "Creating new post: #{filename}"
     open(filename, 'w') do |post|
       post.puts '---'
-      post.puts "title: '#{title}'"
+      post.puts "title: '#{title.titleize}'"
       post.puts "created_at: #{Time.now}"
       post.puts "updated_at: #{Time.now}"
       post.puts 'kind: article'
+      post.puts 'published: false'
       post.puts 'type: post'
       post.puts 'tags:'
       post.puts '- default'
