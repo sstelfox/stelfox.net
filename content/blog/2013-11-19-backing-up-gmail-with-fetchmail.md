@@ -71,6 +71,7 @@ We'll now need to configure procmail to properly deliver our mail to the local
 `$HOME/.procmailrc`
 
 ```
+LOGFILE=$HOME/.procmail.log
 MAILDIR=$HOME
 VERBOSE=on
 
