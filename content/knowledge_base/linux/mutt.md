@@ -164,3 +164,13 @@ set smtp_url = smtp://127.0.0.1
 set ssl_starttls = yes
 ```
 
+## Vim
+
+Since I use vim as my editor I also added the following line to my vim
+configuration file to autowrap my lines at 72 characters, but only for mutt
+composed messsages.
+
+```
+au BufRead /tmp/mutt-* set tw=72
+```
+

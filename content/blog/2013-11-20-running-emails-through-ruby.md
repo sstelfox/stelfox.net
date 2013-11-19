@@ -6,6 +6,7 @@ kind: article
 type: post
 published: false
 tags:
-- default
+- ruby
+- email
 ---
 
