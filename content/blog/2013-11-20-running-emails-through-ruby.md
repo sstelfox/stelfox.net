@@ -10,3 +10,8 @@ tags:
 - email
 ---
 
+Sources:
+
+* http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby
+* http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines
+
