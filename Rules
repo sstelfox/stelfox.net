@@ -19,8 +19,8 @@ preprocess do
   def build_search_index
     # Start with a base index
     index = {
-      keywords: Hash.new([]),
-      path: [],
+      keywords: {},
+      paths: [],
       weights: {}
     }
 
@@ -29,8 +29,8 @@ preprocess do
       next unless i.raw_content
 
       # Create and store the ID of the path
-      index[:path].push(i.identifier)
-      path_id = index[:path].index(i.identifier)
+      index[:paths].push(i.identifier)
+      path_id = index[:paths].index(i.identifier)
 
       i.raw_content.split(/[<>\s]+/).each do |word|
         word.downcase!
@@ -40,22 +40,24 @@ preprocess do
         next unless word =~ /\A[a-z]{3,}\Z/
         next if STOP_WORDS.include?(word)
 
+        index[:keywords][word] ||= []
         index[:keywords][word].push(path_id) unless index[:keywords][word].include?(path_id)
+
         index[:weights][word] ||= {}
         index[:weights][word][path_id] ||= 0
         index[:weights][word][path_id] += ((i[:tags] || []).include?(word) ? 5 : 1)
       end
 
       # Clean up any weights
-      index[:weights].each do |word, path_weights|
-        path_weights.each do |path, weight|
-          index[:weights][word].delete(path) if weight <= 1
-        end
-        index[:weights].delete(word) if index[:weights][word].empty?
-      end
+      #index[:weights].each do |word, path_weights|
+      #  path_weights.each do |path, weight|
+      #    index[:weights][word].delete(path) if weight <= 1
+      #  end
+      #  index[:weights].delete(word) if index[:weights][word].empty?
+      #end
     end
 
-    @items << Nanoc::Item.new(JSON.pretty_generate(index), {hidden: true}, '/search_index/')
+    @items << Nanoc::Item.new(JSON.generate(index), {hidden: true}, '/search_index/')
   end
 
   def create_tag_pages
