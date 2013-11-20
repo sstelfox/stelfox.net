@@ -281,3 +281,12 @@ FileETag None
   ExpiresByType image/svg+xml                       "access plus 1 month"
 </IfModule>
 
+# The short url map is configured in the nanoc.yaml file using the `short_urls`
+# key.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+<% (@site.config[:short_url_map] || {}).each do |short_code, url| %>
+  RewriteRule ^s/<%= short_code %>/?$ <%= url %> [R=301,L,NC]
+<% end %>
+</IfModule>

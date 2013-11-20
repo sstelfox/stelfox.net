@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+require 'json'
+
 # A few helpful tips about the Rules file:
 #
 # * The string given to #compile and #route are matching patterns for
@@ -51,11 +53,27 @@ preprocess do
     end
   end
 
+  def generate_shortcodes
+    map = {}
+
+    # Generate short code URLs and map them to their URLs
+    @site.config[:short_urls].each do |su|
+      k = Digest::SHA1.base64digest(su)[0...6]
+      map[k] = su
+    end
+
+    # Create a JSON representation of the url maps
+    @items << Nanoc::Item.new(JSON.generate(map), {hidden: true}, '/short_codes/')
+
+    @site.config[:short_url_map] = map
+  end
+
   def reject_unpublished
     @items.reject! { |i| i[:published] == false }
   end
 
   reject_unpublished
+  generate_shortcodes
   create_tag_pages
   create_knowledge_base_indexes
 end
@@ -82,7 +100,7 @@ end
 
 # Handle processing of javascripts
 compile "/javascripts/*" do
-  item[:extension].split('.').reverse_each do |e|
+  (item[:extension] || "").split('.').reverse_each do |e|
     filter :coffeescript if e == "coffee"
     filter :erb if e == "erb"
   end
@@ -101,11 +119,19 @@ end
 
 # Yeah htaccess!
 compile "/htaccess/" do
-  nil
+  filter :erb
 end
 
 route "/htaccess/" do
   "/.htaccess"
+end
+
+compile "/short_codes/" do
+  nil
+end
+
+route "/short_codes/" do
+  "/short_codes.json"
 end
 
 compile "/sitemap" do
