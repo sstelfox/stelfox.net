@@ -16,6 +16,48 @@ require 'json'
 #   because “*” matches zero or more characters.
 
 preprocess do
+  def build_search_index
+    # Start with a base index
+    index = {
+      keywords: Hash.new([]),
+      path: [],
+      weights: {}
+    }
+
+    # Loop through all the non-binary documents, for indexing, and focus initially on 
+    @items.each do |i|
+      next unless i.raw_content
+
+      # Create and store the ID of the path
+      index[:path].push(i.identifier)
+      path_id = index[:path].index(i.identifier)
+
+      i.raw_content.split(/[<>\s]+/).each do |word|
+        word.downcase!
+        word.gsub!(/[.,?!;"-'`*_]/, "") # Strip out any punctuation or markdown symbols
+        word.strip!
+
+        next unless word =~ /\A[a-z]{3,}\Z/
+        next if STOP_WORDS.include?(word)
+
+        index[:keywords][word].push(path_id) unless index[:keywords][word].include?(path_id)
+        index[:weights][word] ||= {}
+        index[:weights][word][path_id] ||= 0
+        index[:weights][word][path_id] += ((i[:tags] || []).include?(word) ? 5 : 1)
+      end
+
+      # Clean up any weights
+      index[:weights].each do |word, path_weights|
+        path_weights.each do |path, weight|
+          index[:weights][word].delete(path) if weight <= 1
+        end
+        index[:weights].delete(word) if index[:weights][word].empty?
+      end
+    end
+
+    @items << Nanoc::Item.new(JSON.pretty_generate(index), {hidden: true}, '/search_index/')
+  end
+
   def create_tag_pages
     # Build up a reverse association between tags and items
     tag_list = items.map { |i| (i[:tags] || []) }.flatten
@@ -25,7 +67,7 @@ preprocess do
 
     # Create a page item for each of various tags
     tag_list.uniq.each do |t|
-      @items << Nanoc3::Item.new(
+      @items << Nanoc::Item.new(
         "<%= render 'tag_page', { tag: @tag, tagged_items: @tagged_items } %>",
         {extension: "erb", type: 'tag_page', title: t.gsub("-", " ").titleize },
         "/tags/#{t.to_url}/"
@@ -33,7 +75,7 @@ preprocess do
     end
 
     # Create a tag index page
-    @items << Nanoc3::Item.new(
+    @items << Nanoc::Item.new(
       "<%= render 'tag_index', { tag_list: #{tag_list.inspect} } %>",
       {extension: "erb", type: 'tag_index', title: "Tag List"},
       "/tags/"
@@ -45,7 +87,7 @@ preprocess do
     kb_pages.map! { |i| i.identifier.split("/")[0...-1].join("/") + "/" }
     kb_pages.uniq!.sort!.reject! { |i| @items[i] }
     kb_pages.each do |k|
-      @items << Nanoc3::Item.new(
+      @items << Nanoc::Item.new(
         "<%= render 'kb_index' %>",
         {extension: "erb", type: 'kb_index', title: k.split("/")[-1].titleize},
         k
@@ -76,6 +118,7 @@ preprocess do
   generate_shortcodes
   create_tag_pages
   create_knowledge_base_indexes
+  build_search_index
 end
 
 # Handle processing of stylesheets
@@ -171,6 +214,14 @@ compile "/tags/*/" do
 
   filter :erb, { locals: { tag: tag, tagged_items: tagged_items } }
   layout "default"
+end
+
+compile "/search_index/" do
+  nil
+end
+
+route "/search_index/" do
+  "/search_index.json"
 end
 
 # Handle remaining items
