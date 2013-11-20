@@ -65,80 +65,105 @@ subsystem built into windows to a syslog server. It's called
 ### /etc/rsyslog.conf
 
 ```
-#rsyslog v3 config file
+#rsyslog v5 config file
 
 #### MODULES ####
 
-$ModLoad imuxsock.so    # provides support for local system logging (e.g. via logger command)
-$ModLoad imklog.so      # provides kernel logging support (previously done by rklogd)
+$ModLoad imuxsock # Provide support for local system logging (e.g. via logger command)
+$ModLoad imklog   # Provide kernel logging support
+$ModLoad immark   # Provide --MARK-- message capability
 
-# Provides UDP syslog reception
-$ModLoad imudp.so
-$UDPServerRun 514
-
-# Provides TCP syslog reception
-$ModLoad imtcp.so  
-$InputTCPServerRun 514
-
-#### GLOBAL DIRECTIVES ####
+# GLOBAL DIRECTIVES
 
 # Use default timestamp format
 $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
 
-#### RULES ####
+# File syncing capability is disabled by default. This feature is usually not
+# required, and an extreme performance hit.
+#$ActionFileEnableSync on
 
-# Log anything (except mail) of level info or higher.
-# Don't log private authentication messages!
-*.info;mail.none;authpriv.none;cron.none                /var/log/messages
+# Include all config files in /etc/rsyslog.d/
+$IncludeConfig /etc/rsyslog.d/*.conf
 
-# The authpriv file has restricted access.
-authpriv.*                                              /var/log/secure
+# TEMPLATES
+
+# Log every remote host to it's own directory, with a timestamped file
+$template RemoteHost,"/var/syslog/hosts/%FROMHOST-IP%/%$YEAR%-%$MONTH%-%$DAY%-syslog.log"
+
+# RULESETS
+
+# BEGIN LOCAL RULESET
+
+$RuleSet local
+# Log all kernel messages to the console
+kern.*                                    /dev/console
+
+# Log anything (except mail, and private authentication message) of level info
+# or higher.
+*.info;mail.none;authpriv.none;cron.none  /var/log/messages
+
+authpriv.*                                /var/log/secure
 
 # Log all the mail messages in one place.
-mail.*                                                  -/var/log/maillog
+mail.*                                    -/var/log/maillog
 
 # Log cron stuff
-cron.*                                                  /var/log/cron
+cron.*                                    /var/log/cron
 
 # Everybody gets emergency messages
-*.emerg                                                 *
+*.emerg                                   :omusrmsg:*
 
 # Save news errors of level crit and higher in a special file.
-uucp,news.crit                                          /var/log/spooler
+uucp,news.crit                            -/var/log/spooler
 
 # Save boot messages also to boot.log
-local7.*                                                /var/log/boot.log
+local7.*                                  /var/log/boot.log
+
+# END LOCAL RULESET
+
+# BEGIN REMOTE RULESET
+
+# Use the remote file path template for remote systems
+$RuleSet remote
+*.* ?RemoteHost
+
+# END REMOTE RULESET
+
+# Use the local RuleSet as default if not specified otherwise
+$DefaultRuleset local
+
+# LISTENERS
+
+$ModLoad imtcp
+$InputTCPServerBindRuleset remote
+$InputTCPServerRun 10514
+
+$ModLoad imudp
+$InputUDPServerBindRuleset remote
+$UDPServerRun 10514
 ```
 
-The following chunk is for forwarding messages over the network using TCP, it
-should be put at the end of the file. Do not use both TCP and UDP over the
-network without adjusting the "ActionQueueFileName".
+If you want to send your logs to the remote server create the following
+contents in `/etc/rsyslog.d/central-server.conf`.
 
 ```
-# Begin TCP Forwarding Rule
-$WorkDirectory /var/spool/rsyslog
-$ActionQueueFileName remotesyslog
-$ActionQueueMaxDiskSpace 1g
-$ActionQueueSaveOnShutdown on
-$ActionQueueType LinkedList
-$ActionResumeRetryCount -1
-*.* @@syslog.example.org:514
+# Remote Logging
+#
+# An on-disk queue is created for this action. If the remote host is down,
+# messages are spooled to disk and sent when it is up again.
+
+$WorkDirectory              /var/lib/rsyslog  # The directory to store any queue files
+$ActionQueueFileName        syslog-fwd-01     # Prefix for the files stored in the working directory
+$ActionQueueMaxDiskSpace    1g                # Limit our queue disk consumption to a gig
+$ActionQueueSaveOnShutdown  on                # Whether queues persist through reboots
+$ActionQueueType            LinkedList        # Run asynchronously
+$ActionResumeRetryCount     -1                # Infinite retries if host is down
+*.* @@syslog.example.org:10514
 ```
 
-The following chunk is for forwarding messages over the network using UDP, it
-should be put at the end of the file. Do not use both TCP and UDP over the
-network without adjusting the "ActionQueueFileName".
-
-```
-# Begin UDP Forwarding Rule
-$WorkDirectory /var/spool/rsyslog
-$ActionQueueFileName remotesyslog
-$ActionQueueMaxDiskSpace 1g
-$ActionQueueSaveOnShutdown on
-$ActionQueueType LinkedList
-$ActionResumeRetryCount -1
-*.* @syslog.example.org:514
-```
+You can drop one of the `@` symbols on the last line if you'd like to use UDP.
+The port is also optional but since we're using a non-standard port it's
+required.
 
 ### MySQL Schema
 
