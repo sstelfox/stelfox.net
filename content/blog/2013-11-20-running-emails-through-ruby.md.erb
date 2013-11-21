@@ -21,25 +21,28 @@ email while evaluating various data stores. To get the emails into the various
 data stores, I used the ruby script to parse, process and store the emails as
 they came in.
 
-I'm not going to be using it in this example but if you're going to be doing
-any form of mail manipulation or statistics I highly recommend the [mail][2]
-gem. It did almost everything I needed out of the box, though it didn't
-correctly enumerate any of the additional headers.
+If you're going to be doing any form of mail manipulation or statistics I
+highly recommend the [mail][2] gem. It did almost everything I needed out of
+the box, though it didn't correctly enumerate any of the additional headers.
 
 Procmail is a highly flexible mail filtering and local delivery agent. Without
 much effort you can pass the mail it is handling through a series of filters
 which can manipulate and reject mail before eventually delivering it to your
 inbox. In light of this, we're going to make a filter that simply counts the
-total number of emails the script has processed, rejecting every fifth email.
+total number of emails the script has processed, and add a header to the
+message that indicates this count.
 
 ```ruby
 require 'rubygems'
+require 'mail'
 
 # Get the email message from STDIN / Passed filename
 message = ""
 while input = ARGF.gets
   message += input
 end
+
+msg = Mail.new(message)
 
 count_file = "#{ENV['HOME']}/mail_counter.txt"
 

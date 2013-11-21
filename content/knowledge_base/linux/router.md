@@ -84,19 +84,19 @@ for the internal IP address.
 # Always allow pinging out from the internal network
 -A FORWARD -i eth1 -o eth0 -s 10.0.0.0/24 -p icmp -j ACCEPT
 
-# Allow us to forward to the airlocks SSH server
+# Allow us to forward to the airlock's SSH server
 -A FORWARD -m tcp -p tcp -d 10.0.0.100 --dport 22 -j ACCEPT
 
-# TODO: Harden everything else that we route
+# Temporarily allow routing all other traffic from the inside out
 -A FORWARD -i eth1 -s 10.0.0.0/24 -o eth0 -j ACCEPT
 
 COMMIT
 
 *nat
-:PREROUTING ACCEPT [0:0] # TODO: Harden
-:INPUT ACCEPT [0:0] # TODO: Harden
-:OUTPUT ACCEPT [0:0] # TODO: Harden
-:POSTROUTING ACCEPT [0:0] # TODO: Harden
+:PREROUTING   ACCEPT [0:0] # TODO: Harden?
+:INPUT        ACCEPT [0:0] # TODO: Harden?
+:OUTPUT       ACCEPT [0:0] # TODO: Harden?
+:POSTROUTING  ACCEPT [0:0] # TODO: Harden?
 
 # Portfowarding port 2200 to port 22 on the airlock
 -A PREROUTING -i eth0 -m tcp -p tcp --dport 2200 -j DNAT --to 10.0.0.100:22
