@@ -138,7 +138,7 @@ logfile_rotate 10
 # Include the error in email messages sent using the error pages mailto link
 email_err_data on
 
-########## BEGIN ALIASES ##########
+########## BEGIN ACL ALIASES ##########
 
 # Protocol based aliases
 acl manager proto cache_object
