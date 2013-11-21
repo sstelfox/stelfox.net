@@ -77,6 +77,7 @@ for the internal IP address.
 -A OUTPUT -m limit --limit 2/s --limit-burst 5 -j LOG --log-prefix "Outgoing attempt: "
 -A OUTPUT -j REJECT
 
+# Established connections should be allowed through the firewall
 -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
 
 # Allow us to forward to the airlocks SSH server
