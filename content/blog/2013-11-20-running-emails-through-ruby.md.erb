@@ -1,27 +1,52 @@
 ---
 title: 'Running Emails Through Ruby'
-created_at: 2013-11-20 06:32:05 -0500
-updated_at: 2013-11-20 06:32:05 -0500
+created_at: 2013-11-20 19:32:05 -0500
+updated_at: 2013-11-20 19:32:05 -0500
 kind: article
 type: post
 published: false
 tags:
 - ruby
+- fetchmail
+- procmail
 - email
 ---
 
+Following up on my [earlier post][1] where I covered how to backup your Gmail
+account using `fetchmail` and `procmail`; I wanted to cover how I was
+additionally processing received mail through ruby.
+
+This was part of a larger project where I was doing statistical analysis on my
+email while evaluating various data stores. To get the emails into the various
+data stores, I used the ruby script to parse, process and store the emails as
+they came in.
+
+I'm not going to be using it in this example but if you're going to be doing
+any form of mail manipulation or statistics I highly recommend the [mail][2]
+gem. It did almost everything I needed out of the box, though it didn't
+correctly enumerate any of the additional headers.
+
+Procmail is a highly flexible mail filtering and local delivery agent. Without
+much effort you can pass the mail it is handling through a series of filters
+which can manipulate and reject mail before eventually delivering it to your
+inbox. In light of this, we're going to make a filter that simply counts the
+total number of emails the script has processed, rejecting every fifth email.
+
 ```ruby
+require 'rubygems'
+
 # Get the email message from STDIN / Passed filename
 message = ""
 while input = ARGF.gets
   message += input
 end
 
-# Do stuff with the mail message, in this case we're just counting how many
-we've processed.
 count_file = "#{ENV['HOME']}/mail_counter.txt"
+
 count = File.exists?(count_file) ? File.read(count_file).to_i : 0
-File.write(count_file, (count + 1).to_s)
+count += 1
+
+File.write(count_file, count.to_s)
 
 # Put the (presumably manipulated) message back out to $stdout
 begin
@@ -35,4 +60,7 @@ Sources:
 
 * http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby
 * http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines
+
+[1]: <%= @items['/blog/2013-11-19-backing-up-gmail-with-fetchmail/'].path %>
+[2]: mail gem path
 

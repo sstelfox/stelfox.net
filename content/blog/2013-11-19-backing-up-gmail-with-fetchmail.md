@@ -8,6 +8,8 @@ tags:
 - email
 - backups
 - linux
+- fetchmail
+- procmail
 - cli
 ---
 
