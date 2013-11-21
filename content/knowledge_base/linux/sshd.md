@@ -273,6 +273,14 @@ The first can be done using [IPTables][1] and the rules are mentioned in the
 firewall section of this page. I will cover the rest in the following two
 sub-sections.
 
+Note for personal research: It seems that version 2 of the SSH protocol
+natively supports chaining authentications using the 'AuthenticationMethods'
+commands allowing you to simply do things such as requiring you to have both a
+key and password. Chaining this with pam could allow us to require a publickey,
+following by standard password, and finishing up with a OTP. Would be fantastic
+for high security airlock servers, or as a stronger means of restricting root
+  logins where they are necessary.
+
 ### SSH Authorized Keys
 
 SSH authorized keys provide a considerably stronger authentication method than
