@@ -38,7 +38,7 @@ Lets drop the config into place, this is fairly generic there are just a few IP
 addresses, networks, and emails to change. It should live at
 `/etc/squid/squid.conf`.
 
-```
+```sh
 # Configuration reference:
 # http://www.squid-cache.org/Versions/v3/3.2/cfgman/
 # https://calomel.org/squid.html
@@ -368,13 +368,13 @@ curl --proxy-basic --proxy-user user:pass -x 10.0.0.170:3128 https://www.google.
 To get yum working with the proxy add the following line to the `[main]`
 section of /etc/yum.conf file.
 
-```
+```ini
 proxy=http://10.0.0.170:3128
 ```
 
 If authentication is required the two following lines can always be added:
 
-```
+```ini
 proxy_username=username
 proxy_password=password
 ```

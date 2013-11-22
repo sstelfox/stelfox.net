@@ -153,7 +153,7 @@ end
 compile "/javascripts/*" do
   (item[:extension] || "").split('.').reverse_each do |e|
     filter :coffeescript if e == "coffee"
-    filter :erb if e == "erb"
+    filter :erb, {trim: "-<>"} if e == "erb"
   end
 
   # If mangling is enabled each javascript file needs to be self-contained as
@@ -170,7 +170,7 @@ end
 
 # Yeah htaccess!
 compile "/htaccess/" do
-  filter :erb
+  filter :erb, {trim: "-<>"}
 end
 
 route "/htaccess/" do
@@ -192,7 +192,7 @@ compile "/sitemap" do
   excluded_extensions = %w{ js css txt xml ttf }
   items.reject! { |i| excluded_extensions.include?(i.path.split('.').last) }
 
-  filter :erb, { locals: { sitemap_items: items } }
+  filter :erb, { locals: { sitemap_items: items }, trim: "-<>" }
 end
 
 route "/sitemap" do
@@ -200,7 +200,7 @@ route "/sitemap" do
 end
 
 compile "/atom" do
-  filter :erb
+  filter :erb, {trim: "-<>"}
 end
 
 route "/atom" do
@@ -220,7 +220,7 @@ compile "/tags/*/" do
   tag = item.identifier.match(%r{/tags/(.+)/}).captures.first
   tagged_items = items.select { |i| (i[:tags] || []).include?(tag) }
 
-  filter :erb, { locals: { tag: tag, tagged_items: tagged_items } }
+  filter :erb, { locals: { tag: tag, tagged_items: tagged_items }, trim: "-<>"}
   layout "default"
 end
 
@@ -240,7 +240,7 @@ compile "*" do
     # don’t filter binary items
   else
     item[:extension].split(".").reverse_each do |e|
-      filter :erb if e == "erb"
+      filter :erb, {trim: "-<>"} if e == "erb"
 
       if e == "md"
         filter :redcarpet,
@@ -280,5 +280,5 @@ route "*" do
   end
 end
 
-layout "*", :erb
+layout "*", :erb, {trim: "-<>"}
 
