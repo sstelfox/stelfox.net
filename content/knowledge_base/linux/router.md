@@ -78,8 +78,8 @@ for the internal IP address.
 -A OUTPUT -j REJECT
 
 # Allow existing connections in both directions
--A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
--A FORWARD -i eth1 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i eth0 -o eth1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+-A FORWARD -i eth1 -o eth0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
 # Always allow pinging out from the internal network
 -A FORWARD -i eth1 -o eth0 -s 10.0.0.0/24 -p icmp -j ACCEPT
