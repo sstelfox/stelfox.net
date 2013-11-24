@@ -278,6 +278,46 @@ And ensure the client can make the connection:
 -A OUTPUT -m tcp -tcp --dport 20514 -d <syslog-ip> -j ACCEPT
 ```
 
+## Streaming to Redis
+
+```
+yum install ruby rubygem-redis -y
+```
+
+Created `/bin/redis-syslog-sender` with the following contents:
+
+```
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'redis'
+
+redis = Redis.new(
+  host: 'redis-host',
+  password: "redis-password"
+)
+
+while message = ARGF.gets
+  redis.publish("syslog:stream", message.strip)
+end
+
+redis.quit
+```
+
+You'll need to edit the host your redis server is running on and provide it's
+password.
+
+In `/etc/rsyslog.conf` you'll need to add the following lines:
+
+```
+$template RedisSender, "<%PRI%>%TIMESTAMP:::date-rfc3339% %HOSTNAME% %syslogtag:1:32%%msg:::sp-if-no-1st-sp%%msg%"
+module(load="omprog")
+*.*  action(type="omprog" binary="/bin/syslog-redis-sender" template="RedisSender")
+```
+
+After restarting the service a client can begin receiving all the syslog
+messages by subscribing to the Redis stream 'syslog:stream'.
+
 [1]: ../certificate_authority/
 [2]: http://code.google.com/p/eventlog-to-syslog/
 

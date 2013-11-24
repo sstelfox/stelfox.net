@@ -135,47 +135,6 @@ systemctl start postfix.service
 ## Creating a catch-all
 
 ```
-groupadd -g 201 collector
-useradd -u 201 -g 201 collector
-passwd collector
-mkdir /var/spool/mail/all
-chown collector:collector /var/spool/mail/all
-yum install postfix -y
-```
-
-Edit `/etc/postfix/main.cf`
-
-Created lines:
-
-```
-myhostname = postfix-catch-all.i.0x378.net
-home_mailbox = Maildir/
-#local_recipient_maps = # Intentionally unset
-virtual_mailbox_maps = regexp:/etc/postfix/virtual_mailbox_regexes.txt
-virtual_mailbox_base = /home
-virtual_uid_maps = static:201 # The UID of the mailtrap user
-virtual_gid_maps = static:201 # The GID of postfix
-virtual_minimum_uid = 200
-```
-
-Changed lines:
-
-```
-inet_interfaces = all
-```
-
-Created the file `/etc/postfix/virtual_mailbox_regexes.txt` with the following
-contents:
-
-```
-/.*/  collector/Maildir/
-```
-
-Opened port `25/tcp` on the firewall.
-
-## Round 2
-
-```
 yum install postfix -y
 ```
 
@@ -206,6 +165,11 @@ Created the file `/etc/postfix/virtual_aliases` with the following contents:
 ```
 
 Opened port `25/tcp` on the firewall.
+
+Since the root account is going to be receiving mail for all accounts and all
+domains make sure that root is not being redirected to another email address in
+the `/etc/aliases` file. Make sure to run `newaliases` if you make a change to
+the file.
 
 Great success! The local root account is now receiving emails to literally any
 address. In production this probably shouldn't be the root user....
