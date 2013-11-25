@@ -2,6 +2,7 @@
 created_at: 2010-06-18 17:10:33+00:00
 updated_at: 2010-06-18 17:10:33+00:00
 kind: article
+layout: blog_post
 title: 'Inspeckt and User Input'
 ---
 

@@ -2,6 +2,7 @@
 created_at: 2011-02-17 18:15:02+00:00
 updated_at: 2011-02-17 18:15:02+00:00
 kind: article
+layout: blog_post
 title: 'The Home Network and NAT as a Security Layer'
 ---
 

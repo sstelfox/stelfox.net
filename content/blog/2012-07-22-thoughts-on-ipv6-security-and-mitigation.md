@@ -3,6 +3,7 @@ created_at: 2012-07-22 03:07:42+00:00
 updated_at: 2012-07-22 03:07:42+00:00
 kind: article
 title: 'Thoughts on IPv6 Security and Mitigation'
+layout: blog_post
 tags:
 - networking
 - system-administration

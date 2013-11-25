@@ -3,6 +3,7 @@ created_at: 2009-01-28 21:54:08+00:00
 updated_at: 2009-01-28 21:54:08+00:00
 kind: article
 title: 'The War Between the Text Editors and the IDEs'
+layout: blog_post
 tags:
 - development
 - ides

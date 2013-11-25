@@ -4,6 +4,7 @@ created_at: 2012-11-26 10:18:00 -0500
 updated_at: 2012-11-26 10:18:00 -0500
 kind: article
 type: post
+layout: blog_post
 tags:
 - heroku
 - ruby

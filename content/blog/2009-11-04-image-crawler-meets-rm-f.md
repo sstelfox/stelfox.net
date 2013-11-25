@@ -2,6 +2,7 @@
 created_at: 2009-11-04 21:36:45+00:00
 updated_at: 2009-11-04 21:36:45+00:00
 kind: article
+layout: blog_post
 title: 'Image Crawler Meets rm -f *'
 tags:
 - linux

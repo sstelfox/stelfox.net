@@ -3,6 +3,7 @@ created_at: 2012-08-08 15:06:56+00:00
 updated_at: 2012-08-08 15:06:56+00:00
 kind: article
 title: 'Security Through Obesity'
+layout: blog_post
 tags:
 - development
 - ruby

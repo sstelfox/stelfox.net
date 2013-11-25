@@ -3,6 +3,7 @@ created_at: 2012-08-07 14:09:33+00:00
 updated_at: 2012-08-07 14:09:33+00:00
 kind: article
 title: 'Adding a table prefix to DataMapper tables'
+layout: blog_post
 tags:
 - development
 - ruby
