@@ -1,8 +1,84 @@
-<div class='post'>
-  <h3><%= link_to @post[:title], @post.path %></h3>
-  <aside>Published <%= @post[:created_at] %> by Sam Stelfox</aside>
-  <article>
-    <%= @post.compiled_content %>
-  </article>
-</div>
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title><%= "#{@item[:title]} - " if @item[:title] %><%= @site.config[:title] %></title>
+    <% if @item[:description] %>
+    <meta name="description" content="<%= @item[:description] %>">
+    <% end %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="alternate" type="application/atom+xml" title="<%= @site.config[:title] %> Feed" href="<%= @items['/atom/'].path %>" />
 
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link rel="stylesheet" href="<%= @items['/styles/root/'].path %>" />
+    <script src="<%= @items['/javascripts/modernizr/'].path %>"></script>
+  </head>
+  <body>
+    <!-- Tagline: Unfolding the Questions -->
+    <nav id="sidebar">
+      <ul id="site-nav">
+        <!-- add 'current' class to the active section's link tag -->
+        <li><a class="icon-home" href="<%= @items["/"].path %>" title="Home"><span>Home</span></a></li>
+        <li><a class="icon-about" href="<%= @items["/about/"].path %>" title="About"><span>About</span></a></li>
+        <li><a class="icon-blog" href="<%= @items["/blog/"].path %>" title="Blog"><span>Blog</span></a></li>
+        <li><a class="icon-kb" href="<%= @items["/knowledge_base/"].path %>" title="Knowledge Base"><span>Knowledge Base</span></a></li>
+      </ul>
+    </nav>
+    <div id="main">
+      <div class='row'>
+        <div class='col-12'>
+          <% bct = breadcrumbs_trail.map { |i| link_to(i[:title], i) unless i.nil? } %>
+          <%= bct.reject { |i| i.nil? }.join(" &raquo; ") %>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-12'>
+          <div class='post'>
+            <h3><%= @item[:title] %></h3>
+            <aside>Published <%= @item[:created_at] %> by Sam Stelfox</aside>
+            <article>
+              <%= yield %>
+            </article>
+          </div>
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-6'>
+          <h3>Recent Blog Posts</h3>
+          <ul>
+            <% sort_by_newest(items_with_type("post"))[0...5].each do |i| %>
+              <li><%= link_to(i[:title], i) %></li>
+            <% end %>
+          </ul>
+        </div>
+        <div class='col-6'>
+          <h3>Recent Knowledge Base Changes</h3>
+          <ul>
+            <% kb_items = @items.select { |i| i.identifier.start_with?("/knowledge_base/") } %>
+            <% kb_items.reject! { |i| i[:mtime].nil? } %>
+            <% sort_by_newest(kb_items)[0...5].each do |i| %>
+              <li><%= link_to(i[:title], i) %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+      <footer id="global-footer">
+        <p>Copyright &copy; 2013 Sam Stelfox</p>
+      </footer>
+    </div>
+
+    <script src="<%= @items['/javascripts/root/'].path %>"></script>
+    <script type="text/javascript">
+      var _gaq=_gaq||[];_gaq.push(["_setAccount","UA-32188490-1"]);_gaq.push(["_trackPageview"]);
+      (function(){var e=document.createElement("script");e.type="text/javascript";e.async=true;
+      e.src=("https:"==document.location.protocol?"https://ssl":"http://www")+
+      ".google-analytics.com/ga.js";var t=document.getElementsByTagName("script")[0];
+      t.parentNode.insertBefore(e,t)})()
+    </script>
+  </body>
+</html>

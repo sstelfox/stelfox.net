@@ -3,5 +3,11 @@ title: Blog
 ---
 
 <% sorted_articles.each do |post| %>
-  <%= render 'blog_post', post: post %>
+  <div class='post'>
+    <h3><%= link_to post[:title], post.path %></h3>
+    <aside>Published <%= post[:created_at] %> by Sam Stelfox</aside>
+    <article>
+      <%= post.compiled_content(snapshot: :pre) %>
+    </article>
+  </div>
 <% end %>

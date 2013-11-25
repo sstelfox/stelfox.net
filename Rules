@@ -261,7 +261,11 @@ compile "*" do
       end
     end
 
-    layout "default" unless excluded_extensions.include?(item[:extension])
+    if @item[:layout]
+      layout @item[:layout]
+    else
+      layout "default" unless excluded_extensions.include?(item[:extension])
+    end
   end
 end
 
