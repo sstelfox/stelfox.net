@@ -17,7 +17,7 @@ module PostHelpers
 
   def sort_by_newest(items)
     items.sort_by do |i|
-      attribute_to_time(i[:created_at])
+      attribute_to_time(i[:updated_at] || i[:created_at] || i[:mtime])
     end.reverse
   end
 end
