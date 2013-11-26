@@ -35,7 +35,7 @@ echo "Everything is running fine..."
 # A command outside of a conditional that will always return a exit code of 1
 test 1 -eq 0
 
-echo "This will never run, a command as failed"
+echo "This will never run, as a command has failed"
 echo "Using unset variable ${TEST} will also cause this script to exit"
 ```
 
