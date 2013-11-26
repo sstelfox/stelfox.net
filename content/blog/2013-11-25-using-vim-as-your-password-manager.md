@@ -81,9 +81,22 @@ setup before I can access my passwords.
 
 Hope this helps some other weary CLI warrior some trouble. Cheers!
 
+***Update***: I received a wonderful recommendation from a user named
+[sigzero][6] over on Reddit. For additional security they added the following
+line to their `~/.vimrc` file.
+
+```
+autocmd BufReadPost * if &key != "" | set noswapfile nowritebackup viminfo= nobackup noshelltemp history=0 secure | endif
+```
+
+It disables additional files that vim may write copies to such as swap files
+and backups, prevents dangerous shell commands, and prevents vim from storing a
+history of commands.
+
 [1]: https://www.passpack.com/en/home/
 [2]: https://lastpass.com/
 [3]: http://keepass.info/
 [4]: https://en.wikipedia.org/wiki/PKZIP
 [5]: http://vim.wikia.com/wiki/Encryption
+[6]: http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdn20o8
 
