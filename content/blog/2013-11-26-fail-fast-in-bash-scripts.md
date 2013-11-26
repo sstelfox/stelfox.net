@@ -4,6 +4,7 @@ created_at: 2013-11-26 15:19:40 -0500
 updated_at: 2013-11-26 15:19:40 -0500
 kind: article
 type: post
+layout: blog_post
 tags:
 - cli
 - bash

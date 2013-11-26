@@ -43,6 +43,7 @@ namespace :new do
       post.puts 'kind: article'
       post.puts 'published: false'
       post.puts 'type: post'
+      post.puts 'layout: blog_post'
       post.puts 'tags:'
       post.puts '- default'
       post.puts "---\n\n"
