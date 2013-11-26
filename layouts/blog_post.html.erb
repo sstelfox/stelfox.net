@@ -47,26 +47,6 @@
           </div>
         </div>
       </div>
-      <div class='row'>
-        <div class='col-6'>
-          <h3>Recent Blog Posts</h3>
-          <ul>
-            <% sort_by_newest(items_with_type("post"))[0...5].each do |i| %>
-              <li><%= link_to(i[:title], i) %></li>
-            <% end %>
-          </ul>
-        </div>
-        <div class='col-6'>
-          <h3>Recent Knowledge Base Changes</h3>
-          <ul>
-            <% kb_items = @items.select { |i| i.identifier.start_with?("/knowledge_base/") } %>
-            <% kb_items.reject! { |i| i[:mtime].nil? } %>
-            <% sort_by_newest(kb_items)[0...5].each do |i| %>
-              <li><%= link_to(i[:title], i) %></li>
-            <% end %>
-          </ul>
-        </div>
-      </div>
       <footer id="global-footer">
         <p>Copyright &copy; 2013 Sam Stelfox</p>
       </footer>

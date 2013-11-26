@@ -122,11 +122,14 @@ preprocess do
     @items.reject! { |i| i[:published] == false }
   end
 
-  reject_unpublished
-  generate_shortcodes
   create_tag_pages
   create_knowledge_base_indexes
-  build_search_index
+
+  unless ENV['NANOC_MODE'] == 'auto'
+    reject_unpublished
+    generate_shortcodes
+    build_search_index
+  end
 end
 
 # Handle processing of stylesheets

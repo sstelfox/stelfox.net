@@ -13,6 +13,7 @@ end
 
 desc "Start the nanoc autocompiler."
 task :auto do
+  ENV['NANOC_MODE'] = "auto"
   system 'nanoc autocompile -H thin > autocompile.log 2>&1 &'
 end
 
