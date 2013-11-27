@@ -93,10 +93,22 @@ It disables additional files that vim may write copies to such as swap files
 and backups, prevents dangerous shell commands, and prevents vim from storing a
 history of commands.
 
+***Update 2***: I received another fantastic recommendation from another reddit
+user, this time from [NinlyOne][7]. At their recommendation, I've prepended the
+following modeline to my password. It automatically folds each password entry
+to prevent potential shoulder surfing. You can open up an entry using the
+command `zo` and close it back up with `zc`. It's worth noting that this is
+tied to my indented file format.
+
+```
+# vim: fdm=indent fdn=1 sw=2:
+```
+
 [1]: https://www.passpack.com/en/home/
 [2]: https://lastpass.com/
 [3]: http://keepass.info/
 [4]: https://en.wikipedia.org/wiki/PKZIP
 [5]: http://vim.wikia.com/wiki/Encryption
 [6]: http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdn20o8
+[7]: http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdnn94z
 
