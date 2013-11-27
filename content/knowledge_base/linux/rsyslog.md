@@ -240,8 +240,10 @@ It also helps to add this cron.daily task:
 ```
 #!/bin/bash
 # Compress *.log files not changed in more than 24 hours:
-find /var/log/hosts -type f -mtime +1  -name "*.log" -exec xz {} \;
+find /var/log/hosts -type f -mtime +1  -name "*.log" -exec xz -9 {} \;
 ```
+
+You'll want to make sure 'xz' is installed if you use the above script.
 
 ## RELP Configuration
 
@@ -310,9 +312,8 @@ password.
 In `/etc/rsyslog.conf` you'll need to add the following lines:
 
 ```
-$template RedisSender, "<%PRI%>%TIMESTAMP:::date-rfc3339% %HOSTNAME% %syslogtag:1:32%%msg:::sp-if-no-1st-sp%%msg%"
 module(load="omprog")
-*.*  action(type="omprog" binary="/bin/syslog-redis-sender" template="RedisSender")
+*.*  action(type="omprog" binary="/bin/syslog-redis-sender")
 ```
 
 After restarting the service a client can begin receiving all the syslog

@@ -26,7 +26,16 @@ And copy our failover script into a useful place. This may need to be adjusted
 for our specific cases in the future.
 
 ```
-cp /usr/share/doc/conntrack-tools-*/doc/sync/primary-backup.sh /etc/conntrackd/
+cp /usr/share/doc/conntrack-tools-1.4.2/doc/sync/primary-backup.sh /etc/conntrackd/
+```
+
+If the directors are running within an LXC environment, keepalived won't be
+able to load the kernel module it needs for the services. From the host machine
+you'll need to run the following command before attempting to start the
+keepalived services.
+
+```
+modprobe ip_vs
 ```
 
 Edit the `/etc/keepalived/keepalived.conf`:
