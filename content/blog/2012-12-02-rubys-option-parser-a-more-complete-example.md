@@ -2,8 +2,8 @@
 title: Ruby's Option Parser - a More Complete Example
 created_at: 2012-12-02 22:59:00 -0500
 updated_at: 2012-12-02 22:59:00 -0500
-kind: article
 type: post
+kind: article
 layout: blog_post
 tags:
 - ruby

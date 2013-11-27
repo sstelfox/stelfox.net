@@ -1,8 +1,9 @@
 ---
 created_at: 2013-09-19 20:00:57+00:00
 updated_at: 2013-09-19 20:00:57+00:00
-kind: article
 title: 'Talking about Laboratory B'
+type: post
+kind: article
 layout: blog_post
 tags:
 - hackerspace

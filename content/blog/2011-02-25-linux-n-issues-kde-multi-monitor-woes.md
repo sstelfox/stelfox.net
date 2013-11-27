@@ -1,6 +1,7 @@
 ---
 created_at: 2011-02-25 14:37:39+00:00
 updated_at: 2011-02-25 14:37:39+00:00
+type: post
 kind: article
 layout: blog_post
 title: 'Linux N Issues & KDE Multi-Monitor Woes'

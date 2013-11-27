@@ -1,6 +1,7 @@
 ---
 created_at: 2010-06-30 16:11:24+00:00
 updated_at: 2010-06-30 16:11:24+00:00
+type: post
 kind: article
 layout: blog_post
 title: 'A Little Surprise Nestled Among Software'

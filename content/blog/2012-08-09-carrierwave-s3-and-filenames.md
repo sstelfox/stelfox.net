@@ -1,8 +1,9 @@
 ---
 created_at: 2012-08-09 20:00:57+00:00
 updated_at: 2012-08-09 20:00:57+00:00
-kind: article
 title: 'CarrierWave, S3 and Filenames'
+type: post
+kind: article
 layout: blog_post
 tags:
 - development

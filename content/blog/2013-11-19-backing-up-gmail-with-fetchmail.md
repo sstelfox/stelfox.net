@@ -1,9 +1,9 @@
 ---
 created_at: 2013-11-19 09:55:40 -0500
 updated_at: 2013-11-19 09:55:40 -0500
-kind: article
 title: 'Backing up Gmail with fetchmail'
 type: post
+kind: article
 layout: blog_post
 tags:
 - email
