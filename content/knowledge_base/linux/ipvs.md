@@ -77,12 +77,8 @@ vrrp_instance external_network_1 {
 
   nopreempt
 
-  garp_master_delay         1 # default is 5
   lvs_sync_daemon_interface eth1
   unicast_peer              10.10.10.11
-
-  # Use a virtual mac address on the IP
-  #use_vmac <VMAC_INTERFACE>
 
   authentication {
     auth_type PASS
@@ -103,14 +99,11 @@ vrrp_instance internal_network_1 {
   advert_int        1
   priority          100
   virtual_router_id 30
+
   nopreempt
 
-  garp_master_delay         1 # default is 5
   lvs_sync_daemon_interface eth1
   unicast_peer              10.10.10.11
-
-  # Use VRRP virtual MAC
-  #use_vmac <VMAC_INTERFACE>
 
   authentication {
     auth_type PASS
@@ -132,8 +125,8 @@ instances to communicate their keepalive messages to each other. Add the
 following firewall rules:
 
 ```
--A SERVICES -p vrrp -i eth2 -s 10.10.10.11 -j ACCEPT
--A OUTPUT -p vrrp -i eth2 -d 10.10.10.11 -j ACCEPT
+-A SERVICES -p vrrp -i eth2 -j ACCEPT
+-A OUTPUT -p vrrp -i eth2 -j ACCEPT
 ```
 
 On the second director the '11' suffix should be replaced with '10'.
