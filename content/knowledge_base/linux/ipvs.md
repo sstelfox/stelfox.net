@@ -38,6 +38,15 @@ keepalived services.
 modprobe ip_vs
 ```
 
+This can be done automatically by creating `/etc/rc.d/rc.local` and marking it
+as executable with the following contents.
+
+```
+#!/bin/sh
+
+modprobe ip_vs
+```
+
 Edit the `/etc/keepalived/keepalived.conf`:
 
 ```
@@ -131,4 +140,11 @@ following firewall rules:
 
 On the second director the '11' suffix should be replaced with '10'.
 
+At this point we can start up keepalived on both directors and test their
+failover. Run the following two commands on both directors.
+
+```
+systemctl enable keepalived.service
+systemctl start keepalived.service
+```
 
