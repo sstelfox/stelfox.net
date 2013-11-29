@@ -290,5 +290,6 @@ FileETag None
   RewriteRule ^s/<%= short_code %>/?$ <%= url %> [R=301,L,NC]
 <% end %>
 
-  RewriteRule ^blog/2012/12/02/rubys-option-parser-a-more-complete-example/?$ /blog/2012/12/rubys-option-parser-a-more-complete-example/ [R=301,L,NC]
+  # Rewrite all the old blog posts to the new ones.
+  RewriteRule ^blog/([0-9]+)/([0-9]+)/([0-9]+)/(.*)/?$ /blog/$1/$2/$4/ [R=301,L,NC]
 </IfModule>
