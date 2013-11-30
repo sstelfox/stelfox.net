@@ -185,16 +185,89 @@ First we'll need to install the package that has the synchronization daemon.
 yum install conntrack-tools -y
 ```
 
-We'll need to throw a configuration into place at :
+We'll need to throw a configuration into place at
+`/etc/conntrackd/conntrackd.conf`. The following is for director-01:
 
 ```
+Sync {
+  Mode FTFW {
+    DisableExternalCache Off
+    PurgeTimeout 5
+  }
+
+  Multicast {
+    IPv4_address 225.0.0.50
+    Group 3780
+    IPv4_interface 10.10.10.10
+    Interface eth1
+    SndSocketBuffer 1249280
+    RcvSocketBuffer 1249280
+    Checksum on
+  }
+}
+
+General {
+  Nice -20
+
+  HashSize 32768
+  HashLimit 131072
+
+  Syslog on
+
+  LockFile /var/lock/conntrack.lock
+
+  UNIX {
+    Path /var/run/conntrackd.ctl
+    Backlog 20
+  }
+
+  NetlinkBufferSize 2097152
+  NetlinkBufferSizeMaxGrowth 8388608
+
+  Filter From Userspace {
+    Protocol Accept {
+      #DCCP
+      ICMP
+      IPv6-ICMP
+      #SCTP
+      TCP
+      UDP
+    }
+
+    Address Ignore {
+      # Loopback addresses
+      IPv4_address 127.0.0.1
+      IPv6_address ::1
+
+      # The director IP addresses
+      IPv4_address 10.0.0.10
+      IPv4_address 10.0.0.11
+      IPv4_address 192.168.122.40
+      IPv4_address 192.168.122.41
+
+      # The keepalive network
+      IPv4_address 10.10.10.0/24
+
+      # The virtual IP addresses
+      IPv4_address 192.168.122.140
+      IPv4_address 10.0.0.5
+    }
+  }
+}
 ```
 
-Add the firewall rules needed for the synchronization process:
+The only change for director-02 is to change the `IPv4_interface` to
+`10.10.10.11`.
+
+You'll notice that I am using multicast here. There is an option in conntrackd
+to use unicast as well, and I'll need to come back and reconfigure it to make
+use of it. For now though this should work in my environment.
+
+Add the firewall rules needed for the synchronization process on both machines:
 
 ```
--A INPUT -i eth1 -m udp -p udp -s 10.10.10.0/24 -d 224.0.0.0/4 --dport 3780 -j ACCEPT
--A OUTPUT -o eth1 -m udp -p udp -d 224.0.0.0/4 --dport 3780 -j ACCEPT
+-A INPUT -i eth1 -m udp -p udp -s 10.10.10.0/24 -d 225.0.0.50 --dport 3780 -j ACCEPT
+-A OUTPUT -o eth1 -m udp -p udp -d 225.0.0.50 --dport 3780 -j ACCEPT
 ```
 
 For most services I would also include connection tracking state information,
@@ -224,4 +297,15 @@ notify_backup "/etc/conntrackd/primary-backup.sh backup"
 notify_fault  "/etc/conntrackd/primary-backup.sh fault"
 notify_master "/etc/conntrackd/primary-backup.sh primary"
 ```
+
+Make sure you restart keepalived on both machines.
+
+At this point we have everything in place we need to perform our two target
+tasks. Having a gateway on the local network that can failover in the event the
+other machine dies, and provide highly availability to multiple services behind
+them.
+
+## Traffic Routing with Failover
+
+## Virtual Services
 
