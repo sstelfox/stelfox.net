@@ -48,7 +48,7 @@
           <h3>Recent Blog Posts</h3>
           <ul>
             <% sort_by_newest(items_with_type("post"))[0...5].each do |i| %>
-              <li><%= link_to(i[:title], i) %></li>
+              <li><%= link_to(i[:title], i) %> (<%= get_item_time(i).strftime("%Y-%m-%d") %>)</li>
             <% end %>
           </ul>
         </div>
@@ -58,7 +58,7 @@
             <% kb_items = @items.select { |i| i.identifier.start_with?("/knowledge_base/") } %>
             <% kb_items.reject! { |i| i[:mtime].nil? } %>
             <% sort_by_newest(kb_items)[0...5].each do |i| %>
-              <li><%= link_to(i[:title], i) %></li>
+              <li><%= link_to(i[:title], i) %> (<%= get_item_time(i).strftime("%Y-%m-%d") %>)</li>
             <% end %>
           </ul>
         </div>
