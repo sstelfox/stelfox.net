@@ -1,7 +1,7 @@
 
 # This is a list of english stop words (words that aren't valuable as part of
 # the json search index.
-STOP_WORDS = %w{
+STOP_WORDS ||= %w{
   a able about above according accordingly across actually after afterwards
   again against aint all allow allows almost alone along already also although
   always am among amongst amount an and another any anybody anyhow anyone
