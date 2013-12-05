@@ -28,7 +28,7 @@ namespace :new do
     mkdir_p './content/blog'
     title = args.title
 
-    filename = "./content/blog/#{Time.now.strftime('%Y-%m-%d')}-#{title.to_url}.md"
+    filename = "./content/blog/#{Time.now.strftime('%Y-%m-%d')}-#{title.to_url}.md.erb"
 
     if File.exist?(filename)
       abort('rake aborted!') if ask("#{filename} already exists. Want to overwrite?", ['y','n']) == 'n'
