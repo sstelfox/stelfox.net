@@ -2,13 +2,17 @@
 class Search
   constructor: ->
 
-  data = ->
+  index = ->
+    return @_index unless @_index == undefined
+
     request_object = new XMLHttpRequest
     request_object.open("GET", "/search_index.json", false)
     request_object.send(null)
 
     if request_object.status == 200
-      @data = JSON.parse(request_object.responseText)
+      @_index = JSON.parse(request_object.responseText)
+
+    return @_index
 
   # A method to extract the search terms into the various categories based on
   # prefixes.
