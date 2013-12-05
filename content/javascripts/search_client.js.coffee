@@ -54,5 +54,5 @@ class Search
 # End Class
 
 # Allow the parse query function 
-(exports ? this).Search = Search
+(exports ? this).Search = new Search
 
