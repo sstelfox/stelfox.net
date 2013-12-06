@@ -23,20 +23,19 @@ class Search
 
     # Iterate through each of the terms we've extracted
     for t in terms
-      do (t) ->
-        {term, prefix} = this._extract_prefix(t)
+      {term, prefix} = this._extract_prefix(t)
 
-        # Remove any terms that aren't in our index, this could be stop words or
-        # just words that don't appear on any pages. We'll warn if the term being
-        # removed was in the required words. We don't need to do this for term
-        # exclusions as they don't want those results anyway.
-        if this._valid_term(term)
-          # Add the term to appropriate lookup table
-          sorted_terms["required"].push(term) if prefix == "+"
-          sorted_terms["unwanted"].push(term) if prefix == "-"
-          sorted_terms["optional"].push(term) if prefix == ""
-        else
-          console.log("Removing required term #{term} as it would result in no matches.") if prefix == "+"
+      # Remove any terms that aren't in our index, this could be stop words or
+      # just words that don't appear on any pages. We'll warn if the term being
+      # removed was in the required words. We don't need to do this for term
+      # exclusions as they don't want those results anyway.
+      if this._valid_term(term)
+        # Add the term to appropriate lookup table
+        sorted_terms["required"].push(term) if prefix == "+"
+        sorted_terms["unwanted"].push(term) if prefix == "-"
+        sorted_terms["optional"].push(term) if prefix == ""
+      else
+        console.log("Removing required term #{term} as it would result in no matches.") if prefix == "+"
 
     # Return the sorted terms
     sorted_terms
@@ -59,12 +58,11 @@ class Search
   # Parse query, attempt to find matching results, and return objects that meet
   # the requirements.
   query: (query) ->
-    unless data()
+    unless this.data()
       console.log("The search index is unavailable.")
       return false
 
     terms = this._extract_terms(query)
-
 
 # End Class
 
