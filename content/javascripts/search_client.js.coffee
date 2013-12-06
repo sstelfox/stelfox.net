@@ -47,18 +47,14 @@ class Search
 
   # Get and cache the search index
   data: ->
-    return @_index unless @_index == undefined
-
     request_object = new XMLHttpRequest
     request_object.open("GET", "/search_index.json", false)
     request_object.send(null)
 
     if request_object.status == 200
-      @_index = JSON.parse(request_object.responseText)
-    else
-      console.log("Failed to load the search index.")
+      @index = JSON.parse(request_object.responseText)
 
-    return @_index
+    return @index
 
   # Parse query, attempt to find matching results, and return objects that meet
   # the requirements.
