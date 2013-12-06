@@ -1,6 +1,10 @@
 
 class Search
-  # Get and cache the search index
+  # Get and cache the search index, there is currently a bug in this that I'm
+  # not sure I want to fix. If this is called fast enough it will make the
+  # request multiple times. Ideally it would all block until the single request
+  # was finished (TODO). Futures and promises might help with this if I can
+  # figure out how to use them in javascript.
   _data: ->
     request_object = new XMLHttpRequest
     request_object.open("GET", "/search_index.json", false)
@@ -52,6 +56,12 @@ class Search
 
     # Return the sorted terms
     sorted_terms
+
+  # Map a list of terms to the pages associated with them
+  #
+  # Now defunct not sure if needed
+  _terms_to_pages: (terms) ->
+    (this._data()["keywords"][t] for t in terms)
 
   # Check whether a term is in our index or not
   _valid_term: (term) ->
