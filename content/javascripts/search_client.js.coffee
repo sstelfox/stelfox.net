@@ -1,5 +1,16 @@
 
 class Search
+  # Get and cache the search index
+  _data: ->
+    request_object = new XMLHttpRequest
+    request_object.open("GET", "/search_index.json", false)
+    request_object.send(null)
+
+    if request_object.status == 200
+      @index = JSON.parse(request_object.responseText)
+
+    return @index
+
   # Returns an array that includes the term, and the extracted prefix if there
   # is one.
   _extract_prefix: (term) ->
@@ -23,7 +34,9 @@ class Search
 
     # Iterate through each of the terms we've extracted
     for t in terms
-      {term, prefix} = this._extract_prefix(t)
+      tp = this._extract_prefix(t)
+      term = tp[0]
+      prefix = tp[1]
 
       # Remove any terms that aren't in our index, this could be stop words or
       # just words that don't appear on any pages. We'll warn if the term being
@@ -34,31 +47,20 @@ class Search
         sorted_terms["required"].push(term) if prefix == "+"
         sorted_terms["unwanted"].push(term) if prefix == "-"
         sorted_terms["optional"].push(term) if prefix == ""
-      else
-        console.log("Removing required term #{term} as it would result in no matches.") if prefix == "+"
+      else if prefix == "+"
+        console.log("Removing required term #{term} as it would result in no matches.")
 
     # Return the sorted terms
     sorted_terms
 
   # Check whether a term is in our index or not
   _valid_term: (term) ->
-    (Object.keys(this.data()["keywords"]).indexOf(term) >= 0)
-
-  # Get and cache the search index
-  data: ->
-    request_object = new XMLHttpRequest
-    request_object.open("GET", "/search_index.json", false)
-    request_object.send(null)
-
-    if request_object.status == 200
-      @index = JSON.parse(request_object.responseText)
-
-    return @index
+    (Object.keys(this._data()["keywords"]).indexOf(term) >= 0)
 
   # Parse query, attempt to find matching results, and return objects that meet
   # the requirements.
   query: (query) ->
-    unless this.data()
+    unless this._data()
       console.log("The search index is unavailable.")
       return false
 
