@@ -8,13 +8,18 @@ index = {
   weights: {}
 }
 
-# Loop through all the non-binary documents, for indexing, and focus initially on 
+# Loop through all the non-binary documents, for indexing
 @items.each do |i|
+  next if i.binary?
   next unless i.raw_content
+  next unless i[:title]
 
   # Create and store the ID of the path
-  index[:paths].push(i.identifier)
-  path_id = index[:paths].index(i.identifier)
+  index[:paths].push({
+    title: i[:title],
+    path: i.path
+  })
+  path_id = index[:paths].size
 
   i.raw_content.split(/[<>\s]+/).each do |word|
     word.downcase!

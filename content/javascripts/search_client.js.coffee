@@ -107,3 +107,23 @@ class Search
 # Allow the parse query function 
 (exports ? this).Search = new Search
 
+formSubmission = (event) ->
+  search_results = window.Search.query(event.target.query.value)
+  results_container = document.getElementById('results')
+  new_results = document.createElement("ul")
+
+  for page_id in Object.keys(search_results)
+    page = window.Search._data()["paths"][page_id]
+
+    list_element = document.createElement("li")
+    list_element.innerHTML = "<a href='#{page["path"]}'>#{page["title"]}</a>"
+
+    new_results.appendChild(list_element)
+
+  results_container.innerHTML = ""
+  results_container.appendChild(new_results)
+
+  event.preventDefault()
+
+document.getElementById('searchForm').addEventListener('submit', formSubmission, false)
+
