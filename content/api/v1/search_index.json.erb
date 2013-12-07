@@ -1,0 +1,46 @@
+---
+hidden: true
+---
+<%
+# Start with a base index
+index = {
+  paths: [],
+  weights: {}
+}
+
+# Loop through all the non-binary documents, for indexing, and focus initially on 
+@items.each do |i|
+  next unless i.raw_content
+
+  # Create and store the ID of the path
+  index[:paths].push(i.identifier)
+  path_id = index[:paths].index(i.identifier)
+
+  i.raw_content.split(/[<>\s]+/).each do |word|
+    word.downcase!
+    word.gsub!(/[.,?!;"-'`*_]/, "") # Strip out any punctuation or markdown symbols
+    word.strip!
+
+    next unless word =~ /\A[a-z]{3,}\Z/
+    next if STOP_WORDS.include?(word)
+
+    index[:weights][word] ||= {}
+    index[:weights][word][path_id] ||= 0
+    index[:weights][word][path_id] += ((i[:tags] || []).include?(word) ? 5 : 1)
+  end
+
+  # Clean up any weights under the threshold, this makes the search less
+  # accurate especially for highly specific words, but leaving it out
+  # increases the index size by ~150%
+  index[:weights].each do |word, path_weights|
+    path_weights.each do |path, weight|
+      index[:weights][word].delete(path) if weight <= 1
+    end
+
+    if index[:weights][word].empty?
+      index[:weights].delete(word)
+    end
+  end
+end
+%>
+<%= JSON.generate(index) %>

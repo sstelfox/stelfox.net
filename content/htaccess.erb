@@ -288,7 +288,7 @@ FileETag None
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-<% (@site.config[:short_url_map] || {}).each do |short_code, url| %>
+<% short_code_map.each do |short_code, url| %>
   RewriteRule ^s/<%= short_code %>/?$ <%= url %> [R=301,L,NC]
 <% end %>
 

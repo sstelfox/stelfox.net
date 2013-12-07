@@ -16,56 +16,6 @@ require 'json'
 #   because “*” matches zero or more characters.
 
 preprocess do
-  def build_search_index
-    # Start with a base index
-    index = {
-      keywords: {},
-      paths: [],
-      weights: {}
-    }
-
-    # Loop through all the non-binary documents, for indexing, and focus initially on 
-    @items.each do |i|
-      next unless i.raw_content
-
-      # Create and store the ID of the path
-      index[:paths].push(i.identifier)
-      path_id = index[:paths].index(i.identifier)
-
-      i.raw_content.split(/[<>\s]+/).each do |word|
-        word.downcase!
-        word.gsub!(/[.,?!;"-'`*_]/, "") # Strip out any punctuation or markdown symbols
-        word.strip!
-
-        next unless word =~ /\A[a-z]{3,}\Z/
-        next if STOP_WORDS.include?(word)
-
-        index[:keywords][word] ||= []
-        index[:keywords][word].push(path_id) unless index[:keywords][word].include?(path_id)
-
-        index[:weights][word] ||= {}
-        index[:weights][word][path_id] ||= 0
-        index[:weights][word][path_id] += ((i[:tags] || []).include?(word) ? 5 : 1)
-      end
-
-      # Clean up any weights under the threshold, this makes the search less
-      # accurate especially for highly specific words, but leaving it out
-      # increases the index size by ~150%
-      index[:weights].each do |word, path_weights|
-        path_weights.each do |path, weight|
-          index[:weights][word].delete(path) if weight <= 1
-        end
-
-        if index[:weights][word].empty?
-          index[:weights].delete(word)
-          index[:keywords].delete(word)
-        end
-      end
-    end
-
-    @items << Nanoc::Item.new(JSON.generate(index), {hidden: true}, '/search_index/')
-  end
-
   def create_tag_pages
     # Build up a reverse association between tags and items
     tag_list = items.map { |i| (i[:tags] || []) }.flatten
@@ -103,21 +53,6 @@ preprocess do
     end
   end
 
-  def generate_shortcodes
-    map = {}
-
-    # Generate short code URLs and map them to their URLs
-    @site.config[:short_urls].each do |su|
-      k = Digest::SHA1.base64digest(su)[0...6]
-      map[k] = su
-    end
-
-    # Create a JSON representation of the url maps
-    @items << Nanoc::Item.new(JSON.generate(map), {hidden: true}, '/short_codes/')
-
-    @site.config[:short_url_map] = map
-  end
-
   def reject_unpublished
     @items.reject! { |i| i[:published] == false }
   end
@@ -127,8 +62,6 @@ preprocess do
 
   unless ENV['NANOC_MODE'] == 'auto'
     reject_unpublished
-    generate_shortcodes
-    build_search_index
   end
 end
 
@@ -183,14 +116,6 @@ route "/htaccess/" do
   "/.htaccess"
 end
 
-compile "/short_codes/" do
-  nil
-end
-
-route "/short_codes/" do
-  "/short_codes.json"
-end
-
 compile "/sitemap" do
   # Remove items explicitely hidden, binary items and anything with an
   # extension that probably shouldn't be indexed by a search engine.
@@ -230,12 +155,14 @@ compile "/tags/*/" do
   layout "default"
 end
 
-compile "/search_index/" do
-  nil
+compile "/api/v1/*" do
+  item[:extension].split(".").reverse_each do |e|
+    filter :erb, {trim: "-<>"} if e == "erb"
+  end
 end
 
-route "/search_index/" do
-  "/search_index.json"
+route "/api/v1/*" do
+  item.identifier[0...-1] + "." + item[:extension].split(".").first
 end
 
 # Handle remaining items
