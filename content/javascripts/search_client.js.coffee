@@ -1,5 +1,16 @@
 
+# Extend coffeescript arrays to include a unique method
+Array::unique = ->
+  output = {}
+  output[@[key]] = @[key] for key in [0...@length]
+  value for key, value of output
+
 class Search
+  # Find and return the intersection between two arrays.
+  _ary_intersection: (a, b) ->
+    [a, b] = [b, a] if a.length > b.length
+    value for value in a when value in b
+
   # Get and cache the search index, there is currently a bug in this that I'm
   # not sure I want to fix. If this is called fast enough it will make the
   # request multiple times. Ideally it would all block until the single request
