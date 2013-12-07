@@ -72,11 +72,11 @@ class Search
   #
   # Now defunct not sure if needed
   _terms_to_pages: (terms) ->
-    (this._data()["keywords"][t] for t in terms)
+    (this._data()["weights"][t] for t in terms)
 
   # Check whether a term is in our index or not
   _valid_term: (term) ->
-    (Object.keys(this._data()["keywords"]).indexOf(term) >= 0)
+    (Object.keys(this._data()["weights"]).indexOf(term) >= 0)
 
   # Parse query, attempt to find matching results, and return objects that meet
   # the requirements.
@@ -86,6 +86,15 @@ class Search
       return false
 
     terms = this._extract_terms(query)
+    results = {}
+
+    for t in terms["optional"]
+      console.log(this._data()["weights"][t])
+      for page, weight in this._data()["weights"][t]
+        results[page] =  0 if results[page] == undefined
+        results[page] += weight
+
+    results
 
 # End Class
 
