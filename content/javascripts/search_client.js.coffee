@@ -107,12 +107,11 @@ class Search
 # Allow the parse query function 
 (exports ? this).Search = new Search
 
-formSubmission = (event) ->
-  search_results = window.Search.query(event.target.query.value)
+displayResults = (results) ->
   results_container = document.getElementById('results')
   new_results = document.createElement("ul")
 
-  for page_id in Object.keys(search_results)
+  for page_id in Object.keys(results)
     page = window.Search._data()["paths"][page_id]
 
     list_element = document.createElement("li")
@@ -123,7 +122,26 @@ formSubmission = (event) ->
   results_container.innerHTML = ""
   results_container.appendChild(new_results)
 
+formSubmission = (event) ->
+  displayResults(window.Search.query(event.target.q.value))
   event.preventDefault()
 
-document.getElementById('searchForm').addEventListener('submit', formSubmission, false)
+getParams = ->
+  query = window.location.search.substring(1)
+  raw_vars = query.split("&")
+
+  params = {}
+
+  for v in raw_vars
+    pair = v.split("=")
+    params[pair[0]] = decodeURIComponent(pair[1])
+
+  params
+
+searchForm = document.getElementById('searchForm')
+searchForm.addEventListener('submit', formSubmission, false)
+
+unless getParams()["q"] == undefined
+  searchForm.q.value = getParams()["q"]
+  displayResults(window.Search.query(getParams()["q"]))
 
