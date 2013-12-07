@@ -17,14 +17,16 @@ class Search
   # was finished (TODO). Futures and promises might help with this if I can
   # figure out how to use them in javascript.
   _data: ->
+    return @_data_cache unless @_data_cache == undefined
+
     request_object = new XMLHttpRequest
-    request_object.open("GET", "/search_index.json", false)
+    request_object.open("GET", "/api/v1/search_index.json", false)
     request_object.send(null)
 
     if request_object.status == 200
-      @index = JSON.parse(request_object.responseText)
+      @_data_cache = JSON.parse(request_object.responseText)
 
-    return @index
+    return @_data_cache
 
   # Returns an array that includes the term, and the extracted prefix if there
   # is one.
@@ -68,6 +70,11 @@ class Search
     # Return the sorted terms
     sorted_terms
 
+  # Get the valid known keywords from the search data
+  _keywords: ->
+    return @_keywords_cache unless @_keywords_cache == undefined
+    @_keywords_cache = Object.keys(this._data()["weights"])
+
   # Map a list of terms to the pages associated with them
   #
   # Now defunct not sure if needed
@@ -76,7 +83,7 @@ class Search
 
   # Check whether a term is in our index or not
   _valid_term: (term) ->
-    (Object.keys(this._data()["weights"]).indexOf(term) >= 0)
+    (this._keywords().indexOf(term) >= 0)
 
   # Parse query, attempt to find matching results, and return objects that meet
   # the requirements.
@@ -89,10 +96,9 @@ class Search
     results = {}
 
     for t in terms["optional"]
-      console.log(this._data()["weights"][t])
-      for page, weight in this._data()["weights"][t]
-        results[page] =  0 if results[page] == undefined
-        results[page] += weight
+      for page_id in Object.keys(this._data()["weights"][t])
+        results[page_id] =  0 if results[page_id] == undefined
+        results[page_id] += this._data()["weights"][t][page_id]
 
     results
 
