@@ -5,6 +5,50 @@ Array::unique = ->
   output[@[key]] = @[key] for key in [0...@length]
   value for key, value of output
 
+# Provide a means to store arbitrary key value objects in the users browser.
+class DataStorage
+
+  # Perform some initial setup on these instances to pick a storage mechanism.
+  constructor: ->
+    @_available_storages = []
+    this._check_storage_availability
+    @_storage = @_available_storages[0]
+
+  delete: (key) ->
+    return false unless @_storage
+
+  get: (key) ->
+    return false unless @_storage
+
+  save: (key, value, ttl = 7200) ->
+    return false unless @_storage
+
+  # Performs our known storage backend checks and adds them to a list of
+  # available storages if the test succeeds.
+  _check_storage_availability: ->
+    @_available_storages << localStorage if _local_storage_available
+    @_available_storages << sessionStorage if _session_storage_available
+
+  # Attempts to use the local storage mechanism to test whether it's available
+  # or not.
+  _local_storage_available: ->
+    try
+      localStorage.setItem('test', 'test')
+      localStorage.removeItem('test')
+      return true
+    catch e
+      return false
+
+  # Attempts to use the session storage mechanism to test whether it's
+  # available or not.
+  _session_storage_available: ->
+    try
+      sessionStorage.setItem('test', 'test')
+      sessionStorage.removeItem('test')
+      return true
+    catch e
+      return false
+
 class Search
   # Find and return the intersection between two arrays.
   _ary_intersection: (a, b) ->
