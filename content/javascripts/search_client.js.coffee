@@ -110,7 +110,7 @@ search_instance = new Search
 
 # When given a query and the results of that query it will update various
 # segments of the page to display the results.
-displayResults = (query, results) ->
+displayResults = (query, results, record_history = true) ->
   results_container = document.getElementById('results')
   results_container.innerHTML = ""
 
@@ -128,7 +128,15 @@ displayResults = (query, results) ->
 
     new_results.appendChild(list_element)
 
-  document.title = "Search Results for #{query} - Stelfox Athen&#xe6;um"
+  # Build new title and url
+  new_title = "Search Results for #{query} - Stelfox Athen&#xe6;um"
+  new_url = "#{window.location.protocol}//#{window.location.host}#{window.location.pathname}?q=#{encodeURIComponent(query)}"
+
+  # If we're recording history add the information to our history state.
+  if record_history
+    window.history.pushState({query: query, results: results}, new_title, new_url)
+
+  document.title = new_title
   results_container.appendChild(new_results)
 
 # Function that gets called when the form gets submitted while on the search
@@ -160,4 +168,10 @@ searchForm.addEventListener('submit', formSubmission, false)
 unless getParams()["q"] == undefined
   q = searchForm.q.value = getParams()["q"]
   displayResults(q, search_instance.query(q))
+
+# Recover the various page elements from our popped state
+window.onpopstate = (event) ->
+  if event.state
+    searchForm.q.value = event.state.query
+    displayResults(event.state.query, event.state.results, false)
 
