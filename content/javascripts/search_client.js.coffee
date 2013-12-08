@@ -27,6 +27,7 @@ class DataStorage
   get: (key) ->
     return false unless @_storage
     return null unless (contents = eval(@_storage).getItem(key))
+    contents = JSON.parse(contents)
 
     # If we have contents but they've expired delete them, and return null
     if contents.expiration_time < new Date().getTime()
@@ -43,7 +44,7 @@ class DataStorage
     # Calculate when this key will expire
     expiration_time = new Date().getTime() + (ttl * 1000)
 
-    eval(@_storage).setItem(key, {ttl: expiration_time, value: value})
+    eval(@_storage).setItem(key, JSON.stringify({ttl: expiration_time, value: value}))
 
   # Performs our known storage backend checks and adds them to a list of
   # available storages if the test succeeds.
