@@ -14,6 +14,11 @@ class DataStorage
     this._check_storage_availability
     @_storage = @_available_storages[0]
 
+  # Method to let users of this class known whether we can store data locally
+  # or not.
+  can_store: ->
+    @_storage != undefined
+
   delete: (key) ->
     return false unless @_storage
     @_storage.removeItem(key)
@@ -65,6 +70,13 @@ class DataStorage
       return true
     catch e
       return false
+
+store_instance = new DataStorage
+
+# For debugging uncommend the following line to bind the instance of the
+# DataStorage class to the window object. It will be able to be accessible via
+# window.DataStorage
+(exports ? this).DataStorage = store_instance
 
 class Search
   # Find and return the intersection between two arrays.
@@ -164,7 +176,8 @@ class Search
 search_instance = new Search
 
 # For debugging uncommend the following line to bind the instance of the Search
-# class to the window object. It will be able to be accessed via window.Search
+# class to the window object. It will be able to be accessible via
+# window.Search
 #(exports ? this).Search = search_instance
 
 # End Class
