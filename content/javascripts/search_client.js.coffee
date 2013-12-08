@@ -11,7 +11,7 @@ class DataStorage
   # Perform some initial setup on these instances to pick a storage mechanism.
   constructor: ->
     @_available_storages = []
-    this._check_storage_availability
+    this._check_storage_availability()
     @_storage = @_available_storages[0]
 
   # Method to let users of this class known whether we can store data locally
@@ -48,8 +48,8 @@ class DataStorage
   # Performs our known storage backend checks and adds them to a list of
   # available storages if the test succeeds.
   _check_storage_availability: ->
-    @_available_storages.push("localStorage") if _local_storage_available
-    @_available_storages.push("sessionStorage") if _session_storage_available
+    @_available_storages.push("localStorage") if this._local_storage_available()
+    @_available_storages.push("sessionStorage") if this._session_storage_available()
 
   # Attempts to use the local storage mechanism to test whether it's available
   # or not.
