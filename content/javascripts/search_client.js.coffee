@@ -16,12 +16,29 @@ class DataStorage
 
   delete: (key) ->
     return false unless @_storage
+    @_storage.removeItem(key)
 
+  # Gets the value specified at the given key as long as it hasn't expired.
   get: (key) ->
     return false unless @_storage
+    return null unless (contents = @_storage.getItem(key))
 
+    # If we have contents but they've expired delete them, and return null
+    if contents.expiration_time < new Date().getTime()
+      this.delete(key)
+      return null
+
+    # We have an unexpired value, return it
+    contents.value
+
+  # Stores a value at a specified key along with an expiration time in seconds.
   save: (key, value, ttl = 7200) ->
     return false unless @_storage
+
+    # Calculate when this key will expire
+    expiration_time = new Date().getTime() + (ttl * 1000)
+
+    @_storage.setItem(key, {ttl: expiration_time, value: value})
 
   # Performs our known storage backend checks and adds them to a list of
   # available storages if the test succeeds.
