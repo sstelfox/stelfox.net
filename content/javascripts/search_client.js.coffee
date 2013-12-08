@@ -16,16 +16,16 @@ class DataStorage
 
   # Method to let users of this class known whether we can store data locally
   # or not.
-  can_store: ->
+  available: ->
     @_storage != undefined
 
   delete: (key) ->
-    return false unless @_storage
+    return false unless this.available
     eval(@_storage).removeItem(key)
 
   # Gets the value specified at the given key as long as it hasn't expired.
   get: (key) ->
-    return false unless @_storage
+    return false unless this.available
     return null unless (contents = eval(@_storage).getItem(key))
     contents = JSON.parse(contents)
 
@@ -39,7 +39,7 @@ class DataStorage
 
   # Stores a value at a specified key along with an expiration time in seconds.
   save: (key, value, ttl = 7200) ->
-    return false unless @_storage
+    return false unless this.available
 
     # Calculate when this key will expire
     expiration_time = new Date().getTime() + (ttl * 1000)
@@ -72,14 +72,15 @@ class DataStorage
     catch e
       return false
 
-store_instance = new DataStorage
-
 # For debugging uncommend the following line to bind the instance of the
 # DataStorage class to the window object. It will be able to be accessible via
 # window.DataStorage
-(exports ? this).DataStorage = store_instance
+(exports ? this).DataStorage = new DataStorage
 
 class Search
+  constructor: ->
+    @_store = new DataStorage
+
   # Find and return the intersection between two arrays.
   _ary_intersection: (a, b) ->
     [a, b] = [b, a] if a.length > b.length
@@ -93,12 +94,16 @@ class Search
   _data: ->
     return @_data_cache unless @_data_cache == undefined
 
+    if @_store.available && si = @_store.get('search_index')
+      return @_data_cache = si
+
     request_object = new XMLHttpRequest
     request_object.open("GET", "/api/v1/search_index.json", false)
     request_object.send(null)
 
     if request_object.status == 200
       @_data_cache = JSON.parse(request_object.responseText)
+      @_store.save('search_index', @_data_cache) if @_store.available
 
     return @_data_cache
 
@@ -114,7 +119,7 @@ class Search
   _extract_terms: (raw_query) ->
     # Initialize our extracted terms hash object
     sorted_terms = {
-      negative: [],
+      unwanted: [],
       required: [],
       optional: []
     }
