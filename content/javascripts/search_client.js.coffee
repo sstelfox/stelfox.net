@@ -108,7 +108,9 @@ search_instance = new Search
 
 # End Class
 
-displayResults = (results) ->
+# When given a query and the results of that query it will update various
+# segments of the page to display the results.
+displayResults = (query, results) ->
   results_container = document.getElementById('results')
   new_results = document.createElement("ul")
 
@@ -123,26 +125,33 @@ displayResults = (results) ->
   results_container.innerHTML = ""
   results_container.appendChild(new_results)
 
+# Function that gets called when the form gets submitted while on the search
+# page.
 formSubmission = (event) ->
-  displayResults(search_instance.query(event.target.q.value))
+  q = event.target.q.value
+  displayResults(q, search_instance.query(q))
   event.preventDefault()
 
+# Helper for grabbing all of the get parameters for the current page load and
+# return them as a hash object for easy consumption elsewhere.
 getParams = ->
-  query = window.location.search.substring(1)
+  query    = window.location.search.substring(1)
   raw_vars = query.split("&")
-
-  params = {}
+  params   = {}
 
   for v in raw_vars
-    [key, val] = v.split("=")
+    [key, val]  = v.split("=")
     params[key] = decodeURIComponent(val)
 
   params
 
-searchForm = document.getElementById('searchForm')
+# Bind our search submission function to the actual form.
+searchForm = document.getElementById('search')
 searchForm.addEventListener('submit', formSubmission, false)
 
+# If this page has a query parameter when the page loads, update the value of
+# the search field and grab the results for the specified search.
 unless getParams()["q"] == undefined
-  searchForm.q.value = getParams()["q"]
-  displayResults(search_instance.query(getParams()["q"]))
+  q = searchForm.q.value = getParams()["q"]
+  displayResults(q, search_instance.query(q))
 
