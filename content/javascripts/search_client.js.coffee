@@ -112,7 +112,13 @@ search_instance = new Search
 # segments of the page to display the results.
 displayResults = (query, results) ->
   results_container = document.getElementById('results')
+  results_container.innerHTML = ""
+
   new_results = document.createElement("ul")
+  search_header = document.createElement("h2")
+  search_header.innerText = "Search Results for #{query}"
+
+  results_container.appendChild(search_header)
 
   for page_id in Object.keys(results)
     page = search_instance._data()["pages"][page_id]
@@ -122,7 +128,7 @@ displayResults = (query, results) ->
 
     new_results.appendChild(list_element)
 
-  results_container.innerHTML = ""
+  document.title = "Search Results for #{query} - Stelfox Athen&#xe6;um"
   results_container.appendChild(new_results)
 
 # Function that gets called when the form gets submitted while on the search
