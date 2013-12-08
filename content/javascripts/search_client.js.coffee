@@ -51,9 +51,7 @@ class Search
 
     # Iterate through each of the terms we've extracted
     for t in terms
-      tp = this._extract_prefix(t)
-      term = tp[0]
-      prefix = tp[1]
+      [term, prefix] = this._extract_prefix(t)
 
       # Remove any terms that aren't in our index, this could be stop words or
       # just words that don't appear on any pages. We'll warn if the term being
@@ -102,17 +100,20 @@ class Search
 
     results
 
-# End Class
+search_instance = new Search
 
-# Allow the parse query function 
-(exports ? this).Search = new Search
+# For debugging uncommend the following line to bind the instance of the Search
+# class to the window object. It will be able to be accessed via window.Search
+#(exports ? this).Search = search_instance
+
+# End Class
 
 displayResults = (results) ->
   results_container = document.getElementById('results')
   new_results = document.createElement("ul")
 
   for page_id in Object.keys(results)
-    page = window.Search._data()["paths"][page_id]
+    page = search_instance._data()["pages"][page_id]
 
     list_element = document.createElement("li")
     list_element.innerHTML = "<a href='#{page["path"]}'>#{page["title"]}</a>"
@@ -123,7 +124,7 @@ displayResults = (results) ->
   results_container.appendChild(new_results)
 
 formSubmission = (event) ->
-  displayResults(window.Search.query(event.target.q.value))
+  displayResults(search_instance.query(event.target.q.value))
   event.preventDefault()
 
 getParams = ->
@@ -133,8 +134,8 @@ getParams = ->
   params = {}
 
   for v in raw_vars
-    pair = v.split("=")
-    params[pair[0]] = decodeURIComponent(pair[1])
+    [key, val] = v.split("=")
+    params[key] = decodeURIComponent(val)
 
   params
 
@@ -143,5 +144,5 @@ searchForm.addEventListener('submit', formSubmission, false)
 
 unless getParams()["q"] == undefined
   searchForm.q.value = getParams()["q"]
-  displayResults(window.Search.query(getParams()["q"]))
+  displayResults(search_instance.query(getParams()["q"]))
 

@@ -4,7 +4,7 @@ hidden: true
 <%
 # Start with a base index
 index = {
-  paths: [],
+  pages: [],
   weights: {}
 }
 
@@ -15,11 +15,11 @@ index = {
   next unless i[:title]
 
   # Create and store the ID of the path
-  index[:paths].push({
+  index[:pages].push({
     title: i[:title],
     path: i.path
   })
-  path_id = index[:paths].size
+  page_id = index[:pages].size
 
   i.raw_content.split(/[<>\s]+/).each do |word|
     word.downcase!
@@ -30,8 +30,8 @@ index = {
     next if STOP_WORDS.include?(word)
 
     index[:weights][word] ||= {}
-    index[:weights][word][path_id] ||= 0
-    index[:weights][word][path_id] += ((i[:tags] || []).include?(word) ? 5 : 1)
+    index[:weights][word][page_id] ||= 0
+    index[:weights][word][page_id] += ((i[:tags] || []).include?(word) ? 5 : 1)
   end
 
   # Clean up any weights under the threshold, this makes the search less
