@@ -30,7 +30,7 @@ class DataStorage
     contents = JSON.parse(contents)
 
     # If we have contents but they've expired delete them, and return null
-    if contents.expiration_time < new Date().getTime()
+    if contents.ttl < new Date().getTime()
       this.delete(key)
       return null
 
