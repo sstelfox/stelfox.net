@@ -1,10 +1,9 @@
 ---
 title: 'Running Emails Through Ruby'
-created_at: 2013-11-20 19:32:05 -0500
-updated_at: 2013-11-20 19:32:05 -0500
+created_at: 2013-12-08 19:32:05 -0500
+updated_at: 2013-12-08 19:32:05 -0500
 type: post
 kind: article
-published: false
 layout: blog_post
 tags:
 - ruby
@@ -34,37 +33,71 @@ total number of emails the script has processed, and add a header to the
 message that indicates this count.
 
 ```ruby
-require 'rubygems'
+#!/usr/bin/env ruby
+
 require 'mail'
 
-# Get the email message from STDIN / Passed filename
+# Get the email message from STDIN or a passed filename
 message = ""
 while input = ARGF.gets
   message += input
 end
 
+# Parse the email into a ruby object
 msg = Mail.new(message)
 
-count_file = "#{ENV['HOME']}/mail_counter.txt"
+# Location of our count file
+count_file = "#{ENV['HOME']}/.mail_counter.txt"
 
+# Load or initialize our count value and increment it
 count = File.exists?(count_file) ? File.read(count_file).to_i : 0
 count += 1
 
+# Update our count on disk
 File.write(count_file, count.to_s)
 
-# Put the (presumably manipulated) message back out to $stdout
+# Add our header with the count
+msg.header.fields << Mail::Field.new("X-Mail-Counter: #{count}")
+
+# Output the now modified message back out to $stdout
 begin
-  $stdout.puts message
+  $stdout.puts msg.to_s
 rescue Errno::EPIPE
   exit(74)
 end
 ```
 
-Sources:
+Make sure you mark the script executable after saving it.
+
+If you followed along with [my earlier post][1] the only change we need to make
+is to add our ruby mail processor as a procmail filter. I've stored the script
+in `~/.bin/mail-counter.rb`, if you've stored it in a different location you'll
+want to update your path to reflect that.
+
+Filters in procmail are handled by using the pipe helper. The following is a
+minimum working example of a procmailrc file to make use of our filter:
+
+```
+MAILDIR=$HOME
+VERBOSE=on
+
+:0fw
+| /home/sstelfox/Documents/ruby/riak-mail-indexer/counter.rb
+
+:0
+Maildir/
+```
+
+Store the above file in `~/.procmailrc`. The next time you run `fetchmail`
+those headers will be added to the messages before being delivered and you can
+watch the count increment by looking at the contents of `~/.mail_counter.txt`.
+
+The following are a few additional sources I made use of while writing this
+article:
 
 * http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby
 * http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines
 
 [1]: <%= @items['/blog/2013-11-19-backing-up-gmail-with-fetchmail/'].path %>
-[2]: mail gem path
+[2]: https://github.com/mikel/mail
 
