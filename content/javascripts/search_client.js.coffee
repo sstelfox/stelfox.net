@@ -173,6 +173,7 @@ class Search
 
     terms = this._extract_terms(query)
 
+    # TODO: Make use of additional term types
     optional_weights = this._weight_term_list(terms["optional"])
     required_weights = this._weight_term_list(terms["required"])
     unwanted_weights = this._weight_term_list(terms["unwanted"])
@@ -211,6 +212,7 @@ displayResults = (query, results, record_history = true) ->
 
   results_container.appendChild(search_header)
 
+  # TODO: Display error if no results.
   for page_id in Object.keys(results)
     page = search_instance._data()["pages"][page_id]
 
@@ -233,6 +235,7 @@ displayResults = (query, results, record_history = true) ->
 # Function that gets called when the form gets submitted while on the search
 # page.
 formSubmission = (event) ->
+  # TODO display error if query field is empty
   q = event.target.q.value
   displayResults(q, search_instance.query(q))
   event.preventDefault()
