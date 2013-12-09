@@ -126,7 +126,9 @@ class Search
 
     # Split the terms out into an array, we only care about three or more
     # characters.
-    terms = raw_query.toLowerCase().match(/[+-]?[a-z'-]{3,}/g)
+    terms = raw_query.toLowerCase().match(/[+-]?[a-z'-]+/g)
+
+    # TODO: Strip out ' and - after extracting terms
 
     # Iterate through each of the terms we've extracted
     for t in terms
@@ -170,9 +172,18 @@ class Search
       return false
 
     terms = this._extract_terms(query)
+
+    optional_weights = this._weight_term_list(terms["optional"])
+    required_weights = this._weight_term_list(terms["required"])
+    unwanted_weights = this._weight_term_list(terms["unwanted"])
+
+    optional_weights
+
+  # Get weighted values for a provided list of terms.
+  _weight_term_list: (term_list) ->
     results = {}
 
-    for t in terms["optional"]
+    for t in term_list
       for page_id in Object.keys(this._data()["weights"][t])
         results[page_id] =  0 if results[page_id] == undefined
         results[page_id] += this._data()["weights"][t][page_id]
