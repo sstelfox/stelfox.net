@@ -242,7 +242,7 @@ displayResults = (query, results, record_history = true) ->
   # TODO: Display error if no results.
   for page in results
     list_element = document.createElement("li")
-    list_element.innerHTML = "<a href='#{page["path"]}'>#{page["title"]} (#{page['weight']})</a>"
+    list_element.innerHTML = "<a href='#{page["path"]}' data-weight='#{page["weight"]}'>#{page["title"]}</a>"
 
     new_results.appendChild(list_element)
 
