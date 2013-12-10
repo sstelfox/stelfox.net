@@ -185,7 +185,19 @@ class Search
         all_weights[page_id] = 0 if all_weights[page_id] == undefined
         all_weights[page_id] += weight_list[page_id]
 
-    all_weights
+    _weight_list_to_results(all_weights)
+
+  # Convert a list of weighted page IDs to an array of page objects.
+  _weight_list_to_results: (weight_list) ->
+    result_list = []
+
+    for page_id in Object.keys(weight_list)
+      result = = _data()["pages"][page_id]
+      result["weight"] = weight_list[page_id]
+      result["page_id"] = page_id
+      result_list.push(result)
+
+    result_list
 
   # Get weighted values for a provided list of terms.
   _weight_term_list: (term_list, scale = 1) ->
@@ -220,9 +232,7 @@ displayResults = (query, results, record_history = true) ->
   results_container.appendChild(search_header)
 
   # TODO: Display error if no results.
-  for page_id in Object.keys(results)
-    page = search_instance._data()["pages"][page_id]
-
+  for page in results
     list_element = document.createElement("li")
     list_element.innerHTML = "<a href='#{page["path"]}'>#{page["title"]}</a>"
 
