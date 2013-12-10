@@ -175,19 +175,26 @@ class Search
 
     # TODO: Make use of additional term types
     optional_weights = this._weight_term_list(terms["optional"])
-    required_weights = this._weight_term_list(terms["required"])
-    unwanted_weights = this._weight_term_list(terms["unwanted"])
+    required_weights = this._weight_term_list(terms["required"], 2)
+    unwanted_weights = this._weight_term_list(terms["unwanted"], -2)
 
-    optional_weights
+    # Merge all the weights
+    all_weights = {}
+    for weight_list in [optional_weights, required_weights, unwanted_weights]
+      for page_id in Object.keys(weight_list)
+        all_weights[page_id] = 0 if all_weights[page_id] == undefined
+        all_weights[page_id] += weight_list[page_id]
+
+    all_weights
 
   # Get weighted values for a provided list of terms.
-  _weight_term_list: (term_list) ->
+  _weight_term_list: (term_list, scale = 1) ->
     results = {}
 
     for t in term_list
       for page_id in Object.keys(this._data()["weights"][t])
         results[page_id] =  0 if results[page_id] == undefined
-        results[page_id] += this._data()["weights"][t][page_id]
+        results[page_id] += (this._data()["weights"][t][page_id] * scale)
 
     results
 
