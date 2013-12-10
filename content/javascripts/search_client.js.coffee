@@ -185,14 +185,14 @@ class Search
         all_weights[page_id] = 0 if all_weights[page_id] == undefined
         all_weights[page_id] += weight_list[page_id]
 
-    _weight_list_to_results(all_weights)
+    this._weight_list_to_results(all_weights)
 
   # Convert a list of weighted page IDs to an array of page objects.
   _weight_list_to_results: (weight_list) ->
     result_list = []
 
     for page_id in Object.keys(weight_list)
-      result = = _data()["pages"][page_id]
+      result = this._data()["pages"][page_id]
       result["weight"] = weight_list[page_id]
       result["page_id"] = page_id
       result_list.push(result)
