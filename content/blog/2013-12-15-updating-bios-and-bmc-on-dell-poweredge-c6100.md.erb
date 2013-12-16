@@ -1,0 +1,59 @@
+---
+title: 'Updating BIOS & BMC on Dell PowerEdge C6100'
+created_at: 2013-12-15 23:26:13 -0500
+updated_at: 2013-12-15 23:26:13 -0500
+kind: article
+published: false
+type: post
+layout: blog_post
+tags:
+- dell
+- poweredge
+- bios
+- bmc
+- linux
+---
+
+Last week I finally received a replacement for my home server. After searching
+around quite a bit I settled on the Dell PowerEdge C6100. These aren't normally
+available to consumers, as they're part of the cloud line. These recently came
+out of multiple larger data centers as they came off lease, got refurbished and
+put back on the open market.
+
+The server itself is a 2U full length form factor with four independent blades.
+Each of those blades has it's own BIOS & BMC firmwares that all needed updates.
+In the case of the BMC one of them had a version that was broken (The console
+redirection was failing to connect).
+
+You can find all the software update I mention by entering the service tag from
+the BIOS for each blade into Dell's website. If your service tag doesn't show
+up in Dell's website, there is a good chance it's one of the proprietary
+versions and you shouldn't update the BIOS or BMC as you could completely brick
+your board. You've been warned.
+
+The BMC was fairly straight-foward. I installed the 64-bit version of Fedora 19
+on a thumbdrive, downloaded version 1.30 of the BMC software (get the file
+named `PEC6100BMC130.exe`). The file itself is a self-extracting zip archive
+which can be extracted using the regular unzip utility.
+
+```
+unzip PEC6100BMC130.exe
+```
+
+Inside you'll find two folders, KCSFlash and SOCFlash should both be put on the
+live drive within the KCSFlash. You'll need to set the execute bit on the
+contents of the linux directory and the linux.sh file. You'll also need to
+install the `glibc.i686` package. Afterwards it's as simple as booting each
+chassis off the drive and as root run the linux.sh script.
+
+If the KCSFlash fails, the SOCFlash will more likely than not work but it is
+slightly more dangerous. If you need it mark the `linux/flash8.sh`,
+`linux/socflash`, and `linux/socflash_x64` as executable in the SOCFlash folder
+and run the flash8.sh script.
+
+The BIOS was quite a bit more complicated. It really needs to be done within a
+DOS environment. I downloaded the file `PEC6100BIOS017000.exe` as well as the
+[2.88Mb version of FreeDOS][1]
+
+[1]: http://www.fdos.org/bootdisks/autogen/FDSTD.288.imz
+
