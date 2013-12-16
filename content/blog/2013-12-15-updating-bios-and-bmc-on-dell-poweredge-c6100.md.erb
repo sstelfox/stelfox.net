@@ -1,5 +1,5 @@
 ---
-title: 'Updating BIOS & BMC on Dell PowerEdge C6100'
+title: 'Updating BMC on Dell PowerEdge C6100'
 created_at: 2013-12-15 23:26:13 -0500
 updated_at: 2013-12-15 23:26:13 -0500
 kind: article
@@ -14,22 +14,34 @@ tags:
 - linux
 ---
 
-Last week I finally received a replacement for my home server. After searching
-around quite a bit I settled on the Dell PowerEdge C6100. These aren't normally
-available to consumers, as they're part of the cloud line. These recently came
-out of multiple larger data centers as they came off lease, got refurbished and
-put back on the open market.
+I just received my Dell PowerEdge C6100 and found it's software quite a bit
+outdated. After searching around quite a bit I found the resources lacking for
+explaining how to perform these updates. So in this post I'm going to quickly
+cover updating the BMC firmware on each blade.
 
-The server itself is a 2U full length form factor with four independent blades.
-Each of those blades has it's own BIOS & BMC firmwares that all needed updates.
-In the case of the BMC one of them had a version that was broken (The console
-redirection was failing to connect).
+The system I received had four different versions of the BMC software
+installed, additionally Two were branded as MegaRAC and the others branded as
+Dell. This update didn't fix the branding (and I'd love to remove the Dell
+branding as it's kind of annoying) it did, however, fix a number of other
+issues that I was experiencing such as:
 
-You can find all the software update I mention by entering the service tag from
-the BIOS for each blade into Dell's website. If your service tag doesn't show
-up in Dell's website, there is a good chance it's one of the proprietary
-versions and you shouldn't update the BIOS or BMC as you could completely brick
-your board. You've been warned.
+1. Console Redirection failing to connect
+2. BMC losing it's network connection after a couple of minutes
+3. Slow responses, with occasional failures to load pages
+4. Remote IPMI tools being unable to read sensors status
+
+The first step is too download the latest version of of the BMC software from
+[Dell's support site][1] (Or a [direct link][2]). I recommend you go through
+the process of entering the service tag of each of the blades and make sure
+that Dell recognizes them as existing even if they're out of support.
+
+There has been mention of versions of these blades that had custom
+modifications for DCS and any attempts to modify the BIOS or BMC will likely
+cause you to end up bricking the remote management board or the motherboard.
+
+Even with the regular board there is always a risk of bricking it, though
+firmware updates have gotten a lot more reliable and I haven't experienced a
+mis-flashed motherboard in years. You've been warned.
 
 The BMC was fairly straight-foward. I installed the 64-bit version of Fedora 19
 on a thumbdrive, downloaded version 1.30 of the BMC software (get the file
@@ -51,9 +63,7 @@ slightly more dangerous. If you need it mark the `linux/flash8.sh`,
 `linux/socflash`, and `linux/socflash_x64` as executable in the SOCFlash folder
 and run the flash8.sh script.
 
-The BIOS was quite a bit more complicated. It really needs to be done within a
-DOS environment. I downloaded the file `PEC6100BIOS017000.exe` as well as the
-[2.88Mb version of FreeDOS][1]
 
-[1]: http://www.fdos.org/bootdisks/autogen/FDSTD.288.imz
+[1]: https://support.dell.com/
+[2]: http://downloads.dell.com/Pages/Drivers/poweredge-c6100-all.html
 
