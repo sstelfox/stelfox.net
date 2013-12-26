@@ -5,14 +5,23 @@
 <!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title><%= "#{@item[:title]} - " if @item[:title] %><%= @site.config[:title] %></title>
-    <% if @item[:description] %>
-    <meta name="description" content="<%= @item[:description] %>">
-    <% end %>
+    <% if @item[:description] %><meta name="description" content="<%= @item[:description] %>" /><% end %>
+    <% if @item[:tags] %><meta name="keywords" content="<%= @item[:tags].join(", ") %> /><% end %>
     <link rel="alternate" type="application/atom+xml" title="<%= @site.config[:title] %> Feed" href="<%= @items['/atom/'].path %>" />
+
+    <link rel="canonical" href="<%= @site.config[:base_url] %>" />
+    <link rel="author" href="https://plus.google.com/110904104553240775702"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="<%= ['article', 'blog', 'website'].include?(@item[:type]) ? @item[:type] : 'website' %>" />
+    <meta property="og:title" content="<%= @item[:title] || @site.config[:title] %>" />
+    <meta property="og:url" content="<%= @site.config[:base_url] + @item.path %>" />
+    <meta property="og:site_name" content="<%= @site.config[:title] %>" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="<%= @site.config[:base_url] %>/static/avatar-01.jpg" />
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
