@@ -122,7 +122,7 @@ data_string = OpenSSL::ASN1::Sequence([
   OpenSSL::ASN1::Integer.new(key.public_key.n),
   OpenSSL::ASN1::Integer.new(key.public_key.e)
 ])
-puts OpenSSL::Digest::SHA1.hexdigest(data_string).scan(/../).join(':')
+puts OpenSSL::Digest::SHA1.hexdigest(data_string.to_der).scan(/../).join(':')
 ```
 
 [1]: http://www.ietf.org/rfc/rfc4253.txt
