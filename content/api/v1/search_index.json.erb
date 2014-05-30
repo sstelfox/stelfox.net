@@ -2,11 +2,30 @@
 hidden: true
 ---
 <%
+
+require 'redcarpet/render_strip'
+
+class ContentRenderer < Redcarpet::Render::StripDown
+  def block_code(*args)
+    nil
+  end
+
+  def list_item(content, list_type)
+    content.gsub("\n", " ") + "\n\n"
+  end
+
+  def paragraph(text)
+    text.gsub("\n", " ") + "\n\n"
+  end
+end
+
 # Start with a base index
 index = {
   pages: [],
   weights: {}
 }
+
+markdown = Redcarpet::Markdown.new(ContentRenderer, fenced_code_blocks: true)
 
 # Loop through all the non-binary documents, for indexing
 @items.each do |i|
@@ -21,7 +40,7 @@ index = {
   })
   page_id = index[:pages].size - 1
 
-  i.raw_content.split(/[<>\s]+/).each do |word|
+  markdown.render(i.raw_content).split(/\s+/).each do |word|
     word.downcase!
     word.gsub!(/[.,?!;"-'`*_]/, "") # Strip out any punctuation or markdown symbols
     word.strip!
