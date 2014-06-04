@@ -1,22 +1,22 @@
 
 require 'json'
 
-index = JSON.parse(File.read('public/search_index.json'))
+index = JSON.parse(File.read('public/api/v1/search_index.json'))
 
 def id_to_path(id, index)
-  index["paths"][id]
+  index["pages"][id]["path"]
 end
 
 def search(terms, index, exclusive = false)
   terms = terms.scan(/[a-z\s]+/).join("").split(/\s+/)
 
   # If we haven't indexed the provided term we don't care about it
-  terms.keep_if { |t| index["keywords"].has_key?(t) }
+  terms.keep_if { |t| index["weights"].has_key?(t) }
 
   return {} if terms.empty?
 
   # Build an AND'd list of IDs that match all keywords we have indexed
-  valid_ids = terms.map { |t| index["keywords"][t] }.inject(&:&).map(&:to_i)
+  valid_ids = terms.map { |t| index["weights"][t].keys }.inject(&:&).map(&:to_i)
 
   matches = Hash.new(0)
   terms.each do |t|
@@ -37,6 +37,6 @@ def search(terms, index, exclusive = false)
   matches
 end
 
-puts JSON.pretty_generate(search("ssh chroot session daemon lxc", index))
-puts JSON.pretty_generate(search("ssh chroot session daemon lxc", index, true))
+puts JSON.pretty_generate(search("ssh chroot daemon", index))
+puts JSON.pretty_generate(search("ssh chroot daemon", index, true))
 
