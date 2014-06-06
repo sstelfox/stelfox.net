@@ -19,6 +19,8 @@ gem 'therubyracer'
 gem 'coffee-script'
 gem 'rainpress'
 
+gem 'rake'
+
 # Needed for the CSS and HTML `nanoc check`s
 gem 'w3c_validators'
 
