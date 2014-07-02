@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 
 require 'json'
 
@@ -37,6 +38,6 @@ def search(terms, index, exclusive = false)
   matches
 end
 
-puts JSON.pretty_generate(search("ssh chroot daemon", index))
-puts JSON.pretty_generate(search("ssh chroot daemon", index, true))
+puts JSON.pretty_generate(search(ARGV.join(" "), index))
+#puts JSON.pretty_generate(search(ARGV.join(" "), index, true))
 
