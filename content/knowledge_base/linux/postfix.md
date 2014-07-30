@@ -393,6 +393,147 @@ SMTP protocol's "MAIL FROM" envelope address to perform the validation while
 SenderID uses the headers in the body content. Definitely smarter on the SPF
 front.
 
+## Spam Trapping
+
+This is a very simple message of seeding the website of a domain with fake
+email addresses in a way that isn't visible too users but would get picked up
+by any scrapers that are using simple regular expressions (such as using HTML
+comments too hide the email).
+
+This email address should be a real one that can receive mail. How the
+administrator uses these mails is up too them. Some ideas could be:
+
+* Auto-training spam filters
+* Immediately blacklisting senders
+* Watching for potential phishing attacks
+
+These all have their own pros and cons and are not exclusive from each other.
+There is a high probability that anything sent too this address is going too be
+a spammer, especially so if the name is obvious too a human reader.
+
+## Bounce Message Handling
+
+## Monitoring Sent Bounce Messages
+
+You can configure postfix in a way that when it sends a bounce message to a
+remote mail server, it additionally sends a copy to static address. This is
+useful for monitoring for abuse from mail clients that are compromised (large
+number of bounce messages probably indicate a spam blast).
+
+To send these too the address 'sent-bounces@example.tld' you'll want to add the
+following lines too your postfix configuration:
+
+```
+notify_classes = resource, software, bounce
+bounce_notice_recipient = sent-bounces@example.tld
+```
+
+The first line adds the 'bounce' class of messages to the standard messages
+sent too the postmaster for delivery issues related too the software or server.
+The second line redirects those specific messages to the email address shown
+above.
+
+### VERP
+
+This is a pretty nifty trick that has [been standardized][10] too a certain
+extent. The key too understanding how this works is knowing the difference
+between the various forms of the FROM address used by mail servers. The three
+are:
+
+1. Return-Path (sometimes referred too as the Reverse-Path, or the
+   Envelope-FROM) is the value submitted in the `MAIL FROM` part of the SMTP
+   session. This does not need to be the same value found in the headers of the
+   email sent after the DATA portion of the session.
+
+   This is added as a header by the recipient's SMTP server. If one already
+   exists it is replaced.
+
+   All email bounces that get automatically generated should go too the
+   Return-Path value. Not all mail servers obey this rule, some will bounce the
+   email back to the From address.
+2. The From address is the value found in the From header. This is supposed to
+   be who the message is actually From (i.e. The user or software that actually
+   sent the message). This is what is generally shown in mail clients as who
+   sent the mail. This is also the email address that will be used for all
+   human (mail client) responses if the email doesn't have a Reply-To header.
+3. The Reply-To header is added by the sender (or the sender's software). This
+   header is used to direct human responses to another address. It should be
+   the first thing looked for when a user clicks on the 'Reply' button in their
+   client and should be used to populate the `To:` field on the new message.
+
+VERP takes advantage of the 'Return-Path' header to help direct bounces too an
+automated system. While this can be used by things like mailing list systems
+too automatically unsubscribe bad or no longer active email addresses, it can
+also be used too detect compromised accounts and abuse of your mail server.
+
+By combining a recipient delimiter in the 'Return-Path', you could add unique
+bounce message processing detection based on any individual metric you want.
+Usually sender is the most relevant.
+
+As it stands Postfix supports VERP both for receiving, and for sending. Sending
+is trickier as the client that is initiating the SMTP session for the mail to
+get relayed has too explicitely enable VERP for that message by appending
+'VERP' too the 'MAIL FROM:' component. This is not ideal for general tracking
+and I haven't found a solution for it yet.
+
+For receipt of these VERP bounces I prefer setting up a dedicated address that
+I can pass too a script for processing such as 'bounce@example.tld'. Make sure
+this address exists if before taking the following actions.
+
+This method makes use of postfix transports too handle bounces speciality.
+After the address has been created ensure you have the recipient delimiter
+option configured in your `main.cf` file like so:
+
+```
+recipient_delimiter = +
+```
+
+We'll need to define a new transport, which will send the mail through the
+script or software that will be handling the bounce messages. This will receive
+the messages via STDIN, and can take any arguments you want too provide. I use
+the bounce extension as the only argument too my script which results in an
+addition to my 'master.cf' file that looks like the following:
+
+```
+bounce   unix  -       n       n       -       -       pipe
+  flags=RX user=nobody argv=/srv/scripts/mail_bounce_handler ${extension}
+```
+
+The 'R' flag ensures that a 'Return-Path' message header is added too the
+message before passing it into the script. The 'X' flag is used specifically by
+me for my script, this flag indicates that this transport performs final
+delivery of the message. If you want to additionally have these bounce messages
+end up in a mailbox you'll want too leave this out.
+
+The transport additionally indicates the script specified by the argv argument
+will be executed as the nobody user with the extension passed as the sole
+parameter too the script. You'll want too change the path of argv too the path
+of your script.
+
+If you don't already have a transports map (otherwise just add this tranport
+and remap it if it's a hash type), create the file '/etc/postfix/transport' and
+add the following contents:
+
+```
+bounce@example.tld    bounce:
+```
+
+And build the hash map:
+
+```
+postmap /etc/postfix/transport
+```
+
+Finally make sure postfix is aware of your transport map (the following line
+should be in your 'main.cf' file).
+
+```
+transport_maps = hash:/etc/postfix/transport
+```
+
+Reload your postfix configuration and your script should now be handling all
+mail sent too 'bounce@example.tld'.
+
 [1]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email
 [2]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2
 [3]: https://grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks
@@ -402,4 +543,5 @@ front.
 [7]: http://wiki.dovecot.org/MailLocation/
 [8]: http://wiki2.dovecot.org/MailboxFormat/dbox
 [9]: http://wiki.dovecot.org/MailboxFormat/Maildir
+[10]: http://cr.yp.to/proto/verp.txt
 
