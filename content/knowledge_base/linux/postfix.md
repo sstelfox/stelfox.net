@@ -468,7 +468,8 @@ also be used too detect compromised accounts and abuse of your mail server.
 
 By combining a recipient delimiter in the 'Return-Path', you could add unique
 bounce message processing detection based on any individual metric you want.
-Usually sender is the most relevant.
+Usually a unique value for the receiver of the original message is the most
+relevant.
 
 As it stands Postfix supports VERP both for receiving, and for sending. Sending
 is trickier as the client that is initiating the SMTP session for the mail to
