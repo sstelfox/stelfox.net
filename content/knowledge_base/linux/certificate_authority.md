@@ -331,6 +331,12 @@ openssl req -new -x509 -newkey rsa:4096 -keyout server.key -nodes -days 365 \
   -out server.crt
 ```
 
+## Add / Change a Password on a Keyfile
+
+```
+openssl rsa -des -in unprotected.key -out encrypted.key
+```
+
 ## Notes
 
 http://www.prshanmu.com/2009/03/generating-ssl-certificates-with-x509v3-extensions.html

@@ -16,6 +16,9 @@ I can use [this][5] to centralize my email.
 
 This [site][6] has some diagnostic information that may be useful.
 
+If I have rate limit issues sending too Yahoo, [this article][11] can help
+solve it.
+
 As for Dovecot, while not being Postfix, is still an important piece of this
 puzzle. The [Mail Location][7] for Dovecot will need to be considered, so far
 I'm leaning towards [sdbox][8], however, it is not compatible with mutt which
@@ -545,4 +548,5 @@ mail sent too 'bounce@example.tld'.
 [8]: http://wiki2.dovecot.org/MailboxFormat/dbox
 [9]: http://wiki.dovecot.org/MailboxFormat/Maildir
 [10]: http://cr.yp.to/proto/verp.txt
+[11]: http://stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/
 
