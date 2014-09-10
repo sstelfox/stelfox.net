@@ -3,7 +3,7 @@
   //  available.
   $ips = array(
     "direct_ip" => $_SERVER['REMOTE_ADDR']
-  );  
+  );
 
   // If we detect a forwarded for IP address add them in
   if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -18,6 +18,10 @@
   // Cloudflare headers
   if (!empty($_SERVER['CF-Connecting-IP'])) {
     $ips['cloudflare_connecting_ip'] = $_SERVER['CF-Connecting-IP'];
+  }
+
+  if (!empty($_SERVER['HTTP_CF_IPCOUNTRY'])) {
+    $ips['cloudflare_geolocation'] = $_SERVER["HTTP_CF_IPCOUNTRY"];
   }
 
   echo json_encode($ips);
