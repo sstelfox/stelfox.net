@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Encryption - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Encryption" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/security/encryption/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h2>TRESOR</h2>
+
+<p>TRESOR is quite interesting as it&#39;s key never enters RAM and as such is not
+vulnerable to extraction from RAM. It unfortunately doesn&#39;t seem to be merged
+into the kernel yet, which means a custom kernel will need to be compiled with
+it AND only for 2.6.36. However, it is also the best bet for the security of an
+encrypted linux system.</p>
+
+<h2>Linux Builtin Disk Ciphers</h2>
+
+<p>Finding what ciphers are available and compiled into the kernel can be
+accomplished with the following command. This command will show ciphers and
+hashes so you&#39;ll need to be intelligent about which ones to use.</p>
+<div class="CodeRay">
+  <div class="code"><pre>cat /proc/crypto | grep name
+</pre></div>
+</div>
+
+<p>I&#39;ve compiled a speed test for various cipher combinations based on what was
+available to me. There is generally a security/speed tradeoff with ciphers but
+in some cases this isn&#39;t always true. I strongly recommend reading more about
+the various ciphers before making your own decisions for high-security
+information.</p>
+
+<table><thead>
+<tr>
+<th>Cipher</th>
+<th>Read Speed</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>-c tnepres</td>
+<td>20.1 MB/s</td>
+</tr>
+<tr>
+<td>-c serpent</td>
+<td>20.4 MB/s</td>
+</tr>
+<tr>
+<td>-c seed-ecb-plain -s 256</td>
+<td>20.5 MB/s</td>
+</tr>
+<tr>
+<td>-c fcrypt-pcbc-plain -s 64</td>
+<td>30.4 MB/s</td>
+</tr>
+<tr>
+<td>-c khazad-ecb-plain -s 128</td>
+<td>31.7 MB/s</td>
+</tr>
+<tr>
+<td>-c xtea-ecb-plain -s 128</td>
+<td>32.0 MB/s</td>
+</tr>
+<tr>
+<td>-c arc4</td>
+<td>32.1 MB/s</td>
+</tr>
+<tr>
+<td>-c xeta-ecb-plain -s 128</td>
+<td>32.1 MB/s</td>
+</tr>
+<tr>
+<td>-c twofish</td>
+<td>34.2 MB/s</td>
+</tr>
+<tr>
+<td>-c anubis-cbc-plain -s 256</td>
+<td>37.5 MB/s</td>
+</tr>
+<tr>
+<td>-c anubis -s 256</td>
+<td>37.8 MB/s</td>
+</tr>
+<tr>
+<td>-c tea-ecb-plain -s 128</td>
+<td>38.1 MB/s</td>
+</tr>
+<tr>
+<td>-c anubis-ecb-plain -s 256</td>
+<td>39.6 MB/s</td>
+</tr>
+<tr>
+<td>-c cast6-cbc-plain -s 256</td>
+<td>40.0 MB/s</td>
+</tr>
+<tr>
+<td>-c cast6</td>
+<td>40.7 MB/s</td>
+</tr>
+<tr>
+<td>-c des-ecb-plain -s 64</td>
+<td>42.0 MB/s</td>
+</tr>
+<tr>
+<td>-c camellia -s 256</td>
+<td>42.2 MB/s</td>
+</tr>
+<tr>
+<td>-c anubis -s 128</td>
+<td>46.4 MB/s</td>
+</tr>
+<tr>
+<td>-c anubis-cbc-plain -s 128</td>
+<td>47.5 MB/s</td>
+</tr>
+<tr>
+<td>-c anubis-ecb-plain -s 128</td>
+<td>49.4 MB/s</td>
+</tr>
+<tr>
+<td>-c cast5-cbc-plain -s 128</td>
+<td>50.2 MB/s</td>
+</tr>
+<tr>
+<td>-c camellia -s 128</td>
+<td>51.4 MB/s</td>
+</tr>
+<tr>
+<td>-c aes -s 256</td>
+<td>55.9 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-cbc-plain -s 256</td>
+<td>56.4 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-cbc-benbi -s 256</td>
+<td>56.7 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-cbc-null -s 256</td>
+<td>57.0 MB/s</td>
+</tr>
+<tr>
+<td>-c blowfish</td>
+<td>57.2 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-ecb-benbi -s 256</td>
+<td>58.8 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-ecb-null -s 256</td>
+<td>59.5 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-ecb-plain -s 256</td>
+<td>60.3 MB/s</td>
+</tr>
+<tr>
+<td>-c blowfish-ecb-plain</td>
+<td>61.4 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-xts-plain -s 256</td>
+<td>61.6 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-lrw-plain -s 256</td>
+<td>62.8 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-cbc-plain -s 128</td>
+<td>66.8 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-ctr-plain -s 128</td>
+<td>67.0 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-cbc-null -s 128</td>
+<td>67.1 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-cbc-benbi -s 128</td>
+<td>67.4 MB/s</td>
+</tr>
+<tr>
+<td>-c aes -s 128</td>
+<td>67.5 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-ecb-plain -s 128</td>
+<td>71.0 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-ecb-benbi -s 128</td>
+<td>71.2 MB/s</td>
+</tr>
+<tr>
+<td>-c aes-ecb-null -s 128</td>
+<td>71.5 MB/s</td>
+</tr>
+<tr>
+<td>None (Baseline)</td>
+<td>105 MB/s</td>
+</tr>
+</tbody></table>
+
+    </div>
+  </body>
+</html>

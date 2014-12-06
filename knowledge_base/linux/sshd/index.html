@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>SSHd - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SSHd" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/sshd/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>SSHd</h1>
+
+<p>Secure Shell or SSH is a network protocol that allows data to be exchanged
+using a secure channel between two networked devices. Used primarily on
+GNU/Linux and Unix based systems to access shell accounts, SSH was designed as
+a replacement for Telnet and other insecure remote shells, which send
+information, notably passwords, in plaintext, rendering them susceptible to
+packet analysis. The encryption used by SSH provides confidentiality and
+integrity of data over an insecure network, such as the Internet.</p>
+
+<h2>Security Notes</h2>
+
+<p>SSH is one of the crux services. An improperly configured SSH could be
+equivalent to letting an attacker have physical access to the box.</p>
+
+<h2>Firewall Adjustments</h2>
+
+<p>My default <a href="../iptables/">IPTables</a> firewall already has the following rules in place to
+allow access to SSH by default while still providing a modicum of protection
+from attackers.</p>
+<div class="CodeRay">
+  <div class="code"><pre># Allow SSH, but no more than 5 new connections every minute
+# Note: This has extreme repercussions if I was to use sftp as each file transfer
+# initiates a new connection. Since it's rare for me to use sftp this isn't really an
+# issue, however, when I do want to use it this rule will be the cause of failed
+# transfers. Hopefully I will save myself the diagnostic nightmare scenario I went
+# through last time
+-A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
+-A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &quot;SSH Brute Force&quot;
+-A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
+-A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
+</pre></div>
+</div>
+
+<p>On any sensitive system, where the server can be access from should be further
+restricted. An example is provided below that only allows access from the
+trusted LAN subnet, this should be used on the central syslog server and the
+backup server (In the event of a server compromise I do not want to risk my
+logs or backups to further compromise and SSH is probably my most vulnerable
+service).</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --name SSH --set
+-A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &quot;SSH Brute Force&quot;
+-A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
+-A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -j ACCEPT
+</pre></div>
+</div>
+
+<h2>Configuration</h2>
+
+<h3>/etc/ssh/sshd_config</h3>
+
+<p>This ssh configuration should cover pretty much all the servers.</p>
+<div class="CodeRay">
+  <div class="code"><pre>Port 22
+AddressFamily inet
+ListenAddress 0.0.0.0
+Protocol 2
+
+# Logging
+SyslogFacility AUTHPRIV
+LogLevel INFO
+
+# Limit the ciphers to those which are FIPS approved and only use ciphers in counter (CTR) mode
+Ciphers aes128-ctr,aes192-ctr,aes256-ctr
+
+# Authentication:
+LoginGraceTime 2m
+PermitRootLogin without-password
+StrictModes yes
+
+# Pubkey counts as one of these, this will require brute force users
+# to open a lot of connections, quickly blocking their access
+MaxAuthTries 3
+
+MaxSessions 2
+
+PubkeyAuthentication yes
+AuthorizedKeysFile      .ssh/authorized_keys
+
+HostbasedAuthentication no
+IgnoreRhosts yes
+
+PermitEmptyPasswords no
+PasswordAuthentication yes
+
+ChallengeResponseAuthentication no
+
+KerberosAuthentication no
+
+GSSAPIAuthentication no
+
+UsePAM no
+
+# Accept locale-related environment variables
+AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+AcceptEnv XMODIFIERS
+
+AllowAgentForwarding no
+AllowTcpForwarding no
+GatewayPorts no
+X11Forwarding no
+PrintMotd yes
+PrintLastLog yes
+TCPKeepAlive no
+UseLogin no
+UsePrivilegeSeparation yes
+PermitUserEnvironment no
+Compression delayed
+
+# Check the client every 15 seconds to make sure that it's still connected
+# If no response is heard after 2 minutes assume the client is dead
+ClientAliveInterval 15
+ClientAliveCountMax 8
+
+ShowPatchLevel no
+UseDNS no
+PermitTunnel no
+
+# This is the number of unauthenticated open SSH connections
+# After 10, there is a fifty percent chance a connection will be
+# dropped until the queue reaches 20 at which point all further
+# connections will be dropped until the queue clears
+MaxStartups 10:50:20
+
+PidFile /var/run/sshd.pid
+Banner /etc/issue.net
+
+# I never have use of sftp, preferring scp
+#Subsystem      sftp    /usr/libexec/openssh/sftp-server
+
+# Only allow SSH connections from users explicitly given that permission
+AllowGroups sshers
+</pre></div>
+</div>
+
+<p>There are two configuration options that can potentially break older versions
+of the ssh server and should be commented out or removed they are: </p>
+<div class="CodeRay">
+  <div class="code"><pre>MaxSessions 5
+...
+AllowAgentForwarding yes
+</pre></div>
+</div>
+
+<h3>/etc/issue.net</h3>
+
+<p>The net issue file is what gets displayed before a user logs in. The net issue
+works as a deterrent, a set of policies, and informs any users trying to login
+that they will be monitored. While this won&#39;t deter bots trying to brute force
+the entry, it at the very least provides a professional appearance to let
+potential bad users that they are not dealing with a service that was
+accidentally left open and unconfigured.</p>
+<div class="CodeRay">
+  <div class="code"><pre>***************************************************************************
+     Authorized uses only.  All activity may be monitored and reported.
+                            NOTICE TO USERS
+
+This computer system is the private property of BedroomProgrammers.net.
+It is for authorized use only. Users (authorized or unauthorized) have no
+explicit or implicit expectation of privacy.
+
+Any or all uses of this system and all files on this system may be
+intercepted, monitored, recorded, copied, audited, inspected, and
+disclosed in accordance with the BedroomProgrammers.net acceptable network
+usage policy. 
+
+By using this system, the user consents to such interception, monitoring,
+recording, copying, auditing, inspection, disclosure at the discretion of
+BedroomProgrammers.net and agrees to comply with all related policies,
+procedures and guidelines. Unauthorized or improper use of this system may
+result in civil and criminal penalties and administrative or disciplinary
+action, as appropriate.
+
+By continuing to use this system you indicate your awareness of and consent
+to these terms and conditions of use. LOG OFF IMMEDIATELY if you do not agree
+to the conditions stated in this notice.
+****************************************************************************
+</pre></div>
+</div>
+
+<h3>User Configuration</h3>
+
+<p>The SSH daemon configuration here restricts SSH access to only users in the
+&quot;sshers&quot; group. This group will need to be created like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost]# groupadd sshers -g 401
+</pre></div>
+</div>
+
+<p>And you&#39;ll probably want to add a user to that group. If you want root to be
+able to login remotely that account has to be in this group as well! The
+following example adds root to the sshers group.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost]# usermod -a -G sshers root
+Adding user root to group sshers
+</pre></div>
+</div>
+
+<p>And to remove root from the sshers group:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost]# gpasswd -d root sshers
+</pre></div>
+</div>
+
+<h3>Default SSH Client Configuration</h3>
+<div class="CodeRay">
+  <div class="code"><pre># /etc/ssh/ssh_config
+Host *
+  CheckHostIP yes
+  Compression yes
+  CompressionLevel 6
+  GSSAPIAuthentication yes
+  HashKnownHosts yes
+  Protocol 2
+  SendEnv LC_ALL
+  StrictHostKeyChecking ask
+  VisualHostKey yes
+</pre></div>
+</div>
+
+<h2>Multi-Factor Authentication</h2>
+
+<p>I would like to start out by mentioning yes, I know I&#39;m paranoid. I have no
+reason to explicitly believe that there is anyone actively trying to get into
+my network and additionally I have no reason to believe that the data I&#39;m
+protecting has any value to anyone but myself. My response to anyone who thinks
+this is excessive is, just because I&#39;m paranoid doesn&#39;t mean someone isn&#39;t out
+to get me. Besides what&#39;s the harm in adding another almost non-intrusive
+security measure to the system?</p>
+
+<p>Multi-factor authentication is using three or more different types of user
+verification schemes to provide a considerably harder time for an unauthorized
+user to gain access. These verification schemes can include but are not limited
+to:</p>
+
+<ul>
+<li>Access control (firewall port restrictions or user ACL conditions)</li>
+<li>Something you know (your password or pass phrase)</li>
+<li>Something you have (your ssh key or secure id key-fob hardware)</li>
+<li>Something you are (fingerprint or iris scan)</li>
+<li>Somebody you know (human authentication through mutual acquaintance)</li>
+<li>Something you deduce (logical authentication which the user will need to
+reason, usually based on personal knowledge or life experience)</li>
+</ul>
+
+<p>Multi-factor authentication can easily be implemented on these using built-in
+functionality. Multiple verifications of the same type do not count towards the
+number of verification schemes in use (for example both firewall and restrict
+by user are both ACLs and thus count as one verification scheme) although they
+can still increase the security of the box. Assuming that the server is
+configured according to the guidelines on this wiki in regards to <a href="../iptables/">IPTables</a>
+and SSH, then it already has the following:</p>
+
+<ul>
+<li>limit access by group with the &quot;AllowGroups&quot; directive (whitelist - access
+control)</li>
+<li>use a password (something you know)</li>
+</ul>
+
+<p>We can further increase the security into a true multi-factor authentication
+system by disabling password based access and requiring the following:</p>
+
+<ul>
+<li>limit access to ssh by ip address (access control)</li>
+<li>use a pre-authorized ssh key (something you have)</li>
+<li>use that ssh key <u>with</u> a strong pass-phrase (something you know)</li>
+<li>force a script to run on login that will ask questions of the user (logical
+authentication of a constantly changing answer)</li>
+</ul>
+
+<p>The first can be done using <a href="../iptables/">IPTables</a> and the rules are mentioned in the
+firewall section of this page. I will cover the rest in the following two
+sub-sections.</p>
+
+<p>Note for personal research: It seems that version 2 of the SSH protocol
+natively supports chaining authentications using the &#39;AuthenticationMethods&#39;
+commands allowing you to simply do things such as requiring you to have both a
+key and password. Chaining this with pam could allow us to require a publickey,
+following by standard password, and finishing up with a OTP. Would be fantastic
+for high security airlock servers, or as a stronger means of restricting root
+  logins where they are necessary.</p>
+
+<h3>SSH Authorized Keys</h3>
+
+<p>SSH authorized keys provide a considerably stronger authentication method than
+a user&#39;s password as long as the key is protected by a pass-phrase. If the key
+is left without a pass-phrase, anyone who manages to get access to the system
+can immediately login as that user anywhere they have deployed the key. ENSURE
+THERE IS A STRONG PASS-PHRASE ON THE KEY.</p>
+
+<p>The keys are normally created as <code>~/.ssh/id_rsa</code> and <code>~/.ssh/id_rsa.pub</code>,
+however I like to physically separate my keys from my computers so I&#39;ll give my
+keys a descriptive name of <code>username@host.key</code> and put them on a pendrive
+located at <code>/media/pendrive</code>. Personally I to use keys with 4096 bits. The
+following command will create the public / private keys:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
+Generating public/private rsa key pair.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /media/pendrive/username@host.key.
+Your public key has been saved in /media/pendrive/username@host.key.pub.
+The key fingerprint is:
+xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx user@localhost
+</pre></div>
+</div>
+
+<p>Now that we have a strong key we just need to place it on the servers we want
+to access. Conveniently enough there is a utility that makes this quick and
+simple, if for some reason you don&#39;t trust this utility or want to do it by
+hand just copy the contents of <a href="mailto:username@host.key.pub">username@host.key.pub</a> into
+<code>~/.ssh/authorized_keys</code> on the remote host and make sure the file&#39;s
+permissions are set to 0400.</p>
+
+<p>You can use the utility by performing the following command, replacing
+<code>remoteuser@remotehost</code> with a valid username and hostname for the remote host.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[user@localhost ~]$ ssh-copy-id -i /media/pendrive/username@host.key.pub remoteuser@remotehost
+remoteuser@remotehost's password: 
+Now try logging into the machine, with &quot;ssh 'remoteuser@remotehost'&quot;, and check in:
+
+  .ssh/authorized_keys
+
+to make sure we haven't added extra keys that you weren't expecting.
+
+[user@localhost ~]$ ssh -i /media/pendrive/username@host.key remoteuser@remotehost
+Enter passphrase for key '/media/pendrive/username@remotehost.key':
+[remoteuser@remotehost ~]$
+</pre></div>
+</div>
+
+<p>Once your sure that the key based login is working you can safely disable
+password based logins through ssh to the system entirely by changing the
+following line in <code>/etc/ssh/sshd_config</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>PasswordAuthentication yes
+---- Replace with ----
+PasswordAuthentication no
+</pre></div>
+</div>
+
+<p>This replaces the &#39;something you know&#39; of a password based login, with
+&#39;something you have&#39; (the key, especially if it&#39;s on a pendrive) and &#39;something
+you know&#39; (the key&#39;s pass-phrase).</p>
+
+<h3>Gatekeeper Script</h3>
+
+<p>If you&#39;ve already implemented the SSH keys for authentication and have a
+password on your key then you&#39;ve already achieved multi-factor authentication,
+as I&#39;ve said before now I&#39;m paranoid and any additional step that could keep
+the baddies out of the systems that I need to ensure the security of is a step
+that I&#39;ll take.</p>
+
+<p>The gatekeeper script is something that I haven&#39;t come across on any other
+systems that other people administer. Perhaps they haven&#39;t thought of it, or
+perhaps it&#39;s too much trouble for them without much gain. I had the idea for
+this while watching a James Bond movie (Golden Eye for those who care). A
+Russian systems engineer put riddles on one of his machines that you had to go
+through in order to access the system, while this alone isn&#39;t secure, asking
+the user a random question that they alone would know the answer to couldn&#39;t
+hurt the security. I highly recommend using some logic that changes
+periodically, but the client can remotely deduce.</p>
+
+<p>First we need to make a script to handle the additional authentication.Please
+note that the following script is just an example, posting the actual script
+would defeat the purpose of having it in the first place. You&#39;ll have to come
+up with your own question and answer sections, though this is a good template
+to start from.</p>
+<div class="CodeRay">
+  <div class="code"><pre>#!/bin/sh
+# Gatekeeper.sh - Post-login authentication script
+
+# In the event that a user tries to get crafty and Ctrl-C out of the script
+# we'll just kill the connection
+trap jail INT
+jail() {
+    kill -9 $PPID
+    exit 0
+}
+
+# Once a user logs in, check to see if they just wanted a shell.
+# SSH_ORIGINAL_COMMAND will be null (-z) if they did
+if [ -z &quot;$SSH_ORIGINAL_COMMAND&quot; ]; then
+    # The answer the user needs to know, a function or call to another
+    # script could be used to generate this answer based on any number
+    # of resources available to the system. This could include querying an
+    # internal web script to get a daily password user's of a site have
+    # access to (and perhaps are supposed to be checking)
+    CORRECT_ANSWER=&quot;muffins&quot;
+
+    # Message displayed to the user before being prompted, I'm going to assume
+    # the user knows the question in this case what's the admin's favorite
+    # breakfast
+    echo -n &quot;Gatekeeper token authentication required: &quot;
+
+    # Get the user's answer. If the answer is correct execute the command.
+    # If the answer is wrong, log the attempt and kill the connection.
+    while read -s inputline; do
+        RESPONSE=&quot;$inputline&quot;
+        echo &quot;&quot;
+        if [ $CORRECT_ANSWER = &quot;${RESPONSE}&quot; ]; then
+            echo &quot;Gatekeeper authentication accepted.&quot;
+            $SHELL -l
+            exit 0
+        else
+            logger &quot;Gatekeeper: $USER login failed from $SSH_CLIENT&quot;
+            kill -9 $PPID
+            exit 0
+        fi
+    done
+fi
+
+# This command will bypass the gatekeeper script if the user tries to rsync
+# as this script will break rsync. It creates a fresh shell just for good
+# measure.
+#if [ `echo $SSH_ORIGINAL_COMMAND | awk '{print $1}'` = rsync ]; then
+#    $SHELL -c &quot;$SSH_ORIGINAL_COMMAND&quot;
+#    exit 0
+#fi
+
+# If a user tried to execute something other than an 'approved' command
+# just kill the session. This will prevent SCP and SFTP unless they are
+# configured to bypass the script.
+kill -9 $PPID
+exit 0
+</pre></div>
+</div>
+
+<p>Put this script in <code>/etc/ssh/gatekeeper.sh</code> and change it&#39;s permissions to 755
+with the owner being root. To make the SSH server pass off control to the
+Gatekeeper script once it&#39;s done authenticating a user, we&#39;ll use the
+&#39;ForceCommand&#39; command in SSHd&#39;s config file (<code>/etc/ssh/sshd_config</code>). Add the
+following line to the end of the config and restart the SSH daemon.</p>
+<div class="CodeRay">
+  <div class="code"><pre>ForceCommand /etc/ssh/gatekeeper.sh
+</pre></div>
+</div>
+
+<p>Assuming everything went according to plan, when you SSH into the remote server
+once your done authenticating it&#39;ll ask for the token. Putting in &#39;muffins&#39;
+should get you to your shell, while anything else will kill the connection.
+This provides the final layer of the multi-factor authentication as &#39;something
+you deduce&#39;.</p>
+
+<h2>User Jails</h2>
+
+<p>Jails can isolate users from sensitive parts of the system, creating a &#39;fake&#39;
+environment for them to execute their programs. In the event that a user&#39;s
+account becomes compromised, the jail can limit what an attacker has access too
+though it should be considered a delay rather than a security measure since a
+determined hacker might be able to break out of an otherwise secure jail.</p>
+
+<p>To start off we&#39;re going to need to setup an environment for our jail. The
+following commands create the base directories and the /dev/null device within
+the jail.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost]# mkdir -p /var/jail/{dev,etc,lib,lib64,usr/bin,bin,home}
+[root@localhost]# chown -R root:root /var/jail/
+[root@localhost]# mknod -m 666 /var/jail/dev/null c 1 3
+</pre></div>
+</div>
+
+<p>There is something serious to note here. The <a href="../partitioning/">partitioning</a> security
+guidelines add two flags to the mount options of the /var partition.  You will
+need to remove the &#39;nosuid&#39;, and &#39;noexec&#39; options from this partition to be
+able use a chroot jail.</p>
+
+<p>Next we need to copy a few minimum files into the jail&#39;s etc directory. Hard
+links may work better for these as they will get properly updated with the rest
+of the system, however, I am unsure whether or not that would actually work.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost]# cp /etc/ld.so.cache /etc/ld.so.conf /etc/nsswitch.conf /etc/hosts /var/jail/etc/
+</pre></div>
+</div>
+
+<p>At this point you need to decide what commands you want you&#39;re user to have
+access too and copy the appropriate binaries into place. You can use the
+<code>which</code> command to locate a binary and then copy it into the same directory
+within the jail. The following is an example for moving <code>bash</code> over.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost]# which bash
+/bin/bash
+[root@localhost]# cp /bin/bash /var/jail/bin/
+</pre></div>
+</div>
+
+<p>The trickiest part of setting up a jail is the required libraries for the
+allowed executables. Conveniently, all the Linux distributions that I have
+tried come with a tool too determine what libraries are required. <code>ldd</code>. Here&#39;s
+a little snippet that will give you a run down of the counts for the number of
+times each library is used by a system:</p>
+<div class="CodeRay">
+  <div class="code"><pre>find /bin -type f -perm /a+x -exec ldd {} \; \
+| grep so \
+| sed -e '/^[^\t]/ d' \
+| sed -e 's/\t//' \
+| sed -e 's/.*=..//' \
+| sed -e 's/ (0.*)//' \
+| sort \
+| uniq -c \
+| sort -n
+</pre></div>
+</div>
+
+<p>If for some reason ldd isn&#39;t reporting all of the libraries, while the app is
+running you can use this command to track down what it has actually loaded:</p>
+<div class="CodeRay">
+  <div class="code"><pre>lsof -P -T -p Application_PID
+</pre></div>
+</div>
+
+<p>A few references:</p>
+
+<ul>
+<li><a href="http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/">http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/</a></li>
+<li><a href="http://allanfeid.com/content/creating-chroot-jail-ssh-access">http://allanfeid.com/content/creating-chroot-jail-ssh-access</a></li>
+</ul>
+
+<h2>Multiplex-Sessions &amp; Signed PubKeys</h2>
+
+<ul>
+<li><a href="http://comments.gmane.org/gmane.network.openssh.general/8269">http://comments.gmane.org/gmane.network.openssh.general/8269</a></li>
+<li><a href="http://blog.johnjosephbachir.org/2006/11/19/multiplex-several-ssh-sessions-over-a-single-tcp-connection/">http://blog.johnjosephbachir.org/2006/11/19/multiplex-several-ssh-sessions-over-a-single-tcp-connection/</a></li>
+</ul>
+
+<h2>Published SSH Host Keys</h2>
+
+<ul>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4255.txt">https://www.rfc-editor.org/rfc/rfc4255.txt</a></li>
+<li><a href="http://www.dnorth.net/2007/12/16/sshfp-howto/">http://www.dnorth.net/2007/12/16/sshfp-howto/</a></li>
+</ul>
+
+<h2>LXC Specific</h2>
+
+<p>If you want to run sshd in a LXC container you will need to disable
+<code>pam_loginuid.so</code> in <code>/etc/pam.d/sshd</code> by commenting out the appropriate line.</p>
+
+    </div>
+  </body>
+</html>

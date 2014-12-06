@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Ruby - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Ruby" />
+    <meta property="og:url" content="https://stelfox.net/tags/ruby/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class="post">
+  <h1>Ruby</h1>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/11/auditing-heroku-ssh-keys/">Auditing Heroku SSH Keys</a></h1>
+      <aside>Posted at: 2012-11-26 10:18:00 -0500</aside>
+      <article>
+        <p>A good friend of mine recently left the organization I work for and the task of
+resetting our passwords and auditing credentials fell on me. Since we use
+<a href="https://www.heroku.com/">Heroku</a> for our development platform I needed to not only reset the
+credentials for the web portion (which conveniently also handles resetting the
+API key) but also revoke any SSH keys he may have added to access it.</p>
+
+<p>Sadly Heroku does not seem to provide any web interface that I could find for
+examining what keys were associated with the account. Searching for this
+information also didn&#39;t turn up very valuable results; most people were looking
+to add keys or resolve issues with missing keys rather than revoking them. I
+suspect not many people think of SSH keys when it comes time to revoke access
+which is a dire mistake.</p>
+
+<p>I took to the command line to solve my issue as I knew you could list and add
+keys that way, so it was a minor leap of logic to assume they could revoke keys
+as well. I ran <code>heroku help keys</code> to get the syntax for the commands and was
+pleasantly surprised to see an additional option listed in there:</p>
+<div class="CodeRay">
+  <div class="code"><pre>keys:clear       #  remove all authentication keys from the current user
+</pre></div>
+</div>
+
+<p>As a now two person web-shop it&#39;s not a terrible amount of work to add our keys
+back in and looking through there were already some keys in there that should
+have been revoked long ago. One command and our applications were safe from
+mischief, though I know my former associate wouldn&#39;t abuse that privilege
+beyond perhaps pointing out the security flaw I&#39;d allowed.</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/08/adding-a-table-prefix-to-datamapper-tables/">Adding a table prefix to DataMapper tables</a></h1>
+      <aside>Posted at: 2012-08-07 10:09:33 -0400</aside>
+      <article>
+        <p>So I recently encountered a situation where I needed to define a prefix on the
+tables used by the &quot;data_mapper&quot; gem. When I went searching I found quite a bit
+of information about similar projects in Python, and PHP named DataMapper but
+nothing about the ruby &quot;data_mapper&quot;. The search continued eventually ending in
+my reading through the source of the data_mapper gem only to find that there
+was no feature for simply defining a prefix.</p>
+
+<p>Reading through the source though did allow me to find any easy way to
+implement such functionality. The following snippet is a minimalistic
+data_mapper initialization and setup of one model with a table prefix of
+&quot;source_&quot; (chosen at random and of no significance).</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="comment"># encoding: utf-8</span>
+
+<span class="comment"># (1)</span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">dm-core</span><span class="delimiter">&quot;</span></span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">dm-migrations</span><span class="delimiter">&quot;</span></span>
+
+<span class="comment"># (2)</span>
+<span class="keyword">module</span> <span class="class">PrefixNamingConvention</span>
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">call</span>(model_name)
+    <span class="comment"># (3)</span>
+    prefix = <span class="string"><span class="delimiter">&quot;</span><span class="content">source_</span><span class="delimiter">&quot;</span></span>
+    <span class="comment"># (4)</span>
+    table_name = <span class="constant">DataMapper</span>::<span class="constant">NamingConventions</span>::<span class="constant">Resource</span>::<span class="constant">UnderscoredAndPluralized</span>.call(model_name)
+
+    <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span>prefix<span class="inline-delimiter">}</span></span><span class="inline"><span class="inline-delimiter">#{</span>table_name<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment"># (5)</span>
+<span class="constant">DataMapper</span>::<span class="constant">Logger</span>.new(<span class="global-variable">$stdout</span>, <span class="symbol">:debug</span>)
+
+<span class="comment"># (6)</span>
+<span class="constant">DataMapper</span>.setup(<span class="symbol">:default</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">sqlite:example.db</span><span class="delimiter">&quot;</span></span>)
+<span class="constant">DataMapper</span>.repository(<span class="symbol">:default</span>).adapter.resource_naming_convention = <span class="constant">PrefixNamingConvention</span>
+
+<span class="comment"># (7)</span>
+<span class="keyword">class</span> <span class="class">Person</span>
+  include <span class="constant">DataMapper</span>::<span class="constant">Resource</span>
+
+  property <span class="symbol">:id</span>, <span class="constant">Serial</span>
+  property <span class="symbol">:first_name</span>, <span class="constant">String</span>
+  property <span class="symbol">:last_name</span>, <span class="constant">String</span>
+  property <span class="symbol">:email</span>, <span class="constant">String</span>
+<span class="keyword">end</span>
+
+<span class="comment"># (8)</span>
+<span class="constant">DataMapper</span>.finalize
+<span class="constant">DataMapper</span>.auto_upgrade!
+</pre></div>
+</div>
+
+<p>So here are some notes on what&#39;s going on in this snippet. Each area that I
+will be discussing has been annotated with a number like &quot;# (1)&quot; to make it
+easier to find a section you have questions about.</p>
+
+<ol>
+<li>Since this is an example I&#39;m only including the bare minimum data mapper
+gems to accomplish the task. If you&#39;re using bundler you may need to also
+require &quot;rubygems&quot; to get this too work.</li>
+<li>This is where the real work happens, DataMapper uses external modules that
+receive the &quot;call&quot; method to handle the conversion of class names to table
+names. By default DataMapper uses the module
+&quot;DataMapper::NamingConventions::Resource::UnderscoredAndPluralized&quot;, which
+I&#39;ll use later to maintain the same names.</li>
+<li>This is where I&#39;m defining the table prefix. This could be defined in a
+global, call another method or class, whatever your heart desires to get a
+string that will be used as a prefix.</li>
+<li>Here I&#39;m getting what DataMapper would have named the table if I wasn&#39;t
+interferring</li>
+<li>I&#39;m logging to standard out so that I can see the queries called to verify
+that DataMapper is creating tables with the names that I want. This is used
+later on in this post to demonstrate this solution working, however, it
+could be left out without affecting anything.</li>
+<li>Initial setup of a sqlite database, and then the good stuff. Once a database
+has been setup with a specific adapter you can change the naming convention
+DataMapper will use to generate table names. This is accomplished by passing
+the module constant name through the repositories adapter and too
+&quot;resource_naming_convention&quot; as demonstrated in the code.</li>
+<li>Here I&#39;m defining an example model of no importance. This is purely for
+demonstration, normally DataMapper would name this model &quot;people&quot;.</li>
+<li>Inform DataMapper we&#39;re done setting it up and to run the migrations to
+create the model defined.</li>
+</ol>
+
+<p>When you run this ruby file (assuming you have the &quot;data_mapper&quot; and
+&quot;dm-sqlite-adapter&quot; gem installed) you&#39;ll see output very similar too this:</p>
+<div class="CodeRay">
+  <div class="code"><pre>~ (0.001402) PRAGMA table_info(&quot;source_people&quot;)
+~ (0.000089) SELECT sqlite_version(*)
+~ (0.077840) CREATE TABLE &quot;source_people&quot; (&quot;id&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, &quot;first_name&quot; VARCHAR(50), &quot;last_name&quot; VARCHAR(50), &quot;email&quot; VARCHAR(50))
+</pre></div>
+</div>
+
+<p>Notice the third line? Specifically the name of the table? It&#39;s named exactly
+as it would have been except now it has a prefix of &quot;source_&quot;.</p>
+
+<p>Hope this saves someone else some trouble. Cheers!</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2014/02/finding-ruby-subclasses/">Finding Ruby Subclasses</a></h1>
+      <aside>Posted at: 2014-02-20 07:48:24 -0500</aside>
+      <article>
+        <p>While working through a problem I found it would be immensely useful to be able
+to enumerate all of the current subclasses of a particular class. After
+thinking about this for a while I settled on a good old friend of mine,
+<code>ObjectSpace</code>.</p>
+
+<p>For those not familiar with the ObjectSpace module, it is a means to inspect
+and access the items being tracked by Ruby&#39;s garbage collector. This means it
+has a hook into every living object, and more dangerously, every near-death
+object.</p>
+
+<p><code>ObjectSpace</code> provides a method for enumerating instances of a specific class,
+specifcally named <code>each_object</code> which takes a class. With Ruby all classes are
+in fact instances of the <code>Class</code> class. This allows us to enumerate every
+available class by passing it to the enumerator like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).to_a
+</pre></div>
+</div>
+
+<p>Alright so we now have an array of every single class that could possibly be
+instantiated, how do we narrow it down to just the ones we&#39;re interested in?
+Once again Ruby provides with the <code>ancestors</code> method, combine that with a
+select and we can quickly narrow it down. You can see it in the following
+example:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) }
+=&gt; [<span class="constant">String</span>, <span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>Hmm, that&#39;s not quite right though. We have found all the subclasses but we&#39;ve
+also grabbed the parent class. With one small modification we eliminate that as
+well.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) &amp;&amp; k != <span class="constant">String</span> }
+=&gt; [<span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>That line is rather long though, and I generally like to avoid multiple tests
+in a select block. There is a tad bit of syntactic sugar provided by Ruby
+allowing us to accomplish the same thing, our final example is ultimately the
+solution I went with:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="constant">String</span> }
+=&gt; [<span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>Putting this into a method:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">subclasses</span>(klass)
+  <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; klass }
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>If you were so inclined you could extend the <code>Class</code> class with a method to
+make this available anywhere like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Class</span>
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">subclasses</span>
+    <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="predefined-constant">self</span> }
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>I&#39;m personally not a fan of extending any of the core classes unless absolutely
+necessary, but too each there own.</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2013/12/running-emails-through-ruby/">Running Emails Through Ruby</a></h1>
+      <aside>Posted at: 2013-12-08 09:32:05 -0500</aside>
+      <article>
+        <p>Following up on my <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">earlier post</a> where I covered how to backup your Gmail
+account using <code>fetchmail</code> and <code>procmail</code>; I wanted to cover how I was
+additionally processing received mail through ruby.</p>
+
+<p>This was part of a larger project where I was doing statistical analysis on my
+email while evaluating various data stores. To get the emails into the various
+data stores, I used the ruby script to parse, process and store the emails as
+they came in.</p>
+
+<p>If you&#39;re going to be doing any form of mail manipulation or statistics I
+highly recommend the <a href="https://github.com/mikel/mail">mail</a> gem. It did almost everything I needed out of
+the box, though it didn&#39;t correctly enumerate any of the additional headers.</p>
+
+<p>Procmail is a highly flexible mail filtering and local delivery agent. Without
+much effort you can pass the mail it is handling through a series of filters
+which can manipulate and reject mail before eventually delivering it to your
+inbox. In light of this, we&#39;re going to make a filter that simply counts the
+total number of emails the script has processed, and add a header to the
+message that indicates this count.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="doctype">#!/usr/bin/env ruby</span>
+
+require <span class="string"><span class="delimiter">'</span><span class="content">mail</span><span class="delimiter">'</span></span>
+
+<span class="comment"># Get the email message from STDIN or a passed filename</span>
+message = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
+<span class="keyword">while</span> input = <span class="predefined-constant">ARGF</span>.gets
+  message += input
+<span class="keyword">end</span>
+
+<span class="comment"># Parse the email into a ruby object</span>
+msg = <span class="constant">Mail</span>.new(message)
+
+<span class="comment"># Location of our count file</span>
+count_file = <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span><span class="predefined-constant">ENV</span>[<span class="string"><span class="delimiter">'</span><span class="content">HOME</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="content">/.mail_counter.txt</span><span class="delimiter">&quot;</span></span>
+
+<span class="comment"># Load or initialize our count value and increment it</span>
+count = <span class="constant">File</span>.exists?(count_file) ? <span class="constant">File</span>.read(count_file).to_i : <span class="integer">0</span>
+count += <span class="integer">1</span>
+
+<span class="comment"># Update our count on disk</span>
+<span class="constant">File</span>.write(count_file, count.to_s)
+
+<span class="comment"># Add our header with the count</span>
+msg.header.fields &lt;&lt; <span class="constant">Mail</span>::<span class="constant">Field</span>.new(<span class="string"><span class="delimiter">&quot;</span><span class="content">X-Mail-Counter: </span><span class="inline"><span class="inline-delimiter">#{</span>count<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>)
+
+<span class="comment"># Output the now modified message back out to $stdout</span>
+<span class="keyword">begin</span>
+  <span class="global-variable">$stdout</span>.puts msg.to_s
+<span class="keyword">rescue</span> <span class="constant">Errno</span>::<span class="constant">EPIPE</span>
+  exit(<span class="integer">74</span>)
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>Make sure you mark the script executable after saving it.</p>
+
+<p>If you followed along with <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">my earlier post</a> the only change we need to make
+is to add our ruby mail processor as a procmail filter. I&#39;ve stored the script
+in <code>~/.bin/mail-counter.rb</code>, if you&#39;ve stored it in a different location you&#39;ll
+want to update your path to reflect that.</p>
+
+<p>Filters in procmail are handled by using the pipe helper. The following is a
+minimum working example of a procmailrc file to make use of our filter:</p>
+<div class="CodeRay">
+  <div class="code"><pre>MAILDIR=$HOME
+VERBOSE=on
+
+:0fw
+| /home/sstelfox/Documents/ruby/riak-mail-indexer/counter.rb
+
+:0
+Maildir/
+</pre></div>
+</div>
+
+<p>Store the above file in <code>~/.procmailrc</code>. The next time you run <code>fetchmail</code>
+those headers will be added to the messages before being delivered and you can
+watch the count increment by looking at the contents of <code>~/.mail_counter.txt</code>.</p>
+
+<p>The following are a few additional sources I made use of while writing this
+article:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby">http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby</a></li>
+<li><a href="http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines">http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines</a></li>
+</ul>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/08/security-through-obesity/">Security Through Obesity</a></h1>
+      <aside>Posted at: 2012-08-08 11:06:56 -0400</aside>
+      <article>
+        <p>Jeremy Spilman recently <a href="http://www.opine.me/a-better-way-to-store-password-hashes/">proposed changes</a> to how user&#39;s hashes are stored
+in website&#39;s and companies databases.  This post was originally going to look
+at some of the issues involved in the scheme he envisioned, however, he rather
+quickly posted a <a href="http://www.opine.me/all-your-hashes-arent-belong-to-us/">followup article</a> with a well thought out solution that
+countered all of the issues that other people and myself were able to come up
+with. I&#39;d strongly recommend reading both if you haven&#39;t done so. Instead of
+announcing flaws, I&#39;m turning this into a post with a simple functional
+implementation of the described scheme in Ruby using DataMapper.</p>
+
+<p>At first I&#39;d like to point out that this is one of those few examples where a
+form of security through obscurity is actually increasing not only the
+perceived security but the cost to attack a system as well.</p>
+
+<p>Please note this code is a minimal, functional, example and should not be used
+in production. It is missing a lot of things that I personally would add before
+attempting to use this but that is an exercise for the reader. It is licensed
+under the MIT license. I&#39;ll walk through the code briefly afterwards going over
+some bits.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="comment"># encoding: utf-8</span>
+
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">rubygems</span><span class="delimiter">&quot;</span></span>           <span class="comment"># You only need this if you use bundler</span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">dm-core</span><span class="delimiter">&quot;</span></span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">dm-migrations</span><span class="delimiter">&quot;</span></span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">dm-sqlite-adapter</span><span class="delimiter">&quot;</span></span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">dm-validations</span><span class="delimiter">&quot;</span></span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">scrypt</span><span class="delimiter">&quot;</span></span>
+
+<span class="constant">DataMapper</span>.setup <span class="symbol">:default</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">sqlite:hash.db</span><span class="delimiter">&quot;</span></span>
+
+<span class="keyword">class</span> <span class="class">User</span>
+  include <span class="constant">DataMapper</span>::<span class="constant">Resource</span> 
+
+  property <span class="symbol">:id</span>,             <span class="constant">Serial</span>
+  property <span class="symbol">:username</span>,       <span class="constant">String</span>, <span class="symbol">:required</span> =&gt; <span class="predefined-constant">true</span>,
+                                    <span class="symbol">:unique</span> =&gt; <span class="predefined-constant">true</span> 
+  property <span class="symbol">:crypt_hash</span>,     <span class="constant">String</span>, <span class="symbol">:required</span> =&gt; <span class="predefined-constant">true</span>,
+                                    <span class="symbol">:length</span> =&gt; <span class="integer">64</span>
+  property <span class="symbol">:salt</span>,           <span class="constant">String</span>, <span class="symbol">:required</span> =&gt; <span class="predefined-constant">true</span>,
+                                    <span class="symbol">:length</span> =&gt; <span class="integer">25</span> 
+
+  <span class="keyword">def</span> <span class="function">check_password</span>(plaintext_password)
+    encrypted_hash = scrypt_helper(plaintext_password, <span class="predefined-constant">self</span>.salt)
+    hash_obj = <span class="constant">SiteHash</span>.first(<span class="symbol">:crypt_hash</span> =&gt; encrypted_hash)
+
+    <span class="keyword">if</span> hash_obj.nil?
+      puts <span class="string"><span class="delimiter">&quot;</span><span class="content">Invalid password</span><span class="delimiter">&quot;</span></span>
+      <span class="keyword">return</span> <span class="predefined-constant">false</span>
+    <span class="keyword">end</span>
+
+    verification_hash = scrypt_helper(plaintext_password, hash_obj.salt)
+
+    <span class="keyword">if</span> <span class="predefined-constant">self</span>.crypt_hash == verification_hash
+      <span class="keyword">return</span> <span class="predefined-constant">true</span>
+    <span class="keyword">else</span>
+      puts <span class="string"><span class="delimiter">&quot;</span><span class="content">WARNING: Found matching hash, but verification failed.</span><span class="delimiter">&quot;</span></span>
+      <span class="keyword">return</span> <span class="predefined-constant">false</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+
+  <span class="keyword">def</span> <span class="function">password=</span>(plaintext_password)
+    generate_salt
+
+    encrypted_password = <span class="constant">SiteHash</span>.new
+    encrypted_password.crypt_hash = scrypt_helper(plaintext_password,
+                                                  <span class="predefined-constant">self</span>.salt)
+    encrypted_password.save
+
+    <span class="predefined-constant">self</span>.crypt_hash = scrypt_helper(plaintext_password,
+                                    encrypted_password.salt)
+  <span class="keyword">end</span>
+
+  private
+
+  <span class="keyword">def</span> <span class="function">generate_salt</span>
+    <span class="predefined-constant">self</span>.salt = <span class="constant">SCrypt</span>::<span class="constant">Engine</span>.generate_salt(<span class="symbol">:max_time</span> =&gt; <span class="float">1.0</span>)
+  <span class="keyword">end</span>
+
+  <span class="keyword">def</span> <span class="function">scrypt_helper</span>(plaintext_password, salt)
+    <span class="constant">SCrypt</span>::<span class="constant">Engine</span>.scrypt(plaintext_password, salt,
+                          <span class="constant">SCrypt</span>::<span class="constant">Engine</span>.autodetect_cost(salt),
+                          <span class="integer">32</span>).unpack(<span class="string"><span class="delimiter">'</span><span class="content">H*</span><span class="delimiter">'</span></span>).first
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">class</span> <span class="class">SiteHash</span>
+  include <span class="constant">DataMapper</span>::<span class="constant">Resource</span>
+
+  property <span class="symbol">:id</span>,             <span class="constant">Serial</span>
+  property <span class="symbol">:crypt_hash</span>,     <span class="constant">String</span>,   <span class="symbol">:required</span> =&gt; <span class="predefined-constant">true</span>,
+                                      <span class="symbol">:length</span> =&gt; <span class="integer">64</span>
+  property <span class="symbol">:salt</span>,           <span class="constant">String</span>,   <span class="symbol">:required</span> =&gt; <span class="predefined-constant">true</span>,
+                                      <span class="symbol">:length</span> =&gt; <span class="integer">25</span>
+
+  <span class="keyword">def</span> <span class="function">initialize</span>(*args)
+    <span class="keyword">super</span>
+    generate_salt
+  <span class="keyword">end</span>
+
+  private
+
+  <span class="keyword">def</span> <span class="function">generate_salt</span>
+    <span class="predefined-constant">self</span>.salt = <span class="constant">SCrypt</span>::<span class="constant">Engine</span>.generate_salt(<span class="symbol">:max_time</span> =&gt; <span class="float">1.0</span>)
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="constant">DataMapper</span>.finalize
+<span class="constant">DataMapper</span>.auto_upgrade!
+</pre></div>
+</div>
+
+<p>I tried to keep this as a simple minimum implementation without playing golf.
+Strictly speaking the validations on the data_mapper models aren&#39;t necessary
+and could have been removed, in this case, however, the length fields do
+actually indicate a bit more of what you might expect to see in the database,
+while the requires are just good habits living on.</p>
+
+<p>Both of the two models are required to have both a salt and a hash, the name
+&#39;crypt_hash&#39; was chosen do too a conflict with one of data_mapper&#39;s reserved
+words &#39;hash&#39;, the same goes for the model name, however, that class comes from
+elsewhere. Raw scrypt&#39;d hashes are 256 bits long or 64 hex characters long,
+while the salts are 64 bits (16 hex characters) plus some meta-data totaling 25
+  hex characters in this example.</p>
+
+<p>Salts are hashes are computed by the &#39;scrypt&#39; gem. In this example I&#39;ve bumped
+up the max time option to create a hash from the default of 0.2 seconds up to 1
+second. This is one of those things that I could have left out as the default
+is fine for an example, but it also couldn&#39;t hurt slightly increasing it in
+case someone did copy-paste this into production.</p>
+
+<p>The one thing that I&#39;d like to point out is a couple of &#39;puts&#39; statements I
+dropped in the check_password method on the User model. The first one simply
+announces an invalid password. A lot of these could indicate a brute force
+attack. The second one is more serious, it indicates that there is either a bug
+in the code, a hash collision has occurred, or an attacker has been able to
+drop in hash of their choosing into the site_hashes table, but haven&#39;t updated
+the verification hash on the user model yet. I&#39;d strongly recommend reading
+through both of Jeremy&#39;s posts if you want to understand how this threat works
+and specifically the second post to see how the verification hash protects what
+it does.</p>
+
+<p>So how would you use this code? Well you&#39;d want to create a user with a
+password and then check if their password is valid or not later on like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">User</span>.create(<span class="symbol">:username</span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">admin</span><span class="delimiter">'</span></span>, <span class="symbol">:password</span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">admin</span><span class="delimiter">'</span></span>)
+<span class="constant">User</span>.first(<span class="symbol">:username</span> =&gt; <span class="string"><span class="delimiter">'</span><span class="content">admin</span><span class="delimiter">'</span></span>).check_password(<span class="string"><span class="delimiter">'</span><span class="content">admin</span><span class="delimiter">'</span></span>)
+</pre></div>
+</div>
+
+<p>One of the key ways this separation increases the security of real users&#39;s
+hashes is by having a large number of fake hashes in the hash table that the
+attackers will have to crack at the same time. As a bonus I&#39;ve written a module
+to handle just that for the code I&#39;ve already provided. Once again this is
+licensed under the MIT license and should not be considered production ready.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="comment"># This is the code above, you can also include everything below</span>
+<span class="comment"># this in the same file if you're into that sort of thing</span>
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">user_hash_example</span><span class="delimiter">&quot;</span></span>
+
+<span class="keyword">module</span> <span class="class">HashFaker</span>
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">fast_hash</span>
+    <span class="constant">SiteHash</span>.create(<span class="symbol">:crypt_hash</span> =&gt; get_bytes(<span class="integer">32</span>))
+  <span class="keyword">end</span>
+
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">hash</span>
+    <span class="constant">SiteHash</span>.create(<span class="symbol">:crypt_hash</span> =&gt; scrypt_helper(get_bytes(<span class="integer">24</span>),
+                                                 generate_salt))
+  <span class="keyword">end</span>
+
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">generate_hashes</span>(count = <span class="integer">5000</span>, fast = <span class="predefined-constant">false</span>)
+    count.times <span class="keyword">do</span>
+      fast ? fast_hash : hash
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+
+  private
+
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">generate_salt</span>
+    <span class="constant">SCrypt</span>::<span class="constant">Engine</span>.generate_salt(<span class="symbol">:max_time</span> =&gt; <span class="float">1.0</span>)
+  <span class="keyword">end</span>
+
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">get_bytes</span>(num)
+    <span class="constant">OpenSSL</span>::<span class="constant">Random</span>.random_bytes(num).unpack(<span class="string"><span class="delimiter">'</span><span class="content">H*</span><span class="delimiter">'</span></span>).first
+  <span class="keyword">end</span>
+
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">scrypt_helper</span>(plaintext_password, salt)
+    <span class="constant">SCrypt</span>::<span class="constant">Engine</span>.scrypt(plaintext_password, salt,
+                          <span class="constant">SCrypt</span>::<span class="constant">Engine</span>.autodetect_cost(salt),
+                          <span class="integer">32</span>).unpack(<span class="string"><span class="delimiter">'</span><span class="content">H*</span><span class="delimiter">'</span></span>).first
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/11/keep-your-gems-updated/">Keep Your Gems Updated</a></h1>
+      <aside>Posted at: 2012-11-27 14:17:00 -0500</aside>
+      <article>
+        <p>I recently went back through my backups recently and found quite a few old
+abandoned projects. Looking back on the code I see some things I&#39;m impressed
+with, but the majority of the code I wouldn&#39;t write today.  Thats not to say
+the code is bad, or doesn&#39;t function. It did exactly what I wanted to
+accomplish at the time, just not necessarily in the most efficient way.</p>
+
+<p>This archive of old code made me start wondering how much old code I&#39;m using in
+the projects that I&#39;m currently writing. Not code that I&#39;ve written but code
+that I&#39;m depending on, specifically gems. As of this writing I have 26 active
+ruby projects in various states of development all of which make use of RVM and
+bundler.</p>
+
+<p>Conveniently enough, bundler provides an easy way to update all the gems
+installed in a project unless specific version information was provided in the
+Gemfile. None of my projects have had a version directly specified in the
+Gemfile with the exception of Rails. Each project also has solid test coverage
+(though I must admit it&#39;s usually not complete).</p>
+
+<p>For each project I went through and ran <code>bundle update</code> and kept track of the
+results. I did not keep track of unique gems so the four Rails projects
+probably had a lot of duplicate gems each one more or less likely to have
+different versions of different gems installed depending on when I started the
+project.</p>
+
+<p>Across all of the different projects I had 2214 gems installed. Of those 813
+had updates. My initial plan was to go through the updates and see how many of
+those updates were security or bugfixes, how many were added features, or
+performance improvements, but I wasn&#39;t counting on the shear number of gems
+that my projects were depending on.</p>
+
+<p>The big question for myself after I updated the Gems was how much will this be
+now? Running through the thousands of tests in all of the projects I had
+exactly 7 tests that were now failing and they were all due too projects that
+removed or renamed a piece of functionality that I was making use of. In one
+case I had to extend the core Hash method to replace the functionality. All in
+all it took me about a quarter of an hour to fix all the tests after updating
+my Gems.</p>
+
+<p>Since I didn&#39;t actually go through all of the gems I don&#39;t know for sure that
+my projects are in anyway more secure, faster, or more stable but I can&#39;t
+imagine they&#39;re in a worse state. If you have test coverage on your projects
+you should try and update the gems and see for yourself.</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/12/rubys-option-parser-a-more-complete-example/">Ruby's Option Parser - a More Complete Example</a></h1>
+      <aside>Posted at: 2012-12-02 22:59:00 -0500</aside>
+      <article>
+        <p>Recently while writing a Ruby program I needed to parse some command line
+options. Helpfully Ruby provides a module named OptionParser to make this easy.
+I found a few parts of the documentation ambiguous and a few others down right
+confusing.</p>
+
+<p>The catch I hit was the required field. In my mind the definition of a required
+argument is something that needs to be passed on the commandline to continue.
+What OptionParser actually means is that a value isn&#39;t required when the
+argument is passed. OptionParser already provides boolean switches, so when
+someone would use an optional switch is beyond me.</p>
+
+<p>To make it a little more clear and to have something to work from in the future
+I created the following chunk of code that includes a Configuration singleton
+that can be used anywhere within your codebase to access the run-time
+configuration, a sample parser with a wide range of different types of options,
+and it will load configuration from a file named config.yml in the same
+directory.</p>
+
+<p>I feel like the following is a much more complete explanation of how
+OptionParser is supposed to be used with supporting code.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="doctype">#!/usr/bin/env ruby</span>
+
+<span class="comment"># This file provides an example of creating a command line application with a</span>
+<span class="comment"># wide variety of command line options, parsing and the like as well as global</span>
+<span class="comment"># configuration singleton that can be relied on throughout a program.</span>
+<span class="comment">#</span>
+<span class="comment"># This entire setup lives within the &quot;Example&quot; module. These are really common</span>
+<span class="comment"># names and it would be a shame to override required functionality in other code</span>
+<span class="comment"># that wasn't properly namespaced.</span>
+
+require <span class="string"><span class="delimiter">'</span><span class="content">optparse</span><span class="delimiter">'</span></span>
+require <span class="string"><span class="delimiter">'</span><span class="content">singleton</span><span class="delimiter">'</span></span>
+require <span class="string"><span class="delimiter">'</span><span class="content">yaml</span><span class="delimiter">'</span></span>
+
+<span class="keyword">module</span> <span class="class">Example</span>
+  <span class="comment"># Defines the available configuration options for the configuration</span>
+  <span class="constant">ConfigurationStruct</span> = <span class="constant">Struct</span>.new(<span class="symbol">:enum</span>, <span class="symbol">:list</span>, <span class="symbol">:required</span>, <span class="symbol">:optional</span>, <span class="symbol">:verbose</span>, <span class="symbol">:float</span>)
+
+  <span class="keyword">class</span> <span class="class">Configuration</span>
+    include <span class="constant">Singleton</span>
+
+    <span class="comment"># Initialize the configuration and set defaults:</span>
+    <span class="class-variable">@@config</span> = <span class="constant">ConfigurationStruct</span>.new
+
+    <span class="comment"># This is where the defaults are being set</span>
+    <span class="class-variable">@@config</span>.enum = <span class="symbol">:one</span>
+    <span class="class-variable">@@config</span>.list = []
+    <span class="class-variable">@@config</span>.optional = <span class="predefined-constant">nil</span>
+    <span class="class-variable">@@config</span>.verbose = <span class="predefined-constant">false</span>
+
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">config</span>
+      <span class="keyword">yield</span>(<span class="class-variable">@@config</span>) <span class="keyword">if</span> block_given?
+      <span class="class-variable">@@config</span>
+    <span class="keyword">end</span>
+
+    <span class="comment"># Loads a YAML configuration file and sets each of the configuration values to</span>
+    <span class="comment"># whats in the file.</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">load</span>(file)
+      <span class="constant">YAML</span>::load_file(file).each <span class="keyword">do</span> |key, value|
+        <span class="predefined-constant">self</span>.send(<span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span>key<span class="inline-delimiter">}</span></span><span class="content">=</span><span class="delimiter">&quot;</span></span>, value)
+      <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment"># This provides an easy way to dump the configuration as a hash</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">to_hash</span>
+      <span class="constant">Hash</span>[<span class="class-variable">@@config</span>.each_pair.to_a]
+    <span class="keyword">end</span>
+
+    <span class="comment"># Pass any other calls (most likely attribute setters/getters on to the</span>
+    <span class="comment"># configuration as a way to easily set/get attribute values </span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">method_missing</span>(method, *args, &amp;block)
+      <span class="keyword">if</span> <span class="class-variable">@@config</span>.respond_to?(method)
+        <span class="class-variable">@@config</span>.send(method, *args, &amp;block)
+      <span class="keyword">else</span>
+        raise <span class="constant">NoMethodError</span>
+      <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment"># Handles validating the configuration that has been loaded/configured</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">validate!</span>
+      valid = <span class="predefined-constant">true</span>
+
+      valid = <span class="predefined-constant">false</span> <span class="keyword">if</span> <span class="constant">Configuration</span>.required.nil?
+
+      raise <span class="constant">ArgumentError</span> <span class="keyword">unless</span> valid
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+
+  <span class="keyword">class</span> <span class="class">ConfigurationParser</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">parse</span>(args)
+      opts = <span class="constant">OptionParser</span>.new <span class="keyword">do</span> |parser|
+
+        parser.separator <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
+        parser.separator <span class="string"><span class="delimiter">&quot;</span><span class="content">Specific options:</span><span class="delimiter">&quot;</span></span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--enum ENUM</span><span class="delimiter">&quot;</span></span>, [<span class="symbol">:one</span>, <span class="symbol">:two</span>, <span class="symbol">:three</span>], <span class="string"><span class="delimiter">&quot;</span><span class="content">This field requires one of a set of predefined values be</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">set. If wrapped in brackets this option can be set to nil.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.enum = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">-l</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--list x,y</span><span class="delimiter">&quot;</span></span>, <span class="constant">Array</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command flag takes a comma separated list (without</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">spaces) of values and turns it into an array. This requires</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">at least one argument.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.list = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--[no-]verbose</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This is a common boolean flag, setting verbosity to either</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true or false.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.verbose = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--optional [STR]</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command doesn't require a string to be passed to it, if</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">nothing is passed it will be nil. No error will be raised if</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">nothing is passed to it that logic needs to be handled</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">yourself.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.optional = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">-r</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--required STR</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command requires a string to be passed to it.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.required = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--float NUM</span><span class="delimiter">&quot;</span></span>, <span class="constant">Float</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command will only accept an integer or a float.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.float = setting
+        <span class="keyword">end</span>
+
+        parser.on_tail(<span class="string"><span class="delimiter">&quot;</span><span class="content">-h</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--help</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--usage</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Show this usage message and quit.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          puts parser.help
+          exit
+        <span class="keyword">end</span>
+
+        parser.on_tail(<span class="string"><span class="delimiter">&quot;</span><span class="content">-v</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--version</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Show version information about this program and quit.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span>
+          puts <span class="string"><span class="delimiter">&quot;</span><span class="content">Option Parser Example v1.0.0</span><span class="delimiter">&quot;</span></span>
+          exit
+        <span class="keyword">end</span>
+      <span class="keyword">end</span>
+
+      opts.parse!(args)
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> <span class="constant">File</span>.exists?(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.yml</span><span class="delimiter">&quot;</span></span>)
+  <span class="constant">Example</span>::<span class="constant">Configuration</span>.load(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.yml</span><span class="delimiter">&quot;</span></span>)
+<span class="keyword">end</span>
+
+<span class="constant">Example</span>::<span class="constant">ConfigurationParser</span>.parse(<span class="predefined-constant">ARGV</span>)
+<span class="constant">Example</span>::<span class="constant">Configuration</span>.validate!
+
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">json</span><span class="delimiter">&quot;</span></span>
+puts <span class="constant">JSON</span>.pretty_generate(<span class="constant">Example</span>::<span class="constant">Configuration</span>.to_hash)
+</pre></div>
+</div>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2014/04/calculating-rsa-key-fingerprints-in-ruby/">Calculating RSA Key Fingerprints in Ruby</a></h1>
+      <aside>Posted at: 2014-04-21 18:37:04 -0400</aside>
+      <article>
+        <p>I regularily find myself working on projects that involve the manipulation and
+storage of RSA keys. In the past I&#39;ve never had to worry about identification
+or presentation of these keys. Normally I&#39;ve only got one too three pairs at
+most that I&#39;m manipulating (server, certificate authority, client).</p>
+
+<p>I&#39;ve not found myself working on a project that involves presenting the
+certificates to users for selection and comparison. The obvious way too do this
+is take a page out of other developer&#39;s books and present the key&#39;s
+fingerprint.</p>
+
+<p>For those unfamiliar with key fingerprints, they are a condensed way to compare
+differing RSA with a high probability that if the fingerprints match, so do the
+keys. These are generally based on a cryptographic digest function such as SHA1
+and MD5, and you&#39;ll see them most commonly when connecting to a new SSH host
+and will look like the following:.</p>
+<div class="CodeRay">
+  <div class="code"><pre>The authenticity of host 'some.fakedomain.tld (127.0.0.1)' can't be established.
+RSA key fingerprint is 0c:6c:dd:32:b5:59:40:1d:ac:05:24:4f:04:bc:e0:f3.
+Are you sure you want to continue connecting (yes/no)?
+</pre></div>
+</div>
+
+<p>The string of 32 hex characters presented there can be compared with another
+known value to make sure you&#39;re connecting to the correct SSH server and will
+always be the same length regardless of the bit-strength of the keys used.
+Without the fingerprint, users would have to compare 256 hex characters for a
+1024 bit key, which is a very low security key.</p>
+
+<p>You can calculate the SSH fingerprint for your SSH key or a SSH host key using
+the <code>ssh-keygen</code> command like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>ssh-keygen -lf ~/.ssh/id_rsa
+ssh-keygen -lf /etc/ssh/ssh_host_key.pub
+</pre></div>
+</div>
+
+<p>It will work when the path is either a private RSA key or a public key
+formatted for SSH authorizied key files.</p>
+
+<p>X509 certificates also use a key fingerprint to help identify a certificate&#39;s
+signing authority. What I rapidly learned through this investigation was that
+they are calculated slightly differently from SSH fingerprints even if they&#39;re
+in the same format.</p>
+
+<p>I couldn&#39;t find any good Ruby code that calculated either, and the alternatives
+were some dense C++. Luckily SSH fingerprints are pretty documented in
+<a href="http://www.ietf.org/rfc/rfc4253.txt">RFC4253</a> and <a href="http://www.ietf.org/rfc/rfc4716.txt">RFC4716</a>. Fingerprints on RSA keys for use with OpenSSL
+are less clear, and there is a different method for calculating the
+fingerprints of certificates.</p>
+
+<p>Slowly working through the undocumented bits of Ruby&#39;s OpenSSL wrapper, the
+RFCs and a couple of C++ implementations I finally got a set of working
+implementations that calculate the following fingerprints in Ruby:</p>
+
+<ul>
+<li>MD5 &amp; SHA1 fingerprints for RSA SSH keys</li>
+<li>Fingerprints of RSA keys for use with x509 certificates</li>
+<li>Fingerprints of x509 certificates</li>
+</ul>
+
+<p>The easiest being a regular x509 certificate:</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">openssl</span><span class="delimiter">'</span></span>
+
+path_to_cert = <span class="string"><span class="delimiter">'</span><span class="content">/tmp/sample.crt</span><span class="delimiter">'</span></span>
+cert = <span class="constant">OpenSSL</span>::<span class="constant">X509</span>::<span class="constant">Certificate</span>.new(<span class="constant">File</span>.read(path_to_cert))
+puts <span class="constant">OpenSSL</span>::<span class="constant">Digest</span>::<span class="constant">SHA1</span>.hexdigest(cert.to_der).scan(<span class="regexp"><span class="delimiter">/</span><span class="content">..</span><span class="delimiter">/</span></span>).join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>)
+</pre></div>
+</div>
+
+<p>You can compare the output of the above code with OpenSSL&#39;s implementation with
+the following command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>openssl x509 -in /tmp/sample.crt -noout -fingerprint
+</pre></div>
+</div>
+
+<p>Please note that case sensitivity doesn&#39;t matter here (OpenSSL will return
+upper case hex codes).</p>
+
+<p>The next one I got working was the SSH fingerprints thanks to the RFCs metioned
+earlier.</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">openssl</span><span class="delimiter">'</span></span>
+
+path_to_key = <span class="string"><span class="delimiter">'</span><span class="content">/tmp/ssh_key</span><span class="delimiter">'</span></span>
+
+key = <span class="constant">OpenSSL</span>::<span class="constant">PKey</span>::<span class="constant">RSA</span>.new(<span class="constant">File</span>.read(path_to_key))
+data_string = [<span class="integer">7</span>].pack(<span class="string"><span class="delimiter">'</span><span class="content">N</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content">ssh-rsa</span><span class="delimiter">'</span></span> + key.public_key.e.to_s(<span class="integer">0</span>) + key.public_key.n.to_s(<span class="integer">0</span>)
+puts <span class="constant">OpenSSL</span>::<span class="constant">Digest</span>::<span class="constant">MD5</span>.hexdigest(data_string).scan(<span class="regexp"><span class="delimiter">/</span><span class="content">..</span><span class="delimiter">/</span></span>).join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>)
+</pre></div>
+</div>
+
+<p><em>Please note: The above only works for RSA SSH keys.</em></p>
+
+<p>Calculating a SHA1 fingerprint for SSH hosts is as simple as replacing the
+&#39;MD5&#39; class with &#39;SHA1&#39; or any of the other support digest algorithms.</p>
+
+<p>The last one was the hardest to track down and implement, eventually I found
+the answer in <a href="http://www.ietf.org/rfc/rfc3279.txt">RFC3279</a> under section 2.3.1 for the format of the public key
+I would need to generate before performing a digest calculation on it.</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">openssl</span><span class="delimiter">'</span></span>
+
+path_to_key = <span class="string"><span class="delimiter">'</span><span class="content">/tmp/x509_key.pem</span><span class="delimiter">'</span></span>
+
+key = <span class="constant">OpenSSL</span>::<span class="constant">PKey</span>::<span class="constant">RSA</span>.new(<span class="constant">File</span>.read(path_to_key))
+data_string = <span class="constant">OpenSSL</span>::<span class="constant">ASN1</span>::Sequence([
+  <span class="constant">OpenSSL</span>::<span class="constant">ASN1</span>::<span class="constant">Integer</span>.new(key.public_key.n),
+  <span class="constant">OpenSSL</span>::<span class="constant">ASN1</span>::<span class="constant">Integer</span>.new(key.public_key.e)
+])
+puts <span class="constant">OpenSSL</span>::<span class="constant">Digest</span>::<span class="constant">SHA1</span>.hexdigest(data_string.to_der).scan(<span class="regexp"><span class="delimiter">/</span><span class="content">..</span><span class="delimiter">/</span></span>).join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>)
+</pre></div>
+</div>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/">Creating Crypt Style SHA512 Passwords With Ruby</a></h1>
+      <aside>Posted at: 2014-02-17 15:28:27 -0500</aside>
+      <article>
+        <p>I needed to generate crypt-style SHA512 passwords in ruby for an <code>/etc/shadow</code>
+file. After a bunch of Googling and messing around with the OpenSSL library I
+finally found a very simple built-in way to handle this.</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">securerandom</span><span class="delimiter">'</span></span>
+
+<span class="string"><span class="delimiter">'</span><span class="content">password</span><span class="delimiter">'</span></span>.crypt(<span class="string"><span class="delimiter">'</span><span class="content">$6$</span><span class="delimiter">'</span></span> + <span class="constant">SecureRandom</span>.random_number(<span class="integer">36</span> ** <span class="integer">8</span>).to_s(<span class="integer">36</span>))
+</pre></div>
+</div>
+
+<p>You&#39;ll get a string that looks like:</p>
+<div class="CodeRay">
+  <div class="code"><pre>$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.
+</pre></div>
+</div>
+
+<p>If you don&#39;t want to use the <code>SecureRandom</code> module you can replace the random
+call with simply <code>rand(36 ** 8)</code> though this isn&#39;t recommended.</p>
+
+<p>Enjoy!</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/08/carrierwave-s3-and-filenames/">CarrierWave, S3 and Filenames</a></h1>
+      <aside>Posted at: 2012-08-09 16:00:57 -0400</aside>
+      <article>
+        <p>This is going to be a real quick post. I&#39;m using the &quot;carrier_wave&quot; gem with
+&quot;fog&quot; for one of my projects and found that when a file is stored on S3 the
+&quot;identifier&quot;, and &quot;filename&quot; methods return nil. I got around this issue in two
+separate ways neither of which I&#39;m particularly happy about.</p>
+
+<p>Outside of the uploader, you can use the File utility and the URL of the object
+to get the base filename like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="constant">Model</span>.asset.url)
+</pre></div>
+</div>
+
+<p>If you try and do this within the uploader itself like this:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.url)
+</pre></div>
+</div>
+
+<p>It will work, but not when creating additional versions such as thumbnails as
+the file hasn&#39;t actually been created yet so a URL can&#39;t be built and you&#39;ll
+get an error trying to perform File.basename(nil). You&#39;d need to go back up to
+the model and get the normal version&#39;s URL like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.model.asset.url)
+</pre></div>
+</div>
+
+<p>Now if you&#39;re trying to get the file name to build part of the store_dir,
+you&#39;ve just created an infinite loop! Ruby will be happy to tell you that the
+stack level too deep (SystemStackError). So ultimately how did I end up getting
+it into my store_dir?</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="predefined-constant">self</span>.model.attributes[<span class="string"><span class="delimiter">&quot;</span><span class="content">asset</span><span class="delimiter">&quot;</span></span>]
+</pre></div>
+</div>
+
+<p>The file name gets stored raw directly in the database, and thus you can pull
+it out by accessing the value directly without going through the accessor that
+get overridden by CarrierWave. I&#39;m pretty sure this is a bug, and will report
+it with example code and a test (as is appropriate for any bug report <em>hint</em>)
+as soon as my dead line has passed.</p>
+
+      </article>
+    </div>
+  
+</div>
+
+    </div>
+  </body>
+</html>

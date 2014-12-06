@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>NSLU2 - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NSLU2" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/devices/nslu2/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>NSLU2</h1>
+
+<p>Neat little NAS for USB 2.0 hard drives. Very convenient for backups.</p>
+
+<h2>Hardware Information</h2>
+
+<p>Please note that your hardware may differ if you have a different version.</p>
+
+<table><thead>
+<tr>
+<th style="text-align: right">Component</th>
+<th>Details</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: right">CPU</td>
+<td>Intel IXP420, 133 or 266 MHz</td>
+</tr>
+<tr>
+<td style="text-align: right">RAM</td>
+<td>32Mb</td>
+</tr>
+<tr>
+<td style="text-align: right">Flash ROM</td>
+<td>8Mb</td>
+</tr>
+<tr>
+<td style="text-align: right">Ethernet</td>
+<td>10/100 (integrated SoC)</td>
+</tr>
+<tr>
+<td style="text-align: right">USB</td>
+<td>2x USB 2.0, NEC USB</td>
+</tr>
+<tr>
+<td style="text-align: right">Real Time Clock</td>
+<td>Xicor X1205 RTC</td>
+</tr>
+<tr>
+<td style="text-align: right">Bootloader</td>
+<td>RedBoot</td>
+</tr>
+</tbody></table>
+
+<h2>OpenWRT Installation</h2>
+
+<p><a href="http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin">Download the firmware</a></p>
+
+<p>Install the upslug2 utility (available in the Fedora package repositories).</p>
+
+<p>Plug the NSLU2 into the same subnet of the computer you will be flashing from.
+Ensure power and ethernet are connected. While powered off hold down the reset
+button on the back and press the power button. Continue holding down the power
+button until the status light turns from amber to red. The LED should flash
+between red and green, it is now in upgrade mode.</p>
+
+<p>By default upslug2 will use eth0 as the network device to look for the NSLU2,
+in my case I needed to switch that interface to use em1. Run the following
+command to identify the slug device on your network:</p>
+<div class="CodeRay">
+  <div class="code"><pre>sudo upslug2 --device em1
+</pre></div>
+</div>
+
+<p>Copy the MAC address of the NSLU2 device that you will be upgrading. Navigate
+to the directory where the kernel and firmware were downloaded and run the
+following command replacing the argument to target with the MAC address
+received above:</p>
+<div class="CodeRay">
+  <div class="code"><pre>sudo upslug2 --device em1 --target xx:xx:xx:xx:xx:xx \
+  --image openwrt-nslu2-squashfs.bin
+</pre></div>
+</div>
+
+<p>After rebooting I did not have the status light come on and the device had the
+static address of 192.168.1.1. If that happens to be your router address (it
+wasn&#39;t for me) you should be able to talk to it directly by setting a static
+arp entry like so (replacing the xx:xx... with the MAC address you retrieved
+above):</p>
+<div class="CodeRay">
+  <div class="code"><pre>arp -s 192.168.1.1 xx:xx:xx:xx:xx:xx
+</pre></div>
+</div>
+
+<h3>Initial Configuration</h3>
+
+<p>Telnet into the device and set a password like so: <em>Remember:</em> This password is
+being sent in clear text so ensure that you are on a fully trusted (and
+preferably switched) network segment before setting it or change it to
+something else over SSH after you set the initial password.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[user@example-host ~]$ telnet 192.168.1.1
+Trying 192.168.1.1...
+Connected to 192.168.1.1.
+Escape character is '^]'.
+
+* SNIP MOTD *
+
+root@OpenWrt:/# passwd
+Changing password for root
+New password: 
+Retype password: 
+Password for root changed by root
+root@OpenWrt:/# exit
+Connection closed by foreign host.
+</pre></div>
+</div>
+
+<p>It&#39;s best practice to change the password over the newly established encryption
+communication channel.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[user@example-host ~]$ ssh root@192.168.1.1
+The authenticity of host '192.168.1.1 (192.168.1.1)' can't be established.
+RSA key fingerprint is d7:fd:3f:92:e1:3a:6d:67:4f:64:92:c6:89:4c:7f:4f.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.1.1' (RSA) to the list of known hosts.
+root@192.168.1.1's password: 
+
+* SNIP MOTD *
+
+root@OpenWrt:~# passwd
+Changing password for root
+New password: 
+Retype password: 
+Password for root changed by root
+root@OpenWrt:~#
+</pre></div>
+</div>
+
+<p>The first thin I always do is get rid of the damn banner:</p>
+<div class="CodeRay">
+  <div class="code"><pre>rm /etc/banner
+touch /etc/banner
+</pre></div>
+</div>
+
+<p>Setup a minimal and more secure initial configuration:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/etc/init.d/dnsmasq stop
+/etc/init.d/dnsmasq disable
+rm /etc/config/dhcp
+</pre></div>
+</div>
+
+<h4>/etc/config/dropbear</h4>
+<div class="CodeRay">
+  <div class="code"><pre>config 'dropbear'
+  option 'PasswordAuth'   'on'
+  option 'RootPasswordAuth' 'on'
+  option 'Port'     '22'
+</pre></div>
+</div>
+
+<h4>/etc/config/firewall</h4>
+<div class="CodeRay">
+  <div class="code"><pre>config 'defaults'
+  option 'syn_flood'  '1'
+  option 'input'    'DROP'
+  option 'output'   'ACCEPT'
+  option 'forward'  'DROP'
+
+config 'zone'
+  option 'name'   'lan'
+  option 'network'  'lan'
+  option 'conntrack'      '1'
+  option 'input'    'DROP'
+  option 'output'   'ACCEPT'
+  option 'forward'  'DROP'
+
+# Allow IPv4 ping
+config 'rule'
+  option 'name'   'Allow-Ping'
+  option 'src'    'lan'
+  option 'proto'    'icmp'
+  option 'icmp_type'  'echo-request'
+  option 'family'   'ipv4'
+  option 'target'   'ACCEPT'
+
+# Allow DHCPv6 replies
+config 'rule'
+  option 'name'   'Allow-DHCPv6'
+  option 'src'    'lan'
+  option 'proto'    'udp'
+  option 'src_ip'   'fe80::/10'
+  option 'src_port' '547'
+  option 'dest_ip'  'fe80::/10'
+  option 'dest_port'  '546'
+  option 'family'   'ipv6'
+  option 'target'   'ACCEPT'
+
+# Allow essential incoming IPv6 ICMP traffic
+config 'rule'
+  option 'name'   'Allow-ICMPv6-Input'
+  option 'src'    'lan'
+  option 'proto'    'icmp'
+  list 'icmp_type'  'echo-request'
+  list 'icmp_type'  'echo-reply'
+  list 'icmp_type'  'destination-unreachable'
+  list 'icmp_type'  'packet-too-big'
+  list 'icmp_type'  'time-exceeded'
+  list 'icmp_type'  'bad-header'
+  list 'icmp_type'  'unknown-header-type'
+  list 'icmp_type'  'router-solicitation'
+  list 'icmp_type'  'neighbour-solicitation'
+  list 'icmp_type'  'router-advertisement'
+  list 'icmp_type'  'neighbour-advertisement'
+  option 'limit'    '1000/sec'
+  option 'family'   'ipv6'
+  option 'target'   'ACCEPT'
+
+config 'rule'
+  option 'name'   'Allow local SSH'
+  option 'src'    'lan'
+  option 'proto'    'tcp'
+  option 'dest_port'  '22'
+  option 'target'   'ACCEPT'
+</pre></div>
+</div>
+
+<h4>/etc/config/network</h4>
+<div class="CodeRay">
+  <div class="code"><pre>config 'interface' 'loopback'
+  option 'ifname'   'lo'
+  option 'proto'    'static'
+  option 'ipaddr'   '127.0.0.1'
+  option 'netmask'  '255.0.0.0'
+
+config 'interface' 'lan'
+  option 'ifname'   'eth0'
+  option 'type'   'bridge'
+  option 'proto'    'static'
+  option 'ipaddr'   '192.168.150.80'
+  option 'netmask'  '255.255.255.0'
+  option 'dns'    '192.168.150.1'
+  option 'gateway'  '192.168.150.1'
+</pre></div>
+</div>
+
+<h4>/etc/config/system</h4>
+<div class="CodeRay">
+  <div class="code"><pre>config 'system'
+  option 'hostname' 'nas'
+  option 'timezone' 'EST5EDT,M3.2.0,M11.1.0'
+
+config 'timeserver' 'ntp'
+  list 'server'   '0.pool.ntp.org'
+  list 'server'   '1.pool.ntp.org'
+  list 'server'   '2.pool.ntp.org'
+  list 'server'   '3.pool.ntp.org'
+  option 'enable_server'  '1'
+</pre></div>
+</div>
+
+<p>Commit the configuration and reboot:</p>
+<div class="CodeRay">
+  <div class="code"><pre>uci commit
+reboot
+</pre></div>
+</div>
+
+<h3>LEDs</h3>
+
+<p>The available LED names in the NSLU2 go by the sys names of
+<code>nslu2:green:disk-1</code>, <code>nslu2:green:disk-2</code>, <code>nslu2:green:ready</code>,
+<code>nslu2:red:status</code>. The ready and status light are the same. The first light,
+when they&#39;re both on it will appear green just slightly brighter than with just
+the ready on. If you want it to show up as red, you have to turn off the ready
+light.</p>
+
+<p>You can manually change the lights on and off by echoing a 0 and 1 into the
+system file located at <code>/sys/class/leds/{LED NAME}/brightness</code>.</p>
+
+<p>To check the available triggers on each LED cat the trigger file located in the
+same directory as the LED name. I added the following to the end of
+<code>/etc/config/system</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>config 'led'
+  option 'name'           'Ready'
+  option 'sysfs'          'nslu2:green:ready'
+  option 'default'        '1'
+  option 'trigger'        'default-on'
+</pre></div>
+</div>
+
+<p>Additional configuration information can be found on the <a href="http://wiki.openwrt.org/doc/uci/system#leds">OpenWRT UCI/System
+page under LEDs</a>.</p>
+
+<h3>USB Disk Setup</h3>
+
+<p>Now that we have networking and some basic security on the device lets get this
+usable as a NAS again. First we need to setup USB storage like the following:</p>
+<div class="CodeRay">
+  <div class="code"><pre>opkg update
+opkg install kmod-usb-core kmod-usb-ohci kmod-usb-uhci kmod-usb2 \
+  kmod-ledtrig-usbdev usbutils kmod-usb-storage cfdisk kmod-fs-ext4 e2fsprogs \
+  block-mount
+</pre></div>
+</div>
+
+<p>Ensure your USB drive is plugged in. Mine showed up as <code>/dev/sda</code> and that will
+be used for the remainder of this page. Now we&#39;ll need to configure the
+partitions. We now have cfdisk to do that. I had an issue where my SSH
+connection was passing <code>xterm-256color</code> as the <code>TERM</code> variable which as causing
+issues with starting cfdisk. The first command alleviates this issue:</p>
+<div class="CodeRay">
+  <div class="code"><pre>export TERM=&quot;xterm&quot;
+cfdisk
+</pre></div>
+</div>
+
+<p>Use the interface to create a 512Mb swap partition (type 82), and the rest as
+an ext4 partition (type 83). Make sure not to mark either partition as bootable
+as it has weird effects on the NSLU2...</p>
+
+<p>For me <code>/dev/sda1</code> is the swap and <code>/dev/sda2</code> is the ext4 data partition. Both
+partitions need to be formatted like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>mkswap /dev/sda1
+mkfs.ext4 /dev/sda2
+</pre></div>
+</div>
+
+<p>I&#39;m going to be mounting the storage partition at <code>/mnt/storage</code> so that
+directory needs to exist...</p>
+<div class="CodeRay">
+  <div class="code"><pre>mkdir /mnt/storage
+</pre></div>
+</div>
+
+<p>You&#39;ll need to get the UUID of both of the partition which is easily enough
+like the following, and note the UUIDs the get outputted:</p>
+<div class="CodeRay">
+  <div class="code"><pre>blkid /dev/sda1
+blkid /dev/sda2
+</pre></div>
+</div>
+
+<p>Filesystem configuration is handled by the UCI file <code>/etc/config/fstab</code>
+extensive details can be found on the <a href="http://wiki.openwrt.org/doc/uci/fstab">OpenWRT wiki</a>.</p>
+<div class="CodeRay">
+  <div class="code"><pre>config 'global' 'automount'
+  option 'from_fstab'     '1'
+  option 'anon_mount'     '0'
+
+config 'global' 'autoswap'
+  option 'from_fstab'     '1'
+  option 'anon_swap'      '0'
+
+config 'mount'
+  option 'uuid'           '&lt;uuid of ext4 partition&gt;'
+  option 'target'         '/mnt/storage'
+  option 'fstype'         'ext4'
+  option 'options'        'nodev,noexec,nosuid,noatime,rw,sync'
+  option 'enabled_fsck'   '1'
+
+config 'swap'
+  option 'uuid'   '&lt;uuid of swap partition&gt;'
+</pre></div>
+</div>
+
+<p>Get the storage all happy and setup with the following command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/etc/init.d/fstab restart
+</pre></div>
+</div>
+
+<h3>Additional Package Space</h3>
+
+<p>The NSLU2 doesn&#39;t have a whole lot of space on the device and adding a lot of
+packages is a good way to fill that up and cause instabilities. Adding a small
+virtual partition to install additional packages into can easily alleviate this
+issue. This will use a quick loop back file living on the external drive we&#39;ve
+already setup. I&#39;ve chosen 512Mb, it&#39;s an insignificant amount compared to the
+size of my hard drive and should be way overkill for any packages I&#39;d need to
+install. The OpenWRT wiki suggests 128Mb but why not add more wiggle room when
+it essentially costs me nothing?</p>
+
+<p>We&#39;ll need the loopback package:</p>
+<div class="CodeRay">
+  <div class="code"><pre>opkg update
+opkg install kmod-loop
+</pre></div>
+</div>
+
+<p>And we&#39;ll need to create a file large enough for the virtual partition:</p>
+<div class="CodeRay">
+  <div class="code"><pre>root@nas:~# dd if=/dev/zero of=/mnt/storage/package_partition.disk bs=1M count=512
+root@nas:~# mkfs.ext4 /mnt/storage/package_partition.disk
+
+/mnt/storage/package_partition.disk is not a block special device.
+Proceed anyway? (y,n) y
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+32768 inodes, 131072 blocks
+6553 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=134217728
+4 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+         32768, 98304
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (4096 blocks): done
+Writing superblocks and filesystem accounting information: done
+</pre></div>
+</div>
+
+<p>Create the package directory and mount the partition:</p>
+<div class="CodeRay">
+  <div class="code"><pre>mkdir /mnt/packages
+mount -o loop /mnt/storage/package_partition.disk /mnt/packages
+</pre></div>
+</div>
+
+<p>We need to make sure that the package partition exists after boot up so the
+mount line needs to be added to <code>/etc/rc.local</code> before the &quot;exit 0&quot; line.</p>
+
+<p>Append the following line to <code>/etc/opkg.conf</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>dest usb /mnt/packages
+</pre></div>
+</div>
+
+<p>To install a package to that location you&#39;ll want to add &quot;-dest usb&quot; to the
+opkg install command like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>opkg -dest usb install package-name
+</pre></div>
+</div>
+
+<h3>OpenSSH Server</h3>
+
+<p>We&#39;ll need to put Dropbear on a different port to get OpenSSH on it. So first
+things first we need to add a firewall rule allowing access to the new port.
+I&#39;ve chosen port 2222 as the other port so I&#39;ve added this rule to
+<code>/etc/config/firewall</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>config 'rule'
+  option 'name'           'Dropbear SSH'
+  option 'src'            'lan'
+  option 'proto'          'tcp'
+  option 'dest_port'      '2222'
+  option 'target'         'ACCEPT'
+</pre></div>
+</div>
+
+<p>And the firewall needs to be restarted like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/etc/init.d/firewall restart
+</pre></div>
+</div>
+
+<p>Alright down to business. Change the dropbear config file at
+<code>/etc/config/dropbear</code> to:</p>
+<div class="CodeRay">
+  <div class="code"><pre>config 'dropbear'
+  option 'PasswordAuth'   'on'
+  option 'RootPasswordAuth' 'on'
+  option 'Port'     '2222'
+</pre></div>
+</div>
+
+<p>Restart dropbear:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/etc/init.d/dropbear restart
+</pre></div>
+</div>
+
+<p>and log back into the NAS on it&#39;s new port.</p>
+
+<p>Install OpenSSH Server:</p>
+<div class="CodeRay">
+  <div class="code"><pre>opkg update
+opkg install openssh-server
+</pre></div>
+</div>
+
+<p>If you want the full SFTP server beyond the built-in one (which I&#39;m personally
+perfectly happy with) as well you&#39;ll want to also install the
+openssh-sftp-server package as well.</p>
+
+<p>Finally enable the server and set it to start at boot:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/etc/init.d/sshd enable
+/etc/init.d/sshd start
+</pre></div>
+</div>
+
+<p>You&#39;ll want to config the SSH server with the standard config file located at
+<a href="../../linux/sshd/">/etc/ssh/sshd_config</a>.</p>
+
+<p>Finally remove the firewall rule we added earlier and then disable and stop the
+dropbear service. You mind as well remove the config file as well like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/etc/init.d/dropbear disable
+/etc/init.d/dropbear stop
+</pre></div>
+</div>
+
+<p>I like rebooting after a major service change just to be on the safe side.</p>
+
+<h3>Authentication</h3>
+
+<p>Since this system is intended for backups, I created a backup user by manually
+editing <code>/etc/passwd</code>, <code>/etc/groups</code>, and setting a password for the user.</p>
+
+<p>Append the following to <code>/etc/passwd</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>backup-user:x:500:500:backup-user:/mnt/storage/backups:/bin/false
+</pre></div>
+</div>
+
+<p>Append the following to /etc/group</p>
+<div class="CodeRay">
+  <div class="code"><pre>backup-user:x:500:
+</pre></div>
+</div>
+
+<p>Append the following to /etc/shadow</p>
+<div class="CodeRay">
+  <div class="code"><pre>backup-user:*:0:0:99999:7:::
+</pre></div>
+</div>
+
+<p>Set a ridiculous password for the user:</p>
+<div class="CodeRay">
+  <div class="code"><pre>passwd backup-user
+</pre></div>
+</div>
+
+<p>And then create the backups home directory:</p>
+<div class="CodeRay">
+  <div class="code"><pre>mkdir /mnt/storage/backups
+chmod 0750 /mnt/storage/backups
+mkdir /mnt/storage/backups/backups
+mkdir /mnt/storage/backups/.ssh
+touch /mnt/storage/backups/.ssh/authorized_keys
+chown backup-user:backup-user /mnt/storage/backups/backups
+chown -R root:backup-user /mnt/storage/backups/.ssh
+chmod 0750 /mnt/storage/backups/.ssh
+chmod 0640 /mnt/storage/backups/.ssh/authorized_keys
+</pre></div>
+</div>
+
+<p>So I need to explain a bit about that set of commands. Because I chroot the
+backups user to the backups directory the backups directory needs to be owned
+by root and have permissions set to <code>0750</code>. This requirement is imposed by the
+SSH daemon if you want to login and necessitates the additional backups
+directory if I want to allow the backup-user write access to anything and thus
+giving the backup user ownership over the backups directory. However, I do not
+want the backup user to be able to arbitrarily edit or replace it&#39;s authorized
+keys files. I&#39;ll leave that to be a root administration task and thus the
+ownership and permissions on the <code>.ssh</code> directory and contents.</p>
+
+<p>With that setup here is the tail end of my <code>/etc/ssh/sshd_config</code> file which
+handles the chroot and command enforcement as well as the SFTP definition (I
+use the internal SFTP server rather than the external one for convienience):</p>
+<div class="CodeRay">
+  <div class="code"><pre>Subsystem sftp internal-sftp
+
+Match User backup-user
+  ChrootDirectory %h
+  PasswordAuthentication no
+  ForceCommand internal-sftp
+</pre></div>
+</div>
+
+<p>You now have a user that is highly isolated and able to write to single
+directory on the NAS. It still needs at least one authorized key added to
+<code>/mnt/storage/backups/.ssh/authorized_keys</code> before any backups can take place
+but that will get covered with some additional notes in the next section...</p>
+
+<h3>Backing Up to the NSLU2</h3>
+
+<p>I&#39;ve gone through the trouble on each machine that I&#39;m going to be backing up
+to creating an OpenSSH key without a password that will only be used for
+backing up to the NSLU2. You could potentially use one pair for this but it
+makes it harder to revoke a single system&#39;s authentication. You really need to
+protect the private keys well as they don&#39;t just have permission to create
+backups, they also have the permission to delete backups which I&#39;m sure any
+malicious attacker would happily do for you.</p>
+
+<p>Ideally I&#39;d be able to set the +a attribute (append only) on the
+<code>/mnt/storage/backups/backups</code> directory only allowing the backup-user to
+create and append to existing files without the ability to delete them,
+however, OpenWRT&#39;s <code>e2fsprogs</code> doesn&#39;t compile with chattr and short of
+plugging in the external drive on another machine and setting the attribute, we
+can&#39;t set that (though that is a possible solution and one I&#39;ve chosen to
+employ).</p>
+
+<p>You can create an SSH key for the backups using the following commands on a
+linux system:</p>
+<div class="CodeRay">
+  <div class="code"><pre>ssh-keygen -b 4096 -f ~/.ssh/backups_key
+</pre></div>
+</div>
+
+<p>Copy the key out of <code>~/.ssh/backups_key.pub</code> and as the root user on the NSLU2
+paste the key at the end of <code>/mnt/storage/backups/.ssh/authorized_keys</code>. I add
+the following command prefix to key, ensuring that is all the key will every be
+able to do like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>command=&quot;internal-sftp&quot; ssh-rsa AAAA... user@host.net
+</pre></div>
+</div>
+
+<p>While the command is already restricted to only that at the server level, it
+can&#39;t hurt to have the same restriction here and prevents any messiness if the
+server config is modified in the future.</p>
+
+<p>At this point you can safely append any files you&#39;d like from any backup
+software you&#39;d like that makes use of SFTP as the transfer mechanism. I&#39;m
+personally preferential to <a href="../../linux/duplicity/">duplicity</a>, which is a clean command line
+utility that encrypts and signs all your backups locally before sending them
+along to the remote server and supports incremental backups as well.</p>
+
+<h3>Sysupgrade / MTD</h3>
+
+<p>Luckily for us we can download the new factory image to the storage partition
+so we don&#39;t use up the RAM.</p>
+<div class="CodeRay">
+  <div class="code"><pre>cd /mnt/storage
+wget http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin
+wget http://downloads.openwrt.org/snapshots/trunk/ixp4xx/md5sums
+md5sum -c md5sums
+</pre></div>
+</div>
+
+<p>The output should have one success (the failures are the packages you didn&#39;t
+download). In my case it says &quot;24 or 25 computed checksums did NOT match&quot;.</p>
+
+<p>sysupgrade unfortunately doesn&#39;t support the NSLU2, and using mtd requires the
+use of the &quot;firmware&quot; named mtd partition. You can see the available mtd
+partitions by catting <code>/proc/mtd</code> like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>root@nas:/mnt/storage# cat /proc/mtd
+ dev:    size   erasesize  name
+mtd0: 00040000 00020000 &quot;RedBoot&quot;
+mtd1: 00020000 00020000 &quot;SysConf&quot;
+mtd2: 00020000 00020000 &quot;Loader&quot;
+mtd3: 00120000 00020000 &quot;Kernel&quot;
+mtd4: 00640000 00020000 &quot;rootfs&quot;
+mtd5: 00500000 00020000 &quot;rootfs_data&quot;
+mtd6: 00020000 00020000 &quot;FIS directory&quot;
+</pre></div>
+</div>
+
+<p>This unfortunately means that I don&#39;t know how to upgrade to a new firmware on
+the device... Since RedBoot is still there however I should still be able to
+use the <code>upslug2</code> utility to update the whole device, though this will be at
+the expense of all configuration on the device.</p>
+
+<h3>Upslug2 &amp;&amp; RedBoot</h3>
+
+<p>You&#39;ll need to install upslug2 if you don&#39;t have it already, and download the
+most recent snapshot for the NSLU2 <a href="http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin">here</a>. Open up a console and change to
+the directory you downloaded the firmware.</p>
+
+<p>For me the interface I want to use is <code>em1</code> so that is what I&#39;ve used in the
+following commands. You&#39;ll need to get the MAC address of the device that you
+want to upgrade with the first command like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[user@host ~]$ sudo upslug2 --device em1
+NSLU2     xx:xx:xx:xx:xx:xx Product ID: 1 Protocol ID: 0 Firmware Version: R23V63 [0x2363]
+[user@host ~]$ sudo upslug2 --device em1 --target xx:xx:xx:xx:xx:xx --image openwrt-nslu2-squashfs.bin
+
+* Snip *
+</pre></div>
+</div>
+
+<h3>IXP420 GPIO Pins</h3>
+
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>GPIO</td>
+<td>IXP Ball</td>
+<td>Function</td>
+<td>Connected to:</td>
+<td>Configured as:</td>
+</tr>
+<tr>
+<td>GPIO0</td>
+<td>Y22</td>
+<td>Red Status LED (1 = On)</td>
+<td>Status LED</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO1</td>
+<td>W21</td>
+<td>Green Ready LED (1 = On)</td>
+<td>Ready LED</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO2</td>
+<td>AC26</td>
+<td>Disk 2 LED (0 = On)</td>
+<td>Disk 2 LED</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO3</td>
+<td>AA24</td>
+<td>Disk 1 LED (0 = On)</td>
+<td>Disk 1 LED</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO4</td>
+<td>AB26</td>
+<td>Buzzer</td>
+<td>Buzzer</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO5</td>
+<td>Y25</td>
+<td>Power Button (Pulse when state change)</td>
+<td>Power Button via flipflop</td>
+<td>Input</td>
+</tr>
+<tr>
+<td>GPIO6</td>
+<td>V21</td>
+<td>I²C SCL</td>
+<td>X1205 RTC - SCL - Pin 6</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO7</td>
+<td>AA26</td>
+<td>I²C SDA</td>
+<td>X1205 RTC - SDA - Pin 5</td>
+<td>Tristate</td>
+</tr>
+<tr>
+<td>GPIO8</td>
+<td>W23</td>
+<td>Power Off (1 = Turn Off)</td>
+<td>R10</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO9</td>
+<td>V22</td>
+<td>PCI INTC</td>
+<td>uPD720101 USB (EHCI) - INTC0 - Pin 43</td>
+<td>Input</td>
+</tr>
+<tr>
+<td>GPIO10</td>
+<td>Y26</td>
+<td>PCI INTB</td>
+<td>uPD720101 USB (OHCI #2) - INTB0 - Pin 88</td>
+<td>Input</td>
+</tr>
+<tr>
+<td>GPIO11</td>
+<td>W25</td>
+<td>PCI INTA</td>
+<td>uPD720101 USB (OHCI #1) - INTA0 - Pin 125</td>
+<td>Input</td>
+</tr>
+<tr>
+<td>GPIO12</td>
+<td>W26</td>
+<td>Reset Button (0 = Pressed)</td>
+<td>Reset Button</td>
+<td>Input</td>
+</tr>
+<tr>
+<td>GPIO13</td>
+<td>V24</td>
+<td>PCI Reset</td>
+<td>uPD720101 USB - VBBRST0 - Pin 87</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO14</td>
+<td>U22</td>
+<td>PCI Clock (33MHz)</td>
+<td>uPD720101 USB - PCLK - Pin 42</td>
+<td>Output</td>
+</tr>
+<tr>
+<td>GPIO15</td>
+<td>U25</td>
+<td>Expansion Bus Clock (33MHz)</td>
+<td>IXP420 - EX_CLK - Ball M32</td>
+<td>Output</td>
+</tr>
+</tbody></table>
+
+    </div>
+  </body>
+</html>

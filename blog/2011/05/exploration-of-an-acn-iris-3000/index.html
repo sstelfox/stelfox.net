@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Exploration of an ACN Iris 3000 - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Exploration of an ACN Iris 3000" />
+    <meta property="og:url" content="https://stelfox.net/blog/2011/05/exploration-of-an-acn-iris-3000/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class='post'>
+        <h1><a href="/blog/2011/05/exploration-of-an-acn-iris-3000/">Exploration of an ACN Iris 3000</a></h1>
+        <aside class="post-date">Published <time datetime=''>after his first cup of coffee on May 1, 2011</time> by Sam Stelfox</aside>
+        <article>
+          <p>So I found a dirt cheap video SIP phone (ACN Iris 3000) at a local HAM fest.
+After looking around I found the vendor has locked in the phone with their
+specific service with an iron grip and had gone out of business. I guess I
+should expect that kind of anti-competitive behavior from a business that
+Donald Trump has a vested interest in.</p>
+
+<p>I&#39;ve come across one post on a forum that seems to have been crawled and copied
+out every where. The poster had cracked it and got it working with an Asterisk
+server which is what my ultimate goal for this phone is, however they claim to
+have done it by getting root through telnet. The problem being that port 23
+(telnet) is not open so this was a dead end.</p>
+
+<p>This is a running document of how I&#39;m doing it, you&#39;ll notice that I&#39;m writing
+this as I go.</p>
+
+<h2>Reconnaissance</h2>
+
+<p>First thing&#39;s first a little run down of what I&#39;ve found. I can change the
+network address and the way it&#39;s handling networking (either bridged or NAT). I
+can not get into the Administrators menu which is where all the juicy bits seem
+to be. I&#39;ve found that the factory reset code is 7517517, though that doesn&#39;t
+get me anything beyond cleaning up it&#39;s last known phone number.</p>
+
+<p>Through a very thorough nmap scan I&#39;ve found that ports TCP 21, 79, 113, 513,
+514, 554, 5060, 7022, and 8080 are all open. There doesn&#39;t appear to be any UDP
+ports available which actually surprised me, since SIP over UDP is pretty
+common.</p>
+
+<p>7022 and 8080 both immediately caught my eye. 7022 looks like someone moved SSH
+(port 22) to a non-standard port, and 8080 is a very common alternate port for
+HTTP. Connecting to 7022 via telnet confirmed my suspicions of SSH. I received
+this prompt:</p>
+
+<blockquote>
+<p>Connected to 10.0.0.85.
+Escape character is &#39;<sup>]&#39;.</sup>
+SSH-2.0-dropbear_0.45</p>
+</blockquote>
+
+<p>Bingo. SSH it is, and an old version of dropbear at that.  Unfortunately as the
+one poster I found said the password was neither blank nor &#39;root&#39;. I suspect
+that they had an older firmware revision and these &#39;bugs&#39; were ironed out in a
+later revision. That&#39;s ok though it&#39;ll just take a bit more work.</p>
+
+<p>As for port 8080 it is definitely running a web configuration interface. All it
+asks for is a password (which we don&#39;t have). The extension for the login page
+(esp) makes me suspect that the Iris device is running a copy of AppWebServer
+or something similar and using embedded javascript as the server side
+processing. For now that doesn&#39;t provide much but it could be very useful later
+on.</p>
+
+<h2>Attack</h2>
+
+<p>So while looking for an exploit for DropBear 0.45 I started up a SSH dictionary
+attack and encountered by first real problem. The screen started blinking while
+running three or more threads trying to break in, at first I thought it was
+kind of funny but then it turned off completely.</p>
+
+<p>Turns out the adapter I have for it is only rated for pushing out 500mA and the
+phone itself takes up to 1500mA, apparently I hit that limit and browned-out
+the phone. It still seems to work but if I want to take this route I&#39;ll need a
+more robust power supply. Looking around I found a 1500mA supply and after
+checking the boards for damage I gave it a shot and everything seems to be
+working OK.</p>
+
+<p>Unfortunately I wasn&#39;t able to find any viable exploits for that particular
+DropBear version as the vulnerabilities that had been found were either DoS
+vulnerabilities or were only useful with valid credentials.</p>
+
+<p>The basic dictionary attack failed and I started up a more comprehensive one. I
+could easily start brute forcing this but it would take a very long time,
+especially if the company realized that a weak password wasn&#39;t cutting it.</p>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>

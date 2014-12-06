@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Gitlab - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Gitlab" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/gitlab/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Gitlab</h1>
+<div class="CodeRay">
+  <div class="code"><pre>yum remove firewalld -y
+yum install iptables-services -y
+systemctl enable iptables.service
+systemctl enable ip6tables.service
+
+iptables-save &gt; /etc/sysconfig/iptables
+cp /etc/sysconfig/iptables /etc/sysconfig/ip6tables
+
+yum install ruby ruby-devel gcc libicu libicu-devel libxml2-devel \
+  libxslt-devel rubygem-bundler postgresql-devel tar patch gcc-c++ \
+  vim-enhanced postfix git redis postgresql-server -y
+
+systemctl enable redis.service
+systemctl start redis.service
+systemctl enable postfix.service
+systemctl start postfix.service
+
+postgresql-setup initdb
+systemctl enable postgresql.service
+systemctl start postgresql.service
+
+useradd --home /home/git --create-home --shell /bin/bash git
+su git -
+cd
+git clone https://github.com/gitlabhq/gitlab-shell.git
+cd gitlab-shell
+git checkout v1.7.0
+cp config.yml.example config.yml
+</pre></div>
+</div>
+
+<p>Edit config.yml and configure appropriately. For the short term the
+<code>gitlab_url</code> should be <code>http://127.0.0.1:8080/</code></p>
+<div class="CodeRay">
+  <div class="code"><pre>./bin/install
+
+sudo -u postgres psql
+postgres=# CREATE USER git WITH PASSWORD '$password';
+postgres=# CREATE DATABASE gitlabhq_production OWNER git;
+postgres=# \q
+</pre></div>
+</div>
+
+<p>Validate connection to the database...</p>
+<div class="CodeRay">
+  <div class="code"><pre>sudo -u git -H psql -d gitlabhq_production
+gitlabhq_production=&gt; \q
+
+su git -
+cd
+git clone https://github.com/gitlabhq/gitlabhq.git gitlab
+cd gitlab
+git checkout 6-0-stable
+
+cp config/gitlab.yml.example config/gitlab.yml
+</pre></div>
+</div>
+
+<p>The <code>gitlab.yml</code> file is setup with pretty sane defaults, may need to change
+the HTTP host.</p>
+<div class="CodeRay">
+  <div class="code"><pre>cp config/unicorn.rb.example config/unicorn.rb
+</pre></div>
+</div>
+
+<p>This also seems pretty straight forward....</p>
+<div class="CodeRay">
+  <div class="code"><pre>mkdir -p /home/git/gitlab/tmp/{pids,sockets}
+mkdir -p /home/git/gitlab/public/uploads
+chown -R git:git /home/git/gitlab/log/ /home/git/gitlab/tmp/
+chmod -R u=rwX,g=rX,o= /home/git/gitlab/
+
+mkdir -p /home/git/gitlab-satellites
+chown -R git:git /home/git/gitlab-satellites
+chmod -R u=rwX,g=rX,o= /home/git/gitlab-satellites
+</pre></div>
+</div>
+
+<p>And the database setup...</p>
+<div class="CodeRay">
+  <div class="code"><pre>cp config/database.yml.postgresql config/database.yml
+</pre></div>
+</div>
+
+<p>Edit the file, I switch it to use the postgresql socket since I don&#39;t remember
+what password I setup for the git user...</p>
+<div class="CodeRay">
+  <div class="code"><pre>chmod 0640 config/database.yml
+
+bundle install --deployment --without development test mysql aws
+bundle exec rake gitlab:setup RAILS_ENV=production
+</pre></div>
+</div>
+
+<p>Say &#39;yes&#39; to create the database.  Take note of the admin account details
+created at the end of the process:</p>
+<div class="CodeRay">
+  <div class="code"><pre>#login.........admin@local.host
+#password......5iveL!fe
+</pre></div>
+</div>
+
+<p>And with that out of the way we should setup the git user&#39;s git config...
+Ensure you&#39;re running as the git user...</p>
+<div class="CodeRay">
+  <div class="code"><pre>git config --global user.name &quot;GitLab&quot;
+git config --global user.email &quot;gitlab@localhost&quot;
+git config --global core.autocrlf input
+</pre></div>
+</div>
+
+<p>Check the application status while in <code>/home/git/gitlab</code></p>
+<div class="CodeRay">
+  <div class="code"><pre>bundle exec rake gitlab:env:info RAILS_ENV=production
+</pre></div>
+</div>
+
+<p>Alright so I&#39;m going to need to write my own init script or systemd script
+since the one provided doesn&#39;t work on fedora... In the meantime to get it
+running ensure you&#39;re running as the git user and...</p>
+<div class="CodeRay">
+  <div class="code"><pre>cd /home/git/gitlab
+RAILS_ENV=production bundle exec unicorn_rails \
+  -c /home/git/gitlab/config/unicorn.rb -E production
+RAILS_ENV=production bundle exec rake sidekiq:start
+</pre></div>
+</div>
+
+<p>Connect to the server on port 8080 and login with the provided admin
+credentials, it will force you to change your password</p>
+
+<p>Only need these packages for setup:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum remove ruby-devel gcc binutils cpp glibc-devel libxslt-devel \
+  libgcrypt-devel postgresql-devel libgpg-error-devel libicu-devel tar patch \
+  glibc-headers gcc-c++ libstdc++-devel kernel-headers libmpc mpfr -y
+</pre></div>
+</div>
+
+<p>Alright TODO:</p>
+
+<ul>
+<li>Create init/systemd script</li>
+<li>Add nginx in front of gitlab w/ SSL</li>
+<li>Update gitlab-shell configuration to point at the nginx frontend</li>
+</ul>
+
+    </div>
+  </body>
+</html>

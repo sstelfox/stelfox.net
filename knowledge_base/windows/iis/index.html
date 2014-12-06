@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>IIS - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="IIS" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/windows/iis/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>IIS</h1>
+
+<h2>WebDAV</h2>
+
+<p>For remote access to files and &quot;network drives&quot;. Was used to replace FTP with
+something that can have a certificate slapped on it. This was done on a Windows
+Server 2008R2 Enterprise SP1 box.</p>
+
+<h3>Security Notes</h3>
+
+<p>Fucking Windows Services who knows.</p>
+
+<h3>Installed Roles</h3>
+
+<p>These are just what happened to be installed on the machine I&#39;m documenting,
+these don&#39;t necessary all apply.</p>
+
+<ul>
+<li>File Services
+
+<ul>
+<li>File Server</li>
+<li>File Server Resource Manager</li>
+</ul></li>
+<li>Web Server (IIS)
+
+<ul>
+<li>Web Server</li>
+<li>Common HTTP Features
+
+<ul>
+<li>Static Content</li>
+<li>Default Document</li>
+<li>Directory Browsing</li>
+<li>HTTP Errors</li>
+<li>HTTP Redirection</li>
+<li>WebDAV Publishing</li>
+</ul></li>
+<li>Health and Diagnostics
+
+<ul>
+<li>HTTP Logging</li>
+<li>Logging Tools</li>
+<li>Request Monitor</li>
+</ul></li>
+<li>Security
+
+<ul>
+<li>Basic Authentication</li>
+<li>Windows Authentication</li>
+<li>Request Filtering</li>
+<li>IP and Domain Restrictions</li>
+</ul></li>
+<li>Performance
+
+<ul>
+<li>Static Content Compression</li>
+<li>Dynamic Content Compression</li>
+</ul></li>
+<li>Management Tools</li>
+<li>IIS Management Console</li>
+</ul></li>
+</ul>
+
+<h3>Installed Features</h3>
+
+<p>These are just what happened to be installed on the machine I&#39;m documenting,
+these don&#39;t necessary all apply.</p>
+
+<ul>
+<li>Remote Server Administration Tools
+
+<ul>
+<li>Role Administration Tools</li>
+<li>File Services Tools
+
+<ul>
+<li>File Server Resource Manager Tools</li>
+</ul></li>
+<li>Web Server (IIS) Tools</li>
+</ul></li>
+</ul>
+
+<h3>Web Server Setup</h3>
+
+<p>In the IIS Manager I created two &quot;Sites&quot; one bound to port 80 (&quot;Informational
+Site&quot;) the other to port 443 (&quot;WebDAV Drives&quot;). They are both pointing at
+I:\wwwroot which has a simple information page about the different WebDAV
+shares. The root folder needed read/execute permissions for the local
+&quot;IIS_IUSRS&quot; group to function properly. The shares do not seem to have the same
+permissions restrictions.</p>
+
+<p>In the site bound to port 443 with a valid certificate I created a bunch of
+virtual directories each pointing at one &#39;share&#39;.</p>
+
+<h3>Global Configuration</h3>
+
+<ul>
+<li>Authentication
+
+<ul>
+<li>Only Anonymous Authentication turned on</li>
+</ul></li>
+<li>Compression
+
+<ul>
+<li>Both kinds of compression are on</li>
+<li>Static Compression</li>
+<li>Only compress files larger than (in bytes): 2700</li>
+<li>Cache directory: %SystemDrive%\inetpub\temp\IIS Temporary Compressed Files</li>
+<li>Per application pool disk space limit (in MB): 100</li>
+</ul></li>
+<li>Default Document
+
+<ul>
+<li>Only index.html</li>
+</ul></li>
+<li>Directory Browsing
+
+<ul>
+<li>Disabled</li>
+</ul></li>
+<li>Error Pages
+
+<ul>
+<li>I left the defaults</li>
+</ul></li>
+<li>Handler Mappings
+
+<ul>
+<li>I left the defaults however it might be best to remove the OPTIONS, TRACE, and WebDAV from the global options and just configure WebDAV on the sub folders.</li>
+</ul></li>
+<li>HTTP Redirect
+
+<ul>
+<li>I left the defaults</li>
+</ul></li>
+<li>HTTP Response Headers
+
+<ul>
+<li>I left the defaults</li>
+</ul></li>
+<li>IP Address and Domain Restrictions
+
+<ul>
+<li>I left the defaults</li>
+</ul></li>
+<li>Logging
+
+<ul>
+<li>One log file per: Site</li>
+<li>Format: W3C w/ default fields</li>
+<li>Directory: %SystemDrive%\inetpub\logs\LogFiles</li>
+<li>Encoding: UTF-8</li>
+<li>Log File Rollover: Schedule - Daily</li>
+</ul></li>
+<li>MIME Types
+
+<ul>
+<li>I left the defaults</li>
+</ul></li>
+<li>Modules</li>
+<li>Output Caching</li>
+<li>Request Filtering</li>
+<li>Server Certificates</li>
+<li>WebDAV Authoring Rules
+
+<ul>
+<li>WebDAV Settings</li>
+</ul></li>
+<li>Worker Processes</li>
+</ul>
+
+<h4>Informational Site</h4>
+
+<p>Nothing special I just crafted an index.html that explained how to connect and
+use the WebDAV shares.</p>
+
+<h4>WebDAV Drives</h4>
+
+<ul>
+<li>Directory Browsing - Enable</li>
+<li>Request Filtering
+
+<ul>
+<li>Hidden Segments - Add - &#39;web.config&#39;</li>
+</ul></li>
+<li>WebDAV Authoring Rules
+
+<ul>
+<li>Add Authoring Rule:</li>
+<li>All content</li>
+<li>Specified roles or user groups: &quot;EXAMPLE\Domain Admins, EXAMPLE\Domain Users&quot;</li>
+<li>Permissions: Read, Source, Write</li>
+</ul></li>
+</ul>
+
+<h4>WebDAV folders</h4>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Beets - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Beets" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/beets/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Beets</h1>
+
+<p><a href="http://readthedocs.org/docs/beets/en/1.0b12/index.html">Documentation</a></p>
+
+<h2>Installation</h2>
+<div class="CodeRay">
+  <div class="code"><pre>sudo yum install python-pip chromaprint-tools -y
+sudo pip-python install beets
+sudo pip-python install pyacoustid
+sudo pip-python install rgain
+sudo pip-python install pylast
+</pre></div>
+</div>
+
+<p>Configure ~/.beetsconfig like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[beets]
+path_format: $artist/$album/$track - $title
+import_copy: yes
+import_write: yes
+import_resume: ask
+import_art: yes
+import_quiet_fallback: skip
+import_timid: no
+ignore: .AppleDouble ._* *~ .DS_Store
+threaded: yes
+color: yes
+plugins: chroma embedart lastgenre replaygain scrub
+
+[paths]
+default: $albumartist/$album/$track - $title
+singleton: $artist/$title
+comp: Compilations/$album/$track - $title
+
+[replaygain]
+overwrite: yes
+</pre></div>
+</div>
+
+<h2>Usage</h2>
+
+<p>The following command will import music from the given path and copy it into
+the directory specified in the configuration file.</p>
+<div class="CodeRay">
+  <div class="code"><pre>beet import /path/to/music
+</pre></div>
+</div>
+
+<p>Adding the <code>-C</code> will do the same thing but will update the files in place
+rather than copying them elsewhere:</p>
+<div class="CodeRay">
+  <div class="code"><pre>beet import -C /path/to/music
+</pre></div>
+</div>
+
+<p>And finally if you want the metadata to only exist in the database (not update
+the files) you can pass it the <code>-W</code> flag like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>beet import -W /path/to/music
+</pre></div>
+</div>
+
+<p>The <code>-A</code> flag will import the music without checking the tags. And finally the
+<code>-q</code> will suppress the prompts and only import the files that have a 95% chance
+of matching.</p>
+
+    </div>
+  </body>
+</html>

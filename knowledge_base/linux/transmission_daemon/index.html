@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Transmission Daemon - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Transmission Daemon" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/transmission_daemon/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Transmission Daemon</h1>
+
+<h2>Configuration</h2>
+
+<p>First install the transmission-daemon like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# yum install transmission-daemon -y
+</pre></div>
+</div>
+
+<p>The init script that comes with transmission-daemon uses the utility <code>which</code>
+which is not in the minimal install. As such you&#39;ll need to edit the init file
+to point at the binary as it should be doing in the first place. Find the
+following line:</p>
+<div class="CodeRay">
+  <div class="code"><pre>DAEMON=$(which $NAME)
+</pre></div>
+</div>
+
+<p>Replace it with:</p>
+<div class="CodeRay">
+  <div class="code"><pre>DAEMON=/usr/bin/transmission-daemon
+</pre></div>
+</div>
+
+<p>Open up <code>/etc/sysconfig/transmission-daemon</code>. We&#39;re going to make a few changes
+here. First off the defaults listed in this file are not actually the defaults
+that the transmission-daemon will start up with. I don&#39;t like ambiguity so
+we&#39;re going to replace them with the real values.</p>
+
+<p>The tranmission-daemon runs as user &quot;tranmission&quot; and it&#39;s home directory is
+<code>/var/lib/transmission</code>. We want to prefer encryption whenever it is available.</p>
+
+<p>I don&#39;t like defining configuration information through the service startup
+unless they don&#39;t have an equivalent setting (encryption preferred - you can
+turn encryption support on in the config but not the &#39;prefer&#39; part) so we get
+rid of the blacklist setting.</p>
+
+<p>With those changes the file should look like the following:</p>
+<div class="CodeRay">
+  <div class="code"><pre>TRANSMISSION_HOME=/var/lib/transmission
+DAEMON_USER=&quot;transmission&quot;
+DAEMON_ARGS=&quot;-ep -g $TRANSMISSION_HOME/.config/transmission-daemon&quot;
+</pre></div>
+</div>
+
+<p>The install doesn&#39;t set up a default configuration, so we need to quickly start
+and stop the daemon so one is generated for us to edit like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# service transmission-daemon start
+Starting transmission-daemon (via systemctl):              [  OK  ]
+[root@localhost ~]# service transmission-daemon stop
+Stopping transmission-daemon (via systemctl):              [  OK  ]
+</pre></div>
+</div>
+
+<p>Alright now that we have a config lets open it up and make some changes, it can
+be found at <code>/var/lib/transmission/.config/transmission-daemon/settings.json</code>.</p>
+
+<p>Provided below is my configuration file AFTER I&#39;ve made changes to the
+defaults.</p>
+
+<p>Note to self: This isn&#39;t cleaned up and is not fit for public consumption. The
+only change that has been made is the removal of the contents of rpc-password
+hash.</p>
+
+<p>After entering a password into the rpc-password field, start and stop the
+service again to have it in hashed form. Also note that I&#39;ve picked a random
+but static port in this case 37288. Make sure that it is allowed through the
+firewall and forwarded.</p>
+<div class="CodeRay">
+  <div class="code"><pre>{
+  &quot;alt-speed-down&quot;: 200, 
+  &quot;alt-speed-enabled&quot;: false, 
+  &quot;alt-speed-time-begin&quot;: 540, 
+  &quot;alt-speed-time-day&quot;: 127, 
+  &quot;alt-speed-time-enabled&quot;: false, 
+  &quot;alt-speed-time-end&quot;: 1020, 
+  &quot;alt-speed-up&quot;: 200, 
+  &quot;bind-address-ipv4&quot;: &quot;0.0.0.0&quot;,
+  &quot;bind-address-ipv6&quot;: &quot;::&quot;, 
+  &quot;blocklist-enabled&quot;: true, 
+  &quot;blocklist-url&quot;: &quot;http://list.iblocklist.com/?list=bt_level1&amp;fileformat=p2p&amp;archiveformat=gz&quot;, 
+  &quot;cache-size-mb&quot;: 10, 
+  &quot;dht-enabled&quot;: true, 
+  &quot;download-dir&quot;: &quot;/media/storage/Torrents/Downloads/&quot;, 
+  &quot;encryption&quot;: 1, 
+  &quot;idle-seeding-limit&quot;: 30, 
+  &quot;idle-seeding-limit-enabled&quot;: false, 
+  &quot;incomplete-dir&quot;: &quot;/media/storage/Torrents/Incomplete&quot;, 
+  &quot;incomplete-dir-enabled&quot;: true, 
+  &quot;lazy-bitfield-enabled&quot;: true, 
+  &quot;lpd-enabled&quot;: false, 
+  &quot;message-level&quot;: 2, 
+  &quot;open-file-limit&quot;: 32, 
+  &quot;peer-congestion-algorithm&quot;: &quot;&quot;, 
+  &quot;peer-limit-global&quot;: 240, 
+  &quot;peer-limit-per-torrent&quot;: 60, 
+  &quot;peer-port&quot;: 37288, 
+  &quot;peer-port-random-high&quot;: 65535, 
+  &quot;peer-port-random-low&quot;: 49152, 
+  &quot;peer-port-random-on-start&quot;: false, 
+  &quot;peer-socket-tos&quot;: &quot;default&quot;, 
+  &quot;pex-enabled&quot;: true, 
+  &quot;port-forwarding-enabled&quot;: true, 
+  &quot;preallocation&quot;: 0, 
+  &quot;prefetch-enabled&quot;: 1, 
+  &quot;ratio-limit&quot;: 15, 
+  &quot;ratio-limit-enabled&quot;: false, 
+  &quot;rename-partial-files&quot;: true, 
+  &quot;rpc-authentication-required&quot;: true, 
+  &quot;rpc-bind-address&quot;: &quot;10.13.37.52&quot;, 
+  &quot;rpc-enabled&quot;: true, 
+  &quot;rpc-password&quot;: &quot;&quot;, 
+  &quot;rpc-port&quot;: 9091, 
+  &quot;rpc-url&quot;: &quot;/transmission/&quot;, 
+  &quot;rpc-username&quot;: &quot;torrentadmin&quot;, 
+  &quot;rpc-whitelist&quot;: &quot;127.0.0.1,10.13.37.*&quot;, 
+  &quot;rpc-whitelist-enabled&quot;: true, 
+  &quot;script-torrent-done-enabled&quot;: true,
+  &quot;script-torrent-done-filename&quot;: &quot;/var/lib/transmission/.config/transmission-daemon/torrent-completed.sh&quot;,
+  &quot;speed-limit-down&quot;: 100, 
+  &quot;speed-limit-down-enabled&quot;: false, 
+  &quot;speed-limit-up&quot;: 100, 
+  &quot;speed-limit-up-enabled&quot;: false, 
+  &quot;start-added-torrents&quot;: true, 
+  &quot;trash-original-torrent-files&quot;: true, 
+  &quot;umask&quot;: 18, 
+  &quot;upload-slots-per-torrent&quot;: 14,
+  &quot;watch-dir&quot;: &quot;/media/storage/Dropbox/TorrentDrop&quot;,
+  &quot;watch-dir-enabled&quot;: true
+}
+</pre></div>
+</div>
+
+<p>With the config above I&#39;ve configured it too run a script
+<code>/var/lib/transmission/.config/transmission-daemon/torrent-completed.sh</code>
+whenever a torrent finishes downloading. This file needs to at least exist and
+be executable if you don&#39;t turn it off above. You can do this with the
+following commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# touch /var/lib/transmission/.config/transmission-daemon/torrent-completed.sh
+[root@localhost ~]# chmod +x /var/lib/transmission/.config/transmission-daemon/torrent-completed.sh
+</pre></div>
+</div>
+
+<p>I&#39;ve personally set it up to email me whenever a torrent completes by putting
+the following script in that file:</p>
+<div class="CodeRay">
+  <div class="code"><pre>#!/bin/bash
+
+# Transmission populates the following variables for use in the script:
+# TR_APP_VERSION
+# TR_TIME_LOCALTIME
+# TR_TORRENT_DIR
+# TR_TORRENT_HASH
+# TR_TORRENT_ID
+# TR_TORRENT_NAME
+
+# Setup the message to be sent
+TO_ADDR=admin@example.com
+SUBJECT=&quot;Torrent Completed&quot;
+FROM_ADDR=&quot;transmission@example.com&quot;
+BODY=&quot;Transmission finished downloading \&quot;$TR_TORRENT_NAME\&quot; on $TR_TIME_LOCALTIME&quot;
+
+# Send the email
+echo $BODY | mailx -s &quot;$SUBJECT&quot; -r &quot;$FROM_ADDR&quot; $TO_ADDR
+</pre></div>
+</div>
+
+<p>Alright now this part is strange. If for some reason transmission doesn&#39;t close
+properly or some other funniness happens, it DELETES it&#39;s config file and
+resets it back to the defaults. To prevent this we&#39;re going to remove
+tranmissions ability to change it&#39;s config file. The catch with this is that it
+starts up with root privileges and will just rewrite the config file with
+read/write permissions so you need to make the file immutable like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# chattr +i /var/lib/transmission/.config/transmission-daemon/settings.json
+</pre></div>
+</div>
+
+<p>Ensure that transmission&#39;s group has write privileges over it&#39;s Download,
+Incomplete, and TorrentDrop directory.</p>
+
+<p>Now lets start it up for real and make sure it starts up correctly on boot:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# chkconfig transmission-daemon on
+[root@localhost ~]# service transmission-daemon start
+</pre></div>
+</div>
+
+<p>You can then use the utility transmission-remote to check on the status of
+transmission like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# transmission-remote transmission-server.example.com -l
+ID     Done       Have  ETA           Up    Down  Ratio  Status       Name
+Sum:           Unknown               0.0     0.0
+</pre></div>
+</div>
+
+<h2>Making Torrents from the Command Line</h2>
+
+<p>First you need to install the utility &quot;mktorrent&quot; like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# yum install mktorrent -y
+</pre></div>
+</div>
+
+<p>I use a private tracker so these instructions are going to be specific for
+them.</p>
+
+<p>First things first we&#39;re going to figure out the best size for the pieces in
+the torrent. Generally I default to 512Kb (2<sup>19),</sup> if the torrent is around the
+size of a DVD I&#39;ll increase the size of the pieces to 1Mb (2<sup>20).</sup> Anything
+larger than that probably doesn&#39;t belong in a single torrent. We need to know
+this as the exponent is one of the flags passed (specifically -l) so for my
+default I&#39;ll use the flag &quot;-l 19&quot;.</p>
+
+<p>Since I use a private tracker I need to set the private flag (-p). You should
+really give the torrent a meaningful name with the &quot;-n&quot; flag. Additionally a
+comment on the torrent is usually welcome with &quot;-c&quot;.</p>
+
+<p>With my current private tracker when creating a torrent you get a unique
+tracker link that looks something like <code>http://tracker.&lt;site&gt;.org:34000/&lt;Your
+private 32 character ID string&gt;/announce</code>, so you need to get that before you
+can finish setting up the torrent. Pass it as an option to the &quot;-a&quot; flag</p>
+
+<p>Make sure all the files you want in the torrent are in the same directory
+(we&#39;re going to use <code>/media/example/MySpecialTorrent/</code>) in this example:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# mktorrent -l 19 -p -n &quot;My Special Torrent&quot; -c &quot;A very special torrent that I'm using as an example&quot; \
+&gt; -a &quot;&lt;tracker address&gt;&quot; \
+&gt; /media/example/MySpecialTorrent/*
+mktorrent 1.0 (c) 2007, 2009 Emil Renner Berthing
+
+Hashed 40 of 40 pieces.
+Writing metainfo file... done.
+</pre></div>
+</div>
+
+<p>You will then have a .torrent file in your current directory named after what
+you gave mktorrent with the -n flag.</p>
+
+<h2>Security Notes</h2>
+
+<ul>
+<li>The transmission-daemon doesn&#39;t support multiple users, so either a shared
+password needs to be provided, none configured or a reverse proxy needs to be
+setup in front of it that has basic authentication.
+
+<ul>
+<li>A lot of the clients can support basic authentication by using the format:
+<code>http://username:password@torrentbox.local/</code> for the &quot;host&quot;.</li>
+<li>A reverse proxy can also be used to provide HTTPS access to the interface</li>
+<li>A reverse proxy can safely make the interface available to the outside
+world by putting restrictions on it</li>
+</ul></li>
+<li>The transmission daemon can restrict access to certain things based on IP
+masks, these should be configured appropriately</li>
+<li>Blocklists can be used to eliminate potential corporation spies that&#39;ll do
+bad things to you</li>
+<li>I strongly encourage preferring or enforcing encryption as it will reduce
+what is visible to ISPs</li>
+<li>All of the torrent traffic could potentially be pushed through an anonymising
+VPN such as that provided by xerobank.com</li>
+</ul>
+
+<h2>Firewall Adjustments</h2>
+<div class="CodeRay">
+  <div class="code"><pre># Allow other torrenter's to connect to us
+-A SERVICE -m tcp -p tcp --dport 37288 -j ACCEPT
+# Allow local access to the web interface
+-A SERVICE -s 10.13.37.0/24 -m tcp -p tcp --dport 9091 -j ACCEPT
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>

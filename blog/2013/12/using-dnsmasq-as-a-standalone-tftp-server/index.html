@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Using Dnsmasq as a Standalone TFTP Server - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    <meta name="keywords" content="tftp, linux, dnsmasq />
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Using Dnsmasq as a Standalone TFTP Server" />
+    <meta property="og:url" content="https://stelfox.net/blog/2013/12/using-dnsmasq-as-a-standalone-tftp-server/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class='post'>
+        <h1><a href="/blog/2013/12/using-dnsmasq-as-a-standalone-tftp-server/">Using Dnsmasq as a Standalone TFTP Server</a></h1>
+        <aside class="post-date">Published <time datetime=''>while he should be socializing on December 12, 2013</time> by Sam Stelfox</aside>
+        <article>
+          <p><em>If you&#39;ve come across this blog post with the intention of setting up TFTP on
+an modern version of OpenWRT I have a <a href="/blog/2014/07/using-openwrts-dnsmasq-as-a-tftp-server/">more recent blog post</a> detailing how
+too configure your system.</em></p>
+
+<p>I found myself in need of a TFTP server but wanted to avoid having all of the
+xinet.d packages and services on my system (even if they were disabled). While
+looking for alternatives I found out that <code>dnsmasq</code> has a built-in read-only
+TFTP server.</p>
+
+<p>I already have a DNS and DHCP server on my network and didn&#39;t want dnsmasq to
+take on either of those roles so my first challenge was finding a way to
+prevent dnsmasq from running those bits of it&#39;s code, or failing that I would
+just firewall off the service. Luckily it&#39;s quite easy to disable both bits of
+funtionality.</p>
+
+<p>For DHCP you simply have to leave out any of the dhcp option in the
+configuation file, DNS you just tell it to operate on port 0 and it will be
+disabled.</p>
+
+<p>So my whole config starting out looks like this:</p>
+<div class="CodeRay">
+  <div class="code"><pre># Disable DNS
+port=0
+</pre></div>
+</div>
+
+<p>Now I need to configure the TFTP bits of dnsmasq. This too was rather simple
+only requiring me to add the following to my already terse config file:</p>
+<div class="CodeRay">
+  <div class="code"><pre># Enable the TFTP server
+enable-tftp
+tftp-root=/var/lib/tftp
+</pre></div>
+</div>
+
+<p>I created the root directory for my TFTP server and started it up with the
+following commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>mkdir /var/lib/tftp
+systemctl enable dnsmasq.service
+systemctl start dnsmasq.service
+</pre></div>
+</div>
+
+<p>Voila, TFTP running and happy. If you have a firewall running you&#39;ll also want
+to open ports 69/tcp and 69/udp (though I suspect only the UDP one is needed).</p>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>

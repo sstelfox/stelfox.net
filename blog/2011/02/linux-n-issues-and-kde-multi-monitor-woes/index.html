@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Linux N Issues & KDE Multi-Monitor Woes - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Linux N Issues & KDE Multi-Monitor Woes" />
+    <meta property="og:url" content="https://stelfox.net/blog/2011/02/linux-n-issues-and-kde-multi-monitor-woes/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class='post'>
+        <h1><a href="/blog/2011/02/linux-n-issues-and-kde-multi-monitor-woes/">Linux N Issues & KDE Multi-Monitor Woes</a></h1>
+        <aside class="post-date">Published <time datetime=''>after his first cup of coffee on February 25, 2011</time> by Sam Stelfox</aside>
+        <article>
+          <p>So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE
+spin mind you) on my ThinkPad. I&#39;m pleasantly surprised with hows it&#39;s working
+everything seems to be working out the box very stably. I used it without issue
+for a solid month and a half without a single issue.</p>
+
+<p>Earlier this week I started having issues with my wireless card on some
+networks, but not at all of them. The most prominent one being my home network.
+I&#39;ve had issues with my access point dropping connections before on a wide
+array of machines and not actually dropping it (ie: my laptop would see it as
+connected but the AP wouldn&#39;t exchange traffic with it). So when I started
+seeing this behavior I expected that issue to have cropped up again.</p>
+
+<p>The actual behavior that I was witnessing was this:</p>
+
+<ol>
+<li>Connect to wireless network</li>
+<li>Use the connection for 5-10 seconds</li>
+<li>Pages would start timing out even though the connection was still &#39;active&#39;</li>
+</ol>
+
+<p>Disconnecting and reconnecting to the wireless would start the situation all
+over again, which quickly became frustrating but I didn&#39;t have time to mess
+with it so I just plugged into an ethernet port and went about my business.</p>
+
+<p>The next day I received my the logwatch from my laptop (Yes, my laptop sends
+it&#39;s logs to my email) and it mentioned more than 20,000 new entries of an
+error I&#39;ve never seen before:</p>
+<div class="CodeRay">
+  <div class="code"><pre>iwlagn 0000:03:00.0: BA scd_flow 0 does not match txq_id 10
+</pre></div>
+</div>
+
+<p>After poking around a bit online I found that the issue is with a recent kernel
+update (I&#39;m currently running 2.6.35.11-83) changing the behavior of some
+sanity checks to wireless connections that support &#39;N&#39;. Turns out my wireless
+card and all the networks I was having issues with support &#39;N&#39;. Good to know.</p>
+
+<p>It was easy enough to solve that issue, the kernel module just needed an option
+passed to it that I believe just disables &#39;N&#39;. This is all well and good but I
+haven&#39;t had to manually pass options to a kernel module for a couple of
+releases now (I think the last was Fedora 10). Since then the file
+<em>/etc/modules.conf</em> has been deprecated in favor of placing files in
+<em>/etc/modules.d/</em>. There are some files that come stock in there but none are
+passing parameters to modules and the naming scheme doesn&#39;t seem to conform to
+anything.</p>
+
+<p>I was unsure if there was something specific I had to name the file or if it
+needed to be in one of the existing files. I ended up creating the
+file <em>/etc/modprobe.d/iwlagn.conf</em> and putting the following in it:</p>
+<div class="CodeRay">
+  <div class="code"><pre>options iwlagn 11n_disable=1
+# This one might be needed instead
+#options iwlagn 11n_disable50=1
+</pre></div>
+</div>
+
+<p>After I rebooted the problem vanished like it was never there. If you notice
+there is a second option in there that is commented out. I found some people
+where the first option didn&#39;t work but replacing it with that second option
+did, so if one doesn&#39;t work for you try the second option.</p>
+
+<p>The second issue that I encountered was just this morning. I&#39;m working at a
+remote site today that I&#39;m not at very often, and am using my laptop as my
+desktop workhorse. Usually when I&#39;m at a remote site, I steal an office that
+isn&#39;t in use and claim it as my own, and today was no different. There was a
+screen in this office that had its power plugged it but it&#39;s VGA cable was just
+sitting there. I figured &#39;why not?&#39; so I plugged it in and KDE happily
+announced that it detected a new display and offered to take me to the settings
+interface that would allow me to configure it.</p>
+
+<p>&quot;Awesome!&quot; I thought, multiple desktops has always been one of those things I
+had to tweak and search around for and it looks like KDE is making some serious
+strides in their support for it. When I turned it on I wasn&#39;t really paying
+attention to the settings and my laptop display ended up on the wrong side of
+the screen and my primary desktop on the LCD. Not exactly what I wanted but
+it&#39;s cool that it was that easy to setup.</p>
+
+<p>I went back into the configuration options switched things around, but no
+matter what I did, the &#39;primary desktop&#39; was always on the external monitor.
+What&#39;s more is that there isn&#39;t any option for selecting the primary display!
+That <em>used to</em> be there...</p>
+
+<p>I hunted around before getting frustrated and searching around online. Sure
+enough other people were annoyed by this regression but the solution was very
+easy (though it appears you have to do it everytime).</p>
+
+<p>To set the primary monitor to my laptop screen (LCDS1) I just opened a shell
+and put this in:</p>
+<div class="CodeRay">
+  <div class="code"><pre>xrandr --output LCDS1 --primary
+</pre></div>
+</div>
+
+<p>Poof! Everything is all set and I&#39;m happy once again. I hope that the KDE
+developers put back the primary display selection in the settings but for now
+it&#39;s easy enough. Hopefully this will help other people on the net.</p>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>

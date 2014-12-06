@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>High Availability - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="High Availability" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/high_availability/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>High Availability</h1>
+
+<p>Packages of interest:</p>
+
+<ul>
+<li>keepalived</li>
+<li>ipvsadm</li>
+<li>pacemaker</li>
+</ul>
+
+<h2>IPVS</h2>
+
+<p>IPVS (IP Virtual Server) is used to present a single address in a high
+availability scenario for one more services.</p>
+
+<h2>Installation / Setup</h2>
+<div class="CodeRay">
+  <div class="code"><pre>yum install ipvsadm -y
+</pre></div>
+</div>
+
+<p>A note about LXC containers: In order to make use of ipvsadm within an LXC
+container, you will also need to install the ipvsadm package on the LXC host
+and reboot it (optionally just load the kernel module though I don&#39;t know it by
+name). Additionally the simplest version, VS/NAT, requires enabling IPv4 packet
+forwarding which requires modification of the read-only proc filesystem and
+thus doesn&#39;t seem to be an easy option, there may be work arounds for this, and
+it may effect the other forms but they haven&#39;t been tested yet.</p>
+
+<p>First pass at commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>ipvsadm -A -t 192.168.122.30:443 -s wlc
+ipvsadm -a -t 192.168.122.30:443 -r 192.168.122.61:443 -g -w 1
+ipvsadm -a -t 192.168.122.30:443 -r 192.168.122.62:443 -g -w 1
+</pre></div>
+</div>
+
+<p>That didn&#39;t work so I rebooted to clear it all out.</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install keepalived -y
+</pre></div>
+</div>
+
+<p>Ah ha, Eureka moment. Inside the LXC container I can unmount the <code>/proc/sys</code>
+overlay as long as I&#39;m root...</p>
+<div class="CodeRay">
+  <div class="code"><pre>umount /proc/sys
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+</pre></div>
+</div>
+
+<p>It seems that <code>net.ipv4.ip_nonlocal_bind</code> isn&#39;t available within an LXC
+container: <code>cat /proc/sys/net/ipv4/ip_nonlocal_bind</code>.</p>
+
+<p>Valuable sites:</p>
+
+<ul>
+<li><a href="http://mojobojo.com/blog/2011/01/14/lvs-nginx-nodejs-mongodb-cluster-setup-on-rackspace/">http://mojobojo.com/blog/2011/01/14/lvs-nginx-nodejs-mongodb-cluster-setup-on-rackspace/</a></li>
+<li><a href="https://www.rackspace.com/blog/installing-and-configuring-lvs-tun/">https://www.rackspace.com/blog/installing-and-configuring-lvs-tun/</a></li>
+</ul>
+
+<p>Interesting use for this as a firewall:</p>
+
+<ul>
+<li><a href="http://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html">http://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html</a></li>
+<li><a href="http://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/">http://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/</a></li>
+</ul>
+
+    </div>
+  </body>
+</html>

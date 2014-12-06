@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Postfix - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Postfix" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/postfix/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <p>By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
+written with security in mind.</p>
+
+<p><a href="https://grepular.com/Automatically_Encrypting_all_Incoming_Email">Something that would be good</a> to port over to Fedora/Postfix with a nice
+Stelfox spin, and it&#39;s <a href="https://grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2">follow up</a>.</p>
+
+<p><a href="https://grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks">This</a> is what originally turned me on to that.</p>
+
+<p><a href="http://library.linode.com/email/postfix/dovecot-mysql-centos-5">This</a> will help setup a mail gateway.</p>
+
+<p>I can use <a href="http://library.linode.com/email/fetchmail">this</a> to centralize my email.</p>
+
+<p>This <a href="http://rimuhosting.com/support/settingupemail.jsp?mta=postfix">site</a> has some diagnostic information that may be useful.</p>
+
+<p>If I have rate limit issues sending too Yahoo, <a href="http://stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/">this article</a> can help
+solve it.</p>
+
+<p>As for Dovecot, while not being Postfix, is still an important piece of this
+puzzle. The <a href="http://wiki.dovecot.org/MailLocation/">Mail Location</a> for Dovecot will need to be considered, so far
+I&#39;m leaning towards <a href="http://wiki2.dovecot.org/MailboxFormat/dbox">sdbox</a>, however, it is not compatible with mutt which
+is my ideal client. My next alternative would be the <a href="http://wiki.dovecot.org/MailboxFormat/Maildir">Maildir</a>.</p>
+
+<h2>General Host MTA</h2>
+
+<h2>Local Network Mail Relay</h2>
+
+<h2>Generic Mail Relay</h2>
+
+<h3>Configuration</h3>
+
+<h4>/etc/postfix/main.cf</h4>
+
+<p>The following configuration was used as a temporary mail relay. It does not
+filter spam and was done fast so there are probably problems in the
+configuration that were missed. Proceed with caution. A tool that was
+invaluable to me in diagnosing queueing issues was <code>qshape</code> which is part of
+the package <code>postfix-perl-scripts</code> in Fedora 15.</p>
+<div class="CodeRay">
+  <div class="code"><pre>myhostname = mailrelay.example.org
+
+command_directory = /usr/sbin
+daemon_directory = /usr/libexec/postfix
+data_directory = /var/lib/postfix
+queue_directory = /var/spool/postfix
+
+mail_owner = postfix
+default_privs = nobody
+setgid_group = postdrop
+
+allow_percent_hack = no
+disable_vrfy_command = yes
+smtpd_helo_required = yes
+
+inet_interfaces = all
+inet_protocols = all
+
+mydestination = $myhostname
+unknown_local_recipient_reject_code = 550
+
+mynetworks_style = subnet
+mynetworks = 10.15.0.0/16, 127.0.0.0/8
+
+relay_domains = example.org, example.com
+relayhost = [10.15.1.65]
+
+in_flow_delay = 0
+
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+
+fast_flush_domains = $relay_domains
+
+smtpd_banner = $myhostname ESMTP
+
+local_destination_concurrency_limit = 2
+default_destination_concurrency_limit = 20
+
+sendmail_path = /usr/sbin/sendmail.postfix
+newaliases_path = /usr/bin/newaliases.postfix
+mailq_path = /usr/bin/mailq.postfix
+</pre></div>
+</div>
+
+<h2>Full Local Client MTA w/ Relaying</h2>
+<div class="CodeRay">
+  <div class="code"><pre>queue_directory = /var/spool/postfix
+command_directory = /usr/sbin
+daemon_directory = /usr/libexec/postfix
+data_directory = /var/lib/postfix
+mail_owner = postfix
+inet_interfaces = localhost
+inet_protocols = all
+mydestination = $myhostname, localhost
+local_recipient_maps = unix:passwd.byname $alias_maps
+unknown_local_recipient_reject_code = 550
+mynetworks_style = host
+mynetworks = 127.0.0.0/8
+relayhost = 0x378.net
+#relayhost = [mail-01.i.0x378.net]
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+debug_peer_level = 2
+
+debugger_command =
+         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+         ddd $daemon_directory/$process_name $process_id &amp; sleep 5
+
+sendmail_path = /usr/sbin/sendmail.postfix
+newaliases_path = /usr/bin/newaliases.postfix
+mailq_path = /usr/bin/mailq.postfix
+
+setgid_group = postdrop
+html_directory = no
+manpage_directory = /usr/share/man
+sample_directory = /usr/share/doc/postfix-2.10.2/samples
+readme_directory = /usr/share/doc/postfix-2.10.2/README_FILES
+</pre></div>
+</div>
+
+<p>You&#39;ll also want to append an administrator&#39;s email to the aliases table:</p>
+<div class="CodeRay">
+  <div class="code"><pre>echo &quot;root:  admin+$(hostname -s)@i.0x378.net&quot; &gt;&gt; /etc/aliases
+newaliases
+</pre></div>
+</div>
+
+<p>And enable/start the service:</p>
+<div class="CodeRay">
+  <div class="code"><pre>systemctl enable postfix.service
+systemctl start postfix.service
+</pre></div>
+</div>
+
+<h2>Creating a catch-all</h2>
+<div class="CodeRay">
+  <div class="code"><pre>yum install postfix -y
+</pre></div>
+</div>
+
+<p>Edit <code>/etc/postfix/main.cf</code></p>
+
+<p>Created lines:</p>
+<div class="CodeRay">
+  <div class="code"><pre>disable_vrfy_command = yes
+myhostname = mail-01.i.0x378.net
+home_mailbox = Maildir/
+local_recipient_maps = unix:passwd.byname $alias_maps
+virtual_alias_maps = regexp:/etc/postfix/virtual_aliases
+</pre></div>
+</div>
+
+<p>Changed lines:</p>
+<div class="CodeRay">
+  <div class="code"><pre>inet_interfaces = all
+</pre></div>
+</div>
+
+<p>Make sure <code>mydestination</code> is unset</p>
+
+<p>Created the file <code>/etc/postfix/virtual_aliases</code> with the following contents:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/.*/  root
+</pre></div>
+</div>
+
+<p>Opened port <code>25/tcp</code> on the firewall.</p>
+
+<p>Since the root account is going to be receiving mail for all accounts and all
+domains make sure that root is not being redirected to another email address in
+the <code>/etc/aliases</code> file. Make sure to run <code>newaliases</code> if you make a change to
+the file.</p>
+
+<p>Great success! The local root account is now receiving emails to literally any
+address. In production this probably shouldn&#39;t be the root user....</p>
+
+<h2>Notes on Building the App</h2>
+<div class="CodeRay">
+  <div class="code"><pre>yum install ruby git rubygem-bundler ruby-devel make gcc openssl-devel \
+  openssh-server -y
+
+systemctl enable sshd.service
+systemctl start sshd.service
+</pre></div>
+</div>
+
+<p>Temporarily allow HTTPS for gem installation...</p>
+
+<p>On development box...</p>
+<div class="CodeRay">
+  <div class="code"><pre>rails new parcel_pot --skip-test-unit --skip-bundle
+cd parcel_pot
+
+cat &gt; Gemfile &lt;&lt;-EOS
+source 'https://rubygems.org'
+
+gem 'rails', '4.0.0'
+
+gem 'jquery-rails'
+gem 'turbolinks'
+gem 'jbuilder', '~&gt; 1.2'
+
+# Use ActiveModel has_secure_password
+# gem 'bcrypt-ruby', '~&gt; 3.0.0'
+
+gem 'puma'
+
+group :development do
+  gem 'capistrano'
+  gem 'sqlite3'
+end
+
+gem 'debugger', group: [:development, :test]
+EOS
+
+bundle
+git init
+git add .
+git commit -m &quot;Initial commit&quot;
+
+cap install
+
+cat &gt; Capfile &lt;&lt;-EOS
+require 'capistrano/setup'
+require 'capistrano/deploy'
+require 'capistrano/bundler'
+require 'capistrano/rails/assets'
+require 'capistrano/rails/migrations'
+
+Dir.glob('lib/capistrano/tasks/*.cap').each { |r| import r } 
+EOS
+</pre></div>
+</div>
+
+<h2>Potentially Useful Links</h2>
+
+<ul>
+<li><a href="http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby">http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby</a></li>
+</ul>
+
+<h2>Diagnosing Mail Issues</h2>
+
+<p>To check the current state of the mail queue on a server you can run the
+following command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>postqueue -p
+</pre></div>
+</div>
+
+<p>or:</p>
+<div class="CodeRay">
+  <div class="code"><pre>mailq
+</pre></div>
+</div>
+
+<p>The error messages often indicate what the problem is allowing you to find mail
+routing issues.</p>
+
+<p>To immediately flush the queue (attempt to resent all the mail:</p>
+<div class="CodeRay">
+  <div class="code"><pre>postqueue -f
+</pre></div>
+</div>
+
+<p>Alternatively you can just delete all the deferred mail in the queue or all
+mail in the queue with one of the following two commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>postsuper -d ALL deferred
+postsuper -d ALL
+</pre></div>
+</div>
+
+<h2>Authenticated Mail Relay</h2>
+
+<ul>
+<li><a href="http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/">http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/</a></li>
+</ul>
+
+<h2>Greylisting</h2>
+
+<ul>
+<li>milter-greylist</li>
+<li>sqlgrey</li>
+</ul>
+
+<h2>SSL</h2>
+<div class="CodeRay">
+  <div class="code"><pre>yum install cyrus-sasl -y
+</pre></div>
+</div>
+
+<p>Create the SSL certificate</p>
+<div class="CodeRay">
+  <div class="code"><pre>cd /etc/postfix
+openssl req -new -x509 -newkey rsa:4096 -keyout key.pem -nodes -days 365 -out cert.pem
+chmod 0600 *.pem
+</pre></div>
+</div>
+
+<p>Enable TLS on the SMTP server by adding the following set of commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>smtpd_use_tls = yes
+tls_random_source = dev:/dev/urandom
+smtpd_tls_cert_file = /etc/postfix/cert.pem
+smtpd_tls_key_file = /etc/postfix/key.pem
+</pre></div>
+</div>
+
+<h2>Anti-Virus &amp; Spam Filtering</h2>
+<div class="CodeRay">
+  <div class="code"><pre>yum install amavisd-new spamassassin clamav clamav-update \
+  clamav-server-sysvinit -y
+</pre></div>
+</div>
+
+<p>I opened up <code>/etc/sysconfig/freshclam</code> and commented out the last line.</p>
+
+<p>Edited <code>$mydomain</code> variable in <code>/etc/amavisd/amavisd.conf</code> to be <code>0x378.net</code>
+and finally enable and start the services.</p>
+<div class="CodeRay">
+  <div class="code"><pre>systemctl enable amavisd.service
+systemctl enable clamd.amavisd.service
+systemctl enable spamassassin.service
+systemctl start amavisd.service
+systemctl start clamd.amavisd.service
+systemctl start spamassassin.service
+</pre></div>
+</div>
+
+<p>Additional things to consider:</p>
+
+<ul>
+<li>bogofilter</li>
+<li>spambayes</li>
+<li>spamprobe</li>
+<li>dspam</li>
+</ul>
+
+<h2>DKIM</h2>
+
+<p>There are two postfix DKIM milters available, <code>opendkim</code>, and <code>dkim-milter</code>.
+The former is a fork of the latter, has fewer bugs, and is under a much tighter
+release schedule.</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install opendkim -y
+</pre></div>
+</div>
+
+<h2>DMARC</h2>
+
+<h2>SPF Validation</h2>
+
+<p>There are two postfix SPF filters available as well. The first one is
+<code>perl-Mail-SPF</code> and the other is <code>pypolicyd-spf</code>. From what I can tell the
+latter is significantly more sophisticated and it provides a saner set of
+defaults so thats the choice I&#39;m going with.</p>
+
+<p>The following is a set of the valid SPF keywords and their modifiers.</p>
+
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>v=spf1</td>
+<td>Specifies this is an SPF record, and we&#39;re using version 1 of it.</td>
+</tr>
+<tr>
+<td>all</td>
+<td>Matches everything not specifically matched.</td>
+</tr>
+<tr>
+<td>a</td>
+<td>Match the A record of the domain by default, additionally an other domain can be specified, and a CIDR network prefix can be applied to the resolved address. (ex: a a:other.tld a/24 a:test.tld/24)</td>
+</tr>
+<tr>
+<td>mx</td>
+<td>Match the MX records of the domain by default, additional domains and CIDR suffixes can be applied like the a record. (ex: mx mx:other.tld mx/28 mx:something.tld/24)</td>
+</tr>
+<tr>
+<td>ip4</td>
+<td>IPv4 address or network (CIDR format) (ex: ip4:192.168.0.0/24)</td>
+</tr>
+<tr>
+<td>ip6</td>
+<td>IPv6 address or network (CIDR format) (ex: ip6:2001:51b2:200C::/64)</td>
+</tr>
+<tr>
+<td>ptr</td>
+<td>ptr, without an argument this validates that at least one of the domains resolved by looking up the client&#39;s IP address resolves back to the current domain. When a domain is provided it validates the reverse lookups match that domain instead.</td>
+</tr>
+<tr>
+<td>exists</td>
+<td>Matches successfully if the provided domain successfully resolves to an address (it doesn&#39;t matter what address). This is valuable for use with macros, allowing RBL-style reversed-IP lookups.</td>
+</tr>
+<tr>
+<td>include</td>
+<td>Additionally add the SPF record from another domain. If that other domain doesn&#39;t include an SPF record the result will be a PermError. (ex: include:example.com).</td>
+</tr>
+<tr>
+<td>redirect</td>
+<td>ignore this SPF record and use the SPF record at the provided domain instead. If the provided domain doesn&#39;t have an spf record the result is unknown. (ex: redirect=example.com)</td>
+</tr>
+<tr>
+<td>exp</td>
+<td>If an SMTP receiver rejects a message, it can direct non-conforming users to a web page that provides further instructions. When the domain is expanded; a TXT lookup is performed, the result of the TXT query is then macro expanded and shown to the sender (ex: exp=explain._spf.%{d})</td>
+</tr>
+</tbody></table>
+
+<p>Expressions:</p>
+
+<table><thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead><tbody>
+<tr>
+<td>-</td>
+<td>Fail</td>
+</tr>
+<tr>
+<td>~</td>
+<td>Soft-fail (accept but mark)</td>
+</tr>
+<tr>
+<td>+</td>
+<td>Pass</td>
+</tr>
+<tr>
+<td>?</td>
+<td>Neutral</td>
+</tr>
+</tbody></table>
+
+<p>Install SPF stuff:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install pypolicyd-spf -y
+</pre></div>
+</div>
+
+<h2>SenderID</h2>
+
+<p>This is the Microsoft specific version of SPF. It&#39;s confusing as they have
+similar syntax. SenderID is obsolete but occasionally still causes issues when
+broken SenderID implementations attempt to validate a SPF record. There was
+some mention in the articles I read that SPF and SenderID operate at different
+layers, but they never went into details about it.</p>
+
+<p>Looking into the &#39;layers&#39; thing a little bit deeper, it seems that SPF use the
+SMTP protocol&#39;s &quot;MAIL FROM&quot; envelope address to perform the validation while
+SenderID uses the headers in the body content. Definitely smarter on the SPF
+front.</p>
+
+<h2>Spam Trapping</h2>
+
+<p>This is a very simple message of seeding the website of a domain with fake
+email addresses in a way that isn&#39;t visible too users but would get picked up
+by any scrapers that are using simple regular expressions (such as using HTML
+comments too hide the email).</p>
+
+<p>This email address should be a real one that can receive mail. How the
+administrator uses these mails is up too them. Some ideas could be:</p>
+
+<ul>
+<li>Auto-training spam filters</li>
+<li>Immediately blacklisting senders</li>
+<li>Watching for potential phishing attacks</li>
+</ul>
+
+<p>These all have their own pros and cons and are not exclusive from each other.
+There is a high probability that anything sent too this address is going too be
+a spammer, especially so if the name is obvious too a human reader.</p>
+
+<h2>Bounce Message Handling</h2>
+
+<h2>Monitoring Sent Bounce Messages</h2>
+
+<p>You can configure postfix in a way that when it sends a bounce message to a
+remote mail server, it additionally sends a copy to static address. This is
+useful for monitoring for abuse from mail clients that are compromised (large
+number of bounce messages probably indicate a spam blast).</p>
+
+<p>To send these too the address &#39;<a href="mailto:sent-bounces@example.tld">sent-bounces@example.tld</a>&#39; you&#39;ll want to add the
+following lines too your postfix configuration:</p>
+<div class="CodeRay">
+  <div class="code"><pre>notify_classes = resource, software, bounce
+bounce_notice_recipient = sent-bounces@example.tld
+</pre></div>
+</div>
+
+<p>The first line adds the &#39;bounce&#39; class of messages to the standard messages
+sent too the postmaster for delivery issues related too the software or server.
+The second line redirects those specific messages to the email address shown
+above.</p>
+
+<h3>VERP</h3>
+
+<p>This is a pretty nifty trick that has <a href="http://cr.yp.to/proto/verp.txt">been standardized</a> too a certain
+extent. The key too understanding how this works is knowing the difference
+between the various forms of the FROM address used by mail servers. The three
+are:</p>
+
+<ol>
+<li>Return-Path (sometimes referred too as the Reverse-Path, or the
+Envelope-FROM) is the value submitted in the <code>MAIL FROM</code> part of the SMTP
+session. This does not need to be the same value found in the headers of the
+email sent after the DATA portion of the session.</li>
+</ol>
+
+<p>This is added as a header by the recipient&#39;s SMTP server. If one already
+   exists it is replaced.</p>
+
+<p>All email bounces that get automatically generated should go too the
+   Return-Path value. Not all mail servers obey this rule, some will bounce the
+   email back to the From address.</p>
+
+<ol>
+<li>The From address is the value found in the From header. This is supposed to
+be who the message is actually From (i.e. The user or software that actually
+sent the message). This is what is generally shown in mail clients as who
+sent the mail. This is also the email address that will be used for all
+human (mail client) responses if the email doesn&#39;t have a Reply-To header.</li>
+<li>The Reply-To header is added by the sender (or the sender&#39;s software). This
+header is used to direct human responses to another address. It should be
+the first thing looked for when a user clicks on the &#39;Reply&#39; button in their
+client and should be used to populate the <code>To:</code> field on the new message.</li>
+</ol>
+
+<p>VERP takes advantage of the &#39;Return-Path&#39; header to help direct bounces too an
+automated system. While this can be used by things like mailing list systems
+too automatically unsubscribe bad or no longer active email addresses, it can
+also be used too detect compromised accounts and abuse of your mail server.</p>
+
+<p>By combining a recipient delimiter in the &#39;Return-Path&#39;, you could add unique
+bounce message processing detection based on any individual metric you want.
+Usually a unique value for the receiver of the original message is the most
+relevant.</p>
+
+<p>As it stands Postfix supports VERP both for receiving, and for sending. Sending
+is trickier as the client that is initiating the SMTP session for the mail to
+get relayed has too explicitely enable VERP for that message by appending
+&#39;VERP&#39; too the &#39;MAIL FROM:&#39; component. This is not ideal for general tracking
+and I haven&#39;t found a solution for it yet.</p>
+
+<p>For receipt of these VERP bounces I prefer setting up a dedicated address that
+I can pass too a script for processing such as &#39;<a href="mailto:bounce@example.tld">bounce@example.tld</a>&#39;. Make sure
+this address exists if before taking the following actions.</p>
+
+<p>This method makes use of postfix transports too handle bounces speciality.
+After the address has been created ensure you have the recipient delimiter
+option configured in your <code>main.cf</code> file like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>recipient_delimiter = +
+</pre></div>
+</div>
+
+<p>We&#39;ll need to define a new transport, which will send the mail through the
+script or software that will be handling the bounce messages. This will receive
+the messages via STDIN, and can take any arguments you want too provide. I use
+the bounce extension as the only argument too my script which results in an
+addition to my &#39;master.cf&#39; file that looks like the following:</p>
+<div class="CodeRay">
+  <div class="code"><pre>bounce   unix  -       n       n       -       -       pipe
+  flags=RX user=nobody argv=/srv/scripts/mail_bounce_handler ${extension}
+</pre></div>
+</div>
+
+<p>The &#39;R&#39; flag ensures that a &#39;Return-Path&#39; message header is added too the
+message before passing it into the script. The &#39;X&#39; flag is used specifically by
+me for my script, this flag indicates that this transport performs final
+delivery of the message. If you want to additionally have these bounce messages
+end up in a mailbox you&#39;ll want too leave this out.</p>
+
+<p>The transport additionally indicates the script specified by the argv argument
+will be executed as the nobody user with the extension passed as the sole
+parameter too the script. You&#39;ll want too change the path of argv too the path
+of your script.</p>
+
+<p>If you don&#39;t already have a transports map (otherwise just add this tranport
+and remap it if it&#39;s a hash type), create the file &#39;/etc/postfix/transport&#39; and
+add the following contents:</p>
+<div class="CodeRay">
+  <div class="code"><pre>bounce@example.tld    bounce:
+</pre></div>
+</div>
+
+<p>And build the hash map:</p>
+<div class="CodeRay">
+  <div class="code"><pre>postmap /etc/postfix/transport
+</pre></div>
+</div>
+
+<p>Finally make sure postfix is aware of your transport map (the following line
+should be in your &#39;main.cf&#39; file).</p>
+<div class="CodeRay">
+  <div class="code"><pre>transport_maps = hash:/etc/postfix/transport
+</pre></div>
+</div>
+
+<p>Reload your postfix configuration and your script should now be handling all
+mail sent too &#39;<a href="mailto:bounce@example.tld">bounce@example.tld</a>&#39;.</p>
+
+    </div>
+  </body>
+</html>

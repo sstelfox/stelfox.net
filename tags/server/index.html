@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Server - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Server" />
+    <meta property="og:url" content="https://stelfox.net/tags/server/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class="post">
+  <h1>Server</h1>
+  
+    <div class='post'>
+      <h2><a href="/blog/2014/06/fixing-erratic-bmc-controller-on-poweredge-c6100/">Fixing Erratic BMC Controller on PowerEdge C6100</a></h1>
+      <aside>Posted at: 2014-06-30 21:43:02 -0400</aside>
+      <article>
+        <p>I randomly started experiencing an issue with one blade in one of my PowerEdge
+C6100 blades. It wouldn&#39;t obey all commands issued too it via IPMI or through
+the BMC&#39;s web interface. Additionally the blade would randomly power on when
+off, and the front light would consistently blink as if a hardware fault was
+detected.</p>
+
+<p>This has been bothering me for a while, but it was my spare blade and wasn&#39;t
+affecting my lab in anyway so I&#39;ve ignored it. I finally needed it for a
+project and looked into what may be causing the issue.</p>
+
+<p>A <a href="http://forums.servethehome.com/index.php?threads/dell-c6100-anyone-brick-a-board-yet.1448/">thread</a> on the Serve the Home forums lead to me too a solution, even
+though my symptoms didn&#39;t quite match up with what I was experiencing.</p>
+
+<p>I downloaded the <a href="http://ftp.dell.com/Manuals/all-products/esuprt_ser_stor_net/esuprt_cloud_products/poweredge-c6100_Owner%27s%20Manual_en-us.pdf">PowerEdge C6100 Owner&#39;s Manual</a> for the jumper
+information, and found it too be redudant. The board itself has each of the
+jumpers clearly labeled.</p>
+
+<p>After pulling the affected chassis out of the server I connected the pins for
+the CMOS reset, CMOS password reset, and system reset for about 15 seconds. I
+pulled the jumpers, reinstalled the blade and it&#39;s happy once again. Problem
+solved.</p>
+
+<p><em>Update:</em> After performing a few commands via the web interface the issue
+returned. I&#39;m still looking for a solution too the problem.</p>
+
+<p><em>Update 2:</em> I&#39;m now suspecting that the issue may be related too me not
+updating the FSB, which is responsible for handling power management of
+individual nodes as well as reporting temperature and command response from the
+BMC.</p>
+
+      </article>
+    </div>
+  
+</div>
+
+    </div>
+  </body>
+</html>

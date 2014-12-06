@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Nagios - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nagios" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/nagios/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Nagios</h1>
+<div class="CodeRay">
+  <div class="code"><pre>yum install nagios nagios-plugins httpd nagios-plugins-load \
+  nagios-plugins-users nagios-plugins-http nagios-plugins-ping \
+  nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \
+  nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y
+</pre></div>
+</div>
+<div class="CodeRay">
+  <div class="code"><pre>rm -f /etc/httpd/conf.d/welcome.conf
+</pre></div>
+</div>
+
+<p>There is also an undeclared depedency:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install perl-Text-ParseWords -y
+</pre></div>
+</div>
+<div class="CodeRay">
+  <div class="code"><pre>htpasswd -c /etc/nagios/passwd nagiosadmin
+</pre></div>
+</div>
+
+<p>Updates are going to be handled by yum exclusively, so the first change is
+adjusting <code>check_for_updates=1</code> to <code>0</code>, and for good measure
+<code>bare_update_check=0</code> to <code>1</code> in <code>/etc/nagios/nagios.cfg</code>.</p>
+<div class="CodeRay">
+  <div class="code"><pre>systemctl enable httpd.service
+systemctl enable nagios.service
+systemctl start httpd.service
+systemctl start nagios.service
+</pre></div>
+</div>
+
+<p>I had a strange issue where the ping plugin wasn&#39;t working with an error like
+&quot;CRITICAL - Could not interpret output from ping command&quot; the solution was to
+give the setuid bit to the ping program like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>chmod u+s /usr/bin/ping
+</pre></div>
+</div>
+
+<p>Next steps:</p>
+
+<ul>
+<li>Investigate using nginx instead of apache</li>
+<li>Setup nagios to be the root of apache</li>
+<li>Add SSL to apache</li>
+<li>Add a port forward through to nagios</li>
+</ul>
+
+<h2>Permission Fixing</h2>
+
+<p>In the event all the editing goo breaks nagios&#39;s ability to access files I
+wrote the following quick little script to fix the various ownerships and
+permissions.</p>
+<div class="CodeRay">
+  <div class="code"><pre>#!/bin/bash
+
+# Fix the ownership of the various directories
+chown root:root /etc/nagios
+chown -R root:nagios /etc/nagios/*
+chown root:apache /etc/nagios/passwd
+
+# And fix the permissions on the various files and directories
+chmod -R u=rwX,g=rX,o=rX /etc/nagios
+chmod 0640 /etc/nagios/private/resource.cfg /etc/nagios/passwd
+
+# And restore any selinux attributes on the files
+restorecon -R /etc/nagios
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>

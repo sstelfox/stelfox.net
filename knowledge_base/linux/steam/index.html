@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Steam - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Steam" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/steam/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Steam</h1>
+
+<h2>Installation</h2>
+
+<h3>Thing that Didn&#39;t Work</h3>
+
+<p>Ensure you have the RPMFusion repositories setup.</p>
+
+<p>Install the dependencies:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install libtxc_dxtn.{i686,x86_64} mesa-libGL-devel.{i686,x86_64} \
+  openal-soft.i686 mate-dialogs mesa-libGLU.{x86_64,i686} \
+  xorg-x11-fonts-100dpi -y
+</pre></div>
+</div>
+
+<p>Ensure the 100dpi fonts are in your font path. Add the following line to the
+end of the <code>~/.xinitrc</code> file:</p>
+<div class="CodeRay">
+  <div class="code"><pre>xset +fp /usr/share/fonts/X11/100dpi
+</pre></div>
+</div>
+
+<p>Add the OpenSUSE Fedora game repository, <code>/etc/yum.repos.d/games.repo</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[games]name=Games (Fedora_17)
+type=rpm-md
+baseurl=http://download.opensuse.org/repositories/games/Fedora_17/
+gpgcheck=1
+gpgkey=http://download.opensuse.org/repositories/games/Fedora_17/repodata/repomd.xml.key
+enabled=1
+</pre></div>
+</div>
+
+<p>The repository seems to have taken down all the steam packages as of January
+7th, 2013. It seems incredibly unreliable, other repositories seem to be
+getting taken down for now. In the meantime it seems like it may be better to
+figure out how to install the .deb file.</p>
+
+<h3>Something else That Didn&#39;t work...</h3>
+<div class="CodeRay">
+  <div class="code"><pre>yum install dpkg -y
+wget http://media.steampowered.com/client/installer/steam.deb -O ~/Downloads/steam.deb
+mkdir ~/steam
+dpkg -x ~/Downloads/steam.deb ~/steam
+sudo cp ~/steam/usr/bin/steam /usr/bin/
+sudo cp -r ~/steam/* /
+sudo restorecon -R /usr/lib/steam/ /usr/bin/steam /etc
+sudo yum install libpng.i686 libpng-compat.i686 gtk2.i686 -y
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Finding Ruby Subclasses - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    <meta name="keywords" content="ruby />
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Finding Ruby Subclasses" />
+    <meta property="og:url" content="https://stelfox.net/blog/2014/02/finding-ruby-subclasses/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class='post'>
+        <h1><a href="/blog/2014/02/finding-ruby-subclasses/">Finding Ruby Subclasses</a></h1>
+        <aside class="post-date">Published <time datetime=''>far too early on February 20, 2014</time> by Sam Stelfox</aside>
+        <article>
+          <p>While working through a problem I found it would be immensely useful to be able
+to enumerate all of the current subclasses of a particular class. After
+thinking about this for a while I settled on a good old friend of mine,
+<code>ObjectSpace</code>.</p>
+
+<p>For those not familiar with the ObjectSpace module, it is a means to inspect
+and access the items being tracked by Ruby&#39;s garbage collector. This means it
+has a hook into every living object, and more dangerously, every near-death
+object.</p>
+
+<p><code>ObjectSpace</code> provides a method for enumerating instances of a specific class,
+specifcally named <code>each_object</code> which takes a class. With Ruby all classes are
+in fact instances of the <code>Class</code> class. This allows us to enumerate every
+available class by passing it to the enumerator like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).to_a
+</pre></div>
+</div>
+
+<p>Alright so we now have an array of every single class that could possibly be
+instantiated, how do we narrow it down to just the ones we&#39;re interested in?
+Once again Ruby provides with the <code>ancestors</code> method, combine that with a
+select and we can quickly narrow it down. You can see it in the following
+example:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) }
+=&gt; [<span class="constant">String</span>, <span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>Hmm, that&#39;s not quite right though. We have found all the subclasses but we&#39;ve
+also grabbed the parent class. With one small modification we eliminate that as
+well.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) &amp;&amp; k != <span class="constant">String</span> }
+=&gt; [<span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>That line is rather long though, and I generally like to avoid multiple tests
+in a select block. There is a tad bit of syntactic sugar provided by Ruby
+allowing us to accomplish the same thing, our final example is ultimately the
+solution I went with:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="constant">String</span> }
+=&gt; [<span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>Putting this into a method:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">subclasses</span>(klass)
+  <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; klass }
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>If you were so inclined you could extend the <code>Class</code> class with a method to
+make this available anywhere like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Class</span>
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">subclasses</span>
+    <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="predefined-constant">self</span> }
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>I&#39;m personally not a fan of extending any of the core classes unless absolutely
+necessary, but too each there own.</p>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>

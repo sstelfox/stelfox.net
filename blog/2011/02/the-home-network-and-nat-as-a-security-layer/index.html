@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>The Home Network and NAT as a Security Layer - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="The Home Network and NAT as a Security Layer" />
+    <meta property="og:url" content="https://stelfox.net/blog/2011/02/the-home-network-and-nat-as-a-security-layer/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class='post'>
+        <h1><a href="/blog/2011/02/the-home-network-and-nat-as-a-security-layer/">The Home Network and NAT as a Security Layer</a></h1>
+        <aside class="post-date">Published <time datetime=''>instead of an afternoon nap on February 17, 2011</time> by Sam Stelfox</aside>
+        <article>
+          <p>One of the hot-topics for IPv6 (which I have been thinking about a lot lately)
+is NAT. I normally wouldn&#39;t go into detail about specifics that are obvious to
+people in my field but for the sake of this post I will. NAT or Network Address
+Translation, is a way for a large number of computers to share a single public
+IP address.</p>
+
+<p>The router that is handling the NAT will keep track of connections coming in
+and out of it and re-write the destination IP to an internal address to keep
+the traffic flowing.</p>
+
+<p>NAT was necessary with IPv4 because IPv4 only had 4,294,967,296 addresses on
+the internet and quite a few those were unroutable or reserved. With a world
+population of 7 billion only half the population of the planet could have a
+single device online at a time. IPv6 solves this issue by increasing the number
+of public routable address to 3.4×10<sup>38.</sup> That means that each person alive
+could have 4.9x10<sup>28</sup> addresses online at any given time.</p>
+
+<p>So what does this mean for NAT? Clearly we don&#39;t need it any more right? There
+is no way I&#39;ll ever use 4.9x10<sup>28</sup> addresses. I&#39;m willing to bet Google doesn&#39;t
+own that many machines. Well this is where the debate starts. NAT was never
+designed to be used as a security tool and it has even had some security
+ramifications because of it.</p>
+
+<p>The weakness of NAT is also it&#39;s primary strength. What do I mean by that? You
+can&#39;t attack a computer if you can&#39;t talk to it. In my opinion, this alone has
+protected innumerable regular home users from all kinds of terrible things
+online. A standard COTS router that comes with most internet connections will
+stop port-scans and automated attack tools at the door.</p>
+
+<p>Sounds good right? So why would people be opposed to it? Simple. It complicates
+things. There are a limited number of simultaneous connections that can go
+through a single NAT device. This hard limit of 65,536 connections (in reality
+this number is an order of magnitude less - 32,768) isn&#39;t changed between IPv4
+and IPv6 and there really isn&#39;t a good reason to change it. Sounds like a lot
+but trust me it gets used up quickly.</p>
+
+<p>There is also identity reasons, behind a NAT could be 100 people or 1 and to
+the rest of the world it will all look the same. If someone breaks into a home
+network there isn&#39;t any way to differentiate that cracker from a normal user to
+the outside world. This privacy also gives home users plausible deniability for
+anything that happens on their network.</p>
+
+<p>But those arguments against have very little to do with security. So what is
+all this hype about NAT being a form of security through obscurity? The
+argument I come across whenever I ask neigh-sayers about NAT, is that if a user
+gets infected then the network can still be enumerated behind the NAT as if all
+the computers were on the Internet. This argument has one fatal flaw. It is
+depending on a user to get infected. A firewall has this exact same
+&quot;vulnerability&quot; so would they argue that a firewall is not a layer of security?
+I thought not.</p>
+
+<p>NAT has it&#39;s problems, but claiming it is not a security layer is just plain
+wrong. IPv6 is here to stay and we should really start looking at the security
+implications of everything involving it. New security models need to be created
+and lots of of research needs to be done in this area still. In the mean time I
+suspect a lot of malware and viruses will start making use of IPv6 and how
+relatively unknown it really is.</p>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>

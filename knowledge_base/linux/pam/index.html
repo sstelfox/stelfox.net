@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>PAM - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="PAM" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/pam/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>PAM</h1>
+
+<h2>Overview</h2>
+
+<p><code>/etc/pam.d/</code> directory contains the PAM configuration files for each PAM-aware
+application. Each pam aware configuration file has lines in the format of:</p>
+<div class="CodeRay">
+  <div class="code"><pre>&lt;module interface&gt; &lt;control flag&gt; &lt;module&gt; &lt;module arguments&gt;
+</pre></div>
+</div>
+
+<h2>Module Interfaces</h2>
+
+<p>There are only four module interfaces:</p>
+
+<ul>
+<li>account - Verify access is allowed. Check if account has expired, time of day
+checks, etc</li>
+<li>auth - Authenticates use, verifies the validity of a password, set credentials
+&amp; group memberships &amp; kerberos tickets</li>
+<li>password - Used for updating credentials</li>
+<li>session - Additional tasks performed after access has been granted, stuff like
+mounting user directories and making users mailbox available.</li>
+</ul>
+
+<p>A module can provide any or all module interfaces.</p>
+
+<p>Module interface directives can be &#39;stacked&#39; so that multiple modules are used
+together for one purpose. The order of these directives. Commented out lines
+start with &#39;#&#39;.</p>
+
+<h2>Control flags</h2>
+
+<ul>
+<li>include - The module name that is provided will not load a module, but rather
+include another pam configuration file at this point in the config.</li>
+<li>optional - The module result is ignored, this is only becomes necessary for
+successful authentication when no other modules reference the interface.</li>
+<li>required - The module result must be successful for authentication to
+continue. If the test fails at this point, the user is not notified until the
+results of all modules tests that reference that interface are complete.</li>
+<li>requisite - The module result must be successful for authentication to
+continue. If a test fails at this point, the uesr is notified immediately with
+a message reflecting the first failed required or requisite module test.</li>
+<li>sufficient - The module result is ignored if it fails. However, if the result
+of a module flagged sufficient is successful and no previous modules flagged
+required have failed, then no other results are required and the request
+succeeds.</li>
+</ul>
+
+<h2>Module</h2>
+
+<p>Available modules can be found in <code>/lib/security</code> or <code>/lib64/security</code>
+depending on the system architecture.</p>
+
+<h3>Module Arguments</h3>
+
+<p>These are module dependent refer to the man page of the module.</p>
+
+<h3>Confusing Lines I Don&#39;t Understand</h3>
+<div class="CodeRay">
+  <div class="code"><pre>account [default=bad success=ok user_unknown=ignore] pam_krb5.so
+</pre></div>
+</div>
+
+<h2>pam_cracklib</h2>
+
+<p><code>pam_cracklib</code> allows for quick quality control settings of passwords. It
+allows minimum requirements of the number of different types of characters that
+need to be used in a password before it can be used. It also checks the
+password against a dictionary.</p>
+
+<p>By default it checks against a dictionary but that really isn&#39;t enough for good
+password security. Further password control can be accomplished using
+<code>pam_passwdqc</code>.</p>
+
+<p>Default:</p>
+<div class="CodeRay">
+  <div class="code"><pre>password  requisite  pam_cracklib.so try_first_pass retry=3 type=
+</pre></div>
+</div>
+
+<p>Recommended (require one of each type, minimum length 14):</p>
+<div class="CodeRay">
+  <div class="code"><pre>password  requisite  pam_cracklib.so try_first_pass retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1
+</pre></div>
+</div>
+
+<p>Other (credit based):</p>
+<div class="CodeRay">
+  <div class="code"><pre>password  requisite  pam_cracklib.so try_first_pass retry=3 minlen=22 dcredit=2 ocredit=4
+</pre></div>
+</div>
+
+<p>The credit based system requires a bit of explaining, it requires a 22
+character password and treats numbers as 2 characters and symbols as 4
+characters. This can be dangerous as you can have an 11 digit number as a
+password which isn&#39;t secure...</p>
+
+<h2>pam_passwdqc</h2>
+
+<p><code>pam_passwdqc</code> replaces <code>pam_cracklib</code> in checking the quality of the password.
+To use it you need to comment out <code>pam_cracklib</code> in <code>/etc/pam.d/system-auth</code>.</p>
+
+<p>You&#39;ll need to add this line to the <code>/etc/pam.d/system-auth</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>password  requisite  pam_passwdqc.so retry=3 min=disabled,disabled,22,16,12 passphrase=4 similar=deny enforce=users
+</pre></div>
+</div>
+
+<p>What this does is it prevent any passwords with one or two character types.
+Requires a password with three character types to be a minimum of 16 characters
+and one with four character types to be a minimum of 12 characters.</p>
+
+<p>The middle option (22) is the minimum length of a passphrase (grouping of words
+found in the dictionary file). The minimum number of words is controlled by the
+passphrase option.</p>
+
+<p>It denies similar passwords as previous ones and only enforces quality control
+for root passwords (since they&#39;re sha512 hashes they only have two character
+  classes and would thus be denied).</p>
+
+<p>This is untested but to the best of my knowledge passphrases still need to be
+at least three character classes (since one and two are disabled).</p>
+
+<h2>pam_tally2</h2>
+
+<p><code>pam_tally2</code> comes with Fedora&#39;s pam package so it will be installed. It&#39;s very
+useful to prevent bruteforce attempts BUT it can also used to lock access out
+to a legitimate user. It is recommended to not turn this on for the entire
+system but just remote login services that use pam (for example SSH).</p>
+
+<p>To use it you need to add the following line to the services pam file. So for
+SSH the file would be <code>/etc/pam.d/sshd</code>. The following is what needs to be
+added:</p>
+<div class="CodeRay">
+  <div class="code"><pre>auth    required     pam_tally2.so deny=5 onerr=fail audit silent
+account     required     pam_tally2.so
+</pre></div>
+</div>
+
+<p>You&#39;ll also need to change:</p>
+<div class="CodeRay">
+  <div class="code"><pre>auth     sufficient     pam_unix.so nullok try_first_pass
+</pre></div>
+</div>
+
+<p>To:</p>
+<div class="CodeRay">
+  <div class="code"><pre>auth     required     pam_unix.so nullok try_first_pass
+</pre></div>
+</div>
+
+<p>And get rid of the following two lines as they will interfere with the rest of
+the changes:</p>
+<div class="CodeRay">
+  <div class="code"><pre>auth     requisite    pam_succeed_if.so uid &gt;= 500 quiet
+auth     required     pam_deny.so
+</pre></div>
+</div>
+
+<h3>Resetting a User&#39;s Account</h3>
+
+<p>Information about users password tally can be found in <code>/var/log/tallylog</code>.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# /sbin/pam_tally2 --user username --reset
+</pre></div>
+</div>
+
+<h3>Automatic Unlocking</h3>
+
+<p>Additionally adding <code>unlock_time=1800</code>. This allows the user to log back in
+half an hour after the account has been locked.</p>
+
+    </div>
+  </body>
+</html>

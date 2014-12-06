@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>GPSd - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GPSd" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/gpsd/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h2>Installation</h2>
+
+<p>I&#39;ve been using a BU-353 which if I remember correctly was ~$20 and has been
+fairly reliable. It&#39;s also got a magnetic base allowing you to attach it to the
+roof of a car when war-driving.</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install gpsd gpsd-clients -y
+</pre></div>
+</div>
+
+<p>If you want to use gpsd on a headless server you&#39;ll want to exclude the
+<code>gpsd-clients</code> as they will install <code>xgps</code> and all of X as a dependency.</p>
+
+<h2>Configuration</h2>
+
+<p>My GPS device is identified by udev as a serial port, which is fairly common as
+NMEA specifies a serial connection with a baud rate of 4800. There is an issue,
+however, with a program running in the background called <code>modem-manager</code>.</p>
+
+<p>It will actively take control over any serial device that gets plugged in and
+send &quot;AT&quot; commands at it to try and determine whether or not the device is a
+modem.  It will release control if it fails after 10 seconds but that initial
+control breaks GPSd auto-device detection.</p>
+
+<p>To prevent this from happening we need to blacklist the device to
+modem-manager. If you use a modem (hah) then you&#39;ll want to make sure the
+device IDs don&#39;t conflict. To get your device ID run the following command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>udevadm monitor --env
+</pre></div>
+</div>
+
+<p>Now plug in your GPS device and you should see something similar to the
+following output:</p>
+<div class="CodeRay">
+  <div class="code"><pre>**snip**
+
+UDEV  [10963.023977] add      /devices/pci0000:00/0000:00:1d.0/usb2/2-1/2-1.2/2-1.2:1.0/ttyUSB4/tty/ttyUSB4 (tty)
+ACTION=add
+DEVLINKS=/dev/gps4 /dev/serial/by-id/usb-Prolific_Technology_Inc._USB-Serial_Controller-if00-port0 /dev/serial/by-path/pci-0000:00:1d.0-usb-0:1.2:1.0-port0
+DEVNAME=/dev/ttyUSB4
+DEVPATH=/devices/pci0000:00/0000:00:1d.0/usb2/2-1/2-1.2/2-1.2:1.0/ttyUSB4/tty/ttyUSB4
+ID_BUS=usb
+ID_MM_CANDIDATE=1
+ID_MODEL=USB-Serial_Controller
+ID_MODEL_ENC=USB-Serial\x20Controller
+ID_MODEL_FROM_DATABASE=PL2303 Serial Port
+ID_MODEL_ID=2303
+ID_PATH=pci-0000:00:1d.0-usb-0:1.2:1.0
+ID_PATH_TAG=pci-0000_00_1d_0-usb-0_1_2_1_0
+ID_REVISION=0300ID_SERIAL=Prolific_Technology_Inc._USB-Serial_Controller
+ID_TYPE=generic
+ID_USB_DRIVER=pl2303
+ID_USB_INTERFACES=:ff0000:
+ID_USB_INTERFACE_NUM=00
+ID_VENDOR=Prolific_Technology_Inc.
+ID_VENDOR_ENC=Prolific\x20Technology\x20Inc.
+ID_VENDOR_FROM_DATABASE=Prolific Technology, Inc.
+ID_VENDOR_ID=067b
+MAJOR=188
+MINOR=4
+SEQNUM=2470
+SUBSYSTEM=tty
+TAGS=:systemd:
+USEC_INITIALIZED=10963017963
+
+**snip**
+</pre></div>
+</div>
+
+<p>You&#39;ll probably see this a couple time as udev announces all kinds of
+crazyness. The important fields to look for are <code>ID_VENDOR_ID</code> and
+<code>ID_MODEL_ID</code>, these will become your <code>idVendor</code> and <code>idProduct</code> the udev rules
+to come. The values for mine are <code>067b</code> and <code>2303</code> respectively.</p>
+
+<p>Create the file <code>/etc/udev/rules.d/77-user-mm-usb-device-blacklist.rules</code> with
+the following contents, you&#39;ll want to replace the values of <code>idVendor</code> and
+<code>idProduct</code> if yours differ from mine:</p>
+<div class="CodeRay">
+  <div class="code"><pre>ACTION!=&quot;add|change&quot;, GOTO=&quot;user_mm_usb_device_blacklist_end&quot;
+SUBSYSTEM!=&quot;usb&quot;, GOTO=&quot;user_mm_usb_device_blacklist_end&quot;
+ENV{DEVTYPE}!=&quot;usb_device&quot;, GOTO=&quot;user_mm_usb_device_blacklist_end&quot;
+
+ATTRS{idVendor}==&quot;067b&quot;, ATTRS{idProduct}==&quot;2303&quot;, ENV{ID_MM_DEVICE_IGNORE}=&quot;1&quot;
+
+LABEL=&quot;user_mm_usb_device_blacklist_end&quot;
+</pre></div>
+</div>
+
+<p>The changes should be picked up immediately so no need to restart or anything
+silly like that.</p>
+
+<p>Now you&#39;ll want to start up gpsd and ensure it starts up on boot as well:</p>
+<div class="CodeRay">
+  <div class="code"><pre>systemctl enable gpsd.service
+systemctl start gpsd.service
+</pre></div>
+</div>
+
+<p>Thats the end of the configuration, whenever you plug in one or more GPS
+devices hotplug will take care of notifying gpsd of the devices, and will
+remove it when it&#39;s been removed. You can view information on your position as
+well as a fix of your location with <code>xgps</code> which is installed with the
+<code>gpsd-clients</code>.</p>
+
+<h2>Using as a Time Source</h2>
+
+<p>TODO</p>
+
+<h2>Extending Accuracy with NTRIP / RTCM data</h2>
+
+<p>TODO</p>
+
+<ul>
+<li><a href="http://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol">http://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol</a></li>
+<li><a href="http://igs.bkg.bund.de/ntrip/caster">http://igs.bkg.bund.de/ntrip/caster</a></li>
+<li><a href="http://www.linuxcertif.com/man/5/rtcm-104/173922/">http://www.linuxcertif.com/man/5/rtcm-104/173922/</a></li>
+<li><a href="http://software.rtcm-ntrip.org/">http://software.rtcm-ntrip.org/</a> (BNC is the relevant one)</li>
+</ul>
+
+<h2>Profiling Accuracy of GPS Receivers</h2>
+
+<p>Included with the gpsd-clients is a utility called <code>gpsprof</code> which can take
+samples from a GPS receiver and test the margin of error in x,y,z spaces. By
+default it collects 100 samples.</p>
+
+<p>Since NMEA specifies producing 1/sample/sec this will by default take 100
+seconds or 1 minute 40 seconds to complete. It outputs the information in
+gnuplot format so we&#39;ll need that to view the data:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install gnuplot -y
+</pre></div>
+</div>
+
+<p>During the test you&#39;ll want to ensure that the GPS receiver is in a fixed
+location. Personally I trust data more with a larger sample size so I opted to
+test my receiver over a period of two hours. Like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>gpsprof -n 7200 | tee two-hour-gps-prof.gnuplot | gnuplot -persist
+</pre></div>
+</div>
+
+<p>This also saves the data into a file so you can regenerate the graph without
+running the test for two hours again.</p>
+
+<p>What I found while running the test indoors is that my GPS receiver isn&#39;t that
+accurate (big surprise for $20).</p>
+
+<p>Over the course of two hours of testing is that 50% of the fixes were with 9.24
+meters of the average, 95% were within 27.32 meters of the average, and 99% of
+the fixes were within 37.5 meters (this is only for latitude and longitude).</p>
+
+<p>The latitude varied by as much as 60 meters and the logitude by as much as 40
+meters. The altitude varied by as much as 80 meters though I don&#39;t have a
+statistical breakdown for that. Of the 7200 data point there was also 45 where
+the receiver was unable to calculate altitude. The average location (at least
+for lat/long) was incredibly accurate as verified by Google Maps so at least
+that&#39;s something.</p>
+
+<p>A second test run over the course of an hour with a clear view of the sky
+through the two separate windows provided an accuracy with 50% of fixes within
+6.23 meters of average, 95% of fixes within 25.01 meters, and 99% wihin 31.94
+meters.</p>
+
+<p>The latitude varied by as much as 40 meters and the longitude by as much as 25
+meters. The altitude varied by as much as 40 meters. All fixes had altitude
+fixes as well.</p>
+
+<p>I suspect some if not quite a bit of the error was because I was indoors and
+nowhere near a window (my office is in the heart of a building unfortunately).</p>
+
+<h2>Misc References</h2>
+
+<ul>
+<li><a href="http://catb.org/gpsd/hacking.html">http://catb.org/gpsd/hacking.html</a></li>
+</ul>
+
+    </div>
+  </body>
+</html>

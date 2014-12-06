@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Partitioning - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Partitioning" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/partitioning/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Partitioning</h1>
+
+<h2>Recommended / Best Practices</h2>
+
+<ul>
+<li>/boot 200Mb</li>
+<li>swap 1.5x times the amount of RAM</li>
+<li>/</li>
+<li>/home</li>
+<li>/tmp</li>
+<li>/var</li>
+<li>/var/log</li>
+<li>/var/log/audit</li>
+<li>Encrypt all partitions except /boot</li>
+</ul>
+
+<h2>Creating an LVM partition</h2>
+
+<h3>Create a Physical Partition</h3>
+
+<ul>
+<li>Open the drive in fdisk, create a new primary partition</li>
+<li>Mark the new partition as type &#39;8e&#39; or Linux LVM</li>
+<li>Write the partition table</li>
+</ul>
+
+<h3>Create Physical LVM Volume</h3>
+<div class="CodeRay">
+  <div class="code"><pre>pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)
+</pre></div>
+</div>
+
+<h3>Volume Group Creation</h3>
+
+<p>This point needs a bit of thinking before doing. There is a limit on the number
+of physical extents that can be accessed. This in turn limits the size of the
+volume group. This limit is 65,536 extents.</p>
+
+<p>The default size is 4MB/extent. This by default leads to a limit of 256GB per
+volume group. 8MB/extent gets you 512GB. The maximum size I see needing is
+32MB/extent for a size of 2TB. The following example uses an extent size of
+16MB and assumes the partition is <code>/dev/sdc1</code>.</p>
+<div class="CodeRay">
+  <div class="code"><pre>vgcreate -s 16M vg_test /dev/sdc1
+</pre></div>
+</div>
+
+<h3>Logical Volume Creation</h3>
+
+<p>The following creates a 1GB logical volume group, there does not seem to be a
+way to create a logical volume with all the remaining space in the volume
+group.</p>
+<div class="CodeRay">
+  <div class="code"><pre>lvcreate -L 1G -n lv_test vg_test
+</pre></div>
+</div>
+
+<h2>Securing Partitions</h2>
+
+<ul>
+<li>Add <code>nodev</code> to all non-root local ext{2,3,4} partitions in <code>/etc/fstab</code></li>
+<li>Add <code>nosuid</code> and <code>noexec</code> to <code>/tmp</code> partition</li>
+<li>Bind mount /tmp to /var/tmp with <code>rw,nodev,nosuid,noexec,bind</code> as options</li>
+<li>If removable storage is enabled add <code>nodev</code>, <code>nosuid</code>, <code>noexec</code> to their
+partitions</li>
+<li>Disable auto mounter (autofs)</li>
+<li>Dynamically <a href="../swap/">encrypt the swap partition</a> (not for any machine that will be
+hibernated)</li>
+</ul>
+
+<h2>Encrypting Additional Partitions</h2>
+<div class="CodeRay">
+  <div class="code"><pre>cryptsetup luksFormat -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test
+cryptsetup luksOpen -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test \
+  cryptTest
+mkfs.ext4 /dev/mapper/cryptTest
+cryptsetup luksClose /dev/mapper/cryptTest
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>

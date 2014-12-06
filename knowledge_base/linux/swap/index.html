@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Swap - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Swap" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/swap/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Swap</h1>
+
+<h2>Security</h2>
+
+<p>If at any point a decryption key is needed to access a file, it will be stored
+in RAM. If an otherwise encrypted file is edited it will get stored in RAM
+before being saved. Without warning at any time that RAM can be swapped out to
+disk, at which point there is now a recoverable copy of an encryption key or
+sections of an encrypted document plain text on disk that <a href="../data_recovery/">can be
+recovered</a>.</p>
+
+<p>To prevent this I strongly recommend encrypting the swap. During a standard
+install of Fedora if you want to accomplish this you have to use dirty
+VolGroups and LVMs. I hate VolGroups and LVMs and on top of that it will be
+using a set static key that I&#39;m sure will eventually be open to static
+analysis. While most people won&#39;t care about the latter I like to avoid the
+whole thing if I can do it with a fast simple solution.</p>
+
+<p>My solution is to take swap out of the hands of fstab and mount it myself after
+generating a one-time key for that session. When the computer turns off the key
+will be completely lost and a new one will be generated the next time the
+computer boots. I don&#39;t want to do this by hand every time the computer boots
+so I&#39;ll make sure it does this automatically.</p>
+
+<p>The first step is to prevent Linux from mounting the swap on it&#39;s own. To do
+this comment out all the lines in fstab that have to do with swap. They will
+look like the following:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/dev/sda3       swap                swap        defaults        0 0
+</pre></div>
+</div>
+
+<p>Your going to need to know what partitions your swap lives on. In the above
+example swap lives on <code>/dev/sda3</code>, it is very likely that your&#39;s will live on a
+different device/partition.</p>
+
+<p>First we&#39;re going to want to fill the swap space with junk to make sure that
+there isn&#39;t anything useful left on there to be recovered. Your going to want
+to make sure that your system isn&#39;t currently using the swap, so first turn it
+off before writing over the swap space. The latter command is very dangerous if
+you do it on the wrong partition! Double check before executing it!</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# swapoff -a
+[root@localhost ~]# dd if=/dev/urandom of=/dev/sda3
+</pre></div>
+</div>
+
+<p>Next we&#39;ll want to make one of the boot scripts initialize encryption and mount
+the swap, there is a specific boot script created explicitly for user
+modification that other packages won&#39;t touch. We&#39;re going to use that one which
+is <code>/etc/rc.d/rc.local</code>. You&#39;ll want to add the following lines to it.</p>
+<div class="CodeRay">
+  <div class="code"><pre>cryptsetup -c blowfish -h sha256 -d /dev/urandom create swap /dev/sda3
+mkswap -f /dev/mapper/swap
+swapon /dev/mapper/swap
+</pre></div>
+</div>
+
+<p>The cipher in the above command can be swapped around, blowfish is a strong
+encryption with a fairly good throughput however it seems that 256bit
+aes-xts-plain is a bit faster without sacrificing too much security. If you&#39;d
+prefer to use that instead, replace the cryptsetup invocation with the
+following one:</p>
+<div class="CodeRay">
+  <div class="code"><pre>cryptsetup -c aes-xts-plain -s 256 -h sha256 -d /dev/urandom create swap /dev/sda3
+</pre></div>
+</div>
+
+<p>Additional ciphers that can be used including speed tests can be found on the
+<a href="../../security/encryption/">Encryption</a> page.</p>
+
+<p>Fedora has device mapper support built into the kernel, however if your
+distribution doesn&#39;t have device mapper support active by default, in the line
+right before the cryptsetup invocation add the line &quot;modprobe dm-mod&quot; to load
+the kernel module. Otherwise you&#39;ll get a &quot;Command failed: Incompatible
+libdevmapper&quot; error.</p>
+
+    </div>
+  </body>
+</html>

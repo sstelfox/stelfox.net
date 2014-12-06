@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Linux Virtual Servers - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Linux Virtual Servers" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/linux_virtual_servers/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Linux Virtual Servers</h1>
+
+<h2>Keepalived</h2>
+
+<p>My VMs each have three interfaces, eth0 is the &#39;public&#39; network network, eth1
+is the &#39;synchronization&#39; network, and eth2 is the &#39;internal&#39; network. This
+sample configuration will be making use of two directors and two &quot;real
+servers&quot;.</p>
+
+<p>The directors have hostnames &#39;director-01.i.0x378.net&#39; and
+&#39;director-02.i.0x378.net&#39;. &#39;director-01&#39; will have device/IP pairs of (eth0,
+192.168.122.141), (eth1, 10.10.10.10), and (eth2, 10.0.0.2). &#39;director-02&#39; will
+have device/IP pairs of (eth0, 192.168.122.142), (eth1, 10.10.10.11), and
+(eth2, 10.0.0.3).</p>
+
+<p>There are two virtual IP addresses that will need to be failed over,
+&#39;192.168.122.140&#39; on the &#39;public&#39; network and &#39;10.0.0.1&#39;  on the &#39;internal&#39;
+network.</p>
+
+<p>These need to be failed over simulatenously.</p>
+
+<p>First we need to install the packages:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install ipvsadm keepalived -y
+</pre></div>
+</div>
+
+<p>If the directors are running within an LXC environment, keepalived won&#39;t be
+able to load the kernel module it needs for the services. From the host machine
+you&#39;ll need to run the following command before attempting to start the
+keepalived services.</p>
+<div class="CodeRay">
+  <div class="code"><pre>modprobe ip_vs
+</pre></div>
+</div>
+
+<p>This can be done automatically by creating <code>/etc/rc.d/rc.local</code> and marking it
+as executable with the following contents.</p>
+<div class="CodeRay">
+  <div class="code"><pre>#!/bin/sh
+
+modprobe ip_vs
+</pre></div>
+</div>
+
+<p>Edit the <code>/etc/keepalived/keepalived.conf</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>global_defs {
+  notification_email_from failover@example.tld
+  notification_email {
+    admin+failover@example.tld
+  }
+
+  router_id LVS_DIRECTOR_01
+
+  smtp_connect_timeout 5
+  smtp_server          127.0.0.1
+}
+
+vrrp_sync_group gateway_group_1 {
+  group {
+    external_network_1
+    internal_network_1
+  }
+
+  smtp_alert
+}
+
+vrrp_instance external_network_1 {
+  interface eth0
+
+  state BACKUP
+
+  advert_int        1
+  garp_master_delay 1
+
+  priority          100
+  virtual_router_id 20
+
+  nopreempt
+
+  unicast_peer {
+    # IP address of the other director's eth0 interface
+    192.168.122.40
+  }
+
+  # You'll want to change this password...
+  authentication {
+    auth_type PASS
+    auth_pass password
+  }
+
+  virtual_ipaddress {
+    192.168.122.140/24 dev eth0
+    #2001:db8:15:7::100/64 dev eth0
+  }
+}
+
+vrrp_instance internal_network_1 {
+  interface eth2
+
+  state BACKUP
+
+  advert_int        1
+  garp_master_delay 1
+
+  priority          100
+  virtual_router_id 21
+
+  nopreempt
+
+  unicast_peer {
+    # IP address of the other director's eth2 interface
+    10.0.0.11
+  }
+
+  # You'll want to change this password...
+  authentication {
+    auth_type PASS
+    auth_pass password
+  }
+
+  virtual_ipaddress {
+    10.0.0.1/24 dev eth2
+    #2001:db8:16:10::100/64 dev eth2
+  }
+}
+</pre></div>
+</div>
+
+<p>For &#39;director-02&#39; the <code>router_id</code> should be set to &#39;LVS_DIRECTOR_02&#39;. You&#39;ll
+also want to update the unicast peer addresses for the individual interfaces as
+well. Since we&#39;ve disabled <code>preempt</code> failover and are starting the servers in
+the BACKUP state, adjusting the priority between the directors doesn&#39;t matter.</p>
+
+<p>We now need to ensure we have the firewall rules in place to allow both LVS
+instances to communicate their keepalive messages to each other. Add the
+following firewall rules:</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A SERVICES -i eth0 -p vrrp -s 192.168.122.0/24 -j ACCEPT
+-A SERVICES -i eth2 -p vrrp -s 10.0.0.0/24 -j ACCEPT
+-A OUTPUT -o eth0 -p vrrp -d 192.168.122.0/24 -j ACCEPT
+-A OUTPUT -o eth2 -p vrrp -d 10.0.0.0/24 -j ACCEPT
+</pre></div>
+</div>
+
+<p>At this point we can start up keepalived on both directors and test their
+failover. Run the following two commands on both directors.</p>
+<div class="CodeRay">
+  <div class="code"><pre>systemctl enable keepalived.service
+systemctl start keepalived.service
+</pre></div>
+</div>
+
+<p>You can check the IP addresses of each nodes using <code>ip addr</code>. One of them will
+have both of the virtual IP addresses. Shutdown the keepalive daemon on the
+other one and you should see it failover and grab the virtual IP addresses
+within a second.</p>
+<div class="CodeRay">
+  <div class="code"><pre>systemctl stop keepalived.service
+sleep 2
+systemctl start keepalived.service
+</pre></div>
+</div>
+
+<p>As much as I tried I couldn&#39;t get keepalived to make use of the synchronization
+interface to send it&#39;s VRRP packets. At the same time for my uses multicast
+isn&#39;t an option which I why I chose unicast synchronization. If you have more
+than two directors unicast will increase the amount of traffic required for the
+synchronization.</p>
+
+<h2>Conntrackd Tools</h2>
+
+<p>To allow us to use state based rules we&#39;ll also need to synchronize the known
+connection states between the two machines for the event of failover. There is
+a convenient system to do this. Enter <code>conntrackd</code>.</p>
+
+<p>First we&#39;ll need to install the package that has the synchronization daemon.</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install conntrack-tools -y
+</pre></div>
+</div>
+
+<p>We&#39;ll need to throw a configuration into place at
+<code>/etc/conntrackd/conntrackd.conf</code>. The following is for director-01:</p>
+<div class="CodeRay">
+  <div class="code"><pre>Sync {
+  Mode FTFW {
+    DisableExternalCache Off
+    PurgeTimeout 5
+  }
+
+  Multicast {
+    IPv4_address 225.0.0.50
+    Group 3780
+    IPv4_interface 10.10.10.10
+    Interface eth1
+    SndSocketBuffer 1249280
+    RcvSocketBuffer 1249280
+    Checksum on
+  }
+}
+
+General {
+  Nice -20
+
+  HashSize 32768
+  HashLimit 131072
+
+  Syslog on
+
+  LockFile /var/lock/conntrack.lock
+
+  UNIX {
+    Path /var/run/conntrackd.ctl
+    Backlog 20
+  }
+
+  NetlinkBufferSize 2097152
+  NetlinkBufferSizeMaxGrowth 8388608
+
+  Filter From Userspace {
+    Protocol Accept {
+      #DCCP
+      ICMP
+      IPv6-ICMP
+      #SCTP
+      TCP
+      UDP
+    }
+
+    Address Ignore {
+      # Loopback addresses
+      IPv4_address 127.0.0.1
+      IPv6_address ::1
+
+      # The director IP addresses
+      IPv4_address 10.0.0.10
+      IPv4_address 10.0.0.11
+      IPv4_address 192.168.122.40
+      IPv4_address 192.168.122.41
+
+      # The keepalive network
+      IPv4_address 10.10.10.0/24
+
+      # The virtual IP addresses
+      IPv4_address 192.168.122.140
+      IPv4_address 10.0.0.5
+    }
+  }
+}
+</pre></div>
+</div>
+
+<p>The only change for director-02 is to change the <code>IPv4_interface</code> to
+<code>10.10.10.11</code>.</p>
+
+<p>You&#39;ll notice that I am using multicast here. There is an option in conntrackd
+to use unicast as well, and I&#39;ll need to come back and reconfigure it to make
+use of it. For now though this should work in my environment.</p>
+
+<p>Add the firewall rules needed for the synchronization process on both machines:</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A INPUT -i eth1 -m udp -p udp -s 10.10.10.0/24 -d 225.0.0.50 --dport 3780 -j ACCEPT
+-A OUTPUT -o eth1 -m udp -p udp -d 225.0.0.50 --dport 3780 -j ACCEPT
+</pre></div>
+</div>
+
+<p>For most services I would also include connection tracking state information,
+but given the nature of this service I decided against it.</p>
+
+<p>Enable and start the service:</p>
+<div class="CodeRay">
+  <div class="code"><pre>systemctl enable conntrackd.service
+systemctl start conntrackd.service
+</pre></div>
+</div>
+
+<p>There is some work that conntrackd will need to do whenever keepalive changes
+it&#39;s cluster state. A script is provided with the <code>conntrack-tools</code> package, we
+can just copy it into the appropriate place with the following command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>cp /usr/share/doc/conntrack-tools-1.4.2/doc/sync/primary-backup.sh /etc/conntrackd/
+</pre></div>
+</div>
+
+<p>Now we need to tell keepalived to call the script when it&#39;s state changes, if
+you&#39;re following along with this page you&#39;ll need to add the following to the
+section named <code>vrrp_sync_group gateway_group_1</code>.</p>
+<div class="CodeRay">
+  <div class="code"><pre>notify_backup &quot;/etc/conntrackd/primary-backup.sh backup&quot;
+notify_fault  &quot;/etc/conntrackd/primary-backup.sh fault&quot;
+notify_master &quot;/etc/conntrackd/primary-backup.sh primary&quot;
+</pre></div>
+</div>
+
+<p>Make sure you restart keepalived on both machines.</p>
+
+<p>At this point we have everything in place we need to perform our two target
+tasks. Having a gateway on the local network that can failover in the event the
+other machine dies, and provide highly availability to multiple services behind
+them.</p>
+
+<h2>Traffic Routing with Failover</h2>
+
+<h2>Virtual Services</h2>
+
+    </div>
+  </body>
+</html>

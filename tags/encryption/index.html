@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Encryption - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Encryption" />
+    <meta property="og:url" content="https://stelfox.net/tags/encryption/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class="post">
+  <h1>Encryption</h1>
+  
+    <div class='post'>
+      <h2><a href="/blog/2014/04/calculating-rsa-key-fingerprints-in-ruby/">Calculating RSA Key Fingerprints in Ruby</a></h1>
+      <aside>Posted at: 2014-04-21 18:37:04 -0400</aside>
+      <article>
+        <p>I regularily find myself working on projects that involve the manipulation and
+storage of RSA keys. In the past I&#39;ve never had to worry about identification
+or presentation of these keys. Normally I&#39;ve only got one too three pairs at
+most that I&#39;m manipulating (server, certificate authority, client).</p>
+
+<p>I&#39;ve not found myself working on a project that involves presenting the
+certificates to users for selection and comparison. The obvious way too do this
+is take a page out of other developer&#39;s books and present the key&#39;s
+fingerprint.</p>
+
+<p>For those unfamiliar with key fingerprints, they are a condensed way to compare
+differing RSA with a high probability that if the fingerprints match, so do the
+keys. These are generally based on a cryptographic digest function such as SHA1
+and MD5, and you&#39;ll see them most commonly when connecting to a new SSH host
+and will look like the following:.</p>
+<div class="CodeRay">
+  <div class="code"><pre>The authenticity of host 'some.fakedomain.tld (127.0.0.1)' can't be established.
+RSA key fingerprint is 0c:6c:dd:32:b5:59:40:1d:ac:05:24:4f:04:bc:e0:f3.
+Are you sure you want to continue connecting (yes/no)?
+</pre></div>
+</div>
+
+<p>The string of 32 hex characters presented there can be compared with another
+known value to make sure you&#39;re connecting to the correct SSH server and will
+always be the same length regardless of the bit-strength of the keys used.
+Without the fingerprint, users would have to compare 256 hex characters for a
+1024 bit key, which is a very low security key.</p>
+
+<p>You can calculate the SSH fingerprint for your SSH key or a SSH host key using
+the <code>ssh-keygen</code> command like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>ssh-keygen -lf ~/.ssh/id_rsa
+ssh-keygen -lf /etc/ssh/ssh_host_key.pub
+</pre></div>
+</div>
+
+<p>It will work when the path is either a private RSA key or a public key
+formatted for SSH authorizied key files.</p>
+
+<p>X509 certificates also use a key fingerprint to help identify a certificate&#39;s
+signing authority. What I rapidly learned through this investigation was that
+they are calculated slightly differently from SSH fingerprints even if they&#39;re
+in the same format.</p>
+
+<p>I couldn&#39;t find any good Ruby code that calculated either, and the alternatives
+were some dense C++. Luckily SSH fingerprints are pretty documented in
+<a href="http://www.ietf.org/rfc/rfc4253.txt">RFC4253</a> and <a href="http://www.ietf.org/rfc/rfc4716.txt">RFC4716</a>. Fingerprints on RSA keys for use with OpenSSL
+are less clear, and there is a different method for calculating the
+fingerprints of certificates.</p>
+
+<p>Slowly working through the undocumented bits of Ruby&#39;s OpenSSL wrapper, the
+RFCs and a couple of C++ implementations I finally got a set of working
+implementations that calculate the following fingerprints in Ruby:</p>
+
+<ul>
+<li>MD5 &amp; SHA1 fingerprints for RSA SSH keys</li>
+<li>Fingerprints of RSA keys for use with x509 certificates</li>
+<li>Fingerprints of x509 certificates</li>
+</ul>
+
+<p>The easiest being a regular x509 certificate:</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">openssl</span><span class="delimiter">'</span></span>
+
+path_to_cert = <span class="string"><span class="delimiter">'</span><span class="content">/tmp/sample.crt</span><span class="delimiter">'</span></span>
+cert = <span class="constant">OpenSSL</span>::<span class="constant">X509</span>::<span class="constant">Certificate</span>.new(<span class="constant">File</span>.read(path_to_cert))
+puts <span class="constant">OpenSSL</span>::<span class="constant">Digest</span>::<span class="constant">SHA1</span>.hexdigest(cert.to_der).scan(<span class="regexp"><span class="delimiter">/</span><span class="content">..</span><span class="delimiter">/</span></span>).join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>)
+</pre></div>
+</div>
+
+<p>You can compare the output of the above code with OpenSSL&#39;s implementation with
+the following command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>openssl x509 -in /tmp/sample.crt -noout -fingerprint
+</pre></div>
+</div>
+
+<p>Please note that case sensitivity doesn&#39;t matter here (OpenSSL will return
+upper case hex codes).</p>
+
+<p>The next one I got working was the SSH fingerprints thanks to the RFCs metioned
+earlier.</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">openssl</span><span class="delimiter">'</span></span>
+
+path_to_key = <span class="string"><span class="delimiter">'</span><span class="content">/tmp/ssh_key</span><span class="delimiter">'</span></span>
+
+key = <span class="constant">OpenSSL</span>::<span class="constant">PKey</span>::<span class="constant">RSA</span>.new(<span class="constant">File</span>.read(path_to_key))
+data_string = [<span class="integer">7</span>].pack(<span class="string"><span class="delimiter">'</span><span class="content">N</span><span class="delimiter">'</span></span>) + <span class="string"><span class="delimiter">'</span><span class="content">ssh-rsa</span><span class="delimiter">'</span></span> + key.public_key.e.to_s(<span class="integer">0</span>) + key.public_key.n.to_s(<span class="integer">0</span>)
+puts <span class="constant">OpenSSL</span>::<span class="constant">Digest</span>::<span class="constant">MD5</span>.hexdigest(data_string).scan(<span class="regexp"><span class="delimiter">/</span><span class="content">..</span><span class="delimiter">/</span></span>).join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>)
+</pre></div>
+</div>
+
+<p><em>Please note: The above only works for RSA SSH keys.</em></p>
+
+<p>Calculating a SHA1 fingerprint for SSH hosts is as simple as replacing the
+&#39;MD5&#39; class with &#39;SHA1&#39; or any of the other support digest algorithms.</p>
+
+<p>The last one was the hardest to track down and implement, eventually I found
+the answer in <a href="http://www.ietf.org/rfc/rfc3279.txt">RFC3279</a> under section 2.3.1 for the format of the public key
+I would need to generate before performing a digest calculation on it.</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">openssl</span><span class="delimiter">'</span></span>
+
+path_to_key = <span class="string"><span class="delimiter">'</span><span class="content">/tmp/x509_key.pem</span><span class="delimiter">'</span></span>
+
+key = <span class="constant">OpenSSL</span>::<span class="constant">PKey</span>::<span class="constant">RSA</span>.new(<span class="constant">File</span>.read(path_to_key))
+data_string = <span class="constant">OpenSSL</span>::<span class="constant">ASN1</span>::Sequence([
+  <span class="constant">OpenSSL</span>::<span class="constant">ASN1</span>::<span class="constant">Integer</span>.new(key.public_key.n),
+  <span class="constant">OpenSSL</span>::<span class="constant">ASN1</span>::<span class="constant">Integer</span>.new(key.public_key.e)
+])
+puts <span class="constant">OpenSSL</span>::<span class="constant">Digest</span>::<span class="constant">SHA1</span>.hexdigest(data_string.to_der).scan(<span class="regexp"><span class="delimiter">/</span><span class="content">..</span><span class="delimiter">/</span></span>).join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>)
+</pre></div>
+</div>
+
+      </article>
+    </div>
+  
+</div>
+
+    </div>
+  </body>
+</html>

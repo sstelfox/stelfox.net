@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>389 Directory Server - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="389 Directory Server" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/389_directory_server/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>389 Directory Server</h1>
+
+<p>The <a href="http://docs.redhat.com/docs/en-US/Red_Hat_Directory_Server/">389 Directory Server</a> is an LDAP server and thus the central hub for
+all user and group information on a network. This can also be used by
+<a href="../asterisk/">Asterisk</a> for routing calls and voicemails to users.</p>
+
+<h2>Service Prerequisites</h2>
+
+<ul>
+<li><a href="../bind/">Bind</a> - This is optional if host files are used to store the FQDN of the
+server on the server and it&#39;s clients.</li>
+<li><a href="../certificate_authority/">Certificate Authority</a> - This is optional if the directory is not
+intended to be part of a PKI system. It can be added to the PKI system,
+though this may have ramifications for clients.</li>
+</ul>
+
+<h2>Security Notes</h2>
+
+<h3>Firewall Adjustments</h3>
+
+<p>389 Directory Server has three main ports that should have different levels of
+protection. 389 is unencrypted authentication/querying and should only be
+allowed on the local network. 636 is LDAP over SSL and can be exposed a bit
+more loosely though I would try and limit it as much as possible. 9830 is the
+administration port and should be limited to only those machines that will be
+used to administrate the directory server. Account management can be done over
+389 and 636 using additional tools such as <a href="http://directory.apache.org/studio/index.html">Apache Directory Studio</a>.</p>
+
+<h2>Setup Log</h2>
+
+<h3>Initial Installation</h3>
+
+<p>While the minimum amount of RAM is suggested to be 256Mb, the server itself
+needs more as that is 256Mb for the process itself. The kernel and minimum
+services in Fedora 15 consume about 19Mb of RAM. This would still fully consume
+the RAM. 384Mb is my personal recommendation for a minimum amount of RAM.</p>
+
+<p>It is no longer recommended to create an additional user as it breaks selinux
+rules. The following line SHOULD NOT BE RUN but is left here for future
+documentation purposes.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# useradd -d /etc/dirsrv/ -M -r -s /sbin/nologin -u 389 directory
+[root@localhost ~]# setenforce 0
+</pre></div>
+</div>
+
+<p>Install the packages, set some kernel limits and adjust sysctl variables before
+running the setup.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# yum install 389-ds-base 389-ds-console 389-admin 389-admin-console -y
+[root@localhost ~]# echo &quot;*               soft    nofile          8192&quot; &gt;&gt; /etc/security/limits.conf
+[root@localhost ~]# echo &quot;*               hard    nofile          8192&quot; &gt;&gt; /etc/security/limits.conf
+[root@localhost ~]# echo &quot;net.ipv4.tcp_keepalive_time = 60&quot; &gt;&gt; /etc/sysctl.conf
+[root@localhost ~]# setup-ds-admin.pl
+</pre></div>
+</div>
+
+<p>This will run through a semi-automated setup wizard. The log below is from when
+I setup the directory server for the Gentlemens Lounge. Note that the passwords
+are not shown.</p>
+<div class="CodeRay">
+  <div class="code"><pre>==============================================================================
+This program will set up the 389 Directory and Administration Servers.
+
+It is recommended that you have &quot;root&quot; privilege to set up the software.
+Tips for using this program:
+  - Press &quot;Enter&quot; to choose the default and go to the next screen
+  - Type &quot;Control-B&quot; then &quot;Enter&quot; to go back to the previous screen
+  - Type &quot;Control-C&quot; to cancel the setup program
+
+Would you like to continue with set up? [yes]: 
+
+==============================================================================
+BY SETTING UP AND USING THIS SOFTWARE YOU ARE CONSENTING TO BE BOUND BY
+AND ARE BECOMING A PARTY TO THE AGREEMENT FOUND IN THE
+LICENSE.TXT FILE. IF YOU DO NOT AGREE TO ALL OF THE TERMS
+OF THIS AGREEMENT, PLEASE DO NOT SET UP OR USE THIS SOFTWARE.
+
+Do you agree to the license terms? [no]: yes
+
+==============================================================================
+Your system has been scanned for potential problems, missing patches,
+etc.  The following output is a report of the items found that need to
+be addressed before running this software in a production
+environment.
+
+389 Directory Server system tuning analysis version 10-AUGUST-2007.
+
+NOTICE : System is x86_64-unknown-linux2.6.38.8-32.fc15.x86_64 (1 processor).
+
+WARNING: 365MB of physical memory is available on the system. 1024MB is
+recommended for best performance on large production system.
+
+WARNING  : The warning messages above should be reviewed before proceeding.
+
+Would you like to continue? [no]: yes
+
+==============================================================================
+Choose a setup type:
+
+   1. Express
+       Allows you to quickly set up the servers using the most
+       common options and pre-defined defaults. Useful for quick
+       evaluation of the products.
+
+   2. Typical
+       Allows you to specify common defaults and options.
+
+   3. Custom
+       Allows you to specify more advanced options. This is 
+       recommended for experienced server administrators only.
+
+To accept the default shown in brackets, press the Enter key.
+
+Choose a setup type [2]: 
+
+==============================================================================
+Enter the fully qualified domain name of the computer
+on which you're setting up server software. Using the form
+&lt;hostname&gt;.&lt;domainname&gt;
+Example: eros.example.com.
+
+To accept the default shown in brackets, press the Enter key.
+
+Warning: This step may take a few minutes if your DNS servers
+can not be reached or if DNS is not configured correctly.  If
+you would rather not wait, hit Ctrl-C and run this program again
+with the following command line option to specify the hostname:
+
+    General.FullMachineName=your.hostname.domain.name
+
+Computer name [directory.example.org]: 
+
+WARNING: There are problems with the hostname.
+Hostname 'directory.example.org' is valid, but none of the IP addresses
+resolve back to directory.example.org
+- address 192.168.2.10 resolves to host nameserver.example.org
+
+Please check the spelling of the hostname and/or your network configuration.
+If you proceed with this hostname, you may encounter problems.
+
+Do you want to proceed with hostname 'directory.example.org'? [no]: yes
+
+==============================================================================
+The servers must run as a specific user in a specific group.
+It is strongly recommended that this user should have no privileges
+on the computer (i.e. a non-root user).  The setup procedure
+will give this user/group some permissions in specific paths/files
+to perform server-specific operations.
+
+If you have not yet created a user and group for the servers,
+create this user and group using your native operating
+system utilities.
+
+System User [nobody]: 
+System Group [nobody]: 
+
+==============================================================================
+Server information is stored in the configuration directory server.
+This information is used by the console and administration server to
+configure and manage your servers.  If you have already set up a
+configuration directory server, you should register any servers you
+set up or create with the configuration server.  To do so, the
+following information about the configuration server is required: the
+fully qualified host name of the form
+&lt;hostname&gt;.&lt;domainname&gt;(e.g. hostname.example.com), the port number
+(default 389), the suffix, the DN and password of a user having
+permission to write the configuration information, usually the
+configuration directory administrator, and if you are using security
+(TLS/SSL).  If you are using TLS/SSL, specify the TLS/SSL (LDAPS) port
+number (default 636) instead of the regular LDAP port number, and
+provide the CA certificate (in PEM/ASCII format).
+
+If you do not yet have a configuration directory server, enter 'No' to
+be prompted to set up one.
+
+Do you want to register this software with an existing
+configuration directory server? [no]: 
+
+==============================================================================
+Please enter the administrator ID for the configuration directory
+server.  This is the ID typically used to log in to the console.  You
+will also be prompted for the password.
+
+Configuration directory server
+administrator ID [admin]: 
+Password: 
+Password (confirm): 
+
+==============================================================================
+The information stored in the configuration directory server can be
+separated into different Administration Domains.  If you are managing
+multiple software releases at the same time, or managing information
+about multiple domains, you may use the Administration Domain to keep
+them separate.
+
+If you are not using administrative domains, press Enter to select the
+default.  Otherwise, enter some descriptive, unique name for the
+administration domain, such as the name of the organization
+responsible for managing the domain.
+
+Administration Domain [example.org]: example.org
+
+==============================================================================
+The standard directory server network port number is 389.  However, if
+you are not logged as the superuser, or port 389 is in use, the
+default value will be a random unused port number greater than 1024.
+If you want to use port 389, make sure that you are logged in as the
+superuser, that port 389 is not in use.
+
+Directory server network port [389]: 
+
+==============================================================================
+Each instance of a directory server requires a unique identifier.
+This identifier is used to name the various
+instance specific files and directories in the file system,
+as well as for other uses as a server instance identifier.
+
+Directory server identifier [directory]: 
+
+==============================================================================
+The suffix is the root of your directory tree.  The suffix must be a valid DN.
+It is recommended that you use the dc=domaincomponent suffix convention.
+For example, if your domain is example.com,
+you should use dc=example,dc=com for your suffix.
+Setup will create this initial suffix for you,
+but you may have more than one suffix.
+Use the directory server utilities to create additional suffixes.
+
+Suffix [dc=example, dc=org]: 
+
+==============================================================================
+Certain directory server operations require an administrative user.
+This user is referred to as the Directory Manager and typically has a
+bind Distinguished Name (DN) of cn=Directory Manager.
+You will also be prompted for the password for this user.  The password must
+be at least 8 characters long, and contain no spaces.
+Press Control-B or type the word &quot;back&quot;, then Enter to back up and start over.
+
+Directory Manager DN [cn=Directory Manager]: 
+Password: 
+Password (confirm): 
+
+==============================================================================
+The Administration Server is separate from any of your web or application
+servers since it listens to a different port and access to it is
+restricted.
+
+Pick a port number between 1024 and 65535 to run your Administration
+Server on. You should NOT use a port number which you plan to
+run a web or application server on, rather, select a number which you
+will remember and which will not be used for anything else.
+
+Administration port [9830]: 
+
+==============================================================================
+The interactive phase is complete.  The script will now set up your
+servers.  Enter No or go Back if you want to change something.
+
+Are you ready to set up your servers? [yes]: 
+Creating directory server . . .
+Your new DS instance 'directory' was successfully created.
+Creating the configuration directory server . . .
+Beginning Admin Server creation . . .
+Creating Admin Server files and directories . . .
+Updating adm.conf . . .
+Updating admpw . . .
+Registering admin server with the configuration directory server . . .
+Updating adm.conf with information from configuration directory server . . .
+Updating the configuration for the httpd engine . . .
+Starting admin server . . .
+The admin server was successfully started.
+Admin server was successfully created, configured, and started.
+Exiting . . .
+Log file is '/tmp/setup6kj9Az.log'
+</pre></div>
+</div>
+
+<h2>Directory Configuration</h2>
+
+<p>The installation setup starts the directory and administration processes
+automatically, however they will not come on automatically yet. Make sure they
+get turned on during boot with the following commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# chkconfig dirsrv on
+[root@localhost ~]# chkconfig dirsrv-admin on
+</pre></div>
+</div>
+
+<p>There is one more process dirsrv-snmp however I don&#39;t have use for that until
+the directory is actually up and operating.</p>
+
+<p>After opening up the console and logging in the directory administrator
+account, our first task is to clean up some automatically added groups that we
+won&#39;t need or ever use. Switch to the Users and Groups tab and use &#39;*&#39; as the
+search term. Delete the groups &quot;Accounting Managers&quot;, &quot;HR Managers&quot;, &quot;QA
+Managers&quot;, and &quot;PD Managers&quot;.</p>
+
+<p>Rename the OU &quot;People&quot; to &quot;Users&quot;, this is a more appropriate name for what
+we&#39;re going to use it for, though we may find this causes us trouble in the
+future.</p>
+
+<p>Create an OU under &quot;Users&quot; named &quot;Guests&quot;, for a description I put &quot;Users that
+only need limited access to resources for a short time&quot;. This OU will be
+dedicated for any accounts that may not need to be around for very long and
+will make it easier to clean them up in the future.</p>
+
+<p>Create an OU under &quot;Users&quot; named &quot;Service Accounts&quot; with a description of
+&quot;Non-person accounts for services that need access to the directory or
+directory protected services&quot;. Separating out these users will make it easier
+to restrict them from certain tasks and apply unique password and account
+restrictions to them (such as no password expiration and minimum password
+length of 32).</p>
+
+<p>Create an OU under &quot;Users&quot; named &quot;People&quot; with a description of &quot;Normal
+permanent users of the system&quot;.</p>
+
+<h3>Directory Server Console</h3>
+
+<p>In the 389 Management Console expand the tree [domain]-&gt;[server]-&gt;Server Group
+and double click on the Directory Server. This will open up the Directory
+Server Console (389-ds-console).</p>
+
+<p>Open up the configuration tab and turn on the following plugins:</p>
+
+<ul>
+<li>MemberOf Plugin</li>
+</ul>
+
+<p>To setup a global password policy choose the Configuration tab in the Console
+and click on &quot;Data&quot;.</p>
+
+<ul>
+<li>Passwords Tab
+
+<ul>
+<li>Enable fine-grained password policy - Enabled</li>
+<li>User may change password</li>
+<li>Keep password history - Remember 3</li>
+<li>Password never expires - Enabled</li>
+<li>Check password syntax - Enabled</li>
+<li>Password minimum length - 8</li>
+<li>Minimum required character categories - 3</li>
+<li>Minimum token length - 3</li>
+<li>Password encryption: Salted Secure Hashing Algorithm (SSHA512)</li>
+</ul></li>
+<li>Account Lockout
+
+<ul>
+<li>Accounts may be locked out</li>
+<li>Lockout account after 3 login failures</li>
+<li>Reset failure count after 20 minutes</li>
+<li>Lockout duration 60 minutes</li>
+</ul></li>
+</ul>
+
+<p>While we&#39;re in there expand logs and click on &quot;Access Log&quot;. Set the maximum
+number of logs to 14. Set the new log creation to happen every night at
+midnight. Under the Deletion Policy change &quot;When total log size exceeds&quot; to
+150MB, set &quot;When free disk space is less than&quot; to 100MB and &quot;When a file is
+older than&quot; to 2 weeks.</p>
+
+<p>Under &quot;Error Log&quot;. Set the Maximum number of logs to 4. Set the new log
+creation to happen once a week at midnight. Under the Deletion Policy set &quot;When
+total log size exceeds&quot; to 150MB, the &quot;When free disk space is less than&quot; to
+100MB and &quot;When a file is older than&quot; to 4 weeks. Under Log Level turn on the
+following:</p>
+
+<ul>
+<li>Search filter processing</li>
+<li>Config file processing</li>
+<li>Replication</li>
+<li>Plug-ins</li>
+<li>Access control summary</li>
+</ul>
+
+<p>In &quot;Audit Log&quot; enable logging set the maximum number of logs to 31 and to
+create a new log every night at midnight.</p>
+
+<p>We need a slightly different password scheme for our Service and Guest
+accounts. Switch to the Directory tab and expand the tree [server]-&gt;[base
+domain]-&gt;Users. Right click on [base domain] and choose &quot;Manage Password
+Policy&quot;-&gt;&quot;For subtree&quot;. Set the following on the Guests OU with the following
+settings:</p>
+
+<ul>
+<li>Passwords Tab
+
+<ul>
+<li>Create subtree level password policy</li>
+<li>Password expires after 14 days</li>
+<li>Check Password Syntax</li>
+<li>Password minimum length - 8</li>
+<li>Minimum required character categories - 3</li>
+<li>Minimum token length - 3</li>
+<li>Password encryption: Salted Secure Hashing Algorithm (SSHA512)</li>
+</ul></li>
+<li>Account Lockout
+
+<ul>
+<li>Lockout account after 3 login failures</li>
+<li>Reset failure count after 20 minutes</li>
+<li>Lockout forever</li>
+</ul></li>
+</ul>
+
+<p>And for the Services OU:</p>
+
+<ul>
+<li>Create subtree level password policy</li>
+<li>Check password syntax
+
+<ul>
+<li>Password minimum length - 32</li>
+<li>Minimum required character categories - 3</li>
+<li>Minimum token length - 3</li>
+</ul></li>
+<li>Password encryption: Salted Secure Hashing Algorithm (SSHA512)</li>
+</ul>
+
+<h3>Config Files</h3>
+
+<h2>Administration</h2>
+
+<p>You will need to install the package &quot;389-console&quot; via yum to administer the
+server.</p>
+
+<p>If trying to use 389-console via SSH tunnel in addition to forwarding port 9830
+to the directory server, either port 389 (possibly 636 if SSL is enabled) needs
+to be directly accessible via the FQDN that the server was setup with OR you
+need to also forward the port of SSH and set the FQDN in the local host file as
+it establishes the connection independently. Since port 389 is a privileged
+port, to do the latter you NEED to create the SSH tunnel from the root account.</p>
+
+<h2>Utilities</h2>
+<div class="CodeRay">
+  <div class="code"><pre>ldapsearch -x -b '{Search Path (OU)}' -s sub -h {Host} -D {Username} -W '{Filter}'
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>

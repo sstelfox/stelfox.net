@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Email - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Email" />
+    <meta property="og:url" content="https://stelfox.net/tags/email/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class="post">
+  <h1>Email</h1>
+  
+    <div class='post'>
+      <h2><a href="/blog/2013/12/running-emails-through-ruby/">Running Emails Through Ruby</a></h1>
+      <aside>Posted at: 2013-12-08 09:32:05 -0500</aside>
+      <article>
+        <p>Following up on my <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">earlier post</a> where I covered how to backup your Gmail
+account using <code>fetchmail</code> and <code>procmail</code>; I wanted to cover how I was
+additionally processing received mail through ruby.</p>
+
+<p>This was part of a larger project where I was doing statistical analysis on my
+email while evaluating various data stores. To get the emails into the various
+data stores, I used the ruby script to parse, process and store the emails as
+they came in.</p>
+
+<p>If you&#39;re going to be doing any form of mail manipulation or statistics I
+highly recommend the <a href="https://github.com/mikel/mail">mail</a> gem. It did almost everything I needed out of
+the box, though it didn&#39;t correctly enumerate any of the additional headers.</p>
+
+<p>Procmail is a highly flexible mail filtering and local delivery agent. Without
+much effort you can pass the mail it is handling through a series of filters
+which can manipulate and reject mail before eventually delivering it to your
+inbox. In light of this, we&#39;re going to make a filter that simply counts the
+total number of emails the script has processed, and add a header to the
+message that indicates this count.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="doctype">#!/usr/bin/env ruby</span>
+
+require <span class="string"><span class="delimiter">'</span><span class="content">mail</span><span class="delimiter">'</span></span>
+
+<span class="comment"># Get the email message from STDIN or a passed filename</span>
+message = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
+<span class="keyword">while</span> input = <span class="predefined-constant">ARGF</span>.gets
+  message += input
+<span class="keyword">end</span>
+
+<span class="comment"># Parse the email into a ruby object</span>
+msg = <span class="constant">Mail</span>.new(message)
+
+<span class="comment"># Location of our count file</span>
+count_file = <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span><span class="predefined-constant">ENV</span>[<span class="string"><span class="delimiter">'</span><span class="content">HOME</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="content">/.mail_counter.txt</span><span class="delimiter">&quot;</span></span>
+
+<span class="comment"># Load or initialize our count value and increment it</span>
+count = <span class="constant">File</span>.exists?(count_file) ? <span class="constant">File</span>.read(count_file).to_i : <span class="integer">0</span>
+count += <span class="integer">1</span>
+
+<span class="comment"># Update our count on disk</span>
+<span class="constant">File</span>.write(count_file, count.to_s)
+
+<span class="comment"># Add our header with the count</span>
+msg.header.fields &lt;&lt; <span class="constant">Mail</span>::<span class="constant">Field</span>.new(<span class="string"><span class="delimiter">&quot;</span><span class="content">X-Mail-Counter: </span><span class="inline"><span class="inline-delimiter">#{</span>count<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>)
+
+<span class="comment"># Output the now modified message back out to $stdout</span>
+<span class="keyword">begin</span>
+  <span class="global-variable">$stdout</span>.puts msg.to_s
+<span class="keyword">rescue</span> <span class="constant">Errno</span>::<span class="constant">EPIPE</span>
+  exit(<span class="integer">74</span>)
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>Make sure you mark the script executable after saving it.</p>
+
+<p>If you followed along with <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">my earlier post</a> the only change we need to make
+is to add our ruby mail processor as a procmail filter. I&#39;ve stored the script
+in <code>~/.bin/mail-counter.rb</code>, if you&#39;ve stored it in a different location you&#39;ll
+want to update your path to reflect that.</p>
+
+<p>Filters in procmail are handled by using the pipe helper. The following is a
+minimum working example of a procmailrc file to make use of our filter:</p>
+<div class="CodeRay">
+  <div class="code"><pre>MAILDIR=$HOME
+VERBOSE=on
+
+:0fw
+| /home/sstelfox/Documents/ruby/riak-mail-indexer/counter.rb
+
+:0
+Maildir/
+</pre></div>
+</div>
+
+<p>Store the above file in <code>~/.procmailrc</code>. The next time you run <code>fetchmail</code>
+those headers will be added to the messages before being delivered and you can
+watch the count increment by looking at the contents of <code>~/.mail_counter.txt</code>.</p>
+
+<p>The following are a few additional sources I made use of while writing this
+article:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby">http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby</a></li>
+<li><a href="http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines">http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines</a></li>
+</ul>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">Backing up Gmail with fetchmail</a></h1>
+      <aside>Posted at: 2013-11-19 09:55:40 -0500</aside>
+      <article>
+        <p>This morning I found myself in need of a large set of emails to test a
+particular set of code. Ideally these emails would be broken out into easily
+digestable pieces, and it was strictly for my own personal testing so I wasn&#39;t
+concerned with using my own live data for this test (There will probably be
+another post on this project later on).</p>
+
+<p>Having used <code>fetchmail</code> with good results in the past I decided it was a good
+idea to take this opportunity to also backup my Gmail account into the common
+Maildir format (which essentially breaks out emails into individual files
+meeting my requirements).</p>
+
+<p>The first step was to enable POP access to my account through Gmail&#39;s
+interface. You can accomplish this with the following steps.</p>
+
+<ol>
+<li>Login to Gmail</li>
+<li>Click on the gear icon</li>
+<li>Choose settings</li>
+<li>Forwarding and POP/IMAP</li>
+<li>Enable POP for all mail</li>
+<li>When messages are accessed with POP... Keep&quot;</li>
+<li>Save Changes.</li>
+</ol>
+
+<p>Ensure you have <code>fetchmail</code> and <code>procmail</code> installed. For me on Fedora this can
+be accomplished using yum by running the following commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>$ sudo yum install fetchmail procmail -y
+</pre></div>
+</div>
+
+<p>We need to configure fetchmail to let it know where to retrieve our mail from.
+This configuration file lives at <code>$HOME/.fetchmailrc</code>. By default fetchmail
+will send all retrieved mail to the local SMTP server over a normal TCP
+connection. This isn&#39;t necessary or ideal, rather we&#39;ll additionally supply a
+local mail delivery agent (procmail) to handle processing the mail into the
+Maildir format.</p>
+<div class="CodeRay">
+  <div class="code"><pre>poll pop.gmail.com
+protocol pop3
+timeout 300
+port 995
+username &quot;full_email@withdomain.tld&quot; password &quot;yourpassword&quot;
+keep
+ssl
+sslcertck
+sslproto TLS1
+mda &quot;/usr/bin/procmail -m '/home/&lt;username&gt;/.procmailrc'&quot;
+</pre></div>
+</div>
+
+<p>Be sure to set the permissions on the <code>.fetchmailrc</code> file to 0600:</p>
+<div class="CodeRay">
+  <div class="code"><pre>$ chmod 0600 $HOME/.fetchmailrc
+</pre></div>
+</div>
+
+<p>We&#39;ll now need to configure procmail to properly deliver our mail to the local
+<code>Maildir</code> folder. Procmail&#39;s configuration by default lives in
+<code>$HOME/.procmailrc</code></p>
+<div class="CodeRay">
+  <div class="code"><pre>LOGFILE=$HOME/.procmail.log
+MAILDIR=$HOME
+VERBOSE=on
+
+:0
+Maildir/
+</pre></div>
+</div>
+
+<p>With that done, simply run the <code>fetchmail</code> command. In my experience this can
+take a while process and it seems like Google limits the number of emails you
+can download at a time, so you may need to run the command a couple of times to
+get all your emails.</p>
+
+      </article>
+    </div>
+  
+</div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Gaming - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Gaming" />
+    <meta property="og:url" content="https://stelfox.net/tags/gaming/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class="post">
+  <h1>Gaming</h1>
+  
+    <div class='post'>
+      <h2><a href="/blog/2009/12/open-source-firewall-reviews-intro-and-pfsense/">Open Source Firewall Reviews: Intro & pfSense</a></h1>
+      <aside>Posted at: 2009-12-16 10:58:15 -0500</aside>
+      <article>
+        <p>Every now and then I like to refresh parts of my home network. New technology
+comes out, new versions of software come out and new exploits and attacks come
+out. This time around I felt it was about time that I look at the various
+firewall distributions that have come out in the past couple of years. I&#39;m
+going to perform various reviews over the course of the next few weeks time
+(and memory) permitting.</p>
+
+<p>I have a few slightly more obscure requirements for my firewall, some of which
+very few reviewers touch on. These being support for 802.1q VLAN tagging, a
+built in traffic shaper, a tftp server and options to broadcast it as a PXE
+boot server in the DHCP options, a captive portal on an arbitrary interface,
+and last but not least updates that don&#39;t require a full system rebuild.</p>
+
+<p>The more common features on my requirements are port forwarding, stateful
+firewall with per interface rules, remote syslog logging, DHCP server, DMZ, and
+VPN access (perferably PPTP and OpenVPN).</p>
+
+<p>For a long time I&#39;ve been an avid supporter of <a href="http://pfsense.org/">pfSense</a>. For those of you
+not interested in following the link, pfSense is a BSD firewall/router based on
+a very strong distribution called m0n0wall. pfSense is in a nutshell a
+frankenstein of some of the best pieces of the open source BSDs out there all
+wrapped in a bunch of PHP based scripts.</p>
+
+<p>As much as I love pfSense there have been a few issues that I&#39;ve grown to live
+with. The first being a large number of NAT issues. I&#39;m not really sure how to
+classify this but it is very apparent if you play any multi-player online games
+(and exponentially more apparent if you have more than one person tying to play
+online at the same time). I&#39;m going to use Company of Heroes and Call of Duty:
+Modern Warfare 2 as examples for this.</p>
+
+<p>Right off the bat connecting online in Modern Warfare 2, it will display your
+&quot;NAT Status&quot; as either open or closed. When one person is connected it is
+usually &quot;Open&quot;, when two people are connected one or both will display
+&quot;Closed&quot;. Now this isn&#39;t a terribly big issue for MW2 as even with a closed NAT
+you can still play the game perfectly fine. The trick is that you won&#39;t be able
+to join any games (or even get into a lobby) with someone that is on the same
+network as you. So much for working together.</p>
+
+<p>With Company of Heroes things get considerably worse. Even with only one person
+trying to play the game, whenever hosting or joining an online game about 50%
+of the individual players you try and connect to or that try to connect to you
+will fail with a &quot;NAT negotiation error&quot;. This makes playing or hosting
+anything more than a 1v1 a royal pain, and more than a 2v2 nigh impossible.</p>
+
+<p>Using a commercial off-the-shell router (in this case an old D-Link 524 I had
+laying around) these issues go away completely. At the time of this writing I
+am using version 1.2.3-RELEASE (built on Sun Dec 6 23:38:21 EST 2009). The NAT
+issues are known and you can find many people with the same issues complaining
+in their forums. The answer is almost always use static NAT mapping, but this
+only works for one player. It does seem to solve both issues though (as long as
+only one person being able to play is acceptable).</p>
+
+<p>The next issue I&#39;ve run across seems to have something to do with the state
+table. Now this is a tricky issue because it might be some dirty trick that
+Comcast is playing on me and I haven&#39;t tested any other firewall distribution
+yet to see where the problem lies.</p>
+
+<p>Right off the bat, pfSense has a maximum state table size of 10,000. This is
+WAY more than enough for any home or small business networks. With five people
+behind it, I&#39;ve only seen the state table jump as high as 1,500 and that was
+with all of us running torrents. The problem seems to be that anymore than 900
+entries in the state table cause severe degredation in performance. How severe?
+With a state table of 958, it took 43 seconds for text to be echoed back to me
+over an SSH connection. That&#39;s impossibly bad latency. This issue is quickly
+resolved by blowing away the state table or rebooting the firewall, but will
+quickly crop back up when the computers start re-establishing the connections.
+The built in traffic shaper only seems to make this problem worse not better.
+(As an aside I&#39;m running pfSense on 1.6Ghz box with 512 Mb of ram, this is far
+more than the minimum specs of 100Mhz and 128Mb of ram.)</p>
+
+<p>Also while pfSense officially supports having a captive portal on a interface,
+I&#39;ve only been able to get this working for a short period of time and that was
+back in version 1.21. So beware anyone wanting to use pfSense for a hotspot.
+The only reason I really wanted a captive portal was so that I could broadcast
+a second wireless AP that the public could connect to anytime and they would be
+able to see a kind notice asking them not to abuse the bandwidth I&#39;m freely
+sharing.</p>
+
+<p>So with these issues why have I stayed with pfSense for so long? It is a
+fantastic, stable system when you don&#39;t need to worry about torrents or gaming.
+There are quite a few packages that can be one click installed through the web
+interface. It provides good stats about the status of the system in a clean and
+easy to navigate interface.</p>
+
+<p>pfSense has been doing a wonderful job of meeting all of my requirements with
+the exception of the captive portal but that wasn&#39;t <u>really</u> for me anyway, the
+gaming issues, and of course the state table. For anybody out there looking for
+a solid well rounded firewall don&#39;t let my issues deter you. There is a version
+2 in the works and is currently available that might solve all of my issues,
+although it&#39;s alpha software right now and I didn&#39;t really want to have to
+troubleshoot my home network all the time due to buggy software when I&#39;m trying
+to relax.</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2010/03/pfsense-and-gaming/">pfSense and Gaming</a></h1>
+      <aside>Posted at: 2010-03-24 10:18:00 -0400</aside>
+      <article>
+        <p>Previously while reviewing open source firewall distributions (which I never
+finished), I mentioned some gaming issues. I found a solution that seems to fix
+all the issues I had with gaming but unfortunately creates a few new issues
+that I didn&#39;t arise. The issue lies with how pfSense performs NAT&#39;ing.</p>
+
+<p>The ports that a particular client opens under some cases can be easily
+predicted and in turn exploited. To prevent this pfSense randomizes the
+external port that traffic is coming from. This is perfectly fine for any
+application that follows networking standards. However it seems that games such
+as Call of Duty and Company of Heroes passes the port they open inside their
+network protocol which is what the game servers then use to connect back to
+them rather than looking at the actual frames that arrive from the client. This
+means that the server will be trying to connect back on the wrong port as
+pfSense has changed it.</p>
+
+<p>I can see some impossibly small security benefits for the game programmers to
+do this. I&#39;m guessing more likely than not this was a failing of the network
+library they use where they don&#39;t have access to the information in the frames
+of the packets so they wrote a work around for it, and in turn violate basic
+network programming best practices.</p>
+
+<p>So what&#39;s the solution? I strongly recommend that anyone reading this read the
+complete article as it is possible to prevent yourself from being able to use
+your network connection behind pfSense. If any setting doesn&#39;t look quite like
+I describe it your probably using a different version and should consult with
+the good people in the IRC channels or in their forums.</p>
+
+<p>Here are the steps to get it to work:</p>
+
+<ol>
+<li>Open up Firewall -&gt; NAT</li>
+<li>There should be three tabs, &#39;Port Forward&#39;, &#39;1:1&#39;, and &#39;Outbound&#39;</li>
+<li>Click on the &#39;Outbound&#39; tab</li>
+<li>There should be two radio buttons, by default &quot;Automatic outbound NAT rule
+generation (IPsec passthrough)&quot; is selected. Choose &quot;Manual Outbound NAT
+rule generation (Advanced Outbound NAT (AON))&quot;</li>
+<li>Verify that there is a mapping with the following settings:
+
+<ul>
+<li>Interface: WAN</li>
+<li>Source: Your internal (LAN) subnet</li>
+<li>Source Port: *</li>
+<li>Destination: *</li>
+<li>Destination Port: *</li>
+<li>NAT Address: *</li>
+<li>NAT Port: *</li>
+<li>Static Port: YES</li>
+</ul></li>
+<li>If you have more than one subnet you&#39;ll need to do this for each one.</li>
+<li>Save and Apply the settings</li>
+</ol>
+
+<p>That should be it, there has only been two issues that I&#39;ve found, one I&#39;m not
+really sure if it&#39;s related. About the same time as when I made this change
+UPnP broke. I&#39;m not sure why but it&#39;s something that seems to break quite a bit
+with pfSense and I can see this being related to NAT&#39;ing.</p>
+
+<p>The second issue is traffic in between subnets. While it seems to mostly work,
+there have been a few oddities such as a computer on one subnet is able to talk
+to a computer on a different subnet as long as it initiates the connection. If
+the other computer trys to initiate the connection then it will just time out.
+It definitely wasn&#39;t related to firewall rules (I set an allow all on both
+interfaces and turned off the firewall on both computers). Switching back to
+auto-nat&#39;ing resolved the issue.</p>
+
+      </article>
+    </div>
+  
+</div>
+
+    </div>
+  </body>
+</html>

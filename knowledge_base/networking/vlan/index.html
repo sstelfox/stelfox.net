@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>VLAN - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="VLAN" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/networking/vlan/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>VLAN</h1>
+
+<p>I use a fairly simple scheme to assign VLAN ID&#39;s based on the Class C subnet.
+Valid VLAN numbers range from 1 - 1024 (A 10-bit number). Not all of these are
+available for use however.</p>
+
+<p>The Cisco switch at the core of my network limits the number of in-use VLANs to</p>
+
+<ol>
+<li>This isn&#39;t a problem as if my network ever gets big enough that I need
+this many I will probably be able to buy additional switches to trunk/route
+more VLANs too.</li>
+</ol>
+
+<p>The scheme used to calculate the VLAN for a subnet uses the bits to encode
+information about the network. We have 10 bits to work with, these are broken
+up into two groups, Sub-network (V) and Class C (C) like so VVCCCCCCCC. The
+Class C segment is a binary representation of the Class C subnet that VLAN will
+have running over it. The sub-network part is a number 0-3 encoded in binary
+starting at 0 to allow a Class C be broken up into four subnets. This does not
+require them to all have the same subnet mask (There could be a /25 a /26 and
+two /27s if you&#39;d please).</p>
+
+<p>This scheme WILL bump into a few of the reserved subnets which can not be used
+and are noted in the reserved section.</p>
+
+<h2>Reserved</h2>
+
+<p>The table below lists all the VLANs that are reserved and why.</p>
+
+<table><thead>
+<tr>
+<th>ID</th>
+<th>Encoded Binary</th>
+<th>Affected Subnets</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>0000000000</td>
+<td><em>.</em>.0.* / 0</td>
+<td>This is not a real VLAN however I&#39;ve included it since subnet 0 can only have 3 sub-networks due to this</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0000000001</td>
+<td><em>.</em>.1.* / 0</td>
+<td>VLAN 1 is the default VLAN that traffic lives on when not tagged. This can be changed though it is against best practices. It should not be used</td>
+</tr>
+<tr>
+<td>1002</td>
+<td>1111101010</td>
+<td><em>.</em>.235.* / 3</td>
+<td>Cisco legacy reserved for: fddi-default</td>
+</tr>
+<tr>
+<td>1003</td>
+<td>1111101011</td>
+<td><em>.</em>.236.* / 3</td>
+<td>Cisco legacy reserved for: trcrf-default</td>
+</tr>
+<tr>
+<td>1004</td>
+<td>1111101100</td>
+<td><em>.</em>.237.* / 3</td>
+<td>Cisco legacy reserved for: fddinet-default</td>
+</tr>
+<tr>
+<td>1005</td>
+<td>1111101101</td>
+<td><em>.</em>.238.* / 3</td>
+<td>Cisco legacy reserved for: trbrf-default</td>
+</tr>
+<tr>
+<td>1006-1023</td>
+<td>1111101101-1111111111</td>
+<td><em>.</em>.239-255.* / 3</td>
+<td>Not actually available on Cisco switches</td>
+</tr>
+</tbody></table>
+
+    </div>
+  </body>
+</html>

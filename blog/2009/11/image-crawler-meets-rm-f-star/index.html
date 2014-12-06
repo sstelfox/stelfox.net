@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Image Crawler Meets rm -f * - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    <meta name="keywords" content="linux, projects />
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Image Crawler Meets rm -f *" />
+    <meta property="og:url" content="https://stelfox.net/blog/2009/11/image-crawler-meets-rm-f-star/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <div class='post'>
+        <h1><a href="/blog/2009/11/image-crawler-meets-rm-f-star/">Image Crawler Meets rm -f *</a></h1>
+        <aside class="post-date">Published <time datetime=''>instead of an afternoon nap on November 4, 2009</time> by Sam Stelfox</aside>
+        <article>
+          <p>So for giggles I wrote a simple web crawler that archived any image it found on
+a site that rapidly updated. My plan was to take all of the images resize them
+to a fraction of what they were and make a collage progression of the images
+posted over a 24 hours period. If that was successful I was going to try and
+sort the image by the highest peak on a gray scale histogram of the image.</p>
+
+<p>I let my crawler go and stopped it after a 24 hour period. I ls&#39;d the directory
+the images were being saved in to see how many I got and my ssh session locked
+up... Or so I thought. I hit Ctrl - C and nothing happened... So I closed my
+window and opened a new one. Did the same ls and the same thing happened. At
+this point I was really confused, did my system get compromised?  Maybe a
+trojan ls was put on my system that was broken somehow?</p>
+
+<p>The last thought put me into a panic, I raced to a system that held incremental
+backups of this entire system and ran an md5sum on /bin/ls on it and on every
+ls that I could find in the backup. There hadn&#39;t been any change. At this point
+I was fairly certain that wasn&#39;t the case so I moved on...</p>
+
+<p>Maybe there was a filename that hit some weird glitch in ls&#39;s programming
+causing it too lock up. If this was the case how should I go about fixing it? I
+started thinking about how it would be a nice contribution to the community if
+I could figure out the error and report it, but I decided to take the lazy way
+out.</p>
+
+<p>I cd&#39;d to the directory and ran an rm -f * and was greeted with this:</p>
+
+<blockquote>
+<p>/bin/rm: Argument list too long.</p>
+</blockquote>
+
+<p>Wait what? All I get was this irritating and slightly elusive error message. So
+the * was being expanded, and making the list too long? To be sure I started
+hunting in the man pages. <code>man rm</code> recommended me to <code>info coreutils &#39;rm
+invocation&#39;</code>. I read through and couldn&#39;t find any limitations or warnings that
+might relate to the problem. The only thing I could find in there was a line
+that said:</p>
+
+<blockquote>
+<p>GNU <code>rm&#39;, like every program that uses the</code>getopt&#39; function to parse its
+arguments...</p>
+</blockquote>
+
+<p>Alrighty moving on... so getopt is parsing it&#39;s options... man and info pages
+on getopt don&#39;t really reveal anything... So to Google!</p>
+
+<p>After a bit of googling I found the answer, getopt&#39;s argument limit is 1024.
+So... how many files did I have? I wanted to give ls one more try... I typed it
+in and sure enough console froze... or did it? I walked away and did other
+things. When I came back I had a large list of files, longer than my console
+buffer... Ok-day, lets try this again &#39;ls -l | wc -l&#39;. After about five minutes
+it came back again with just the number.</p>
+
+<blockquote>
+<p>177654</p>
+</blockquote>
+
+<p>Whoa... I wasn&#39;t expecting that... So how do I get around it... &#39;find . | xargs
+rm -f&#39; and.... WOO Victory! The directory is clean and happy again... Now i&#39;ll
+just have to figure out how to cut down the number of files, or at the very
+least organize them into more managable chunks...</p>
+
+        </article>
+      </div>
+    </div>
+  </body>
+</html>

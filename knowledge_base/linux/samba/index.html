@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Samba - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Samba" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/samba/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Samba</h1>
+
+<p>FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.</p>
+
+<h2>SELinux Adjustments</h2>
+
+<p>SELinux hates Samba and with good reason. To allow authenticated clients to
+access the contents of a samba share you need to label the share. The easiest
+way to make this persistent is by adjusting the targeted SELinux config. In the
+following example the only samba share is location at /media/sharing.</p>
+
+<p>Add this to <code>/etc/selinux/targeted/contexts/files/file_contexts</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>/media/storage(/.*)?    system_u:object_r:samba_share_t:s0
+</pre></div>
+</div>
+
+<p>Then run this command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# restorecon -R /media/storage
+</pre></div>
+</div>
+
+<h2>On Anonymous Access</h2>
+
+<p>If you intend to allow anonymous browsing of shares and/or access to a share,
+you will need to create a &#39;nobody&#39; user with no password and add a few lines to
+the configuration file. Add the user by following the instructions in &#39;Managing
+Users&#39;</p>
+
+<h2>Managing Users</h2>
+
+<p>To add a samba user make sure they have an account on the local machine, and
+run the command:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# pdbedit -a &lt;username&gt;
+</pre></div>
+</div>
+
+<p>To list samba users:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# pdbedit -L
+</pre></div>
+</div>
+
+<p>To delete a samba user:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[root@localhost ~]# pdbedit -x &lt;username&gt;
+</pre></div>
+</div>
+
+<h2>Configuration</h2>
+
+<h3>/etc/samba/smb.conf</h3>
+<div class="CodeRay">
+  <div class="code"><pre>[global]
+# ----------------------- Network-Related Options -------------------------
+
+        workgroup = Pantheon
+        server string = For Sexual Favors
+        netbios name = Moirae
+        interfaces = eth0:0
+        bind interfaces only = yes
+        hosts allow = 10.13.37.0/24
+        guest account = nobody
+        map to guest = bad user
+        force directory mode = 0777
+        force create mode = 0666
+
+        # Force master browser elections to choose this server
+        domain master = no
+        local master = yes
+        preferred master = yes
+        os level = 60
+
+        socket options = TCP_NODELAY
+        read raw = yes
+        write raw = yes
+
+        security = user
+        passdb backend = tdbsam
+
+# --------------------------- Logging Options -----------------------------
+
+        # log files split per-machine:
+        log file = /var/log/samba/log.%m
+
+        # maximum size of 50KB per log file, then rotate:
+        max log size = 50
+
+# --------------------------- Printing Options -----------------------------
+# Disable printing altogether
+
+        load printers = no
+        printcap name = /dev/null
+        printing = bsd
+        disable spoolss = yes
+
+# --------------------------- File System Options ---------------------------
+
+;       map archive = no
+;       map hidden = no
+;       map read only = no
+;       map system = no
+;       store dos attributes = yes
+
+
+#============================ Share Definitions ==============================
+
+[Hidden]
+        comment = I'm a secret!
+        browsable = no
+        path = /media/storage/Dropbox
+        public = no
+        writable = no
+        printable = no
+        write list = @users
+        guest ok = no
+
+[Anonymous Dropbox]
+        comment = Public File Drop Be Nice
+        browsable = yes
+        path = /media/storage/Dropbox
+        public = yes
+        writable = yes
+        printable = no
+        guest ok = yes
+
+[Media]
+        comment = Public Media Shares
+        browsable = yes
+        path = /media/storage/Media
+        public = yes
+        writable = no
+        printable = no
+        write list = @users
+        guest ok = yes
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>VOIP - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="VOIP" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/security/voip/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>VOIP</h1>
+
+<p>Sensitive information can be transmitted through phone systems, POTS lines can
+also be very very expensive if anonymous calls are allowed through the POTS
+line. Mitigations must be implemented in the network, network perimeter,
+servers, and phones. Mitigations in the network aim to deny access to attackers
+through virtual separation of data and phone networks using <a href="../../networking/vlan/">VLANs</a>, and
+perimeter security devices such as firewalls and filtering routers.</p>
+
+<p>Servers AND phones must be security hardened. Phones must require strong
+authentication and authorization of users to prevent identity spoofing. Phones
+should also encrypt voice streams through high risk environments such as the
+internet.</p>
+
+<h2>Authentication</h2>
+
+<p>Devices and users should authenticate themselves separately to the PBX.
+Additionally devices should ensure the validity of the server before allow user
+authentication.</p>
+
+<h2>Network Separation</h2>
+
+<h3>VLANs</h3>
+
+<p>Dividing the network into multiple VLANs does not provide any benefit if the
+traffic between the VLANs is not restricted. VLANs are so trivial to implement
+that there really isn&#39;t any reason not to use them, and they do provide a solid
+defense against malicious traffic on other networks... As long as attackers
+can&#39;t craft packets to traverse the VLANs...</p>
+
+<p>Filters need to configured at every available device to permit only traffic
+between phones and the telephony server.</p>
+
+<h3>Physical/Layer 2</h3>
+
+<p>An attacker who has physical access to the network may bypass any VLAN
+separation by simply unplugging an IP phone and introducing a malicious
+machine. A simple solution would be to only allow know MAC addresses, however,
+this too could be fooled quite trivially. The solution to this is <a href="../801x/">802.1X</a>
+authentication. Additional trickery can be added using various switch port
+security features such as dhcp client sniffing.</p>
+
+<h3>Services</h3>
+
+<p>Ideally, voice networks should have their own service providers for basic
+functionality like DNS, DHCP, and NTP. This might be a bit overkill, however,
+it&#39;s pretty simple to implement these services and they don&#39;t require much of a
+box to do it. What this gets you is a complete separation of voice and data
+networks preventing even leaks about the other networks from occuring on the
+other one.</p>
+
+<p>In the event of a voice network that goes only to POTS lines and doesn&#39;t need
+any external SIP clients, or to receive voice calls from outside the local
+voice network, then having the services separated allows for total network
+isolation. Even with external SIP clients it can be made so that there is
+exactly one point where external data can get into the voice network and out of
+it. This provides a very nice and convienient place to drop an <a href="../ids/">IDS</a>.</p>
+
+<h2>Call Eavesdropping</h2>
+
+<p>Eavesdropping on unencrypted voice communication is more likely when
+conversations travel over a general use IP network. Media streams are easily
+reconstructed if packets can be captured. Security protections at the network
+layer can make call eavesdropping more difficult, but not prevent it. If VoIP
+traffic traverses public networks unencrypted, eavesdropping is a serious
+concern.</p>
+
+<p>By eavesdropping on VoIP calls, attackers can potentially obtain sensitive
+information such as passwords, usernames, caller location, and addresses of
+other devices. They could also use traffic analysis to determine relationship
+patterns between unique callers on the system.</p>
+
+<p>A switched network means that network traffic is not broadcast to all devices
+connected to a switch, thus making packet capturing more difficult. However,
+there are methods to subvert the switch. One method is to flood the switch with
+traffic, which overfills the MAC address table causing the switch to broadcast
+traffic on all ports. The other method of subverting a switched network is to
+implement a man-in-the-middle attack. In this case, an attacker pretends to be
+the victim device by spoofing the victim’s MAC address.</p>
+
+<p>The best and only robust solution to eavesdropping is to encrypt all voice
+traffic on the network from end to end.</p>
+
+<h2>Signal Leakage</h2>
+
+<p>With many VoIP implementations signaling is done out-of-band. Signalling is
+meta-data about calls such as the destination number, extensions, caller
+identity information, etc.</p>
+
+<p>If this information is sent plaintext an attacker can potentially build up a
+social graph of users of the phone system that may be later used in a social
+engineering attack.</p>
+
+<p>If this signalling information is sent without a form of crytographic
+verification, plaintext or not, these messages would be suscetible to MITM
+attacks allowing an attacker to cause havoc such as change who you are calling
+tranparently, even potentially routing them to the attacker themselves to
+continue a social enginerring attack, effectively disrupting the integrity of a
+critical communications service.</p>
+
+<h2>Impersonation</h2>
+
+<p>Impersonating a caller can potentially allow an attacker access services on
+telephony servers reserved for the legitimate user, spoof caller ID
+information, bypass filters based on caller name, and eavesdrop on calls. While
+people are used to using a caller&#39;s voice as a form of authentication, this
+only works after answering the phone and with telephony applications that are
+voice-based.</p>
+
+<p>If phones can be contacted from the Internet, this could lead to problems with
+SPAM over Internet Telephony (SPIT), because SPAMmers can cheaply automate
+sending messages or calling phones. In addition, by impersonating a user to the
+telephony server, an attacker can eavesdrop on calls from anywhere on the
+network using the registration hijacking attack. This attack allows an attacker
+to send spoofed messages to the telephony server and potentially reroute a
+user&#39;s calls.</p>
+
+<h2>Call Plan Security</h2>
+
+<h3>Outgoing PIN</h3>
+
+<p>A neat little trick that could be accomplished to greatly increase the security
+of a PBX to prevent abuse from people making paid phone calls could be to
+require a PIN be entered whenever an outgoing call is made to a number that has
+never been dialed from an extension before.</p>
+
+<h3>911</h3>
+
+<p>Any fixed phone should have it&#39;s physical location stored and available to make
+911 calls safely. Remote SIP clients or any other phone that moves regularily,
+however, should not be able to dial 911 and should rely on additional means for
+emergency services.</p>
+
+<h2>Call Log Auditing</h2>
+
+<p>Here, there comes a tradeoff. Keeping call logs (not recordings mind you) can
+be very useful in tracking down abuse, the other side of this coin is privacy
+for the users. Knowing the source number, destination number, call duration,
+and time the call occurred are important for this nothing more and nothing
+less.</p>
+
+<p>If these logs were kept only for a month it would limit the privacy impact. If
+any call that lasted under 15 seconds never entered the call log, as these
+would have minimal importance, and probably wouldn&#39;t be particularily valuable.</p>
+
+<p>The source number could be removed after a week, anonymising the call logs to a
+certain extent that would probably be acceptable to most users.</p>
+
+<p>This is one of those security measures I wouldn&#39;t want to relax quite this much
+unless things such as the outgoing pin, a strong IDS, and firewall logs had
+been implemented.</p>
+
+    </div>
+  </body>
+</html>

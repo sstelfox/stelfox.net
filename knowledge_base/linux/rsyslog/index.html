@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>RSyslog - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="RSyslog" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/rsyslog/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>RSyslog</h1>
+
+<p>RSyslog is a more advanced replacement for the aging klogd and syslogd. It
+supports useful features such as attribute filtering and logging to a database.</p>
+
+<h2>Security Notes</h2>
+
+<p>RSyslog can log some sensitive information or very useful information for any
+potential intruder including service names, versions, valid usernames, logon
+times and quite a bit more. It is highly recommended that syslog&#39;s are sent to
+a central hardened host that can maintain a backup of any logs in case a server
+is compromised. It is also very useful for information and error trending.</p>
+
+<h2>Firewall Adjustments</h2>
+
+<p>By default RSyslog doesn&#39;t need any ports opened. If you intend to send your
+logs over the network, it will depend on how you&#39;re doing it. UDP is the most
+error prone but the least processor intensive. TCP is a bit more reliable. You
+can also encrypt syslog messages over TCP using TLS. This however requires
+there to be a trusted <a href="../certificate_authority/">Certificate_Authority</a> to create and sign
+certificates. TCP is also not supported by all syslog hosts, usually resulting
+in a mixed mode setup.</p>
+
+<p>When running as a UDP host, the firewall can be configured to allow the UDP
+responses in and block and responses from the syslog server without issue. This
+will prevent anyone malicious running a port scan on the network to see that
+there is a remote syslog server, which would be a very juicy target. This of
+course comes at the expense of the clients and reliability. The clients will
+never be able to tell if their message was received but most don&#39;t care anyway.</p>
+
+<p>If you&#39;re not using TLS on the server to authenticate where messages are coming
+from it is a good idea to restrict who can send messages to the syslog server
+to prevent attackers from overloading the system.</p>
+
+<p>To allow UDP:</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A SERVICES -s 10.13.37.192/28 -m udp -p udp --dport 514 -j ACCEPT
+</pre></div>
+</div>
+
+<p>To allow TCP:</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A SERVICES -s 10.13.37.192/28 -m tcp -p tcp --dport 514 -j ACCEPT
+</pre></div>
+</div>
+
+<p>To allow TCP/TLS:</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A SERVICES -m tcp -p tcp --dport 514 -j ACCEPT
+</pre></div>
+</div>
+
+<h2>Forwarding Windows Events</h2>
+
+<p>There is a handy service that can forward syslog events from the Windows Event
+subsystem built into windows to a syslog server. It&#39;s called
+<a href="http://code.google.com/p/eventlog-to-syslog/">eventlog-to-syslog</a> and seems to be under active development (good thing).</p>
+
+<h2>Configuration</h2>
+
+<h3>/etc/rsyslog.conf</h3>
+<div class="CodeRay">
+  <div class="code"><pre>#rsyslog v5 config file
+
+#### MODULES ####
+
+$ModLoad imuxsock # Provide support for local system logging (e.g. via logger command)
+$ModLoad imklog   # Provide kernel logging support
+$ModLoad immark   # Provide --MARK-- message capability
+
+# GLOBAL DIRECTIVES
+
+# Use default timestamp format
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+
+# File syncing capability is disabled by default. This feature is usually not
+# required, and an extreme performance hit.
+#$ActionFileEnableSync on
+
+# Include all config files in /etc/rsyslog.d/
+$IncludeConfig /etc/rsyslog.d/*.conf
+
+# TEMPLATES
+
+# Log every remote host to it's own directory, with a timestamped file
+$template RemoteHost,&quot;/var/syslog/hosts/%FROMHOST-IP%/%$YEAR%-%$MONTH%-%$DAY%-syslog.log&quot;
+
+# RULESETS
+
+# BEGIN LOCAL RULESET
+
+$RuleSet local
+# Log all kernel messages to the console
+kern.*                                    /dev/console
+
+# Log anything (except mail, and private authentication message) of level info
+# or higher.
+*.info;mail.none;authpriv.none;cron.none  /var/log/messages
+
+authpriv.*                                /var/log/secure
+
+# Log all the mail messages in one place.
+mail.*                                    -/var/log/maillog
+
+# Log cron stuff
+cron.*                                    /var/log/cron
+
+# Everybody gets emergency messages
+*.emerg                                   :omusrmsg:*
+
+# Save news errors of level crit and higher in a special file.
+uucp,news.crit                            -/var/log/spooler
+
+# Save boot messages also to boot.log
+local7.*                                  /var/log/boot.log
+
+# END LOCAL RULESET
+
+# BEGIN REMOTE RULESET
+
+# Use the remote file path template for remote systems
+$RuleSet remote
+*.* ?RemoteHost
+
+# END REMOTE RULESET
+
+# Use the local RuleSet as default if not specified otherwise
+$DefaultRuleset local
+
+# LISTENERS
+
+$ModLoad imtcp
+$InputTCPServerBindRuleset remote
+$InputTCPServerRun 10514
+
+$ModLoad imudp
+$InputUDPServerBindRuleset remote
+$UDPServerRun 10514
+</pre></div>
+</div>
+
+<p>If you want to send your logs to the remote server create the following
+contents in <code>/etc/rsyslog.d/central-server.conf</code>.</p>
+<div class="CodeRay">
+  <div class="code"><pre># Remote Logging
+#
+# An on-disk queue is created for this action. If the remote host is down,
+# messages are spooled to disk and sent when it is up again.
+
+$WorkDirectory              /var/lib/rsyslog  # The directory to store any queue files
+$ActionQueueFileName        syslog-fwd-01     # Prefix for the files stored in the working directory
+$ActionQueueMaxDiskSpace    1g                # Limit our queue disk consumption to a gig
+$ActionQueueSaveOnShutdown  on                # Whether queues persist through reboots
+$ActionQueueType            LinkedList        # Run asynchronously
+$ActionResumeRetryCount     -1                # Infinite retries if host is down
+*.* @@syslog.example.org:10514
+</pre></div>
+</div>
+
+<p>You can drop one of the <code>@</code> symbols on the last line if you&#39;d like to use UDP.
+The port is also optional but since we&#39;re using a non-standard port it&#39;s
+required.</p>
+
+<h3>MySQL Schema</h3>
+
+<p>The extension &quot;rsyslog-mysql&quot; will need to be installed and loaded in the
+&quot;MODULES&quot; section of <code>/etc/rsyslog.conf</code> using the following line:</p>
+<div class="CodeRay">
+  <div class="code"><pre>$ModLoad ommysql.so
+</pre></div>
+</div>
+
+<p>Create the database using the following custom schema, this is probably not
+compatible with tools expecting the default schema. I didn&#39;t like the default
+schema. You will need to create a mysql user for the RSyslog service. It only
+needs &#39;INSERT&#39; privileges on the database.</p>
+<div class="CodeRay">
+  <div class="code"><pre>CREATE DATABASE IF NOT EXISTS syslog;
+use syslog;
+DROP TABLE IF EXISTS syslog_events;
+CREATE TABLE syslog_events (
+  id int unsigned not null auto_increment primary key,
+  receivedAt varchar(60) NULL,
+  deviceReportedTime varchar(60) NULL,
+  facility smallint NULL,
+  severity smallint NULL,
+  program varchar(60) NULL,
+  hostname varchar(60) NULL,
+  srcHost varchar(60) NULL,
+  srcIP varchar(60) NULL,
+  message text NOT NULL,
+  inputName varchar(60)
+);
+</pre></div>
+</div>
+
+<p>To use the custom schema above, this template needs to be added near the top of
+the config file under &quot;GLOBAL DIRECTIVES&quot;. Changes in the schema will need to
+be reflected in the template.</p>
+<div class="CodeRay">
+  <div class="code"><pre>$template CustomMySQLSyslog,&quot;INSERT INTO syslog_events (receivedAt, deviceReportedTime, facility, severity, program, hostname, srcHost, srcIP, message, inputName) VALUES ('%timegenerated%', '%timereported%', '%syslogfacility%', '%syslogseverity%', '%programname%', '%hostname:::lowercase%', '%fromhost:::lowercase%', '%fromhost-ip%', '%msg%', '%inputname%');&quot;,SQL
+</pre></div>
+</div>
+
+<p>The following code should be added to the very top of the &quot;RULES&quot; section. You
+will need to replace dbhost, dbname, dbuser, dbpass with the values for your
+MySQL server (dbname will be syslog if you used the schema on this page). The
+last line in this will prevent remote syslog messages from flooding the
+log-text files of the server.</p>
+<div class="CodeRay">
+  <div class="code"><pre># MySQL Message queue, this will prevent data loss if we aren't able to write
+# to the database fast enough
+$WorkDirectory /var/spool/rsyslog
+$ActionQueueMaxDiskSpace 1g
+$ActionQueueSaveOnShutdown on
+$ActionQueueType LinkedList
+$ActionResumeRetryCount -1
+*.*     :ommysql:dbhost,dbname,dbuser,dbpass;CustomMySQLSyslog
+
+# Everything logged to files should only be the localhosts logs
+# This will disable everything else
+:fromhost-ip, !isequal, &quot;127.0.0.1&quot; ~
+</pre></div>
+</div>
+
+<p>I also created <code>/etc/rsyslog.d/remote_hosts.conf</code> on the central syslog server
+to create a log file dedicated to each host.</p>
+<div class="CodeRay">
+  <div class="code"><pre>$template DailyPerHostLogs,&quot;/var/log/hosts/%$YEAR%/%$MONTH%/%$DAY%/%FROMHOST-IP%/messages.log&quot;
+*.* -?DailyPerHostLogs
+</pre></div>
+</div>
+
+<p>It also helps to add this cron.daily task:</p>
+<div class="CodeRay">
+  <div class="code"><pre>#!/bin/bash
+# Compress *.log files not changed in more than 24 hours:
+find /var/log/hosts -type f -mtime +1  -name &quot;*.log&quot; -exec xz -9 {} \;
+</pre></div>
+</div>
+
+<p>You&#39;ll want to make sure &#39;xz&#39; is installed if you use the above script.</p>
+
+<h2>RELP Configuration</h2>
+
+<p>On both the client and the server:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install rsyslog-relp -y
+</pre></div>
+</div>
+
+<p>On the server (I created the following in <code>/etc/rsyslog.d/relp.conf</code>:</p>
+<div class="CodeRay">
+  <div class="code"><pre>$ModLoad imrelp
+$InputrelpMaxSessions 5000
+$InputRELPServerRun 20514
+</pre></div>
+</div>
+
+<p>And open up tcp/20514:</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A INPUT -m tcp -p tcp --dport 20514 -j ACCEPT
+</pre></div>
+</div>
+
+<p>On the client:</p>
+<div class="CodeRay">
+  <div class="code"><pre>$ModLoad omrelp
+*.* :omrelp:loghost.example.com:20514;RSYSLOG_ForwardFormat
+</pre></div>
+</div>
+
+<p>And ensure the client can make the connection:</p>
+<div class="CodeRay">
+  <div class="code"><pre>-A OUTPUT -m tcp -tcp --dport 20514 -d &lt;syslog-ip&gt; -j ACCEPT
+</pre></div>
+</div>
+
+<h2>Streaming to Redis</h2>
+<div class="CodeRay">
+  <div class="code"><pre>yum install ruby rubygem-redis -y
+</pre></div>
+</div>
+
+<p>Created <code>/bin/redis-syslog-sender</code> with the following contents:</p>
+<div class="CodeRay">
+  <div class="code"><pre>#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'redis'
+
+redis = Redis.new(
+  host: 'redis-host',
+  password: &quot;redis-password&quot;
+)
+
+while message = ARGF.gets
+  redis.publish(&quot;syslog:stream&quot;, message.strip)
+end
+
+redis.quit
+</pre></div>
+</div>
+
+<p>You&#39;ll need to edit the host your redis server is running on and provide it&#39;s
+password.</p>
+
+<p>In <code>/etc/rsyslog.conf</code> you&#39;ll need to add the following lines:</p>
+<div class="CodeRay">
+  <div class="code"><pre>module(load=&quot;omprog&quot;)
+*.*  action(type=&quot;omprog&quot; binary=&quot;/bin/syslog-redis-sender&quot;)
+</pre></div>
+</div>
+
+<p>After restarting the service a client can begin receiving all the syslog
+messages by subscribing to the Redis stream &#39;syslog:stream&#39;.</p>
+
+    </div>
+  </body>
+</html>

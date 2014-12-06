@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Initial Gem Setup - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Initial Gem Setup" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/misc/initial_gem_setup/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Initial Gem Setup</h1>
+
+<p>This is the process I go through when inititially setting up a gem. For this I
+will be creating a gem named <code>super_g</code>.</p>
+<div class="CodeRay">
+  <div class="code"><pre># Create the initial super structure
+bundle gem super_g -b -t rspec
+cd super_g
+
+# Remove the stock / sample tests
+rm -f spec/super_g_spec.rb
+</pre></div>
+</div>
+
+<ul>
+<li>Remove the bin/ directory if you will not be using it.</li>
+<li>Clean the comment out of the Gemfile</li>
+<li>Add my name to the top of the LICENSE.txt file</li>
+<li>Clean-up anything in the Rakefile I dont want (usually just comments)</li>
+<li>Write the README</li>
+<li>Clean the comments out of lib/super_g.rb</li>
+<li>Fix up the gemspec file</li>
+<li>Configure rspec, travis-ci, coveralls, codeclimate, gemnasium, rubygems, and
+yard</li>
+</ul>
+
+<p>Make the initial commit:</p>
+<div class="CodeRay">
+  <div class="code"><pre>git add -A
+git commit -m &quot;Setup the support structure for the gem&quot;
+</pre></div>
+</div>
+
+<p>Create a new repo on github, add the remote locally, and push the code up:</p>
+<div class="CodeRay">
+  <div class="code"><pre>git remote add origin git@github.com:sstelfox/super_g.git
+git push origin master
+</pre></div>
+</div>
+
+<h2>Fixup the Gemspec File</h2>
+
+<ul>
+<li>Set an author</li>
+<li>Set an email</li>
+<li>Write a description</li>
+<li>Wire a summary</li>
+<li>Add a homepage</li>
+<li>Verify license</li>
+<li>Added the following development dependencies:
+
+<ul>
+<li>coveralls</li>
+<li>simplecov</li>
+<li>yard</li>
+</ul></li>
+</ul>
+
+<p>Once complete run <code>bundle</code> to make sure all the dependencies are available.</p>
+
+<h2>Configure RSpec</h2>
+
+<p>First off fix the RSpec settings file located at .rspec:</p>
+<div class="CodeRay">
+  <div class="code"><pre>--format progress
+--color
+</pre></div>
+</div>
+
+<p>Next change spec/spec_helper.rb to support coveralls and be a tad bit nicer to
+rapid testing.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="global-variable">$LOAD_PATH</span>.unshift(<span class="constant">File</span>.expand_path(<span class="string"><span class="delimiter">'</span><span class="content">../../lib</span><span class="delimiter">'</span></span>, <span class="predefined-constant">__FILE__</span>))
+
+require <span class="string"><span class="delimiter">'</span><span class="content">coveralls</span><span class="delimiter">'</span></span>
+require <span class="string"><span class="delimiter">'</span><span class="content">simplecov</span><span class="delimiter">'</span></span>
+
+<span class="constant">SimpleCov</span>.formatter = <span class="constant">SimpleCov</span>::<span class="constant">Formatter</span>::<span class="constant">MultiFormatter</span>[
+  <span class="constant">SimpleCov</span>::<span class="constant">Formatter</span>::<span class="constant">HTMLFormatter</span>,
+  <span class="constant">Coveralls</span>::<span class="constant">SimpleCov</span>::<span class="constant">Formatter</span>
+]
+<span class="constant">SimpleCov</span>.start
+
+require <span class="string"><span class="delimiter">'</span><span class="content">super_g</span><span class="delimiter">'</span></span>
+
+<span class="constant">RSpec</span>.configure <span class="keyword">do</span> |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = <span class="predefined-constant">true</span>
+  config.run_all_when_everything_filtered = <span class="predefined-constant">true</span>
+  config.filter_run <span class="symbol">:focus</span>
+  config.order = <span class="string"><span class="delimiter">'</span><span class="content">random</span><span class="delimiter">'</span></span>
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<h2>Configure Travis-CI</h2>
+
+<p>The following is my standard Travis-CI config.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="key">language</span>: <span class="string"><span class="content">ruby</span></span>
+<span class="key">rvm</span>:
+  - <span class="string"><span class="content">1.9.3</span></span>
+  - <span class="string"><span class="content">2.0.0</span></span>
+  - <span class="string"><span class="content">2.1.0</span></span>
+</pre></div>
+</div>
+
+<h2>Configure YARD</h2>
+
+<p>Create a .yardopts file in the root of the projec with the following contents:</p>
+<div class="CodeRay">
+  <div class="code"><pre>--private
+--protected
+lib/**/*.rb - README.md LICENSE.txt
+</pre></div>
+</div>
+
+<p>You can test it out by running &#39;yard&#39; and opening doc/index.html in your
+browser.</p>
+
+<h2>Configure Coveralls</h2>
+
+<p>Setting up the service is still a TODO but part of it was done in RSpec
+already.</p>
+
+<ul>
+<li><a href="https://coveralls.io/docs/ruby">https://coveralls.io/docs/ruby</a></li>
+</ul>
+
+<h2>Configure CodeClimate</h2>
+
+<p>TODO, partially covered by badges in the README</p>
+
+<h2>Configure Gemnasium</h2>
+
+<p>TODO</p>
+
+<h2>Setup RubyGems</h2>
+
+<p>TODO</p>
+
+<h2>Write the README</h2>
+
+<p>TODO: see belfort project</p>
+
+<h3>Badges</h3>
+
+<p>Available badges and tracking information:</p>
+
+<ul>
+<li>Gem version (<a href="https://rubygems.org/">https://rubygems.org/</a>) (<a href="https://badge.fury.io/">https://badge.fury.io/</a>)</li>
+<li>Code Climate (<a href="https://codeclimate.com/">https://codeclimate.com/</a>)</li>
+<li>Travis-CI (<a href="https://travis-ci.org/">https://travis-ci.org/</a>)</li>
+<li>Dependency Status (<a href="https://gemnasium.com/">https://gemnasium.com/</a>)</li>
+<li>Coveralls (<a href="https://coveralls.io">https://coveralls.io</a>)</li>
+<li>Githalytics (<a href="http://githalytics.com/">http://githalytics.com/</a>)</li>
+<li>Kiuwan (Code maintainability?) (<a href="https://kiuwan.com/">https://kiuwan.com/</a>)</li>
+</ul>
+
+<p>Badges should be added for all the services in use by this project a sample of
+this might look like:</p>
+<div class="CodeRay">
+  <div class="code"><pre># TODO: Your gem name
+
+[![Gem Version][GV img]][Gem Version]
+[![Build Status][BS img]][Build Status]
+[![Dependency Status][DS img]][Dependency Status]
+[![Code Climate][CC img]][Code Climate]
+[![Coverage Status][CS img]][Coverage Status]
+
+## Description
+
+TODO: Your gem description
+
+[Gem Version]: https://rubygems.org/gems/&lt;gem name&gt;
+[Build Status]: https://travis-ci.org/sstelfox/&lt;gem name&gt;
+[travis pull requests]: https://travis-ci.org/sstelfox/&lt;gem name&gt;/pull_requests
+[Dependency Status]: https://gemnasium.com/sstelfox/&lt;gem name&gt;
+[Code Climate]: https://codeclimate.com/github/sstelfox/&lt;gem name&gt;
+[Coverage Status]: https://coveralls.io/r/sstelfox/&lt;gem name&gt;
+
+[GV img]: https://badge.fury.io/rb/&lt;gem name&gt;.png
+[BS img]: https://travis-ci.org/sstelfox/&lt;gem name&gt;.png
+[DS img]: https://gemnasium.com/sstelfox/&lt;gem name&gt;.png
+[CC img]: https://codeclimate.com/github/sstelfox/&lt;gem name&gt;.png
+[CS img]: https://coveralls.io/repos/sstelfox/&lt;gem name&gt;/badge.png?branch=master
+</pre></div>
+</div>
+
+<p>More info: <a href="http://elgalu.github.io/2013/add-achievement-badges-to-your-gem-readme/">http://elgalu.github.io/2013/add-achievement-badges-to-your-gem-readme/</a></p>
+
+    </div>
+  </body>
+</html>

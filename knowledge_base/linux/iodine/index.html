@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Iodine - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Iodine" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/iodine/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Iodine</h1>
+
+<p>On the server side:</p>
+<div class="CodeRay">
+  <div class="code"><pre>yum install iodine-server -y
+</pre></div>
+</div>
+
+<p>Edit the <code>/etc/sysconfig/iodine-server</code> file and put the following options in:</p>
+<div class="CodeRay">
+  <div class="code"><pre>OPTIONS=&quot;-P somepassword 172.16.0.1 t.0x378.net&quot;
+</pre></div>
+</div>
+
+<p>Create an <code>A</code> or <code>CNAME</code> record for <code>iodine-01.0x378.net</code> pointing at the FQDN
+of the server running <code>iodine</code> and a <code>NS</code> record pointing at
+<code>iodine-01.0x378.net</code> for the domain <code>t.0x378.net</code> (shorter is better, allows
+for higher speed).</p>
+
+<p>And firewall rules...</p>
+
+<p>filter table:</p>
+<div class="CodeRay">
+  <div class="code"><pre># Allow access to the iodine server
+-A INPUT -i eth0 -m udp -p udp --dport 53 -j ACCEPT
+-A INPUT -i eth0 -m tcp -p tcp --dport 53 -j ACCEPT
+
+# Accept tunneled traffic from iodine
+-A FORWARD -i dns+ -o eth0 -j ACCEPT
+-A FORWARD -i eth0 -o dns+ -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+</pre></div>
+</div>
+
+<p>nat table:</p>
+<div class="CodeRay">
+  <div class="code"><pre>*nat
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+-A POSTROUTING -s 172.16.0.0/24 -o eth0 -j MASQUERADE
+
+COMMIT
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang='en_US'>
+  <head>
+    <title>Festival - Stelfox Athen&#xe6;um</title>
+
+    <meta http-equiv='content-type' content='text/html; charset=utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1' />
+    
+    
+
+    <link rel="alternate" type="application/atom+xml" title="Stelfox Athen&#xe6;um Feed" href="/atom.xml" />
+    <link rel="canonical" href="https://stelfox.net" />
+    <link rel="author" href="https://plus.google.com/+SamStelfox31337/"/>
+
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Festival" />
+    <meta property="og:url" content="https://stelfox.net/knowledge_base/linux/festival/" />
+    <meta property="og:site_name" content="Stelfox Athen&#xe6;um" />
+    <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
+    <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
+
+    <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
+    <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-32188490-1', 'stelfox.net');
+      ga('require', 'displayfeatures');
+      ga('send', 'pageview');
+    </script>
+  </head>
+  <body>
+    <header class='masthead'>
+      <div class='masthead-inner'>
+        <h1><a href='/' title='Home'>Sam Stelfox</a></h1>
+        <p class='lead'>Thoughts from a systems hacker and developer.</p>
+        <nav>
+          <ul>
+            <li><a href="/about/" title="About">About</a></li>
+            <li><a href="/blog/" title="Blog">Blog</a></li>
+            <li><a href="/knowledge_base/" title="Knowledge Base">Knowledge Base</a></li>
+            <li><form action="/search/" method="get"><input type="search" name="q" placeholder="Search" /></form></li>
+          </ul>
+        </nav>
+        <footer class='colophon'>
+          <p>&copy; 2014, All rights reserved.</p>
+        </footer>
+      </div>
+    </header>
+    <div class='content container'>
+      <h1>Festival</h1>
+
+<p>Festival is packaged in a way on Fedora in a standalone mode, it does not come
+with an init script to startup it&#39;s server on boot so the following is an
+adaptation of another one custom written to handle this. It&#39;s primarily used in
+Fedora for Gnome&#39;s usability support which doesn&#39;t run the server as a daemon.</p>
+
+<p>Listening to the samples of the stock voices, I&#39;ve found that <code>ked</code> sounds the
+best in my opinion and at least until we here try and make our own diphone
+database this is the voice that I&#39;m going to use.</p>
+
+<p>Packages:</p>
+
+<ul>
+<li>festival</li>
+<li>asterisk-festival</li>
+<li>festvox-ked-diphone</li>
+</ul>
+
+<p>In Fedora the voices are stored in the directory
+<code>/usr/share/festival/lib/voices/*/</code> directories. These are the voice that you
+have to choose from when configuring festival. The configuration files live in
+<code>/etc/festival/</code>.</p>
+
+<p>We&#39;re only interested in <code>/etc/festival/festival.scm</code> which doesn&#39;t exist by
+default. The following file has the <code>ked</code> voice set to be the default. I left
+the other voice in there commented out in case I wanted to switch back some
+other time.</p>
+<div class="CodeRay">
+  <div class="code"><pre>(defvar server_home &quot;.&quot;)
+
+;; Enable access to localhost so asterisk can connect (no one else needs to connect)
+(set! server_access_list '(&quot;[^.]+&quot; &quot;127.0.0.1&quot; &quot;localhost.*&quot; &quot;argus.lounge.gentlemenslounge.org&quot;))
+
+(cd server_home)
+(set! default_access_strategy 'direct)
+
+;; Set the voice to 'ked' the other one is left in case I wish to switch later
+(set! voice_default 'voice_ked_diphone)
+;(set! voice_default 'voice_nitech_us_awb_arctic_hts)
+
+; Preload ked voice to make the server more responsive
+(voice_ked_diphone)
+
+;; Asterisk command
+&quot;(define (tts_textasterisk STRING MODE)
+Apply tts to STRING. This function is specifically designed for use in
+server mode so a single function call may synthesize the string. This function
+name may be added to the server safe functions.&quot;
+(let ((wholeutt (utt.synth (eval (list 'Utterance 'Text string)))))
+(utt.wave.resample wholeutt 8000)
+(utt.wave.rescale wholeutt 5)
+(utt.send.wave.client.wholeutt)))
+;; End Asterisk command
+
+;(provide 'siteinit)
+</pre></div>
+</div>
+
+    </div>
+  </body>
+</html>
