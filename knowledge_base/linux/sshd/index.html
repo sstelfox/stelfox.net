@@ -64,14 +64,14 @@ integrity of data over an insecure network, such as the Internet.</p>
 
 <h2>Security Notes</h2>
 
-<p>SSH is one of the crux services. An improperly configured SSH could be
-equivalent to letting an attacker have physical access to the box.</p>
+<p>SSH is a crux service. An improperly configured SSH could be equivalent to
+letting an attacker have physical access to the box.</p>
 
 <p>Generally it&#39;s recommended to run any instances of SSH exposed to the public
-internet on an alternate port. This won&#39;t protect you against vulnerabilities
-but it will drastrically reduce the number of automated and scripted attacks
-your server will be subjected to. If nothing else it will allow real attacks to
-stand out more clearly in your logs.</p>
+internet on an alternate port. Alternate ports won&#39;t protect you against
+vulnerabilities but it will drastrically reduce the number of automated and
+scripted attacks your server will be subjected to. If nothing else it will allow
+real attacks to stand out more clearly in your logs.</p>
 
 <h2>Firewall Adjustments</h2>
 
@@ -96,7 +96,7 @@ from attackers.</p>
 
 <h3>/etc/ssh/sshd_config</h3>
 
-<p>The following is a minimal SSH config relying mostly on the defaults. It
+<p>The following is a minimal SSHd config relying mostly on the defaults. It
 requires a group named <code>sshers</code> to be created before hand and any user that
 should have legitimate access via SSH should be added to the group.</p>
 <div class="CodeRay">
@@ -122,6 +122,14 @@ AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
 </pre></div>
 </div>
 
+<p>To create the group and add the user &#39;test&#39; to it you can run the following
+commands:</p>
+<div class="CodeRay">
+  <div class="code"><pre>groupadd sshers
+usermod -a -G sshers test
+</pre></div>
+</div>
+
 <h3>/etc/issue.net</h3>
 
 <p>The net issue file is what gets displayed before a user logs in. While I&#39;m
@@ -132,30 +140,18 @@ law enforcement to ensure that notice of unauthorized access was given prior.</p
 <p>At a minimum it will show the server has been professionally configured and
 that they are not dealing with a service that was left unconfigured.</p>
 <div class="CodeRay">
-  <div class="code"><pre>***************************************************************************
-     Authorized uses only.  All activity may be monitored and reported.
-                            NOTICE TO USERS
+  <div class="code"><pre>************************************************************************
+This system is privately owned. If you are not authorized to access this
+system, exit immediately. Unauthorized access to this system is
+forbidden by organization policies, national, and international laws.
+Unauthorized users are subject to criminal and civil penalties as well
+as organization initiated disciplinary proceedings.
 
-This computer system is the private property of BedroomProgrammers.net.
-It is for authorized use only. Users (authorized or unauthorized) have no
-explicit or implicit expectation of privacy.
-
-Any or all uses of this system and all files on this system may be
-intercepted, monitored, recorded, copied, audited, inspected, and
-disclosed in accordance with the BedroomProgrammers.net acceptable network
-usage policy. 
-
-By using this system, the user consents to such interception, monitoring,
-recording, copying, auditing, inspection, disclosure at the discretion of
-BedroomProgrammers.net and agrees to comply with all related policies,
-procedures and guidelines. Unauthorized or improper use of this system may
-result in civil and criminal penalties and administrative or disciplinary
-action, as appropriate.
-
-By continuing to use this system you indicate your awareness of and consent
-to these terms and conditions of use. LOG OFF IMMEDIATELY if you do not agree
-to the conditions stated in this notice.
-****************************************************************************
+By entry into this system you acknowledge that you are authorized to
+access and have been granted the level of privileges you will
+subsequently execute on this system. You further acknowledge that by
+entry into this system you expect no privacy from monitoring.
+************************************************************************
 </pre></div>
 </div>
 
@@ -163,79 +159,14 @@ to the conditions stated in this notice.
 <div class="CodeRay">
   <div class="code"><pre># /etc/ssh/ssh_config
 Host *
-  CheckHostIP yes
   Compression yes
-  CompressionLevel 6
-  GSSAPIAuthentication yes
   HashKnownHosts yes
   Protocol 2
   SendEnv LC_ALL
-  StrictHostKeyChecking ask
+  VerifyHostKeyDNS ask
   VisualHostKey yes
 </pre></div>
 </div>
-
-<h2>Multi-Factor Authentication</h2>
-
-<p>I would like to start out by mentioning yes, I know I&#39;m paranoid. I have no
-reason to explicitly believe that there is anyone actively trying to get into
-my network and additionally I have no reason to believe that the data I&#39;m
-protecting has any value to anyone but myself. My response to anyone who thinks
-this is excessive is, just because I&#39;m paranoid doesn&#39;t mean someone isn&#39;t out
-to get me. Besides what&#39;s the harm in adding another almost non-intrusive
-security measure to the system?</p>
-
-<p>Multi-factor authentication is using three or more different types of user
-verification schemes to provide a considerably harder time for an unauthorized
-user to gain access. These verification schemes can include but are not limited
-to:</p>
-
-<ul>
-<li>Access control (firewall port restrictions or user ACL conditions)</li>
-<li>Something you know (your password or pass phrase)</li>
-<li>Something you have (your ssh key or secure id key-fob hardware)</li>
-<li>Something you are (fingerprint or iris scan)</li>
-<li>Somebody you know (human authentication through mutual acquaintance)</li>
-<li>Something you deduce (logical authentication which the user will need to
-reason, usually based on personal knowledge or life experience)</li>
-</ul>
-
-<p>Multi-factor authentication can easily be implemented on these using built-in
-functionality. Multiple verifications of the same type do not count towards the
-number of verification schemes in use (for example both firewall and restrict
-by user are both ACLs and thus count as one verification scheme) although they
-can still increase the security of the box. Assuming that the server is
-configured according to the guidelines on this wiki in regards to <a href="/knowledge_base/linux/iptables/">IPTables</a>
-and SSH, then it already has the following:</p>
-
-<ul>
-<li>limit access by group with the &quot;AllowGroups&quot; directive (whitelist - access
-control)</li>
-<li>use a password (something you know)</li>
-</ul>
-
-<p>We can further increase the security into a true multi-factor authentication
-system by disabling password based access and requiring the following:</p>
-
-<ul>
-<li>limit access to ssh by ip address (access control)</li>
-<li>use a pre-authorized ssh key (something you have)</li>
-<li>use that ssh key <u>with</u> a strong pass-phrase (something you know)</li>
-<li>force a script to run on login that will ask questions of the user (logical
-authentication of a constantly changing answer)</li>
-</ul>
-
-<p>The first can be done using <a href="/knowledge_base/linux/iptables/">IPTables</a> and the rules are mentioned in the
-firewall section of this page. I will cover the rest in the following two
-sub-sections.</p>
-
-<p>Note for personal research: It seems that version 2 of the SSH protocol
-natively supports chaining authentications using the &#39;AuthenticationMethods&#39;
-commands allowing you to simply do things such as requiring you to have both a
-key and password. Chaining this with pam could allow us to require a publickey,
-following by standard password, and finishing up with a OTP. Would be fantastic
-for high security airlock servers, or as a stronger means of restricting root
-logins where they are necessary.</p>
 
 <h3>SSH Authorized Keys</h3>
 
@@ -299,105 +230,6 @@ PasswordAuthentication no
 <p>This replaces the &#39;something you know&#39; of a password based login, with
 &#39;something you have&#39; (the key, especially if it&#39;s on a pendrive) and &#39;something
 you know&#39; (the key&#39;s pass-phrase).</p>
-
-<h3>Gatekeeper Script</h3>
-
-<p>If you&#39;ve already implemented the SSH keys for authentication and have a
-password on your key then you&#39;ve already achieved multi-factor authentication,
-as I&#39;ve said before now I&#39;m paranoid and any additional step that could keep
-the baddies out of the systems that I need to ensure the security of is a step
-that I&#39;ll take.</p>
-
-<p>The gatekeeper script is something that I haven&#39;t come across on any other
-systems that other people administer. Perhaps they haven&#39;t thought of it, or
-perhaps it&#39;s too much trouble for them without much gain. I had the idea for
-this while watching a James Bond movie (Golden Eye for those who care). A
-Russian systems engineer put riddles on one of his machines that you had to go
-through in order to access the system, while this alone isn&#39;t secure, asking
-the user a random question that they alone would know the answer to couldn&#39;t
-hurt the security. I highly recommend using some logic that changes
-periodically, but the client can remotely deduce.</p>
-
-<p>First we need to make a script to handle the additional authentication.Please
-note that the following script is just an example, posting the actual script
-would defeat the purpose of having it in the first place. You&#39;ll have to come
-up with your own question and answer sections, though this is a good template
-to start from.</p>
-<div class="CodeRay">
-  <div class="code"><pre>#!/bin/sh
-# Gatekeeper.sh - Post-login authentication script
-
-# In the event that a user tries to get crafty and Ctrl-C out of the script
-# we'll just kill the connection
-trap jail INT
-jail() {
-    kill -9 $PPID
-    exit 0
-}
-
-# Once a user logs in, check to see if they just wanted a shell.
-# SSH_ORIGINAL_COMMAND will be null (-z) if they did
-if [ -z &quot;$SSH_ORIGINAL_COMMAND&quot; ]; then
-    # The answer the user needs to know, a function or call to another
-    # script could be used to generate this answer based on any number
-    # of resources available to the system. This could include querying an
-    # internal web script to get a daily password user's of a site have
-    # access to (and perhaps are supposed to be checking)
-    CORRECT_ANSWER=&quot;muffins&quot;
-
-    # Message displayed to the user before being prompted, I'm going to assume
-    # the user knows the question in this case what's the admin's favorite
-    # breakfast
-    echo -n &quot;Gatekeeper token authentication required: &quot;
-
-    # Get the user's answer. If the answer is correct execute the command.
-    # If the answer is wrong, log the attempt and kill the connection.
-    while read -s inputline; do
-        RESPONSE=&quot;$inputline&quot;
-        echo &quot;&quot;
-        if [ $CORRECT_ANSWER = &quot;${RESPONSE}&quot; ]; then
-            echo &quot;Gatekeeper authentication accepted.&quot;
-            $SHELL -l
-            exit 0
-        else
-            logger &quot;Gatekeeper: $USER login failed from $SSH_CLIENT&quot;
-            kill -9 $PPID
-            exit 0
-        fi
-    done
-fi
-
-# This command will bypass the gatekeeper script if the user tries to rsync
-# as this script will break rsync. It creates a fresh shell just for good
-# measure.
-#if [ `echo $SSH_ORIGINAL_COMMAND | awk '{print $1}'` = rsync ]; then
-#    $SHELL -c &quot;$SSH_ORIGINAL_COMMAND&quot;
-#    exit 0
-#fi
-
-# If a user tried to execute something other than an 'approved' command
-# just kill the session. This will prevent SCP and SFTP unless they are
-# configured to bypass the script.
-kill -9 $PPID
-exit 0
-</pre></div>
-</div>
-
-<p>Put this script in <code>/etc/ssh/gatekeeper.sh</code> and change it&#39;s permissions to 755
-with the owner being root. To make the SSH server pass off control to the
-Gatekeeper script once it&#39;s done authenticating a user, we&#39;ll use the
-&#39;ForceCommand&#39; command in SSHd&#39;s config file (<code>/etc/ssh/sshd_config</code>). Add the
-following line to the end of the config and restart the SSH daemon.</p>
-<div class="CodeRay">
-  <div class="code"><pre>ForceCommand /etc/ssh/gatekeeper.sh
-</pre></div>
-</div>
-
-<p>Assuming everything went according to plan, when you SSH into the remote server
-once your done authenticating it&#39;ll ask for the token. Putting in &#39;muffins&#39;
-should get you to your shell, while anything else will kill the connection.
-This provides the final layer of the multi-factor authentication as &#39;something
-you deduce&#39;.</p>
 
 <h2>User Jails</h2>
 
@@ -491,6 +323,12 @@ running you can use this command to track down what it has actually loaded:</p>
 
 <p>If you want to run sshd in a LXC container you will need to disable
 <code>pam_loginuid.so</code> in <code>/etc/pam.d/sshd</code> by commenting out the appropriate line.</p>
+
+<h2>Misc</h2>
+
+<p>I&#39;ve play around with implementing a <a href="/knowledge_base/linux/sshd_gatekeeper/">gatekeeper style script</a> to provide an
+additional layer of security. In practice real multi-factor authentication is
+more reliable and should be used instead.</p>
 
     </div>
   </body>
