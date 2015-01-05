@@ -67,36 +67,28 @@ integrity of data over an insecure network, such as the Internet.</p>
 <p>SSH is one of the crux services. An improperly configured SSH could be
 equivalent to letting an attacker have physical access to the box.</p>
 
+<p>Generally it&#39;s recommended to run any instances of SSH exposed to the public
+internet on an alternate port. This won&#39;t protect you against vulnerabilities
+but it will drastrically reduce the number of automated and scripted attacks
+your server will be subjected to. If nothing else it will allow real attacks to
+stand out more clearly in your logs.</p>
+
 <h2>Firewall Adjustments</h2>
 
-<p>My default <a href="../iptables/">IPTables</a> firewall already has the following rules in place to
+<p>My default <a href="/knowledge_base/linux/iptables/">IPTables</a> firewall already has the following rules in place to
 allow access to SSH by default while still providing a modicum of protection
 from attackers.</p>
 <div class="CodeRay">
-  <div class="code"><pre># Allow SSH, but no more than 5 new connections every minute
-# Note: This has extreme repercussions if I was to use sftp as each file transfer
-# initiates a new connection. Since it's rare for me to use sftp this isn't really an
-# issue, however, when I do want to use it this rule will be the cause of failed
-# transfers. Hopefully I will save myself the diagnostic nightmare scenario I went
-# through last time
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &quot;SSH Brute Force&quot;
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
-</pre></div>
-</div>
-
-<p>On any sensitive system, where the server can be access from should be further
-restricted. An example is provided below that only allows access from the
-trusted LAN subnet, this should be used on the central syslog server and the
-backup server (In the event of a server compromise I do not want to risk my
-logs or backups to further compromise and SSH is probably my most vulnerable
-service).</p>
-<div class="CodeRay">
-  <div class="code"><pre>-A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --name SSH --set
--A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &quot;SSH Brute Force&quot;
--A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
--A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -j ACCEPT
+  <div class="code"><pre># Allow SSH, but no more than 5 new connections every minute Note: This has
+# extreme repercussions if I was to use sftp as each file transfer initiates a
+# new connection. Since it's rare for me to use sftp this isn't really an
+# issue, however, when I do want to use it this rule will be the cause of
+# failed transfers. Hopefully I will save myself the diagnostic nightmare
+# scenario I went through last time
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &quot;SSH Brute Force&quot;
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
 </pre></div>
 </div>
 
@@ -104,109 +96,41 @@ service).</p>
 
 <h3>/etc/ssh/sshd_config</h3>
 
-<p>This ssh configuration should cover pretty much all the servers.</p>
+<p>The following is a minimal SSH config relying mostly on the defaults. It
+requires a group named <code>sshers</code> to be created before hand and any user that
+should have legitimate access via SSH should be added to the group.</p>
 <div class="CodeRay">
-  <div class="code"><pre>Port 22
-AddressFamily inet
-ListenAddress 0.0.0.0
-Protocol 2
+  <div class="code"><pre>Banner /etc/issue.net
 
-# Logging
+ClientAliveInterval 60
+TCPKeepAlive no
+
 SyslogFacility AUTHPRIV
-LogLevel INFO
+UseDNS no
 
-# Limit the ciphers to those which are FIPS approved and only use ciphers in counter (CTR) mode
-Ciphers aes128-ctr,aes192-ctr,aes256-ctr
+PermitRootLogin no
+PasswordAuthentication no
+UsePAM yes
 
-# Authentication:
-LoginGraceTime 2m
-PermitRootLogin without-password
-StrictModes yes
-
-# Pubkey counts as one of these, this will require brute force users
-# to open a lot of connections, quickly blocking their access
-MaxAuthTries 3
-
-MaxSessions 2
-
-PubkeyAuthentication yes
-AuthorizedKeysFile      .ssh/authorized_keys
-
-HostbasedAuthentication no
-IgnoreRhosts yes
-
-PermitEmptyPasswords no
-PasswordAuthentication yes
-
-ChallengeResponseAuthentication no
-
-KerberosAuthentication no
-
-GSSAPIAuthentication no
-
-UsePAM no
+AllowTcpForwarding no
+AllowGroups sshers
 
 # Accept locale-related environment variables
 AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
 AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
 AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
-AcceptEnv XMODIFIERS
-
-AllowAgentForwarding no
-AllowTcpForwarding no
-GatewayPorts no
-X11Forwarding no
-PrintMotd yes
-PrintLastLog yes
-TCPKeepAlive no
-UseLogin no
-UsePrivilegeSeparation yes
-PermitUserEnvironment no
-Compression delayed
-
-# Check the client every 15 seconds to make sure that it's still connected
-# If no response is heard after 2 minutes assume the client is dead
-ClientAliveInterval 15
-ClientAliveCountMax 8
-
-ShowPatchLevel no
-UseDNS no
-PermitTunnel no
-
-# This is the number of unauthenticated open SSH connections
-# After 10, there is a fifty percent chance a connection will be
-# dropped until the queue reaches 20 at which point all further
-# connections will be dropped until the queue clears
-MaxStartups 10:50:20
-
-PidFile /var/run/sshd.pid
-Banner /etc/issue.net
-
-# I never have use of sftp, preferring scp
-#Subsystem      sftp    /usr/libexec/openssh/sftp-server
-
-# Only allow SSH connections from users explicitly given that permission
-AllowGroups sshers
-</pre></div>
-</div>
-
-<p>There are two configuration options that can potentially break older versions
-of the ssh server and should be commented out or removed they are: </p>
-<div class="CodeRay">
-  <div class="code"><pre>MaxSessions 5
-...
-AllowAgentForwarding yes
 </pre></div>
 </div>
 
 <h3>/etc/issue.net</h3>
 
-<p>The net issue file is what gets displayed before a user logs in. The net issue
-works as a deterrent, a set of policies, and informs any users trying to login
-that they will be monitored. While this won&#39;t deter bots trying to brute force
-the entry, it at the very least provides a professional appearance to let
-potential bad users that they are not dealing with a service that was
-accidentally left open and unconfigured.</p>
+<p>The net issue file is what gets displayed before a user logs in. While I&#39;m
+under no false pretense that having a policy displayed to a potential attacker
+will prevent them from their malicious activity, it is generally recommended by
+law enforcement to ensure that notice of unauthorized access was given prior.</p>
+
+<p>At a minimum it will show the server has been professionally configured and
+that they are not dealing with a service that was left unconfigured.</p>
 <div class="CodeRay">
   <div class="code"><pre>***************************************************************************
      Authorized uses only.  All activity may be monitored and reported.
@@ -232,30 +156,6 @@ By continuing to use this system you indicate your awareness of and consent
 to these terms and conditions of use. LOG OFF IMMEDIATELY if you do not agree
 to the conditions stated in this notice.
 ****************************************************************************
-</pre></div>
-</div>
-
-<h3>User Configuration</h3>
-
-<p>The SSH daemon configuration here restricts SSH access to only users in the
-&quot;sshers&quot; group. This group will need to be created like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre>[root@localhost]# groupadd sshers -g 401
-</pre></div>
-</div>
-
-<p>And you&#39;ll probably want to add a user to that group. If you want root to be
-able to login remotely that account has to be in this group as well! The
-following example adds root to the sshers group.</p>
-<div class="CodeRay">
-  <div class="code"><pre>[root@localhost]# usermod -a -G sshers root
-Adding user root to group sshers
-</pre></div>
-</div>
-
-<p>And to remove root from the sshers group:</p>
-<div class="CodeRay">
-  <div class="code"><pre>[root@localhost]# gpasswd -d root sshers
 </pre></div>
 </div>
 
@@ -305,7 +205,7 @@ functionality. Multiple verifications of the same type do not count towards the
 number of verification schemes in use (for example both firewall and restrict
 by user are both ACLs and thus count as one verification scheme) although they
 can still increase the security of the box. Assuming that the server is
-configured according to the guidelines on this wiki in regards to <a href="../iptables/">IPTables</a>
+configured according to the guidelines on this wiki in regards to <a href="/knowledge_base/linux/iptables/">IPTables</a>
 and SSH, then it already has the following:</p>
 
 <ul>
@@ -325,7 +225,7 @@ system by disabling password based access and requiring the following:</p>
 authentication of a constantly changing answer)</li>
 </ul>
 
-<p>The first can be done using <a href="../iptables/">IPTables</a> and the rules are mentioned in the
+<p>The first can be done using <a href="/knowledge_base/linux/iptables/">IPTables</a> and the rules are mentioned in the
 firewall section of this page. I will cover the rest in the following two
 sub-sections.</p>
 
@@ -335,15 +235,15 @@ commands allowing you to simply do things such as requiring you to have both a
 key and password. Chaining this with pam could allow us to require a publickey,
 following by standard password, and finishing up with a OTP. Would be fantastic
 for high security airlock servers, or as a stronger means of restricting root
-  logins where they are necessary.</p>
+logins where they are necessary.</p>
 
 <h3>SSH Authorized Keys</h3>
 
 <p>SSH authorized keys provide a considerably stronger authentication method than
 a user&#39;s password as long as the key is protected by a pass-phrase. If the key
 is left without a pass-phrase, anyone who manages to get access to the system
-can immediately login as that user anywhere they have deployed the key. ENSURE
-THERE IS A STRONG PASS-PHRASE ON THE KEY.</p>
+can immediately login as that user anywhere they have deployed the key. Ensure
+there is a strong pass-phrase on the key.</p>
 
 <p>The keys are normally created as <code>~/.ssh/id_rsa</code> and <code>~/.ssh/id_rsa.pub</code>,
 however I like to physically separate my keys from my computers so I&#39;ll give my
@@ -353,8 +253,8 @@ following command will create the public / private keys:</p>
 <div class="CodeRay">
   <div class="code"><pre>[user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
 Generating public/private rsa key pair.
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
 Your identification has been saved in /media/pendrive/username@host.key.
 Your public key has been saved in /media/pendrive/username@host.key.pub.
 The key fingerprint is:
@@ -517,7 +417,7 @@ the jail.</p>
 </pre></div>
 </div>
 
-<p>There is something serious to note here. The <a href="../partitioning/">partitioning</a> security
+<p>There is something serious to note here. The <a href="/knowledge_base/linux/partitioning/">partitioning</a> security
 guidelines add two flags to the mount options of the /var partition.  You will
 need to remove the &#39;nosuid&#39;, and &#39;noexec&#39; options from this partition to be
 able use a chroot jail.</p>
