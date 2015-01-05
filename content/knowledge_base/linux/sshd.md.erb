@@ -17,6 +17,12 @@ integrity of data over an insecure network, such as the Internet.
 SSH is one of the crux services. An improperly configured SSH could be
 equivalent to letting an attacker have physical access to the box.
 
+Generally it's recommended to run any instances of SSH exposed to the public
+internet on an alternate port. This won't protect you against vulnerabilities
+but it will drastrically reduce the number of automated and scripted attacks
+your server will be subjected to. If nothing else it will allow real attacks to
+stand out more clearly in your logs.
+
 ## Firewall Adjustments
 
 My default [IPTables][1] firewall already has the following rules in place to
@@ -24,139 +30,57 @@ allow access to SSH by default while still providing a modicum of protection
 from attackers.
 
 ```
-# Allow SSH, but no more than 5 new connections every minute
-# Note: This has extreme repercussions if I was to use sftp as each file transfer
-# initiates a new connection. Since it's rare for me to use sftp this isn't really an
-# issue, however, when I do want to use it this rule will be the cause of failed
-# transfers. Hopefully I will save myself the diagnostic nightmare scenario I went
-# through last time
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix "SSH Brute Force"
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
-```
-
-On any sensitive system, where the server can be access from should be further
-restricted. An example is provided below that only allows access from the
-trusted LAN subnet, this should be used on the central syslog server and the
-backup server (In the event of a server compromise I do not want to risk my
-logs or backups to further compromise and SSH is probably my most vulnerable
-service).
-
-```
--A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --name SSH --set
--A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix "SSH Brute Force"
--A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
--A SERVICES -m tcp -p tcp -s 10.13.37.0/24 --dport 22 -m state --state NEW -j ACCEPT
+# Allow SSH, but no more than 5 new connections every minute Note: This has
+# extreme repercussions if I was to use sftp as each file transfer initiates a
+# new connection. Since it's rare for me to use sftp this isn't really an
+# issue, however, when I do want to use it this rule will be the cause of
+# failed transfers. Hopefully I will save myself the diagnostic nightmare
+# scenario I went through last time
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix "SSH Brute Force"
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
+-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
 ```
 
 ## Configuration
 
 ### /etc/ssh/sshd_config
 
-This ssh configuration should cover pretty much all the servers.
+The following is a minimal SSH config relying mostly on the defaults. It
+requires a group named `sshers` to be created before hand and any user that
+should have legitimate access via SSH should be added to the group.
 
 ```
-Port 22
-AddressFamily inet
-ListenAddress 0.0.0.0
-Protocol 2
+Banner /etc/issue.net
 
-# Logging
+ClientAliveInterval 60
+TCPKeepAlive no
+
 SyslogFacility AUTHPRIV
-LogLevel INFO
+UseDNS no
 
-# Limit the ciphers to those which are FIPS approved and only use ciphers in counter (CTR) mode
-Ciphers aes128-ctr,aes192-ctr,aes256-ctr
+PermitRootLogin no
+PasswordAuthentication no
+UsePAM yes
 
-# Authentication:
-LoginGraceTime 2m
-PermitRootLogin without-password
-StrictModes yes
-
-# Pubkey counts as one of these, this will require brute force users
-# to open a lot of connections, quickly blocking their access
-MaxAuthTries 3
-
-MaxSessions 2
-
-PubkeyAuthentication yes
-AuthorizedKeysFile      .ssh/authorized_keys
-
-HostbasedAuthentication no
-IgnoreRhosts yes
-
-PermitEmptyPasswords no
-PasswordAuthentication yes
-
-ChallengeResponseAuthentication no
-
-KerberosAuthentication no
-
-GSSAPIAuthentication no
-
-UsePAM no
+AllowTcpForwarding no
+AllowGroups sshers
 
 # Accept locale-related environment variables
 AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
 AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
 AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
-AcceptEnv XMODIFIERS
-
-AllowAgentForwarding no
-AllowTcpForwarding no
-GatewayPorts no
-X11Forwarding no
-PrintMotd yes
-PrintLastLog yes
-TCPKeepAlive no
-UseLogin no
-UsePrivilegeSeparation yes
-PermitUserEnvironment no
-Compression delayed
-
-# Check the client every 15 seconds to make sure that it's still connected
-# If no response is heard after 2 minutes assume the client is dead
-ClientAliveInterval 15
-ClientAliveCountMax 8
-
-ShowPatchLevel no
-UseDNS no
-PermitTunnel no
-
-# This is the number of unauthenticated open SSH connections
-# After 10, there is a fifty percent chance a connection will be
-# dropped until the queue reaches 20 at which point all further
-# connections will be dropped until the queue clears
-MaxStartups 10:50:20
-
-PidFile /var/run/sshd.pid
-Banner /etc/issue.net
-
-# I never have use of sftp, preferring scp
-#Subsystem      sftp    /usr/libexec/openssh/sftp-server
-
-# Only allow SSH connections from users explicitly given that permission
-AllowGroups sshers
-```
-
-There are two configuration options that can potentially break older versions
-of the ssh server and should be commented out or removed they are: 
-
-```
-MaxSessions 5
-...
-AllowAgentForwarding yes
 ```
 
 ### /etc/issue.net
 
-The net issue file is what gets displayed before a user logs in. The net issue
-works as a deterrent, a set of policies, and informs any users trying to login
-that they will be monitored. While this won't deter bots trying to brute force
-the entry, it at the very least provides a professional appearance to let
-potential bad users that they are not dealing with a service that was
-accidentally left open and unconfigured.
+The net issue file is what gets displayed before a user logs in. While I'm
+under no false pretense that having a policy displayed to a potential attacker
+will prevent them from their malicious activity, it is generally recommended by
+law enforcement to ensure that notice of unauthorized access was given prior.
+
+At a minimum it will show the server has been professionally configured and
+that they are not dealing with a service that was left unconfigured.
 
 ```
 ***************************************************************************
@@ -183,30 +107,6 @@ By continuing to use this system you indicate your awareness of and consent
 to these terms and conditions of use. LOG OFF IMMEDIATELY if you do not agree
 to the conditions stated in this notice.
 ****************************************************************************
-```
-
-### User Configuration
-
-The SSH daemon configuration here restricts SSH access to only users in the
-"sshers" group. This group will need to be created like so:
-
-```
-[root@localhost]# groupadd sshers -g 401
-```
-
-And you'll probably want to add a user to that group. If you want root to be
-able to login remotely that account has to be in this group as well! The
-following example adds root to the sshers group.
-
-```
-[root@localhost]# usermod -a -G sshers root
-Adding user root to group sshers
-```
-
-And to remove root from the sshers group:
-
-```
-[root@localhost]# gpasswd -d root sshers
 ```
 
 ### Default SSH Client Configuration
@@ -279,15 +179,15 @@ commands allowing you to simply do things such as requiring you to have both a
 key and password. Chaining this with pam could allow us to require a publickey,
 following by standard password, and finishing up with a OTP. Would be fantastic
 for high security airlock servers, or as a stronger means of restricting root
-  logins where they are necessary.
+logins where they are necessary.
 
 ### SSH Authorized Keys
 
 SSH authorized keys provide a considerably stronger authentication method than
 a user's password as long as the key is protected by a pass-phrase. If the key
 is left without a pass-phrase, anyone who manages to get access to the system
-can immediately login as that user anywhere they have deployed the key. ENSURE
-THERE IS A STRONG PASS-PHRASE ON THE KEY.
+can immediately login as that user anywhere they have deployed the key. Ensure
+there is a strong pass-phrase on the key.
 
 The keys are normally created as `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`,
 however I like to physically separate my keys from my computers so I'll give my
@@ -298,8 +198,8 @@ following command will create the public / private keys:
 ```
 [user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
 Generating public/private rsa key pair.
-Enter passphrase (empty for no passphrase): 
-Enter same passphrase again: 
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
 Your identification has been saved in /media/pendrive/username@host.key.
 Your public key has been saved in /media/pendrive/username@host.key.pub.
 The key fingerprint is:
@@ -530,6 +430,6 @@ A few references:
 If you want to run sshd in a LXC container you will need to disable
 `pam_loginuid.so` in `/etc/pam.d/sshd` by commenting out the appropriate line.
 
-[1]: ../iptables/
-[2]: ../partitioning/
+[1]: <%= @items['/knowledge_base/linux/iptables/'].path %>
+[2]: <%= @items['/knowledge_base/linux/partitioning/'].path %>
 
