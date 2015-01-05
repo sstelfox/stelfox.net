@@ -14,14 +14,14 @@ integrity of data over an insecure network, such as the Internet.
 
 ## Security Notes
 
-SSH is one of the crux services. An improperly configured SSH could be
-equivalent to letting an attacker have physical access to the box.
+SSH is a crux service. An improperly configured SSH could be equivalent to
+letting an attacker have physical access to the box.
 
 Generally it's recommended to run any instances of SSH exposed to the public
-internet on an alternate port. This won't protect you against vulnerabilities
-but it will drastrically reduce the number of automated and scripted attacks
-your server will be subjected to. If nothing else it will allow real attacks to
-stand out more clearly in your logs.
+internet on an alternate port. Alternate ports won't protect you against
+vulnerabilities but it will drastrically reduce the number of automated and
+scripted attacks your server will be subjected to. If nothing else it will allow
+real attacks to stand out more clearly in your logs.
 
 ## Firewall Adjustments
 
@@ -46,7 +46,7 @@ from attackers.
 
 ### /etc/ssh/sshd_config
 
-The following is a minimal SSH config relying mostly on the defaults. It
+The following is a minimal SSHd config relying mostly on the defaults. It
 requires a group named `sshers` to be created before hand and any user that
 should have legitimate access via SSH should be added to the group.
 
@@ -72,6 +72,14 @@ AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
 AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
 ```
 
+To create the group and add the user 'test' to it you can run the following
+commands:
+
+```
+groupadd sshers
+usermod -a -G sshers test
+```
+
 ### /etc/issue.net
 
 The net issue file is what gets displayed before a user logs in. While I'm
@@ -83,30 +91,18 @@ At a minimum it will show the server has been professionally configured and
 that they are not dealing with a service that was left unconfigured.
 
 ```
-***************************************************************************
-     Authorized uses only.  All activity may be monitored and reported.
-                            NOTICE TO USERS
+************************************************************************
+This system is privately owned. If you are not authorized to access this
+system, exit immediately. Unauthorized access to this system is
+forbidden by organization policies, national, and international laws.
+Unauthorized users are subject to criminal and civil penalties as well
+as organization initiated disciplinary proceedings.
 
-This computer system is the private property of BedroomProgrammers.net.
-It is for authorized use only. Users (authorized or unauthorized) have no
-explicit or implicit expectation of privacy.
-
-Any or all uses of this system and all files on this system may be
-intercepted, monitored, recorded, copied, audited, inspected, and
-disclosed in accordance with the BedroomProgrammers.net acceptable network
-usage policy. 
-
-By using this system, the user consents to such interception, monitoring,
-recording, copying, auditing, inspection, disclosure at the discretion of
-BedroomProgrammers.net and agrees to comply with all related policies,
-procedures and guidelines. Unauthorized or improper use of this system may
-result in civil and criminal penalties and administrative or disciplinary
-action, as appropriate.
-
-By continuing to use this system you indicate your awareness of and consent
-to these terms and conditions of use. LOG OFF IMMEDIATELY if you do not agree
-to the conditions stated in this notice.
-****************************************************************************
+By entry into this system you acknowledge that you are authorized to
+access and have been granted the level of privileges you will
+subsequently execute on this system. You further acknowledge that by
+entry into this system you expect no privacy from monitoring.
+************************************************************************
 ```
 
 ### Default SSH Client Configuration
@@ -114,72 +110,13 @@ to the conditions stated in this notice.
 ```
 # /etc/ssh/ssh_config
 Host *
-  CheckHostIP yes
   Compression yes
-  CompressionLevel 6
-  GSSAPIAuthentication yes
   HashKnownHosts yes
   Protocol 2
   SendEnv LC_ALL
-  StrictHostKeyChecking ask
+  VerifyHostKeyDNS ask
   VisualHostKey yes
 ```
-
-## Multi-Factor Authentication
-
-I would like to start out by mentioning yes, I know I'm paranoid. I have no
-reason to explicitly believe that there is anyone actively trying to get into
-my network and additionally I have no reason to believe that the data I'm
-protecting has any value to anyone but myself. My response to anyone who thinks
-this is excessive is, just because I'm paranoid doesn't mean someone isn't out
-to get me. Besides what's the harm in adding another almost non-intrusive
-security measure to the system?
-
-Multi-factor authentication is using three or more different types of user
-verification schemes to provide a considerably harder time for an unauthorized
-user to gain access. These verification schemes can include but are not limited
-to:
-
-* Access control (firewall port restrictions or user ACL conditions)
-* Something you know (your password or pass phrase)
-* Something you have (your ssh key or secure id key-fob hardware)
-* Something you are (fingerprint or iris scan)
-* Somebody you know (human authentication through mutual acquaintance)
-* Something you deduce (logical authentication which the user will need to
-  reason, usually based on personal knowledge or life experience)
-
-Multi-factor authentication can easily be implemented on these using built-in
-functionality. Multiple verifications of the same type do not count towards the
-number of verification schemes in use (for example both firewall and restrict
-by user are both ACLs and thus count as one verification scheme) although they
-can still increase the security of the box. Assuming that the server is
-configured according to the guidelines on this wiki in regards to [IPTables][1]
-and SSH, then it already has the following:
-
-* limit access by group with the "AllowGroups" directive (whitelist - access
-  control)
-* use a password (something you know)
-
-We can further increase the security into a true multi-factor authentication
-system by disabling password based access and requiring the following:
-
-* limit access to ssh by ip address (access control)
-* use a pre-authorized ssh key (something you have)
-* use that ssh key _with_ a strong pass-phrase (something you know)
-* force a script to run on login that will ask questions of the user (logical
-  authentication of a constantly changing answer)
-
-The first can be done using [IPTables][1] and the rules are mentioned in the
-firewall section of this page. I will cover the rest in the following two
-sub-sections.
-
-Note for personal research: It seems that version 2 of the SSH protocol
-natively supports chaining authentications using the 'AuthenticationMethods'
-commands allowing you to simply do things such as requiring you to have both a
-key and password. Chaining this with pam could allow us to require a publickey,
-following by standard password, and finishing up with a OTP. Would be fantastic
-for high security airlock servers, or as a stronger means of restricting root
-logins where they are necessary.
 
 ### SSH Authorized Keys
 
@@ -243,105 +180,6 @@ PasswordAuthentication no
 This replaces the 'something you know' of a password based login, with
 'something you have' (the key, especially if it's on a pendrive) and 'something
 you know' (the key's pass-phrase).
-
-### Gatekeeper Script
-
-If you've already implemented the SSH keys for authentication and have a
-password on your key then you've already achieved multi-factor authentication,
-as I've said before now I'm paranoid and any additional step that could keep
-the baddies out of the systems that I need to ensure the security of is a step
-that I'll take.
-
-The gatekeeper script is something that I haven't come across on any other
-systems that other people administer. Perhaps they haven't thought of it, or
-perhaps it's too much trouble for them without much gain. I had the idea for
-this while watching a James Bond movie (Golden Eye for those who care). A
-Russian systems engineer put riddles on one of his machines that you had to go
-through in order to access the system, while this alone isn't secure, asking
-the user a random question that they alone would know the answer to couldn't
-hurt the security. I highly recommend using some logic that changes
-periodically, but the client can remotely deduce.
-
-First we need to make a script to handle the additional authentication.Please
-note that the following script is just an example, posting the actual script
-would defeat the purpose of having it in the first place. You'll have to come
-up with your own question and answer sections, though this is a good template
-to start from.
-
-```bash
-#!/bin/sh
-# Gatekeeper.sh - Post-login authentication script
-
-# In the event that a user tries to get crafty and Ctrl-C out of the script
-# we'll just kill the connection
-trap jail INT
-jail() {
-    kill -9 $PPID
-    exit 0
-}
-
-# Once a user logs in, check to see if they just wanted a shell.
-# SSH_ORIGINAL_COMMAND will be null (-z) if they did
-if [ -z "$SSH_ORIGINAL_COMMAND" ]; then
-    # The answer the user needs to know, a function or call to another
-    # script could be used to generate this answer based on any number
-    # of resources available to the system. This could include querying an
-    # internal web script to get a daily password user's of a site have
-    # access to (and perhaps are supposed to be checking)
-    CORRECT_ANSWER="muffins"
-
-    # Message displayed to the user before being prompted, I'm going to assume
-    # the user knows the question in this case what's the admin's favorite
-    # breakfast
-    echo -n "Gatekeeper token authentication required: "
-
-    # Get the user's answer. If the answer is correct execute the command.
-    # If the answer is wrong, log the attempt and kill the connection.
-    while read -s inputline; do
-        RESPONSE="$inputline"
-        echo ""
-        if [ $CORRECT_ANSWER = "${RESPONSE}" ]; then
-            echo "Gatekeeper authentication accepted."
-            $SHELL -l
-            exit 0
-        else
-            logger "Gatekeeper: $USER login failed from $SSH_CLIENT"
-            kill -9 $PPID
-            exit 0
-        fi
-    done
-fi
-
-# This command will bypass the gatekeeper script if the user tries to rsync
-# as this script will break rsync. It creates a fresh shell just for good
-# measure.
-#if [ `echo $SSH_ORIGINAL_COMMAND | awk '{print $1}'` = rsync ]; then
-#    $SHELL -c "$SSH_ORIGINAL_COMMAND"
-#    exit 0
-#fi
-
-# If a user tried to execute something other than an 'approved' command
-# just kill the session. This will prevent SCP and SFTP unless they are
-# configured to bypass the script.
-kill -9 $PPID
-exit 0
-```
-
-Put this script in `/etc/ssh/gatekeeper.sh` and change it's permissions to 755
-with the owner being root. To make the SSH server pass off control to the
-Gatekeeper script once it's done authenticating a user, we'll use the
-'ForceCommand' command in SSHd's config file (`/etc/ssh/sshd_config`). Add the
-following line to the end of the config and restart the SSH daemon.
-
-```
-ForceCommand /etc/ssh/gatekeeper.sh
-```
-
-Assuming everything went according to plan, when you SSH into the remote server
-once your done authenticating it'll ask for the token. Putting in 'muffins'
-should get you to your shell, while anything else will kill the connection.
-This provides the final layer of the multi-factor authentication as 'something
-you deduce'.
 
 ## User Jails
 
@@ -430,6 +268,12 @@ A few references:
 If you want to run sshd in a LXC container you will need to disable
 `pam_loginuid.so` in `/etc/pam.d/sshd` by commenting out the appropriate line.
 
+## Misc
+
+I've play around with implementing a [gatekeeper style script][3] to provide an
+additional layer of security. In practice real multi-factor authentication is
+more reliable and should be used instead.
+
 [1]: <%= @items['/knowledge_base/linux/iptables/'].path %>
 [2]: <%= @items['/knowledge_base/linux/partitioning/'].path %>
-
+[3]: <%= @items['/knowledge_base/linux/sshd_gatekeeper/'].path %>
