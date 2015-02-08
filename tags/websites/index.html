@@ -56,55 +56,6 @@
   <h1>Websites</h1>
   
     <div class='post'>
-      <h2><a href="/blog/2012/08/carrierwave-s3-and-filenames/">CarrierWave, S3 and Filenames</a></h1>
-      <aside>Posted at: 2012-08-09 16:00:57 -0400</aside>
-      <article>
-        <p>This is going to be a real quick post. I&#39;m using the &quot;carrier_wave&quot; gem with
-&quot;fog&quot; for one of my projects and found that when a file is stored on S3 the
-&quot;identifier&quot;, and &quot;filename&quot; methods return nil. I got around this issue in two
-separate ways neither of which I&#39;m particularly happy about.</p>
-
-<p>Outside of the uploader, you can use the File utility and the URL of the object
-to get the base filename like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="constant">Model</span>.asset.url)
-</pre></div>
-</div>
-
-<p>If you try and do this within the uploader itself like this:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.url)
-</pre></div>
-</div>
-
-<p>It will work, but not when creating additional versions such as thumbnails as
-the file hasn&#39;t actually been created yet so a URL can&#39;t be built and you&#39;ll
-get an error trying to perform File.basename(nil). You&#39;d need to go back up to
-the model and get the normal version&#39;s URL like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.model.asset.url)
-</pre></div>
-</div>
-
-<p>Now if you&#39;re trying to get the file name to build part of the store_dir,
-you&#39;ve just created an infinite loop! Ruby will be happy to tell you that the
-stack level too deep (SystemStackError). So ultimately how did I end up getting
-it into my store_dir?</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="predefined-constant">self</span>.model.attributes[<span class="string"><span class="delimiter">&quot;</span><span class="content">asset</span><span class="delimiter">&quot;</span></span>]
-</pre></div>
-</div>
-
-<p>The file name gets stored raw directly in the database, and thus you can pull
-it out by accessing the value directly without going through the accessor that
-get overridden by CarrierWave. I&#39;m pretty sure this is a bug, and will report
-it with example code and a test (as is appropriate for any bug report <em>hint</em>)
-as soon as my dead line has passed.</p>
-
-      </article>
-    </div>
-  
-    <div class='post'>
       <h2><a href="/blog/2012/08/security-through-obesity/">Security Through Obesity</a></h1>
       <aside>Posted at: 2012-08-08 11:06:56 -0400</aside>
       <article>
@@ -691,6 +642,55 @@ site. Note that the &quot;About your application&#39;s environment&quot; link wi
 in the production environment, this is intentional and expected for Rails.</p>
 
 <p>This is where I leave you to develop your site. Good luck!</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/08/carrierwave-s3-and-filenames/">CarrierWave, S3 and Filenames</a></h1>
+      <aside>Posted at: 2012-08-09 16:00:57 -0400</aside>
+      <article>
+        <p>This is going to be a real quick post. I&#39;m using the &quot;carrier_wave&quot; gem with
+&quot;fog&quot; for one of my projects and found that when a file is stored on S3 the
+&quot;identifier&quot;, and &quot;filename&quot; methods return nil. I got around this issue in two
+separate ways neither of which I&#39;m particularly happy about.</p>
+
+<p>Outside of the uploader, you can use the File utility and the URL of the object
+to get the base filename like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="constant">Model</span>.asset.url)
+</pre></div>
+</div>
+
+<p>If you try and do this within the uploader itself like this:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.url)
+</pre></div>
+</div>
+
+<p>It will work, but not when creating additional versions such as thumbnails as
+the file hasn&#39;t actually been created yet so a URL can&#39;t be built and you&#39;ll
+get an error trying to perform File.basename(nil). You&#39;d need to go back up to
+the model and get the normal version&#39;s URL like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.model.asset.url)
+</pre></div>
+</div>
+
+<p>Now if you&#39;re trying to get the file name to build part of the store_dir,
+you&#39;ve just created an infinite loop! Ruby will be happy to tell you that the
+stack level too deep (SystemStackError). So ultimately how did I end up getting
+it into my store_dir?</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="predefined-constant">self</span>.model.attributes[<span class="string"><span class="delimiter">&quot;</span><span class="content">asset</span><span class="delimiter">&quot;</span></span>]
+</pre></div>
+</div>
+
+<p>The file name gets stored raw directly in the database, and thus you can pull
+it out by accessing the value directly without going through the accessor that
+get overridden by CarrierWave. I&#39;m pretty sure this is a bug, and will report
+it with example code and a test (as is appropriate for any bug report <em>hint</em>)
+as soon as my dead line has passed.</p>
 
       </article>
     </div>
