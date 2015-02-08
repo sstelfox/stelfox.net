@@ -8,7 +8,7 @@ title: Bind
 
 Phew, where do I start. DNS can be used to enumerate machines and services on a
 network, as well as provide topographical layouts of the network and how things
-are segregated. A good solution to this is too use 'split-horizon' DNS, that is
+are segregated. A good solution to this is to use 'split-horizon' DNS, that is
 providing an internal set of records for all of your systems and an external
 set of records only containing the addresses required to be used externally.
 I'll elaborate more some other time.
