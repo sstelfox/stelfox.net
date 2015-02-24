@@ -1,5 +1,11 @@
 #!/usr/bin/env ruby
 
+# Potential improvements for on site full text search:
+#
+# * Stemming
+# * Better weighting system
+# * Use of additional 'metaphone' keys for user provided errors.
+
 require 'json'
 
 index = JSON.parse(File.read('public/api/v1/search_index.json'))

@@ -18,3 +18,6 @@ git add -A
 git commit -m "Automated site content update"
 git push
 popd &> /dev/null
+
+# Sync the file to the webserver as well
+rsync -vrz public/ web01:sites/stelfox.net/
