@@ -2,13 +2,44 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://stelfox.net/</id>
   <title>Stelfox Athen&amp;#xe6;um</title>
-  <updated>2015-02-23T17:49:13Z</updated>
+  <updated>2015-04-14T00:47:40Z</updated>
   <link rel="alternate" href="https://stelfox.net/"/>
   <link rel="self" href="https://stelfox.net/atom.xml"/>
   <author>
     <name>Sam Stelfox</name>
     <uri>https://stelfox.net</uri>
   </author>
+  <entry>
+    <id>tag:stelfox.net,2015-04-13:/blog/2015/04/creating-an-empty-git-branch/</id>
+    <title type="html">Creating an Empty Git Branch</title>
+    <published>2015-04-14T00:47:40Z</published>
+    <updated>2015-04-14T00:47:40Z</updated>
+    <link rel="alternate" href="https://stelfox.net/blog/2015/04/creating-an-empty-git-branch/"/>
+    <content type="html">&lt;p&gt;Every now and then I find myself wanting to create a new empty branch in an
+existing repository. It&amp;#39;s useful for things such as [Github Pages][1] so you&amp;#39;re
+able to keep your content source in the master branch while only keeping the
+output in the gh-pages branch. I&amp;#39;ve also used it for testing a complete rewrite
+of a code base without the overhead of creating a new repo and copying access
+permissions.&lt;/p&gt;
+
+&lt;p&gt;This is a pretty straight forward trick to do. You create the brach by
+indicating you want the new branch to be an orphan by passing the &amp;#39;--orphan&amp;#39;
+flag like so:&lt;/p&gt;
+&lt;div class="CodeRay"&gt;
+  &lt;div class="code"&gt;&lt;pre&gt;git checkout --orphan NEW_BRANCH_NAME
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This leaves all the files in place but effectively uncommitted like you just
+initialized a new repository. Add and commit any files you&amp;#39;d like to keep then
+delete the rest, everything will still be preserved in the original branches.&lt;/p&gt;
+
+&lt;p&gt;With that done you should be able to easily switch just using a normal
+&amp;#39;checkout&amp;#39; between your normal branches and this new tree.&lt;/p&gt;
+
+&lt;p&gt;[1]:&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:stelfox.net,2015-02-23:/blog/2015/02/unbuffered-pipe-filters/</id>
     <title type="html">Unbuffered Pipe Filters</title>
@@ -214,110 +245,6 @@ sections like the following sample and you&amp;#39;ll be golden:&lt;/p&gt;
 &lt;/div&gt;
 
 &lt;p&gt;Hope this helps someone else!&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:stelfox.net,2014-07-22:/blog/2014/07/unregistering-from-whisperpush-after-flashing-a-new-rom/</id>
-    <title type="html">Unregistering From WhisperPush After Flashing a New ROM</title>
-    <published>2014-07-23T01:54:59Z</published>
-    <updated>2014-07-23T01:54:59Z</updated>
-    <link rel="alternate" href="https://stelfox.net/blog/2014/07/unregistering-from-whisperpush-after-flashing-a-new-rom/"/>
-    <content type="html">&lt;p&gt;I&amp;#39;ve been playing around with my Nexus 5 lately. It was quickly rooted and I
-began playing with various ROMs that had been pre-built for the Nexus 5. My
-first stop was the &lt;a href="http://www.cyanogenmod.org/"&gt;CyanogenMod&lt;/a&gt;. Since I&amp;#39;d last used CyanogenMod they added
-a built-in framework that provides &lt;a href="https://whispersystems.org/blog/cyanogen-integration/"&gt;transparent text&lt;/a&gt; &lt;a href="http://www.cyanogenmod.org/blog/whisperpush-secure-messaging-integration"&gt;message
-encryption&lt;/a&gt; called WhisperPush.&lt;/p&gt;
-
-&lt;p&gt;WhisperPush is an implementation of &lt;a href="http://thoughtcrime.org/"&gt;Moxie Marlinspike&amp;#39;s&lt;/a&gt; highly respected
-TextSecure and I was very excited at the possibility of using it. I immediately
-signed up for the service.&lt;/p&gt;
-
-&lt;p&gt;After a day of use I found CyanogenMod far too unstable too use on my primary
-device. It locked up multiple times the first day and mobile data simply
-wouldn&amp;#39;t work all day. I promptly formatted and flashed my phone, I haven&amp;#39;t
-settled on a new ROM but that&amp;#39;s not what this post is about.&lt;/p&gt;
-
-&lt;p&gt;It occurred to me after flashing the phone I was still subscribed to
-WhisperPush. If anyone that texts me was signed up as well. I&amp;#39;d never receive
-even an encrypted blob, it would just silently fail.&lt;/p&gt;
-
-&lt;p&gt;Searching around I found there is very little information on it, and no
-official way to unregister, especially after you&amp;#39;ve wiped your device and no
-longer have your credentials. Ultimately I found a fairly easy solution, just
-re-register and perform the backdoor steps too de-register.&lt;/p&gt;
-
-&lt;p&gt;I wiped my phone again and installed a new copy of the CyanogenMod nightly.
-Booted it up and re-enabled WhisperPush. It didn&amp;#39;t even note that my number was
-registered in the past.&lt;/p&gt;
-
-&lt;p&gt;I found the solution somewhere in the CyanogenMod forums (though I lost the
-link, and I&amp;#39;m now too lazy to go find it again). You can unregister by
-performing the following steps:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Connect your computer with ADB too the phone and pair the computer with the
-phone.&lt;/li&gt;
-&lt;li&gt;Enable developer options by opening the system settings, choosing &amp;#39;About
-phone&amp;#39; and clicking on the &amp;#39;Build number&amp;#39; about 7 times (it will start
-counting down).&lt;/li&gt;
-&lt;li&gt;Open up the developer options found in the root of the system settings menu
-and enable root access for &amp;#39;Apps and ADB&amp;#39;.&lt;/li&gt;
-&lt;li&gt;On the computer use &lt;code&gt;adb shell&lt;/code&gt; to get a shell on the device.&lt;/li&gt;
-&lt;li&gt;Switch to root using the &lt;code&gt;su&lt;/code&gt; command.&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Run the following command too view the WhisperPush internal settings:&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;cat /data/user/0/org.whispersystems.whisperpush/shared_prefs/org.whispersystems.whisperpush_preferences.xml`
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Note down the value for &lt;code&gt;pref_registered_number&lt;/code&gt; (this should be your phone
-number with a preceeding &amp;#39;+&amp;#39;) and &lt;code&gt;pre_push_password&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Exit the shell.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Finally too unregister we need too make a DELETE request against the
-WhisperPush API. The classic HTTP swiss army knife &lt;code&gt;curl&lt;/code&gt; is going to help us
-on this front. Run the following command on any linux computer with curl
-installed, replacing the registered number and registered password with the
-value you recorded earlier.&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;curl -v -k -X DELETE --basic --user ${pref_registered_number}:${pre_push_password} https://whisperpush.cyanogenmod.org/v1/accounts/gcm
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Be sure too include the &amp;#39;+&amp;#39; in your pref_registered_number. You should end up
-with a status code of 204. The output will look something like the following
-(credentials removed).&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;* About to connect() to whisperpush.cyanogenmod.org port 443 (#0)
-*   Trying 54.201.5.27...
-* Connected to whisperpush.cyanogenmod.org (54.201.5.27) port 443 (#0)
-* Initializing NSS with certpath: sql:/etc/pki/nssdb
-* skipping SSL peer certificate verification
-* SSL connection using TLS_DHE_RSA_WITH_AES_128_CBC_SHA
-* Server certificate:
-*   subject: OU=Operations,O=&amp;quot;Cyanogen, Inc.&amp;quot;,E=ops@cyngn.com,C=US,ST=Washington,L=Seattle,CN=whisperpush.cyanogenmod.org
-*   start date: Nov 26 05:39:18 2013 GMT
-*   expire date: Nov 24 05:39:18 2023 GMT
-*   common name: whisperpush.cyanogenmod.org
-*   issuer: E=ops@cyngn.com,CN=Authority,OU=Operations,O=&amp;quot;Cyanogen, Inc.&amp;quot;,L=Seattle,ST=Washington,C=US
-* Server auth using Basic with user '${pref_registered_number}'
-&amp;gt; DELETE /v1/accounts/gcm HTTP/1.1
-&amp;gt; Authorization: Basic ${encoded credentials}
-&amp;gt; User-Agent: curl/7.29.0
-&amp;gt; Host: whisperpush.cyanogenmod.org
-&amp;gt; Accept: */*
-&amp;gt; 
-&amp;lt; HTTP/1.1 204 No Content
-&amp;lt; Server: nginx/1.1.19
-&amp;lt; Date: Wed, 23 Jul 2014 01:45:25 GMT
-&amp;lt; Connection: keep-alive
-&amp;lt; 
-* Connection #0 to host whisperpush.cyanogenmod.org left intact
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;I don&amp;#39;t have any way too check that I&amp;#39;m unregistered but it seems too have
-worked. Here is hoping this helps some else out in the future.&lt;/p&gt;
 </content>
   </entry>
 </feed>

@@ -56,6 +56,37 @@
   <h1>Development</h1>
   
     <div class='post'>
+      <h2><a href="/blog/2015/04/creating-an-empty-git-branch/">Creating an Empty Git Branch</a></h1>
+      <aside>Posted at: 2015-04-13 20:47:40 -0400</aside>
+      <article>
+        <p>Every now and then I find myself wanting to create a new empty branch in an
+existing repository. It&#39;s useful for things such as [Github Pages][1] so you&#39;re
+able to keep your content source in the master branch while only keeping the
+output in the gh-pages branch. I&#39;ve also used it for testing a complete rewrite
+of a code base without the overhead of creating a new repo and copying access
+permissions.</p>
+
+<p>This is a pretty straight forward trick to do. You create the brach by
+indicating you want the new branch to be an orphan by passing the &#39;--orphan&#39;
+flag like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre>git checkout --orphan NEW_BRANCH_NAME
+</pre></div>
+</div>
+
+<p>This leaves all the files in place but effectively uncommitted like you just
+initialized a new repository. Add and commit any files you&#39;d like to keep then
+delete the rest, everything will still be preserved in the original branches.</p>
+
+<p>With that done you should be able to easily switch just using a normal
+&#39;checkout&#39; between your normal branches and this new tree.</p>
+
+<p>[1]:</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
       <h2><a href="/blog/2012/08/adding-a-table-prefix-to-datamapper-tables/">Adding a table prefix to DataMapper tables</a></h1>
       <aside>Posted at: 2012-08-07 10:09:33 -0400</aside>
       <article>
