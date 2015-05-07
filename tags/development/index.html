@@ -20,6 +20,8 @@
     <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
     <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
 
+    <meta name="go-import" content="stelfox.net git io:repos/" />
+
     <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
     <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
 
@@ -54,37 +56,6 @@
     <div class='content container'>
       <div class="post">
   <h1>Development</h1>
-  
-    <div class='post'>
-      <h2><a href="/blog/2015/04/creating-an-empty-git-branch/">Creating an Empty Git Branch</a></h1>
-      <aside>Posted at: 2015-04-13 20:47:40 -0400</aside>
-      <article>
-        <p>Every now and then I find myself wanting to create a new empty branch in an
-existing repository. It&#39;s useful for things such as [Github Pages][1] so you&#39;re
-able to keep your content source in the master branch while only keeping the
-output in the gh-pages branch. I&#39;ve also used it for testing a complete rewrite
-of a code base without the overhead of creating a new repo and copying access
-permissions.</p>
-
-<p>This is a pretty straight forward trick to do. You create the brach by
-indicating you want the new branch to be an orphan by passing the &#39;--orphan&#39;
-flag like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre>git checkout --orphan NEW_BRANCH_NAME
-</pre></div>
-</div>
-
-<p>This leaves all the files in place but effectively uncommitted like you just
-initialized a new repository. Add and commit any files you&#39;d like to keep then
-delete the rest, everything will still be preserved in the original branches.</p>
-
-<p>With that done you should be able to easily switch just using a normal
-&#39;checkout&#39; between your normal branches and this new tree.</p>
-
-<p>[1]:</p>
-
-      </article>
-    </div>
   
     <div class='post'>
       <h2><a href="/blog/2012/08/adding-a-table-prefix-to-datamapper-tables/">Adding a table prefix to DataMapper tables</a></h1>
@@ -189,6 +160,55 @@ create the model defined.</li>
 as it would have been except now it has a prefix of &quot;source_&quot;.</p>
 
 <p>Hope this saves someone else some trouble. Cheers!</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/08/carrierwave-s3-and-filenames/">CarrierWave, S3 and Filenames</a></h1>
+      <aside>Posted at: 2012-08-09 16:00:57 -0400</aside>
+      <article>
+        <p>This is going to be a real quick post. I&#39;m using the &quot;carrier_wave&quot; gem with
+&quot;fog&quot; for one of my projects and found that when a file is stored on S3 the
+&quot;identifier&quot;, and &quot;filename&quot; methods return nil. I got around this issue in two
+separate ways neither of which I&#39;m particularly happy about.</p>
+
+<p>Outside of the uploader, you can use the File utility and the URL of the object
+to get the base filename like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="constant">Model</span>.asset.url)
+</pre></div>
+</div>
+
+<p>If you try and do this within the uploader itself like this:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.url)
+</pre></div>
+</div>
+
+<p>It will work, but not when creating additional versions such as thumbnails as
+the file hasn&#39;t actually been created yet so a URL can&#39;t be built and you&#39;ll
+get an error trying to perform File.basename(nil). You&#39;d need to go back up to
+the model and get the normal version&#39;s URL like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.model.asset.url)
+</pre></div>
+</div>
+
+<p>Now if you&#39;re trying to get the file name to build part of the store_dir,
+you&#39;ve just created an infinite loop! Ruby will be happy to tell you that the
+stack level too deep (SystemStackError). So ultimately how did I end up getting
+it into my store_dir?</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="predefined-constant">self</span>.model.attributes[<span class="string"><span class="delimiter">&quot;</span><span class="content">asset</span><span class="delimiter">&quot;</span></span>]
+</pre></div>
+</div>
+
+<p>The file name gets stored raw directly in the database, and thus you can pull
+it out by accessing the value directly without going through the accessor that
+get overridden by CarrierWave. I&#39;m pretty sure this is a bug, and will report
+it with example code and a test (as is appropriate for any bug report <em>hint</em>)
+as soon as my dead line has passed.</p>
 
       </article>
     </div>
@@ -390,6 +410,69 @@ require <span class="string"><span class="delimiter">&quot;</span><span class="c
 <span class="keyword">end</span>
 </pre></div>
 </div>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2009/01/the-war-between-the-text-editors-and-the-ides/">The War Between the Text Editors and the IDEs</a></h1>
+      <aside>Posted at: 2009-01-28 16:54:08 -0500</aside>
+      <article>
+        <p>Long has been the battle of programming in a text editor and IDEs. Both sides
+have made good points and slung mud at the other. What all these zealots fail
+to realize is that there are merits to both sides. This is true with almost
+every war going on and while to each person the other side might seem
+ridiculous that doesn&#39;t make the other side wrong. But I digress.</p>
+
+<p>This topic recently surfaced on a private mailing list that me and about thirty
+of my friends share. The topic didn&#39;t start as anything to do with development
+at all but rather around the cheap netbooks and there effect on the economy,
+moved into the time it takes to setup a computer after a full install. He
+upgraded his OS because the software that he runs needed new libraries that
+would break his old system. After upgrading he found weird compatibility issues
+with the new libraries and his system.</p>
+
+<p>All the time he spent setting up his computer was lost development time on his
+various freelance projects. This is when it came around to development and
+development environments.</p>
+
+<blockquote>
+<p>It is obvious to anyone who works with computers that a great deal of time
+can be spent on installing, configuring, and maintaining (upgrading)
+software. Since no real work is accomplished by this, such time can be
+thought of overhead time or as part of the &quot;cost&quot; of doing business in the
+computer field.</p>
+</blockquote>
+
+<p>Back in the old days I programmed using a plain text editor and a command line
+compiler, perhaps together with a make-like tool. There was no fancy IDE with
+zillions of dependencies on complex graphical systems, no huge libraries, no
+complex web browsers with multiple plug-ins, etc, etc. Most of my time was
+spent actually writing programs. Huh.</p>
+
+<p>I&#39;ve used IDEs and I&#39;ve used text editors. Personally I prefer text editors a
+lot more, but I definitely see the merits. Since most of my development is
+around PHP, a built in compiler doesn&#39;t do me much good. Subversion support
+between IDEs vary and with every one you have to learn a different user
+interface. On the other hand they allow you to quickly keep track of large
+number of files. There are other features that IDEs have but this is the only
+feature I can think of that is exclusive to IDEs that isn&#39;t in a plain text
+editor.</p>
+
+<p>Those familiar with vim or emacs (yes another war and for the record I&#39;m on the
+vim side), will be aware that they have syntax highlighting that would be the
+other feature that the IDE side tends to argue is exclusive to them. Which is
+sort of true since vim and emacs kind of blend both sides.</p>
+
+<p>IDEs are bloated and complex with lots of features and buttons which takes a
+lot of time to learn. Text editors are simple all they do is edit text. vim and
+emacs both started out as simple text editors and they still behave exactly as
+they did but they have a lot of features that are common in IDEs. You can even
+compile from within them and at least in vim if the the compiler throws an
+error vim can jump straight to the line the error is on.</p>
+
+<p>I haven&#39;t even begun to cover this war but I&#39;m fairly tired of typing. What my
+verdict? Why not get the best of both worlds and just use vim or emacs?</p>
 
       </article>
     </div>
@@ -780,118 +863,6 @@ site. Note that the &quot;About your application&#39;s environment&quot; link wi
 in the production environment, this is intentional and expected for Rails.</p>
 
 <p>This is where I leave you to develop your site. Good luck!</p>
-
-      </article>
-    </div>
-  
-    <div class='post'>
-      <h2><a href="/blog/2009/01/the-war-between-the-text-editors-and-the-ides/">The War Between the Text Editors and the IDEs</a></h1>
-      <aside>Posted at: 2009-01-28 16:54:08 -0500</aside>
-      <article>
-        <p>Long has been the battle of programming in a text editor and IDEs. Both sides
-have made good points and slung mud at the other. What all these zealots fail
-to realize is that there are merits to both sides. This is true with almost
-every war going on and while to each person the other side might seem
-ridiculous that doesn&#39;t make the other side wrong. But I digress.</p>
-
-<p>This topic recently surfaced on a private mailing list that me and about thirty
-of my friends share. The topic didn&#39;t start as anything to do with development
-at all but rather around the cheap netbooks and there effect on the economy,
-moved into the time it takes to setup a computer after a full install. He
-upgraded his OS because the software that he runs needed new libraries that
-would break his old system. After upgrading he found weird compatibility issues
-with the new libraries and his system.</p>
-
-<p>All the time he spent setting up his computer was lost development time on his
-various freelance projects. This is when it came around to development and
-development environments.</p>
-
-<blockquote>
-<p>It is obvious to anyone who works with computers that a great deal of time
-can be spent on installing, configuring, and maintaining (upgrading)
-software. Since no real work is accomplished by this, such time can be
-thought of overhead time or as part of the &quot;cost&quot; of doing business in the
-computer field.</p>
-</blockquote>
-
-<p>Back in the old days I programmed using a plain text editor and a command line
-compiler, perhaps together with a make-like tool. There was no fancy IDE with
-zillions of dependencies on complex graphical systems, no huge libraries, no
-complex web browsers with multiple plug-ins, etc, etc. Most of my time was
-spent actually writing programs. Huh.</p>
-
-<p>I&#39;ve used IDEs and I&#39;ve used text editors. Personally I prefer text editors a
-lot more, but I definitely see the merits. Since most of my development is
-around PHP, a built in compiler doesn&#39;t do me much good. Subversion support
-between IDEs vary and with every one you have to learn a different user
-interface. On the other hand they allow you to quickly keep track of large
-number of files. There are other features that IDEs have but this is the only
-feature I can think of that is exclusive to IDEs that isn&#39;t in a plain text
-editor.</p>
-
-<p>Those familiar with vim or emacs (yes another war and for the record I&#39;m on the
-vim side), will be aware that they have syntax highlighting that would be the
-other feature that the IDE side tends to argue is exclusive to them. Which is
-sort of true since vim and emacs kind of blend both sides.</p>
-
-<p>IDEs are bloated and complex with lots of features and buttons which takes a
-lot of time to learn. Text editors are simple all they do is edit text. vim and
-emacs both started out as simple text editors and they still behave exactly as
-they did but they have a lot of features that are common in IDEs. You can even
-compile from within them and at least in vim if the the compiler throws an
-error vim can jump straight to the line the error is on.</p>
-
-<p>I haven&#39;t even begun to cover this war but I&#39;m fairly tired of typing. What my
-verdict? Why not get the best of both worlds and just use vim or emacs?</p>
-
-      </article>
-    </div>
-  
-    <div class='post'>
-      <h2><a href="/blog/2012/08/carrierwave-s3-and-filenames/">CarrierWave, S3 and Filenames</a></h1>
-      <aside>Posted at: 2012-08-09 16:00:57 -0400</aside>
-      <article>
-        <p>This is going to be a real quick post. I&#39;m using the &quot;carrier_wave&quot; gem with
-&quot;fog&quot; for one of my projects and found that when a file is stored on S3 the
-&quot;identifier&quot;, and &quot;filename&quot; methods return nil. I got around this issue in two
-separate ways neither of which I&#39;m particularly happy about.</p>
-
-<p>Outside of the uploader, you can use the File utility and the URL of the object
-to get the base filename like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="constant">Model</span>.asset.url)
-</pre></div>
-</div>
-
-<p>If you try and do this within the uploader itself like this:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.url)
-</pre></div>
-</div>
-
-<p>It will work, but not when creating additional versions such as thumbnails as
-the file hasn&#39;t actually been created yet so a URL can&#39;t be built and you&#39;ll
-get an error trying to perform File.basename(nil). You&#39;d need to go back up to
-the model and get the normal version&#39;s URL like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.model.asset.url)
-</pre></div>
-</div>
-
-<p>Now if you&#39;re trying to get the file name to build part of the store_dir,
-you&#39;ve just created an infinite loop! Ruby will be happy to tell you that the
-stack level too deep (SystemStackError). So ultimately how did I end up getting
-it into my store_dir?</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="predefined-constant">self</span>.model.attributes[<span class="string"><span class="delimiter">&quot;</span><span class="content">asset</span><span class="delimiter">&quot;</span></span>]
-</pre></div>
-</div>
-
-<p>The file name gets stored raw directly in the database, and thus you can pull
-it out by accessing the value directly without going through the accessor that
-get overridden by CarrierWave. I&#39;m pretty sure this is a bug, and will report
-it with example code and a test (as is appropriate for any bug report <em>hint</em>)
-as soon as my dead line has passed.</p>
 
       </article>
     </div>

@@ -20,6 +20,8 @@
     <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
     <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
 
+    <meta name="go-import" content="stelfox.net git io:repos/" />
+
     <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
     <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
 
@@ -54,41 +56,6 @@
     <div class='content container'>
       <div class="post">
   <h1>Security</h1>
-  
-    <div class='post'>
-      <h2><a href="/blog/2012/11/auditing-heroku-ssh-keys/">Auditing Heroku SSH Keys</a></h1>
-      <aside>Posted at: 2012-11-26 10:18:00 -0500</aside>
-      <article>
-        <p>A good friend of mine recently left the organization I work for and the task of
-resetting our passwords and auditing credentials fell on me. Since we use
-<a href="https://www.heroku.com/">Heroku</a> for our development platform I needed to not only reset the
-credentials for the web portion (which conveniently also handles resetting the
-API key) but also revoke any SSH keys he may have added to access it.</p>
-
-<p>Sadly Heroku does not seem to provide any web interface that I could find for
-examining what keys were associated with the account. Searching for this
-information also didn&#39;t turn up very valuable results; most people were looking
-to add keys or resolve issues with missing keys rather than revoking them. I
-suspect not many people think of SSH keys when it comes time to revoke access
-which is a dire mistake.</p>
-
-<p>I took to the command line to solve my issue as I knew you could list and add
-keys that way, so it was a minor leap of logic to assume they could revoke keys
-as well. I ran <code>heroku help keys</code> to get the syntax for the commands and was
-pleasantly surprised to see an additional option listed in there:</p>
-<div class="CodeRay">
-  <div class="code"><pre>keys:clear       #  remove all authentication keys from the current user
-</pre></div>
-</div>
-
-<p>As a now two person web-shop it&#39;s not a terrible amount of work to add our keys
-back in and looking through there were already some keys in there that should
-have been revoked long ago. One command and our applications were safe from
-mischief, though I know my former associate wouldn&#39;t abuse that privilege
-beyond perhaps pointing out the security flaw I&#39;d allowed.</p>
-
-      </article>
-    </div>
   
     <div class='post'>
       <h2><a href="/blog/2014/07/unregistering-from-whisperpush-after-flashing-a-new-rom/">Unregistering From WhisperPush After Flashing a New ROM</a></h1>
@@ -190,6 +157,41 @@ with a status code of 204. The output will look something like the following
 
 <p>I don&#39;t have any way too check that I&#39;m unregistered but it seems too have
 worked. Here is hoping this helps some else out in the future.</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/11/auditing-heroku-ssh-keys/">Auditing Heroku SSH Keys</a></h1>
+      <aside>Posted at: 2012-11-26 10:18:00 -0500</aside>
+      <article>
+        <p>A good friend of mine recently left the organization I work for and the task of
+resetting our passwords and auditing credentials fell on me. Since we use
+<a href="https://www.heroku.com/">Heroku</a> for our development platform I needed to not only reset the
+credentials for the web portion (which conveniently also handles resetting the
+API key) but also revoke any SSH keys he may have added to access it.</p>
+
+<p>Sadly Heroku does not seem to provide any web interface that I could find for
+examining what keys were associated with the account. Searching for this
+information also didn&#39;t turn up very valuable results; most people were looking
+to add keys or resolve issues with missing keys rather than revoking them. I
+suspect not many people think of SSH keys when it comes time to revoke access
+which is a dire mistake.</p>
+
+<p>I took to the command line to solve my issue as I knew you could list and add
+keys that way, so it was a minor leap of logic to assume they could revoke keys
+as well. I ran <code>heroku help keys</code> to get the syntax for the commands and was
+pleasantly surprised to see an additional option listed in there:</p>
+<div class="CodeRay">
+  <div class="code"><pre>keys:clear       #  remove all authentication keys from the current user
+</pre></div>
+</div>
+
+<p>As a now two person web-shop it&#39;s not a terrible amount of work to add our keys
+back in and looking through there were already some keys in there that should
+have been revoked long ago. One command and our applications were safe from
+mischief, though I know my former associate wouldn&#39;t abuse that privilege
+beyond perhaps pointing out the security flaw I&#39;d allowed.</p>
 
       </article>
     </div>

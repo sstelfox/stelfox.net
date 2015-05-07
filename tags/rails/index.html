@@ -20,6 +20,8 @@
     <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
     <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
 
+    <meta name="go-import" content="stelfox.net git io:repos/" />
+
     <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
     <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
 
@@ -54,6 +56,81 @@
     <div class='content container'>
       <div class="post">
   <h1>Rails</h1>
+  
+    <div class='post'>
+      <h2><a href="/blog/2014/05/pg-error-error-type-hstore-does-not-exist/">PG::Error: ERROR: Type 'Hstore' Does Not Exist</a></h1>
+      <aside>Posted at: 2014-05-28 18:00:55 -0400</aside>
+      <article>
+        <p>I&#39;ve been using the PostgreSQL&#39;s hstore extension in a Rails application lately
+and kept encountering the error that is this post&#39;s namesake. It would
+specifically happen when a database had been dropped, recreated and I freshly
+ran the migrations.</p>
+
+<p>It seems that while Rails 4 supports the HStore datatype, it doesn&#39;t enable the
+extension itself. I&#39;ve found two ways too solve this issue in wildly different
+ways.</p>
+
+<h2>First Solution: Enable HStore by Default</h2>
+
+<p>This is the common solution that is recommended too solve this issue. It
+enables the HStore extension by default on all newly created databases. Too
+understand this you need to know a bit about PostgreSQL&#39;s behavior.</p>
+
+<p>When a new database is created, PostgreSQL creates a copy of a special
+pre-existing database named &#39;template1&#39; by default. Anything done too this
+database will be reflected in all new databases, including enabling extensions.</p>
+
+<p>Too enable the HStore extension on the <code>template1</code> database you can execute the
+following command (generally as the postgres user or with your authentication
+of choice).</p>
+<div class="CodeRay">
+  <div class="code"><pre>psql -d template1 -c 'CREATE EXTENSION hstore;'
+</pre></div>
+</div>
+
+<h2>Second Solution: Rails Migration</h2>
+
+<p>The above solution doesn&#39;t sit well with me. While it&#39;s uncommon for any
+individual PostgreSQL server to be shared among different applications with
+different databases, the possibility is there. Perhaps the application will get
+de-commisioned and the DBA will simply drop the associated database and roles
+instead of setting up a new one.</p>
+
+<p>Disconnecting the requirements of the application from the application itself
+always seems to lead too trouble.</p>
+
+<p>Rails already has a mechanism too handle modifications too the database
+overtime, migrations. They&#39;re solid, well tested, and encapsulate not only how
+to get the database to a particular state but also how to return it back to
+it&#39;s prior state (generally).</p>
+
+<p>We can also do this without using raw SQL which now also seems a bit... off to
+me. The following is a sample Rails migration that will both enable and disable
+the extension:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">ManageHstore</span> &lt; <span class="constant">ActiveRecord</span>::<span class="constant">Migration</span>
+  <span class="keyword">def</span> <span class="function">change</span>
+    reversible <span class="keyword">do</span> |op|
+      op.up { enable_extension <span class="string"><span class="delimiter">'</span><span class="content">hstore</span><span class="delimiter">'</span></span> }
+      op.down { disable_extension <span class="string"><span class="delimiter">'</span><span class="content">hstore</span><span class="delimiter">'</span></span> }
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>Now the biggest problem with this migration is that too use it, you need too
+plan ahead of time too use the extension or not worry about freshly running all
+the migrations (generally because you dropped and created the database). This
+migration needs to be named so it alphabetically comes before any migration in
+your application that makes use of the HStore datatype.</p>
+
+<p>ActiveRecord uses timestamps at the beginning of the migration names to handle
+this alphabetic sorting, and such you&#39;ll want to fake this in before you used
+the HStore datatype.</p>
+
+      </article>
+    </div>
   
     <div class='post'>
       <h2><a href="/blog/2012/02/updating-to-a-newer-rails-on-dreamhost/">Updating to a Newer Rails on DreamHost</a></h1>
@@ -441,81 +518,6 @@ site. Note that the &quot;About your application&#39;s environment&quot; link wi
 in the production environment, this is intentional and expected for Rails.</p>
 
 <p>This is where I leave you to develop your site. Good luck!</p>
-
-      </article>
-    </div>
-  
-    <div class='post'>
-      <h2><a href="/blog/2014/05/pg-error-error-type-hstore-does-not-exist/">PG::Error: ERROR: Type 'Hstore' Does Not Exist</a></h1>
-      <aside>Posted at: 2014-05-28 18:00:55 -0400</aside>
-      <article>
-        <p>I&#39;ve been using the PostgreSQL&#39;s hstore extension in a Rails application lately
-and kept encountering the error that is this post&#39;s namesake. It would
-specifically happen when a database had been dropped, recreated and I freshly
-ran the migrations.</p>
-
-<p>It seems that while Rails 4 supports the HStore datatype, it doesn&#39;t enable the
-extension itself. I&#39;ve found two ways too solve this issue in wildly different
-ways.</p>
-
-<h2>First Solution: Enable HStore by Default</h2>
-
-<p>This is the common solution that is recommended too solve this issue. It
-enables the HStore extension by default on all newly created databases. Too
-understand this you need to know a bit about PostgreSQL&#39;s behavior.</p>
-
-<p>When a new database is created, PostgreSQL creates a copy of a special
-pre-existing database named &#39;template1&#39; by default. Anything done too this
-database will be reflected in all new databases, including enabling extensions.</p>
-
-<p>Too enable the HStore extension on the <code>template1</code> database you can execute the
-following command (generally as the postgres user or with your authentication
-of choice).</p>
-<div class="CodeRay">
-  <div class="code"><pre>psql -d template1 -c 'CREATE EXTENSION hstore;'
-</pre></div>
-</div>
-
-<h2>Second Solution: Rails Migration</h2>
-
-<p>The above solution doesn&#39;t sit well with me. While it&#39;s uncommon for any
-individual PostgreSQL server to be shared among different applications with
-different databases, the possibility is there. Perhaps the application will get
-de-commisioned and the DBA will simply drop the associated database and roles
-instead of setting up a new one.</p>
-
-<p>Disconnecting the requirements of the application from the application itself
-always seems to lead too trouble.</p>
-
-<p>Rails already has a mechanism too handle modifications too the database
-overtime, migrations. They&#39;re solid, well tested, and encapsulate not only how
-to get the database to a particular state but also how to return it back to
-it&#39;s prior state (generally).</p>
-
-<p>We can also do this without using raw SQL which now also seems a bit... off to
-me. The following is a sample Rails migration that will both enable and disable
-the extension:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="keyword">class</span> <span class="class">ManageHstore</span> &lt; <span class="constant">ActiveRecord</span>::<span class="constant">Migration</span>
-  <span class="keyword">def</span> <span class="function">change</span>
-    reversible <span class="keyword">do</span> |op|
-      op.up { enable_extension <span class="string"><span class="delimiter">'</span><span class="content">hstore</span><span class="delimiter">'</span></span> }
-      op.down { disable_extension <span class="string"><span class="delimiter">'</span><span class="content">hstore</span><span class="delimiter">'</span></span> }
-    <span class="keyword">end</span>
-  <span class="keyword">end</span>
-<span class="keyword">end</span>
-</pre></div>
-</div>
-
-<p>Now the biggest problem with this migration is that too use it, you need too
-plan ahead of time too use the extension or not worry about freshly running all
-the migrations (generally because you dropped and created the database). This
-migration needs to be named so it alphabetically comes before any migration in
-your application that makes use of the HStore datatype.</p>
-
-<p>ActiveRecord uses timestamps at the beginning of the migration names to handle
-this alphabetic sorting, and such you&#39;ll want to fake this in before you used
-the HStore datatype.</p>
 
       </article>
     </div>

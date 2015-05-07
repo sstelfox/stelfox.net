@@ -20,6 +20,8 @@
     <meta property="article:publisher" content="https://www.facebook.com/sstelfox" />
     <meta property="og:image" content="https://stelfox.net/static/avatar-01.jpg" />
 
+    <meta name="go-import" content="stelfox.net git io:repos/" />
+
     <link rel='stylesheet' href="//fonts.googleapis.com/css?family=Open+Sans:300,400italic,400,600,700|Alegreya+SC:700" />
     <link rel="stylesheet" href="https://stelfox.net/css/3HrCRVwL3Gos2V4HzXAw/Om/nxs=.css" />
 
@@ -54,41 +56,6 @@
     <div class='content container'>
       <div class="post">
   <h1>Ruby</h1>
-  
-    <div class='post'>
-      <h2><a href="/blog/2012/11/auditing-heroku-ssh-keys/">Auditing Heroku SSH Keys</a></h1>
-      <aside>Posted at: 2012-11-26 10:18:00 -0500</aside>
-      <article>
-        <p>A good friend of mine recently left the organization I work for and the task of
-resetting our passwords and auditing credentials fell on me. Since we use
-<a href="https://www.heroku.com/">Heroku</a> for our development platform I needed to not only reset the
-credentials for the web portion (which conveniently also handles resetting the
-API key) but also revoke any SSH keys he may have added to access it.</p>
-
-<p>Sadly Heroku does not seem to provide any web interface that I could find for
-examining what keys were associated with the account. Searching for this
-information also didn&#39;t turn up very valuable results; most people were looking
-to add keys or resolve issues with missing keys rather than revoking them. I
-suspect not many people think of SSH keys when it comes time to revoke access
-which is a dire mistake.</p>
-
-<p>I took to the command line to solve my issue as I knew you could list and add
-keys that way, so it was a minor leap of logic to assume they could revoke keys
-as well. I ran <code>heroku help keys</code> to get the syntax for the commands and was
-pleasantly surprised to see an additional option listed in there:</p>
-<div class="CodeRay">
-  <div class="code"><pre>keys:clear       #  remove all authentication keys from the current user
-</pre></div>
-</div>
-
-<p>As a now two person web-shop it&#39;s not a terrible amount of work to add our keys
-back in and looking through there were already some keys in there that should
-have been revoked long ago. One command and our applications were safe from
-mischief, though I know my former associate wouldn&#39;t abuse that privilege
-beyond perhaps pointing out the security flaw I&#39;d allowed.</p>
-
-      </article>
-    </div>
   
     <div class='post'>
       <h2><a href="/blog/2012/08/adding-a-table-prefix-to-datamapper-tables/">Adding a table prefix to DataMapper tables</a></h1>
@@ -198,180 +165,240 @@ as it would have been except now it has a prefix of &quot;source_&quot;.</p>
     </div>
   
     <div class='post'>
-      <h2><a href="/blog/2014/02/finding-ruby-subclasses/">Finding Ruby Subclasses</a></h1>
-      <aside>Posted at: 2014-02-20 07:48:24 -0500</aside>
+      <h2><a href="/blog/2012/08/carrierwave-s3-and-filenames/">CarrierWave, S3 and Filenames</a></h1>
+      <aside>Posted at: 2012-08-09 16:00:57 -0400</aside>
       <article>
-        <p>While working through a problem I found it would be immensely useful to be able
-to enumerate all of the current subclasses of a particular class. After
-thinking about this for a while I settled on a good old friend of mine,
-<code>ObjectSpace</code>.</p>
+        <p>This is going to be a real quick post. I&#39;m using the &quot;carrier_wave&quot; gem with
+&quot;fog&quot; for one of my projects and found that when a file is stored on S3 the
+&quot;identifier&quot;, and &quot;filename&quot; methods return nil. I got around this issue in two
+separate ways neither of which I&#39;m particularly happy about.</p>
 
-<p>For those not familiar with the ObjectSpace module, it is a means to inspect
-and access the items being tracked by Ruby&#39;s garbage collector. This means it
-has a hook into every living object, and more dangerously, every near-death
-object.</p>
-
-<p><code>ObjectSpace</code> provides a method for enumerating instances of a specific class,
-specifcally named <code>each_object</code> which takes a class. With Ruby all classes are
-in fact instances of the <code>Class</code> class. This allows us to enumerate every
-available class by passing it to the enumerator like so:</p>
+<p>Outside of the uploader, you can use the File utility and the URL of the object
+to get the base filename like so:</p>
 <div class="CodeRay">
-  <div class="code"><pre><span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).to_a
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="constant">Model</span>.asset.url)
 </pre></div>
 </div>
 
-<p>Alright so we now have an array of every single class that could possibly be
-instantiated, how do we narrow it down to just the ones we&#39;re interested in?
-Once again Ruby provides with the <code>ancestors</code> method, combine that with a
-select and we can quickly narrow it down. You can see it in the following
-example:</p>
+<p>If you try and do this within the uploader itself like this:</p>
 <div class="CodeRay">
-  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
-=&gt; <span class="constant">TargetSubclass</span>
-[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) }
-=&gt; [<span class="constant">String</span>, <span class="constant">TargetSubclass</span>]
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.url)
 </pre></div>
 </div>
 
-<p>Hmm, that&#39;s not quite right though. We have found all the subclasses but we&#39;ve
-also grabbed the parent class. With one small modification we eliminate that as
-well.</p>
+<p>It will work, but not when creating additional versions such as thumbnails as
+the file hasn&#39;t actually been created yet so a URL can&#39;t be built and you&#39;ll
+get an error trying to perform File.basename(nil). You&#39;d need to go back up to
+the model and get the normal version&#39;s URL like so:</p>
 <div class="CodeRay">
-  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
-=&gt; <span class="constant">TargetSubclass</span>
-[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) &amp;&amp; k != <span class="constant">String</span> }
-=&gt; [<span class="constant">TargetSubclass</span>]
+  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.model.asset.url)
 </pre></div>
 </div>
 
-<p>That line is rather long though, and I generally like to avoid multiple tests
-in a select block. There is a tad bit of syntactic sugar provided by Ruby
-allowing us to accomplish the same thing, our final example is ultimately the
-solution I went with:</p>
+<p>Now if you&#39;re trying to get the file name to build part of the store_dir,
+you&#39;ve just created an infinite loop! Ruby will be happy to tell you that the
+stack level too deep (SystemStackError). So ultimately how did I end up getting
+it into my store_dir?</p>
 <div class="CodeRay">
-  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
-=&gt; <span class="constant">TargetSubclass</span>
-[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="constant">String</span> }
-=&gt; [<span class="constant">TargetSubclass</span>]
+  <div class="code"><pre><span class="predefined-constant">self</span>.model.attributes[<span class="string"><span class="delimiter">&quot;</span><span class="content">asset</span><span class="delimiter">&quot;</span></span>]
 </pre></div>
 </div>
 
-<p>Putting this into a method:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="keyword">def</span> <span class="function">subclasses</span>(klass)
-  <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; klass }
-<span class="keyword">end</span>
-</pre></div>
-</div>
-
-<p>If you were so inclined you could extend the <code>Class</code> class with a method to
-make this available anywhere like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="keyword">class</span> <span class="class">Class</span>
-  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">subclasses</span>
-    <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="predefined-constant">self</span> }
-  <span class="keyword">end</span>
-<span class="keyword">end</span>
-</pre></div>
-</div>
-
-<p>I&#39;m personally not a fan of extending any of the core classes unless absolutely
-necessary, but too each there own.</p>
+<p>The file name gets stored raw directly in the database, and thus you can pull
+it out by accessing the value directly without going through the accessor that
+get overridden by CarrierWave. I&#39;m pretty sure this is a bug, and will report
+it with example code and a test (as is appropriate for any bug report <em>hint</em>)
+as soon as my dead line has passed.</p>
 
       </article>
     </div>
   
     <div class='post'>
-      <h2><a href="/blog/2013/12/running-emails-through-ruby/">Running Emails Through Ruby</a></h1>
-      <aside>Posted at: 2013-12-08 09:32:05 -0500</aside>
+      <h2><a href="/blog/2012/11/auditing-heroku-ssh-keys/">Auditing Heroku SSH Keys</a></h1>
+      <aside>Posted at: 2012-11-26 10:18:00 -0500</aside>
       <article>
-        <p>Following up on my <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">earlier post</a> where I covered how to backup your Gmail
-account using <code>fetchmail</code> and <code>procmail</code>; I wanted to cover how I was
-additionally processing received mail through ruby.</p>
+        <p>A good friend of mine recently left the organization I work for and the task of
+resetting our passwords and auditing credentials fell on me. Since we use
+<a href="https://www.heroku.com/">Heroku</a> for our development platform I needed to not only reset the
+credentials for the web portion (which conveniently also handles resetting the
+API key) but also revoke any SSH keys he may have added to access it.</p>
 
-<p>This was part of a larger project where I was doing statistical analysis on my
-email while evaluating various data stores. To get the emails into the various
-data stores, I used the ruby script to parse, process and store the emails as
-they came in.</p>
+<p>Sadly Heroku does not seem to provide any web interface that I could find for
+examining what keys were associated with the account. Searching for this
+information also didn&#39;t turn up very valuable results; most people were looking
+to add keys or resolve issues with missing keys rather than revoking them. I
+suspect not many people think of SSH keys when it comes time to revoke access
+which is a dire mistake.</p>
 
-<p>If you&#39;re going to be doing any form of mail manipulation or statistics I
-highly recommend the <a href="https://github.com/mikel/mail">mail</a> gem. It did almost everything I needed out of
-the box, though it didn&#39;t correctly enumerate any of the additional headers.</p>
+<p>I took to the command line to solve my issue as I knew you could list and add
+keys that way, so it was a minor leap of logic to assume they could revoke keys
+as well. I ran <code>heroku help keys</code> to get the syntax for the commands and was
+pleasantly surprised to see an additional option listed in there:</p>
+<div class="CodeRay">
+  <div class="code"><pre>keys:clear       #  remove all authentication keys from the current user
+</pre></div>
+</div>
 
-<p>Procmail is a highly flexible mail filtering and local delivery agent. Without
-much effort you can pass the mail it is handling through a series of filters
-which can manipulate and reject mail before eventually delivering it to your
-inbox. In light of this, we&#39;re going to make a filter that simply counts the
-total number of emails the script has processed, and add a header to the
-message that indicates this count.</p>
+<p>As a now two person web-shop it&#39;s not a terrible amount of work to add our keys
+back in and looking through there were already some keys in there that should
+have been revoked long ago. One command and our applications were safe from
+mischief, though I know my former associate wouldn&#39;t abuse that privilege
+beyond perhaps pointing out the security flaw I&#39;d allowed.</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2012/12/rubys-option-parser-a-more-complete-example/">Ruby's Option Parser - a More Complete Example</a></h1>
+      <aside>Posted at: 2012-12-02 22:59:00 -0500</aside>
+      <article>
+        <p>Recently while writing a Ruby program I needed to parse some command line
+options. Helpfully Ruby provides a module named OptionParser to make this easy.
+I found a few parts of the documentation ambiguous and a few others down right
+confusing.</p>
+
+<p>The catch I hit was the required field. In my mind the definition of a required
+argument is something that needs to be passed on the commandline to continue.
+What OptionParser actually means is that a value isn&#39;t required when the
+argument is passed. OptionParser already provides boolean switches, so when
+someone would use an optional switch is beyond me.</p>
+
+<p>To make it a little more clear and to have something to work from in the future
+I created the following chunk of code that includes a Configuration singleton
+that can be used anywhere within your codebase to access the run-time
+configuration, a sample parser with a wide range of different types of options,
+and it will load configuration from a file named config.yml in the same
+directory.</p>
+
+<p>I feel like the following is a much more complete explanation of how
+OptionParser is supposed to be used with supporting code.</p>
 <div class="CodeRay">
   <div class="code"><pre><span class="doctype">#!/usr/bin/env ruby</span>
 
-require <span class="string"><span class="delimiter">'</span><span class="content">mail</span><span class="delimiter">'</span></span>
+<span class="comment"># This file provides an example of creating a command line application with a</span>
+<span class="comment"># wide variety of command line options, parsing and the like as well as global</span>
+<span class="comment"># configuration singleton that can be relied on throughout a program.</span>
+<span class="comment">#</span>
+<span class="comment"># This entire setup lives within the &quot;Example&quot; module. These are really common</span>
+<span class="comment"># names and it would be a shame to override required functionality in other code</span>
+<span class="comment"># that wasn't properly namespaced.</span>
 
-<span class="comment"># Get the email message from STDIN or a passed filename</span>
-message = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
-<span class="keyword">while</span> input = <span class="predefined-constant">ARGF</span>.gets
-  message += input
+require <span class="string"><span class="delimiter">'</span><span class="content">optparse</span><span class="delimiter">'</span></span>
+require <span class="string"><span class="delimiter">'</span><span class="content">singleton</span><span class="delimiter">'</span></span>
+require <span class="string"><span class="delimiter">'</span><span class="content">yaml</span><span class="delimiter">'</span></span>
+
+<span class="keyword">module</span> <span class="class">Example</span>
+  <span class="comment"># Defines the available configuration options for the configuration</span>
+  <span class="constant">ConfigurationStruct</span> = <span class="constant">Struct</span>.new(<span class="symbol">:enum</span>, <span class="symbol">:list</span>, <span class="symbol">:required</span>, <span class="symbol">:optional</span>, <span class="symbol">:verbose</span>, <span class="symbol">:float</span>)
+
+  <span class="keyword">class</span> <span class="class">Configuration</span>
+    include <span class="constant">Singleton</span>
+
+    <span class="comment"># Initialize the configuration and set defaults:</span>
+    <span class="class-variable">@@config</span> = <span class="constant">ConfigurationStruct</span>.new
+
+    <span class="comment"># This is where the defaults are being set</span>
+    <span class="class-variable">@@config</span>.enum = <span class="symbol">:one</span>
+    <span class="class-variable">@@config</span>.list = []
+    <span class="class-variable">@@config</span>.optional = <span class="predefined-constant">nil</span>
+    <span class="class-variable">@@config</span>.verbose = <span class="predefined-constant">false</span>
+
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">config</span>
+      <span class="keyword">yield</span>(<span class="class-variable">@@config</span>) <span class="keyword">if</span> block_given?
+      <span class="class-variable">@@config</span>
+    <span class="keyword">end</span>
+
+    <span class="comment"># Loads a YAML configuration file and sets each of the configuration values to</span>
+    <span class="comment"># whats in the file.</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">load</span>(file)
+      <span class="constant">YAML</span>::load_file(file).each <span class="keyword">do</span> |key, value|
+        <span class="predefined-constant">self</span>.send(<span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span>key<span class="inline-delimiter">}</span></span><span class="content">=</span><span class="delimiter">&quot;</span></span>, value)
+      <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment"># This provides an easy way to dump the configuration as a hash</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">to_hash</span>
+      <span class="constant">Hash</span>[<span class="class-variable">@@config</span>.each_pair.to_a]
+    <span class="keyword">end</span>
+
+    <span class="comment"># Pass any other calls (most likely attribute setters/getters on to the</span>
+    <span class="comment"># configuration as a way to easily set/get attribute values </span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">method_missing</span>(method, *args, &amp;block)
+      <span class="keyword">if</span> <span class="class-variable">@@config</span>.respond_to?(method)
+        <span class="class-variable">@@config</span>.send(method, *args, &amp;block)
+      <span class="keyword">else</span>
+        raise <span class="constant">NoMethodError</span>
+      <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+    <span class="comment"># Handles validating the configuration that has been loaded/configured</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">validate!</span>
+      valid = <span class="predefined-constant">true</span>
+
+      valid = <span class="predefined-constant">false</span> <span class="keyword">if</span> <span class="constant">Configuration</span>.required.nil?
+
+      raise <span class="constant">ArgumentError</span> <span class="keyword">unless</span> valid
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+
+  <span class="keyword">class</span> <span class="class">ConfigurationParser</span>
+    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">parse</span>(args)
+      opts = <span class="constant">OptionParser</span>.new <span class="keyword">do</span> |parser|
+
+        parser.separator <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
+        parser.separator <span class="string"><span class="delimiter">&quot;</span><span class="content">Specific options:</span><span class="delimiter">&quot;</span></span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--enum ENUM</span><span class="delimiter">&quot;</span></span>, [<span class="symbol">:one</span>, <span class="symbol">:two</span>, <span class="symbol">:three</span>], <span class="string"><span class="delimiter">&quot;</span><span class="content">This field requires one of a set of predefined values be</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">set. If wrapped in brackets this option can be set to nil.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.enum = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">-l</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--list x,y</span><span class="delimiter">&quot;</span></span>, <span class="constant">Array</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command flag takes a comma separated list (without</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">spaces) of values and turns it into an array. This requires</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">at least one argument.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.list = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--[no-]verbose</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This is a common boolean flag, setting verbosity to either</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true or false.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.verbose = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--optional [STR]</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command doesn't require a string to be passed to it, if</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">nothing is passed it will be nil. No error will be raised if</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">nothing is passed to it that logic needs to be handled</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">yourself.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.optional = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">-r</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--required STR</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command requires a string to be passed to it.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.required = setting
+        <span class="keyword">end</span>
+
+        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--float NUM</span><span class="delimiter">&quot;</span></span>, <span class="constant">Float</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command will only accept an integer or a float.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          <span class="constant">Configuration</span>.float = setting
+        <span class="keyword">end</span>
+
+        parser.on_tail(<span class="string"><span class="delimiter">&quot;</span><span class="content">-h</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--help</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--usage</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Show this usage message and quit.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
+          puts parser.help
+          exit
+        <span class="keyword">end</span>
+
+        parser.on_tail(<span class="string"><span class="delimiter">&quot;</span><span class="content">-v</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--version</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Show version information about this program and quit.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span>
+          puts <span class="string"><span class="delimiter">&quot;</span><span class="content">Option Parser Example v1.0.0</span><span class="delimiter">&quot;</span></span>
+          exit
+        <span class="keyword">end</span>
+      <span class="keyword">end</span>
+
+      opts.parse!(args)
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
 <span class="keyword">end</span>
 
-<span class="comment"># Parse the email into a ruby object</span>
-msg = <span class="constant">Mail</span>.new(message)
-
-<span class="comment"># Location of our count file</span>
-count_file = <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span><span class="predefined-constant">ENV</span>[<span class="string"><span class="delimiter">'</span><span class="content">HOME</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="content">/.mail_counter.txt</span><span class="delimiter">&quot;</span></span>
-
-<span class="comment"># Load or initialize our count value and increment it</span>
-count = <span class="constant">File</span>.exists?(count_file) ? <span class="constant">File</span>.read(count_file).to_i : <span class="integer">0</span>
-count += <span class="integer">1</span>
-
-<span class="comment"># Update our count on disk</span>
-<span class="constant">File</span>.write(count_file, count.to_s)
-
-<span class="comment"># Add our header with the count</span>
-msg.header.fields &lt;&lt; <span class="constant">Mail</span>::<span class="constant">Field</span>.new(<span class="string"><span class="delimiter">&quot;</span><span class="content">X-Mail-Counter: </span><span class="inline"><span class="inline-delimiter">#{</span>count<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>)
-
-<span class="comment"># Output the now modified message back out to $stdout</span>
-<span class="keyword">begin</span>
-  <span class="global-variable">$stdout</span>.puts msg.to_s
-<span class="keyword">rescue</span> <span class="constant">Errno</span>::<span class="constant">EPIPE</span>
-  exit(<span class="integer">74</span>)
+<span class="keyword">if</span> <span class="constant">File</span>.exists?(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.yml</span><span class="delimiter">&quot;</span></span>)
+  <span class="constant">Example</span>::<span class="constant">Configuration</span>.load(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.yml</span><span class="delimiter">&quot;</span></span>)
 <span class="keyword">end</span>
+
+<span class="constant">Example</span>::<span class="constant">ConfigurationParser</span>.parse(<span class="predefined-constant">ARGV</span>)
+<span class="constant">Example</span>::<span class="constant">Configuration</span>.validate!
+
+require <span class="string"><span class="delimiter">&quot;</span><span class="content">json</span><span class="delimiter">&quot;</span></span>
+puts <span class="constant">JSON</span>.pretty_generate(<span class="constant">Example</span>::<span class="constant">Configuration</span>.to_hash)
 </pre></div>
 </div>
-
-<p>Make sure you mark the script executable after saving it.</p>
-
-<p>If you followed along with <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">my earlier post</a> the only change we need to make
-is to add our ruby mail processor as a procmail filter. I&#39;ve stored the script
-in <code>~/.bin/mail-counter.rb</code>, if you&#39;ve stored it in a different location you&#39;ll
-want to update your path to reflect that.</p>
-
-<p>Filters in procmail are handled by using the pipe helper. The following is a
-minimum working example of a procmailrc file to make use of our filter:</p>
-<div class="CodeRay">
-  <div class="code"><pre>MAILDIR=$HOME
-VERBOSE=on
-
-:0fw
-| /home/sstelfox/Documents/ruby/riak-mail-indexer/counter.rb
-
-:0
-Maildir/
-</pre></div>
-</div>
-
-<p>Store the above file in <code>~/.procmailrc</code>. The next time you run <code>fetchmail</code>
-those headers will be added to the messages before being delivered and you can
-watch the count increment by looking at the contents of <code>~/.mail_counter.txt</code>.</p>
-
-<p>The following are a few additional sources I made use of while writing this
-article:</p>
-
-<ul>
-<li><a href="http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby">http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby</a></li>
-<li><a href="http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines">http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines</a></li>
-</ul>
 
       </article>
     </div>
@@ -578,6 +605,129 @@ require <span class="string"><span class="delimiter">&quot;</span><span class="c
     </div>
   
     <div class='post'>
+      <h2><a href="/blog/2013/12/running-emails-through-ruby/">Running Emails Through Ruby</a></h1>
+      <aside>Posted at: 2013-12-08 09:32:05 -0500</aside>
+      <article>
+        <p>Following up on my <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">earlier post</a> where I covered how to backup your Gmail
+account using <code>fetchmail</code> and <code>procmail</code>; I wanted to cover how I was
+additionally processing received mail through ruby.</p>
+
+<p>This was part of a larger project where I was doing statistical analysis on my
+email while evaluating various data stores. To get the emails into the various
+data stores, I used the ruby script to parse, process and store the emails as
+they came in.</p>
+
+<p>If you&#39;re going to be doing any form of mail manipulation or statistics I
+highly recommend the <a href="https://github.com/mikel/mail">mail</a> gem. It did almost everything I needed out of
+the box, though it didn&#39;t correctly enumerate any of the additional headers.</p>
+
+<p>Procmail is a highly flexible mail filtering and local delivery agent. Without
+much effort you can pass the mail it is handling through a series of filters
+which can manipulate and reject mail before eventually delivering it to your
+inbox. In light of this, we&#39;re going to make a filter that simply counts the
+total number of emails the script has processed, and add a header to the
+message that indicates this count.</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="doctype">#!/usr/bin/env ruby</span>
+
+require <span class="string"><span class="delimiter">'</span><span class="content">mail</span><span class="delimiter">'</span></span>
+
+<span class="comment"># Get the email message from STDIN or a passed filename</span>
+message = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
+<span class="keyword">while</span> input = <span class="predefined-constant">ARGF</span>.gets
+  message += input
+<span class="keyword">end</span>
+
+<span class="comment"># Parse the email into a ruby object</span>
+msg = <span class="constant">Mail</span>.new(message)
+
+<span class="comment"># Location of our count file</span>
+count_file = <span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span><span class="predefined-constant">ENV</span>[<span class="string"><span class="delimiter">'</span><span class="content">HOME</span><span class="delimiter">'</span></span>]<span class="inline-delimiter">}</span></span><span class="content">/.mail_counter.txt</span><span class="delimiter">&quot;</span></span>
+
+<span class="comment"># Load or initialize our count value and increment it</span>
+count = <span class="constant">File</span>.exists?(count_file) ? <span class="constant">File</span>.read(count_file).to_i : <span class="integer">0</span>
+count += <span class="integer">1</span>
+
+<span class="comment"># Update our count on disk</span>
+<span class="constant">File</span>.write(count_file, count.to_s)
+
+<span class="comment"># Add our header with the count</span>
+msg.header.fields &lt;&lt; <span class="constant">Mail</span>::<span class="constant">Field</span>.new(<span class="string"><span class="delimiter">&quot;</span><span class="content">X-Mail-Counter: </span><span class="inline"><span class="inline-delimiter">#{</span>count<span class="inline-delimiter">}</span></span><span class="delimiter">&quot;</span></span>)
+
+<span class="comment"># Output the now modified message back out to $stdout</span>
+<span class="keyword">begin</span>
+  <span class="global-variable">$stdout</span>.puts msg.to_s
+<span class="keyword">rescue</span> <span class="constant">Errno</span>::<span class="constant">EPIPE</span>
+  exit(<span class="integer">74</span>)
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>Make sure you mark the script executable after saving it.</p>
+
+<p>If you followed along with <a href="/blog/2013/11/backing-up-gmail-with-fetchmail/">my earlier post</a> the only change we need to make
+is to add our ruby mail processor as a procmail filter. I&#39;ve stored the script
+in <code>~/.bin/mail-counter.rb</code>, if you&#39;ve stored it in a different location you&#39;ll
+want to update your path to reflect that.</p>
+
+<p>Filters in procmail are handled by using the pipe helper. The following is a
+minimum working example of a procmailrc file to make use of our filter:</p>
+<div class="CodeRay">
+  <div class="code"><pre>MAILDIR=$HOME
+VERBOSE=on
+
+:0fw
+| /home/sstelfox/Documents/ruby/riak-mail-indexer/counter.rb
+
+:0
+Maildir/
+</pre></div>
+</div>
+
+<p>Store the above file in <code>~/.procmailrc</code>. The next time you run <code>fetchmail</code>
+those headers will be added to the messages before being delivered and you can
+watch the count increment by looking at the contents of <code>~/.mail_counter.txt</code>.</p>
+
+<p>The following are a few additional sources I made use of while writing this
+article:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby">http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby</a></li>
+<li><a href="http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines">http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines</a></li>
+</ul>
+
+      </article>
+    </div>
+  
+    <div class='post'>
+      <h2><a href="/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/">Creating Crypt Style SHA512 Passwords With Ruby</a></h1>
+      <aside>Posted at: 2014-02-17 15:28:27 -0500</aside>
+      <article>
+        <p>I needed to generate crypt-style SHA512 passwords in ruby for an <code>/etc/shadow</code>
+file. After a bunch of Googling and messing around with the OpenSSL library I
+finally found a very simple built-in way to handle this.</p>
+<div class="CodeRay">
+  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">securerandom</span><span class="delimiter">'</span></span>
+
+<span class="string"><span class="delimiter">'</span><span class="content">password</span><span class="delimiter">'</span></span>.crypt(<span class="string"><span class="delimiter">'</span><span class="content">$6$</span><span class="delimiter">'</span></span> + <span class="constant">SecureRandom</span>.random_number(<span class="integer">36</span> ** <span class="integer">8</span>).to_s(<span class="integer">36</span>))
+</pre></div>
+</div>
+
+<p>You&#39;ll get a string that looks like:</p>
+<div class="CodeRay">
+  <div class="code"><pre>$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.
+</pre></div>
+</div>
+
+<p>If you don&#39;t want to use the <code>SecureRandom</code> module you can replace the random
+call with simply <code>rand(36 ** 8)</code> though this isn&#39;t recommended.</p>
+
+<p>Enjoy!</p>
+
+      </article>
+    </div>
+  
+    <div class='post'>
       <h2><a href="/blog/2012/11/keep-your-gems-updated/">Keep Your Gems Updated</a></h1>
       <aside>Posted at: 2012-11-27 14:17:00 -0500</aside>
       <article>
@@ -628,156 +778,85 @@ you should try and update the gems and see for yourself.</p>
     </div>
   
     <div class='post'>
-      <h2><a href="/blog/2012/12/rubys-option-parser-a-more-complete-example/">Ruby's Option Parser - a More Complete Example</a></h1>
-      <aside>Posted at: 2012-12-02 22:59:00 -0500</aside>
+      <h2><a href="/blog/2014/02/finding-ruby-subclasses/">Finding Ruby Subclasses</a></h1>
+      <aside>Posted at: 2014-02-20 07:48:24 -0500</aside>
       <article>
-        <p>Recently while writing a Ruby program I needed to parse some command line
-options. Helpfully Ruby provides a module named OptionParser to make this easy.
-I found a few parts of the documentation ambiguous and a few others down right
-confusing.</p>
+        <p>While working through a problem I found it would be immensely useful to be able
+to enumerate all of the current subclasses of a particular class. After
+thinking about this for a while I settled on a good old friend of mine,
+<code>ObjectSpace</code>.</p>
 
-<p>The catch I hit was the required field. In my mind the definition of a required
-argument is something that needs to be passed on the commandline to continue.
-What OptionParser actually means is that a value isn&#39;t required when the
-argument is passed. OptionParser already provides boolean switches, so when
-someone would use an optional switch is beyond me.</p>
+<p>For those not familiar with the ObjectSpace module, it is a means to inspect
+and access the items being tracked by Ruby&#39;s garbage collector. This means it
+has a hook into every living object, and more dangerously, every near-death
+object.</p>
 
-<p>To make it a little more clear and to have something to work from in the future
-I created the following chunk of code that includes a Configuration singleton
-that can be used anywhere within your codebase to access the run-time
-configuration, a sample parser with a wide range of different types of options,
-and it will load configuration from a file named config.yml in the same
-directory.</p>
-
-<p>I feel like the following is a much more complete explanation of how
-OptionParser is supposed to be used with supporting code.</p>
+<p><code>ObjectSpace</code> provides a method for enumerating instances of a specific class,
+specifcally named <code>each_object</code> which takes a class. With Ruby all classes are
+in fact instances of the <code>Class</code> class. This allows us to enumerate every
+available class by passing it to the enumerator like so:</p>
 <div class="CodeRay">
-  <div class="code"><pre><span class="doctype">#!/usr/bin/env ruby</span>
-
-<span class="comment"># This file provides an example of creating a command line application with a</span>
-<span class="comment"># wide variety of command line options, parsing and the like as well as global</span>
-<span class="comment"># configuration singleton that can be relied on throughout a program.</span>
-<span class="comment">#</span>
-<span class="comment"># This entire setup lives within the &quot;Example&quot; module. These are really common</span>
-<span class="comment"># names and it would be a shame to override required functionality in other code</span>
-<span class="comment"># that wasn't properly namespaced.</span>
-
-require <span class="string"><span class="delimiter">'</span><span class="content">optparse</span><span class="delimiter">'</span></span>
-require <span class="string"><span class="delimiter">'</span><span class="content">singleton</span><span class="delimiter">'</span></span>
-require <span class="string"><span class="delimiter">'</span><span class="content">yaml</span><span class="delimiter">'</span></span>
-
-<span class="keyword">module</span> <span class="class">Example</span>
-  <span class="comment"># Defines the available configuration options for the configuration</span>
-  <span class="constant">ConfigurationStruct</span> = <span class="constant">Struct</span>.new(<span class="symbol">:enum</span>, <span class="symbol">:list</span>, <span class="symbol">:required</span>, <span class="symbol">:optional</span>, <span class="symbol">:verbose</span>, <span class="symbol">:float</span>)
-
-  <span class="keyword">class</span> <span class="class">Configuration</span>
-    include <span class="constant">Singleton</span>
-
-    <span class="comment"># Initialize the configuration and set defaults:</span>
-    <span class="class-variable">@@config</span> = <span class="constant">ConfigurationStruct</span>.new
-
-    <span class="comment"># This is where the defaults are being set</span>
-    <span class="class-variable">@@config</span>.enum = <span class="symbol">:one</span>
-    <span class="class-variable">@@config</span>.list = []
-    <span class="class-variable">@@config</span>.optional = <span class="predefined-constant">nil</span>
-    <span class="class-variable">@@config</span>.verbose = <span class="predefined-constant">false</span>
-
-    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">config</span>
-      <span class="keyword">yield</span>(<span class="class-variable">@@config</span>) <span class="keyword">if</span> block_given?
-      <span class="class-variable">@@config</span>
-    <span class="keyword">end</span>
-
-    <span class="comment"># Loads a YAML configuration file and sets each of the configuration values to</span>
-    <span class="comment"># whats in the file.</span>
-    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">load</span>(file)
-      <span class="constant">YAML</span>::load_file(file).each <span class="keyword">do</span> |key, value|
-        <span class="predefined-constant">self</span>.send(<span class="string"><span class="delimiter">&quot;</span><span class="inline"><span class="inline-delimiter">#{</span>key<span class="inline-delimiter">}</span></span><span class="content">=</span><span class="delimiter">&quot;</span></span>, value)
-      <span class="keyword">end</span>
-    <span class="keyword">end</span>
-
-    <span class="comment"># This provides an easy way to dump the configuration as a hash</span>
-    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">to_hash</span>
-      <span class="constant">Hash</span>[<span class="class-variable">@@config</span>.each_pair.to_a]
-    <span class="keyword">end</span>
-
-    <span class="comment"># Pass any other calls (most likely attribute setters/getters on to the</span>
-    <span class="comment"># configuration as a way to easily set/get attribute values </span>
-    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">method_missing</span>(method, *args, &amp;block)
-      <span class="keyword">if</span> <span class="class-variable">@@config</span>.respond_to?(method)
-        <span class="class-variable">@@config</span>.send(method, *args, &amp;block)
-      <span class="keyword">else</span>
-        raise <span class="constant">NoMethodError</span>
-      <span class="keyword">end</span>
-    <span class="keyword">end</span>
-
-    <span class="comment"># Handles validating the configuration that has been loaded/configured</span>
-    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">validate!</span>
-      valid = <span class="predefined-constant">true</span>
-
-      valid = <span class="predefined-constant">false</span> <span class="keyword">if</span> <span class="constant">Configuration</span>.required.nil?
-
-      raise <span class="constant">ArgumentError</span> <span class="keyword">unless</span> valid
-    <span class="keyword">end</span>
-  <span class="keyword">end</span>
-
-  <span class="keyword">class</span> <span class="class">ConfigurationParser</span>
-    <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">parse</span>(args)
-      opts = <span class="constant">OptionParser</span>.new <span class="keyword">do</span> |parser|
-
-        parser.separator <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>
-        parser.separator <span class="string"><span class="delimiter">&quot;</span><span class="content">Specific options:</span><span class="delimiter">&quot;</span></span>
-
-        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--enum ENUM</span><span class="delimiter">&quot;</span></span>, [<span class="symbol">:one</span>, <span class="symbol">:two</span>, <span class="symbol">:three</span>], <span class="string"><span class="delimiter">&quot;</span><span class="content">This field requires one of a set of predefined values be</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">set. If wrapped in brackets this option can be set to nil.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
-          <span class="constant">Configuration</span>.enum = setting
-        <span class="keyword">end</span>
-
-        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">-l</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--list x,y</span><span class="delimiter">&quot;</span></span>, <span class="constant">Array</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command flag takes a comma separated list (without</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">spaces) of values and turns it into an array. This requires</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">at least one argument.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
-          <span class="constant">Configuration</span>.list = setting
-        <span class="keyword">end</span>
-
-        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--[no-]verbose</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This is a common boolean flag, setting verbosity to either</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">true or false.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
-          <span class="constant">Configuration</span>.verbose = setting
-        <span class="keyword">end</span>
-
-        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--optional [STR]</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command doesn't require a string to be passed to it, if</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">nothing is passed it will be nil. No error will be raised if</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">nothing is passed to it that logic needs to be handled</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">yourself.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
-          <span class="constant">Configuration</span>.optional = setting
-        <span class="keyword">end</span>
-
-        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">-r</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--required STR</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command requires a string to be passed to it.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
-          <span class="constant">Configuration</span>.required = setting
-        <span class="keyword">end</span>
-
-        parser.on(<span class="string"><span class="delimiter">&quot;</span><span class="content">--float NUM</span><span class="delimiter">&quot;</span></span>, <span class="constant">Float</span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">This command will only accept an integer or a float.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
-          <span class="constant">Configuration</span>.float = setting
-        <span class="keyword">end</span>
-
-        parser.on_tail(<span class="string"><span class="delimiter">&quot;</span><span class="content">-h</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--help</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--usage</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Show this usage message and quit.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span> |setting|
-          puts parser.help
-          exit
-        <span class="keyword">end</span>
-
-        parser.on_tail(<span class="string"><span class="delimiter">&quot;</span><span class="content">-v</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">--version</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">Show version information about this program and quit.</span><span class="delimiter">&quot;</span></span>) <span class="keyword">do</span>
-          puts <span class="string"><span class="delimiter">&quot;</span><span class="content">Option Parser Example v1.0.0</span><span class="delimiter">&quot;</span></span>
-          exit
-        <span class="keyword">end</span>
-      <span class="keyword">end</span>
-
-      opts.parse!(args)
-    <span class="keyword">end</span>
-  <span class="keyword">end</span>
-<span class="keyword">end</span>
-
-<span class="keyword">if</span> <span class="constant">File</span>.exists?(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.yml</span><span class="delimiter">&quot;</span></span>)
-  <span class="constant">Example</span>::<span class="constant">Configuration</span>.load(<span class="string"><span class="delimiter">&quot;</span><span class="content">config.yml</span><span class="delimiter">&quot;</span></span>)
-<span class="keyword">end</span>
-
-<span class="constant">Example</span>::<span class="constant">ConfigurationParser</span>.parse(<span class="predefined-constant">ARGV</span>)
-<span class="constant">Example</span>::<span class="constant">Configuration</span>.validate!
-
-require <span class="string"><span class="delimiter">&quot;</span><span class="content">json</span><span class="delimiter">&quot;</span></span>
-puts <span class="constant">JSON</span>.pretty_generate(<span class="constant">Example</span>::<span class="constant">Configuration</span>.to_hash)
+  <div class="code"><pre><span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).to_a
 </pre></div>
 </div>
+
+<p>Alright so we now have an array of every single class that could possibly be
+instantiated, how do we narrow it down to just the ones we&#39;re interested in?
+Once again Ruby provides with the <code>ancestors</code> method, combine that with a
+select and we can quickly narrow it down. You can see it in the following
+example:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) }
+=&gt; [<span class="constant">String</span>, <span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>Hmm, that&#39;s not quite right though. We have found all the subclasses but we&#39;ve
+also grabbed the parent class. With one small modification we eliminate that as
+well.</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k.ancestors.include?(<span class="constant">String</span>) &amp;&amp; k != <span class="constant">String</span> }
+=&gt; [<span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>That line is rather long though, and I generally like to avoid multiple tests
+in a select block. There is a tad bit of syntactic sugar provided by Ruby
+allowing us to accomplish the same thing, our final example is ultimately the
+solution I went with:</p>
+<div class="CodeRay">
+  <div class="code"><pre>[<span class="integer">1</span>] pry(main)&gt; <span class="constant">TargetSubclass</span> = <span class="constant">Class</span>.new(<span class="constant">String</span>)
+=&gt; <span class="constant">TargetSubclass</span>
+[<span class="integer">2</span>] pry(main)&gt; <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="constant">String</span> }
+=&gt; [<span class="constant">TargetSubclass</span>]
+</pre></div>
+</div>
+
+<p>Putting this into a method:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">def</span> <span class="function">subclasses</span>(klass)
+  <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; klass }
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>If you were so inclined you could extend the <code>Class</code> class with a method to
+make this available anywhere like so:</p>
+<div class="CodeRay">
+  <div class="code"><pre><span class="keyword">class</span> <span class="class">Class</span>
+  <span class="keyword">def</span> <span class="predefined-constant">self</span>.<span class="function">subclasses</span>
+    <span class="constant">ObjectSpace</span>.each_object(<span class="constant">Class</span>).select { |k| k &lt; <span class="predefined-constant">self</span> }
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre></div>
+</div>
+
+<p>I&#39;m personally not a fan of extending any of the core classes unless absolutely
+necessary, but too each there own.</p>
 
       </article>
     </div>
@@ -900,159 +979,6 @@ data_string = <span class="constant">OpenSSL</span>::<span class="constant">ASN1
 puts <span class="constant">OpenSSL</span>::<span class="constant">Digest</span>::<span class="constant">SHA1</span>.hexdigest(data_string.to_der).scan(<span class="regexp"><span class="delimiter">/</span><span class="content">..</span><span class="delimiter">/</span></span>).join(<span class="string"><span class="delimiter">'</span><span class="content">:</span><span class="delimiter">'</span></span>)
 </pre></div>
 </div>
-
-      </article>
-    </div>
-  
-    <div class='post'>
-      <h2><a href="/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/">Creating Crypt Style SHA512 Passwords With Ruby</a></h1>
-      <aside>Posted at: 2014-02-17 15:28:27 -0500</aside>
-      <article>
-        <p>I needed to generate crypt-style SHA512 passwords in ruby for an <code>/etc/shadow</code>
-file. After a bunch of Googling and messing around with the OpenSSL library I
-finally found a very simple built-in way to handle this.</p>
-<div class="CodeRay">
-  <div class="code"><pre>require <span class="string"><span class="delimiter">'</span><span class="content">securerandom</span><span class="delimiter">'</span></span>
-
-<span class="string"><span class="delimiter">'</span><span class="content">password</span><span class="delimiter">'</span></span>.crypt(<span class="string"><span class="delimiter">'</span><span class="content">$6$</span><span class="delimiter">'</span></span> + <span class="constant">SecureRandom</span>.random_number(<span class="integer">36</span> ** <span class="integer">8</span>).to_s(<span class="integer">36</span>))
-</pre></div>
-</div>
-
-<p>You&#39;ll get a string that looks like:</p>
-<div class="CodeRay">
-  <div class="code"><pre>$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.
-</pre></div>
-</div>
-
-<p>If you don&#39;t want to use the <code>SecureRandom</code> module you can replace the random
-call with simply <code>rand(36 ** 8)</code> though this isn&#39;t recommended.</p>
-
-<p>Enjoy!</p>
-
-      </article>
-    </div>
-  
-    <div class='post'>
-      <h2><a href="/blog/2015/04/ruby-code-quality-metrics/">Ruby Code Quality Metrics</a></h1>
-      <aside>Posted at: 2015-04-22 16:47:10 -0400</aside>
-      <article>
-        <p>I like getting unopionated feedback on the quality of the code I write.
-Sometimes I can get this from other developers but they tend to get annoyed
-being asked after every commit whether they consider it an approvement.</p>
-
-<p>There are a few utilities for Ruby codebases such as <a href="https://github.com/seattlerb/flay">flay</a>, <a href="https://github.com/seattlerb/flog">flog</a>, and
-<a href="https://github.com/bbatsov/rubocop">rubocop</a> as well as hosted services such as <a href="https://codeclimate.com/">Code Climate</a> that can help
-you identify chunks of code that can use some work.</p>
-
-<p>While not directly connected to the quality of the code, I also make use of
-<a href="http://yardoc.org/">yard</a> and <a href="https://github.com/colszowka/simplecov">simplecov</a> to assess documentation and test coverage of the
-codebases I work on.</p>
-
-<p>Using the tools means very little without some reference or understanding
-doesn&#39;t get you very far. For a while I&#39;ve been using flog and only comparing
-the numbers against other codebases I control. I finally googled around and
-found a <a href="http://jakescruggs.blogspot.com/2008/08/whats-good-flog-score.html">blog post</a> by a developer named Jake Scruggs from a while ago
-(2008).</p>
-
-<p>The blog post includes a rough table for assessing scores on individual methods
-reported from the flog utility. From what I can tell the ranges are still
-pretty accurate. I&#39;ve tweaked the descriptions a bit to fit my mental
-understanding a bit but the table is here:</p>
-
-<table><thead>
-<tr>
-<th>Method Score</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>0   - 10</td>
-<td>Awesome</td>
-</tr>
-<tr>
-<td>10  - 20</td>
-<td>Decent</td>
-</tr>
-<tr>
-<td>20  - 40</td>
-<td>Might need refactoring</td>
-</tr>
-<tr>
-<td>40  - 60</td>
-<td>Should probably review</td>
-</tr>
-<tr>
-<td>60  - 100</td>
-<td>Danger</td>
-</tr>
-<tr>
-<td>100 - 200</td>
-<td>Raise the alarm</td>
-</tr>
-<tr>
-<td>200+</td>
-<td>Seriously what are you doing!?</td>
-</tr>
-</tbody></table>
-
-<p>I wanted to extend this with a second table providing a scale for the overall
-method average with a more aggressive scale (an individual couple of methods
-can be justifiably complex but the overall code base shouldn&#39;t be riddled with
-them) but had a hard time working it out.</p>
-
-<p>I&#39;ve seen some awesome code bases with a score of 6.4 on average, some bad
-larger ones with 7.8. Even some mediocre ones around a score of 10.6.</p>
-
-<p>I guess I&#39;ll have to think more on it...</p>
-
-      </article>
-    </div>
-  
-    <div class='post'>
-      <h2><a href="/blog/2012/08/carrierwave-s3-and-filenames/">CarrierWave, S3 and Filenames</a></h1>
-      <aside>Posted at: 2012-08-09 16:00:57 -0400</aside>
-      <article>
-        <p>This is going to be a real quick post. I&#39;m using the &quot;carrier_wave&quot; gem with
-&quot;fog&quot; for one of my projects and found that when a file is stored on S3 the
-&quot;identifier&quot;, and &quot;filename&quot; methods return nil. I got around this issue in two
-separate ways neither of which I&#39;m particularly happy about.</p>
-
-<p>Outside of the uploader, you can use the File utility and the URL of the object
-to get the base filename like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="constant">Model</span>.asset.url)
-</pre></div>
-</div>
-
-<p>If you try and do this within the uploader itself like this:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.url)
-</pre></div>
-</div>
-
-<p>It will work, but not when creating additional versions such as thumbnails as
-the file hasn&#39;t actually been created yet so a URL can&#39;t be built and you&#39;ll
-get an error trying to perform File.basename(nil). You&#39;d need to go back up to
-the model and get the normal version&#39;s URL like so:</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="constant">File</span>.basename(<span class="predefined-constant">self</span>.model.asset.url)
-</pre></div>
-</div>
-
-<p>Now if you&#39;re trying to get the file name to build part of the store_dir,
-you&#39;ve just created an infinite loop! Ruby will be happy to tell you that the
-stack level too deep (SystemStackError). So ultimately how did I end up getting
-it into my store_dir?</p>
-<div class="CodeRay">
-  <div class="code"><pre><span class="predefined-constant">self</span>.model.attributes[<span class="string"><span class="delimiter">&quot;</span><span class="content">asset</span><span class="delimiter">&quot;</span></span>]
-</pre></div>
-</div>
-
-<p>The file name gets stored raw directly in the database, and thus you can pull
-it out by accessing the value directly without going through the accessor that
-get overridden by CarrierWave. I&#39;m pretty sure this is a bug, and will report
-it with example code and a test (as is appropriate for any bug report <em>hint</em>)
-as soon as my dead line has passed.</p>
 
       </article>
     </div>
