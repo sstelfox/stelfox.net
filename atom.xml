@@ -2,13 +2,120 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <id>https://stelfox.net/</id>
   <title>Stelfox Athen&amp;#xe6;um</title>
-  <updated>2015-02-23T17:49:13Z</updated>
+  <updated>2015-04-22T20:47:10Z</updated>
   <link rel="alternate" href="https://stelfox.net/"/>
   <link rel="self" href="https://stelfox.net/atom.xml"/>
   <author>
     <name>Sam Stelfox</name>
     <uri>https://stelfox.net</uri>
   </author>
+  <entry>
+    <id>tag:stelfox.net,2015-04-22:/blog/2015/04/ruby-code-quality-metrics/</id>
+    <title type="html">Ruby Code Quality Metrics</title>
+    <published>2015-04-22T20:47:10Z</published>
+    <updated>2015-04-22T20:47:10Z</updated>
+    <link rel="alternate" href="https://stelfox.net/blog/2015/04/ruby-code-quality-metrics/"/>
+    <content type="html">&lt;p&gt;I like getting unopionated feedback on the quality of the code I write.
+Sometimes I can get this from other developers but they tend to get annoyed
+being asked after every commit whether they consider it an approvement.&lt;/p&gt;
+
+&lt;p&gt;There are a few utilities for Ruby codebases such as &lt;a href="https://github.com/seattlerb/flay"&gt;flay&lt;/a&gt;, &lt;a href="https://github.com/seattlerb/flog"&gt;flog&lt;/a&gt;, and
+&lt;a href="https://github.com/bbatsov/rubocop"&gt;rubocop&lt;/a&gt; as well as hosted services such as &lt;a href="https://codeclimate.com/"&gt;Code Climate&lt;/a&gt; that can help
+you identify chunks of code that can use some work.&lt;/p&gt;
+
+&lt;p&gt;While not directly connected to the quality of the code, I also make use of
+&lt;a href="http://yardoc.org/"&gt;yard&lt;/a&gt; and &lt;a href="https://github.com/colszowka/simplecov"&gt;simplecov&lt;/a&gt; to assess documentation and test coverage of the
+codebases I work on.&lt;/p&gt;
+
+&lt;p&gt;Using the tools means very little without some reference or understanding
+doesn&amp;#39;t get you very far. For a while I&amp;#39;ve been using flog and only comparing
+the numbers against other codebases I control. I finally googled around and
+found a &lt;a href="http://jakescruggs.blogspot.com/2008/08/whats-good-flog-score.html"&gt;blog post&lt;/a&gt; by a developer named Jake Scruggs from a while ago
+(2008).&lt;/p&gt;
+
+&lt;p&gt;The blog post includes a rough table for assessing scores on individual methods
+reported from the flog utility. From what I can tell the ranges are still
+pretty accurate. I&amp;#39;ve tweaked the descriptions a bit to fit my mental
+understanding a bit but the table is here:&lt;/p&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Method Score&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;0   - 10&lt;/td&gt;
+&lt;td&gt;Awesome&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;10  - 20&lt;/td&gt;
+&lt;td&gt;Decent&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;20  - 40&lt;/td&gt;
+&lt;td&gt;Might need refactoring&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;40  - 60&lt;/td&gt;
+&lt;td&gt;Should probably review&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;60  - 100&lt;/td&gt;
+&lt;td&gt;Danger&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;100 - 200&lt;/td&gt;
+&lt;td&gt;Raise the alarm&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;200+&lt;/td&gt;
+&lt;td&gt;Seriously what are you doing!?&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;p&gt;I wanted to extend this with a second table providing a scale for the overall
+method average with a more aggressive scale (an individual couple of methods
+can be justifiably complex but the overall code base shouldn&amp;#39;t be riddled with
+them) but had a hard time working it out.&lt;/p&gt;
+
+&lt;p&gt;I&amp;#39;ve seen some awesome code bases with a score of 6.4 on average, some bad
+larger ones with 7.8. Even some mediocre ones around a score of 10.6.&lt;/p&gt;
+
+&lt;p&gt;I guess I&amp;#39;ll have to think more on it...&lt;/p&gt;
+</content>
+  </entry>
+  <entry>
+    <id>tag:stelfox.net,2015-04-13:/blog/2015/04/creating-an-empty-git-branch/</id>
+    <title type="html">Creating an Empty Git Branch</title>
+    <published>2015-04-14T00:47:40Z</published>
+    <updated>2015-04-14T00:47:40Z</updated>
+    <link rel="alternate" href="https://stelfox.net/blog/2015/04/creating-an-empty-git-branch/"/>
+    <content type="html">&lt;p&gt;Every now and then I find myself wanting to create a new empty branch in an
+existing repository. It&amp;#39;s useful for things such as [Github Pages][1] so you&amp;#39;re
+able to keep your content source in the master branch while only keeping the
+output in the gh-pages branch. I&amp;#39;ve also used it for testing a complete rewrite
+of a code base without the overhead of creating a new repo and copying access
+permissions.&lt;/p&gt;
+
+&lt;p&gt;This is a pretty straight forward trick to do. You create the brach by
+indicating you want the new branch to be an orphan by passing the &amp;#39;--orphan&amp;#39;
+flag like so:&lt;/p&gt;
+&lt;div class="CodeRay"&gt;
+  &lt;div class="code"&gt;&lt;pre&gt;git checkout --orphan NEW_BRANCH_NAME
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This leaves all the files in place but effectively uncommitted like you just
+initialized a new repository. Add and commit any files you&amp;#39;d like to keep then
+delete the rest, everything will still be preserved in the original branches.&lt;/p&gt;
+
+&lt;p&gt;With that done you should be able to easily switch just using a normal
+&amp;#39;checkout&amp;#39; between your normal branches and this new tree.&lt;/p&gt;
+
+&lt;p&gt;[1]:&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <id>tag:stelfox.net,2015-02-23:/blog/2015/02/unbuffered-pipe-filters/</id>
     <title type="html">Unbuffered Pipe Filters</title>
@@ -99,225 +206,6 @@ OUTPUT=$((0x${INPUT}))
 echo $OUTPUT
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:stelfox.net,2014-07-30:/blog/2014/07/spf-and-dkim-records-in-route-53/</id>
-    <title type="html">SPF &amp; DKIM Records in Route 53</title>
-    <published>2014-07-30T14:46:13Z</published>
-    <updated>2014-07-30T14:46:13Z</updated>
-    <link rel="alternate" href="https://stelfox.net/blog/2014/07/spf-and-dkim-records-in-route-53/"/>
-    <content type="html">&lt;p&gt;I&amp;#39;m going to do a more detailed post on emailing from Amazon&amp;#39;s infrastructure
-soon, but in the meantime I wanted to quickly throw out solutions too a couple
-of problems I encountered. These are all specific too Amazon&amp;#39;s Route 53, and
-most are user error (myself).&lt;/p&gt;
-
-&lt;h2&gt;SPF Invalid Characters or Format&lt;/h2&gt;
-
-&lt;p&gt;After generating my SPF record, I jumped into Route 53, created a new record
-pasted in my record, attempted to save and received the following message:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;The record set could not be saved because:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The Value field contains invalid characters or is in an invalid format.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;I was using the SPF record type at a time (see the next section) and assumed
-that I had messed up the format of my record in some way. I banged my head
-against the wall and through RFCs thoroughly before I found the solution...&lt;/p&gt;
-
-&lt;p&gt;Solution: Wrap your SPF records in quotation characters.&lt;/p&gt;
-
-&lt;h2&gt;No SPF Record Found / Validation Failure&lt;/h2&gt;
-
-&lt;p&gt;Since I have my DMARC policy in place (I&amp;#39;ll cover this in my email follow up),
-I receive daily domain reports from Google whenever something fails validation
-about my domain. After switching to Route 53 for DNS the &lt;code&gt;authresult&lt;/code&gt; component
-started showing up as fail for SPF.&lt;/p&gt;
-
-&lt;p&gt;Testing around a few online SPF validators indicated that none of them were
-able to see my new SPF record, and there had been plenty of time for it too
-propagate.&lt;/p&gt;
-
-&lt;p&gt;The SPF resource record type (RRTYPE 99) is available in Route 53 even though
-&lt;a href="https://tools.ietf.org/html/rfc6686#section-3.1"&gt;the record type has been deprecated&lt;/a&gt;. Not being familiar with this
-particular decision, I assumed I should be using it &lt;em&gt;instead&lt;/em&gt; of the TXT record
-I&amp;#39;ve used for every other domain, and it would be handled correctly or more
-intelligently.&lt;/p&gt;
-
-&lt;p&gt;Solution: Either switch the SPF record too a TXT record. or my preference
-duplicate it into a TXT record so you have both.&lt;/p&gt;
-
-&lt;h2&gt;Invalid DKIM record&lt;/h2&gt;
-
-&lt;p&gt;This one had me scratching my head for a while. This was my first time
-deploying DKIM on a domain that I was not running a Bind name server for.
-OpenDKIM is nice enough too generate a Bind record for you which works
-perfectly. It&amp;#39;s output looks like the following:&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;default._domainkey.example.tld.   IN      TXT     ( &amp;quot;v=DKIM1; k=rsa; t=y; s=email; &amp;quot;
-          &amp;quot;p=MIHfMA0GCSqGSIb3DQEBAQUAA4HNADCByQKBwQC2Cwpa/+Xhfkzn0QnyQoxRwoJPb+s51dIt9UtFLMlMFuYa/k3GBwZ7UWeyAaQJ3RibSzKV/YwgFuMrzyISrLNSuL2k1bQlQQG8nl23Mu9Mowcb+mV2/3G7roshK6kOLNA0IV2SBl8/0UoNZR/x7c1lzVtVqdj0vW1SsJzgGfbt4LGRvCPyjdg+SLpYtOd/Li4Y1pvHgSRKQRrklpKeJo&amp;quot;
-          &amp;quot;nJQ4+lXWqzYtuX9xdNH46ck2HUl56Ob4cy3/gYCJBWrAsCAwEAAQ==&amp;quot; )  ; ----- DKIM key default for example.tld
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Copying and pasting everything between the parens in the value field and
-pasting them into Route 53 works flawlessly. The catch? This won&amp;#39;t be treated
-as a single record, but three individual responses. None of which are complete
-and valid DKIM records.&lt;/p&gt;
-
-&lt;p&gt;This happens because Route 53&amp;#39;s value field treats newlines as separate
-records.&lt;/p&gt;
-
-&lt;p&gt;Solution: Turn it into one long string so it isn&amp;#39;t covering multiple lines
-right? Not quite...&lt;/p&gt;
-
-&lt;h2&gt;TXTRDATATooLong&lt;/h2&gt;
-
-&lt;p&gt;Combining the DKIM key into one string like so:&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;&amp;quot;v=DKIM1; k=rsa; t=y; s=email; p=MIHfMA0GCSqGSIb3DQEBAQUAA4HNADCByQKBwQC2Cwpa/+Xhfkzn0QnyQoxRwoJPb+s51dIt9UtFLMlMFuYa/k3GBwZ7UWeyAaQJ3RibSzKV/YwgFuMrzyISrLNSuL2k1bQlQQG8nl23Mu9Mowcb+mV2/3G7roshK6kOLNA0IV2SBl8/0UoNZR/x7c1lzVtVqdj0vW1SsJzgGfbt4LGRvCPyjdg+SLpYtOd/Li4Y1pvHgSRKQRrklpKeJonJQ4+lXWqzYtuX9xdNH46ck2HUl56Ob4cy3/gYCJBWrAsCAwEAAQ==&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;And attempting to save results in the following error message:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Invalid Resource Record: FATAL problem: TXTRDATATooLong encountered at ...&lt;snip&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Now we&amp;#39;re left in a tricky spot. After some research the reason behind this is
-clear, and makes sense. Though it is another poor usability bug in the way
-Amazon&amp;#39;s Route 53 behaves. Individual DNS UDP packets are limited too 255
-characters for their response.&lt;/p&gt;
-
-&lt;p&gt;Too properly deliver records longer than that DNS servers are supposed to break
-up the response into chunks. Properly implemented clients combine these chunks
-together (with no spaces, newlines or other characters added). What this means
-is that the record can be broken up transparently behind the scenes anywhere in
-the message and the client will put it back together correctly.&lt;/p&gt;
-
-&lt;p&gt;The Route 53 entry form won&amp;#39;t handle this for you though, and in hindsight it
-looks like Bind might not do it for you though I suspected that was more for
-readability of zone files rather than a technical limitation (and I haven&amp;#39;t
-tested whether Bind is intelligent enough too handle just a long string).&lt;/p&gt;
-
-&lt;p&gt;Solution: Take the original output of Bind between the parens and just remove
-the newline characters, leave the quotation marks and spaces between the
-sections like the following sample and you&amp;#39;ll be golden:&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;&amp;quot;v=DKIM1; k=rsa; t=y; s=email; &amp;quot; &amp;quot;p=MIHfMA0GCSqGSIb3DQEBAQUAA4HNADCByQKBwQC2Cwpa/+Xhfkzn0QnyQoxRwoJPb+s51dIt9UtFLMlMFuYa/k3GBwZ7UWeyAaQJ3RibSzKV/YwgFuMrzyISrLNSuL2k1bQlQQG8nl23Mu9Mowcb+mV2/3G7roshK6kOLNA0IV2SBl8/0UoNZR/x7c1lzVtVqdj0vW1SsJzgGfbt4LGRvCPyjdg+SLpYtOd/Li4Y1pvHgSRKQRrklpKeJo&amp;quot; &amp;quot;nJQ4+lXWqzYtuX9xdNH46ck2HUl56Ob4cy3/gYCJBWrAsCAwEAAQ==&amp;quot;
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Hope this helps someone else!&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <id>tag:stelfox.net,2014-07-22:/blog/2014/07/unregistering-from-whisperpush-after-flashing-a-new-rom/</id>
-    <title type="html">Unregistering From WhisperPush After Flashing a New ROM</title>
-    <published>2014-07-23T01:54:59Z</published>
-    <updated>2014-07-23T01:54:59Z</updated>
-    <link rel="alternate" href="https://stelfox.net/blog/2014/07/unregistering-from-whisperpush-after-flashing-a-new-rom/"/>
-    <content type="html">&lt;p&gt;I&amp;#39;ve been playing around with my Nexus 5 lately. It was quickly rooted and I
-began playing with various ROMs that had been pre-built for the Nexus 5. My
-first stop was the &lt;a href="http://www.cyanogenmod.org/"&gt;CyanogenMod&lt;/a&gt;. Since I&amp;#39;d last used CyanogenMod they added
-a built-in framework that provides &lt;a href="https://whispersystems.org/blog/cyanogen-integration/"&gt;transparent text&lt;/a&gt; &lt;a href="http://www.cyanogenmod.org/blog/whisperpush-secure-messaging-integration"&gt;message
-encryption&lt;/a&gt; called WhisperPush.&lt;/p&gt;
-
-&lt;p&gt;WhisperPush is an implementation of &lt;a href="http://thoughtcrime.org/"&gt;Moxie Marlinspike&amp;#39;s&lt;/a&gt; highly respected
-TextSecure and I was very excited at the possibility of using it. I immediately
-signed up for the service.&lt;/p&gt;
-
-&lt;p&gt;After a day of use I found CyanogenMod far too unstable too use on my primary
-device. It locked up multiple times the first day and mobile data simply
-wouldn&amp;#39;t work all day. I promptly formatted and flashed my phone, I haven&amp;#39;t
-settled on a new ROM but that&amp;#39;s not what this post is about.&lt;/p&gt;
-
-&lt;p&gt;It occurred to me after flashing the phone I was still subscribed to
-WhisperPush. If anyone that texts me was signed up as well. I&amp;#39;d never receive
-even an encrypted blob, it would just silently fail.&lt;/p&gt;
-
-&lt;p&gt;Searching around I found there is very little information on it, and no
-official way to unregister, especially after you&amp;#39;ve wiped your device and no
-longer have your credentials. Ultimately I found a fairly easy solution, just
-re-register and perform the backdoor steps too de-register.&lt;/p&gt;
-
-&lt;p&gt;I wiped my phone again and installed a new copy of the CyanogenMod nightly.
-Booted it up and re-enabled WhisperPush. It didn&amp;#39;t even note that my number was
-registered in the past.&lt;/p&gt;
-
-&lt;p&gt;I found the solution somewhere in the CyanogenMod forums (though I lost the
-link, and I&amp;#39;m now too lazy to go find it again). You can unregister by
-performing the following steps:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Connect your computer with ADB too the phone and pair the computer with the
-phone.&lt;/li&gt;
-&lt;li&gt;Enable developer options by opening the system settings, choosing &amp;#39;About
-phone&amp;#39; and clicking on the &amp;#39;Build number&amp;#39; about 7 times (it will start
-counting down).&lt;/li&gt;
-&lt;li&gt;Open up the developer options found in the root of the system settings menu
-and enable root access for &amp;#39;Apps and ADB&amp;#39;.&lt;/li&gt;
-&lt;li&gt;On the computer use &lt;code&gt;adb shell&lt;/code&gt; to get a shell on the device.&lt;/li&gt;
-&lt;li&gt;Switch to root using the &lt;code&gt;su&lt;/code&gt; command.&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Run the following command too view the WhisperPush internal settings:&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;cat /data/user/0/org.whispersystems.whisperpush/shared_prefs/org.whispersystems.whisperpush_preferences.xml`
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Note down the value for &lt;code&gt;pref_registered_number&lt;/code&gt; (this should be your phone
-number with a preceeding &amp;#39;+&amp;#39;) and &lt;code&gt;pre_push_password&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Exit the shell.&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Finally too unregister we need too make a DELETE request against the
-WhisperPush API. The classic HTTP swiss army knife &lt;code&gt;curl&lt;/code&gt; is going to help us
-on this front. Run the following command on any linux computer with curl
-installed, replacing the registered number and registered password with the
-value you recorded earlier.&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;curl -v -k -X DELETE --basic --user ${pref_registered_number}:${pre_push_password} https://whisperpush.cyanogenmod.org/v1/accounts/gcm
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;Be sure too include the &amp;#39;+&amp;#39; in your pref_registered_number. You should end up
-with a status code of 204. The output will look something like the following
-(credentials removed).&lt;/p&gt;
-&lt;div class="CodeRay"&gt;
-  &lt;div class="code"&gt;&lt;pre&gt;* About to connect() to whisperpush.cyanogenmod.org port 443 (#0)
-*   Trying 54.201.5.27...
-* Connected to whisperpush.cyanogenmod.org (54.201.5.27) port 443 (#0)
-* Initializing NSS with certpath: sql:/etc/pki/nssdb
-* skipping SSL peer certificate verification
-* SSL connection using TLS_DHE_RSA_WITH_AES_128_CBC_SHA
-* Server certificate:
-*   subject: OU=Operations,O=&amp;quot;Cyanogen, Inc.&amp;quot;,E=ops@cyngn.com,C=US,ST=Washington,L=Seattle,CN=whisperpush.cyanogenmod.org
-*   start date: Nov 26 05:39:18 2013 GMT
-*   expire date: Nov 24 05:39:18 2023 GMT
-*   common name: whisperpush.cyanogenmod.org
-*   issuer: E=ops@cyngn.com,CN=Authority,OU=Operations,O=&amp;quot;Cyanogen, Inc.&amp;quot;,L=Seattle,ST=Washington,C=US
-* Server auth using Basic with user '${pref_registered_number}'
-&amp;gt; DELETE /v1/accounts/gcm HTTP/1.1
-&amp;gt; Authorization: Basic ${encoded credentials}
-&amp;gt; User-Agent: curl/7.29.0
-&amp;gt; Host: whisperpush.cyanogenmod.org
-&amp;gt; Accept: */*
-&amp;gt; 
-&amp;lt; HTTP/1.1 204 No Content
-&amp;lt; Server: nginx/1.1.19
-&amp;lt; Date: Wed, 23 Jul 2014 01:45:25 GMT
-&amp;lt; Connection: keep-alive
-&amp;lt; 
-* Connection #0 to host whisperpush.cyanogenmod.org left intact
-&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;
-
-&lt;p&gt;I don&amp;#39;t have any way too check that I&amp;#39;m unregistered but it seems too have
-worked. Here is hoping this helps some else out in the future.&lt;/p&gt;
 </content>
   </entry>
 </feed>
