@@ -1,14 +1,11 @@
 ---
-title: 'Taking Back the Sky'
-created_at: 2013-12-04 13:18:15 -0500
-updated_at: 2013-12-04 13:18:15 -0500
-kind: article
-type: post
-layout: blog_post
+date: 2013-12-04 13:18:15 -0500
+slug: "taking-back-the-sky"
 tags:
 - skyjack
 - drones
 - news
+title: "Taking Back the Sky"
 ---
 
 During my daily review of various new sources I came across one particular

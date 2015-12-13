@@ -1,13 +1,10 @@
 ---
-created_at: 2009-11-04 21:36:45+00:00
-updated_at: 2009-11-04 21:36:45+00:00
-type: post
-kind: article
-layout: blog_post
-title: 'Image Crawler Meets rm -f *'
+date: 2009-11-04 21:36:45+00:00
+slug: "image-crawler-meets-rm-f"
 tags:
 - linux
 - projects
+title: "Image Crawler Meets rm -f *"
 ---
 
 So for giggles I wrote a simple web crawler that archived any image it found on
@@ -59,9 +56,8 @@ buffer... Ok-day, lets try this again 'ls -l | wc -l'. After about five minutes
 it came back again with just the number.
 
 > 177654
- 
+
 Whoa... I wasn't expecting that... So how do I get around it... 'find . | xargs
 rm -f' and.... WOO Victory! The directory is clean and happy again... Now i'll
 just have to figure out how to cut down the number of files, or at the very
 least organize them into more managable chunks...
-

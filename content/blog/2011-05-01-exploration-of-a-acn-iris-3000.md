@@ -1,9 +1,6 @@
 ---
-created_at: 2011-05-01 15:48:08+00:00
-updated_at: 2011-05-01 15:48:08+00:00
-type: post
-kind: article
-layout: blog_post
+date: 2011-05-01 15:48:08+00:00
+slug: "exploration-of-a-acn-iris-3000"
 title: 'Exploration of an ACN Iris 3000'
 ---
 
@@ -77,4 +74,3 @@ vulnerabilities or were only useful with valid credentials.
 The basic dictionary attack failed and I started up a more comprehensive one. I
 could easily start brute forcing this but it would take a very long time,
 especially if the company realized that a weak password wasn't cutting it.
-

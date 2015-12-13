@@ -1,13 +1,10 @@
 ---
-created_at: 2012-07-22 03:07:42+00:00
-updated_at: 2012-07-22 03:07:42+00:00
-title: 'Thoughts on IPv6 Security and Mitigation'
-type: post
-kind: article
-layout: blog_post
+date: 2012-07-22 03:07:42+00:00
+stub: "thoughts-on-ipv6-security-and-mitigation"
 tags:
 - networking
 - system-administration
+title: "Thoughts on IPv6 Security and Mitigation"
 ---
 
 I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric
@@ -82,7 +79,7 @@ I use Fedora 17 and it took me a while to figure out how to enable privacy
 addresses the "Red Hat" way. You can easily do it generally on any Linux system
 with sysctl. Just add the following to your /etc/sysctl.conf and reload sysctl:
 
-```
+```ini
 net.ipv6.conf.all.use_tempaddr = 2
 net.ipv6.conf.default.use_tempaddr = 2
 ```
@@ -93,7 +90,7 @@ configuration through various interface configuration files living in
 privacy addresses with the following line for example in
 "/etc/sysconfig/network-scripts/ifcfg-eth0":
 
-```
+```bash
 IPV6_PRIVACY="rfc3041"
 ```
 
@@ -107,4 +104,3 @@ machine register it's privacy address with a local IDS/IPS with an expiration,
 and to automatically trigger the IDS/IPS whenever a new connection is made to
 an expired privacy address. It would almost be like a free honey pot on your
 own network.
-

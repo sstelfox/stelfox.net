@@ -1,14 +1,11 @@
 ---
-title: Keep Your Gems Updated
-created_at: 2012-11-27 14:17:00 -0500
-updated_at: 2012-11-27 14:17:00 -0500
-type: post
-kind: article
-layout: blog_post
+dated: 2012-11-27 14:17:00 -0500
+slug: "keep-your-gems-updated"
 tags:
 - ruby
 - security
 - updates
+title: "Keep Your Gems Updated"
 ---
 
 I recently went back through my backups recently and found quite a few old
@@ -53,4 +50,3 @@ Since I didn't actually go through all of the gems I don't know for sure that
 my projects are in anyway more secure, faster, or more stable but I can't
 imagine they're in a worse state. If you have test coverage on your projects
 you should try and update the gems and see for yourself.
-

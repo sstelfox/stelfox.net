@@ -1,13 +1,10 @@
 ---
-created_at: 2009-01-28 21:54:08+00:00
-updated_at: 2009-01-28 21:54:08+00:00
-type: post
-kind: article
-title: 'The War Between the Text Editors and the IDEs'
-layout: blog_post
+date: 2009-01-28 21:54:08+00:00
+slug: "the-war-between-the-text-editors-and-the-ideas"
 tags:
 - development
 - ides
+title: "The War Between the Text Editors and the IDEs"
 ---
 
 Long has been the battle of programming in a text editor and IDEs. Both sides
@@ -63,4 +60,3 @@ error vim can jump straight to the line the error is on.
 
 I haven't even begun to cover this war but I'm fairly tired of typing. What my
 verdict? Why not get the best of both worlds and just use vim or emacs?
-

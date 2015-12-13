@@ -1,14 +1,11 @@
 ---
-title: Auditing Heroku SSH Keys
-created_at: 2012-11-26 10:18:00 -0500
-updated_at: 2012-11-26 10:18:00 -0500
-type: post
-kind: article
-layout: blog_post
+dated: 2012-11-26 10:18:00 -0500
+slug: "auditing-heroku-ssh-keys"
 tags:
 - heroku
 - ruby
 - security
+title: "Auditing Heroku SSH Keys"
 ---
 
 A good friend of mine recently left the organization I work for and the task of
@@ -16,8 +13,6 @@ resetting our passwords and auditing credentials fell on me. Since we use
 [Heroku][1] for our development platform I needed to not only reset the
 credentials for the web portion (which conveniently also handles resetting the
 API key) but also revoke any SSH keys he may have added to access it.
-
-[1]: https://www.heroku.com/
 
 Sadly Heroku does not seem to provide any web interface that I could find for
 examining what keys were associated with the account. Searching for this
@@ -41,3 +36,4 @@ have been revoked long ago. One command and our applications were safe from
 mischief, though I know my former associate wouldn't abuse that privilege
 beyond perhaps pointing out the security flaw I'd allowed.
 
+[1]: https://www.heroku.com/

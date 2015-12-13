@@ -1,13 +1,10 @@
 ---
-created_at: 2010-02-04 17:44:28+00:00
-updated_at: 2010-02-04 17:44:28+00:00
-type: post
-kind: article
-layout: blog_post
-title: 'Project Hermes: Broad Overview'
+date: 2010-02-04 17:44:28+00:00
+slug: "project-hermes-broad-overview"
 tags:
 - ham-radio
 - project-hermes
+title: "Project Hermes: Broad Overview"
 ---
 
 For the past few months, the little free time that I haven't spent with friends
@@ -15,10 +12,12 @@ or playing with my personal servers has been put towards working out the
 details of a rather ambitious plan for my car. The goal? Set my car up as a
 mobile internet relay for emergency use. I've named this project Hermes. My
 naming scheme for all of my projects is based off mythological figures, folk
-lores and beasts. It's a nice broad name set and I can usually associate the
-goal of the project with a well known (or not) story. Hermes, messenger of the
-gods, patron of boundaries and those that cross them. Hermes often helped
-travelers have a safe and easy journey. Perfect.
+lores and beasts.
+
+It's a nice broad name set and I can usually associate the goal of the project
+with a well known (or not) story. Hermes, messenger of the gods, patron of
+boundaries and those that cross them. Hermes often helped travelers have a safe
+and easy journey. Perfect.
 
 Now on to some details, what do I want out of this project? What are my
 requirements? I want to be able to quickly establish reliable mobile short
@@ -88,4 +87,3 @@ should be enough to power a communications hub for an extended period of time.
 So that's where I'm at. I've tentatively started pricing out solar panels and
 in-car ham radios for the project. Stay tuned! This is going to be an
 interesting ride...
-

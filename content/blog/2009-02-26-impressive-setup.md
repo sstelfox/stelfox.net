@@ -1,14 +1,11 @@
 ---
-created_at: 2009-02-26 20:10:34+00:00
-updated_at: 2009-02-26 20:10:34+00:00
-type: post
-kind: article
-layout: blog_post
-title: 'Impressive Setup...'
+date: 2009-02-26 20:10:34+00:00
+slug: "impressive-setup"
 tags:
 - development-environment
 - php
 - voom
+title: 'Impressive Setup...'
 ---
 
 So I joined a project named VOOM (Very Open Object Model). It's a group of PHP
@@ -30,4 +27,3 @@ automated testing, wiki, coding templates.
 Most of that was done by one person in the group, Nathan Rixham. I've never
 worked in any setup that... complete. Due too lack of time and creative
 inspiration I still haven't though I'm really looking forward to it.
-

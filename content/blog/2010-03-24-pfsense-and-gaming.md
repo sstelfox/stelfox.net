@@ -1,14 +1,11 @@
 ---
-created_at: 2010-03-24 14:18:00+00:00
-updated_at: 2010-03-24 14:18:00+00:00
-type: post
-kind: article
-layout: blog_post
-title: 'pfSense and Gaming'
+date: 2010-03-24 14:18:00+00:00
+slug: "pfsense-and-gaming"
 tags:
 - gaming
 - networking
 - pfsense
+title: "pfSense and Gaming"
 ---
 
 Previously while reviewing open source firewall distributions (which I never
@@ -70,4 +67,3 @@ the other computer trys to initiate the connection then it will just time out.
 It definitely wasn't related to firewall rules (I set an allow all on both
 interfaces and turned off the firewall on both computers). Switching back to
 auto-nat'ing resolved the issue.
-

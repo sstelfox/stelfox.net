@@ -1,15 +1,12 @@
 ---
-title: Ruby's Option Parser - a More Complete Example
-created_at: 2012-12-02 22:59:00 -0500
-updated_at: 2012-12-02 22:59:00 -0500
-type: post
-kind: article
-layout: blog_post
+date: 2012-12-02 22:59:00 -0500
+slug: "rubys-option-parser-a-more-complete-example"
 tags:
 - ruby
 - cli
+title: "Ruby's Option Parser - a More Complete Example"
 ---
-    
+
 Recently while writing a Ruby program I needed to parse some command line
 options. Helpfully Ruby provides a module named OptionParser to make this easy.
 I found a few parts of the documentation ambiguous and a few others down right
@@ -61,7 +58,7 @@ module Example
     @@config.list = []
     @@config.optional = nil
     @@config.verbose = false
-    
+
     def self.config
       yield(@@config) if block_given?
       @@config
@@ -157,4 +154,3 @@ Example::Configuration.validate!
 require "json"
 puts JSON.pretty_generate(Example::Configuration.to_hash)
 ```
-

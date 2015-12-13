@@ -1,14 +1,11 @@
 ---
-created_at: 2013-09-19 20:00:57+00:00
-updated_at: 2013-09-19 20:00:57+00:00
-title: 'Talking about Laboratory B'
-type: post
-kind: article
-layout: blog_post
+date: 2013-09-19 20:00:57+00:00
+slug: "talking-about-laboratory-b"
 tags:
 - hackerspace
 - interview
 - youtube
+title: "Talking about Laboratory B"
 ---
 
 Recently Justin England and myself were interviewed on a local television

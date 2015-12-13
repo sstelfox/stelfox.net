@@ -1,14 +1,11 @@
 ---
-created_at: 2012-08-09 20:00:57+00:00
-updated_at: 2012-08-09 20:00:57+00:00
-title: 'CarrierWave, S3 and Filenames'
-type: post
-kind: article
-layout: blog_post
+date: 2012-08-09 20:00:57+00:00
+slug: "carrierwave-s3-and-filenames"
 tags:
 - development
 - ruby
 - websites
+title: "CarrierWave, S3 and Filenames"
 ---
 
 This is going to be a real quick post. I'm using the "carrier_wave" gem with
@@ -51,5 +48,4 @@ The file name gets stored raw directly in the database, and thus you can pull
 it out by accessing the value directly without going through the accessor that
 get overridden by CarrierWave. I'm pretty sure this is a bug, and will report
 it with example code and a test (as is appropriate for any bug report *hint*)
-as soon as my dead line has passed. 
-
+as soon as my dead line has passed.

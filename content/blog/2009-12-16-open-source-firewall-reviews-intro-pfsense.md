@@ -1,10 +1,6 @@
 ---
-created_at: 2009-12-16 15:58:15+00:00
-updated_at: 2009-12-16 15:58:15+00:00
-type: post
-kind: article
-layout: blog_post
-title: 'Open Source Firewall Reviews: Intro & pfSense'
+date: 2009-12-16 15:58:15+00:00
+slug: "open-source-firewall-reviews-intro-pfsense"
 tags:
 - firewall
 - gaming
@@ -12,6 +8,7 @@ tags:
 - networking
 - pfsense
 - traffic-shaping
+title: 'Open Source Firewall Reviews: Intro & pfSense'
 ---
 
 Every now and then I like to refresh parts of my home network. New technology
@@ -108,4 +105,3 @@ troubleshoot my home network all the time due to buggy software when I'm trying
 to relax.
 
 [1]: http://pfsense.org/
-

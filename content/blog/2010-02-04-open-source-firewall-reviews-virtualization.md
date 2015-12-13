@@ -1,13 +1,10 @@
 ---
-created_at: 2010-02-04 16:56:17+00:00
-updated_at: 2010-02-04 16:56:17+00:00
-type: post
-kind: article
-layout: blog_post
-title: 'Open Source Firewall Reviews: Virtualization'
+date: 2010-02-04 16:56:17+00:00
+slug: "open-source-firewall-reviews-virtualization"
 tags:
 - firewall
 - virtualization
+title: "Open Source Firewall Reviews: Virtualization"
 ---
 
 So I hit a snag while attempting to review the open source firewalls on my
@@ -32,4 +29,3 @@ m0n0wall was not an option right off the bat. I couldn't even get the ISO to
 boot to do the installation. pfSense worked like a charm, no fuss at all. I
 still have yet to look at how the others are at dealing with being virtualized.
 Stay tuned.
-

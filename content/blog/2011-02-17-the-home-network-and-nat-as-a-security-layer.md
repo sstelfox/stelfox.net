@@ -1,9 +1,6 @@
 ---
-created_at: 2011-02-17 18:15:02+00:00
-updated_at: 2011-02-17 18:15:02+00:00
-type: post
-kind: article
-layout: blog_post
+date: 2011-02-17 18:15:02+00:00
+slug: "the-home-network-and-nat-as-a-security-layer"
 title: 'The Home Network and NAT as a Security Layer'
 ---
 
@@ -64,4 +61,3 @@ implications of everything involving it. New security models need to be created
 and lots of of research needs to be done in this area still. In the mean time I
 suspect a lot of malware and viruses will start making use of IPv6 and how
 relatively unknown it really is.
-

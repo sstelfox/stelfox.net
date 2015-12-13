@@ -1,13 +1,10 @@
 ---
-created_at: 2010-06-18 16:39:56+00:00
-updated_at: 2010-06-18 16:39:56+00:00
-type: post
-kind: article
-layout: blog_post
-title: 'Nice Update'
+date: 2010-06-18 16:39:56+00:00
+slug: "nice-update"
 tags:
 - updates
 - wordpress
+title: 'Nice Update'
 ---
 
 I know I don't update this blog as often as I'd like and I have had a lot going
@@ -19,4 +16,3 @@ really come with any other benefits.
 This time however I was greeted with a clean refreshing theme. I've got to give
 it to the WordPress UI designers on this one. It is simple and that's all that
 I need.
-

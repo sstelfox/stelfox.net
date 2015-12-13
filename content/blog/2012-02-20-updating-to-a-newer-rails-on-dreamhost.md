@@ -1,10 +1,6 @@
 ---
-created_at: 2012-02-20 04:13:48+00:00
-updated_at: 2012-02-20 04:13:48+00:00
-title: 'Updating to a Newer Rails on DreamHost'
-type: post
-kind: article
-layout: blog_post
+date: 2012-02-20 04:13:48+00:00
+slug: "updating-to-a-newer-rails-on-dreamhost"
 tags:
 - development
 - dreamhost
@@ -16,6 +12,7 @@ tags:
 - rvm
 - updates
 - websites
+title: "Updating to a Newer Rails on DreamHost"
 ---
 
 I've started getting heavily into Ruby on Rails development and wanted to use
@@ -47,7 +44,7 @@ you have already set it up but you'll probably need pay attention to the last
 part to ensure it is setup properly.
 
 So what will this guide get you?
-	
+
 * A version of Rails that is 8 minor revisions newer (3.0.11 vs 3.0.3). This
   includes several security fixes.
 * An isolated gemset from other applications, preventing nightmare gem
@@ -57,7 +54,7 @@ So what will this guide get you?
 
 SSH into your DreamHost user, open up .bashrc file and add this:
 
-```sh
+```bash
 export PATH=$HOME/.gems/bin:$HOME/opt/bin:$PATH
 export GEM_HOME=$HOME/.gems
 export GEM_PATH="$GEM_HOME"
@@ -68,13 +65,13 @@ alias gem="nice -n19 ~/opt/bin/gem"
 
 And .bash_profile:
 
-```sh
+```bash
 source ~/.bashrc
 ```
 
 Run the following commands to setup the environment for the upcoming steps:
 
-```sh
+```
 [dreamhost]$ mkdir ~/{src,opt}
 [dreamhost]$ cd src
 [dreamhost]$ wget http://production.cf.rubygems.org/rubygems/rubygems-1.3.7.tgz
@@ -89,7 +86,7 @@ Run the following commands to setup the environment for the upcoming steps:
 At this point you're ready to start using the rubygems version you just
 installed.
 
-```sh    
+```
 [dreamhost]$ gem -v
 1.3.6
 [dreamhost]$ source ~/.bash_profile
@@ -99,7 +96,7 @@ installed.
 
 You'll want to update to the latest version locally:
 
-```sh    
+```
 [dreamhost]$ gem update --system
 Updating RubyGems
 Updating rubygems-update
@@ -121,14 +118,14 @@ Because I don't need ruby documentation in my server environment I disable the
 installation and generation by default by creating a ~/.gemrc file and
 populating it like so:
 
-```yaml    
+```yaml
 install: --no-rdoc --no-ri
 update: --no-rdoc --no-ri
 ```
 
 Install bundler and rake locally.
 
-```sh
+```
 [dreamhost]$ gem install bundler
 Fetching: bundler-1.0.22.gem (100%)
 Successfully installed bundler-1.0.22
@@ -145,14 +142,14 @@ Gemfile you can prevent dependency hell when you're updating gems.
 
 Instead we can setup RVM to handle gemsets.
 
-```sh    
-[dreamhost]$ bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
+```bash
+bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
 ```
 
 You'll need to source your .bash_profile file again and make sure that RVM is
 up and working like so:
 
-```sh    
+```
 [dreamhost]$ source ~/.bash_profile
 [dreamhost]$ rvm -v
 
@@ -165,7 +162,7 @@ want to differ from my instructions but I'll tell you now it won't work.
 DreamHost as of this tutorial was using ruby-1.8.7-p72 you can check this by
 running the following:
 
-```sh    
+```
 [dreamhost]$ ruby -v
 ruby 1.8.7 (2008-08-11 patchlevel 72) [x86_64-linux]
 ```
@@ -180,7 +177,7 @@ welcome to completely disregard this warning as well.
 
 So lets go ahead and install the appropriate ruby version through RVM:
 
-```sh    
+```
 [dreamhost]$ rvm install ruby-1.8.7-p72
 [dreamhost]$ rvm use --default ruby-1.8.7-p72
 [dreamhost]$ ruby -v
@@ -204,7 +201,7 @@ intend to put up a guide for that as soon as I can get that environment stable.
 We'll start by creating a the domain folder for it and setting up an .rvmrc
 file with a unique gemset for the project.
 
-```sh    
+```
 [dreamhost]$ mkdir ~/example.com
 [dreamhost]$ cd ~/example.com
 [dreamhost]$ rvm --create --rvmrc ruby-1.8.7-p72@example_com
@@ -216,7 +213,7 @@ yes you want to trust it. You trust yourself don't you?
 
 Verify we're inside our gemset real quick:
 
-```sh    
+```
 [dreamhost]$ rvm gemset list
 
 gemsets for ruby-1.8.7-p72 (found in /home//.rvm/gems/ruby-1.8.7-p72)
@@ -227,7 +224,7 @@ gemsets for ruby-1.8.7-p72 (found in /home//.rvm/gems/ruby-1.8.7-p72)
 Perfect the arrow is next to our gemset. Lets install rails 3.0.11 (DreamHost
 currently provides version 3.0.3).
 
-```sh    
+```
 [dreamhost]$ gem install rails -v 3.0.11
 ```
 
@@ -237,20 +234,20 @@ water and come back.
 
 Great! You're back lets make sure we're running the right version of rails now:
 
-```sh    
+```
 [dreamhost]$ rails -v
 Rails 3.0.11
 ```
 
 Voila! Lets get that project going with a mysql backend:
 
-```sh    
+```
 [dreamhost]$ rails new . -d mysql
 ```
 
 And because it's good to do lets get this under version control.
 
-```sh    
+```
 [dreamhost]$ git init
 Initialized empty Git repository in /home/<username>/example.com/.git/
 [dreamhost]$ git add .
@@ -265,19 +262,19 @@ to get it out of the way now.
 Add the following line to the Gemfile anywhere in the main part of the config,
 I prefer near the top:
 
-```sh    
+```
 gem 'rack', '1.2.1'
 ```
 
 Then we'll re-bundle to make sure we have it:
 
-```sh    
+```
 [dreamhost]$ bundle install
 ```
 
 You can make sure your project is happy by popping open the rails console.
 
-```sh
+```
 [dreamhost]$ rails console
 Loading development environment (Rails 3.0.11)
 1.8.7 :001 >
@@ -286,7 +283,7 @@ Loading development environment (Rails 3.0.11)
 Woo! That right there is Rails 3.0.11 working on DreamHost. Since it's working
 lets add another commit:
 
-```sh
+```
 [dreamhost]$ git commit -a -m "Added rack 1.2.1 and tested for working rails 3.0.11"
 ```
 
@@ -299,8 +296,7 @@ development and testing as it means I don't have to run another service on my
 development machines. In that light this is what my config/database.yml looks
 like:
 
-    
-```yml
+```yaml
 development:
   adapter: sqlite3
   encoding: utf8
@@ -325,8 +321,7 @@ production:
 We'll need to add the sqlite3 gem for the test and development environment, add
 this to the end of your Gemfile:
 
-    
-```yml
+```yaml
 group :development, :test do
   gem 'sqlite3'
 end
@@ -334,13 +329,13 @@ end
 
 And once again run:
 
-```sh
+```
 [dreamhost]$ bundle install
 ```
 
 Lets make sure our development and then production databases are happy:
 
-```sh    
+```
 [dreamhost]$ rake db:migrate
 [dreamhost]$ sqlite3 db/development.sqlite3
 SQLite version 3.5.9
@@ -364,7 +359,7 @@ mysql>; quit
 
 Lets commit one last time now that we have some schema:
 
-```  
+```
 [dreamhost]$ git add .
 [dreamhost]$ git commit -m "Configured database"
 ```
@@ -384,7 +379,7 @@ install in the production environment to make sure we have all the dependencies
 we need for the live site. This unfortunately will need to be done everytime
 you manipulate your gem sets:
 
-```sh
+```
 [dreamhost]$ RAILS_ENV=production bundle install
 ```
 
@@ -400,4 +395,3 @@ site. Note that the "About your application's environment" link will not work
 in the production environment, this is intentional and expected for Rails.
 
 This is where I leave you to develop your site. Good luck!
-

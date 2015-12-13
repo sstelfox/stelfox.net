@@ -1,13 +1,10 @@
 ---
-created_at: 2012-08-07 14:09:33+00:00
-updated_at: 2012-08-07 14:09:33+00:00
-title: 'Adding a table prefix to DataMapper tables'
-type: post
-kind: article
-layout: blog_post
+date: 2012-08-07 14:09:33+00:00
+slug: "adding-a-table-prefix-to-datamapper-tables"
 tags:
 - development
 - ruby
+title: "Adding a table prefix to DataMapper tables"
 ---
 
 So I recently encountered a situation where I needed to define a prefix on the
@@ -107,4 +104,3 @@ Notice the third line? Specifically the name of the table? It's named exactly
 as it would have been except now it has a prefix of "source_".
 
 Hope this saves someone else some trouble. Cheers!
-

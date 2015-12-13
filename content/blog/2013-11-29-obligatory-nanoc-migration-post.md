@@ -1,14 +1,11 @@
 ---
-title: 'Obligatory Nanoc Migration Post'
-created_at: 2013-11-29 09:38:54 -0500
-updated_at: 2013-11-29 09:38:54 -0500
-kind: article
-published: false
-type: post
-layout: blog_post
+date: 2013-11-29 09:38:54 -0500
+draft: true
+stub: "obligatory-nanoc-migration-post"
 tags:
 - nanoc
 - websites
+title: "Obligatory Nanoc Migration Post"
 ---
 
 It's been a couple weeks since I migrated my site from my own personal static
@@ -22,4 +19,3 @@ while, and importing content from my personal wiki (was previously wikipedia)
 and documentation as I wasn't pleased with it's performance.
 
 [1]: http://nanoc.ws/
-

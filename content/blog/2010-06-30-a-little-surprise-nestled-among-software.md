@@ -1,9 +1,6 @@
 ---
-created_at: 2010-06-30 16:11:24+00:00
-updated_at: 2010-06-30 16:11:24+00:00
-type: post
-kind: article
-layout: blog_post
+date: 2010-06-30 16:11:24+00:00
+slug: "a-little-surprise-nestled-among-software"
 title: 'A Little Surprise Nestled Among Software'
 ---
 
@@ -120,4 +117,3 @@ After enabling the policy and a couple of reboots later and the traffic was
 gone. I personally despise any company that installs anything other than what
 you want. It's just bad practice. If you have to hide it, your users probably
 don't want it. Don't piss off your user base, that's just bad for business.
-

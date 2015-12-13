@@ -1,9 +1,6 @@
 ---
-created_at: 2011-02-17 19:04:53+00:00
-updated_at: 2011-02-17 19:04:53+00:00
-type: post
-kind: article
-layout: blog_post
+date: 2011-02-17 19:04:53+00:00
+slug: "ipv6-enabled-webservers"
 title: 'IPv6 Enabled WebServers'
 ---
 
@@ -18,4 +15,3 @@ disappoint.
 
 [1]: http://www.dreamhost.com/redir.cgi?ad=rewards%7C71008
 [2]: http://blog.dreamhost.com/2011/02/03/ipv6-now-available-from-dreamhost/
-

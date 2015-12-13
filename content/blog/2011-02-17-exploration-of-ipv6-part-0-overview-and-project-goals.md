@@ -1,0 +1,69 @@
+---
+date: 2011-02-17 18:49:56+00:00
+slug: "exploration-of-ipv6-part-0-overview-and-project-goals"
+title: 'Exploration of IPv6 Part 0: Overview and Project Goals'
+---
+
+Last week I finally picked up a project that I've been putting off for far too
+long. IPv6. With all of the Class A IPv4 subnets assigned and the total pool of
+available addresses rapidly dwindling it was time to make the move. When I
+started hunting down information about IPv6 and using it on my local network I
+was inundated with a lot of information about *what* IPv6 is, *why* we need it,
+and *when* everyone will need to be on it but very little about how to
+implement it.
+
+To this end I'm writing these posts about the how and glossing over the what,
+why, and when. For those of you who are interested in that information I
+strongly recommend you read the [Wikipedia article on IPv6][1]. It covers
+everything that I've found in other blog posts and news releases and a lot more
+that isn't.
+
+On to the specifics. My home network is closer to a small-business network
+crossed with an enterprise network. I have multiple subnets devoted to specific
+tasks (Public, DMZ, Server, Trusted LAN). I have two wireless networks, the
+first one is WPA2 802.1x using my own  PKI for certificates, and the second is
+WEP  secured with static addresses MAC restrictions and does not route to the
+internet. The latter is for some very old devices I have that don't support the
+secure wireless but still need to talk to a local service.
+
+Ultimately I should not have to sacrifice any of my security to upgrade to IPv6
+and I firmly believe in defence in depth. Off the top of my head the only thing
+I lose security wise is NAT which a lot of people argue is security through
+obscurity and not actually a layer of security but I [personally disagree][2].
+I don't _have_ to lose NAT as there are NAT66 options out there but to be
+honest, we need to start looking at the future and sticking with old and
+outdated security models will only end up causing a lot of trouble. I also
+don't want to deal with the thought of 2^16,386 potential addresses out there
+(That's assuming every IPv6 address is hiding a NAT *shudder*).
+
+My servers are all running either Fedora 14 or CentOS 5.5 as I'm most
+comfortable with the Red Hat architecture. Anyone out there using a different
+system architecture will have to look elsewhere (sorry). I also have Mac OS X
+(10.3 and 10.4) and Windows 7 clients. Lucky for me they all support IPv6
+natively, they just need to be configured.
+
+So what do I want to accomplish with this project? I intend to break this down
+into stages, each stage will be followed up with a post on this blog with the
+details of what I did, how I accomplished it, and any pitfalls I ran into.
+These stages will be:
+
+1. Firewall, Initial Connection, and Security Plan
+2. Getting the clients online (Routing, FreeRADIUS, radvd)
+3. Getting the public servers online (Apache, Postfix, Bind)
+4. Getting file & database servers online (MySQL, OpenLDAP, Samba, NFSv4)
+5. Getting support services online (Kerberos, Syslog, Snort)
+6. Pulling the plug on IPv4 (NAT64, DNS64)
+7. One month IPv6 only report
+
+Part 2 may also include ISC DHCPd configuration for stateful IPv6 client
+configuration. This will be something that I cover all the pros and cons about
+in the security plan and will be decided then. At the very end (Parts 6 & 7) I
+will have all of my home systems running IPv6 only for one month too see the
+state of IPv6 and see what clients still work. Thanks to the magic of NAT64 and
+DNS64 I should be able to access everything that is still IPv4 as if it was
+IPv6.
+
+Stay tuned. This is going to be a bumpy ride.
+
+[1]: http://en.wikipedia.org/wiki/Ipv6
+[2]: {{< relref "2011-02-17-the-home-network-and-nat-as-a-security-layer.md" >}}

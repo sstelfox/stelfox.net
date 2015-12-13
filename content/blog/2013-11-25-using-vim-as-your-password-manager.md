@@ -1,15 +1,12 @@
 ---
-title: 'Using VIM as Your Password Manager'
-created_at: 2013-11-25 15:10:46 -0500
-updated_at: 2013-11-25 15:10:46 -0500
-type: post
-kind: article
-layout: blog_post
+date: 2013-11-25 15:10:46 -0500
+slug: "using-vim-as-your-password-manager"
 tags:
 - vim
 - cli
 - passwords
 - dotfiles
+title: "Using VIM as Your Password Manager"
 ---
 
 There are all kinds of password managers out there. Everything from [web
@@ -111,4 +108,3 @@ tied to my indented file format.
 [5]: http://vim.wikia.com/wiki/Encryption
 [6]: http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdn20o8
 [7]: http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdnn94z
-

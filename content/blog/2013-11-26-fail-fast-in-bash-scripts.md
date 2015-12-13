@@ -1,13 +1,10 @@
 ---
-title: 'Fail Fast in Bash Scripts'
-created_at: 2013-11-26 15:19:40 -0500
-updated_at: 2013-11-26 15:19:40 -0500
-type: post
-kind: article
-layout: blog_post
+date: 2013-11-26 15:19:40 -0500
+slug: "fail-fast-in-bash-scripts"
 tags:
 - cli
 - bash
+title: "Fail Fast in Bash Scripts"
 ---
 
 I found myself writing another bash script that should exit should any of the
@@ -16,7 +13,7 @@ after each command, and isolating the sections into bash functions I figured
 there had to be a better way. After a little Googling and a trip through the
 bash manpages sure enough:
 
-```
+```bash
 #!/bin/bash
 
 function error_handler() {
@@ -60,4 +57,3 @@ or less directly from the bash man pages:
 
 If anything goes wrong in the script it will fail once, fail fast, and let you
 know where it died.
-

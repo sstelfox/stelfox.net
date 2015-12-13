@@ -1,14 +1,11 @@
 ---
-created_at: 2012-08-08 15:06:56+00:00
-updated_at: 2012-08-08 15:06:56+00:00
-title: 'Security Through Obesity'
-type: post
-kind: article
-layout: blog_post
+date: 2012-08-08 15:06:56+00:00
+slug: "security-through-obesity"
 tags:
 - development
 - ruby
 - websites
+title: "Security Through Obesity"
 ---
 
 Jeremy Spilman recently [proposed changes][1] to how user's hashes are stored
@@ -120,7 +117,7 @@ end
 
 DataMapper.finalize
 DataMapper.auto_upgrade!
-```    
+```
 
 I tried to keep this as a simple minimum implementation without playing golf.
 Strictly speaking the validations on the data_mapper models aren't necessary
@@ -207,4 +204,3 @@ end
 
 [1]: http://www.opine.me/a-better-way-to-store-password-hashes/
 [2]: http://www.opine.me/all-your-hashes-arent-belong-to-us/
-

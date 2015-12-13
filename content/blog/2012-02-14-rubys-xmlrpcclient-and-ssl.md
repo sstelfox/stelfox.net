@@ -1,9 +1,6 @@
 ---
-created_at: 2012-02-14 18:08:51+00:00
-updated_at: 2012-02-14 18:08:51+00:00
-type: post
-kind: article
-layout: blog_post
+dated: 2012-02-14 18:08:51+00:00
+slug: "rubys-xmlrpcclient-and-ssl"
 title: "Ruby's XMLRPC::Client and SSL"
 ---
 

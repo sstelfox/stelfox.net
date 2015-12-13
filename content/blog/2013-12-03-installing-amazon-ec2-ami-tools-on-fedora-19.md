@@ -1,11 +1,7 @@
 ---
-title: 'Installing Amazon EC2 API & AMI Tools on Fedora 19'
-created_at: 2013-12-03 14:09:35 -0500
-updated_at: 2013-12-03 14:09:35 -0500
-kind: article
-published: false
-type: post
-layout: blog_post
+date: 2013-12-03 14:09:35 -0500
+draft: true
+stub: "installing-amazon-ec2-ami-tools-on-fedora-19"
 tags:
 - fedora
 - amazon
@@ -13,6 +9,7 @@ tags:
 - ami
 - tools
 - cli
+title: 'Installing Amazon EC2 API & AMI Tools on Fedora 19'
 ---
 
 While most software I need to make use of in my day is already available in the
@@ -27,4 +24,3 @@ tools][2] and the [AMI tools][3].
 [1]: http://aws.amazon.com/developertools/
 [2]: http://aws.amazon.com/developertools/351
 [3]: http://aws.amazon.com/developertools/368
-

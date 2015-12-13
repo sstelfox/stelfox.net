@@ -1,10 +1,6 @@
 ---
-created_at: 2013-11-19 09:55:40 -0500
-updated_at: 2013-11-19 09:55:40 -0500
-title: 'Backing up Gmail with fetchmail'
-type: post
-kind: article
-layout: blog_post
+date: 2013-11-19 09:55:40 -0500
+slug: "backing-up-gmail-with-fetchmail"
 tags:
 - email
 - backups
@@ -12,6 +8,7 @@ tags:
 - fetchmail
 - procmail
 - cli
+title: "Backing up Gmail with fetchmail"
 ---
 
 This morning I found myself in need of a large set of emails to test a
@@ -39,8 +36,8 @@ interface. You can accomplish this with the following steps.
 Ensure you have `fetchmail` and `procmail` installed. For me on Fedora this can
 be accomplished using yum by running the following commands:
 
-```sh
-$ sudo yum install fetchmail procmail -y
+```bash
+sudo yum install fetchmail procmail -y
 ```
 
 We need to configure fetchmail to let it know where to retrieve our mail from.
@@ -65,15 +62,15 @@ mda "/usr/bin/procmail -m '/home/<username>/.procmailrc'"
 
 Be sure to set the permissions on the `.fetchmailrc` file to 0600:
 
-```sh
-$ chmod 0600 $HOME/.fetchmailrc
+```bash
+chmod 0600 $HOME/.fetchmailrc
 ```
 
 We'll now need to configure procmail to properly deliver our mail to the local
 `Maildir` folder. Procmail's configuration by default lives in
 `$HOME/.procmailrc`
 
-```
+```bash
 LOGFILE=$HOME/.procmail.log
 MAILDIR=$HOME
 VERBOSE=on
@@ -86,4 +83,3 @@ With that done, simply run the `fetchmail` command. In my experience this can
 take a while process and it seems like Google limits the number of emails you
 can download at a time, so you may need to run the command a couple of times to
 get all your emails.
-
