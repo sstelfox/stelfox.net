@@ -1,6 +1,3 @@
----
-hidden: true
----
 # CORS-enabled images
 <IfModule mod_setenvif.c>
   <IfModule mod_headers.c>
@@ -19,7 +16,7 @@ hidden: true
 </IfModule>
 
 Options -MultiViews
-ErrorDocument 404 /404/index.html
+ErrorDocument 404 /404.html
 # Don't really need to worry about other error documents...
 
 # Force IE to render pages in the highest available mode in the various
@@ -288,9 +285,9 @@ FileETag None
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-<% short_code_map.each do |short_code, url| %>
-  RewriteRule ^s/<%= short_code %>/?$ <%= url %> [R=301,L,NC]
-<% end %>
+#<% short_code_map.each do |short_code, url| %>
+#  RewriteRule ^s/<%= short_code %>/?$ <%= url %> [R=301,L,NC]
+#<% end %>
 
   # Rewrite all the old blog posts to the new ones.
   RewriteRule ^blog/([0-9]+)/([0-9]+)/([0-9]+)/(.*)/?$ /blog/$1/$2/$4/ [R=301,L,NC]
