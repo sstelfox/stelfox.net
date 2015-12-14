@@ -1,5 +1,8 @@
 ---
 title: IDS
+tags:
+- networking
+- security
 ---
 
 [Security Onion][1] is kind of awesome. It's a live CD with a lot of IDS and
@@ -31,22 +34,21 @@ might be a good reference or a good quick IDS when one is needed.
 * [OSSEC][19]
 
 [1]: http://securityonion.blogspot.com/
-[2]: ../../linux/bro/
+[2]: {{< relref "bro.md" >}}
 [3]: http://www.bro-ids.org/
 [4]: http://labs.snort.org/razorback/
-[5]: ../../linux/labrea/
+[5]: {{< relref "labrea.md" >}}
 [6]: http://labrea.sourceforge.net/labrea-info.html 
 [7]: http://oinkmaster.sourceforge.net/
-[8]: ../../linux/p0f/
+[8]: {{< relref "p0f.md" >}}
 [9]: http://lcamtuf.coredump.cx/p0f3/
 [10]: http://sguil.sourceforge.net/
 [11]: http://snorby.org/
 [12]: http://www.snort.org/
 [13]: http://doc.emergingthreats.net/bin/view/Main/SnortValidator
 [14]: http://www.squertproject.org/
-[15]: ../../linux/suricata/
+[15]: {{< relref "suricata.md" >}}
 [16]: http://www.openinfosecfoundation.org/
 [17]: http://sourceforge.net/projects/vortex-ids/
-[18]: ../../linux/aide/
+[18]: {{< relref "aide.md" >}}
 [19]: http://www.ossec.net/
-

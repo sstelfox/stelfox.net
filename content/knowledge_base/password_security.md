@@ -1,13 +1,14 @@
 ---
-title: Passwords
+title: Password Security
+tags:
+- passwords
+- security
 ---
-
-# Password Security
 
 ## Random Password Generation
 
 This little ruby snippet generates a random 31 character string consisting of
-uppercase letters, lowercase letters, and numbers. 
+uppercase letters, lowercase letters, and numbers.
 
 ```ruby
 #!/usr/bin/env ruby
@@ -73,7 +74,7 @@ Using a 184 bit security level.
 
 You make get the following error message as well which is safe to ignore as
 long as you're on a fully trusted system, and are the only user of such system.
- 
+
 ```
 WARNING: couldn't get memory lock (ENOMEM, try to adjust RLIMIT_MEMLOCK!).
 ```
@@ -89,4 +90,3 @@ Share [2/3]: 5-4756974923c0dce0a55f4774d09ca7a4865f64f56a4ee0
 Share [3/3]: 2-fbc74a03a50e14ab406c225afb5f45c40ae11976d2b665
 Resulting secret: my secret root password
 ```
-

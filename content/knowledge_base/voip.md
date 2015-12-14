@@ -1,8 +1,10 @@
 ---
 title: VOIP
+tags:
+- security
+- voip
+- communications
 ---
-
-# VOIP
 
 Sensitive information can be transmitted through phone systems, POTS lines can
 also be very very expensive if anonymous calls are allowed through the POTS
@@ -40,7 +42,7 @@ between phones and the telephony server.
 An attacker who has physical access to the network may bypass any VLAN
 separation by simply unplugging an IP phone and introducing a malicious
 machine. A simple solution would be to only allow know MAC addresses, however,
-this too could be fooled quite trivially. The solution to this is [802.1X][2]
+this too could be fooled quite trivially. The solution to this is 802.1X
 authentication. Additional trickery can be added using various switch port
 security features such as dhcp client sniffing.
 
@@ -58,7 +60,7 @@ any external SIP clients, or to receive voice calls from outside the local
 voice network, then having the services separated allows for total network
 isolation. Even with external SIP clients it can be made so that there is
 exactly one point where external data can get into the voice network and out of
-it. This provides a very nice and convienient place to drop an [IDS][3].
+it. This provides a very nice and convienient place to drop an [IDS][2].
 
 ## Call Eavesdropping
 
@@ -154,7 +156,5 @@ This is one of those security measures I wouldn't want to relax quite this much
 unless things such as the outgoing pin, a strong IDS, and firewall logs had
 been implemented.
 
-[1]: ../../networking/vlan/
-[2]: ../801x/
-[3]: ../ids/
-
+[1]: {{< relref "vlan.md" >}}
+[2]: {{< relref "ids.md" >}}

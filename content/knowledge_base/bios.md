@@ -1,8 +1,9 @@
 ---
 title: BIOS Security
+tags:
+- physical
+- security
 ---
-
-# BIOS Security
 
 ## Security Notes
 
@@ -36,8 +37,8 @@ drive (so you better have off-site backups).
 
 Most new machines have a place for a padlock to be connected. An extremely
 determined physical attacker can either cut these off or if they are skilled in
-[Lockpicking][4] pick the lock. This shouldn't be necessary however in the
-machine is already in a physically secured location.
+Lockpicking pick the lock. This shouldn't be necessary however in the machine
+is already in a physically secured location.
 
 ## Default Passwords
 
@@ -65,8 +66,6 @@ below:
 
 It is a good idea to test and see if the BIOS has this kind of vulnerability.
 
-[1]: ../../security/tpm/
-[2]: ../../security/physical/
-[3]: ../../security/encryption/
-[4]: ../../security/lockpicking/
-
+[1]: {{< relref "tpm.md" >}}
+[2]: {{< relref "physical_security.md" >}}
+[3]: {{< relref "encryption.md" >}}

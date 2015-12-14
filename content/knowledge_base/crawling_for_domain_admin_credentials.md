@@ -1,8 +1,9 @@
 ---
 title: Crawling for Domain Admin Credentials
+tags:
+- pentesting
+- windows
 ---
-
-# Crawling for Domain Admin Credentials
 
 Some folks are just doing it right. Not using their admin credentials for
 everyday activities. While this is a best practice, it doesn't prevent the
@@ -50,4 +51,3 @@ command finds the right process, rather than pause.
 
 Like the scenario states, there is some work to be done before this command is
 useful. You'll need an initial shell and a little luck.
-

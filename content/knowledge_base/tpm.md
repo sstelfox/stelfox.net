@@ -1,8 +1,10 @@
 ---
 title: TPM
+tags:
+- bios
+- physical
+- security
 ---
-
-# TPM
 
 TPM is an advanced feature that establishes a chain of trust between the a chip
 on the motherboard, the BIOS, the bootloader, and the OS. Properly configuring
@@ -19,4 +21,3 @@ the motherboard has a TPM chip (If the motherboard has this chip, the BIOS more
 likely than not supports it).
 
 I will have to save detailed configuration of TPM for a later date.
-

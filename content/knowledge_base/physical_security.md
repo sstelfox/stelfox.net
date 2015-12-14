@@ -1,8 +1,9 @@
 ---
 title: Physical Security
+tags:
+- security
+- physical
 ---
-
-# Physical Security
 
 ## Computer Security
 
@@ -35,10 +36,3 @@ temperature between 60 and 80 degrees fahrenheit and a relative humidity
 between 30% and 60%. Adding in environmental sensors can alert and
 administrator before their system's cook due to AC failures and is strongly
 recommended.
-
-## Lockpicking
-
-See more in the [Security/Lockpicking][1] article on this wiki.
-
-[1]: ../../security/lockpicking/
-

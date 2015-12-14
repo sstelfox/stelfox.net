@@ -1,8 +1,10 @@
 ---
 title: Fedora Check Script
+tags:
+- fedora
+- linux
+- security
 ---
-
-# Fedora Check Script
 
 ## TODO
 
@@ -38,11 +40,11 @@ AIDECONF_MD5="38ab9065a05f329bc04737f9a774cdde"
 # back online, but that can be added in the future since this is the only
 # place it'll need to change.
 function disaster() {
-        echo "
+  echo "
 A critical system change has occurred outside of normal means.
 To ensure the integrity of this system and the overall network,
 this machine will be forced off."
-        #halt
+  #halt
 }
 
 # This will check to ensure that the AIDE binary and configuration files
@@ -53,20 +55,20 @@ C_AIDECONF_SHA1=`$SHA1 /etc/aide.conf | $AWK '{print $1}'`
 C_AIDECONF_MD5=`$MD5 /etc/aide.conf | $AWK '{print $1}'`
 
 if [ "$C_AIDE_SHA1" != "$AIDE_SHA1" ]; then
-        echo "sha1 mismatch for $AIDE"
-        disaster
+  echo "sha1 mismatch for $AIDE"
+  disaster
 fi
 if [ "$C_AIDE_MD5" != "$AIDE_MD5" ]; then
-        echo "md5 mismatch for $AIDE"
-        disaster
+  echo "md5 mismatch for $AIDE"
+  disaster
 fi
 if [ "$C_AIDECONF_SHA1" != "$AIDECONF_SHA1" ]; then
-        echo "sha1 mismatch for /etc/aide.conf"
-        disaster
+  echo "sha1 mismatch for /etc/aide.conf"
+  disaster
 fi
 if [ "$C_AIDECONF_MD5" != "$AIDECONF_MD5" ]; then
-        echo "md5 mismatch for /etc/aide.conf"
-        disaster
+  echo "md5 mismatch for /etc/aide.conf"
+  disaster
 fi
 
 # Ensure that no one has tampered with the system. If anyone has we need
@@ -74,8 +76,8 @@ fi
 echo "Checking AIDE..."
 nice -n 19 $AIDE --check > /dev/null
 if [ "$?" -ne 0 ]; then
-        echo "Failed the AIDE check"
-        disaster
+  echo "Failed the AIDE check"
+  disaster
 fi
 
 # Check to make sure our system is intact as far as the RPM database knows about
@@ -85,9 +87,9 @@ echo "Checking RPM database..."
 CHNGES=`nice -n 19 rpm -qVa | awk '$2!="c" {print $0}'`
 CHNGCOUNT=`echo "$CHNGES" | wc -l`
 if [ "$CHNGCOUNT" -ne 0 ]; then
-        echo "The RPM database appears to be corrupted."
-        echo $CHNGES
-        disaster
+  echo "The RPM database appears to be corrupted."
+  echo $CHNGES
+  disaster
 fi
 
 # We want to update yum before we update anything else to minimize
@@ -106,14 +108,13 @@ $YUM -e 0 -d 0 update -y
 echo "Rebuilding new AIDE database..."
 nice -n 19 $AIDE --init > /dev/null
 if [ "$?" -eq 0 ]; then
-        mv -f /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-        if [ "$?" -ne 0 ]; then
-                echo "Unable to move new AIDE database into position!"
-                disaster
-        fi
+  mv -f /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+  if [ "$?" -ne 0 ]; then
+    echo "Unable to move new AIDE database into position!"
+    disaster
+  fi
 else
-        echo "Unable to rebuild AIDE database"
-        disaster
+  echo "Unable to rebuild AIDE database"
+  disaster
 fi
 ```
-

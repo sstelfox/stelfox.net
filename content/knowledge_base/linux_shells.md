@@ -1,8 +1,9 @@
 ---
 title: Linux Remote Shell Techniques
+tags:
+- linux
+- pentesting
 ---
-
-# Linux Remote Shell Techniques
 
 Abbreviations:
 
@@ -107,4 +108,3 @@ By god this is an ugly one... but it works... and if it's all you got then it's
 all you got.
 
 Target:
-

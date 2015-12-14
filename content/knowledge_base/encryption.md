@@ -1,5 +1,8 @@
 ---
 title: Encryption
+tags:
+- encryption
+- security
 ---
 
 ## TRESOR
@@ -70,4 +73,3 @@ information.
 | -c aes-ecb-benbi -s 128    | 71.2 MB/s  |
 | -c aes-ecb-null -s 128     | 71.5 MB/s  |
 | None (Baseline)            | 105 MB/s   |
-
