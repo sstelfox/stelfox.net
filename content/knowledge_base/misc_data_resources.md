@@ -1,10 +1,10 @@
 ---
 title: Miscelaneous Information Resources
+tags:
+- data
+- wireless
 ---
-
-# Miscelaneous Information Resources
 
 ## Find Wireless Near a Site
 
 * https://wigle.net/
-
