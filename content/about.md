@@ -52,6 +52,5 @@ If you like the site you can read more about it in the [Colophon][8].
 [5]: mailto:sam@stelfox.net
 [6]: https://github.com/sstelfox
 [7]: http://twitter.com/samstelfox
-[8]: <%= @items['/colophon/'].path %>
+[8]: {{< relpath "colophon.md" >}}
 [9]: http://pwnieexpress.com/
-
