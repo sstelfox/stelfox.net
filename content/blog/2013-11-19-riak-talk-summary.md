@@ -27,5 +27,5 @@ check it out!
 [1]: http://gabekoss.com/
 [2]: http://basho.com/riak/
 [3]: http://www.btvwag.org/
-[4]: /20131118-riak-talk-slides.pdf
+[4]: /files/20131118-riak-talk-slides.pdf
 [5]: http://gabekoss.com/blog/2013/11/riak_101/

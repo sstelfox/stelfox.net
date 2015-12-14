@@ -1110,6 +1110,6 @@ Todo...
 
 [1]: http://www.icecast.org/docs/icecast-2.3.2/icecast2_config_file.html
 [2]: http://www.icecast.org/docs/icecast-2.0.1/icecast2_config_file.html
-[4]: <%= @items['/knowledge_base/linux/iptables/'].path %>
-[4]: <%= @items['/knowledge_base/security/passwords/'].path %>
-[5]: <%= @items['/static/silence/'].path %>
+[4]: {{< relref "iptables.md" >}}
+[4]: {{< relref "password_security.md" >}}
+[5]: /files/silence.ogg
