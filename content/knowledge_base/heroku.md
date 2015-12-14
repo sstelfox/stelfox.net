@@ -1,8 +1,9 @@
 ---
 title: Heroku Notes
+tags:
+- cloud services
+- heroku
 ---
-
-# Heroku Notes
 
 This page is simple a collection of commands that are useful that I had to
 lookup at one point or another and have been documented to make it easier for
@@ -16,7 +17,7 @@ need to add them as appropriate remotes especially when working in a repo that
 I hadn't directly created the heroku instance from here are the command to add
 a remote to the repositories:
 
-```sh
+```bash
 git remote add staging git@heroku.com:name-of-the-staging-app.git
 git remote add production git@heroku.com:name-of-the-production-app.git
 ```
@@ -26,7 +27,6 @@ git remote add production git@heroku.com:name-of-the-production-app.git
 Simply blow away all access, nice and simple. This revokes access to all
 projects created under the authenticated account.
 
-```sh
+```bash
 heroku keys:clear
 ```
-

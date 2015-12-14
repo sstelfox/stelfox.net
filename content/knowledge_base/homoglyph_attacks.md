@@ -1,8 +1,9 @@
 ---
 title: Homoglyph Attacks
+tags:
+- phishing tactic
+- social engineering
 ---
-
-# Homoglyph Attacks
 
 A [homoglyph][1] attack is making use of common UTF-8 high order characters
 that look virtually identical to different ASCII characters. For example
@@ -22,4 +23,3 @@ this in a ruby interpreter shell by issueing the following commands:
 ```
 
 [1]: http://www.irongeek.com/homoglyph-attack-generator.php
-

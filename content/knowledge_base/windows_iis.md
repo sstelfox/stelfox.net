@@ -1,8 +1,9 @@
 ---
 title: IIS
+tags:
+- iis
+- windows
 ---
-
-# IIS
 
 ## WebDAV
 
@@ -10,11 +11,7 @@ For remote access to files and "network drives". Was used to replace FTP with
 something that can have a certificate slapped on it. This was done on a Windows
 Server 2008R2 Enterprise SP1 box.
 
-### Security Notes
-
-Fucking Windows Services who knows.
-
-### Installed Roles
+## Installed Roles
 
 These are just what happened to be installed on the machine I'm documenting,
 these don't necessary all apply.
@@ -46,7 +43,7 @@ these don't necessary all apply.
   * Management Tools
     * IIS Management Console
 
-### Installed Features
+## Installed Features
 
 These are just what happened to be installed on the machine I'm documenting,
 these don't necessary all apply.
@@ -57,7 +54,7 @@ these don't necessary all apply.
       * File Server Resource Manager Tools
     * Web Server (IIS) Tools
 
-### Web Server Setup
+## Web Server Setup
 
 In the IIS Manager I created two "Sites" one bound to port 80 ("Informational
 Site") the other to port 443 ("WebDAV Drives"). They are both pointing at
@@ -69,7 +66,7 @@ permissions restrictions.
 In the site bound to port 443 with a valid certificate I created a bunch of
 virtual directories each pointing at one 'share'.
 
-### Global Configuration
+## Global Configuration
 
 * Authentication
   * Only Anonymous Authentication turned on
@@ -109,12 +106,12 @@ virtual directories each pointing at one 'share'.
   * WebDAV Settings
 * Worker Processes
 
-#### Informational Site
+## Informational Site
 
 Nothing special I just crafted an index.html that explained how to connect and
 use the WebDAV shares.
 
-#### WebDAV Drives
+## WebDAV Drives
 
 * Directory Browsing - Enable
 * Request Filtering
@@ -124,6 +121,3 @@ use the WebDAV shares.
     * All content
     * Specified roles or user groups: "EXAMPLE\Domain Admins, EXAMPLE\Domain Users"
     * Permissions: Read, Source, Write
-
-#### WebDAV folders
-
