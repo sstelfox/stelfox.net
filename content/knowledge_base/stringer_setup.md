@@ -1,8 +1,10 @@
 ---
 title: Stringer Setup
+tags:
+- heroku
+- news
+- ruby
 ---
-
-# Stringer Setup
 
 * Forked the project on github (https://github.com/swanson/stringer.git)
 * Cloned the project to my local box:
@@ -48,6 +50,8 @@ title: Stringer Setup
 
 To change the password:
 
-  heroku run rake change_password
+```
+heroku run rake change_password
+```
 
 This requests you change the password through the command line.

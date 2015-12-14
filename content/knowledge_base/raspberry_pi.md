@@ -1,8 +1,9 @@
 ---
 title: Raspberry Pi
+tags:
+- embedded
+- linux
 ---
-
-# Raspberry Pi
 
 Downloaded the ArchLinux version [from here][1]
 
@@ -88,4 +89,3 @@ systemctl disable dhcpcd@eth0.service
 At this point I switched to the arch linux notes.
 
 [1]: http://www.raspberrypi.org/downloads
-

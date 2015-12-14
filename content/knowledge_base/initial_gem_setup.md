@@ -1,8 +1,10 @@
 ---
 title: Initial Gem Setup
+tags:
+- gem
+- projects
+- ruby
 ---
-
-# Initial Gem Setup
 
 This is the process I go through when inititially setting up a gem. For this I
 will be creating a gem named `super_g`.
@@ -125,14 +127,6 @@ already.
 
 TODO, partially covered by badges in the README
 
-## Configure Gemnasium
-
-TODO
-
-## Setup RubyGems
-
-TODO
-
 ## Write the README
 
 TODO: see belfort project
@@ -180,4 +174,3 @@ TODO: Your gem description
 ```
 
 More info: http://elgalu.github.io/2013/add-achievement-badges-to-your-gem-readme/
-

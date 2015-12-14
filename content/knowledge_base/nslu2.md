@@ -1,8 +1,11 @@
 ---
 title: NSLU2
+tags:
+- embedded
+- hardware
+- linux
+- nas
 ---
-
-# NSLU2
 
 Neat little NAS for USB 2.0 hard drives. Very convenient for backups.
 
@@ -60,7 +63,7 @@ above):
 arp -s 192.168.1.1 xx:xx:xx:xx:xx:xx
 ```
 
-### Initial Configuration
+## Initial Configuration
 
 Telnet into the device and set a password like so: *Remember:* This password is
 being sent in clear text so ensure that you are on a fully trusted (and
@@ -120,7 +123,7 @@ Setup a minimal and more secure initial configuration:
 rm /etc/config/dhcp
 ```
 
-#### /etc/config/dropbear
+### /etc/config/dropbear
 
 ```
 config 'dropbear'
@@ -129,7 +132,7 @@ config 'dropbear'
   option 'Port'     '22'
 ```
 
-#### /etc/config/firewall
+### /etc/config/firewall
 
 ```
 config 'defaults'
@@ -195,7 +198,7 @@ config 'rule'
   option 'target'   'ACCEPT'
 ```
 
-#### /etc/config/network
+### /etc/config/network
 
 ```
 config 'interface' 'loopback'
@@ -214,7 +217,7 @@ config 'interface' 'lan'
   option 'gateway'  '192.168.150.1'
 ```
 
-#### /etc/config/system
+### /etc/config/system
 
 ```
 config 'system'
@@ -236,7 +239,7 @@ uci commit
 reboot
 ```
 
-### LEDs
+## LEDs
 
 The available LED names in the NSLU2 go by the sys names of
 `nslu2:green:disk-1`, `nslu2:green:disk-2`, `nslu2:green:ready`,
@@ -263,7 +266,7 @@ config 'led'
 Additional configuration information can be found on the [OpenWRT UCI/System
 page under LEDs][2].
 
-### USB Disk Setup
+## USB Disk Setup
 
 Now that we have networking and some basic security on the device lets get this
 usable as a NAS again. First we need to setup USB storage like the following:
@@ -342,16 +345,18 @@ Get the storage all happy and setup with the following command:
 /etc/init.d/fstab restart
 ```
 
-### Additional Package Space
+## Additional Package Space
 
 The NSLU2 doesn't have a whole lot of space on the device and adding a lot of
 packages is a good way to fill that up and cause instabilities. Adding a small
 virtual partition to install additional packages into can easily alleviate this
-issue. This will use a quick loop back file living on the external drive we've
-already setup. I've chosen 512Mb, it's an insignificant amount compared to the
-size of my hard drive and should be way overkill for any packages I'd need to
-install. The OpenWRT wiki suggests 128Mb but why not add more wiggle room when
-it essentially costs me nothing?
+issue.
+
+This will use a quick loop back file living on the external drive we've already
+setup. I've chosen 512Mb, it's an insignificant amount compared to the size of
+my hard drive and should be way overkill for any packages I'd need to install.
+The OpenWRT wiki suggests 128Mb but why not add more wiggle room when it
+essentially costs me nothing?
 
 We'll need the loopback package:
 
@@ -412,7 +417,7 @@ opkg install command like so:
 opkg -dest usb install package-name
 ```
 
-### OpenSSH Server
+## OpenSSH Server
 
 We'll need to put Dropbear on a different port to get OpenSSH on it. So first
 things first we need to add a firewall rule allowing access to the new port.
@@ -483,7 +488,7 @@ dropbear service. You mind as well remove the config file as well like so:
 
 I like rebooting after a major service change just to be on the safe side.
 
-### Authentication
+## Authentication
 
 Since this system is intended for backups, I created a backup user by manually
 editing `/etc/passwd`, `/etc/groups`, and setting a password for the user.
@@ -528,13 +533,16 @@ chmod 0640 /mnt/storage/backups/.ssh/authorized_keys
 
 So I need to explain a bit about that set of commands. Because I chroot the
 backups user to the backups directory the backups directory needs to be owned
-by root and have permissions set to `0750`. This requirement is imposed by the
-SSH daemon if you want to login and necessitates the additional backups
-directory if I want to allow the backup-user write access to anything and thus
-giving the backup user ownership over the backups directory. However, I do not
-want the backup user to be able to arbitrarily edit or replace it's authorized
-keys files. I'll leave that to be a root administration task and thus the
-ownership and permissions on the `.ssh` directory and contents.
+by root and have permissions set to `0750`.
+
+This requirement is imposed by the SSH daemon if you want to login and
+necessitates the additional backups directory if I want to allow the
+backup-user write access to anything and thus giving the backup user ownership
+over the backups directory.
+
+I do not want the backup user to be able to arbitrarily edit or replace it's
+authorized keys files. I'll leave that to be a root administration task and
+thus the ownership and permissions on the `.ssh` directory and contents.
 
 With that setup here is the tail end of my `/etc/ssh/sshd_config` file which
 handles the chroot and command enforcement as well as the SFTP definition (I
@@ -554,15 +562,16 @@ directory on the NAS. It still needs at least one authorized key added to
 `/mnt/storage/backups/.ssh/authorized_keys` before any backups can take place
 but that will get covered with some additional notes in the next section...
 
-### Backing Up to the NSLU2
+## Backing Up to the NSLU2
 
 I've gone through the trouble on each machine that I'm going to be backing up
 to creating an OpenSSH key without a password that will only be used for
 backing up to the NSLU2. You could potentially use one pair for this but it
-makes it harder to revoke a single system's authentication. You really need to
-protect the private keys well as they don't just have permission to create
-backups, they also have the permission to delete backups which I'm sure any
-malicious attacker would happily do for you.
+makes it harder to revoke a single system's authentication.
+
+You really need to protect the private keys well as they don't just have
+permission to create backups, they also have the permission to delete backups
+which I'm sure any malicious attacker would happily do for you.
 
 Ideally I'd be able to set the +a attribute (append only) on the
 `/mnt/storage/backups/backups` directory only allowing the backup-user to
@@ -598,7 +607,7 @@ personally preferential to [duplicity][5], which is a clean command line
 utility that encrypts and signs all your backups locally before sending them
 along to the remote server and supports incremental backups as well.
 
-### Sysupgrade / MTD
+## Sysupgrade / MTD
 
 Luckily for us we can download the new factory image to the storage partition
 so we don't use up the RAM.
@@ -634,7 +643,7 @@ the device... Since RedBoot is still there however I should still be able to
 use the `upslug2` utility to update the whole device, though this will be at
 the expense of all configuration on the device.
 
-### Upslug2 && RedBoot
+## Upslug2 && RedBoot
 
 You'll need to install upslug2 if you don't have it already, and download the
 most recent snapshot for the NSLU2 [here][6]. Open up a console and change to
@@ -652,7 +661,7 @@ NSLU2     xx:xx:xx:xx:xx:xx Product ID: 1 Protocol ID: 0 Firmware Version: R23V6
 * Snip *
 ```
 
-### IXP420 GPIO Pins
+## IXP420 GPIO Pins
 
 |          |          |                                        |                                           |                |
 | -------- | -------- | -------------------------------------- | ----------------------------------------- | -------------- |
@@ -677,7 +686,6 @@ NSLU2     xx:xx:xx:xx:xx:xx Product ID: 1 Protocol ID: 0 Firmware Version: R23V6
 [1]: http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin
 [2]: http://wiki.openwrt.org/doc/uci/system#leds
 [3]: http://wiki.openwrt.org/doc/uci/fstab
-[4]: ../../linux/sshd/
-[5]: ../../linux/duplicity/
+[4]: {{< relref "sshd.md" >}}
+[5]: {{< relref "duplicity.md" >}}
 [6]: http://downloads.openwrt.org/snapshots/trunk/ixp4xx/openwrt-nslu2-squashfs.bin
-

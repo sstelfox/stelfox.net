@@ -1,8 +1,10 @@
 ---
 title: Sipura SPA3000
+tags:
+- embedded
+- linux
+- voip
 ---
-
-# Sipura SPA3000
 
 Getting this working properly with incoming, and outgoing calls through the FXO
 port and as a standard extension through the FXS port was quite a trick so I've
@@ -106,4 +108,3 @@ tone phone is plugged into the phone port. Pick up the receiver and dial
 will read out the IP address one digit at a time.
 
 [1]: http://wiki.freeswitch.org/wiki/SPA3102_FreeSwitch_HowTo
-
