@@ -2,13 +2,11 @@
 title: "About Myself"
 ---
 
-# About Myself
-
 I live and work out of the Burlington, VT area though I tend to travel all over
 the state and to a lesser extent New England. I went to school at [Vermont
 Technical College][1] for Software Engineering which was followed up as being
 their Network & Systems Administrator. Currently I'm working at
-[PwnieExpress][9] on a cloud intelligence platform.
+[PwnieExpress][8] on a cloud intelligence platform.
 
 I am an avid computer and network security enthusiast with a strong passion for
 exploring the depths of Linux environments, though I am familiar with Windows
@@ -43,8 +41,6 @@ All of the open source stuff I work on is either under MIT or GPLv3. Unless
 otherwise noted consider code on this site MIT licensed. I’m always happy to
 hear feedback on any of my projects via email.
 
-If you like the site you can read more about it in the [Colophon][8].
-
 [1]: http://www.vtc.edu/
 [2]: http://www.linkedin.com/pub/sam-stelfox/2a/475/267
 [3]: http://stackexchange.com/users/33854/trueduality?tab=accounts
@@ -52,5 +48,4 @@ If you like the site you can read more about it in the [Colophon][8].
 [5]: mailto:sam@stelfox.net
 [6]: https://github.com/sstelfox
 [7]: http://twitter.com/samstelfox
-[8]: {{< relpath "colophon.md" >}}
-[9]: http://pwnieexpress.com/
+[8]: http://pwnieexpress.com/
