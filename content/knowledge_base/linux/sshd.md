@@ -1,8 +1,12 @@
 ---
 title: SSHd
+tags:
+- linux
+- lxc
+- security
+- service
+- ssh
 ---
-
-# SSHd
 
 Secure Shell or SSH is a network protocol that allows data to be exchanged
 using a secure channel between two networked devices. Used primarily on
@@ -194,9 +198,9 @@ following commands create the base directories and the /dev/null device within
 the jail.
 
 ```
-[root@localhost]# mkdir -p /var/jail/{dev,etc,lib,lib64,usr/bin,bin,home}
-[root@localhost]# chown -R root:root /var/jail/
-[root@localhost]# mknod -m 666 /var/jail/dev/null c 1 3
+mkdir -p /var/jail/{dev,etc,lib,lib64,usr/bin,bin,home}
+chown -R root:root /var/jail/
+mknod -m 666 /var/jail/dev/null c 1 3
 ```
 
 There is something serious to note here. The [partitioning][2] security
@@ -209,7 +213,7 @@ links may work better for these as they will get properly updated with the rest
 of the system, however, I am unsure whether or not that would actually work.
 
 ```
-[root@localhost]# cp /etc/ld.so.cache /etc/ld.so.conf /etc/nsswitch.conf /etc/hosts /var/jail/etc/
+cp /etc/ld.so.cache /etc/ld.so.conf /etc/nsswitch.conf /etc/hosts /var/jail/etc/
 ```
 
 At this point you need to decide what commands you want you're user to have
@@ -274,6 +278,6 @@ I've play around with implementing a [gatekeeper style script][3] to provide an
 additional layer of security. In practice real multi-factor authentication is
 more reliable and should be used instead.
 
-[1]: <%= @items['/knowledge_base/linux/iptables/'].path %>
-[2]: <%= @items['/knowledge_base/linux/partitioning/'].path %>
-[3]: <%= @items['/knowledge_base/linux/sshd_gatekeeper/'].path %>
+[1]: {{< relref "iptables.md" >}}
+[2]: {{< relref "partitioning.md" >}}
+[3]: {{< relref "sshd_gatekeeper.md" >}}

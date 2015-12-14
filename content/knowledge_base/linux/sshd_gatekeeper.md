@@ -1,8 +1,10 @@
 ---
 title: Gatekeeper Script for SSH
+tags:
+- linux
+- security
+- ssh
 ---
-
-# Gatekeeper Script for SSH
 
 If you've already implemented the SSH keys for authentication and have a
 password on your key then you've already achieved multi-factor authentication
