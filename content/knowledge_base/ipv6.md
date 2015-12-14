@@ -1,16 +1,16 @@
 ---
 title: IPv6
+tags:
+- ipv6
+- networking
+- security
 ---
-
-# IPv6
-
-## Personal Security Thoughts
 
 [Deployment Guide][1]
 
 [1]: http://tools.ietf.org/html/draft-ietf-v6ops-enterprise-incremental-ipv6-01
 
-### On Subnet Enumeration Through Scanning
+## On Subnet Enumeration Through Scanning
 
 Over and over again I've heard that it is completely infeasible to scan the
 entirety of the IPv6 address space. 
@@ -65,4 +65,3 @@ address space smaller?
 * http://tehchimp.wordpress.com/2010/08/17/configuring-hurricane-electric-ipv6-tunnel/
 * http://fedoraproject.org/wiki/IPv6Guide
 * http://blog.martinshouse.com/2010/09/ipv6-cisco-1841-adsl-monowall.html
-

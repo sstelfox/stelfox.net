@@ -1,8 +1,8 @@
 ---
 title: VLAN
+tags:
+- networking
 ---
-
-# VLAN
 
 I use a fairly simple scheme to assign VLAN ID's based on the Class C subnet.
 Valid VLAN numbers range from 1 - 1024 (A 10-bit number). Not all of these are
@@ -38,4 +38,3 @@ The table below lists all the VLANs that are reserved and why.
 | 1004      | 1111101100            | *.*.237.* / 3     | Cisco legacy reserved for: fddinet-default                                                                                                       |
 | 1005      | 1111101101            | *.*.238.* / 3     | Cisco legacy reserved for: trbrf-default                                                                                                         |
 | 1006-1023 | 1111101101-1111111111 | *.*.239-255.* / 3 | Not actually available on Cisco switches                                                                                                         |
-

@@ -1,12 +1,14 @@
 ---
 title: Catalyst 2950
+tags:
+- cisco
+- hardward
+- networking
 ---
-
-# Catalyst 2950
 
 ## Configuration Wipe
 
-```sh
+```
 cisco2950# write erase
 Erasing the nvram filesystem will remove all files! Continue? [confirm]y[OK]
 Erase of nvram: complete
@@ -35,7 +37,7 @@ the system binary, as such it's usually necessary (and recommended) to delete
 the html directory to make room for the new files even if you have no intention
 of using the web interface.
 
-```sh
+```
 cisco2950# delete /recursive html
 Delete filename [html]? 
 Examine files in directory flash:html? [confirm]
@@ -65,7 +67,7 @@ Connection closed by foreign host.
 A Bin upgrade ***does not*** include html files for the web interface. Do not
 remove them if there is need for a web interface.
 
-```sh
+```
 cisco2950# copy tftp://192.168.0.103/c2950-i6q4l2-mz.121-22.EA7.bin flash:
 ...
 (The switch will copy the file)
@@ -83,4 +85,3 @@ System configuration has been modified. Save? [yes/no]: n
 Proceed with reload? [confirm]
 Connection closed by foreign host.
 ```
-

@@ -1,5 +1,7 @@
 ---
 title: Steam Mashing
+tags:
+- brewing
 ---
 
 [Source][1]
