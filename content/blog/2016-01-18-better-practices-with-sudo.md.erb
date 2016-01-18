@@ -1,0 +1,36 @@
+---
+title: 'Better Practices With Sudo'
+created_at: 2016-01-18 17:25:22 -0500
+updated_at: 2016-01-18 17:25:22 -0500
+kind: article
+published: true
+type: post
+layout: blog_post
+tags:
+- linux
+- security
+- sudo
+---
+
+I work with a lot of different linux machines from embedded devices, to cloud
+servers and open stack hosts. For most of them I'm either the sole
+administrator or one of three or less with administrative access. Where there
+are multiple administrative users, we all are generally working as backups to
+each other. We use sudo whenever we need to execute a task with privileges on
+any of these machines with no direct root login permitted remotely.
+
+I must confess I have established two habits over time that are against best
+practices with regard to sudo; Using it to execute a root shell, and not
+restricting which commands can be run with sudo.
+
+<!-- more -->
+
+I'm sure many other administrators commit these sins as well. I've always
+gotten sudo to the 'good enough' point without ever learning how to configure
+it properly countless times, which mostly meant leaving the distribution's
+defaults.
+
+At face value, executing a shell this way doen't seem to pose a problem. We use
+auditd to record administrative changes, and the kernel can track our original
+login UID and record that in addition to our effective user ID. Permission to
+use sudo is still restricted
