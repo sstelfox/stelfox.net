@@ -20,7 +20,7 @@ each other. We use sudo whenever we need to execute a task with privileges on
 any of these machines with no direct root login permitted remotely.
 
 I must confess I have established two habits over time that are against best
-practices with regard to sudo; Using it to execute a root shell, and not
+practices with regard to sudo; Using it to execute a root shell only, and not
 restricting which commands can be run with sudo.
 
 <!-- more -->
@@ -33,4 +33,45 @@ defaults.
 At face value, executing a shell this way doen't seem to pose a problem. We use
 auditd to record administrative changes, and the kernel can track our original
 login UID and record that in addition to our effective user ID. Permission to
-use sudo is still restricted
+use sudo is still restricted to a subset of trusted administrators.
+
+Using this default configuration is forming bad habits and after working
+through it it's not particularily hard to make a drastic improvement on the
+granularity of control.
+
+I'm going to work through the changes I've made slowly building up my final
+config.
+
+## Minimal Configuration
+
+Rather than looking at what needs to be changed, or removed I prefer to start
+with a minimal effective configuration.
+
+Most distribution's default sudo configuration pass through environment
+variables related to locale and a few others. I've left these out as currently
+no other administrator of my systems override these values. If you work in a
+more diverse environment you may want to selectively add back in the ones that
+are being overridden.
+
+My entire starting sudo config is the following:
+
+```
+Defaults env_reset
+Defaults !visiblepw
+
+root      ALL=(ALL)     ALL
+%wheel    ALL=(ALL)     ALL
+```
+
+This is very similar to most distribution's configurations if you ignore the
+environment variables. The root user and members of the wheel group can all
+execute anything as sudo as long as the user can authenticate through PAM and
+the mechanism won't display their password. Usually distributions also include
+additional sudo configuration by including all files in /etc/sudoers.d. This
+config isn't going to be terribly long so we may as well KISS it and not allow
+the inclusion of other files.
+
+## No Need for the su
+
+The first habit I wanted to break was executing `sudo su -` instead of the
+correct `sudo -s`.
