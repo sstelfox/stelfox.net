@@ -13,7 +13,7 @@ tags:
 ---
 
 I work with a lot of different linux machines from embedded devices, to cloud
-servers and open stack hosts. For most of them I'm either the sole
+servers and open stack hosts. For many of them I'm either the sole
 administrator or one of three or less with administrative access. Where there
 are multiple administrative users, we all are generally working as backups to
 each other. We use sudo whenever we need to execute a task with privileges on
@@ -48,10 +48,11 @@ Rather than looking at what needs to be changed, or removed I prefer to start
 with a minimal effective configuration.
 
 Most distribution's default sudo configuration pass through environment
-variables related to locale and a few others. I've left these out as currently
-no other administrator of my systems override these values. If you work in a
-more diverse environment you may want to selectively add back in the ones that
-are being overridden.
+variables related to locale and a few others. I have left these out since the
+way I see sudo executed most commonly (`sudo su -`), removes any environment
+variables passed through anyway. If you work on multi-lingual systems or
+otherwise your administrators make use of multiple system locales, you will
+want to re-introduce the locale values used.
 
 My entire starting sudo config is the following:
 
@@ -60,18 +61,119 @@ Defaults env_reset
 Defaults !visiblepw
 
 root      ALL=(ALL)     ALL
-%wheel    ALL=(ALL)     ALL
+%wheel    ALL=(root)    ALL
 ```
 
 This is very similar to most distribution's configurations if you ignore the
-environment variables. The root user and members of the wheel group can all
-execute anything as sudo as long as the user can authenticate through PAM and
-the mechanism won't display their password. Usually distributions also include
-additional sudo configuration by including all files in /etc/sudoers.d. This
-config isn't going to be terribly long so we may as well KISS it and not allow
-the inclusion of other files.
+environment variables and comments. The root user and members of the wheel
+group can all execute anything as sudo as long as the user can authenticate
+through PAM and the mechanism won't display their password.
+
+There is also a small restriction in place that ensures members of the wheel
+group will only be executing commands as the root user. Executing as other
+user's directly should be a special case and added separately.
+
+Usually distributions also include additional sudo configuration by including
+all files in /etc/sudoers.d. This config isn't going to be terribly long so we
+may as well KISS it and not allow the inclusion of other files.
 
 ## No Need for the su
 
-The first habit I wanted to break was executing `sudo su -` instead of the
-correct `sudo -s`.
+The first habit I wanted to break was executing `sudo su -` instead of `sudo
+-s`. Generally when sudo is configured correctly, administrators are supposed
+to minimize the number of times dropping to a root shell. There are always
+going to be times when a root shell is necessary.
+
+The differences between the two methods of executing a root shell are subtle.
+They are creating to different types of shells. Executing `sudo su -` creates
+a login shell, while `sudo -s` doesn't. Both can be subtly changed to provide
+the other type (Adding the `-i` flag to sudo, or removing the `-` from su).
+
+A login shell resets your environment, spawns the new
+user's default shell (in this case root's default shell) and executes the
+user's profile scripts in addition to the shell's rc files.
+
+By not using a login shell, administrators can keep their preferred shells
+while allowing selective bits of their configuration (whitelisted environment
+variables) through to the new session.
+
+By removing `su` from the process, administrators can enforce permitted root
+shells just like whitelisting or blacklisting any other binary on the system.
+The only way to enforce this transition is to blacklist `su` directly.
+
+A blacklist is added by creating a command alias that includes the commands to
+be blacklisted, then adjusting ACLs to make use of them. These need to be
+defined before they're used. Generally this means all command aliases are at
+the top of the config file. The following command alias will be used for our
+blacklist. The path to `su` is valid for CentOS 7, other distributions do
+vary.
+
+```
+Cmnd_Alias BLACKLIST = /bin/su
+```
+
+To enforce the blacklist the wheel group ACL needs to be adjusted to the
+following:
+
+```
+%wheel  ALL=(root)  ALL,!BLACKLIST
+```
+
+Now when you try to execute `sudo su -` you'll instead get this warning after
+authenticating:
+
+```
+Sorry, user <username> is not allowed to execute '/bin/su -' as root on <hostname>.
+```
+
+This warning will enforce not using the less ideal mechanism.
+
+## Brief Interlude on Blacklists
+
+I'm going to be adding several more things to different forms of blacklists
+inside sudo. Some of these may be unacceptably inconvenient for some
+environments. If you find the explained reason insufficient to justify the
+inconvenience and are willing to accept the risk, remove the offender from the
+blacklist.
+
+There is also always a risk that programs allowed through the blacklist have
+the ability to execute blacklisted applications as root. The blacklist applies
+only to direct execution through sudo.
+
+Preventing 'commonly used' escalation vectors does make it that much harder on
+potential attackers and may allow you see an attack in progress through the
+logs. This should not be considered perfect though. A good example of these
+vectors is the utility `awk`. If allowed to be executed through sudo an
+unrestricted root shell can be acquired with the following command:
+
+```
+sudo awk 'BEGIN {system("/bin/sh")}'
+```
+
+## Editing Files as Root
+
+Commonly when I wanted to edit a particular sensitive configuration file, I
+would drop to a root shell, then open the file in my preferred editor, possibly
+saving along the way until I was done. Less commonly I would open my editor
+directly using `sudo` skipping the shell entirely.
+
+The partially complete saves as part of that workflow, have caused issues
+though they're temporary. Sudo provides a utility, `sudoedit`, that covers this
+use case. It make a copy of the file to be edited into a temporary directory,
+and allows you to edit and save as you like. When you're done save the file and
+it will replace the real file with the temporary one you've been editing.
+
+Editing the sudoers file itself should be done using the `visudo` command. And
+can be invoked by:
+
+```
+sudo visudo
+```
+
+It's a good idea to restrict the list of editors that can be used by visudo
+(this doesn't affect sudoedit at all) by adding the following line (replace
+this with your preferred, colon separated list of editors):
+
+```
+Defaults editor = /usr/bin/vim:/usr/bin/nano
+```
