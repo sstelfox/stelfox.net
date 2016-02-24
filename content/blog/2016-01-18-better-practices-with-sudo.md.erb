@@ -42,6 +42,11 @@ granularity of control.
 I'm going to work through the changes I've made slowly building up my final
 config.
 
+***These changes, if made incorrectly or with the wrong paths to binaries may
+effect your ability to get privileged access to the system. I strongly
+encourage you to maintain a root shell independent of the shell you are using
+to test just in case you need to revert a breaking change.***
+
 ## Minimal Configuration
 
 Rather than looking at what needs to be changed, or removed I prefer to start
@@ -175,5 +180,150 @@ It's a good idea to restrict the list of editors that can be used by visudo
 this with your preferred, colon separated list of editors):
 
 ```
-Defaults editor = /usr/bin/vim:/usr/bin/nano
+Defaults editor = /bin/vim:/bin/nano
 ```
+
+## User Writable Directories
+
+Since the blacklist functionality is based on full paths to binaries, there is
+a quick way for a user with sudo permissions to bypass the blacklist for a
+specific program, copy it somewhere else.
+
+When an attacker gets into a system and downloads a binary off their site they
+want to run with privileges. They'll have to put it somewhere they have
+permission to write to.
+
+This is less of a threat if you always require authentication to use sudo,
+trust all your administrators, and are confident their credentials will never
+be stolen.
+
+A salve to both problems is simply to prevent sudo from executing files in user
+writable directories, and ensuring it has a sane path to lookup trusted
+binaries. The following three lines need to be added to the sudoers file:
+
+```
+Cmnd_Alias USER_WRITEABLE = /home/*, /tmp/*, /var/tmp/*
+Defaults ignore_dot
+Defaults secure_path = /sbin:/bin:/usr/sbin:/usr/bin
+```
+
+We also need to modify our wheel ACL to prevent the execution in the aliases
+locations. Replace your previous line with the following one:
+
+```
+%wheel  ALL=(root)  ALL,!BLACKLIST,!USER_WRITEABLE
+```
+
+## Preventing Breakouts
+
+I've already shown that there is a way to abuse individual commands to expose a
+root shell. There are a few additional common applications that can regularly
+shell out, advanced text editors, pagers, several unix utilities and any
+interactive programming shell are easy candidates.
+
+These utilities likely still need to be available for general administrative
+purposes, but we don't want them in turn executing other programs. Sudo has a
+trick up it's sleeve for this, the noexec flag.
+
+There are two ways to effectively apply this, a whitelist and a blacklist. I
+encourage you to try the whitelist approach first as it does offer
+substantially better protection against this potential abuse.
+
+Before applying this it is useful to know how this works and what it's
+limitations are. Sudo disables the exec call using LD_PRELOAD and defining an
+alternate version of the system call. This is largely effective, but will only
+work with dynamically linked programs (most coming from a distribution are
+going to be dynamically linked).
+
+### Whitelisting Programs w/ Exec Privileges
+
+This is very strict but also very effective. We need to ensure that things we
+expect and want to be able to execute other programs (like shells) still can.
+Additionally visudo in turn executes your editor, so it to needs to be able to
+spawn programs.
+
+Be very sure of the paths in the following change. If you have no shells, or
+editors that can be executed as root through sudo you may lock yourself out of
+your system privileges.
+
+```
+Cmnd_Alias SHELLS = /bin/sh, /bin/bash
+Cmnd_Alias ALLOWED_EXEC = /usr/sbin/visudo
+Defaults noexec
+Defaults!ALLOWED_EXEC,SHELLS !noexec
+```
+
+As you use this in your environment you will probably find programs that behave
+incorrectly and will need to be added to the whitelist. This whitelist
+(assuming your paths are correct) will at least be enough to allow future
+modifications of the sudoers file.
+
+### Blacklisting Programs w/ Exec Privileges
+
+This is a much milder version of the exec restrictions, and won't catch unknown
+abuses. This will also have the least impact on normal operations to apply and
+is better than nothing.
+
+```
+Cmnd_Alias EDITORS     = /bin/vim
+Cmnd_Alias PAGERS      = /bin/less, /bin/more
+Cmnd_Alias BREAKOUT    = /bin/awk, /bin/find
+Cmnd_Alias DEVEL_SHELL = /bin/perl, /bin/python, /bin/ruby
+
+Defaults!EDITORS,PAGERS,BREAKOUT,DEVEL_SHELL noexec
+```
+
+## TTYs!
+
+Enforcing the use of TTYs generally prevents non-interactive processes from
+executing anything as sudo either remotely or locally. Examples of this might
+be from cron, apache, or from a remote Jenkins server. In almost all cases
+prevention of this type of execution is the ideal behavior.
+
+There are a [couple][1] of very [visible][2] search results on this topic that
+indicate there isn't any security benefit to this. One of the leading arguments
+that is valid, is that it takes no privileges to create a PTY. The `script`
+command already does this effectively.
+
+What this does do, is make it harder for a remote attacker or a local process,
+to abuse password-less permissions granted to sudo. It's another layer for them
+to actively work around, while being trivial to an administrator to whitelist a
+set of expected commands run by a user to allow this kind of execution only
+where necessary.
+
+TODO
+
+```
+Defaults requiretty, use_pty
+```
+
+## Notification of Violation
+
+```
+Defaults mail_badpass, mail_no_perms
+Defaults mailfrom = "root"
+Defaults mailsub  = "Sudo Security Alert for %h"
+```
+
+## Dealing with Interactive Shells
+
+With all the protections put in place so far, we still have no visibility or
+restrictions on what administrators do with the root shells when they
+use them.
+
+If you didn't go the whitelist exec route, you'll need to pull in the SHELL
+command alias from their to make use of this.
+
+```
+Defaults iolog_file = %Y%m%d_%{seq}_%{user}
+Defaults!SHELLS log_output
+```
+
+## SELinux
+
+TODO...
+
+[1]: https://unix.stackexchange.com/questions/65774/is-it-okay-to-disable-requiretty
+[2]: https://bugzilla.redhat.com/show_bug.cgi?id=1020147
+[3]: https://superuser.com/questions/180764/sudoers-files-requiretty-flag-security-implications
+
