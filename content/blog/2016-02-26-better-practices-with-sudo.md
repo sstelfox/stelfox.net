@@ -1,7 +1,7 @@
 ---
 title: 'Better Practices With Sudo'
-created_at: 2016-01-18 17:25:22 -0500
-updated_at: 2016-01-18 17:25:22 -0500
+created_at: 2016-02-26 17:45:22 -0500
+updated_at: 2016-02-26 17:45:22 -0500
 kind: article
 published: true
 type: post
@@ -281,17 +281,31 @@ be from cron, apache, or from a remote Jenkins server. In almost all cases
 prevention of this type of execution is the ideal behavior.
 
 There are a [couple][1] of very [visible][2] search results on this topic that
-indicate there isn't any security benefit to this. One of the leading arguments
-that is valid, is that it takes no privileges to create a PTY. The `script`
-command already does this effectively.
+indicate there isn't any security benefit to this, but their are
+[exceptions][3] as well. The argument that seems to have the most merit, is
+that no special privileges are required to create a PTY. This in turn means an
+attacking process could spawn the PTY required, and continue it's attack.
 
-What this does do, is make it harder for a remote attacker or a local process,
-to abuse password-less permissions granted to sudo. It's another layer for them
-to actively work around, while being trivial to an administrator to whitelist a
-set of expected commands run by a user to allow this kind of execution only
-where necessary.
+The same argument could be used in favor of the option. An attacker would have
+learn they need to make this adjustment and actively work around it. As the
+administrator you know the option is set and should be able to work around it
+more easily than the attacker.
 
-TODO
+The most common form of pain seems to be remotely executing privileged commands
+through ssh. By providing the SSH command being executed the '-t' flag twice,
+the client will force a PTY allocation even when there is no local tty. Other
+more stubborn use cases can be individually exempted.
+
+When the user already has a local TTY, the sudoers man page calls out to an
+additional potential attack vector around TTYs under the 'use_pty' option:
+
+> A malicious program run under sudo could conceivably fork a background
+> process that retains to the user's terminal device after the main program has
+> finished executing. Use of this option will make that impossible.
+
+I haven't been able to find any attacks that exploit this possibility, but I
+have yet to be impacted by turning that feature on within sudo. Making both
+changes can be done by adding the following line to the sudoers config.
 
 ```
 Defaults requiretty, use_pty
@@ -299,31 +313,92 @@ Defaults requiretty, use_pty
 
 ## Notification of Violation
 
+Receiving immediate notification when privilege gain has been attempted can be
+invaluable to stopping an attacker before they can do any damage. If the linux
+system has a properly configured MTA forwarding root's email to relevant
+parties it is recommended to have failure mailed to them directly to take
+action.
+
 ```
 Defaults mail_badpass, mail_no_perms
-Defaults mailfrom = "root"
-Defaults mailsub  = "Sudo Security Alert for %h"
+Defaults mailfrom = root
+Defaults mailsub = "Sudo Policy Violation on %H by %u"
 ```
 
-## Dealing with Interactive Shells
+The overridden subject provides everything but the command itself (which isn't
+available through the expanded variables) needed to quickly judge a threat at a
+glance.
+
+## Auditing Interactive Shells
 
 With all the protections put in place so far, we still have no visibility or
 restrictions on what administrators do with the root shells when they
-use them.
+use them. These should hopefully be relatively few and far between.
 
-If you didn't go the whitelist exec route, you'll need to pull in the SHELL
-command alias from their to make use of this.
+Built into sudo is an option to *record* execution of commands. This has proven
+to be valuable to narrow down things that have gone wrong, or see how something
+was done before. This may not prove useful as much for an audit tool as a user
+with root privileges can purge the recordings and logs.
+
+If auditing is the goal, use of the kernel audit subsystem may be a better
+choice, but will only give you the command and arguments executed. This shows
+what was displayed to the privileged shell directly. There will be a future
+article covering the use of the audit subsystem and centralizing the
+information in a future post.
+
+If you didn't go the whitelist exec route, to enable this you will need to pull
+in the 'SHELLS' command alias from there to make use of this.
 
 ```
-Defaults iolog_file = %Y%m%d_%{seq}_%{user}
 Defaults!SHELLS log_output
 ```
 
-## SELinux
+Once this is in place you can get a list of recorded sessions using the
+command:
 
-TODO...
+```
+$ sudo sudoreplay -l
+Feb 26 17:56:18 2016 : jdoe : TTY=/dev/pts/7 ; CWD=/home/jdoe ; USER=root ; TSID=000001 ; COMMAND=/bin/bash
+```
+
+To view an individual session provide `sudoreplay` with the TSID value of the
+session like so:
+
+```
+$ sudo sudoreplay 000001
+```
+
+Refer to the man page of sudoreplay for additional tricks such as speeding up
+playback.
+
+## Final Config
+
+Some of the options from above I have combined into a single config line. This
+uses the stricter whitelist policy for exec privileges.
+
+```
+# /etc/sudoers
+
+Cmnd_Alias ALLOWED_EXEC = /usr/sbin/visudo
+Cmnd_Alias BLACKLIST = /usr/bin/su
+Cmnd_Alias SHELLS = /usr/bin/sh, /usr/bin/bash
+Cmnd_Alias USER_WRITEABLE = /home/*, /tmp/*, /var/tmp/*
+
+Defaults env_reset, mail_badpass, mail_no_perms, noexec, requiretty, use_pty
+Defaults !visiblepw
+
+Defaults editor = /usr/bin/vim
+Defaults mailfrom = root
+Defaults mailsub = "Sudo Policy Violation on %H by %u"
+Defaults secure_path = /sbin:/sbin:/usr/sbin:/usr/bin
+
+Defaults!ALLOWED_EXEC,SHELLS !noexec
+Defaults!SHELLS log_output
+
+root    ALL=(ALL)   ALL
+%wheel  ALL=(root)  ALL,!BLACKLIST,!USER_WRITEABLE
+```
 
 [1]: https://unix.stackexchange.com/questions/65774/is-it-okay-to-disable-requiretty
 [2]: https://bugzilla.redhat.com/show_bug.cgi?id=1020147
 [3]: https://superuser.com/questions/180764/sudoers-files-requiretty-flag-security-implications
-
