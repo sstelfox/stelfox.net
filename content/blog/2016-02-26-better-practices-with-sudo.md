@@ -390,7 +390,7 @@ Defaults !visiblepw
 Defaults editor = /usr/bin/vim
 Defaults mailfrom = root
 Defaults mailsub = "Sudo Policy Violation on %H by %u"
-Defaults secure_path = /sbin:/sbin:/usr/sbin:/usr/bin
+Defaults secure_path = /sbin:/bin:/usr/sbin:/usr/bin
 
 Defaults!ALLOWED_EXEC,SHELLS !noexec
 Defaults!SHELLS log_output
