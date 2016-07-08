@@ -20,18 +20,27 @@ openssl dhparam -rand - 1024 > dh1024.pem
 
 # Create the CA
 touch /etc/pki/CA/index.txt
-echo -e 'US\nVermont\nBurlington\n0x378.net\n\nca.0x378.net\n\n' \
+echo -e 'US\nVermont\nBurlington\nstelfox.net\n\nca.stelfox.net\n\n' \
   | openssl req -new -x509 -newkey rsa:2048 -keyout ca.key -nodes -days 365 \
   -out ca.crt &> /dev/null
 
 # Create the server key & csr
-echo -e 'US\nVermont\nBurlington\n0x378.net\n\nairlock-01.i.0x378.net\n\n\n\n' \
+echo -e 'US\nVermont\nBurlington\nstelfox.net\n\nwild-spring-cobweb.stelfox.net\n\n\n\n' \
   | openssl req -newkey rsa:2048 -keyout server.key -nodes -days 365 \
   -out server.csr &> /dev/null
 
 # Sign the server cert
 openssl x509 -req -in server.csr -days 365 -CA ca.crt -CAkey ca.key \
   -set_serial 01 -out server.crt
+
+# Create the client key & csr
+echo -e 'US\nVermont\nBurlington\nstelfox.net\n\nclient01.stelfox.net\n\n\n\n' \
+  | openssl req -newkey rsa:2048 -keyout client.key -nodes -days 365 \
+    -out client.csr &> /dev/null
+
+# Sign the client cert
+openssl x509 -req -in client.csr -days 365 -CA ca.crt -CAkey ca.key \
+  -set_serial 01 -out client.crt
 ```
 
 Create the server configuration file:
@@ -53,14 +62,12 @@ ifconfig-pool 10.8.0.4 10.8.0.255
 ifconfig-pool-persist ipp.txt
 
 push "route 10.8.0.1 255.255.255.255"
-push "route 10.0.0.0 255.255.255.0"
+route 10.8.0.0 255.255.255.0
 
 comp-lzo
 
 keepalive 10 60
 inactive 600
-
-route 10.8.0.0 255.255.255.0
 
 user openvpn
 group openvpn
@@ -74,3 +81,9 @@ log-append openvpn.log
 EOF
 ```
 
+```
+iptables -t filter -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+iptables -t filter -A FORWARD -s 10.8.0.0/16 -i tun0 -o eth0 -j ACCEPT
+iptables -t nat -A POSTROUTING -s 10.8.0.0/16 -o eth0 -j MASQUERADE
+echo 1 > /proc/sys/net/ipv4/ip_forward
+```
