@@ -1,15 +1,11 @@
 ---
-title: 'Better Practices With Sudo'
-created_at: 2016-02-26 17:45:22 -0500
-updated_at: 2016-02-26 17:45:22 -0500
-kind: article
-published: true
-type: post
-layout: blog_post
+date: 2016-02-26 17:45:22 -0500
+slug: "better-practices-with-sudo"
 tags:
 - linux
 - security
 - sudo
+title: "Better Practices With Sudo"
 ---
 
 I work with a lot of different linux machines from embedded devices, to cloud

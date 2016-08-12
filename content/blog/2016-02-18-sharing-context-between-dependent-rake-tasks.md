@@ -1,14 +1,10 @@
 ---
-title: 'Sharing Context Between Dependent Rake Tasks'
-created_at: 2016-02-18 15:46:12 -0500
-updated_at: 2016-02-18 15:46:12 -0500
-kind: article
-published: true
-type: post
-layout: blog_post
+date: 2016-02-18 15:46:12 -0500
+slug: "sharing-context-between-dependent-rake-tasks"
 tags:
 - ruby
 - rake
+title: "Sharing Context Between Dependent Rake Tasks"
 ---
 
 I use Rakefiles quite a bit like traditional Makefiles, in that I specify
