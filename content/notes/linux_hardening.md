@@ -1,8 +1,8 @@
 ---
-title: Hardening
+title: Linux Hardening
 ---
 
-# Hardening
+# Linux Hardening
 
 PLEASE NOTE: This guide was developed for Red Had Based architectures,
 specifically CentOS 5, and Fedora 16+. A lot of the information here is

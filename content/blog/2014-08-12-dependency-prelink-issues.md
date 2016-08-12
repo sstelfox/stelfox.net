@@ -50,4 +50,4 @@ with aide checks and causing other weird issues. The memory trade-off isn't
 valuable enough for me.
 
 [1]: http://lists.centos.org/pipermail/centos/2007-December/049222.html
-[2]: {{< relref "knowledge_base/linux/hardening.md" >}}
+[2]: {{< relref "notes/linux_hardening.md" >}}

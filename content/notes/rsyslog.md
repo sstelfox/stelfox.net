@@ -324,9 +324,9 @@ well as RSyslog. The developers are continuing to develop in a security
 concious way (such as integrating encryption, and third party message
 signatures) and stability (such as log queues).
 
-[1]: <%= @items['/knowledge_base/linux/certificate_authority/'].path %>
+[1]: {{ relref "notes/certificate_authority" }}
 [2]: http://code.google.com/p/eventlog-to-syslog/
 [3]: http://www.rsyslog.com/doc/sigprov_gt.html
 [4]: http://guardtime.com/
 [5]: https://www.startssl.com/
-[6]: <%= @items['/knowledge_base/linux/logrotate/'].path %>
+[6]: {{ relref "notes/logrotate" }}
