@@ -2,10 +2,9 @@
 date: 2009-02-26 20:10:34+00:00
 slug: "impressive-setup"
 tags:
-- development-environment
 - php
 - voom
-title: 'Impressive Setup...'
+title: "Impressive Setup..."
 type: post
 ---
 

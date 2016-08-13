@@ -18,15 +18,15 @@ input. I went searching for a standalone library to handle this validation for
 me. Something that had already been tested and examined by the wonderful open
 source community (Can you tell where my loyalties lie?).
 
-I finally get pointed in the direction of [Inspekt][1]. From the Google Code
-page:
+I finally get pointed in the direction of
+[Inspekt](http://code.google.com/p/inspekt/). From the Google Code page:
 
 > Inspekt acts as a sort of 'firewall' API between user input and the rest  of
-> the application.  It takes PHP superglobal arrays, encapsulates  their data
-> in an "cage" object, and destroys the original superglobal.   Data can then
-> be retrieved from the input data object using a variety of  accessor methods
+> the application. It takes PHP superglobal arrays, encapsulates their data
+> in an "cage" object, and destroys the original superglobal. Data can then
+> be retrieved from the input data object using a variety of accessor methods
 > that apply filtering, or the data can be checked  against validation methods.
-> Raw data can only be accessed via a  'getRaw()' method, forcing the developer
+> Raw data can only be accessed via a 'getRaw()' method, forcing the developer
 > to show clear intent.
 
 Inspekt conveniently comes with several predefined validators (called tests)
@@ -41,5 +41,3 @@ variable or array or just put filters and tests on them. It never gets rid of
 the raw input either if you ever need that again. For anyone out there that
 needs to validate input from anywhere, I'd strongly recommend taking a look at
 Inspekt.
-
-[1]: http://code.google.com/p/inspekt/

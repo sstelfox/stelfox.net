@@ -4,7 +4,7 @@ slug: "nice-update"
 tags:
 - updates
 - wordpress
-title: 'Nice Update'
+title: "Nice Update"
 type: post
 ---
 

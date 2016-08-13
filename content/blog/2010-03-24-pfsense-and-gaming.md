@@ -2,7 +2,6 @@
 date: 2010-03-24 14:18:00+00:00
 slug: "pfsense-and-gaming"
 tags:
-- gaming
 - networking
 - pfsense
 title: "pfSense and Gaming"

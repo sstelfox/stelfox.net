@@ -4,6 +4,8 @@ slug: "open-source-firewall-reviews-virtualization"
 tags:
 - firewall
 - virtualization
+series:
+- 2009 Firewall Reviews
 title: "Open Source Firewall Reviews: Virtualization"
 type: post
 ---

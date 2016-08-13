@@ -8,7 +8,9 @@ tags:
 - networking
 - pfsense
 - traffic-shaping
-title: 'Open Source Firewall Reviews: Intro & pfSense'
+series:
+- 2009 Firewall Reviews
+title: "Open Source Firewall Reviews: Intro & pfSense"
 type: post
 ---
 
@@ -29,11 +31,11 @@ The more common features on my requirements are port forwarding, stateful
 firewall with per interface rules, remote syslog logging, DHCP server, DMZ, and
 VPN access (perferably PPTP and OpenVPN).
 
-For a long time I've been an avid supporter of [pfSense][1]. For those of you
-not interested in following the link, pfSense is a BSD firewall/router based on
-a very strong distribution called m0n0wall. pfSense is in a nutshell a
-frankenstein of some of the best pieces of the open source BSDs out there all
-wrapped in a bunch of PHP based scripts.
+For a long time I've been an avid supporter of [pfSense](http://pfsense.org/).
+For those of you not interested in following the link, pfSense is a BSD
+firewall/router based on a very strong distribution called m0n0wall. pfSense is
+in a nutshell a frankenstein of some of the best pieces of the open source BSDs
+out there all wrapped in a bunch of PHP based scripts.
 
 As much as I love pfSense there have been a few issues that I've grown to live
 with. The first being a large number of NAT issues. I'm not really sure how to
@@ -104,5 +106,3 @@ a solid well rounded firewall don't let my issues deter you. There is a version
 although it's alpha software right now and I didn't really want to have to
 troubleshoot my home network all the time due to buggy software when I'm trying
 to relax.
-
-[1]: http://pfsense.org/
