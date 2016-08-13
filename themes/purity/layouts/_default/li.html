@@ -1,0 +1,21 @@
+<article class="li {{ .Type }}">
+  <header class="post-header">
+    <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    <h3><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 02, 2006" }}</time> &mdash; {{ .FuzzyWordCount }} Words &mdash; About {{ .ReadingTime }} Minutes to Read</h3>
+    {{ range .Params.tags }}
+      <a href="/tags/{{ . | urlize }}">#{{ . }}</a>
+    {{ end }}
+  </header>
+
+  <section class="post-excerpt">
+    <p>{{ .Summary }}</p>
+    {{ if .Truncated }}
+    <a href="{{ .RelPermalink }}">Read More...</a>
+    {{ end }}
+  </section>
+
+  <footer class="post-footer">
+    <!-- Related posts... or other posts in the series... -->
+    <!-- Comments Could Go Here -->
+  </footer>
+</article>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="{{ with .Site.LanguageCode }}{{ . }}{{ else }}en-US{{ end }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{ .Hugo.Generator }}
+
+    <link href="//fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/skeleton.css">
+    <link rel="stylesheet" href="/css/custom.css">
+    <link rel="alternate" href="/index.xml" type="application/rss+xml" title="{{ .Site.Title }}">
+
+    <title>{{ $home := eq .Title .Site.Title }}{{ .Title }}{{ if eq $home false }} - {{ .Site.Title }}{{ end }}</title>
+  </head>
+  <body>
+    <div class="container">
+    <header role="banner">
+      <div>
+        <a href="/"><img src="{{ .Site.Params.logo }}" width="80" height="80" alt="{{ .Site.Title }}" class="header-logo" /></a>
+      </div>
+      {{ if eq $home true }}<h1>{{ .Site.Title }}</h1>{{ end }}
+    </header>
