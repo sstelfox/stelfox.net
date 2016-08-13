@@ -1,5 +1,6 @@
 ---
 title: MySQL
+type: note
 ---
 
 # MySQL

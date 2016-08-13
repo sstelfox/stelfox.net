@@ -6,6 +6,7 @@ tags:
 - riak
 - talk
 title: "Riak Talk Summary"
+type: post
 ---
 
 This evening [Gabe Koss][1] and myself gave a lightning talk on [Riak][2] at

@@ -1,5 +1,6 @@
 ---
 title: Nagios
+type: note
 ---
 
 # Nagios

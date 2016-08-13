@@ -2,6 +2,7 @@
 date: 2010-06-18 17:10:33+00:00
 slug: "inspeckt-and-user-input"
 title: "Inspeckt and User Input"
+type: post
 ---
 
 I started working on a rather large PHP based project that needed to take input

@@ -1,5 +1,6 @@
 ---
 title: NTPDate
+type: note
 ---
 
 # NTPDate

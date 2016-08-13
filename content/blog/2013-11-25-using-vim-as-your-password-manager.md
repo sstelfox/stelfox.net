@@ -7,6 +7,7 @@ tags:
 - passwords
 - dotfiles
 title: "Using VIM as Your Password Manager"
+type: post
 ---
 
 There are all kinds of password managers out there. Everything from [web

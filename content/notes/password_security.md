@@ -3,6 +3,7 @@ title: Password Security
 tags:
 - passwords
 - security
+type: note
 ---
 
 ## Random Password Generation

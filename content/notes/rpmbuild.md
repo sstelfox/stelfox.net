@@ -1,5 +1,6 @@
 ---
 title: RPM Build
+type: note
 ---
 
 # RPM Build

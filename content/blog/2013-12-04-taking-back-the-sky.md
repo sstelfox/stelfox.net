@@ -6,6 +6,7 @@ tags:
 - drones
 - news
 title: "Taking Back the Sky"
+type: post
 ---
 
 During my daily review of various new sources I came across one particular

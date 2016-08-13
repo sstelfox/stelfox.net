@@ -1,5 +1,6 @@
 ---
 title: Ruby
+type: note
 ---
 
 # Ruby

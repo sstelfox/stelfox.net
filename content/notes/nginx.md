@@ -1,5 +1,6 @@
 ---
 title: NGinx
+type: note
 ---
 
 # NGinx

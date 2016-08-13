@@ -2,6 +2,7 @@
 date: 2011-02-17 18:49:56+00:00
 slug: "exploration-of-ipv6-part-0-overview-and-project-goals"
 title: 'Exploration of IPv6 Part 0: Overview and Project Goals'
+type: post
 ---
 
 Last week I finally picked up a project that I've been putting off for far too

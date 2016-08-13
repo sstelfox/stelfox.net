@@ -1,5 +1,6 @@
 ---
 title: Arduino
+type: note
 ---
 
 # Arduino

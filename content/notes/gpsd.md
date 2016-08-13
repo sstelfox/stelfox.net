@@ -1,5 +1,6 @@
 ---
 title: GPSd
+type: note
 ---
 
 ## Installation

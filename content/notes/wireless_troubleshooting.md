@@ -1,5 +1,6 @@
 ---
 title: Wireless Troubleshouting
+type: note
 ---
 
 # Wireless Troubleshooting

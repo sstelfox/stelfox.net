@@ -1,5 +1,6 @@
 ---
 title: OpenStack Glance
+type: note
 ---
 
 # OpenStack Glance

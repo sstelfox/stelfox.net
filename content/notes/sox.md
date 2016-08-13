@@ -1,5 +1,6 @@
 ---
 title: Sox
+type: note
 ---
 
 # Sox

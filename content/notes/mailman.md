@@ -1,5 +1,6 @@
 ---
 title: Mailman
+type: note
 ---
 
 # Mailman

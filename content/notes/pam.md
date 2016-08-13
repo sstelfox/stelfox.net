@@ -1,5 +1,6 @@
 ---
 title: PAM
+type: note
 ---
 
 # PAM

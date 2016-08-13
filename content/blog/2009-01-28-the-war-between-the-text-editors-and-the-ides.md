@@ -1,10 +1,11 @@
 ---
 date: 2009-01-28 21:54:08+00:00
-slug: "the-war-between-the-text-editors-and-the-ideas"
+slug: "the-war-between-the-text-editors-and-the-ides"
 tags:
 - development
 - ides
 title: "The War Between the Text Editors and the IDEs"
+type: post
 ---
 
 Long has been the battle of programming in a text editor and IDEs. Both sides

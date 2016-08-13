@@ -7,6 +7,7 @@ tags:
 - programming
 - tips
 title: "Creating an Empty Git Branch"
+type: post
 ---
 
 Every now and then I find myself wanting to create a new empty branch in an

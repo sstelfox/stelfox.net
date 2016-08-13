@@ -1,5 +1,6 @@
 ---
 title: DHCPd
+type: note
 ---
 
 # DHCPd

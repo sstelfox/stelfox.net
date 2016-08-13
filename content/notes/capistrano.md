@@ -1,5 +1,6 @@
 ---
 title: Capistrano
+type: note
 ---
 
 # Capistrano

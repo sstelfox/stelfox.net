@@ -1,5 +1,6 @@
 ---
 title: Icinga
+type: note
 ---
 
 # Icinga

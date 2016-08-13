@@ -1,5 +1,6 @@
 ---
 title: IPTables
+type: note
 ---
 
 # iptables

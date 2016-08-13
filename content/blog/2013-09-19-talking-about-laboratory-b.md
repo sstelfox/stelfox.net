@@ -6,6 +6,7 @@ tags:
 - interview
 - youtube
 title: "Talking about Laboratory B"
+type: post
 ---
 
 Recently Justin England and myself were interviewed on a local television

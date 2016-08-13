@@ -1,5 +1,6 @@
 ---
 title: Logwatch
+type: note
 ---
 
 # Logwatch

@@ -2,6 +2,7 @@
 date: 2011-02-25 14:37:39+00:00
 slug: "linux-n-issues-kde-multi-monitor-woes"
 title: 'Linux N Issues & KDE Multi-Monitor Woes'
+type: post
 ---
 
 So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE

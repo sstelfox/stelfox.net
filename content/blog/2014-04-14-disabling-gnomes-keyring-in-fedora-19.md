@@ -6,6 +6,7 @@ tags:
 - gnome
 - ssh
 title: "Disabling Gnome's Keyring in Fedora 19"
+type: post
 ---
 
 An update too Fedora a while ago started causing some unexpected behavior with

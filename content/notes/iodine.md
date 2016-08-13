@@ -1,5 +1,6 @@
 ---
 title: Iodine
+type: note
 ---
 
 # Iodine

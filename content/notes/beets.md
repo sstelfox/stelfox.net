@@ -1,5 +1,6 @@
 ---
 title: Beets
+type: note
 ---
 
 # Beets

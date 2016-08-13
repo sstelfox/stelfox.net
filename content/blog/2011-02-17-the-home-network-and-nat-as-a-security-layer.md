@@ -2,6 +2,7 @@
 date: 2011-02-17 18:15:02+00:00
 slug: "the-home-network-and-nat-as-a-security-layer"
 title: 'The Home Network and NAT as a Security Layer'
+type: post
 ---
 
 One of the hot-topics for IPv6 (which I have been thinking about a lot lately)

@@ -1,5 +1,6 @@
 ---
 title: iSCSId
+type: note
 ---
 
 # iSCSId

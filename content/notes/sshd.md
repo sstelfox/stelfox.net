@@ -6,6 +6,7 @@ tags:
 - security
 - service
 - ssh
+type: note
 ---
 
 Secure Shell or SSH is a network protocol that allows data to be exchanged

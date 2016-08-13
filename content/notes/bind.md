@@ -1,5 +1,6 @@
 ---
 title: Bind
+type: note
 ---
 
 # Bind

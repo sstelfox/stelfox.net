@@ -1,5 +1,6 @@
 ---
 title: Festival
+type: note
 ---
 
 # Festival

@@ -6,6 +6,7 @@ tags:
 - backups
 - google
 title: "Downloading Google Mail and Calendar Data"
+type: post
 ---
 
 I [recently posted][1] a guide on backing up your Gmail with fetchmail. This

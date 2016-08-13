@@ -6,6 +6,7 @@ tags:
 - linux
 - password
 title: "Creating Crypt Style SHA512 Passwords With Ruby"
+type: post
 ---
 
 I needed to generate crypt-style SHA512 passwords in ruby for an `/etc/shadow`

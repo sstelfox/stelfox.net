@@ -1,5 +1,6 @@
 ---
 title: Postfix
+type: note
 ---
 
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was

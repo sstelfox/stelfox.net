@@ -7,6 +7,7 @@ tags:
 - utilities
 - pipes
 title: "Unbuffered Pipe Filters"
+type: post
 ---
 
 I need to filter a live logstream for only relevant events and quickly hit an

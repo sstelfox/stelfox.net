@@ -1,5 +1,6 @@
 ---
 title: Grub
+type: note
 ---
 
 # Grub

@@ -1,5 +1,6 @@
 ---
 title: Partitioning
+type: note
 ---
 
 # Partitioning

@@ -1,5 +1,6 @@
 ---
 title: EZStream
+type: note
 ---
 
 # EZStream

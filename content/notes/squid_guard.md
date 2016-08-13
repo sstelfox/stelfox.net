@@ -1,5 +1,6 @@
 ---
 title: Squid Guard
+type: note
 ---
 
 # Squid Guard

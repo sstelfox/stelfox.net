@@ -1,5 +1,6 @@
 ---
 title: VPN
+type: note
 ---
 
 VPN Provides remote access to local network from authenticated clients. It can

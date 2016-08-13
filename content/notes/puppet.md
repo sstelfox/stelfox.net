@@ -1,5 +1,6 @@
 ---
 title: Puppet
+type: note
 ---
 
 # Puppet

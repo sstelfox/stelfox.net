@@ -1,5 +1,6 @@
 ---
 title: Router
+type: note
 ---
 
 # Router

@@ -2,6 +2,7 @@
 dated: 2012-02-14 18:08:51+00:00
 slug: "rubys-xmlrpcclient-and-ssl"
 title: "Ruby's XMLRPC::Client and SSL"
+type: post
 ---
 
 For the past few days I've been working on a Ruby project that needed to

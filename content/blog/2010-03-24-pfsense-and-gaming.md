@@ -6,6 +6,7 @@ tags:
 - networking
 - pfsense
 title: "pfSense and Gaming"
+type: post
 ---
 
 Previously while reviewing open source firewall distributions (which I never

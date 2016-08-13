@@ -1,5 +1,6 @@
 ---
 title: Gitorious
+type: note
 ---
 
 # Gitorious

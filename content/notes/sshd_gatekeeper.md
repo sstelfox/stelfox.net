@@ -4,6 +4,7 @@ tags:
 - linux
 - security
 - ssh
+type: note
 ---
 
 If you've already implemented the SSH keys for authentication and have a

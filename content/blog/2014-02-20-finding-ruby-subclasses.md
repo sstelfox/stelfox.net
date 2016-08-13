@@ -4,6 +4,7 @@ slug: "finding-ruby-subclasses"
 tags:
 - ruby
 title: "Finding Ruby Subclasses"
+type: post
 ---
 
 While working through a problem I found it would be immensely useful to be able

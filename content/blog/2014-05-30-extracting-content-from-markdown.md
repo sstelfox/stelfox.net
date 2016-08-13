@@ -7,6 +7,7 @@ tags:
 - search
 - text
 title: "Extracting Content From Markdown"
+type: post
 ---
 
 Recently I've been playing around with building a pure javascript full text

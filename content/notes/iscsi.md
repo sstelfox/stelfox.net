@@ -1,5 +1,6 @@
 ---
 title: iSCSI
+type: note
 ---
 
 # iSCSI

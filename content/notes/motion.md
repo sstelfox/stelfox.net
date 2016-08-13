@@ -1,5 +1,6 @@
 ---
 title: Motion
+type: note
 ---
 
 # Motion

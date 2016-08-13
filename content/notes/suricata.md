@@ -1,5 +1,6 @@
 ---
 title: Suricata
+type: note
 ---
 
 # Suricata

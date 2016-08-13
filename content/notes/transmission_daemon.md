@@ -1,5 +1,6 @@
 ---
 title: Transmission Daemon
+type: note
 ---
 
 # Transmission Daemon

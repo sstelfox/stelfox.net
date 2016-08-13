@@ -1,5 +1,6 @@
 ---
 title: Gitlab
+type: note
 ---
 
 # Gitlab

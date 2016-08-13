@@ -1,5 +1,6 @@
 ---
 title: MySQL Tuning
+type: note
 ---
 
 # MySQL Tuning

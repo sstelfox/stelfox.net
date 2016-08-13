@@ -1,5 +1,6 @@
 ---
 title: 389 Directory Server
+type: note
 ---
 
 # 389 Directory Server

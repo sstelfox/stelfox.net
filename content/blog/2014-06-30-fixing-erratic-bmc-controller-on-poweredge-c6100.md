@@ -5,6 +5,7 @@ tags:
 - server
 - c6100
 title: "Fixing Erratic BMC Controller on PowerEdge C6100"
+type: post
 ---
 
 I randomly started experiencing an issue with one blade in one of my PowerEdge

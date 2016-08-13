@@ -5,6 +5,7 @@ tags:
 - quality
 - ruby
 title: "Ruby Code Quality Metrics"
+type: post
 ---
 
 I like getting unopionated feedback on the quality of the code I write.

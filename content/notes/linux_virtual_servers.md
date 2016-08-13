@@ -1,5 +1,6 @@
 ---
 title: Linux Virtual Servers
+type: note
 ---
 
 # Linux Virtual Servers

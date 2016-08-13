@@ -6,6 +6,7 @@ tags:
 - cyanogenmod
 - security
 title: "Unregistering From WhisperPush After Flashing a New ROM"
+type: post
 ---
 
 I've been playing around with my Nexus 5 lately. It was quickly rooted and I

@@ -2,6 +2,7 @@
 date: 2011-05-01 15:48:08+00:00
 slug: "exploration-of-a-acn-iris-3000"
 title: 'Exploration of an ACN Iris 3000'
+type: post
 ---
 
 So I found a dirt cheap video SIP phone (ACN Iris 3000) at a local HAM fest.

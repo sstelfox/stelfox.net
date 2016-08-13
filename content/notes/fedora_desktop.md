@@ -1,5 +1,6 @@
 ---
 title: Fedora Desktop
+type: note
 ---
 
 # Fedora Desktop

@@ -1,5 +1,6 @@
 ---
 title: Squid
+type: note
 ---
 
 # Squid

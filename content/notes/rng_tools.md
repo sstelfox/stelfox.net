@@ -1,5 +1,6 @@
 ---
 title: RNG Tools
+type: note
 ---
 
 # RNG Tools

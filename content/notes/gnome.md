@@ -1,5 +1,6 @@
 ---
 title: Gnome
+type: note
 ---
 
 # Gnome

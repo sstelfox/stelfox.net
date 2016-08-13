@@ -1,5 +1,6 @@
 ---
 title: Linux Hardening
+type: note
 ---
 
 # Linux Hardening

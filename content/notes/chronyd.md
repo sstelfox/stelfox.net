@@ -1,5 +1,6 @@
 ---
 title: Chronyd
+type: note
 ---
 
 # Chronyd

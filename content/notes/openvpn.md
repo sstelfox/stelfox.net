@@ -1,5 +1,6 @@
 ---
 title: OpenVPN
+type: note
 ---
 
 # OpenVPN

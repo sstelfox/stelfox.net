@@ -1,5 +1,6 @@
 ---
 title: GPG Keypairs
+type: note
 ---
 
 # GPG Keypairs

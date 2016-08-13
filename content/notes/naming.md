@@ -1,5 +1,6 @@
 ---
 title: Naming
+type: note
 ---
 
 # Naming

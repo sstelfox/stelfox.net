@@ -1,5 +1,6 @@
 ---
 title: Openstack Keystone
+type: note
 ---
 
 # Openstack Keystone

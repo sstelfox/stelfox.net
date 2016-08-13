@@ -6,6 +6,7 @@ tags:
 - ruby
 - websites
 title: "Security Through Obesity"
+type: post
 ---
 
 Jeremy Spilman recently [proposed changes][1] to how user's hashes are stored

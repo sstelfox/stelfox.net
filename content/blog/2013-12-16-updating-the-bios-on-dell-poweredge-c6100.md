@@ -2,6 +2,7 @@
 date: 2013-12-16 09:39:02 -0500
 slug: "updating-the-bios-on-dell-poweredge-c6100"
 title: "Updating the BIOS on Dell Poweredge C6100"
+type: post
 ---
 
 The BIOS was quite a bit more complicated and there was a few options that I

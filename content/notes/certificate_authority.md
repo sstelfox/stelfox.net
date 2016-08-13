@@ -1,5 +1,6 @@
 ---
 title: Building a Certificate Authority
+type: note
 ---
 
 # Building a Certificate Authority

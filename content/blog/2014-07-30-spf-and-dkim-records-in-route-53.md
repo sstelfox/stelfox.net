@@ -7,6 +7,7 @@ tags:
 - mail
 - spf
 title: "SPF & DKIM Records in Route 53"
+type: post
 ---
 
 I'm going to do a more detailed post on emailing from Amazon's infrastructure

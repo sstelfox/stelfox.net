@@ -13,6 +13,7 @@ tags:
 - updates
 - websites
 title: "Updating to a Newer Rails on DreamHost"
+type: post
 ---
 
 I've started getting heavily into Ruby on Rails development and wanted to use

@@ -1,5 +1,6 @@
 ---
 title: Software RAID
+type: note
 ---
 
 # Software RAID

@@ -1,5 +1,6 @@
 ---
 title: "About Myself"
+type: "page"
 ---
 
 I live and work out of the Burlington, VT area though I tend to travel all over

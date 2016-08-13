@@ -1,5 +1,6 @@
 ---
-title: HIPache
+title: Hipache
+type: note
 ---
 
 # Hipache

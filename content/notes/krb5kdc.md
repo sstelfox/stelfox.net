@@ -1,5 +1,6 @@
 ---
 title: Kerberos
+type: note
 ---
 
 # Kerberos

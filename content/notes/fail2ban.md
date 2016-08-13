@@ -1,5 +1,6 @@
 ---
 title: fail2ban
+type: note
 ---
 
 # Fail2Ban

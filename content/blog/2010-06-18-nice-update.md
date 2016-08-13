@@ -5,6 +5,7 @@ tags:
 - updates
 - wordpress
 title: 'Nice Update'
+type: post
 ---
 
 I know I don't update this blog as often as I'd like and I have had a lot going

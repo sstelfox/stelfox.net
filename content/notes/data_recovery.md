@@ -1,5 +1,6 @@
 ---
 title: Data Recovery
+type: note
 ---
 
 # Data Recovery

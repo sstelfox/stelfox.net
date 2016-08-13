@@ -2,6 +2,7 @@
 date: 2010-06-30 16:11:24+00:00
 slug: "a-little-surprise-nestled-among-software"
 title: 'A Little Surprise Nestled Among Software'
+type: post
 ---
 
 So yesterday my morning started out by my organization's WAN administrator

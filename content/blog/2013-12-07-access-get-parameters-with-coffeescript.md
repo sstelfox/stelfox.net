@@ -7,6 +7,7 @@ tags:
 - programming
 slug: "access-get-parameters-with-coffeescript"
 title: "Access GET Parameters With Coffeescript"
+type: post
 ---
 
 I've been working on a pure javascript based search engine for this static

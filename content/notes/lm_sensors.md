@@ -1,5 +1,6 @@
 ---
 title: LM Sensors
+type: note
 ---
 
 # LM Sensors

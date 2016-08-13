@@ -1,5 +1,6 @@
 ---
 title: Wine
+type: note
 ---
 
 # Wine

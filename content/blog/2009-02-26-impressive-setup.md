@@ -6,6 +6,7 @@ tags:
 - php
 - voom
 title: 'Impressive Setup...'
+type: post
 ---
 
 So I joined a project named VOOM (Very Open Object Model). It's a group of PHP

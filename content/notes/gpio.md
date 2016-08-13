@@ -1,5 +1,6 @@
 ---
 title: GPIO
+type: note
 ---
 
 # GPIO

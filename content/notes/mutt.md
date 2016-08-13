@@ -1,5 +1,6 @@
 ---
 title: Mutt
+type: note
 ---
 
 # Mutt

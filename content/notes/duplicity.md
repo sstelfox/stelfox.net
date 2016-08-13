@@ -1,5 +1,6 @@
 ---
 title: Duplicity
+type: note
 ---
 
 # Duplicity

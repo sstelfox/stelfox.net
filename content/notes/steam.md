@@ -1,5 +1,6 @@
 ---
 title: Steam
+type: note
 ---
 
 # Steam

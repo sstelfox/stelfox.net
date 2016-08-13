@@ -1,5 +1,6 @@
 ---
 title: High Availability
+type: note
 ---
 
 # High Availability

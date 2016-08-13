@@ -5,6 +5,7 @@ tags:
 - ham-radio
 - project-hermes
 title: "Project Hermes: Broad Overview"
+type: post
 ---
 
 For the past few months, the little free time that I haven't spent with friends

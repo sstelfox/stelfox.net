@@ -6,6 +6,7 @@ tags:
 - tftp
 - dnsmasq
 title: "Using OpenWRT's Dnsmasq as a TFTP Server"
+type: post
 ---
 
 I recently reflashed my primary router to a newer version of OpenWRT and

@@ -6,6 +6,7 @@ tags:
 - devops
 - sysadmin
 title: "Starting Puppetmaster on Fedora 19"
+type: post
 ---
 
 I was trying to get puppet running out of the box on Fedora 19 and found a bug

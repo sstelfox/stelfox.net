@@ -1,5 +1,6 @@
 ---
 title: IP6Tables
+type: note
 ---
 
 # ip6tables

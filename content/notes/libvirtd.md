@@ -1,5 +1,6 @@
 ---
 title: libvirtd
+type: note
 ---
 
 # libvirtd

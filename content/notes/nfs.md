@@ -1,5 +1,6 @@
 ---
 title: NFS
+type: note
 ---
 
 # NFS

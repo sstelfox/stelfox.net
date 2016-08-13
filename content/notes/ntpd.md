@@ -1,5 +1,6 @@
 ---
 title: NTPd
+type: note
 ---
 
 # NTPd

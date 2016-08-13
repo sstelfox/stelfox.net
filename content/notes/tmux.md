@@ -1,5 +1,6 @@
 ---
 title: Tmux
+type: note
 ---
 
 # Tmux

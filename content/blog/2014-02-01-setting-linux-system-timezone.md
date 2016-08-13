@@ -4,6 +4,7 @@ slug: "setting-linux-system-timezone"
 tags:
 - linux
 title: "Setting Linux System Timezone"
+type: post
 ---
 
 I change the timezone on the linux systems so rarely that I almost always have

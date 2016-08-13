@@ -1,5 +1,6 @@
 ---
 title: HAProxy
+type: note
 ---
 
 # HAProxy

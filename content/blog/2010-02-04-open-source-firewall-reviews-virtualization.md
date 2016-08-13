@@ -5,6 +5,7 @@ tags:
 - firewall
 - virtualization
 title: "Open Source Firewall Reviews: Virtualization"
+type: post
 ---
 
 So I hit a snag while attempting to review the open source firewalls on my

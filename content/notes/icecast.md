@@ -1,5 +1,6 @@
 ---
 title: IceCast
+type: note
 ---
 
 While it's described and primarily used as an audio streaming server, it would

@@ -1,5 +1,6 @@
 ---
 title: Logrotate
+type: note
 ---
 
 # Logrotate

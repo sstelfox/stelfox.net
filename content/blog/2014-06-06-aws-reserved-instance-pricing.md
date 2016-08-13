@@ -5,6 +5,7 @@ slug: "aws-reserved-instance-pricing"
 tags:
 - aws
 - pricing
+type: post
 ---
 
 The current large project I'm working on is going to be hosted on AWS and I was

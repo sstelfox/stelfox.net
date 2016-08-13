@@ -9,6 +9,7 @@ tags:
 - procmail
 - cli
 title: "Backing up Gmail with fetchmail"
+type: post
 ---
 
 This morning I found myself in need of a large set of emails to test a

@@ -9,6 +9,7 @@ tags:
 - pfsense
 - traffic-shaping
 title: 'Open Source Firewall Reviews: Intro & pfSense'
+type: post
 ---
 
 Every now and then I like to refresh parts of my home network. New technology

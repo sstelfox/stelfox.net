@@ -1,5 +1,6 @@
 ---
 title: Memcached
+type: note
 ---
 
 # Memcached

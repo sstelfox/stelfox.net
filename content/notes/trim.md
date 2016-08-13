@@ -1,5 +1,6 @@
 ---
 title: Trim
+type: note
 ---
 
 # Trim

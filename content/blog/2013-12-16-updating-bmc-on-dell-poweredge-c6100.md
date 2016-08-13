@@ -8,6 +8,7 @@ tags:
 - bmc
 - linux
 title: "Updating BMC on Dell PowerEdge C6100"
+type: post
 ---
 
 I just received my Dell PowerEdge C6100 and found it's software quite a bit

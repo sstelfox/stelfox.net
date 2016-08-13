@@ -7,6 +7,7 @@ tags:
 - tricks
 - bash
 title: "Fast Hex to Decimal in Bash"
+type: post
 ---
 
 I needed too turn some hexidecimal values into decimal in a bash script and

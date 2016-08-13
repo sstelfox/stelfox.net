@@ -1,5 +1,6 @@
 ---
 title: Snort
+type: note
 ---
 
 # Snort

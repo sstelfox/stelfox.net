@@ -7,6 +7,7 @@ tags:
 - procmail
 - email
 title: "Running Emails Through Ruby"
+type: post
 ---
 
 Following up on my [earlier post][1] where I covered how to backup your Gmail

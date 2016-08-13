@@ -1,5 +1,6 @@
 ---
 title: HTTPd
+type: note
 ---
 
 # HTTPd

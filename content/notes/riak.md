@@ -1,5 +1,6 @@
 ---
 title: Riak
+type: note
 ---
 
 # Riak

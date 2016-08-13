@@ -1,5 +1,6 @@
 ---
 title: Arch Linux
+type: note
 ---
 
 # Arch Linux

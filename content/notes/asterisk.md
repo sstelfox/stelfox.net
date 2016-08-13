@@ -1,5 +1,6 @@
 ---
 title: Asterisk
+type: note
 ---
 
 # Asterisk

@@ -1,5 +1,6 @@
 ---
 title: Session Recording
+type: note
 ---
 
 # Session Recording

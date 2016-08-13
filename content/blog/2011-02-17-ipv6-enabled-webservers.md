@@ -2,6 +2,7 @@
 date: 2011-02-17 19:04:53+00:00
 slug: "ipv6-enabled-webservers"
 title: 'IPv6 Enabled WebServers'
+type: post
 ---
 
 I've happily been using [DreamHost][1] for over 6 years now. They [recently

@@ -2,6 +2,7 @@
 date: 2013-12-24 14:53:27 -0500
 slug: "playing-with-the-linux-bluetooth-stack"
 title: "Playing With the Linux Bluetooth Stack"
+type: post
 ---
 
 List all available bluetooth interfaces:

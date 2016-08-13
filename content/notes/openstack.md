@@ -1,5 +1,6 @@
 ---
 title: Openstack
+type: note
 ---
 
 # Openstack

@@ -1,5 +1,6 @@
 ---
 title: Samba
+type: note
 ---
 
 # Samba

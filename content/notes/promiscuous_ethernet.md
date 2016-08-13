@@ -1,5 +1,6 @@
 ---
 title: Promiscuous Ethernet
+type: note
 ---
 
 # Promiscuous Ethernet
