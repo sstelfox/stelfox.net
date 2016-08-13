@@ -21,4 +21,13 @@
         <a href="/"><img src="{{ .Site.Params.logo }}" width="80" height="80" alt="{{ .Site.Title }}" class="header-logo" /></a>
       </div>
       {{ if eq $home true }}<h1>{{ .Site.Title }}</h1>{{ end }}
+      <nav>
+        {{ range .Site.Menus.main.ByWeight }}
+          <!-- Just in case I want nested menus... -->
+          {{ if .HasChildren }}
+          {{ else }}
+          {{ end }}
+          <a href="{{ .URL }}">{{ .Name }}</a>
+        {{ end }}
+      </nav>
     </header>
