@@ -25,7 +25,7 @@ Special metadata keys:
 * publishdate, pubdate
 * expirydate, unpublishdate
 * draft
-* published (intentionally undocumented for some reason)
+* published (intentionally undocumented, inverse of draft)
 * layout
 * markup
 * weight

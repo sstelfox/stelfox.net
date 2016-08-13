@@ -1,7 +1,6 @@
 ---
-date: "now()"
 draft: true
-slug: ""
-tags: ["", ""]
-title: ""
+slug:
+tags:
+- default
 ---
