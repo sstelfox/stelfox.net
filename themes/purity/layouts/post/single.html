@@ -3,6 +3,8 @@
 <main role="main">
   <article>
     <header>
+      <h1>{{ .Title }}</h1>
+      <h3><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 02, 2006" }}</time> &mdash; {{ .FuzzyWordCount }} Words &mdash; About {{ .ReadingTime }} Minutes to Read</h3>
       {{ range .Params.tags }}
       <a href="/tags/{{ . | urlize }}">#{{ . }}</a>
       {{ end }}
@@ -13,7 +15,7 @@
     </section>
 
     <footer>
-      <!-- Related notes... -->
+      <!-- Related posts... or other posts in the series... -->
       <!-- Comments Could Go Here -->
     </footer>
   </article>

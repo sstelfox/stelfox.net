@@ -1,7 +1,7 @@
 ---
 title: DFA Konami Easter Egg
 hidden: true
-type: "page"
+type: page
 ---
 
 # DFA Konami Easter Egg
