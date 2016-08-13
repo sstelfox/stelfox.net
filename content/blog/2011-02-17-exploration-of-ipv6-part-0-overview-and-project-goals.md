@@ -3,6 +3,8 @@ date: 2011-02-17 18:49:56+00:00
 slug: "exploration-of-ipv6-part-0-overview-and-project-goals"
 title: 'Exploration of IPv6 Part 0: Overview and Project Goals'
 type: post
+series:
+- Initial IPv6 Exploration
 ---
 
 Last week I finally picked up a project that I've been putting off for far too
@@ -15,9 +17,9 @@ implement it.
 
 To this end I'm writing these posts about the how and glossing over the what,
 why, and when. For those of you who are interested in that information I
-strongly recommend you read the [Wikipedia article on IPv6][1]. It covers
-everything that I've found in other blog posts and news releases and a lot more
-that isn't.
+strongly recommend you read the [Wikipedia article on
+IPv6](http://en.wikipedia.org/wiki/Ipv6). It covers everything that I've found
+in other blog posts and news releases and a lot more that isn't.
 
 On to the specifics. My home network is closer to a small-business network
 crossed with an enterprise network. I have multiple subnets devoted to specific
@@ -30,12 +32,13 @@ secure wireless but still need to talk to a local service.
 Ultimately I should not have to sacrifice any of my security to upgrade to IPv6
 and I firmly believe in defence in depth. Off the top of my head the only thing
 I lose security wise is NAT which a lot of people argue is security through
-obscurity and not actually a layer of security but I [personally disagree][2].
-I don't _have_ to lose NAT as there are NAT66 options out there but to be
-honest, we need to start looking at the future and sticking with old and
-outdated security models will only end up causing a lot of trouble. I also
-don't want to deal with the thought of 2^16,386 potential addresses out there
-(That's assuming every IPv6 address is hiding a NAT *shudder*).
+obscurity and not actually a layer of security but I [personally disagree]({{<
+relref "2011-02-17-the-home-network-and-nat-as-a-security-layer.md" >}}).  I
+don't _have_ to lose NAT as there are NAT66 options out there but to be honest,
+we need to start looking at the future and sticking with old and outdated
+security models will only end up causing a lot of trouble. I also don't want to
+deal with the thought of 2^16,386 potential addresses out there (That's
+assuming every IPv6 address is hiding a NAT *shudder*).
 
 My servers are all running either Fedora 14 or CentOS 5.5 as I'm most
 comfortable with the Red Hat architecture. Anyone out there using a different
@@ -65,6 +68,3 @@ DNS64 I should be able to access everything that is still IPv4 as if it was
 IPv6.
 
 Stay tuned. This is going to be a bumpy ride.
-
-[1]: http://en.wikipedia.org/wiki/Ipv6
-[2]: {{< relref "2011-02-17-the-home-network-and-nat-as-a-security-layer.md" >}}
