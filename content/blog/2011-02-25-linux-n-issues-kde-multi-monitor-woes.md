@@ -1,7 +1,7 @@
 ---
 date: 2011-02-25 14:37:39+00:00
 slug: "linux-n-issues-kde-multi-monitor-woes"
-title: 'Linux N Issues & KDE Multi-Monitor Woes'
+title: "Linux N Issues & KDE Multi-Monitor Woes"
 type: post
 ---
 
@@ -31,7 +31,9 @@ The next day I received my the logwatch from my laptop (Yes, my laptop sends
 it's logs to my email) and it mentioned more than 20,000 new entries of an
 error I've never seen before:
 
-> iwlagn 0000:03:00.0: BA scd_flow 0 does not match txq_id 10
+```
+iwlagn 0000:03:00.0: BA scd_flow 0 does not match txq_id 10
+```
 
 After poking around a bit online I found that the issue is with a recent kernel
 update (I'm currently running 2.6.35.11-83) changing the behavior of some
@@ -90,7 +92,7 @@ easy (though it appears you have to do it everytime).
 To set the primary monitor to my laptop screen (LCDS1) I just opened a shell
 and put this in:
 
-```bash
+```sh
 xrandr --output LCDS1 --primary
 ```
 

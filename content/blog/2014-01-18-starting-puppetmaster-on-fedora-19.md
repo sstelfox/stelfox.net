@@ -14,17 +14,19 @@ exists in their systemd service file. After installing `puppet` and
 `puppet-server`, whenever I tried to start the server with the following
 command:
 
-```bash
+```sh
 systemctl start puppetmaster.service
 ```
 
 It would hang for a long time and the following error message would show up in
 the log:
 
-> Jan 19 03:42:18 puppet-01 puppet-master[1166]: Starting Puppet master version 3.3.1
-> Jan 19 03:42:18 puppet-01 systemd[1]: PID file /run/puppet/master.pid not readable (yet?) after start.
-> Jan 19 03:43:07 puppet-01 systemd[1]: puppetmaster.service operation timed out. Terminating.
-> Jan 19 03:43:07 puppet-01 puppet-master[1166]: Could not run: can't be called from trap context
+```
+Jan 19 03:42:18 puppet-01 puppet-master[1166]: Starting Puppet master version 3.3.1
+Jan 19 03:42:18 puppet-01 systemd[1]: PID file /run/puppet/master.pid not readable (yet?) after start.
+Jan 19 03:43:07 puppet-01 systemd[1]: puppetmaster.service operation timed out. Terminating.
+Jan 19 03:43:07 puppet-01 puppet-master[1166]: Could not run: can't be called from trap context
+```
 
 Starting puppet directly from the command line using the same command specified
 in the service file would work fine, but that wasn't really a solution. Turns

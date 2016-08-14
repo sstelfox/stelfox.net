@@ -17,7 +17,9 @@ After the update, when that expiration came I started receiving errors in my
 shell that looked similar to the following (Since I fixed it I am not able to
 get the exact working again):
 
-> Warning: Unable to connect to SSH agent
+```
+Warning: Unable to connect to SSH agent
+```
 
 I also noticed that periodically I got a Gnome keyring popup asking for my SSH
 agent rather than my command-line client. I'm personally not a big fan of
@@ -37,10 +39,10 @@ The first, and easiest way to probably have dealt with this was too put some
 logic into my `~/.bashrc` file that detected when the `gnome-keying-agent` was
 running, kill it and clean up after it. It might look something like this:
 
-```bash
+```sh
 if [ -n "${GNOME_KEYRING_PID}" ]; then
   if $(kill -0 ${GNOME_KEYRING_PID}); then
-    kill ${GNOME_KEYRING_PID}
+    kill -9 ${GNOME_KEYRING_PID}
   fi
 fi
 
@@ -57,17 +59,14 @@ Sure enough in `/etc/xdg/autostart` I found a series of background daemons that
 I definitely did not want nor need running. As root I ran the following command
 to purge them from my system:
 
-```bash
+```sh
 cd /etc/xdg/autostart
-rm -f gnome-keyring-{gpg,pkcs11,secrets,ssh}.desktop \
-  gnome-welcome-tour.desktop imsettings-start.desktop \
-  evolution-alarm-notify.desktop caribou-autostart.desktop
+rm -f gnome-keyring-{gpg,pkcs11,secrets,ssh}.desktop
 ```
 
-Make sure you read through that command as I'm deleting more services than just
-the Gnome keyring related daemons. The first solution will keep your system in
-a default state, but this will permanently prevent the obnoxious behaivior on
-your system for all users and prevents you from adding hacks to your bashrc to
-work around mis-behaving software.
+The first solution will keep your system in a default state, but this will
+permanently prevent the obnoxious behaivior on your system for all users and
+prevents you from adding hacks to your bashrc to work around mis-behaving
+software.
 
 I hope this helps someone else!

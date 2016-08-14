@@ -10,9 +10,10 @@ title: "Running Emails Through Ruby"
 type: post
 ---
 
-Following up on my [earlier post][1] where I covered how to backup your Gmail
-account using `fetchmail` and `procmail`; I wanted to cover how I was
-additionally processing received mail through ruby.
+Following up on my [earlier post]({{< relref
+"2013-11-19-backing-up-gmail-with-fetchmail.md" >}}) where I covered how to
+backup your Gmail account using `fetchmail` and `procmail`; I wanted to cover
+how I was additionally processing received mail through ruby.
 
 This was part of a larger project where I was doing statistical analysis on my
 email while evaluating various data stores. To get the emails into the various
@@ -20,8 +21,9 @@ data stores, I used the ruby script to parse, process and store the emails as
 they came in.
 
 If you're going to be doing any form of mail manipulation or statistics I
-highly recommend the [mail][2] gem. It did almost everything I needed out of
-the box, though it didn't correctly enumerate any of the additional headers.
+highly recommend the [mail](https://github.com/mikel/mail) gem. It did almost
+everything I needed out of the box, though it didn't correctly enumerate any of
+the additional headers.
 
 Procmail is a highly flexible mail filtering and local delivery agent. Without
 much effort you can pass the mail it is handling through a series of filters
@@ -95,6 +97,3 @@ article:
 
 * http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby
 * http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines
-
-[1]: {{< relref "2013-11-19-backing-up-gmail-with-fetchmail.md" >}}
-[2]: https://github.com/mikel/mail

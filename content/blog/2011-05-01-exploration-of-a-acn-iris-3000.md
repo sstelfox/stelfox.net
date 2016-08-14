@@ -1,7 +1,7 @@
 ---
 date: 2011-05-01 15:48:08+00:00
 slug: "exploration-of-a-acn-iris-3000"
-title: 'Exploration of an ACN Iris 3000'
+title: "Exploration of an ACN Iris 3000"
 type: post
 ---
 
@@ -38,9 +38,11 @@ common.
 HTTP. Connecting to 7022 via telnet confirmed my suspicions of SSH. I received
 this prompt:
 
-> Connected to 10.0.0.85.
-> Escape character is '^]'.
-> SSH-2.0-dropbear_0.45
+```
+Connected to 10.0.0.85.
+Escape character is '^]'.
+SSH-2.0-dropbear_0.45
+```
 
 Bingo. SSH it is, and an old version of dropbear at that.  Unfortunately as the
 one poster I found said the password was neither blank nor 'root'. I suspect

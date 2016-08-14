@@ -28,10 +28,12 @@ issues that I was experiencing such as:
 4. Remote IPMI tools being unable to read sensors status
 
 The first step is too download the latest version of of the BMC software from
-[Dell's support site][1] (Or a [direct link][2], I've also taken the liberty of
-[hosting a copy myself][3]). I recommend you go through the process of entering
-the service tag of each of the blades and make sure that Dell recognizes them
-as existing even if they're out of support.
+[Dell's support site](https://support.dell.com/) (Or a [direct
+link](http://downloads.dell.com/Pages/Drivers/poweredge-c6100-all.html), I've
+also taken the liberty of [hosting a copy
+myself](http://static.stelfox.net/files/PEC6100BMC130.exe)). I recommend you go
+through the process of entering the service tag of each of the blades and make
+sure that Dell recognizes them as existing even if they're out of support.
 
 There has been mention of versions of these blades that had custom
 modifications for DCS and any attempts to modify the BIOS or BMC will likely
@@ -46,7 +48,7 @@ on a thumbdrive, downloaded version 1.30 of the BMC software (get the file
 named `PEC6100BMC130.exe`). The file itself is a self-extracting zip archive
 which can be extracted using the regular unzip utility.
 
-```
+```sh
 unzip PEC6100BMC130.exe
 ```
 
@@ -63,7 +65,3 @@ and run the flash8.sh script.
 
 After that you're going to want to reboot into the BIOS and ensure the IPMI
 ethernet port is set to dedicated, as this switched it back to "Shared" on me.
-
-[1]: https://support.dell.com/
-[2]: http://downloads.dell.com/Pages/Drivers/poweredge-c6100-all.html
-[3]: http://static.stelfox.net/files/PEC6100BMC130.exe

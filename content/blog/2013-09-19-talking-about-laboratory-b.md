@@ -10,12 +10,11 @@ type: post
 ---
 
 Recently Justin England and myself were interviewed on a local television
-channel about the [local hackerspace][1] which we are both founding members of.
+channel about the [local hackerspace](http://laboratoryb.org/) which we are
+both founding members of.
 
 We covered several general topics about hackerspaces, how the organization is
 run, and some of the stuff we do at the Lab. Take a look if you're at all
 interested in any of those!
 
-<iframe width="640" height="360" src="//www.youtube.com/embed/3V7Sio6sBtk?feature=player_detailpage" frameborder="0" allowfullscreen></iframe>
-
-[1]: http://laboratoryb.org/
+<iframe width="100%" height="450px" src="https://www.youtube.com/embed/3V7Sio6sBtk" frameborder="0" allowfullscreen></iframe>

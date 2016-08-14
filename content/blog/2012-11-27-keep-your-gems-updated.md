@@ -11,9 +11,9 @@ type: post
 
 I recently went back through my backups recently and found quite a few old
 abandoned projects. Looking back on the code I see some things I'm impressed
-with, but the majority of the code I wouldn't write today.  Thats not to say
-the code is bad, or doesn't function. It did exactly what I wanted to
-accomplish at the time, just not necessarily in the most efficient way.
+with, but the majority of the code I wouldn't write today. Thats not to say the
+code is bad, or doesn't function. It did exactly what I wanted to accomplish at
+the time, just not necessarily in the most efficient way.
 
 This archive of old code made me start wondering how much old code I'm using in
 the projects that I'm currently writing. Not code that I've written but code

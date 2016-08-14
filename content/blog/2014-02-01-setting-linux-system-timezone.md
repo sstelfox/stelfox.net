@@ -18,7 +18,7 @@ all the logs have consistent times.
 
 To set the system time to UTC you'd run the following command as root:
 
-```bash
+```sh
 ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 ```
 
@@ -29,6 +29,6 @@ As a user it's obviously more useful to see the time in my local timezone and
 this can be overridden on a per-user basis using the TZ environment variable. I
 stick this in my `~/.bashrc` file and it just works transparently:
 
-```bash
+```sh
 export TZ="America/Los_Angeles"
 ```

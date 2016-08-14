@@ -14,7 +14,7 @@ after each command, and isolating the sections into bash functions I figured
 there had to be a better way. After a little Googling and a trip through the
 bash manpages sure enough:
 
-```bash
+```sh
 #!/bin/bash
 
 function error_handler() {
@@ -26,6 +26,7 @@ trap 'error_handler ${LINENO} $?' ERR
 
 set -o errexit
 set -o errtrace
+set -o errpipe
 set -o nounset
 
 echo "Everything is running fine..."

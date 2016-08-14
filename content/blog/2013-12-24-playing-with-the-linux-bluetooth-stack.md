@@ -7,30 +7,34 @@ type: post
 
 List all available bluetooth interfaces:
 
-```bash
+```sh
 hciconfig -a
 ```
 
 If you get an error like the following:
 
-> Operation not possible due to RF-kill
+```
+Operation not possible due to RF-kill
+```
 
 You'll need to unblock access to the resource using rfkill. You can unblock all
 blocked devices like so:
 
-```bash
+```sh
 rfkill unblock all
 ```
 
 Before doing any iBeacon stuff you should disable scanning:
 
-```bash
+```sh
 hciconfig hci0 noscan
 ```
 
-```bash
+```sh
 hcitool -i hci0 cmd 0x08 0x0008 1E 02 01 1A 1A FF 4C 00 02 15 [ 92 77 83 0A B2 EB 49 0F A1 DD 7F E3 8C 49 2E DE ] [ 00 00 ] [ 00 00 ] C5 00
 hcitool -i hci0 leadv
 ```
 
-> LE set advertise enable on hci1 returned status 12
+```
+LE set advertise enable on hci1 returned status 12
+```

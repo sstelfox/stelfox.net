@@ -37,7 +37,7 @@ interface. You can accomplish this with the following steps.
 Ensure you have `fetchmail` and `procmail` installed. For me on Fedora this can
 be accomplished using yum by running the following commands:
 
-```bash
+```sh
 sudo yum install fetchmail procmail -y
 ```
 
@@ -63,7 +63,7 @@ mda "/usr/bin/procmail -m '/home/<username>/.procmailrc'"
 
 Be sure to set the permissions on the `.fetchmailrc` file to 0600:
 
-```bash
+```sh
 chmod 0600 $HOME/.fetchmailrc
 ```
 
@@ -71,7 +71,7 @@ We'll now need to configure procmail to properly deliver our mail to the local
 `Maildir` folder. Procmail's configuration by default lives in
 `$HOME/.procmailrc`
 
-```bash
+```sh
 LOGFILE=$HOME/.procmail.log
 MAILDIR=$HOME
 VERBOSE=on

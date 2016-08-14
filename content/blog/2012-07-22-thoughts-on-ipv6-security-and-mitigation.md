@@ -91,7 +91,7 @@ configuration through various interface configuration files living in
 privacy addresses with the following line for example in
 "/etc/sysconfig/network-scripts/ifcfg-eth0":
 
-```bash
+```sh
 IPV6_PRIVACY="rfc3041"
 ```
 
