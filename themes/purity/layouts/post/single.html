@@ -15,7 +15,14 @@
     </section>
 
     <footer>
-      <!-- Related posts... or other posts in the series... -->
+      {{ $curPage := .RelPermalink }}
+      {{ $siteSeries := .Site.Taxonomies.series }}{{ with .Params.series }}
+        {{ range $name := . }}
+          <h4>Posts in {{ $name }}:</h4>
+          <!-- TODO -->
+        {{ end }}
+      {{ end }}
+      <!-- TODO: Related posts, posts in the series, Next post, and previous post -->
       <!-- Comments Could Go Here -->
     </footer>
   </article>

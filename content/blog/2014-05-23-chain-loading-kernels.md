@@ -61,14 +61,14 @@ though very easily and that's what I'm going to cover here.
 You'll need to have the kexec tools installed on your system. This is pretty
 straight-forward:
 
-```bash
+```sh
 yum install kexec-tools -y
 ```
 
 Next we're going to shift the standard init process off to the side, someplace
 still accessible so we can call it later (this will need to be done as root).
 
-```bash
+```sh
 mv /sbin/init /sbin/init.original
 ```
 
@@ -89,7 +89,7 @@ to do exactly this in these shell scripts: `exec`.
 
 Our simple shell script to do the chain load looks like this:
 
-```bash
+```sh
 #!/bin/bash
 
 # Detect if this is the old kernel (not booted with the otherwise meaningless
