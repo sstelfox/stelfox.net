@@ -13,6 +13,8 @@ immediate dependencies for an individual task and Rake will execute all of
 them. If a file or directory is the dependency and it exists, the task that
 creates it will be skipped. A contrieved Rakefile example might look like:
 
+<!--more-->
+
 ```ruby
 file 'sample' do |t|
   puts 'Creating sample directory'
