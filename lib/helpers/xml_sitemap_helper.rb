@@ -53,7 +53,7 @@ module XMLSitemapHelper
     xml = Builder::XmlMarkup.new(:target => buffer, :indent => 2)
 
     # Check for required attributes
-    if @site.config[:base_url].nil?
+    if @config[:base_url].nil?
       raise RuntimeError.new("The XMLSitemap helper requires the site configuration to specify the base URL for the site.")
     end
 
@@ -68,7 +68,7 @@ module XMLSitemapHelper
           xml.url do
             last_mod_time = (item[:updated_at] || item[:mtime])
 
-            xml.loc         @site.config[:base_url] + rep.path
+            xml.loc         @config[:base_url] + rep.path
             xml.lastmod     last_mod_time.to_iso8601_date if last_mod_time
             xml.changefreq  item[:changefreq] unless item[:changefreq].nil?
             xml.priority    item[:priority] unless item[:priority].nil?

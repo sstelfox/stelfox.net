@@ -8,12 +8,12 @@ require 'helpers/post_helpers'
 require 'helpers/short_code_helper'
 require 'helpers/xml_sitemap_helper'
 
-include Nanoc3::Helpers::Blogging
-include Nanoc3::Helpers::Breadcrumbs
-include Nanoc3::Helpers::LinkTo
-include Nanoc3::Helpers::Tagging
-include Nanoc3::Helpers::Text
-include Nanoc3::Helpers::Rendering
+include Nanoc::Helpers::Blogging
+include Nanoc::Helpers::Breadcrumbs
+include Nanoc::Helpers::LinkTo
+include Nanoc::Helpers::Tagging
+include Nanoc::Helpers::Text
+include Nanoc::Helpers::Rendering
 
 include PostHelpers
 include ShortCodeHelper
