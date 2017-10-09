@@ -1,10 +1,8 @@
-all: dev
-
-dev:
-	hugo --buildDrafts --buildExpired --buildFuture
-
-prod:
+build:
 	hugo
 
 server:
-	hugo server --buildDrafts --buildExpired --buildFuture --watch
+	hugo server --log --verbose --verboseLog --i18n-warnings --enableGitInfo --buildDrafts --buildFuture
+
+.PHONY: build server
+.DEFAULT_GOAL := server
