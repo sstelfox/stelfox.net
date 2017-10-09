@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+PLEASE NOTE: This guide was developed for Red Had Based architectures, specifically CentOS 5, and Fedora 16&#43;. A lot of the information here is generally solid principles but you may need to adapt it to your distribution.'>
+<meta property='og:title' content='Linux Hardening • Sam Stelfox'>
+<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+PLEASE NOTE: This guide was developed for Red Had Based architectures, specifically CentOS 5, and Fedora 16&#43;. A lot of the information here is generally solid principles but you may need to adapt it to your distribution.'>
+<meta property='og:url' content='https://stelfox.net/notes/linux-hardening/'>
+<meta property='og:site_name' content='Sam Stelfox'>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'>
+
+  <title>Linux Hardening • Sam Stelfox</title>
+  <link rel='canonical' href='https://stelfox.net/notes/linux-hardening/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-32188490-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-notes'>
+  <div class='site'>
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/posts/'>Blog Posts</a>
+    </li>
+  <li>
+      <a href='/notes/'>Various Notes</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sam Stelfox</p>
+          
+          <p class='site-description subtitle'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Linux Hardening</h1>
+      
+
+    </div>
+    
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</em></strong></p>
+
+<p>PLEASE NOTE: This guide was developed for Red Had Based architectures,
+specifically CentOS 5, and Fedora 16+. A lot of the information here is
+generally solid principles but you may need to adapt it to your distribution.</p>
+
+<p>Hardening of all my servers is the largest piece IMHO to the <a href="https://en.wikipedia.org/wiki/Defence_in_depth" target="_blank">defence in
+depth</a>. It brings to them each a strength to stand on their own. I want to
+be able to plug each and everyone on a raw internet connection and feel safe
+knowing that they won&rsquo;t be compromised.</p>
+
+<p>In the event that any section of my defence fails, I&rsquo;ll know that the rest of
+my systems are strong enough to hopefully be protected from whatever the weak
+link was.</p>
+
+<p>This section of my documentation provides a quick overview of procedures to
+harden a system to make sure I never miss a step.</p>
+
+<p>This hardening guide started out as a summary and a few updates to the <a href="http://www.nsa.gov/ia/_files/os/redhat/NSA_RHEL_5_GUIDE_v4.2.pdf" target="_blank">NSA
+RedHat 5 Operating System Security Guidelings</a>. Since then it has grown to
+include a lot of services that were not mentioned anywhere in there, and a few
+best practices that I&rsquo;ve developed myself over the years of managing Linux
+boxes.</p>
+
+<p>I&rsquo;ve started including information from <a href="http://web.nvd.nist.gov/view/ncp/repository" target="_blank">National Vulnerability Database (NVD)
+National Checklist Program Repository</a> hosted by NIST. They aggregate some
+useful information from a few sites including the <a href="http://benchmarks.cisecurity.org/en-us/" target="_blank">Center for Internet Security
+(CIS) Security Benchmarks</a>. One more site I&rsquo;ve got some information from is
+the <a href="http://www.sans.org/reading_room/" target="_blank">SANS Information Security Reading Room</a>.</p>
+
+<p>These have all been listed here to give them some credit towards the following
+security guidelines. If you doubt anything I&rsquo;ve mentioned here I&rsquo;d recommend
+you go look through these sites.</p>
+
+<h2 id="general-principles">General Principles</h2>
+
+<ul>
+<li>Encrypt Transmitted Data Whenever Possible</li>
+<li>Minimize Software to Minimize Vulnerability</li>
+<li>Run Different Network Services on Separate Systems</li>
+<li>Configure Security Tools to Improve System Robustness</li>
+<li>Least Privilege</li>
+</ul>
+
+<h2 id="review-of-the-security-notes">Review of the Security Notes</h2>
+
+<p>This section is mostly a TODO for myself. To keep this as up to date and
+relevant as possible I need to annually review the following information:</p>
+
+<ul>
+<li>Any pre-bootloader changes include BIOS, EFI, RAID, etc.</li>
+<li>OS install instructions</li>
+<li>Applications to be installed, possibly sorted by machine function</li>
+<li>Hardening guidelines starting with OS and including applications</li>
+<li>Instructions for validating the configurables</li>
+<li>Ensure exceptions are documented in the ticket for the device/machine</li>
+<li>Regularly validate the configuration, this should be automated if possible</li>
+</ul>
+
+<h2 id="hardware">Hardware</h2>
+
+<p>Hardware and BIOS&rsquo;s change from machine to machine but there are some quick
+best practices that should be followed. The BIOS should be hardened and
+physical security should be assessed.</p>
+
+<h2 id="installation-notes">Installation Notes</h2>
+
+<ul>
+<li>Follow the <a href="/notes/ip6tables/" target="_blank">Partitioning</a> guidelines.</li>
+<li>Ensure you set the date correctly so that the remote certificates can have
+their expiration properly checked</li>
+<li>Set a sufficiently strong boot loader password</li>
+<li>Set a sufficiently strong root password</li>
+<li>Install the absolute minimum required packages (Service specific packages can
+be installed afterwards)</li>
+<li>Include the updates repository, so there is never any initial out of date
+packages</li>
+</ul>
+
+<h2 id="firewall">Firewall</h2>
+
+<p>A strong firewall does not just protect against incoming attacks but also
+prevents a machine from connecting to things it shouldn&rsquo;t. In the event of a
+partially compromised system, an egress ruleset can help prevent an attacker
+from using the machine as a springboard to launch further attacks on the
+internal networks.</p>
+
+<p>IPv4 and IPv6 traffic have separate firewalls. Strong examples for configuring
+[IPTables][9] and [IP6Tables][10] can be found on their respective
+configuration pages.</p>
+
+<h2 id="networking">Networking</h2>
+
+<p>Follow the <a href="/notes/network/" target="_blank">Network</a> guide to configure a static address and gateway.</p>
+
+<p>Update /etc/resolv.conf to include the proper domain and nameserver. It will
+look something like this:</p>
+
+<pre><code>search internal.example.org
+nameserver 4.2.2.2
+nameserver 8.8.8.8
+</code></pre>
+
+<p>Verify hostname / domain in <code>/etc/sysconfig/network</code>. An example is given
+below:</p>
+
+<pre><code>NETWORKING=yes
+HOSTNAME=testing.internal.example.org
+</code></pre>
+
+<p>Edit <code>/etc/hosts</code>. Remove all the IPv6 loopback entries with the exception of
+<code>localhost6</code> and all of the IPv4 addresses with the exception of <code>localhost</code>.
+<code>127.0.0.1</code> should also have entries for the FQDN of this server and just the
+hostname. Other extraneous entries should be removed unless absolutely
+necessary.</p>
+
+<pre><code>127.0.0.1       testing.internal.example.org testing localhost localhost4
+::1             testing.internal.example.org testing localhost localhost6
+</code></pre>
+
+<h2 id="logging">Logging</h2>
+
+<p>You&rsquo;ll want to make sure you configure <a href="/notes/rsyslog/" target="_blank">RSyslog</a>, <a href="/notes/logrotate/" target="_blank">Logrotate</a>, and
+<a href="/notes/logwatch/" target="_blank">Logwatch</a> according to their appropriate guides. Logwatch is not installed
+in the minimum install and should be installed.</p>
+
+<h3 id="configure-root-s-mail-recipient">Configure Root&rsquo;s Mail Recipient</h3>
+
+<p>Add the line to following line to <code>/etc/aliases</code>, replacing
+<code>administrator@example.tld</code> with an administrator&rsquo;s email address. This is
+where logs will be emailed.</p>
+
+<pre><code>root:     administrator@example.tld
+</code></pre>
+
+<p>As root run the <code>newaliases</code> command which will update the binary database of
+mail recipients.</p>
+
+<h2 id="services">Services</h2>
+
+<p>Review the list of services running on the machine with the following command:</p>
+
+<pre><code>systemctl --type=service
+</code></pre>
+
+<p>Pay special attention to any that is listed as &ldquo;running&rdquo;, these are the always
+on services that start up on boot. If it says &ldquo;exited&rdquo; it has started up on
+boot finished whatever part in the boot process it took care of and then
+properly exited. The latter need to be audited as well, if they&rsquo;re not needed
+they should not be executing on boot.</p>
+
+<p>Whenever you find a service that shouldn&rsquo;t be started on boot run the following
+command replacing &ldquo;rpcbind.service&rdquo; with the service you would like to disable.</p>
+
+<pre><code>systemctl disable rpcbind.service
+systemctl stop rpcbind.service
+</code></pre>
+
+<p>If it&rsquo;s particularily pesky about not going away you may need to mask it. This
+will essentially create a symlink of the service to <code>/dev/null</code>, allowing it to
+attempt to execute without actually accomplishing anything.</p>
+
+<pre><code>systemctl mask rpcbind.service
+</code></pre>
+
+<p>To re-enable a service you&rsquo;ll want to execute the following commands:</p>
+
+<pre><code>system enable rpcbind.service
+system start rpcbind.service
+</code></pre>
+
+<p>If you masked the service you&rsquo;ll need to unmask it before re-enabling it.</p>
+
+<pre><code>systemctl unmask rpcbind.service
+</code></pre>
+
+<p>You need to be aware that the mask / unmask command is a stronger version of
+&ldquo;disable&rdquo;, disable just prevents systemd from starting the service on boot.
+&ldquo;mask&rdquo; links the service file to <code>/dev/null</code> preventing manual activation as
+well as other services attempting to start it as requirements.</p>
+
+<p>If you mask a critical service that the machine need to boot it will fail and
+you&rsquo;ll need to fix this by hand in the debug shell.</p>
+
+<h3 id="all-server-services">All Server Services</h3>
+
+<p>On all of my servers I configure:</p>
+
+<ul>
+<li><a href="/notes/sshd/" target="_blank">SSHd</a> (If you follow this guide, you won&rsquo;t be able to SSH into the box
+until users and groups have been configured)</li>
+<li><a href="/notes/ntpd/" target="_blank">NTPd</a> or <a href="/notes/chronyd/" target="_blank">Chronyd</a> (pick your preference)</li>
+<li><a href="/notes/rsyslog/" target="_blank">RSyslog</a></li>
+</ul>
+
+<h2 id="updates">Updates</h2>
+
+<p>Updates regardless of whether KSplice is being used should be done as
+soon as possible. For the most part there shouldn&rsquo;t be any reason not to update
+automatically unless you are using untrusted repositories.</p>
+
+<p>There is a daemon available yum-updatesd in the Fedora repositories which
+can be configured to notify administrators of new packages and optionally
+install them automatically.</p>
+
+<h3 id="updating-manually">Updating Manually</h3>
+
+<p>Updating the system manually can be performed using the following command:</p>
+
+<pre><code>yum update
+</code></pre>
+
+<h2 id="init-process">Init Process</h2>
+
+<p>Ensure that root logins are only permitted on appropriate terminals in
+<code>/etc/securetty</code>. An example used by me is the following:</p>
+
+<pre><code>tty1
+tty2
+tty3
+</code></pre>
+
+<p>If I&rsquo;m going to access the system of the serial console I&rsquo;d want to add
+&ldquo;console&rdquo; to that as well.</p>
+
+<p>The init process by default starts with that pretty plymouth graphical boot
+loader, to change it back to the default linux boot sequence that is actually
+verbose and useful you need to make a few changes to the <code>/etc/sysconfig/init</code>
+file. I use the following:</p>
+
+<pre><code>BOOTUP=verbose
+AUTOSWAP=no
+ACTIVE_CONSOLES=/dev/tty[1-3]
+SINGLE=/sbin/sulogin
+</code></pre>
+
+<p>The changes actually made reduces the number of active TTYs to 3 from 6,
+requires a root login to get into single user mode, and disables the pretty
+color status display when in text mode during boot up.</p>
+
+<p>The other change that needs to be made is in the default grub options in
+<code>/etc/default/grub</code>. Remove <code>rhgb</code> and <code>quiet</code> from the <code>GRUB_CMDLINE_LINUX</code>
+variable. Strictly speaking you don&rsquo;t need to remove quiet, however, it allows
+the kernel to print out it&rsquo;s boot messages which can help debug some lower
+level issues and I generally find it useful. After making the change you&rsquo;ll
+need to run <code>grub2-mkconfig -o /boot/grub2/grub.cfg</code> as root.</p>
+
+<p>One thing that I have noticed is that as of grub2 if a boot password is defined
+you need to add <code>--unrestricted</code> to the menu entry if you want to boot the menu
+entry without a super user password. I&rsquo;ve done this in <code>/etc/grub.d/10_linux</code>
+by adding <code>--unrestricted</code> to the <code>CLASS</code> environment variable around line 29
+and rebuilding the grub config.</p>
+
+<h2 id="sudo">Sudo</h2>
+
+<p>Sudo is one of those things that I need to go through and properly restrict.
+Since I&rsquo;m usually the lone administrator or am very close with the few others
+on servers and I trust the people given sudo permissions with global root like
+permissions.</p>
+
+<p>This definitely has larger security implications but here is how to configure
+that. This grants unlimited sudo privileges to any user in the sudoers group.
+They still need to authenticate however.</p>
+
+<p>Edit <code>/etc/sudoers</code> adding the line:</p>
+
+<pre><code>%sudoers                ALL=(ALL)        ALL
+</code></pre>
+
+<h2 id="users">Users</h2>
+
+<h3 id="password-requirements">Password Requirements</h3>
+
+<p>Update the minimum user password to 10 characters in <code>/etc/login.defs</code></p>
+
+<h3 id="creation">Creation</h3>
+
+<p>If local authentication is used, create any users that will need access to the
+system using the following command:</p>
+
+<pre><code>useradd &lt;username&gt;
+passwd &lt;username&gt;
+</code></pre>
+
+<p>If the user isn&rsquo;t available locally to enter their own password, a hash from
+another system can be extracted and dropped into place or alternatively a very
+strong temporary password can be set and provided to the user through secure
+means. You can then run the following command to force the user to change their
+password the next time they login:</p>
+
+<pre><code>chage -d 0 &lt;username&gt;
+</code></pre>
+
+<h3 id="securing-system-users">Securing System Users</h3>
+
+<p>Review <code>/etc/passwd</code> to ensure all non-user accounts have their account shells
+set to <code>/sbin/nologin</code> with the exception of <code>halt</code>, <code>shutdown</code>, <code>sync</code> which
+should be <code>/sbin/halt</code>, <code>/sbin/shutdown</code>, and <code>/bin/sync</code> respectively.</p>
+
+<p><a href="/notes/mysql/" target="_blank">Mysql</a> creates it&rsquo;s user with <code>/bin/bash</code> as the shell which shouldn&rsquo;t be
+(this is just an example).</p>
+
+<h3 id="system-wide-settings">System Wide Settings</h3>
+
+<p>Edit <code>/etc/profile</code>, find <code>HISTSIZE</code> replace that line with these couple of
+lines.</p>
+
+<pre><code>readonly HISTSIZE=50
+export readonly TMOUT=900
+export readonly HISTFILE=&quot;$HOME/.bash_history&quot;
+</code></pre>
+
+<h2 id="groups">Groups</h2>
+
+<h3 id="creation-1">Creation</h3>
+
+<p>Create the sudoers and sshers group</p>
+
+<pre><code>groupadd sudoers -g 400
+groupadd sshers -g 401
+</code></pre>
+
+<h3 id="add-users">Add Users</h3>
+
+<pre><code>useradd &lt;username&gt;
+passwd &lt;username&gt;
+</code></pre>
+
+<p>Any users that are going to be SSH&rsquo;ing into the server should be added to the
+<code>sshers</code> group. This includes root if necessary (which by default is only
+available to pubkey based authentication if you follow this guide).</p>
+
+<pre><code>usermod -a -G sshers &lt;username&gt;
+</code></pre>
+
+<p>Any users that NEED sudo permission should be added to the <code>sudoers</code> group like
+so:</p>
+
+<pre><code>usermod -a -G sudoers &lt;username&gt;
+</code></pre>
+
+<p>You can do both at the same time like so:</p>
+
+<pre><code>usermod -a -G sshers,sudoers &lt;username&gt;
+</code></pre>
+
+<h2 id="system-hardening">System Hardening</h2>
+
+<ul>
+<li>Change the permissions of the rpm binary <code>/bin/rpm</code> to <code>0700</code></li>
+<li>Remove suid privileges on <code>/bin/mount</code> and <code>/bin/umount</code> using the following
+command: <code>chmod a-s /bin/mount /bin/umount</code></li>
+<li>Create <code>/etc/cron.allow</code> and <code>/etc/at.allow</code> putting <code>root</code> in both of them.
+Set the permissions on the files to <code>600</code>.</li>
+<li>Restrict permissions on all of the cron tasks using the following command:
+<code>chmod -R go-rwx /etc/cron.* /etc/crontab</code></li>
+<li>Restrict boot configurations to only be readable / writable by root
+<code>chmod 600 /etc/grub.conf</code></li>
+<li>Restrict access to the boot scripts <code>chmod -R go-rwx /etc/rc.d</code></li>
+<li>Change the owner and permission of the sudo binary to be owned by
+<code>root:sudoers</code> and have permissions <code>750</code></li>
+</ul>
+
+<p>You&rsquo;ll want to verify that that there are not more SUID or GUID flags set than
+absolutely necessary. You can find all of the files with these flags set with
+the following command:</p>
+
+<pre><code>[root@localhost ~]# find / -type f \( -perm -04000 -o -perm -02000 \)
+</code></pre>
+
+<p>The same goes for unowned files as there should never be any of these:</p>
+
+<pre><code>[root@localhost ~]# find / \( -nouser -o -nogroup \) -print
+</code></pre>
+
+<p>Something that should be considered is security limits per user. This can not
+only be used to prevent users from abusing the system but to prevent a user
+accidentally fork bombing a system or causing other kinds of havoc. These
+settings can be found in <code>/etc/security/limits.conf</code></p>
+
+<h3 id="checklist">Checklist</h3>
+
+<ul>
+<li>Network
+
+<ul>
+<li>If DHCP is used, minimize accepted options <code>/etc/dhclient.conf</code></li>
+<li>Accept only IP, Router, DNS</li>
+<li>Override domain name</li>
+</ul></li>
+<li>Package updating
+
+<ul>
+<li>Install additional packages</li>
+<li>aide</li>
+</ul></li>
+<li>Disable USB Support
+
+<ul>
+<li>Disable usb-storage kernel module in <code>/etc/modules.d/blacklist.conf</code></li>
+<li>If USB devices are completely unecessary, disable USB completely with the
+<code>nousb</code> option in kernel boot options</li>
+</ul></li>
+<li>Set <code>kernel.randomize_va_space</code> to 2, 1 if that&rsquo;s not possible</li>
+<li>Disable Rebooting When &lsquo;ctrl-alt-del&rsquo; is Pressed
+
+<ul>
+<li><code>/etc/init/control-alt-delete.conf</code>: -exec /sbin/shutdown -r now
+&ldquo;Control-Alt-Delete pressed&rdquo;</li>
+</ul></li>
+</ul>
+
+<h3 id="updating-software">Updating Software</h3>
+
+<ul>
+<li>Repository Configuration
+
+<ul>
+<li>yum install yum-plugin-fastestmirror yum-plugin-security yum-presto <br />
+yum-plugin-changelog yum-plugin-protectbase -y</li>
+<li>Configure local repository if available</li>
+<li>If using the btrfs filesystem install yum-plugin-fs-snapshot</li>
+</ul></li>
+<li>Manual Software Update
+
+<ul>
+<li>Manual verification of installed GPG key with remote resource</li>
+<li>Verify gpgcheck is enabled in all yum configuration files</li>
+</ul></li>
+<li>Configuring Automatic Updates
+
+<ul>
+<li>Fedora Update &amp; Security Check Script</li>
+</ul></li>
+</ul>
+
+<h3 id="permission-verification">Permission Verification</h3>
+
+<ul>
+<li>Verify Permissions on passwd, shadow, group, and gshadow Files</li>
+<li>Verify All World-Writeable Directories Have Sticky Bits Set</li>
+<li>Verify All World Writeable Directories Have Proper Ownership</li>
+<li>Find Unauthorized World-Writeable Files</li>
+<li>Find Unauthorized SUID/SGID System Executables</li>
+<li>Find and Repair Unowned Files</li>
+<li>Restrict access to init files only to root <code>/etc/rc.d</code></li>
+<li>Restrict Permissions on Files Used by cron</li>
+</ul>
+
+<h3 id="restrict-dangerous-execution-patterns">Restrict Dangerous Execution Patterns</h3>
+
+<ul>
+<li>Set Daemon umask to <code>027</code>
+
+<ul>
+<li><code>/etc/init.d/functions</code>: <code>umask 022</code> -&gt; <code>umask 027</code></li>
+</ul></li>
+<li>Disable Core Dumps
+
+<ul>
+<li><code>/etc/security/limits.conf</code>: <code>+*                hard    core            0</code></li>
+<li><code>/etc/sysctl.conf</code>: <code>+fs.suid_dumpable = 0</code></li>
+</ul></li>
+<li>Disable Prelink (if turned on)
+
+<ul>
+<li><code>/etc/sysconfig/prelink</code>: <code>PRELINKING=yes</code> -&gt; <code>PRELINKING=no</code></li>
+<li><code>/usr/sbin/prelink -ua</code></li>
+<li><code>yum remove prelink -y</code></li>
+</ul></li>
+</ul>
+
+<h3 id="restrict-password-based-login">Restrict Password Based Login</h3>
+
+<ul>
+<li>Limit <code>su</code> Access to <code>root</code> and the <code>wheel</code> Group
+
+<ul>
+<li><code>chgrp wheel /bin/su &amp;&amp; chmod o-rx /bin/su</code></li>
+</ul></li>
+<li>Configure sudo to Improve Auditing of Root Access
+
+<ul>
+<li>Create <code>sudoers</code> Group and Allow it to Use sudo</li>
+</ul></li>
+<li>Verify Proper Storage and Existence of Password Hashes</li>
+<li>Verify No Non-root Accounts Have UID 0</li>
+</ul>
+
+<h3 id="account-security">Account Security</h3>
+
+<ul>
+<li>Create a Unique Default Group for Each User</li>
+<li>Create and Maintain a Group Containing All Human Users
+
+<ul>
+<li><code>users</code> Group</li>
+</ul></li>
+<li>Set Password Quality Requirements
+
+<ul>
+<li>Either pam_cracklib or pam_passwdqc</li>
+</ul></li>
+<li>Set Lockouts for Failed Password Attempts
+
+<ul>
+<li>pam_tally2</li>
+</ul></li>
+<li>Set Password Hashing Algorithm to SHA-512
+
+<ul>
+<li><code>/etc/pam.d/system-auth</code>: Ensure: <code>password     sufficient    pam_unix.so
+{sha512}</code></li>
+<li><code>/etc/login.defs</code>: Ensure: <code>ENCRYPT_METHOD SHA512</code></li>
+<li><code>/etc/libuser.conf</code>: Ensure: <code>crypt_style = sha512</code></li>
+</ul></li>
+<li>Limit Password Reuse
+
+<ul>
+<li><code>/etc/pam.d/system-auth</code>: <code>password    sufficient    pam_unix.so</code> +
+<existing options> remember=5</li>
+</ul></li>
+<li>Ensure User Home Directories Are Not Group-Writable or World-Readable</li>
+<li>Ensure User&rsquo;s Hidden Files Are Not World-Writeable</li>
+<li>Configure User umask Values
+
+<ul>
+<li><code>/etc/profile</code>: <code>umask 022</code> -&gt; <code>umask 027</code></li>
+</ul></li>
+<li>Use a Centralized Authentication Service</li>
+<li>Ensure there are no dangerous directories in root&rsquo;s path (realtive or
+world-writable)</li>
+</ul>
+
+<h3 id="selinux">SELinux</h3>
+
+<ul>
+<li>Ensure SELinux is Properly Enabled</li>
+<li>Disable and Remove SETroubleshoot if Possible</li>
+<li>Disable MCS Translation Service (mcstrans) if Possible</li>
+<li>Configure Restorecon Service (restorecond)</li>
+<li>Check for Unconfined Daemons</li>
+<li>Check for Unlabeled Device Files</li>
+<li>Debug any SELinux Policy Errors</li>
+<li>Strengthen the Default SELinux Boolean Configuration</li>
+</ul>
+
+<h3 id="network-firewall-configuration">Network/Firewall Configuration</h3>
+
+<ul>
+<li>Ensure System is Not Acting as a Network Sniffer</li>
+<li>Remove Wireless Hardware if Possible</li>
+<li>Disable Wireless Through Software Configuration if Possible</li>
+</ul>
+
+<h3 id="logging-and-auditing">Logging and Auditing</h3>
+
+<ul>
+<li>Configure auditd&rsquo;s Data Retention</li>
+<li>Enable Auditing for Processes Which Start Prior to the Audit Daemon</li>
+<li>Configure auditd Rules for Comprehensive Auditing</li>
+<li>Configure Audit Log aureport To Send Daily Emails</li>
+</ul>
+
+<h3 id="misc">Misc</h3>
+
+<ul>
+<li>Add Local <a href="/notes/building-a-certificate-authority/" target="_blank">Certificate Authority</a>&rsquo;s Public Key to the Trusted Store</li>
+<li>Harden sysctl.conf Values</li>
+</ul>
+
+<h3 id="services-1">Services</h3>
+
+<ul>
+<li>Configure SMART Disk Monitoring</li>
+<li>Disable at &amp; anacron if Possible</li>
+<li>Configure an MTA if necessary</li>
+</ul>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='mailto:sam@stelfox.net' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/SamStelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://keybase.io/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Keybase account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <g transform="matrix(0.5, 0, 0, 0.5, -120,-205)">
+    <path d="M247.8,451.8c-0.6-1.3-1.4-3.1-1.8-4l-0.6-1.7l-2,2.2l-2,2.2 l-0.2-4.2c-0.3-6,0.2-12.2,1.2-16.6c2.3-9.8,9.5-18.7,18.8-23.4l2.1-1l-0.5-1.5c-0.3-0.8-0.6-2.5-0.7-3.6l-0.2-2.1l-2.1-0.2 c-3.2-0.3-4.9-1.2-6-3.5c-0.6-1.2-0.6-1.4-0.4-4.6c0.2-4.2,0.5-5.1,1.8-6.5c1.6-1.8,2.7-2.1,6.7-1.9c2.9,0.2,3.5,0.3,4.8,0.9 c0.8,0.4,1.5,0.8,1.6,0.8c0.1,0,1-1.1,2.1-2.6l1.9-2.7l1.2,0.7c0.7,0.4,1.5,0.9,1.9,1.1l0.7,0.4l-0.6,1.5c-0.3,0.8-0.7,2.2-0.8,2.9 l-0.2,1.4l1.7,0.2c6.1,0.6,10.7,4.3,12.4,9.9c0.5,1.8,0.5,5.3,0,7c-0.5,1.6-0.5,1.7-0.1,1.7c0.7,0,5.4,2.3,7.3,3.5 c3.7,2.4,8,6.6,10.4,10.2c4.5,6.7,6.4,14,5.6,22c-0.4,4.8-1.3,8.6-2.9,12.3l-0.6,1.4l-2.5,0l-2.5,0l1.2-2.4 c1.3-2.6,2.3-6.2,2.8-9.4c0.3-2.2,0.4-8.2,0.1-9.3l-0.2-0.7l-1.3,1.4c-3.2,3.5-7.9,4.5-14.2,2.8c-5.4-1.4-7.6-1.7-12.7-1.7 c-3.9,0-5.2,0.1-7.3,0.6c-5.8,1.3-9.9,3.2-15.6,7.3c-2.1,1.5-3.8,2.7-3.9,2.7c-0.1,0,0.2-1,0.6-2.3c0.4-1.3,1.1-3.4,1.5-4.8 l0.8-2.5l-0.9,0.9c-0.5,0.5-1.9,1.9-3.1,3.2l-2.1,2.3l0.5,1.9c0.6,2.5,2,5.6,3.5,7.9c0.6,1,1.1,1.8,1.1,1.9s-1.2,0.1-2.6,0.1h-2.6 L247.8,451.8L247.8,451.8z M256.6,427.6c4.8-5.1,8.7-9.2,8.8-9.2c0.1,0.1-0.4,1.6-0.9,3.3c-3.3,10.4-4,12.4-3.9,12.5 c0,0,1.2-0.4,2.5-0.9c8.5-3.7,18.4-4.2,28.9-1.4c4.7,1.2,6.5,1.2,8.8,0c1.3-0.7,1.8-1.1,2.4-2.1c1.1-1.7,1.2-4.1,0.5-6.3 c-1.7-4.8-8.3-11-14.5-13.7c-3.2-1.4-3.4-1.4-4.1-0.7l-0.6,0.6l2.6,3.2c1.4,1.7,2.9,3.6,3.1,4.1c0.6,1.2,0.7,3.1,0.1,4.3 c-0.8,1.7-3.2,2.9-5.1,2.5c-0.8-0.2-1.1-0.1-1.9,0.5c-2.2,1.6-4.6,1.2-6.6-1.2c-1.6-1.8-2-2.7-2.1-4.5c0-0.9-0.3-2-0.5-2.4 c-0.3-0.6-0.4-1.3-0.4-2.2l0.1-1.4l-1.3-0.3c-1.8-0.5-3.9-1.5-5.1-2.4c-0.6-0.4-1.1-0.8-1.3-0.8s-1.5,0.6-2.9,1.3 c-9.7,5-16,14.3-17,24.8c-0.1,1-0.2,2.3-0.3,2.8l-0.1,0.9l1.1-1.1C247.4,437.3,251.8,432.7,256.6,427.6L256.6,427.6z M282.5,420.2 c0.9-0.7,1.7-1.3,1.9-1.3c0.1,0,0.4,0.3,0.7,0.7c0.5,0.8,1.4,0.8,1.8,0.1c0.3-0.5,0.3-0.6-5.6-7.8c-3.5-4.3-4.2-5-4.7-5 c-1.2,0.1-0.9,1,1,3.3l1.8,2.2l-1,0.8c-1.1,1-1.2,1.2-0.5,1.8c0.5,0.5,0.6,0.4,1.6-0.3l1.1-0.7l0.7,0.6c0.4,0.3,0.6,0.8,0.6,0.9 c0,0.2-0.8,0.9-1.7,1.7c-0.9,0.7-1.6,1.5-1.6,1.7c0,0.3,0.5,1.1,1.4,2.2C280.3,421.7,280.8,421.5,282.5,420.2L282.5,420.2z  M272.2,406c0.6-1.8,2.6-3.2,4.6-3.2c1.1,0,2.7,0.9,3.8,2.1l1,1.2l0.9-1.1c2.5-2.8,2.8-6.7,0.8-10.1c-1.5-2.5-4.3-4-8.2-4.4 c-2.1-0.2-2.6-0.4-3.7-1.5l-0.8-0.8l-0.4,0.6c-0.8,1.2-2.5,5.1-3,6.6c-0.7,2.3-0.4,5.9,0.5,7.7c0.9,1.7,3.3,4,4,3.7 C271.8,406.9,272,406.5,272.2,406L272.2,406z M263.3,392.4c0.2-0.5,0.7-1.8,1.2-2.8c0.5-1,0.9-2,0.9-2.3c0-0.9-1-1.3-3.7-1.5 c-2.4-0.2-2.6-0.1-3.1,0.4c-0.4,0.4-0.6,0.9-0.6,1.6c0,0.6-0.1,1.7-0.2,2.6c-0.2,2.1,0.1,2.5,2.2,2.8 C263.1,393.4,263,393.4,263.3,392.4z M260.2,390c0-1.7,0.2-1.9,1.6-1.9h1.3v1.4v1.4h-1.4h-1.4V390z M266.5,448.3 c-0.6-0.6-0.8-1-0.8-2c0-1.9,1.1-3,2.9-3c1.7,0,2.9,1.2,2.9,2.9c0,1.8-1.1,2.8-3,2.9C267.5,449.1,267.1,448.9,266.5,448.3 L266.5,448.3z M285.8,448.6c-2.3-1.8-1.1-5.3,1.8-5.3c1.8,0,2.8,1.1,2.9,3c0,1.1-0.1,1.4-0.8,2s-1,0.8-2,0.8 C286.8,449.1,286.2,448.9,285.8,448.6L285.8,448.6z"/>
+  </g>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://facebook.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Facebook account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://linkedin.com/in/samstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Linkedin account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+       &copy; 2011-2017 Sam Stelfox - Content license information can be found on the <a rel='license' href='/licenses/'>licensing page</a>.
+  </p>
+</div>
+
+      </div>
+    </footer>
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+</html>
+

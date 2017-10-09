@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Various Notes on Sam Stelfox</title>
+    <link>https://stelfox.net/notes/</link>
+    <description>Recent content in Various Notes on Sam Stelfox</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <managingEditor>sam@stelfox.net (Sam Stelfox)</managingEditor>
+    <webMaster>sam@stelfox.net (Sam Stelfox)</webMaster>
+    <lastBuildDate>Mon, 09 Oct 2017 14:50:23 +0000</lastBuildDate>
+    
+	<atom:link href="https://stelfox.net/notes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Amanda</title>
+      <link>https://stelfox.net/notes/amanda/</link>
+      <pubDate>Mon, 09 Oct 2017 14:50:23 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/amanda/</guid>
+      <description>Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open source computer archiving tool that is able to back up data residing on multiple computers on a network.
+I am not a huge fan of having xinetd or perl on my system and this is reliant on both, however, there does not currently seem to be any reasonable open source alternatives that support managing a tape library.</description>
+    </item>
+    
+    <item>
+      <title>AIDE</title>
+      <link>https://stelfox.net/notes/aide/</link>
+      <pubDate>Mon, 09 Oct 2017 14:19:45 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/aide/</guid>
+      <description>AIDE (Advanced Intrusion Detection Environment) is a file and directory integrity checker that compares the current hashes, permissions, and attributes of files directories against a known database built from the system.
+This can be run periodically to detect manipulation of critical system files, though a motivated attacker with an appropriate level of permissions could modify this database or disable the check as long as the system is able to write to it.</description>
+    </item>
+    
+    <item>
+      <title>Asterisk</title>
+      <link>https://stelfox.net/notes/asterisk/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/asterisk/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services.</description>
+    </item>
+    
+    <item>
+      <title>Beets</title>
+      <link>https://stelfox.net/notes/beets/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/beets/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Documentation
+Installation sudo yum install python-pip chromaprint-tools -y sudo pip-python install beets sudo pip-python install pyacoustid sudo pip-python install rgain sudo pip-python install pylast  Configure ~/.beetsconfig like so:
+[beets] path_format: $artist/$album/$track - $title import_copy: yes import_write: yes import_resume: ask import_art: yes import_quiet_fallback: skip import_timid: no ignore: .</description>
+    </item>
+    
+    <item>
+      <title>Bind</title>
+      <link>https://stelfox.net/notes/bind/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/bind/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Firewall Adjustments A DNS server isn&amp;rsquo;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT  If you&amp;rsquo;re running named in a chroot you&amp;rsquo;ll also need to add the following line to rsyslog&amp;rsquo;s configuration file so that the chroot doesn&amp;rsquo;t break named&amp;rsquo;s logging.</description>
+    </item>
+    
+    <item>
+      <title>Building a Certificate Authority</title>
+      <link>https://stelfox.net/notes/building-a-certificate-authority/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/building-a-certificate-authority/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+This page goes through how to create a local PKI infrastructure for use with all the other components listed in this wiki and many not mentioned at all. It uses OpenSSL and provides scripts, information about choices made during the process and where to go next.</description>
+    </item>
+    
+    <item>
+      <title>Chronyd</title>
+      <link>https://stelfox.net/notes/chronyd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/chronyd/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Replacement for the ntpd daemon.
+Installation yum install chrony -y  After configuration enable the service like so
+systemctl enable chronyd.service  Server /etc/chrony.conf bindaddress &amp;lt;Server IP&amp;gt; bindcmdaddress 127.0.0.1 # IPv4/IPv6: server clock.nyc.he.net iburst server clock.</description>
+    </item>
+    
+    <item>
+      <title>DHCPd</title>
+      <link>https://stelfox.net/notes/dhcpd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/dhcpd/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT  Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be.</description>
+    </item>
+    
+    <item>
+      <title>Data Recovery</title>
+      <link>https://stelfox.net/notes/data-recovery/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/data-recovery/</guid>
+      <description>Recovering Data from Swap Sometimes useful bits of information can be recovered from swap. Whether it&amp;rsquo;s encryption keys, documents that were being worked on or anything else that might&amp;rsquo;ve ended up in RAM. To search through the swap for interesting bits (and depending on the size this might take a while) you can execute the following command as root or sudo to do it:
+[root@localhost ~]# strings `/bin/swapon -s | tail -1 | awk &#39;{print $1}&#39;` | less  The command above uses the swapon utility to list all of the swap devices in use; look at the last line of the output (most people only have one swap device); extract only the path to the device node.</description>
+    </item>
+    
+    <item>
+      <title>Duplicity</title>
+      <link>https://stelfox.net/notes/duplicity/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/duplicity/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Duplicity is a command line backup utility that makes use of the rsync libraries to perform incremental backups. It also can use GPG public/private keypairs to handle backing up and restoring files.
+I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key.</description>
+    </item>
+    
+    <item>
+      <title>EZStream</title>
+      <link>https://stelfox.net/notes/ezstream/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/ezstream/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+EZStream is a media streamer and re-encoder that can be used to feed Icecast.
+Mounting Content I have a Samba share &amp;ldquo;Media&amp;rdquo; setup on the server &amp;ldquo;samba-srv&amp;rdquo; that holds all my media and allows anonymous read access to the content.</description>
+    </item>
+    
+    <item>
+      <title>Festival</title>
+      <link>https://stelfox.net/notes/festival/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/festival/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Festival is packaged in a way on Fedora in a standalone mode, it does not come with an init script to startup it&amp;rsquo;s server on boot so the following is an adaptation of another one custom written to handle this.</description>
+    </item>
+    
+    <item>
+      <title>GPG Keypairs</title>
+      <link>https://stelfox.net/notes/gpg-keypairs/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/gpg-keypairs/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Use of subkeys Sources:
+ https://alexcabal.com/creating-the-perfect-gpg-keypair/ http://www.phillylinux.org/keys/terminal.html https://wiki.debian.org/subkeys http://tjl73.altervista.org/secure_keygen/en/en.html  Subkeys are important as they can prevent the full loss of identity in the event a laptop is stolen or compromised. A master keypair should be isolated via airgap (stored on a USB stick and only used on a non-network enabled Live CD for example).</description>
+    </item>
+    
+    <item>
+      <title>GPIO</title>
+      <link>https://stelfox.net/notes/gpio/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/gpio/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+I came across this python script that accesses GPIO pins in linux. It&amp;rsquo;s potentially very useful so I&amp;rsquo;m including it here, in it&amp;rsquo;s entirety. I can later on reference this for use in my own programs.</description>
+    </item>
+    
+    <item>
+      <title>GPSd</title>
+      <link>https://stelfox.net/notes/gpsd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/gpsd/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation I&amp;rsquo;ve been using a BU-353 which if I remember correctly was ~$20 and has been fairly reliable. It&amp;rsquo;s also got a magnetic base allowing you to attach it to the roof of a car when war-driving.</description>
+    </item>
+    
+    <item>
+      <title>Gatekeeper Script for SSH</title>
+      <link>https://stelfox.net/notes/gatekeeper-script-for-ssh/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/gatekeeper-script-for-ssh/</guid>
+      <description>If you&amp;rsquo;ve already implemented the SSH keys for authentication and have a password on your key then you&amp;rsquo;ve already achieved multi-factor authentication to a certain degree.
+The gatekeeper script is something that I haven&amp;rsquo;t come across on any other systems that other people administer. Perhaps it&amp;rsquo;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
+A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&amp;rsquo;t secure, asking the user random questions after authentication couldn&amp;rsquo;t hurt security.</description>
+    </item>
+    
+    <item>
+      <title>Grub</title>
+      <link>https://stelfox.net/notes/grub/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/grub/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Security Password Protection If left unchecked a malicious user with console access can add or remove kernel parameters or chain-boot onto another device when booting using grub. You can prevent this by requiring the user to enter a password to modify the run-time configuration of grub on boot.</description>
+    </item>
+    
+    <item>
+      <title>HAProxy</title>
+      <link>https://stelfox.net/notes/haproxy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/haproxy/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Notes on Setup I setup two simple nginx webservers to test this configuration. They both served up a simple static page whose only contents was an indication of which server it was served from.</description>
+    </item>
+    
+    <item>
+      <title>HTTPd</title>
+      <link>https://stelfox.net/notes/httpd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/httpd/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Apache or httpd is a strong and well tested webserver.
+Installation To install the Apache web server for this hardening guide on fedora run the following command as root:
+[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security \ mod_selinux -y  A few modules I need to look into (TODO):</description>
+    </item>
+    
+    <item>
+      <title>High Availability</title>
+      <link>https://stelfox.net/notes/high-availability/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/high-availability/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Packages of interest:
+ keepalived ipvsadm pacemaker  IPVS IPVS (IP Virtual Server) is used to present a single address in a high availability scenario for one more services.
+Installation / Setup yum install ipvsadm -y  A note about LXC containers: In order to make use of ipvsadm within an LXC container, you will also need to install the ipvsadm package on the LXC host and reboot it (optionally just load the kernel module though I don&amp;rsquo;t know it by name).</description>
+    </item>
+    
+    <item>
+      <title>Hipache</title>
+      <link>https://stelfox.net/notes/hipache/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/hipache/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installing and setting up hipache. To actually install this I had to open up port tcp/9418 outbound on the server.
+yum install git npm -y npm install hipache -g  Create an initial configuration file:</description>
+    </item>
+    
+    <item>
+      <title>IP6Tables</title>
+      <link>https://stelfox.net/notes/ip6tables/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/ip6tables/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+IP6Tables is the firewall that will directly effect IPv6 traffic. This is sample configuration is restricted to allow normal client activity but has no open ports.
+Security Notes While turning off IPv6 is definitely one way to handle blocking IPv6 traffic, if I left ip6tables off or in it&amp;rsquo;s default state and an update re-enabled IPv6 in the networking stack somehow it would be as good as having no firewall against any attacker that noticed.</description>
+    </item>
+    
+    <item>
+      <title>IPTables</title>
+      <link>https://stelfox.net/notes/iptables/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/iptables/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+iptables is the bread and butter linux firewall and the last defence before traffic gets to the applications themselves.
+Security Notes Since I strongly believe in the defence in-depth strategy, a very strong hardened firewall both ingress and egress is very important.</description>
+    </item>
+    
+    <item>
+      <title>IceCast</title>
+      <link>https://stelfox.net/notes/icecast/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/icecast/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+While it&amp;rsquo;s described and primarily used as an audio streaming server, it would be more accurate to describe it as a media streaming server as it&amp;rsquo;s perfectly capable of rebroadcasting video streams with or without audio.</description>
+    </item>
+    
+    <item>
+      <title>Icinga</title>
+      <link>https://stelfox.net/notes/icinga/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/icinga/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Icinga is a serious and awesome port of nagios. It properly modernizes it and gives it all the stuff the nagios developers made into an &amp;ldquo;Enterprise only&amp;rdquo; release just to be tool bags. Unfortunately at this time there aren&amp;rsquo;t any handy Fedora packages, but this should be coming soon with any luck.</description>
+    </item>
+    
+    <item>
+      <title>Iodine</title>
+      <link>https://stelfox.net/notes/iodine/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/iodine/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+On the server side:
+yum install iodine-server -y  Edit the /etc/sysconfig/iodine-server file and put the following options in:
+OPTIONS=&amp;quot;-P somepassword 172.16.0.1 t.0x378.net&amp;quot;  Create an A or CNAME record for iodine-01.0x378.net pointing at the FQDN of the server running iodine and a NS record pointing at iodine-01.</description>
+    </item>
+    
+    <item>
+      <title>Kerberos</title>
+      <link>https://stelfox.net/notes/kerberos/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/kerberos/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Kerberos is a network authentication system.
+Installation The servers require the following packages be installed:
+ krb5-libs krb5-server krb5-workstation  It is very important that NTPdate is already configured and running on all of the client systems as well as the server.</description>
+    </item>
+    
+    <item>
+      <title>LM Sensors</title>
+      <link>https://stelfox.net/notes/lm-sensors/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/lm-sensors/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Useful for monitoring system statistics such as CPU core temperatures. After installing the lm_sensors packages you can run the sensors-detect command that will walk you through loading any kernel modules that may be necessary to read sensor data.</description>
+    </item>
+    
+    <item>
+      <title>Linux Hardening</title>
+      <link>https://stelfox.net/notes/linux-hardening/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/linux-hardening/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+PLEASE NOTE: This guide was developed for Red Had Based architectures, specifically CentOS 5, and Fedora 16+. A lot of the information here is generally solid principles but you may need to adapt it to your distribution.</description>
+    </item>
+    
+    <item>
+      <title>Linux Virtual Servers</title>
+      <link>https://stelfox.net/notes/linux-virtual-servers/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/linux-virtual-servers/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Keepalived My VMs each have three interfaces, eth0 is the &amp;lsquo;public&amp;rsquo; network network, eth1 is the &amp;lsquo;synchronization&amp;rsquo; network, and eth2 is the &amp;lsquo;internal&amp;rsquo; network. This sample configuration will be making use of two directors and two &amp;ldquo;real servers&amp;rdquo;.</description>
+    </item>
+    
+    <item>
+      <title>Logrotate</title>
+      <link>https://stelfox.net/notes/logrotate/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/logrotate/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Logrotate is a pretty simple and straight forward program. It&amp;rsquo;s generally run as a nightly cron job testing the various configured file to see if they match their respective criteria for rotation.
+After installing logrotate defaults are configured that are generally &amp;lsquo;good enough&amp;rsquo; for most systems and generally include the default system logs in /var/log.</description>
+    </item>
+    
+    <item>
+      <title>Logwatch</title>
+      <link>https://stelfox.net/notes/logwatch/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/logwatch/</guid>
+      <description> Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Configuration /etc/logwatch/conf/logwatch.conf LogDir = /var/log TmpDir = /var/cache/logwatch Output = stdout Format = text Encode = none MailTo = administrator@example.net MailFrom = root@example.net Archives = No Range = yesterday Detail = Med Service = All mailer = &amp;quot;/usr/sbin/sendmail -t&amp;quot; HostLimit = Yes  </description>
+    </item>
+    
+    <item>
+      <title>Mailman</title>
+      <link>https://stelfox.net/notes/mailman/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/mailman/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+GNU Mailman is a computer software application from the GNU project for managing electronic mailing lists.
+Mailman is coded primarily in Python and currently maintained by Barry Warsaw. Mailman is free software, distributed under the GNU General Public License.</description>
+    </item>
+    
+    <item>
+      <title>Memcached</title>
+      <link>https://stelfox.net/notes/memcached/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/memcached/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install memcached -y  Configuration Memcached doesn&amp;rsquo;t have a whole lot of configuration options. There is the user it&amp;rsquo;s running under, what port it should listen on, what IP address it should bind too and how large it&amp;rsquo;s cache is.</description>
+    </item>
+    
+    <item>
+      <title>Motion</title>
+      <link>https://stelfox.net/notes/motion/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/motion/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install motion -y  Make sure all your camera&amp;rsquo;s are on and connected.
+Configuration SELinux Woes SELinux by default block motion&amp;rsquo;s access to it&amp;rsquo;s logfile /var/log/motion.log, to allow this write the following out to a file motion_log_file_access.</description>
+    </item>
+    
+    <item>
+      <title>Mutt</title>
+      <link>https://stelfox.net/notes/mutt/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/mutt/</guid>
+      <description>yum install mutt -y  Do a basic configuration in ~/.muttrc
+# Name to be displayed on sent emails: set my_name = Sam Stelfox # Use the Maildir format set mbox_type = Maildir set folder = ~/Maildir set spoolfile = +/ # How often to check for new mail (in seconds) set mail_check = 150 # Cache messages and headers locally to speed up some operations, this is # mostly valuable when retrieving email via IMAP or POP.</description>
+    </item>
+    
+    <item>
+      <title>MySQL</title>
+      <link>https://stelfox.net/notes/mysql/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/mysql/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Server Installation Install the package.
+yum install mysql-server -y  Set to start up auto-magically and get it going now.
+systemctl enable mysqld.service systemctl start mysqld.service  Run the quick and dirty secure installation script that comes with the server.</description>
+    </item>
+    
+    <item>
+      <title>MySQL Tuning</title>
+      <link>https://stelfox.net/notes/mysql-tuning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/mysql-tuning/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+#!/bin/sh  # MySQL performance tuning primer script # # Writen by: Matthew Montgomery # Modified by: Sam Stelfox # Report bugs to: https://bugs.launchpad.net/mysql-tuning-primer # Inspired by: MySQLARd (http://gert.sos.be/demo/mysqlar/) # Version: 1.6-r1 # Released: 2011-08-06 # Updated: 2013-05-23 # # Licenced under GPLv2.</description>
+    </item>
+    
+    <item>
+      <title>NFS</title>
+      <link>https://stelfox.net/notes/nfs/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/nfs/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Install packages nfs-utils and nfs4-acl-tools
+This installation sets rpcbind, rpcgssd, rpcidmapd and nfslock to all automatically start on boot&amp;hellip; That pisses me off properly, so I set them all too disabled for testing&amp;hellip; I&amp;rsquo;ll turn them back on as needed (hopefully I won&amp;rsquo;t have too).</description>
+    </item>
+    
+    <item>
+      <title>NGinx</title>
+      <link>https://stelfox.net/notes/nginx/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/nginx/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Dynamic Backend w/ Fallback Sources:
+ http://devblog.mixlr.com/2012/06/26/how-we-use-nginx-lua-and-redis-to-beta-ify-mixlr/ http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/  upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access.</description>
+    </item>
+    
+    <item>
+      <title>NTPDate</title>
+      <link>https://stelfox.net/notes/ntpdate/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/ntpdate/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+There are two different means of client configuration. Fedora has a package ntpdate that should be installed instead of ntpd. Whenever it is started it will synchronize the server&amp;rsquo;s clock to any configured time servers.</description>
+    </item>
+    
+    <item>
+      <title>NTPd</title>
+      <link>https://stelfox.net/notes/ntpd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/ntpd/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer.</description>
+    </item>
+    
+    <item>
+      <title>Nagios</title>
+      <link>https://stelfox.net/notes/nagios/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/nagios/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y  rm -f /etc/httpd/conf.d/welcome.conf  There is also an undeclared depedency:
+yum install perl-Text-ParseWords -y  htpasswd -c /etc/nagios/passwd nagiosadmin  Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios.</description>
+    </item>
+    
+    <item>
+      <title>Network</title>
+      <link>https://stelfox.net/notes/network/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/network/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+RedHat Based Systems Simple Static IP Address You&amp;rsquo;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&amp;rsquo;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention).</description>
+    </item>
+    
+    <item>
+      <title>OpenStack Glance</title>
+      <link>https://stelfox.net/notes/openstack-glance/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/openstack-glance/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation/Configuration Install the required packages with the following command:
+yum install openstack-utils openstack-glance python-glanceclient -y  Generate a long, strong unique password for glance&amp;rsquo;s MySQL user (MySQL should already be setup at this point and bound to 10.</description>
+    </item>
+    
+    <item>
+      <title>OpenVAS</title>
+      <link>https://stelfox.net/notes/openvas/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/openvas/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Setup Install the packages nikto, openvas-scanner, openvas-manager, and openvas-client.
+Scanner As root run openvas-mkcert like the following:
+[root@localhost ~]# openvas-mkcert ------------------------------------------------------------------------------- Creation of the OpenVAS SSL Certificate ------------------------------------------------------------------------------- This script will now ask you the relevant information to create the SSL certificate of OpenVAS.</description>
+    </item>
+    
+    <item>
+      <title>OpenVPN</title>
+      <link>https://stelfox.net/notes/openvpn/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/openvpn/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+If doing this from within an LXC container you&amp;rsquo;ll need to perform the following two steps (this didnt work):
+mkdir /var/lib/libvirt/lxc/${VMNAME}/dev/net mknod /var/lib/libvirt/lxc/${VMNAME}/dev/net/tun c 10 200  yum install openssl openvpn -y mkdir -p /etc/openvpn/keys cd /etc/openvpn/keys openssl dhparam -rand - 1024 &amp;gt; dh1024.</description>
+    </item>
+    
+    <item>
+      <title>Openstack</title>
+      <link>https://stelfox.net/notes/openstack/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/openstack/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+This is a mostly (95%) script-less installation and setup of OpenStack from scratch on a single host, though done in a way that the services could each be very easily broken out on to their own machines or multiple machines.</description>
+    </item>
+    
+    <item>
+      <title>Openstack Keystone</title>
+      <link>https://stelfox.net/notes/openstack-keystone/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/openstack-keystone/</guid>
+      <description>Openstack Keystone Installation/Configuration Install the required packages with the following command:
+yum install openstack-utils openstack-keystone python-keystoneclient -y  Generate a long, strong unique password for keystone&amp;rsquo;s MySQL user (MySQL should already be setup at this point and bound to 10.100.0.11 if you&amp;rsquo;re following along from the Openstack page. Open up a MySQL console as the root user and run the following commands:
+Important Note: Openstack has a convenient command openstack-db that does the following for you, however, when it creates the user it uses keystone for a password and doesn&amp;rsquo;t restrict the hosts that can use that account (globally available).</description>
+    </item>
+    
+    <item>
+      <title>PAM</title>
+      <link>https://stelfox.net/notes/pam/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/pam/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Overview /etc/pam.d/ directory contains the PAM configuration files for each PAM-aware application. Each pam aware configuration file has lines in the format of:
+&amp;lt;module interface&amp;gt; &amp;lt;control flag&amp;gt; &amp;lt;module&amp;gt; &amp;lt;module arguments&amp;gt;  Module Interfaces There are only four module interfaces:</description>
+    </item>
+    
+    <item>
+      <title>Partitioning</title>
+      <link>https://stelfox.net/notes/partitioning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/partitioning/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Recommended / Best Practices  /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot  Creating an LVM partition Create a Physical Partition  Open the drive in fdisk, create a new primary partition Mark the new partition as type &amp;lsquo;8e&amp;rsquo; or Linux LVM Write the partition table  Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)  Volume Group Creation This point needs a bit of thinking before doing.</description>
+    </item>
+    
+    <item>
+      <title>Password Security</title>
+      <link>https://stelfox.net/notes/password-security/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/password-security/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Random Password Generation This little ruby snippet generates a random 31 character string consisting of uppercase letters, lowercase letters, and numbers.
+#!/usr/bin/env ruby character_set = [(&amp;#39;a&amp;#39;..&amp;#39;z&amp;#39;),(&amp;#39;A&amp;#39;..&amp;#39;Z&amp;#39;),(0..9)].map do |item| item.to_a end character_set.flatten! password = &amp;#34;&amp;#34; 31.</description>
+    </item>
+    
+    <item>
+      <title>Postfix</title>
+      <link>https://stelfox.net/notes/postfix/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/postfix/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+By default Fedora/CentOS come with sendmail. Postfix is preferable as it was written with security in mind.
+Something that would be good to port over to Fedora/Postfix with a nice Stelfox spin, and it&amp;rsquo;s follow up.</description>
+    </item>
+    
+    <item>
+      <title>Puppet</title>
+      <link>https://stelfox.net/notes/puppet/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/puppet/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Puppet Master / Server Installation yum install puppet puppet-server -y  And configure the puppet master like so:
+The following file is /etc/puppet/puppet.conf:
+[master] confdir = /etc/puppet vardir = /var/lib/puppet logdir = /var/log/puppet # Whether to print stack traces on some errors trace = false # Whether log files should always flush to disk.</description>
+    </item>
+    
+    <item>
+      <title>Qpid</title>
+      <link>https://stelfox.net/notes/qpid/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/qpid/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Qpid is an open source AMQP broker, providing transaction management, queuing, distribution, security, management, clustering, and federation.
+ http://wiki.openstack.org/QpidSupport http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1  Installation Fedora provides a package for qpid called qpid-cpp-server which can be installed like so:</description>
+    </item>
+    
+    <item>
+      <title>RPM Build</title>
+      <link>https://stelfox.net/notes/rpm-build/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/rpm-build/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Sources:
+ https://fedoraproject.org/wiki/How_to_create_an_RPM_package http://wiki.mandriva.com/en/Policies/RpmSpecProposal https://fedoraproject.org/wiki/Packaging:Guidelines http://rpm.org/max-rpm-snapshot/s1-rpm-inside-macros.html  Create a build user whose sole purpose is to handle building packages. Do not use root under any circumstances.
+As root:
+useradd mockbuild echo -n &#39;mockbuild:password&#39; | chpasswd  Its valuable to grant the mockbuild user sudo permissions to allow that user to install missing development packages.</description>
+    </item>
+    
+    <item>
+      <title>RSyslog</title>
+      <link>https://stelfox.net/notes/rsyslog/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/rsyslog/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
+Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more.</description>
+    </item>
+    
+    <item>
+      <title>Redis</title>
+      <link>https://stelfox.net/notes/redis/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/redis/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install redis -y  Configuration Default configuration:
+############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127.</description>
+    </item>
+    
+    <item>
+      <title>Router</title>
+      <link>https://stelfox.net/notes/router/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/router/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Resources:
+ http://www.fclose.com/816/port-forwarding-using-iptables/  This was done as a quick and dirty iptables NAT/gateway for a private LXC network. Create the LXC container using our base templating trick:
+cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &amp;quot;/var/lib/libvirt/lxc/gateway-01,/&amp;quot; --network=&amp;quot;network=br0&amp;quot; \ --network=&amp;quot;network=isolated&amp;quot; --console &amp;quot;pty&amp;quot; --check-cpu  echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward echo &#39;net.</description>
+    </item>
+    
+    <item>
+      <title>Ruby</title>
+      <link>https://stelfox.net/notes/ruby/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/ruby/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+RVM If using Gnome terminal, you have to set the &amp;lsquo;Run command as login shell&amp;rsquo; check box on the Title and Command tab inside of gnome-terminal&amp;rsquo;s Settings page to run the bashrc file upon opening the terminal.</description>
+    </item>
+    
+    <item>
+      <title>SSHd</title>
+      <link>https://stelfox.net/notes/sshd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/sshd/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Secure Shell or SSH is a network protocol that allows data to be exchanged using a secure channel between two networked devices. Used primarily on GNU/Linux and Unix based systems to access shell accounts, SSH was designed as a replacement for Telnet and other insecure remote shells, which send information, notably passwords, in plaintext, rendering them susceptible to packet analysis.</description>
+    </item>
+    
+    <item>
+      <title>Samba</title>
+      <link>https://stelfox.net/notes/samba/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/samba/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
+SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share.</description>
+    </item>
+    
+    <item>
+      <title>Sendmail</title>
+      <link>https://stelfox.net/notes/sendmail/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/sendmail/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Consider Postfix instead. It was written with security in mind.
+ http://www.sendmail.com/sm/open_source/docs/m4/tweaking_config.html http://www.bga.org/~lessem/psyc5112/usail/mail/configuration/ http://etutorials.org/Linux+systems/red+hat+linux+bible+fedora+enterprise+edition/Part+IV+Red+Hat+Linux+Network+and+Server+Setup/Chapter+19+Setting+Up+a+Mail+Server/Configuring+sendmail/ http://www.fredshack.com/docs/sendmail.html  Installation yum install sendmail -y  Configure Any configuration changes need to be re-compiled by the m4 processor.</description>
+    </item>
+    
+    <item>
+      <title>Session Recording</title>
+      <link>https://stelfox.net/notes/session-recording/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/session-recording/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Bash Builtins The script utility which I&amp;rsquo;ve found in Fedora as a default package (or it&amp;rsquo;s a bash builtin). You can record a session and the timing data about it exit and then view it like an in console video.</description>
+    </item>
+    
+    <item>
+      <title>Snort</title>
+      <link>https://stelfox.net/notes/snort/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/snort/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Suricata might be a better option and has packages for Fedora 15.
+Useful software that can complement an IDS/IPS: OpenFPC, Snorby
+Notes Alright this is frustrating, Fedora 15 doesn&amp;rsquo;t have snort packages so we&amp;rsquo;re compiling from source.</description>
+    </item>
+    
+    <item>
+      <title>Software RAID</title>
+      <link>https://stelfox.net/notes/software-raid/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/software-raid/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation The mdadm package is required for software RAID:
+yum install mdadm -y  Array Creation mdadm --create /dev/md0 --verbose --level=1 --raid-devices=2 /dev/sda /dev/sdb  Shorthand:
+mdadm -Cv /dev/md0 -l1 -n2 /dev/sd[ab]  Note: If you use a RAID 0 and want to put ZFS on top of be sure to set a chunk size &amp;lt;= 256 (maybe even 128 if you&amp;rsquo;re still getting errors) otherwise ZFS will warn about issues creating it&amp;rsquo;s partitions.</description>
+    </item>
+    
+    <item>
+      <title>Squid</title>
+      <link>https://stelfox.net/notes/squid/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/squid/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+ http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/ http://gofedora.com/how-to-configure-squid-proxy-server/ http://wiki.squid-cache.org/ConfigExamples/Portal/Splash http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos http://wiki.squid-cache.org/Features/NegotiateAuthentication http://www.squid-cache.org/Versions/v3/3.2/cfgman/  For URL filtering please refer to the SquidGuard page.
+yum install squid -y  Before configuring squid we mind as well get the authentication credentials in place.</description>
+    </item>
+    
+    <item>
+      <title>Squid Guard</title>
+      <link>https://stelfox.net/notes/squid-guard/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/squid-guard/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Squid Guard is officially a &amp;ldquo;URL Rewrite Program&amp;rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator.</description>
+    </item>
+    
+    <item>
+      <title>Suricata</title>
+      <link>https://stelfox.net/notes/suricata/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/suricata/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install suricata -y  Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1.</description>
+    </item>
+    
+    <item>
+      <title>Swap</title>
+      <link>https://stelfox.net/notes/swap/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/swap/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Security If at any point a decryption key is needed to access a file, it will be stored in RAM. If an otherwise encrypted file is edited it will get stored in RAM before being saved.</description>
+    </item>
+    
+    <item>
+      <title>Tmux</title>
+      <link>https://stelfox.net/notes/tmux/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/tmux/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install tmux -y  Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&amp;rsquo;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment.</description>
+    </item>
+    
+    <item>
+      <title>Transmission Daemon</title>
+      <link>https://stelfox.net/notes/transmission-daemon/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/transmission-daemon/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Configuration First install the transmission-daemon like so:
+[root@localhost ~]# yum install transmission-daemon -y  The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you&amp;rsquo;ll need to edit the init file to point at the binary as it should be doing in the first place.</description>
+    </item>
+    
+    <item>
+      <title>Trim</title>
+      <link>https://stelfox.net/notes/trim/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/trim/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well.</description>
+    </item>
+    
+    <item>
+      <title>Wireless Troubleshouting</title>
+      <link>https://stelfox.net/notes/wireless-troubleshouting/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/wireless-troubleshouting/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+BCM4311 There is a known issue with Fedora 15+ and BCM4311 wireless cards where the wireless will connect, stay connected for a few minutes, then disconnect until either the machine is rebooted or wpa_supplicant and NetworkManager are rebooted.</description>
+    </item>
+    
+    <item>
+      <title>fail2ban</title>
+      <link>https://stelfox.net/notes/fail2ban/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/fail2ban/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+fail2ban provides a vital service of blocking troublesome IPs from attempting brute force logins.
+My immediate issue is that it requires a few packages off the bat that I do not want on my system.</description>
+    </item>
+    
+    <item>
+      <title>iSCSI</title>
+      <link>https://stelfox.net/notes/iscsi/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/iscsi/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+This is the client configuration for iSCSI, please refer to iSCSId for the server portion.
+Configuration yum install iscsi-initiator-utils -y
+iscsid.startup = /etc/rc.d/init.d/iscsid force-start node.startup = automatic node.session.auth.authmethod = CHAP node.session.auth.username = client1 node.</description>
+    </item>
+    
+    <item>
+      <title>iSCSId</title>
+      <link>https://stelfox.net/notes/iscsid/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/iscsid/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+This is the server configuration for iSCSI, please refer to iSCSI for the client portion.
+Configuration Install the package scsi-target-utils.
+Example config:
+default-driver iscsi initiator-address 10.0.0.100 #ignore-errors yes &amp;lt;target iqm.2011-09.net.bedroomprogrammers.lab:example-srv.storage&amp;gt; backing-store /dev/vdb incominguser client1 XXXXXXXXXXXX incominguser client2 XXXXXXXXXXXX write-cache off vendor_id Bedroom Programmers &amp;lt;/target&amp;gt;  [root@localhost ~]# chkconfig tgtd on [root@localhost ~]# service tgtd start  References  http://fedoraproject.</description>
+    </item>
+    
+    <item>
+      <title>libvirtd</title>
+      <link>https://stelfox.net/notes/libvirtd/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/libvirtd/</guid>
+      <description>Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+libvirt is an open source API and management tool for managing platform virtualization. It is used to manage Linux KVM and Xen virtual machines through graphical interfaces such as Virtual Machine Manager and higher level tools such as oVirt.</description>
+    </item>
+    
+  </channel>
+</rss>
