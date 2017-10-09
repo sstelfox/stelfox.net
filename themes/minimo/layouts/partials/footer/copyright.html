@@ -4,13 +4,11 @@
     {{ . }}
   {{- else -}}
     {{- with .Site.Params.Copyright -}}
-
       {{ with .startyear }}
         {{ if lt ( int . ) now.Year }}
           {{ $.Scratch.Set "copyrightStartYear" . }}
         {{ end }}
       {{ end }}
-
       {{ .prefix }} &copy; {{ with ( $.Scratch.Get "copyrightStartYear" ) }}{{ . }}-{{ end }}{{ now.Year }} {{ or .holder $.Site.Title }} {{ .suffix | safeHTML }}
     {{- end -}}
   {{ end }}
