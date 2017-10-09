@@ -1,5 +1,8 @@
 ---
 date: 2017-10-09 14:19:45+00:00
+tags:
+- linux
+- security
 title: AIDE
 ---
 
@@ -17,6 +20,16 @@ process and the database should be backed up immediately after being updated.
 With good backups in place this can help identify what changes were made by an
 attacker after a breach which can be invaluable in knowing both the impact and
 intent of a security incident.
+
+## Import Caveat
+
+There does seems to be an issue that causes core dumps (floating point
+exception). I guessed it was either the number of files or UTF-8 characters in
+the path triggering this but after some testing I couldn't confirm either.
+
+The issue itself could be with the specific compiled version (community/aide
+0.16-1 on arch linux) I was testing or with my config so I recommend trying on
+your own.
 
 ## Secure Usage
 

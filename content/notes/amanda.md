@@ -1,50 +1,32 @@
 ---
+date: 2017-10-09 14:50:23+00:00
+tags:
+- backups
+- linux
 title: Amanda
 ---
-
-# Amanda
 
 Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open
 source computer archiving tool that is able to back up data residing on
 multiple computers on a network.
 
-## Security Notes
+I am not a huge fan of having xinetd or perl on my system and this is reliant
+on both, however, there does not currently seem to be any reasonable open
+source alternatives that support managing a tape library.
 
-The biggest in your face security hole that I see off the top of my head is
-that amanda uses the xinetd to run it's services. xinetd while more secure than
-it's predecessor inetd, still suffers from the problem that it allows any
-arbitrary program to start up automatically and listen on any port (including
-privileged ports) for incoming connections, there are many insecure daemons
-that are traditionally run from xinetd that I do not want existing on my
-network.
+My notes on setting this up were incomplete and woefully outdated so I removed
+them. I have included a couple of references to sources of specific information
+I either do or did find useful:
 
-Higher security for the rest of the system and a very carefully tuned firewall
-is my only defence against this evil service.
+## Cleaning a Tape Library
 
-## Steps I took
+> Any LTO cleaning tape may be used in any LTO drive
 
-```
-yum install amanda amanda-client amanda-server
-```
+* http://arstechnica.com/civis/viewtopic.php?t=1206963
+* http://www.tandbergdata.com/knowledge-base/index.cfm/are-there-any-guidelines-for-cleaning-the-lto-tape-drive/
 
-Edit `/etc/xinetd.d/amanda` and change disable to 'no'.
+## Encryption
 
-Started xinetd
-
-Verified it opened port `10080/udp`
-
-Opened port `10080/udp` on firewall for server subnet
-
-Added to `/var/lib/amanda/.amandahosts`:
-
-```
-localhost                          amandabackup
-backup                             amandabackup
-backup.home.bedroomprogrammers.net amandabackup
-legba                              root
-```
-
-Set permissions on `/var/lib/amanda/.amandahosts` to `600` created folder
-`/opt/backups` and changed owner to `amandabackup` and then I messed something
-up... and didn't document it...
-
+* http://linux.die.net/man/8/amcheck
+* https://wiki.zmanda.com/index.php/How_To:Set_up_data_encryption
+* https://serverfault.com/questions/68487/tape-encryption-management-best-practices
