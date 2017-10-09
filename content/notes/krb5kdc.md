@@ -2,7 +2,9 @@
 title: Kerberos
 ---
 
-# Kerberos
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Kerberos is a network authentication system.
 
@@ -222,6 +224,5 @@ as well:
 * http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127
 * http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html
 
-[1]: ../ntpdate/
+[1]: {{< relref "notes/ntpdate" >}}
 [2]: http://cryptnet.net/fdp/admin/kerby-infra/en/kerby-infra.html#configure
-

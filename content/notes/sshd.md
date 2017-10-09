@@ -272,6 +272,6 @@ I've play around with implementing a [gatekeeper style script][3] to provide an
 additional layer of security. In practice real multi-factor authentication is
 more reliable and should be used instead.
 
-[1]: {{< relref "iptables.md" >}}
-[2]: {{< relref "partitioning.md" >}}
-[3]: {{< relref "sshd_gatekeeper.md" >}}
+[1]: {{< relref "notes/iptables.md" >}}
+[2]: {{< relref "notes/partitioning.md" >}}
+[3]: {{< relref "notes/sshd_gatekeeper.md" >}}

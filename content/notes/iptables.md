@@ -2,7 +2,9 @@
 title: IPTables
 ---
 
-# iptables
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 iptables is the bread and butter linux firewall and the last defence before
 traffic gets to the applications themselves.
@@ -316,7 +318,6 @@ iptables -A reject_as6724 -s 81.169.128.0/17 -j REJECT
 ip6tables -A reject_as6724 -s 2a01:238::/32 -j REJECT
 ```
 
-[1]: ../rsyslog/
+[1]: {{< relref "notes/rsyslog" >}}
 [2]: ftp://ftp.arin.net/info/asn.txt
 [3]: http://www.team-cymru.org/Services/ip-to-asn.html
-

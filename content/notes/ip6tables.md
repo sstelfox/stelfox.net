@@ -2,7 +2,9 @@
 title: IP6Tables
 ---
 
-# ip6tables
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 IP6Tables is the firewall that will directly effect IPv6 traffic. This is
 sample configuration is restricted to allow normal client activity but has no
@@ -40,5 +42,4 @@ configured [IPTables][1] firewall.
 COMMIT
 ```
 
-[1]: ../iptables/
-
+[1]: {{< relref "notes/iptables" >}}

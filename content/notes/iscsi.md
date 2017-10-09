@@ -2,7 +2,9 @@
 title: iSCSI
 ---
 
-# iSCSI
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 This is the client configuration for iSCSI, please refer to [iSCSId][1] for the
 server portion.
@@ -63,5 +65,4 @@ node.session.iscsi.FastAbort = Yes
 [root@localhost ~]# iscsiadm --mode discovery --type sendtargets --portal <service_ip>
 ```
 
-[1]: ../iscsid/
-
+[1]: {{< relref "notes/iscsid" >}}

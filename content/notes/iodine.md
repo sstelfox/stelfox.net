@@ -2,7 +2,9 @@
 title: Iodine
 ---
 
-# Iodine
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 On the server side:
 
@@ -46,4 +48,3 @@ nat table:
 
 COMMIT
 ```
-

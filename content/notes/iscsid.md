@@ -2,7 +2,9 @@
 title: iSCSId
 ---
 
-# iSCSId
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 This is the server configuration for iSCSI, please refer to [iSCSI][1] for the
 client portion.
@@ -40,5 +42,4 @@ initiator-address 10.0.0.100
 * `http://www.ryanuber.com/a-quick-introduction-to-gfs2-over-iscsi.html` (dead link) - Transition from iSCSI to GFS2
 * http://www.rainingpackets.com/wiki/doku.php?id=iscsi_cheat_sheet - iSCSI cheat sheet (includes client config)
 
-[1]: ../iscsi/
-
+[1]: {{< relref "notes/iscsi" >}}
