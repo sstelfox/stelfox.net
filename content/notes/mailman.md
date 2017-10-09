@@ -2,7 +2,9 @@
 title: Mailman
 ---
 
-# Mailman
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 [GNU Mailman][1] is a computer software application from the GNU project for
 managing electronic mailing lists.
@@ -27,20 +29,14 @@ service.
 Mailman needs to be able to both send and receive mail. These jobs are handled
 by the system's MTA, the only two of which I use are [Postfix][2] and
 [Sendmail][3] depending on the system. If I ever get around to it I'll also get
-around to writing a config guide for [Exim][4]. Refer to those for proper
+around to writing a config guide for Exim. Refer to those for proper
 hardening and firewalling.
 
 The other half of Mailman is the administrative interfaces. This is done
 through a web site hosted on an [Apache][5] installation. Please refer to that
 guide for firewall and configuration on that service.
 
-## Configuration
-
-TODO
-
 [1]: http://www.list.org/
-[2]: ../postfix/
-[3]: ../sendmail/
-[4]: ../exim/
-[5]: ../httpd/
-
+[2]: {{< relref "notes/postfix.md" >}}
+[3]: {{< relref "notes/sendmail.md" >}}
+[5]: {{< relref "notes/httpd.md" >}}

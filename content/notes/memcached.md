@@ -2,7 +2,9 @@
 title: Memcached
 ---
 
-# Memcached
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Installation
 
@@ -36,4 +38,3 @@ OPTIONS="-l 10.100.0.14"
 ## Firewall
 
 By default memcached listens on both UDP and TCP port `11211`
-

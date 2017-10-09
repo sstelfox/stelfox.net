@@ -2,7 +2,9 @@
 title: Sendmail
 ---
 
-# Sendmail
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Consider [Postfix][1] instead. It was written with security in mind.
 
@@ -27,5 +29,4 @@ command:
 yum install sendmail-cf -y
 ```
 
-[1]: ../postfix/
-
+[1]: {{< relref "notes/postfix.md" >}}

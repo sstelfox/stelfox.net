@@ -2,7 +2,9 @@
 title: Linux Virtual Servers
 ---
 
-# Linux Virtual Servers
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Keepalived
 
@@ -304,8 +306,3 @@ At this point we have everything in place we need to perform our two target
 tasks. Having a gateway on the local network that can failover in the event the
 other machine dies, and provide highly availability to multiple services behind
 them.
-
-## Traffic Routing with Failover
-
-## Virtual Services
-

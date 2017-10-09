@@ -2,8 +2,6 @@
 title: Mutt
 ---
 
-# Mutt
-
 ```
 yum install mutt -y
 ```
@@ -173,4 +171,3 @@ composed messsages.
 ```
 au BufRead /tmp/mutt-* set tw=72
 ```
-

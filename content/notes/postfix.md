@@ -2,6 +2,10 @@
 title: Postfix
 ---
 
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
+
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
 written with security in mind.
 
@@ -549,4 +553,3 @@ mail sent too 'bounce@example.tld'.
 [9]: http://wiki.dovecot.org/MailboxFormat/Maildir
 [10]: http://cr.yp.to/proto/verp.txt
 [11]: http://stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/
-

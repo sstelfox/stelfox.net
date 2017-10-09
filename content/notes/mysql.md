@@ -2,7 +2,9 @@
 title: MySQL
 ---
 
-# MySQL
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Server
 
@@ -395,5 +397,4 @@ MORE TODO
 [1]: http://www.symantec.com/connect/articles/securing-mysql-step-step
 [2]: http://www.webhostingskills.com/articles/mysql_in_a_chrooted_environment
 [3]: http://dev.mysql.com/doc/refman/5.5/en/dynamic-system-variables.html
-[4]: ../mysql_tuning/
-
+[4]: {{< relref "notes/mysql_tuning.md" >}}

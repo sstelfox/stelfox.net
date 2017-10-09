@@ -2,7 +2,9 @@
 title: Motion
 ---
 
-# Motion
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Installation
 
@@ -46,4 +48,3 @@ shows up as `/dev/video2` for me so this is how I turned it off:
 ```
 uvcdynctrl -d /dev/video2 -s 'Focus, Auto' 0
 ```
-
