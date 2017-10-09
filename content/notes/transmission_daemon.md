@@ -2,7 +2,9 @@
 title: Transmission Daemon
 ---
 
-# Transmission Daemon
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Configuration
 
@@ -272,4 +274,3 @@ you gave mktorrent with the -n flag.
 # Allow local access to the web interface
 -A SERVICE -s 10.13.37.0/24 -m tcp -p tcp --dport 9091 -j ACCEPT
 ```
-

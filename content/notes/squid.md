@@ -2,7 +2,9 @@
 title: Squid
 ---
 
-# Squid
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 * http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/
 * http://gofedora.com/how-to-configure-squid-proxy-server/
@@ -397,5 +399,4 @@ export NO_PROXY=.i.0x378.net
 You can include credentials by prepending the `user:pass@` to the hosts of the
 protocols above.
 
-[1]: ../squid_guard/
-
+[1]: {{< relref "notes/squid_guard.md" >}}

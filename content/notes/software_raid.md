@@ -2,7 +2,9 @@
 title: Software RAID
 ---
 
-# Software RAID
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Installation
 
@@ -102,4 +104,3 @@ And blow away the super block on all of the drives:
 ```
 mdadm --zero-superblock /dev/sd[ab]
 ```
-

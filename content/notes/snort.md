@@ -2,11 +2,13 @@
 title: Snort
 ---
 
-# Snort
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Suricata might be a better option and has packages for Fedora 15.
 
-Useful software that can complement an IDS/IPS: [OpenFPC][1], [Snorby][2]
+Useful software that can complement an IDS/IPS: OpenFPC, [Snorby][1]
 
 ## Notes
 
@@ -43,6 +45,4 @@ cd etc/
 cp * /etc/snort/
 ```
 
-[1]: ../openfpc/
-[2]: https://snorby.org
-
+[1]: https://snorby.org

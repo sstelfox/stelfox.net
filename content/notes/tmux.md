@@ -2,7 +2,9 @@
 title: Tmux
 ---
 
-# Tmux
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Installation
 
@@ -204,4 +206,3 @@ set laststatus=2
 ```
 
 [1]: https://wiki.archlinux.org/index.php/Tmux#Clients_simultaneously_interacting_with_various_windows_of_a_session
-

@@ -2,7 +2,9 @@
 title: RPM Build
 ---
 
-# RPM Build
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Sources:
 
@@ -138,4 +140,3 @@ yum install lua lua-socket lua-devel -y
 Source:
 
 * http://www.question-defense.com/2010/03/04/generate-a-gpg-key-to-sign-rpm-packages-created-using-rpmbuild-on-centos-linux
-

@@ -2,6 +2,10 @@
 title: Password Security
 ---
 
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
+
 ## Random Password Generation
 
 This little ruby snippet generates a random 31 character string consisting of

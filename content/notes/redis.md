@@ -2,7 +2,9 @@
 title: Redis
 ---
 
-# Redis
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Installation
 
@@ -537,4 +539,3 @@ Use the identical config from the master but append the following line to it:
 ```
 slaveof <master-ip> 6379
 ```
-
