@@ -2,7 +2,9 @@
 title: GPG Keypairs
 ---
 
-# GPG Keypairs
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Use of subkeys
 
@@ -361,4 +363,3 @@ Viewing signatures on a key:
 ```
 [user@host ~]$ gpg --list-sigs <keyid>
 ```
-

@@ -2,6 +2,10 @@
 title: GPSd
 ---
 
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
+
 ## Installation
 
 I've been using a BU-353 which if I remember correctly was ~$20 and has been
@@ -174,4 +178,3 @@ nowhere near a window (my office is in the heart of a building unfortunately).
 ## Misc References
 
 * http://catb.org/gpsd/hacking.html
-

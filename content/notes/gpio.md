@@ -2,7 +2,9 @@
 title: GPIO
 ---
 
-# GPIO
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 I came across this python script that accesses GPIO pins in linux. It's
 potentially very useful so I'm including it here, in it's entirety. I can later
@@ -171,4 +173,3 @@ def run(setup, main): # from PyBBIO by Alexander Hiam - ahiam@marlboro.edu - www
     cleanup()
     print e
 ```
-

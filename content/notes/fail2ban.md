@@ -2,7 +2,9 @@
 title: fail2ban
 ---
 
-# Fail2Ban
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 fail2ban provides a vital service of blocking troublesome IPs from attempting
 brute force logins.
@@ -385,5 +387,4 @@ The above shows that I have 75 matches and the IPs (removed) that matched
 against which rule.
 
 [1]: https://bugzilla.redhat.com/show_bug.cgi?id=244275
-[2]: ../mysql/
-
+[2]: {{< relref "notes/mysql.md" >}}

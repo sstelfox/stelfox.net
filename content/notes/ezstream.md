@@ -2,7 +2,9 @@
 title: EZStream
 ---
 
-# EZStream
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 EZStream is a media streamer and re-encoder that can be used to feed
 [Icecast][1].
@@ -16,15 +18,15 @@ stream server I've performed the following:
 
 ```
 mkdir /media/content
-mount -t cifs -o username=guest //samba-srv/Media /media/content
+mount -t cifs -o username=guest /samba-srv/Media /media/content
 ```
 
 The above command could be added to an init script like an `rc.local` or
-alternatively you can do it right and add it to the [fstab][3] file to be
-mounted automatically. You'll want to add the following to `/etc/fstab`:
+alternatively you can do it right and add it to the fstab file to be mounted
+automatically. You'll want to add the following to `/etc/fstab`:
 
 ```
-//samba-srv/Media  /media/content  cifs  auto,guest,_netdev  0 0
+/samba-srv/Media  /media/content  cifs  auto,guest,_netdev  0 0
 ```
 
 Nice and easy.
@@ -81,7 +83,5 @@ ezstream.xml
 </ezstream>
 ```
 
-[1]: ../icecast/
-[2]: ../samba/
-[3]: ../fstab/
-
+[1]: {{< relref "notes/icecast" >}}
+[2]: {{< relref "notes/samba" >}}
