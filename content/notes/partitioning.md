@@ -2,7 +2,9 @@
 title: Partitioning
 ---
 
-# Partitioning
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Recommended / Best Practices
 
@@ -76,5 +78,4 @@ mkfs.ext4 /dev/mapper/cryptTest
 cryptsetup luksClose /dev/mapper/cryptTest
 ```
 
-[1]: ../swap/
-
+[1]: {{< relref "notes/swap.md" >}}

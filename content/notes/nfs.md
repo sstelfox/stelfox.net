@@ -2,7 +2,9 @@
 title: NFS
 ---
 
-# NFS
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Install packages `nfs-utils` and `nfs4-acl-tools`
 
@@ -45,4 +47,3 @@ dmesg | tail  or so
 * http://tldp.org/HOWTO/NFS-HOWTO/security.html
 * http://www.linuxjournal.com/article/4880
 * `http://www.copiouscom.com/2010/05/open-directory-kerberos-single-sign-on-sso-and-centos-with-ssh-and-kerberized-nfs-home-directories/` (Dead link)
-

@@ -2,7 +2,9 @@
 title: Swap
 ---
 
-# Swap
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Security
 
@@ -70,15 +72,10 @@ following one:
 cryptsetup -c aes-xts-plain -s 256 -h sha256 -d /dev/urandom create swap /dev/sda3
 ```
 
-Additional ciphers that can be used including speed tests can be found on the
-[Encryption][2] page.
-
 Fedora has device mapper support built into the kernel, however if your
 distribution doesn't have device mapper support active by default, in the line
 right before the cryptsetup invocation add the line "modprobe dm-mod" to load
 the kernel module. Otherwise you'll get a "Command failed: Incompatible
 libdevmapper" error.
 
-[1]: ../data_recovery/
-[2]: ../../security/encryption/
-
+[1]: {{< relref "notes/data_recovery.md" >}}

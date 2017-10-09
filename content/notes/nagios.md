@@ -2,7 +2,9 @@
 title: Nagios
 ---
 
-# Nagios
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ```
 yum install nagios nagios-plugins httpd nagios-plugins-load \
@@ -72,4 +74,3 @@ chmod 0640 /etc/nagios/private/resource.cfg /etc/nagios/passwd
 # And restore any selinux attributes on the files
 restorecon -R /etc/nagios
 ```
-

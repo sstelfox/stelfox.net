@@ -2,7 +2,9 @@
 title: OpenStack Glance
 ---
 
-# OpenStack Glance
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Installation/Configuration
 
@@ -23,6 +25,5 @@ GRANT ALL ON glance.* TO 'glance'@'10.100.0.%' IDENTIFIED BY 'LongStrongUniquePa
 FLUSH PRIVILEGES;
 ```
 
-[1]: ../mysql/
-[2]: ../openstack/
-
+[1]: {{< relref "notes/mysql.md" >}}
+[2]: {{< relref "notes/openstack.md" >}}

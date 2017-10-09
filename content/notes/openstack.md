@@ -2,7 +2,9 @@
 title: Openstack
 ---
 
-# Openstack
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 This is a mostly (95%) script-less installation and setup of OpenStack from
 scratch on a single host, though done in a way that the services could each be
@@ -136,10 +138,9 @@ Additional notes:
 * `http://docs.openstack.org/trunk/openstack-object-storage/admin/content/memcached-considerations.html` (Dead link)
 * http://www.cybera.ca/tech-radar/using-memcached-openstack-nova
 
-[1]: ../mysql/
-[2]: ../qpid/
-[3]: ../chronyd/
-[4]: ../memcached/
-[5]: ../openstack_keystone/
-[6]: ../openstack_glance/
-
+[1]: {{< relref "notes/mysql.md" >}}
+[2]: {{< relref "notes/qpid.md" >}}
+[3]: {{< relref "notes/chronyd.md" >}}
+[4]: {{< relref "notes/memcached.md" >}}
+[5]: {{< relref "notes/openstack_keystone.md" >}}
+[6]: {{< relref "notes/openstack_glance.md" >}}
