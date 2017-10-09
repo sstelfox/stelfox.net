@@ -106,7 +106,8 @@ valid.
 I have a modified configuration file covering my general use case
 [available][3], a slightly tweaked [cron job][4] ([original here][5]), and
 slightly [modified script][6] to check AIDE itegrity remotely using SSH
-(original in the contrib directory of the AIDE source).
+(original in the contrib directory of the AIDE source). If you use any of these
+you will likely need to adjust paths to match the config.
 
 [1]: {{< relref "notes/puppet.md" >}}
 [2]: {{< relref "notes/logrotate.md" >}}
