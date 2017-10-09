@@ -23,15 +23,23 @@ intent of a security incident.
 
 ## Import Caveat
 
-There does seems to be an issue that causes core dumps (floating point
-exception). I guessed it was either the number of files or UTF-8 characters in
-the path triggering this but after some testing I couldn't confirm either. This
-issue prevents me from monitoring all of my system (specifically I can't
-monitor file contents under `/usr/lib` which is... not ideal).
+There does seems to be an issue that causes core dumps like so:
+
+```
+Floating point exception (core dumped)
+```
+
+I initially suspected UTF-8 characters in the path name or to many files. Both
+I was able to disprove. I can enable all checks on an effected directory except
+for any of the hashes (I tested all the ones available to me individually).
 
 The issue itself could be with the specific compiled version (community/aide
-0.16-1 on arch linux) I was testing or with my config so I recommend trying on
-your own.
+0.16-1 on arch linux) I was testing with.
+
+After strace'ing down the files it was having issues with I simply excluded the
+files that were triggering the issue from checksum validation. I couldn't find
+anything unusual about the files themselves though... no extended attributes,
+normal permissions, readable... Maybe a bug in libmhash?
 
 ## Secure Usage
 
