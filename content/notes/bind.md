@@ -2,16 +2,9 @@
 title: Bind
 ---
 
-# Bind
-
-## Security Notes
-
-Phew, where do I start. DNS can be used to enumerate machines and services on a
-network, as well as provide topographical layouts of the network and how things
-are segregated. A good solution to this is to use 'split-horizon' DNS, that is
-providing an internal set of records for all of your systems and an external
-set of records only containing the addresses required to be used externally.
-I'll elaborate more some other time.
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Firewall Adjustments
 
@@ -381,4 +374,3 @@ mean it won't even listen on an IPv6 port).
 echo 'OPTIONS="-4"' >> /etc/sysconfig/named
 service named restart
 ```
-

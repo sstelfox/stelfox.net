@@ -2,7 +2,9 @@
 title: Asterisk
 ---
 
-# Asterisk
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Asterisk is a software implementation of a telephone private branch exchange
 (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it
@@ -11,11 +13,11 @@ other telephone services including the public switched telephone network (PSTN)
 and Voice over Internet Protocol (VoIP) services. Its name comes from the
 asterisk symbol, “*”.
 
-NOTE: FreeSWITCH would be a much more solid replacement for asterisk and has
-support for interops with Linksys SPA3000 as well as ZRTP and SRTP support. It
-might be wise to look into using kamailio as a front end SIP router though this
-doesn't seem to be necessary unless we want to start handling multi-thousands
-of calls concurrently.
+NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for
+the Linksys SPA3000 as well as ZRTP and SRTP support. It might be wise to look
+into using kamailio as a front end SIP router though this doesn't seem to be
+necessary unless we want to start handling multi-thousands of calls
+concurrently.
 
 A [few][1] [references][2] for help when building FreeSWITCH.
 
@@ -61,8 +63,6 @@ setup and will document it here.
 One of the things for me to note ahead of time is to not put incoming calls
 into the same context as my dial plans. This alone will be a significant
 increase in any kind of security.
-
-A more thorough discussion of voip security can be found [elsewhere][6].
 
 ### Encryption
 
@@ -124,14 +124,6 @@ included, there are a lot of them). I copied the original files to *.conf.o and
 blew away most of the files I edited (including the stock comments). 
 
 ### /etc/asterisk/asterisk.conf
-
-[1]: http://oneitguy.com/blog/freeswitch-spa3000-openwrt
-[2]: http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/
-[3]: http://google.com/voice
-[4]: http://www.sipgate.com/
-[5]: http://code.google.com/p/pygooglevoice/
-[6]: ../../security/voip/
-[7]: ../fail2ban/
 
 ```ini
 ; --- Asterisk's Primary Configuration ---
@@ -249,7 +241,7 @@ blew away most of the files I edited (including the stock comments).
 The only thing that I have changed in the below configuration is that where it
 says 'SPA3000' in the variables I used the MAC address of the actual SPA3000
 device as it is defined in sip.conf (this has also been changed there). This
-will allow it too remain unique even if another is added.
+will allow it to remain unique even if another is added.
 
 ```ini
 ; --- Asterisk Extension Configuration ---
@@ -778,16 +770,15 @@ chosen at random from this directory as long as asterisk can read them (that is
 it has a codec for the audio file loaded). I strongly suggest the music be in
 `ogg` format.
 
-## Configuring Linksys/Sipura SPA-3000
-
-I've documented setting up the [Linksys Sipura SPA3000][1] with Asterisk on
-another section of my wiki.
-
 ## Text to Speech
 
-Please refer to my notes on [Festival][2] for more information on text to
+Please refer to my notes on [Festival][7] for more information on text to
 speech with asterisk.
 
-[1]: ../../devices/sipura_spa3000/
-[2]: ../festival/
-
+[1]: http://oneitguy.com/blog/freeswitch-spa3000-openwrt
+[2]: http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/
+[3]: http://google.com/voice
+[4]: http://www.sipgate.com/
+[5]: http://code.google.com/p/pygooglevoice/
+[6]: {{< relref "notes/fail2ban.md" >}}
+[7]: {{< relref "notes/festival.md" >}}

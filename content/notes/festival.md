@@ -2,7 +2,9 @@
 title: Festival
 ---
 
-# Festival
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Festival is packaged in a way on Fedora in a standalone mode, it does not come
 with an init script to startup it's server on boot so the following is an
@@ -58,4 +60,3 @@ name may be added to the server safe functions."
 
 ;(provide 'siteinit)
 ```
-

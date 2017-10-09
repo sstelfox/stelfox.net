@@ -2,7 +2,9 @@
 title: Beets
 ---
 
-# Beets
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 [Documentation][1]
 
@@ -69,4 +71,3 @@ The `-A` flag will import the music without checking the tags. And finally the
 of matching.
 
 [1]: http://readthedocs.org/docs/beets/en/1.0b12/index.html
-
