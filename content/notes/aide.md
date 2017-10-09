@@ -25,7 +25,9 @@ intent of a security incident.
 
 There does seems to be an issue that causes core dumps (floating point
 exception). I guessed it was either the number of files or UTF-8 characters in
-the path triggering this but after some testing I couldn't confirm either.
+the path triggering this but after some testing I couldn't confirm either. This
+issue prevents me from monitoring all of my system (specifically I can't
+monitor file contents under `/usr/lib` which is... not ideal).
 
 The issue itself could be with the specific compiled version (community/aide
 0.16-1 on arch linux) I was testing or with my config so I recommend trying on
