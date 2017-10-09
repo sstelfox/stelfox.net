@@ -2,7 +2,9 @@
 title: Linux Hardening
 ---
 
-# Linux Hardening
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 PLEASE NOTE: This guide was developed for Red Had Based architectures,
 specifically CentOS 5, and Fedora 16+. A lot of the information here is
@@ -60,8 +62,8 @@ relevant as possible I need to annually review the following information:
 ## Hardware
 
 Hardware and BIOS's change from machine to machine but there are some quick
-best practices that should be followed. Follow the [BIOS][6] notes and ensure
-the hardware is [physically secure][7].
+best practices that should be followed. The BIOS should be hardened and
+physical security should be assessed.
 
 ## Installation Notes
 
@@ -200,11 +202,11 @@ On all of my servers I configure:
 
 ## Updates
 
-Updates regardless of whether [KSplice][18] is being used should be done as
+Updates regardless of whether KSplice is being used should be done as
 soon as possible. For the most part there shouldn't be any reason not to update
 automatically unless you are using untrusted repositories.
 
-There is a daemon available [yum-updatesd][19] in the Fedora repositories which
+There is a daemon available yum-updatesd in the Fedora repositories which
 can be configured to notify administrators of new packages and optionally
 install them automatically.
 
@@ -424,7 +426,7 @@ settings can be found in `/etc/security/limits.conf`
   * Manual verification of installed GPG key with remote resource
   * Verify gpgcheck is enabled in all yum configuration files
 * Configuring Automatic Updates
-  * [Fedora Update & Security Check Script][21]
+  * Fedora Update & Security Check Script
 
 ### Permission Verification
 
@@ -464,9 +466,9 @@ settings can be found in `/etc/security/limits.conf`
 * Create and Maintain a Group Containing All Human Users
   * `users` Group
 * Set Password Quality Requirements
-  * Either [pam_cracklib][22] or [pam_passwdqc][23]
+  * Either pam_cracklib or pam_passwdqc
 * Set Lockouts for Failed Password Attempts
-  * [|pam_tally2][24]
+  * pam_tally2
 * Set Password Hashing Algorithm to SHA-512
   * `/etc/pam.d/system-auth`: Ensure: `password     sufficient    pam_unix.so
     {sha512}`
@@ -510,7 +512,7 @@ settings can be found in `/etc/security/limits.conf`
 ### Misc
 
 * Add Local [Certificate Authority][25]'s Public Key to the Trusted Store
-* Harden [sysctl.conf][26] Values
+* Harden sysctl.conf Values
 
 ### Services
 
@@ -523,25 +525,15 @@ settings can be found in `/etc/security/limits.conf`
 [3]: http://web.nvd.nist.gov/view/ncp/repository
 [4]: http://benchmarks.cisecurity.org/en-us/
 [5]: http://www.sans.org/reading_room/
-[6]: ../../security/bios/
-[7]: ../../security/physical/
-[8]: ../partitioning/
-[9]: ../iptables/
-[10]: ../ip6tables/
-[11]: ../network/
-[12]: ../rsyslog/
-[13]: ../logrotate/
-[14]: ../logwatch/
-[15]: ../sshd/
-[16]: ../ntpd/
-[17]: ../chronyd/
-[18]: ../ksplice/
-[19]: ../yum-updatesd/
-[20]: ../mysql/
-[21]: ../../security/fedora_check/
-[22]: ../pam_cracklib/
-[23]: ../pam_passwdqc/
-[24]: ../pam_tally2/
-[25]: ../certificate_authority/
-[26]: ../sysctl/
-
+[8]: {{< relref "notes/partitioning.md" >}}
+[8]: {{< relref "notes/iptables.md" >}}
+[8]: {{< relref "notes/ip6tables.md" >}}
+[11]: {{< relref "notes/network.md" >}}
+[12]: {{< relref "notes/rsyslog.md" >}}
+[13]: {{< relref "notes/logrotate.md" >}}
+[14]: {{< relref "notes/logwatch.md" >}}
+[15]: {{< relref "notes/sshd.md" >}}
+[16]: {{< relref "notes/ntpd.md" >}}
+[17]: {{< relref "notes/chronyd.md" >}}
+[20]: {{< relref "notes/mysql.md" >}}
+[25]: {{< relref "notes/certificate_authority.md" >}}

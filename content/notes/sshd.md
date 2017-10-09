@@ -2,6 +2,10 @@
 title: SSHd
 ---
 
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
+
 Secure Shell or SSH is a network protocol that allows data to be exchanged
 using a secure channel between two networked devices. Used primarily on
 GNU/Linux and Unix based systems to access shell accounts, SSH was designed as

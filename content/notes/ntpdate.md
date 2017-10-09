@@ -41,4 +41,4 @@ ones listed. If there aren't then use the following for the config file:
 1.pool.ntp.org
 ```
 
-[1]: {{< relref "notes/ntpd" >}}
+[1]: {{< relref "notes/ntpd.md" >}}

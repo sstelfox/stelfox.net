@@ -224,5 +224,5 @@ as well:
 * http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127
 * http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html
 
-[1]: {{< relref "notes/ntpdate" >}}
+[1]: {{< relref "notes/ntpdate.md" >}}
 [2]: http://cryptnet.net/fdp/admin/kerby-infra/en/kerby-infra.html#configure

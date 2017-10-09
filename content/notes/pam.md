@@ -2,8 +2,6 @@
 title: PAM
 ---
 
-# PAM
-
 ## Overview
 
 `/etc/pam.d/` directory contains the PAM configuration files for each PAM-aware
@@ -171,4 +169,3 @@ Information about users password tally can be found in `/var/log/tallylog`.
 
 Additionally adding `unlock_time=1800`. This allows the user to log back in
 half an hour after the account has been locked.
-

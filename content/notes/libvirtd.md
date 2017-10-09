@@ -2,7 +2,9 @@
 title: libvirtd
 ---
 
-# libvirtd
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 libvirt is an open source API and management tool for managing platform
 virtualization. It is used to manage Linux KVM and Xen virtual machines through
@@ -386,5 +388,4 @@ virt-install --connect qemu:///system \
 
 * https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/
 
-[1]: ../iptables/
-
+[1]: {{< relref "notes/iptables.md" >}}

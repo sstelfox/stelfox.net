@@ -65,4 +65,4 @@ node.session.iscsi.FastAbort = Yes
 [root@localhost ~]# iscsiadm --mode discovery --type sendtargets --portal <service_ip>
 ```
 
-[1]: {{< relref "notes/iscsid" >}}
+[1]: {{< relref "notes/iscsid.md" >}}

@@ -2,7 +2,9 @@
 title: Logrotate
 ---
 
-# Logrotate
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Logrotate is a pretty simple and straight forward program. It's generally run
 as a nightly cron job testing the various configured file to see if they match
@@ -19,4 +21,4 @@ such as `yum` and [`nginx`][1]. Defaults for configurations are configured in
 for specific log files. Where appropriate you'll find the rotation
 configurations I use on the relevant service pages.
 
-[1]: <%= @items['/knowledge_base/linux/nginx/'].path %>
+[1]: {{< relref "notes/nginx.md" >}}

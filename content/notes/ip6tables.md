@@ -42,4 +42,4 @@ configured [IPTables][1] firewall.
 COMMIT
 ```
 
-[1]: {{< relref "notes/iptables" >}}
+[1]: {{< relref "notes/iptables.md" >}}
