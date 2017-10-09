@@ -2,7 +2,9 @@
 title: High Availability
 ---
 
-# High Availability
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Packages of interest:
 
@@ -63,4 +65,3 @@ Interesting use for this as a firewall:
 
 * http://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html
 * http://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/
-

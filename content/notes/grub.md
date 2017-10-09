@@ -2,7 +2,9 @@
 title: Grub
 ---
 
-# Grub
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Security
 
@@ -20,8 +22,8 @@ sha512 to hash the password like so:
 
 ```
 [root@localhost ~]# grub-crypt --sha-512
-Password: 
-Retype password: 
+Password:
+Retype password:
 $6$Um4l/Bido.ySrD.H$uuQjipx3uCu/XwGAfqOQsdIw1m1dphRbUbKOsoT5EpCt4LGi0kGdckDE3SPj2eS3pJ9DCJy3V/TqlqJOjjMvJ1
 ```
 
@@ -45,4 +47,3 @@ like so:
 ```
 [root@localhost ~]# chmod 600 /etc/grub.conf
 ```
-

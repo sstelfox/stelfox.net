@@ -2,7 +2,9 @@
 title: Hipache
 ---
 
-# Hipache
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Installing and setting up hipache. To actually install this I had to open up
 port `tcp/9418` outbound on the server.
@@ -39,4 +41,3 @@ Allow redis access to the local redis servers:
 ```
 -A OUTPUT -m tcp -p tcp --dport 6379 -d 192.168.122.0/24 -j ACCEPT
 ```
-

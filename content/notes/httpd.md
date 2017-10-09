@@ -2,7 +2,9 @@
 title: HTTPd
 ---
 
-# HTTPd
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Apache or httpd is a strong and well tested webserver.
 
@@ -981,5 +983,4 @@ I wasn't able to get this working at the current time as there is a bug in
 passenger 3.0.12 that prevents it from being compiled with GCC 4.6.
 
 [1]: http://www.ietf.org/rfc/rfc3546.txt
-[2]: ../ruby/
-
+[2]: {{< relref "notes/ruby.md" >}}

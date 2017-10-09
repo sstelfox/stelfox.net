@@ -2,7 +2,9 @@
 title: Icinga
 ---
 
-# Icinga
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Icinga is a serious and awesome port of nagios. It properly modernizes it and
 gives it all the stuff the nagios developers made into an "Enterprise only"
@@ -61,4 +63,3 @@ icinga_group=apache
 
 [1]: https://bugzilla.redhat.com/show_bug.cgi?id=693608
 [2]: http://pkgs.repoforge.org/icinga/
-

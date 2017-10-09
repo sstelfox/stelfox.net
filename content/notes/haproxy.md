@@ -2,23 +2,9 @@
 title: HAProxy
 ---
 
-# HAProxy
-
-## A Note on SSL
-
-If you're using HAProxy to proxy SSL traffic without terminating it at HAProxy
-you might quickly discover what I did. You lose the client IP in the request
-completely. This unfortunately was a deal breaker for me. HAProxy's SSL support
-was slow to evolve and as far as I can tell doesn't directly support the
-elliptic curve based protocols.
-
-This is mostly an assumption since I couldn't find any documentation on this
-being in place anywhere, and there doesn't seem to be a way to directly provide
-a diffie-hellman parameter file (though it's not uncommon for this to just be
-appended to the certificate file).
-
-Instead my next step was too look at the kernel's support for virtual IPs
-shared among different machines (IPVS and Keepalived).
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## Notes on Setup
 
@@ -103,4 +89,3 @@ And setup haproxy to run.
 systemctl enable haproxy.service
 systemctl start haproxy.service
 ```
-

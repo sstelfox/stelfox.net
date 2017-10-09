@@ -2,7 +2,9 @@
 title: Ruby
 ---
 
-# Ruby
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 ## RVM
 
@@ -104,5 +106,4 @@ I suspect the error was unrelated.
 
 http://hmarr.com/2012/nov/08/rubies-and-bundles/
 
-[1]: https://rvm.io//gemsets/initial/
-
+[1]: https://rvm.io/gemsets/initial/

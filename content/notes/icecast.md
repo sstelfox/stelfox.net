@@ -2,6 +2,10 @@
 title: IceCast
 ---
 
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
+
 While it's described and primarily used as an audio streaming server, it would
 be more accurate to describe it as a media streaming server as it's perfectly
 capable of rebroadcasting video streams with or without audio.
