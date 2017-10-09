@@ -1112,4 +1112,4 @@ Todo...
 [2]: http://www.icecast.org/docs/icecast-2.0.1/icecast2_config_file.html
 [3]: {{< relref "iptables.md" >}}
 [4]: {{< relref "password_security.md" >}}
-[5]: /files/silence.ogg
+[5]: /note_files/icecast/silence.ogg
