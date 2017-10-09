@@ -1,6 +1,6 @@
 ---
 menu: main
-title: Personal Notes
+title: Various Notes
 ---
 
 This section contains notes on various services and systems I've explored or
