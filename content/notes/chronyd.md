@@ -2,9 +2,11 @@
 title: Chronyd
 ---
 
-# Chronyd
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
-Replacement for the ntpd daemon. This doesn't seem to be "production ready".
+Replacement for the ntpd daemon.
 
 ## Installation
 
@@ -140,4 +142,3 @@ case "$STATUS" in
     ;;
 esac
 ```
-

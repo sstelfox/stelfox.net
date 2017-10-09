@@ -2,7 +2,9 @@
 title: Building a Certificate Authority
 ---
 
-# Building a Certificate Authority
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 This page goes through how to create a local PKI infrastructure for use with
 all the other components listed in this wiki and many not mentioned at all. It
@@ -337,7 +339,6 @@ openssl req -new -x509 -newkey rsa:4096 -keyout server.key -nodes -days 365 \
 openssl rsa -des -in unprotected.key -out encrypted.key
 ```
 
-## Notes
+## References
 
-http://www.prshanmu.com/2009/03/generating-ssl-certificates-with-x509v3-extensions.html
-
+* http://www.prshanmu.com/2009/03/generating-ssl-certificates-with-x509v3-extensions.html

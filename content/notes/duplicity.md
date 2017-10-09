@@ -2,7 +2,9 @@
 title: Duplicity
 ---
 
-# Duplicity
+***Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.***
 
 Duplicity is a command line backup utility that makes use of the rsync
 libraries to perform incremental backups. It also can use GPG public/private
@@ -17,8 +19,7 @@ encrypted and can be decrypted and restored from any of the other machines as
 needed.
 
 The backups are performed to a remote system using SFTP and thus I handle
-per-machine authentication using SSH keys (the setup of which I have documented
-on the page for [my NSLU2 NAS][1]).
+per-machine authentication using SSH keys.
 
 Duplicity supports more than SFTP as a backend, however, it will just make my
 scripts less relevant too you.
@@ -40,10 +41,6 @@ provided with the gpgme package and can be installed like so:
 ```
 sudo yum install gpgme -y
 ```
-
-I also strongly recommend you install and configure [rng-tools][2] on any
-machine getting backed up that is headless with little to no user interaction,
-as the encryption requires a lot of entropy.
 
 ### GPG Key Creation
 
@@ -114,7 +111,3 @@ You now have a block of base64 encoded encrypted goodness in the
 cat export.asc | gpg2 --decrypt --batch --passphrase "PASSWORD" | gpg2 \
   --keyring backup-pub.gpg --secret-keyring backup-sec.gpg --import
 ```
-
-[1]: ../../devices/nslu2/
-[2]: ../rng_tools/
-

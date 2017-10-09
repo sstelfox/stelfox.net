@@ -1,8 +1,9 @@
 ---
+tags:
+- linux
+- tips
 title: Data Recovery
 ---
-
-# Data Recovery
 
 ## Recovering Data from Swap
 
@@ -24,4 +25,3 @@ on the swap device. Break the output down by pages.
 
 A lot of the output will look like junk, but if you're patient some interesting
 things can pop out at you.
-
