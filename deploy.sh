@@ -32,9 +32,11 @@ make build
 
 # Deploy the new changes
 pushd public/ &> /dev/null
-git add -A
-git commit -m "Site content update"
-git push
+if ! git diff --quiet --exit-code; then
+  git add -A
+  git commit -m "Site content update"
+  git push
+fi
 popd &> /dev/null
 
 # Sync the file to the webserver as well
