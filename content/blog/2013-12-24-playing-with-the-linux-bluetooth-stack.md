@@ -4,7 +4,6 @@ slug: playing-with-the-linux-bluetooth-stack
 tags:
 - linux
 title: Playing With the Linux Bluetooth Stack
-type: post
 ---
 
 List all available bluetooth interfaces:

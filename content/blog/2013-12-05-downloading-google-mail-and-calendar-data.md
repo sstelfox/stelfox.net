@@ -4,7 +4,6 @@ slug: downloading-google-mail-and-calendar-data
 tags:
 - tips
 title: Downloading Google Mail and Calendar Data
-type: post
 ---
 
 I [recently posted]({{< relref "2013-11-19-backing-up-gmail-with-fetchmail.md"

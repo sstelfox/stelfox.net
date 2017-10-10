@@ -5,7 +5,6 @@ tags:
 - linux
 - security
 title: Better Practices With Sudo
-type: post
 ---
 
 I work with a lot of different linux machines from embedded devices, to cloud

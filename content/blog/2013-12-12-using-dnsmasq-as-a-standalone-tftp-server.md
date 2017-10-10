@@ -5,7 +5,6 @@ tags:
 - linux
 - tips
 title: Using Dnsmasq as a Standalone TFTP Server
-type: post
 ---
 
 *If you've come across this blog post with the intention of setting up TFTP on

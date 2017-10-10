@@ -5,7 +5,6 @@ tags:
 - ruby
 - security
 title: Keep Your Gems Updated
-type: post
 ---
 
 I recently went back through my backups recently and found quite a few old

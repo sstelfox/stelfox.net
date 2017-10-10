@@ -5,7 +5,6 @@ tags:
 - linux
 - tips
 title: Image Crawler Meets rm -f *
-type: post
 ---
 
 I wrote a simple web crawler that archived any images it found from a site with

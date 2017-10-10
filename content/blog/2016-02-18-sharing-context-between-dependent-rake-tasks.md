@@ -5,7 +5,6 @@ tags:
 - development
 - ruby
 title: Sharing Context Between Dependent Rake Tasks
-type: post
 ---
 
 I use Rakefiles quite a bit like traditional Makefiles, in that I specify

@@ -5,7 +5,6 @@ tags:
 - development
 - ruby
 title: Ruby's Option Parser - a More Complete Example
-type: post
 ---
 
 Recently while writing a Ruby program I needed to parse some command line

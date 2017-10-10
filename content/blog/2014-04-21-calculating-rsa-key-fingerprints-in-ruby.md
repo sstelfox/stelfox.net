@@ -6,7 +6,6 @@ tags:
 - ruby
 - security
 title: Calculating RSA Key Fingerprints in Ruby
-type: post
 ---
 
 I regularily find myself working on projects that involve the manipulation and

@@ -4,7 +4,6 @@ slug: exploration-of-a-acn-iris-3000
 tags:
 - hardware
 title: Exploration of an ACN Iris 3000
-type: post
 ---
 
 So I found a dirt cheap video SIP phone (ACN Iris 3000) at a local HAM fest.

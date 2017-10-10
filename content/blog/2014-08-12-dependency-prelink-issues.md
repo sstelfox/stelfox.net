@@ -4,7 +4,6 @@ slug: dependency-prelink-issues
 tags:
 - linux
 title: Dependency Prelink Issues
-type: post
 ---
 
 While running an aide check on one of my servers after updating it, I started

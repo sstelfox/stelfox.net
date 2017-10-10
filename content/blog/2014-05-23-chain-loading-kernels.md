@@ -4,7 +4,6 @@ slug: chain-loading-kernels
 tags:
 - linux
 title: Chain Loading Kernels
-type: post
 ---
 
 I've found several places where I needed to be able to update my kernels but

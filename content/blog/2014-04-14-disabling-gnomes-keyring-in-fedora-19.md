@@ -4,7 +4,6 @@ slug: disabling-gnomes-keyring-in-fedora-19
 tags:
 - linux
 title: Disabling Gnome's Keyring in Fedora 19
-type: post
 ---
 
 An update too Fedora a while ago started causing some unexpected behavior with

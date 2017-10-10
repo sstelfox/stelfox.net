@@ -5,7 +5,6 @@ tags:
 - networking
 - security
 title: The Home Network and NAT as a Security Layer
-type: post
 ---
 
 One of the hot-topics for IPv6 (which I have been thinking about a lot lately)

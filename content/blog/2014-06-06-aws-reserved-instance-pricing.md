@@ -4,7 +4,6 @@ slug: aws-reserved-instance-pricing
 tags:
 - aws
 title: AWS Reserved Instance Pricing
-type: post
 ---
 
 The current large project I'm working on is going to be hosted on AWS and I was

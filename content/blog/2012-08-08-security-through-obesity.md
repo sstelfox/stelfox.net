@@ -5,20 +5,16 @@ tags:
 - development
 - ruby
 title: Security Through Obesity
-type: post
 ---
 
-Jeremy Spilman recently [proposed
-changes](http://www.opine.me/a-better-way-to-store-password-hashes/) to how
-user's hashes are stored in website's and companies databases. This post was
-originally going to look at some of the issues involved in the scheme he
-envisioned, however, he rather quickly posted a [followup
-article](http://www.opine.me/all-your-hashes-arent-belong-to-us/) with a well
-thought out solution that countered all of the issues that other people and
-myself were able to come up with. I'd strongly recommend reading both if you
-haven't done so. Instead of announcing flaws, I'm turning this into a post with
-a simple functional implementation of the described scheme in Ruby using
-DataMapper.
+Jeremy Spilman recently [proposed changes][1] to how user's hashes are stored
+in website's and companies databases. This post was originally going to look at
+some of the issues involved in the scheme he envisioned, however, he rather
+quickly posted a [followup article][2] with a well thought out solution that
+countered all of the issues that other people and myself were able to come up
+with. I'd strongly recommend reading both if you haven't done so. Instead of
+announcing flaws, I'm turning this into a post with a simple functional
+implementation of the described scheme in Ruby using DataMapper.
 
 At first I'd like to point out that this is one of those few examples where a
 form of security through obscurity is actually increasing not only the
@@ -204,3 +200,6 @@ module HashFaker
   end
 end
 ```
+
+[1]: http://www.opine.me/a-better-way-to-store-password-hashes/
+[2]: http://www.opine.me/all-your-hashes-arent-belong-to-us/

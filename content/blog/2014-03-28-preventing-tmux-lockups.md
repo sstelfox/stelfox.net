@@ -4,7 +4,6 @@ slug: preventing-tmux-lockups
 tags:
 - linux
 title: Preventing Tmux Lockups
-type: post
 ---
 
 Anyone that has used SSH, Tmux or Screen for a while will have inevitably

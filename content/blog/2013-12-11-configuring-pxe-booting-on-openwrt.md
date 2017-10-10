@@ -4,7 +4,6 @@ slug: configuring-pxe-booting-on-openwrt
 tags:
 - linux
 title: Configuring PXE Booting on OpenWRT
-type: post
 ---
 
 I needed to support PXE booting on my home network. I use OpenWRT as my main

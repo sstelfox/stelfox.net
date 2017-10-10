@@ -6,7 +6,6 @@ tags:
 - ruby
 - tips
 title: Running Emails Through Ruby
-type: post
 ---
 
 Following up on my [earlier post]({{< relref

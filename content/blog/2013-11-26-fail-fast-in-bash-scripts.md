@@ -5,7 +5,6 @@ tags:
 - linux
 - tips
 title: Fail Fast in Bash Scripts
-type: post
 ---
 
 I found myself writing another bash script that should exit should any of the

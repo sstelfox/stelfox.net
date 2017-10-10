@@ -5,7 +5,6 @@ tags:
 - linux
 - tips
 title: Setting Linux System Timezone
-type: post
 ---
 
 I change the timezone on the linux systems so rarely that I almost always have

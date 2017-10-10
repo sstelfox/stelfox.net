@@ -5,7 +5,6 @@ tags:
 - postgres
 - ruby
 title: "PG::Error: ERROR: Type 'Hstore' Does Not Exist"
-type: post
 ---
 
 I've been using the PostgreSQL's hstore extension in a Rails application lately

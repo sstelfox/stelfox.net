@@ -5,7 +5,6 @@ tags:
 - development
 - ruby
 title: CarrierWave, S3 and Filenames
-type: post
 ---
 
 This is going to be a real quick post. I'm using the "carrier_wave" gem with

@@ -5,7 +5,6 @@ tags:
 - development
 - ruby
 title: Adding a Table Prefix to DataMapper Tables
-type: post
 ---
 
 So I recently encountered a situation where I needed to define a prefix on the

@@ -5,7 +5,6 @@ tags:
 - docker
 - linux
 title: Modifying the Hosts File in a Docker Container
-type: post
 ---
 
 Before I describe the issue that I encountered, let me be very clear. This hack

@@ -5,7 +5,6 @@ tags:
 - networking
 - security
 title: Thoughts on IPv6 Security and Mitigation
-type: post
 ---
 
 I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric

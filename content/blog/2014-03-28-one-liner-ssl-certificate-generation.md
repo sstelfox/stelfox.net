@@ -5,7 +5,6 @@ tags:
 - linux
 - tips
 title: One-Liner SSL Certificate Generation
-type: post
 ---
 
 I regularily find myself in need of generating a quick SSL key and certificate
