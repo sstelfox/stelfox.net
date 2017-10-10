@@ -1,15 +1,11 @@
 ---
-title: 'Better Practices With Sudo'
-created_at: 2016-02-26 17:45:22 -0500
-updated_at: 2016-02-26 17:45:22 -0500
-kind: article
-published: true
-type: post
-layout: blog_post
+date: 2016-02-26 17:45:22 -0500
+slug: better-practices-with-sudo
 tags:
 - linux
 - security
-- sudo
+title: Better Practices With Sudo
+type: post
 ---
 
 I work with a lot of different linux machines from embedded devices, to cloud
@@ -23,7 +19,7 @@ I must confess I have established two habits over time that are against best
 practices with regard to sudo; Using it to execute a root shell only, and not
 restricting which commands can be run with sudo.
 
-<!-- more -->
+<!--more-->
 
 I'm sure many other administrators commit these sins as well. I've always
 gotten sudo to the 'good enough' point without ever learning how to configure
@@ -280,11 +276,15 @@ executing anything as sudo either remotely or locally. Examples of this might
 be from cron, apache, or from a remote Jenkins server. In almost all cases
 prevention of this type of execution is the ideal behavior.
 
-There are a [couple][1] of very [visible][2] search results on this topic that
-indicate there isn't any security benefit to this, but their are
-[exceptions][3] as well. The argument that seems to have the most merit, is
-that no special privileges are required to create a PTY. This in turn means an
-attacking process could spawn the PTY required, and continue it's attack.
+There are a
+[couple](https://unix.stackexchange.com/questions/65774/is-it-okay-to-disable-requiretty)
+of very [visible](https://bugzilla.redhat.com/show_bug.cgi?id=1020147) search
+results on this topic that indicate there isn't any security benefit to this,
+but their are
+[exceptions](https://superuser.com/questions/180764/sudoers-files-requiretty-flag-security-implications)
+as well. The argument that seems to have the most merit, is that no special
+privileges are required to create a PTY. This in turn means an attacking
+process could spawn the PTY required, and continue it's attack.
 
 The same argument could be used in favor of the option. An attacker would have
 learn they need to make this adjustment and actively work around it. As the
@@ -398,7 +398,3 @@ Defaults!SHELLS log_output
 root    ALL=(ALL)   ALL
 %wheel  ALL=(root)  ALL,!BLACKLIST,!USER_WRITEABLE
 ```
-
-[1]: https://unix.stackexchange.com/questions/65774/is-it-okay-to-disable-requiretty
-[2]: https://bugzilla.redhat.com/show_bug.cgi?id=1020147
-[3]: https://superuser.com/questions/180764/sudoers-files-requiretty-flag-security-implications
