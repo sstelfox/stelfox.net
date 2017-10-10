@@ -3,17 +3,21 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:title' content='Tag: Android • Sam Stelfox'>
-<meta property='og:description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:url' content='https://stelfox.net/tags/android/'>
+<meta name='description' content='Smart Card NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
+NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like: https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
+The API can then return a token that for accessing additional functionality.
+Resetting This will wipe all keys, user, and admin pins on the card.'>
+<meta property='og:title' content='Yubikey • Sam Stelfox'>
+<meta property='og:description' content='Smart Card NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
+NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like: https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
+The API can then return a token that for accessing additional functionality.
+Resetting This will wipe all keys, user, and admin pins on the card.'>
+<meta property='og:url' content='https://stelfox.net/notes/yubikey/'>
 <meta property='og:site_name' content='Sam Stelfox'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content='2017-10-10T00:28:32Z'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-10T00:28:32Z'/><meta property='article:modified_time' content='2017-10-10T00:28:32Z'/>
 
-  <title>Tag: Android • Sam Stelfox</title>
-  <link rel='canonical' href='https://stelfox.net/tags/android/'>
-  
-    <link href="https://stelfox.net/tags/android/index.xml" rel="alternate" type="application/rss+xml" title="Sam Stelfox" />
+  <title>Yubikey • Sam Stelfox</title>
+  <link rel='canonical' href='https://stelfox.net/notes/yubikey/'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -29,7 +33,7 @@ ga('send', 'pageview');
 </head>
 
 
-<body class='taxonomy type-page taxonomyTerm-tag'>
+<body class='page type-notes'>
   <div class='site'>
     <a class='screen-reader' href='#main'>Skip to Content</a>
     <header id='header' class='header-container'>
@@ -63,45 +67,117 @@ ga('send', 'pageview');
 
 
 <main id='main' class='main'>
-  <header class='header-container'>
-    <div class='header list-header'>
-      <div class='header-info'>
-        <h1 class='title'><span class='taxonomy-type'>Tag: </span>Android</h1>
-
-        
-
-      </div>
-    </div>
-  </header>
-
-  
-
-  <div class='list-container'>
-    <ul class='list'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Yubikey</h1>
       
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2014-07-22T21:54:59-04:00'>2014, Jul 22</time>
-</span>
 
     </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/posts/2014/07/unregistering-from-whisperpush-after-flashing-a-new-rom/'>Unregistering From WhisperPush After Flashing a New ROM</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-    </ul>
-
     
 
   </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<h2 id="smart-card-neo">Smart Card NEO</h2>
+
+<pre><code>dnf install ykpers -y
+ykpersonalize -m82
+</code></pre>
+
+<p>Unplug and replug it back in and it should be usable as a smartcard.</p>
+
+<h2 id="nfc-http-auth">NFC / HTTP Auth</h2>
+
+<pre><code>dnf install ykpers -y
+ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=
+</code></pre>
+
+<p>This will hit the API with a URL like: <a href="https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh" target="_blank">https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh</a></p>
+
+<p>The API can then return a token that for accessing additional functionality.</p>
+
+<h2 id="resetting">Resetting</h2>
+
+<p>This will wipe all keys, user, and admin pins on the card.</p>
+
+<p>This requires scdaemon and gpg-agent to be working and able to connect to the
+smartcard. It needs to be plugged into the computer and requires GPG version
+2.0.22 or later. On yubikeys prior to the YubiKey4 check the version and
+confirm it&rsquo;s version 1.0.6 or later using the following command:</p>
+
+<pre><code>gpg-connect-agent --hex &quot;scd apdu 00 f1 00 00&quot; /bye
+</code></pre>
+
+<p>You&rsquo;ll get back a line that looks like:</p>
+
+<pre><code>D[0000]  01 00 06 90 00
+</code></pre>
+
+<p>Indicating version 1.0.6. To reset the applet create a file with the following
+contents:</p>
+
+<pre><code>/hex
+scd serialno
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 e6 00 00
+scd apdu 00 44 00 00
+/echo Card has been successfully reset.
+/bye
+</code></pre>
+
+<p>And cat it into <code>gpg-connect-agent</code> like so:</p>
+
+<pre><code>cat FILE | gpg-connect-agent
+</code></pre>
+
+<h2 id="using-as-a-rng-source">Using as a RNG source</h2>
+
+<p>This may allow me to use the yubikey&rsquo;s hardware RNG to generate entropy on my
+host:</p>
+
+<p><a href="https://github.com/infincia/TokenTools" target="_blank">https://github.com/infincia/TokenTools</a></p>
+
+<h2 id="vulnerability">Vulnerability</h2>
+
+<p>A vulnerability was published around YubiKey NEOs use as smartcards and
+<a href="https://developers.yubico.com/ykneo-openpgp/SecurityAdvisory%202015-04-14.html" target="_blank">Yubico&rsquo;s</a> response is top notch. I recommend following the steps in
+checking on your key to see if you&rsquo;re affected.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/security'>Security</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
 </main>
 
     <footer id='footer' class='footer-container'>
