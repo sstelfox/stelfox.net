@@ -38,4 +38,4 @@ git push
 popd &> /dev/null
 
 # Sync the file to the webserver as well
-rsync -vrz --delete public/ web01:sites/stelfox.net/
+rsync -vrz --delete --cvs-exclude public/ web01:sites/stelfox.net/
