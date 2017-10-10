@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install redis -y  Configuration Default configuration:
+############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127.'>
+<meta property='og:title' content='Redis • Sam Stelfox'>
+<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install redis -y  Configuration Default configuration:
+############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127.'>
+<meta property='og:url' content='https://stelfox.net/notes/redis/'>
+<meta property='og:site_name' content='Sam Stelfox'>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'>
+
+  <title>Redis • Sam Stelfox</title>
+  <link rel='canonical' href='https://stelfox.net/notes/redis/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-32188490-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-notes'>
+  <div class='site'>
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/posts/'>Blog Posts</a>
+    </li>
+  <li>
+      <a href='/notes/'>Various Notes</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sam Stelfox</p>
+          
+          <p class='site-description subtitle'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Redis</h1>
+      
+
+    </div>
+    
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</em></strong></p>
+
+<h2 id="installation">Installation</h2>
+
+<pre><code>yum install redis -y
+</code></pre>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>Default configuration:</p>
+
+<pre><code>############### GENERAL ###############
+
+# Daemonize the Redis process and write out the specified PID file
+#
+daemonize no
+pidfile /var/run/redis/redis.pid
+
+# TCP Listen mode, if bind is not specified it will listen on all available
+# interfaces
+#
+bind 127.0.0.1
+port 6379
+
+# Specify the path for the unix socket that will be used to listen for incoming
+# connections. There is no default, so Redis will not listen on a unix socket
+# when not specified.
+#
+#unixsocket /tmp/redis.sock
+#unixsocketperm 755
+
+# Close the connection after a client is idle for N seconds (0 to disable)
+#
+timeout 30
+tcp-keepalive 5
+
+# Set the log output:
+#   debug (a lot of information, useful for development/testing)
+#   verbose (many rarely useful info, but not a mess like the debug level)
+#   notice (moderately verbose, what you want in production probably)
+#   warning (only very important / critical messages are logged)
+#
+loglevel notice
+
+# Specify the log file name. Also 'stdout' can be used to force Redis to log on
+# the standard output. Note that if you use standard output for logging but
+# daemonize, logs will be sent to /dev/null
+#
+logfile /var/log/redis/redis.log
+
+# To enable logging to the system logger, just set 'syslog-enabled' to yes, and
+# optionally update the other syslog parameters to suit your needs.
+#
+syslog-enabled yes
+
+# Specify the syslog identity.
+#
+syslog-ident redis
+
+# Specify the syslog facility.  Must be USER or between LOCAL0-LOCAL7.
+#
+syslog-facility local0
+
+# Set the number of databases. The default database is DB 0, you can select a
+# different one on a per-connection basis using SELECT &lt;dbid&gt; where dbid is a
+# number between 0 and 'databases' - 1
+#
+databases 16
+
+############### SNAPSHOTTING ###############
+
+# The name of the file to sync the in memory database too.
+#
+dbfilename database.rdb
+
+# The working directory.
+#
+# The DB will be written inside this directory, with the filename specified
+# above using the 'dbfilename' configuration directive. Also the Append Only
+# File will be created inside this directory. Note that you must specify a
+# directory here, not a file name.
+#
+dir /var/lib/redis/
+
+# Compress string objects using LZF when dump .rdb databases? For default that's
+# set to 'yes' as it's almost always a win. If you want to save some CPU in the
+# saving child set it to 'no' but the dataset will likely be bigger if you have
+# compressible values or keys.
+#
+rdbcompression yes
+
+# Save the DB on disk:
+#   save &lt;seconds&gt; &lt;changes&gt;
+#
+# Will save the DB if both the given number of seconds and the given number of
+# write operations against the DB occurred. In the configuration below, the
+# database will be saved when any of the following rules are matched:
+#
+#   after 900 sec (15 min) if at least 1 key changed
+#   after 300 sec (5 min) if at least 10 keys changed
+#   after 60 sec if at least 10000 keys changed
+#
+# You can disable saving to disk at all commenting all the &quot;save&quot; lines.
+#
+save 900 1
+save 300 10
+save  60 10000
+
+############### REPLICATION ###############
+
+# Master-Slave replication. Use slaveof to make a Redis instance a copy of
+# another Redis server. Note that the configuration is local to the slave so for
+# example it is possible to configure the slave to save the DB with a different
+# interval, or to listen to another port, and so on.
+#
+#slaveof &lt;masterip&gt; &lt;masterport&gt;
+
+# If the master is password protected (using the &quot;requirepass&quot; configuration
+# directive below) it is possible to tell the slave to authenticate before
+# starting the replication synchronization process, otherwise the master will
+# refuse the slave request.
+#
+#masterauth &lt;master-password&gt;
+
+# When a slave lost the connection with the master, or when the replication is
+# still in progress, the slave can act in two different ways:
+#
+# 1) if slave-serve-stale-data is set to 'yes' (the default) the slave will
+#    still reply to client requests, possibly with out of data data, or the data
+#    set may just be empty if this is the first synchronization.
+#
+# 2) if slave-serve-stale data is set to 'no' the slave will reply with an error
+#    &quot;SYNC with master in progress&quot; to all the kind of commands but to INFO and
+#    SLAVEOF.
+#
+slave-serve-stale-data yes
+
+# Slaves send PINGs to server in a predefined interval. It's possible to change
+# this interval with the repl_ping_slave_period option. The default value is 10
+# seconds.
+#
+repl-ping-slave-period 10
+
+# The following option sets a timeout for both Bulk transfer I/O timeout and
+# master data or ping response timeout. The default value is 60 seconds.
+#
+# It is important to make sure that this value is greater than the value
+# specified for repl-ping-slave-period otherwise a timeout will be detected every
+# time there is low traffic between the master and the slave.
+#
+repl-timeout 60
+
+############### SECURITY ###############
+
+# Require clients to issue AUTH &lt;PASSWORD&gt; before processing any other commands.
+# This might be useful in environments in which you do not trust others with
+# access to the host running redis-server.
+#
+# This should stay commented out for backward compatibility and because most
+# people do not need auth (e.g. they run their own servers).
+#
+# Warning: since Redis is pretty fast an outside user can try up to 150k
+# passwords per second against a good box. This means that you should use a very
+# strong password otherwise it will be very easy to break.
+#
+requirepass xRDdPoEtcB6DtrRhuMDi1B1TXa0h3hNhxmaFWzruZdFd9hBJnNqzkY0pRY7UVxf5
+
+# Command renaming.
+#
+# It is possilbe to change the name of dangerous commands in a shared
+# environment. For instance the CONFIG command may be renamed into something of
+# hard to guess so that it will be still available for internal-use tools but
+# not available for general clients.
+#
+#   rename-command CONFIG b840fc02d524045429941cc15f59e41cb7be6c52
+#
+# It is also possilbe to completely kill a command renaming it into an empty
+# string:
+#
+#   rename-command CONFIG &quot;&quot;
+#
+# The following commands are potentially dangerous and they've either been
+# renamed if they seem legitimately useful or disabled completely otherwise.
+# Most of the commands that have been disabled are configuration options that
+# should be specified in this file.
+
+rename-command CLIENT &quot;&quot;
+rename-command CONFIG &quot;&quot;
+rename-command SLAVEOF &quot;&quot;
+
+rename-command MONITOR &quot;&quot;
+rename-command OBJECT &quot;&quot;
+
+rename-command FLUSHALL &quot;&quot;
+rename-command FLUSHDB &quot;&quot;
+
+rename-command EVAL &quot;&quot;
+rename-command EVALSHA &quot;&quot;
+rename-command SCRIPT &quot;&quot;
+
+############### LIMITS ###############
+
+# Set the max number of connected clients at the same time. By default there is
+# no limit, and it's up to the number of file descriptors the Redis process is
+# able to open. The special value '0' means no limits. Once the limit is reached
+# Redis will close all the new connections sending an error 'max number of
+# clients reached'.
+#
+maxclients 128
+
+# Don't use more memory than the specified amount of bytes. When the memory
+# limit is reached Redis will try to remove keys accordingly to the eviction
+# policy selected (see maxmemmory-policy).
+#
+# If Redis can't remove keys according to the policy, or if the policy is set to
+# 'noeviction', Redis will start to reply with errors to commands that would use
+# more memory, like SET, LPUSH, and so on, and will continue to reply to
+# read-only commands like GET.
+#
+# This option is usually useful when using Redis as an LRU cache, or to set a
+# hard memory limit for an instance (using the 'noeviction' policy).
+#
+# WARNING: If you have slaves attached to an instance with maxmemory on, the
+# size of the output buffers needed to feed the slaves are subtracted from the
+# used memory count, so that network problems / resyncs will not trigger a loop
+# where keys are evicted, and in turn the output buffer of slaves is full with
+# DELs of keys evicted triggering the deletion of more keys, and so forth until
+# the database is completely emptied.
+#
+# In short... if you have slaves attached it is suggested that you set a lower
+# limit for maxmemory so that there is some free RAM on the system for slave
+# output buffers (but this is not needed if the policy is 'noeviction').
+#
+#maxmemory 512Mb
+
+# MAXMEMORY POLICY: how Redis will select what to remove when maxmemory is
+# reached? You can select among five behavior:
+#
+# volatile-lru: remove keys with an expire set using an LRU algorithm (default)
+# allkeys-lru: remove any key accordingly to the LRU algorithm
+# volatile-random: remove a random key with an expire set
+# allkeys-&gt;random: remove a random key, any key
+# volatile-ttl: remove the key with the nearest expire time (minor TTL)
+# noeviction: don't expire at all, just return an error on write operations
+#
+# Note: with all the kind of policies, Redis will return an error on write
+# operations, when there are not suitable keys for eviction.
+#
+# At the date of writing this commands are: set setnx setex append incr decr
+# rpush lpush rpushx lpushx linsert lset rpoplpush sadd sinter sinterstore
+# sunion sunionstore sdiff sdiffstore zadd zincrby zunionstore zinterstore hset
+# hsetnx hmset hincrby incrby decrby getset mset msetnx exec sort
+#
+#maxmemory-policy volatile-lru
+
+# LRU and minimal TTL algorithms are not precise algorithms but approximated
+# algorithms (in order to save memory), so you can select as well the sample
+# size to check. For instance for default Redis will check three keys and
+# pick the one that was used less recently, you can change the sample size
+# using the following configuration directive.
+#
+#maxmemory-samples 3
+
+############### APPEND ONLY MODE ###############
+
+# By default Redis asynchronously dumps the dataset on disk. If you can live
+# with the idea that the latest records will be lost if something like a crash
+# happens this is the preferred way to run Redis. If instead you care a lot
+# about your data and don't want to that a single record can get lost you should
+# enable the append only mode: when this mode is enabled Redis will append every
+# write operation received in the file appendonly.aof. This file will be read on
+# startup in order to rebuild the full dataset in memory.
+#
+# Note that you can have both the async dumps and the append only file if you
+# like (you have to comment the &quot;save&quot; statements above to disable the dumps).
+# Still if append only mode is enabled Redis will load the data from the log
+# file at startup ignoring the dump.rdb file.
+#
+# IMPORTANT: Check the BGREWRITEAOF to check how to rewrite the append log file
+# in background when it gets too big.
+#
+appendonly no
+
+# The name of the append only file (default: &quot;appendonly.aof&quot;)
+#
+appendfilename appendonly.aof
+
+# The fsync() call tells the Operating System to actually write data on disk
+# instead to wait for more data in the output buffer. Some OS will really flush
+# data on disk, some other OS will just try to do it ASAP.
+#
+# Redis supports three different modes:
+#
+# no: don't fsync, just let the OS flush the data when it wants. Faster.
+# always: fsync after every write to the append only log. Slow, Safest.
+# everysec: fsync only if one second passed since the last fsync. Compromise.
+#
+# The default is &quot;everysec&quot; that's usually the right compromise between speed
+# and data safety. It's up to you to understand if you can relax this to &quot;no&quot;
+# that will will let the operating system flush the output buffer when it wants,
+# for better performances (but if you can live with the idea of some data loss
+# consider the default persistence mode that's snapshotting), or on the
+# contrary, use &quot;always&quot; that's very slow but a bit safer than everysec.
+#
+# If unsure, use &quot;everysec&quot;.
+#
+appendfsync everysec
+
+# When the AOF fsync policy is set to always or everysec, and a background
+# saving process (a background save or AOF log background rewriting) is
+# performing a lot of I/O against the disk, in some Linux configurations Redis
+# may block too long on the fsync() call. Note that there is no fix for this
+# currently, as even performing fsync in a different thread will block our
+# synchronous write(2) call.
+#
+# In order to mitigate this problem it's possible to use the following option
+# that will prevent fsync() from being called in the main process while a BGSAVE
+# or BGREWRITEAOF is in progress.
+#
+# This means that while another child is saving the durability of Redis is the
+# same as &quot;appendfsync none&quot;, that in pratical terms means that it is possible
+# to lost up to 30 seconds of log in the worst scenario (with the default Linux
+# settings).
+#
+# If you have latency problems turn this to &quot;yes&quot;. Otherwise leave it as &quot;no&quot;
+# that is the safest pick from the point of view of durability.
+#
+no-appendfsync-on-rewrite no
+
+# Automatic rewrite of the append only file. Redis is able to automatically
+# rewrite the log file implicitly calling BGREWRITEAOF when the AOF log size
+# will growth by the specified percentage.
+#
+# This is how it works: Redis remembers the size of the AOF file after the
+# latest rewrite (or if no rewrite happened since the restart, the size of the
+# AOF at startup is used).
+#
+# This base size is compared to the current size. If the current size is bigger
+# than the specified percentage, the rewrite is triggered. Also you need to
+# specify a minimal size for the AOF file to be rewritten, this is useful to
+# avoid rewriting the AOF file even if the percentage increase is reached but it
+# is still pretty small.
+#
+# Specify a precentage of zero in order to disable the automatic AOF rewrite
+# feature.
+#
+auto-aof-rewrite-min-size 64mb
+auto-aof-rewrite-percentage 100
+
+############### SLOW LOG ###############
+
+# The Redis Slow Log is a system to log queries that exceeded a specified
+# execution time. The execution time does not include the I/O operations like
+# talking with the client, sending the reply and so forth, but just the time
+# needed to actually execute the command (this is the only stage of command
+# execution where the thread is blocked and can not serve other requests in the
+# meantime).
+#
+# You can configure the slow log with two parameters: one tells Redis what is
+# the execution time, in microseconds, to exceed in order for the command to get
+# logged, and the other parameter is the length of the slow log. When a new
+# command is logged the oldest one is removed from the queue of logged commands.
+#
+# The following time is expressed in microseconds, so 1000000 is equivalent to
+# one second. Note that a negative number disables the slow log, while a value
+# of zero forces the logging of every command.
+#
+slowlog-log-slower-than 10000
+
+# There is no limit to this length. Just be aware that it will consume memory.
+# You can reclaim memory used by the slow log with SLOWLOG RESET.
+#
+slowlog-max-len 1024
+
+############### VIRTUAL MEMORY ###############
+
+### WARNING! Virtual Memory is deprecated in Redis 2.4
+### The use of Virtual Memory is strongly discouraged.
+
+# Virtual Memory allows Redis to work with datasets bigger than the actual
+# amount of RAM needed to hold the whole dataset in memory. In order to do so
+# very used keys are taken in memory while the other keys are swapped into a
+# swap file, similarly to what operating systems do with memory pages.
+#
+# To enable VM just set 'vm-enabled' to yes, and set the following three VM
+# parameters accordingly to your needs.
+#
+vm-enabled no
+
+# This is the path of the Redis swap file. As you can guess, swap files can't be
+# shared by different Redis instances, so make sure to use a swap file for every
+# redis process you are running. Redis will complain if the swap file is already
+# in use.
+#
+# The best kind of storage for the Redis swap file (that's accessed at random)
+# is a Solid State Disk (SSD).
+#
+# *** WARNING *** if you are using a shared hosting the default of putting the
+# swap file under /tmp is not secure. Create a dir with access granted only to
+# Redis user and configure Redis to create the swap file there.
+#
+vm-swap-file /tmp/redis.swap
+
+# vm-max-memory configures the VM to use at max the specified amount of RAM.
+# Everything that deos not fit will be swapped on disk *if* possible, that is,
+# if there is still enough contiguous space in the swap file.
+#
+# With vm-max-memory 0 the system will swap everything it can. Not a good
+# default, just specify the max amount of RAM you can in bytes, but it's better
+# to leave some margin. For instance specify an amount of RAM that's more or
+# less between 60 and 80% of your free RAM.
+#
+vm-max-memory 0
+
+# Redis swap files is split into pages. An object can be saved using multiple
+# contiguous pages, but pages can't be shared between different objects. So if
+# your page is too big, small objects swapped out on disk will waste a lot of
+# space. If you page is too small, there is less space in the swap file
+# (assuming you configured the same number of total swap file pages).
+#
+# If you use a lot of small objects, use a page size of 64 or 32 bytes.
+# If you use a lot of big objects, use a bigger page size.
+# If unsure, use the default :)
+#
+vm-page-size 32
+
+# Number of total memory pages in the swap file. Given that the page table (a
+# bitmap of free/used pages) is taken in memory, every 8 pages on disk will
+# consume 1 byte of RAM.
+#
+# The total swap size is vm-page-size * vm-pages
+#
+# With the default of 32-bytes memory pages and 134217728 pages Redis will use a
+# 4 GB swap file, that will use 16 MB of RAM for the page table.
+#
+# It's better to use the smallest acceptable value for your application, but the
+# default is large in order to work in most conditions.
+#
+vm-pages 134217728
+
+# Max number of VM I/O threads running at the same time. This threads are used
+# to read/write data from/to swap file, since they also encode and decode
+# objects from disk to memory or the reverse, a bigger number of threads can
+# help with big objects even if they can't help with I/O itself as the physical
+# device may not be able to couple with many reads/writes operations at the same
+# time.
+#
+# The special value of 0 turn off threaded I/O and enables the blocking Virtual
+# Memory implementation.
+#
+vm-max-threads 4
+
+############### ADVANCED CONFIG ###############
+
+# Hashes are encoded in a special way (much more memory efficient) when they
+# have at max a given numer of elements, and the biggest element does not exceed
+# a given threshold. You can configure this limits with the following
+# configuration directives.
+#
+hash-max-zipmap-entries 512
+hash-max-zipmap-value 64
+
+# Similarly to hashes, small lists are also encoded in a special way in order to
+# save a lot of space. The special representation is only used when you are under
+# the following limits:
+#
+list-max-ziplist-entries 512
+list-max-ziplist-value 64
+
+# Sets have a special encoding in just one case: when a set is composed of just
+# strings that happens to be integers in radix 10 in the range of 64 bit signed
+# integers. The following configuration setting sets the limit in the size of
+# the set in order to use this special memory saving encoding.
+#
+set-max-intset-entries 512
+
+# Similarly to hashes and lists, sorted sets are also specially encoded in order
+# to save a lot of space. This encoding is only used when the length and
+# elements of a sorted set are below the following limits:
+#
+zset-max-ziplist-entries 128
+zset-max-ziplist-value 64
+
+# Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
+# order to help rehashing the main Redis hash table (the one mapping top-level
+# keys to values). The hash table implementation redis uses (see dict.c)
+# performs a lazy rehashing: the more operation you run into an hash table that
+# is rhashing, the more rehashing &quot;steps&quot; are performed, so if the server is
+# idle the rehashing is never complete and some more memory is used by the hash
+# table.
+#
+# The default is to use this millisecond 10 times every second in order to
+# active rehashing the main dictionaries, freeing memory when possible.
+#
+# Use &quot;activerehashing no&quot;. If you have hard latency requirements and it is not
+# a good thing in your environment that Redis can reply form time to time to
+# queries with 2 milliseconds delay.
+#
+# use &quot;activerehashing yes&quot; if you don't have such hard requirements but want to
+# free memory asap when possible.
+#
+activerehashing yes
+
+############### INCLUDES ###############
+# Include one or more other config files here. This is useful if you have a
+# standard template that goes to all redis server but also need to customize a
+# few per-server settings. Include files can include other files, so use this
+# wisely.
+#
+# include /path/to/local.conf
+# include /path/to/other.conf
+</code></pre>
+
+<h2 id="master">Master</h2>
+
+<p>Open up incoming connections from the app servers (or the app server network)
+to port 6379.</p>
+
+<p>Use the default &lsquo;redis.conf&rsquo; file in this repository, but change the
+requirepass to something random and difficult and set masterauth to match the
+value.</p>
+
+<h2 id="slaves">Slaves</h2>
+
+<p>Open up incoming connections from the app servers (or the app server network)
+to port tcp/6379. As well as outgoing connections to the master server on port
+tcp/6379.</p>
+
+<p>Use the identical config from the master but append the following line to it:</p>
+
+<pre><code>slaveof &lt;master-ip&gt; 6379
+</code></pre>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='mailto:sam@stelfox.net' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/SamStelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://keybase.io/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Keybase account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <g transform="matrix(0.5, 0, 0, 0.5, -120,-205)">
+    <path d="M247.8,451.8c-0.6-1.3-1.4-3.1-1.8-4l-0.6-1.7l-2,2.2l-2,2.2 l-0.2-4.2c-0.3-6,0.2-12.2,1.2-16.6c2.3-9.8,9.5-18.7,18.8-23.4l2.1-1l-0.5-1.5c-0.3-0.8-0.6-2.5-0.7-3.6l-0.2-2.1l-2.1-0.2 c-3.2-0.3-4.9-1.2-6-3.5c-0.6-1.2-0.6-1.4-0.4-4.6c0.2-4.2,0.5-5.1,1.8-6.5c1.6-1.8,2.7-2.1,6.7-1.9c2.9,0.2,3.5,0.3,4.8,0.9 c0.8,0.4,1.5,0.8,1.6,0.8c0.1,0,1-1.1,2.1-2.6l1.9-2.7l1.2,0.7c0.7,0.4,1.5,0.9,1.9,1.1l0.7,0.4l-0.6,1.5c-0.3,0.8-0.7,2.2-0.8,2.9 l-0.2,1.4l1.7,0.2c6.1,0.6,10.7,4.3,12.4,9.9c0.5,1.8,0.5,5.3,0,7c-0.5,1.6-0.5,1.7-0.1,1.7c0.7,0,5.4,2.3,7.3,3.5 c3.7,2.4,8,6.6,10.4,10.2c4.5,6.7,6.4,14,5.6,22c-0.4,4.8-1.3,8.6-2.9,12.3l-0.6,1.4l-2.5,0l-2.5,0l1.2-2.4 c1.3-2.6,2.3-6.2,2.8-9.4c0.3-2.2,0.4-8.2,0.1-9.3l-0.2-0.7l-1.3,1.4c-3.2,3.5-7.9,4.5-14.2,2.8c-5.4-1.4-7.6-1.7-12.7-1.7 c-3.9,0-5.2,0.1-7.3,0.6c-5.8,1.3-9.9,3.2-15.6,7.3c-2.1,1.5-3.8,2.7-3.9,2.7c-0.1,0,0.2-1,0.6-2.3c0.4-1.3,1.1-3.4,1.5-4.8 l0.8-2.5l-0.9,0.9c-0.5,0.5-1.9,1.9-3.1,3.2l-2.1,2.3l0.5,1.9c0.6,2.5,2,5.6,3.5,7.9c0.6,1,1.1,1.8,1.1,1.9s-1.2,0.1-2.6,0.1h-2.6 L247.8,451.8L247.8,451.8z M256.6,427.6c4.8-5.1,8.7-9.2,8.8-9.2c0.1,0.1-0.4,1.6-0.9,3.3c-3.3,10.4-4,12.4-3.9,12.5 c0,0,1.2-0.4,2.5-0.9c8.5-3.7,18.4-4.2,28.9-1.4c4.7,1.2,6.5,1.2,8.8,0c1.3-0.7,1.8-1.1,2.4-2.1c1.1-1.7,1.2-4.1,0.5-6.3 c-1.7-4.8-8.3-11-14.5-13.7c-3.2-1.4-3.4-1.4-4.1-0.7l-0.6,0.6l2.6,3.2c1.4,1.7,2.9,3.6,3.1,4.1c0.6,1.2,0.7,3.1,0.1,4.3 c-0.8,1.7-3.2,2.9-5.1,2.5c-0.8-0.2-1.1-0.1-1.9,0.5c-2.2,1.6-4.6,1.2-6.6-1.2c-1.6-1.8-2-2.7-2.1-4.5c0-0.9-0.3-2-0.5-2.4 c-0.3-0.6-0.4-1.3-0.4-2.2l0.1-1.4l-1.3-0.3c-1.8-0.5-3.9-1.5-5.1-2.4c-0.6-0.4-1.1-0.8-1.3-0.8s-1.5,0.6-2.9,1.3 c-9.7,5-16,14.3-17,24.8c-0.1,1-0.2,2.3-0.3,2.8l-0.1,0.9l1.1-1.1C247.4,437.3,251.8,432.7,256.6,427.6L256.6,427.6z M282.5,420.2 c0.9-0.7,1.7-1.3,1.9-1.3c0.1,0,0.4,0.3,0.7,0.7c0.5,0.8,1.4,0.8,1.8,0.1c0.3-0.5,0.3-0.6-5.6-7.8c-3.5-4.3-4.2-5-4.7-5 c-1.2,0.1-0.9,1,1,3.3l1.8,2.2l-1,0.8c-1.1,1-1.2,1.2-0.5,1.8c0.5,0.5,0.6,0.4,1.6-0.3l1.1-0.7l0.7,0.6c0.4,0.3,0.6,0.8,0.6,0.9 c0,0.2-0.8,0.9-1.7,1.7c-0.9,0.7-1.6,1.5-1.6,1.7c0,0.3,0.5,1.1,1.4,2.2C280.3,421.7,280.8,421.5,282.5,420.2L282.5,420.2z  M272.2,406c0.6-1.8,2.6-3.2,4.6-3.2c1.1,0,2.7,0.9,3.8,2.1l1,1.2l0.9-1.1c2.5-2.8,2.8-6.7,0.8-10.1c-1.5-2.5-4.3-4-8.2-4.4 c-2.1-0.2-2.6-0.4-3.7-1.5l-0.8-0.8l-0.4,0.6c-0.8,1.2-2.5,5.1-3,6.6c-0.7,2.3-0.4,5.9,0.5,7.7c0.9,1.7,3.3,4,4,3.7 C271.8,406.9,272,406.5,272.2,406L272.2,406z M263.3,392.4c0.2-0.5,0.7-1.8,1.2-2.8c0.5-1,0.9-2,0.9-2.3c0-0.9-1-1.3-3.7-1.5 c-2.4-0.2-2.6-0.1-3.1,0.4c-0.4,0.4-0.6,0.9-0.6,1.6c0,0.6-0.1,1.7-0.2,2.6c-0.2,2.1,0.1,2.5,2.2,2.8 C263.1,393.4,263,393.4,263.3,392.4z M260.2,390c0-1.7,0.2-1.9,1.6-1.9h1.3v1.4v1.4h-1.4h-1.4V390z M266.5,448.3 c-0.6-0.6-0.8-1-0.8-2c0-1.9,1.1-3,2.9-3c1.7,0,2.9,1.2,2.9,2.9c0,1.8-1.1,2.8-3,2.9C267.5,449.1,267.1,448.9,266.5,448.3 L266.5,448.3z M285.8,448.6c-2.3-1.8-1.1-5.3,1.8-5.3c1.8,0,2.8,1.1,2.9,3c0,1.1-0.1,1.4-0.8,2s-1,0.8-2,0.8 C286.8,449.1,286.2,448.9,285.8,448.6L285.8,448.6z"/>
+  </g>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://facebook.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Facebook account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://linkedin.com/in/samstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Linkedin account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+       &copy; 2011-2017 Sam Stelfox - Content license information can be found on the <a rel='license' href='/licenses/'>licensing page</a>.
+  </p>
+</div>
+
+      </div>
+    </footer>
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+</html>
+

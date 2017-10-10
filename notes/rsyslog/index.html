@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
+Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more.'>
+<meta property='og:title' content='RSyslog • Sam Stelfox'>
+<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
+Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more.'>
+<meta property='og:url' content='https://stelfox.net/notes/rsyslog/'>
+<meta property='og:site_name' content='Sam Stelfox'>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'>
+
+  <title>RSyslog • Sam Stelfox</title>
+  <link rel='canonical' href='https://stelfox.net/notes/rsyslog/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-32188490-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-notes'>
+  <div class='site'>
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/posts/'>Blog Posts</a>
+    </li>
+  <li>
+      <a href='/notes/'>Various Notes</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sam Stelfox</p>
+          
+          <p class='site-description subtitle'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>RSyslog</h1>
+      
+
+    </div>
+    
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</em></strong></p>
+
+<h1 id="rsyslog">RSyslog</h1>
+
+<p>RSyslog is a more advanced replacement for the aging klogd and syslogd. It
+supports useful features such as attribute filtering, multiple protocol
+support, and logging to databases.</p>
+
+<h2 id="security-notes">Security Notes</h2>
+
+<p>RSyslog can log some sensitive information or very useful information for any
+potential intruder including service names, versions, valid usernames, logon
+times and quite a bit more.</p>
+
+<p>Attempts are usually made to alter or destroy logs by various malicious actors
+to cover their tracks. As such it is highly recommended that logs are sent to a
+central hardened host that can maintain a backup of any logs in case a server
+is compromised as well as providing a central place for logs to be processed
+and manipulated.</p>
+
+<p>Other software will need to be used to handle the correlation of logs, RSyslog
+itself only provides mechanisms for aggregations.</p>
+
+<h2 id="firewall-adjustments">Firewall Adjustments</h2>
+
+<p>By default RSyslog doesn&rsquo;t need any ports opened. If you intend to send your
+logs over the network, it will depend on how you&rsquo;re doing it. UDP is the most
+error prone but the least processor intensive, you could also use UDP across a
+one-way data path which can be valuable in some high security situations.</p>
+
+<p>TCP is more reliable but does require more processing and memory as connections
+need to be tracked. This overhead is usually trivial amounts in small to medium
+logging situations and can probably be safely ignored in most cases.</p>
+
+<p>RSyslog also provides a mechanism to encrypt syslog messages over TCP using
+TLS. This however requires there to be a trusted <a href="/notes/building-a-certificate-authority/" target="_blank">Certificate_Authority</a> to
+create and sign certificates. You could potentially use <a href="https://www.startssl.com/" target="_blank">StartSSL</a>
+certificates but using others could do the same thing and correctly
+authenticate to your log server. There would be an audit trail linking someone
+to the offending certificate, getting access to that information would require
+assistance from the issuing authority in the event of a breach.</p>
+
+<p>Many network appliances, switches, and routers don&rsquo;t support TCP or TLS syslog
+reporting. This frequently means you&rsquo;ll want to operate in a mixed mode setup,
+providing a secure connection to clients that support it while still allowing
+older clients to send you logs over UDP.</p>
+
+<p>These logs generally travel unencrypted over the network unless configured to
+do otherwise.</p>
+
+<h2 id="firewall-adjustments-1">Firewall Adjustments</h2>
+
+<p>If you&rsquo;re sending or receiving log messages between machines you&rsquo;ll need to
+adjust your firewall rules to allow the traffic. Syslog has an IANA assigned
+port number of <em>514</em> for both TCP and UDP.</p>
+
+<p>It is common and more widely supported by endpoint devices to support UDP as it
+requires less processing but is more prone to message loss. TCP is
+significantly more reliable for message delivery, at the cost of having more
+processing overhead.</p>
+
+<p>RSyslog also supports a homegrown protocol referred to as RELP (the &ldquo;Reliable
+Event Logging Protocol&rdquo;). This does not have an IANA standard port assigned to
+it but defaults to port <em>2514/tcp</em>.</p>
+
+<p>It is a good idea to limit the hosts that can send log messages to your central
+log servers or implement a form of authentication to prevent malicious
+attackers from flooding / overloading your log server.</p>
+
+<h2 id="forwarding-windows-events">Forwarding Windows Events</h2>
+
+<p>There is a handy service that can forward syslog events from the Windows Event
+subsystem built into windows to a syslog server. It&rsquo;s called
+<a href="http://code.google.com/p/eventlog-to-syslog/" target="_blank">eventlog-to-syslog</a> and seems to be under active development (good thing).</p>
+
+<h2 id="modular-configuration">Modular Configuration</h2>
+
+<p>Modular configuration of services has become increasingly important with the
+rise of configuration management systems. By making use of the modular imports,
+configuration of systems can be mostly standardized with only the variations
+based on the system&rsquo;s role adding or removing individual files without worrying
+about the state of others.</p>
+
+<p>I&rsquo;ve updated my example configurations for RSyslog to make full use of the
+modular configuration mechanism.</p>
+
+<p><strong><em>Compatibility warning:</em></strong> I&rsquo;ve switched from using the &ldquo;legacy&rdquo; syslog.conf
+syntax to RSyslog&rsquo;s &ldquo;RainerScript&rdquo; as much as possible. This sample
+configuration works at version 7.4.8 of RSyslog on Fedora 20. I&rsquo;ve had serious
+compatibility issues going to new and older minor releases of RSyslog with
+certain subsets of the new syntax, all of which I&rsquo;ve left out of these examples
+to the best of my abilities.</p>
+
+<p>My base <code>/etc/rsyslog.conf</code> file.</p>
+
+<pre><code>module(load=&quot;imuxsock&quot;)
+module(load=&quot;imjournal&quot; statefile=&quot;imjournal.state&quot;)
+module(load=&quot;imklog&quot;)
+module(load=&quot;immark&quot; interval=&quot;3600&quot;)
+
+$WorkDirectory /var/lib/rsyslog
+$IncludeConfig /etc/rsyslog.d/*.conf
+</code></pre>
+
+<p>If you prefer not to have time based mark messages periodically added to your
+log files you&rsquo;ll want to remove or comment out that line or change the interval
+that they&rsquo;re logged at (I&rsquo;ve found hourly to be pretty balanced and useful).</p>
+
+<p>The first important modular configuration file is for logging messages to local
+files. All my systems get this file which I place at
+<code>/etc/rsyslog.d/local_logging.conf</code>.</p>
+
+<p>There is one weird condition on only logging to local files if the log message
+itself didn&rsquo;t come from a file, the reason for this will become apparent later
+on.</p>
+
+<pre><code>if $inputname != 'imfile' then {
+  local7.*                                  action(type=&quot;omfile&quot; file=&quot;/var/log/boot.log&quot;)
+  cron.*                                    action(type=&quot;omfile&quot; file=&quot;/var/log/cron&quot;)
+  mail.*                                    action(type=&quot;omfile&quot; file=&quot;/var/log/maillog&quot;)
+  *.info;mail.none;authpriv.none;cron.none  action(type=&quot;omfile&quot; file=&quot;/var/log/messages&quot;)
+  authpriv.*                                action(type=&quot;omfile&quot; file=&quot;/var/log/secure&quot;)
+  uucp,news.crit                            action(type=&quot;omfile&quot; file=&quot;/var/log/spooler&quot;)
+  *.emerg                                   action(type=&quot;omusrmsg&quot; users=&quot;*&quot;)
+}
+</code></pre>
+
+<p>You can stop at this point if you&rsquo;re not going to send your logs to a central
+location. On the systems that will be receiving logs you&rsquo;ll want to add the
+following configuration file at <code>/etc/rsyslog.d/server.conf</code>.</p>
+
+<p>This is one of the places where I couldn&rsquo;t find a RainerScript equivalent
+(around the definition of templates). The RELP module also doesn&rsquo;t support the
+&lsquo;ruleset&rsquo; attribute, otherwise, I&rsquo;d probably include the module just for
+completeness.</p>
+
+<pre><code>module(load=&quot;imudp&quot;)
+module(load=&quot;imtcp&quot;)
+
+$template remoteAudit,    &quot;/var/log/remote/%fromhost-ip%/audit.log&quot;
+$template remoteBoot,     &quot;/var/log/remote/%fromhost-ip%/boot.log&quot;
+$template remoteCron,     &quot;/var/log/remote/%fromhost-ip%/cron&quot;
+$template remoteMail,     &quot;/var/log/remote/%fromhost-ip%/maillog&quot;
+$template remoteMessages, &quot;/var/log/remote/%fromhost-ip%/messages&quot;
+$template remoteSecure,   &quot;/var/log/remote/%fromhost-ip%/secure&quot;
+$template remoteSpooler,  &quot;/var/log/remote/%fromhost-ip%/spooler&quot;
+
+$template auditFormat, &quot;%msg%\n&quot;
+
+ruleset(name=&quot;remote&quot;) {
+  if $pri-text == 'local6.info' and $programname == 'auditd-sender' then {
+    local6.info   action(type=&quot;omfile&quot; dynaFile=&quot;remoteAudit&quot; template=&quot;auditFormat&quot;)
+  } else {
+    local7.*                                  action(type=&quot;omfile&quot; dynaFile=&quot;remoteBoot&quot;)
+    cron.*                                    action(type=&quot;omfile&quot; dynaFile=&quot;remoteCron&quot;)
+    mail.*                                    action(type=&quot;omfile&quot; dynaFile=&quot;remoteMail&quot; sync=&quot;off&quot;)
+    *.info;mail.none;authpriv.none;cron.none  action(type=&quot;omfile&quot; dynaFile=&quot;remoteMessages&quot;)
+    authpriv.*                                action(type=&quot;omfile&quot; dynaFile=&quot;remoteSecure&quot;)
+    uucp,news.crit                            action(type=&quot;omfile&quot; dynaFile=&quot;remoteSpooler&quot;)
+  }
+}
+
+input(type=&quot;imudp&quot; port=&quot;514&quot; ruleset=&quot;remote&quot;)
+input(type=&quot;imtcp&quot; port=&quot;514&quot; ruleset=&quot;remote&quot;)
+</code></pre>
+
+<p>This will maintain indepedant log file for each client that sends the server
+logs broken down by IP address in the <code>/var/log/remote</code> directory. Each
+directory will match the one you&rsquo;d expect to see on that systems <code>/var/log</code>
+directory.</p>
+
+<p>If you look closely you can see that I&rsquo;ve got some special logic in place for
+handling one special type of log, the output of &lsquo;auditd&rsquo;. We&rsquo;ll get to that
+soon.</p>
+
+<p>We need to now configure our clients to send the logs to our server. On all
+machines (I do this on the log servers as well) I add the following
+configuration file at <code>/etc/rsyslog.d/remote.conf</code>.</p>
+
+<pre><code>*.* action(
+  type=&quot;omfwd&quot;
+  target=&quot;logserver.example.tld&quot;
+  port=&quot;514&quot;
+  protocol=&quot;tcp&quot;
+
+  action.resumeretrycount=&quot;-1&quot;
+
+  queue.filename=&quot;log01&quot;
+  queue.size=&quot;1g&quot;
+  queue.type=&quot;LinkedList&quot;
+  queue.saveonshutdown=&quot;on&quot;
+)
+</code></pre>
+
+<p>You&rsquo;ll want to replace the value of the target attribute with the name of your
+logserver. I&rsquo;ve never had issues with using hostnames though generally the best
+practice for logging is to use IP addresses. This name will only be looked up
+when the configuration is evaluated.</p>
+
+<p>I have two separate log servers that I send logs to for redundancy, this does
+make log processing later on a smidge more difficult due to duplicaitons but
+I&rsquo;ve found the benefits far outweigh the added effort.</p>
+
+<p>The final link in this log chain is sending our audit log files to the central
+server. This is why I&rsquo;ve added a conditional statement to the local logging as
+rsyslog isn&rsquo;t responsible for generating or locally logging this data and why
+the server file has conditions for dealing with the audit log. I keep this
+configuration in <code>/etc/rsyslog.d/audit_input.conf</code>.</p>
+
+<pre><code>module(load=&quot;imfile&quot;)
+input(type=&quot;imfile&quot;
+      file=&quot;/var/log/audit/audit.log&quot;
+      statefile=&quot;imfile-state:-var-log-audit-audit.log&quot;
+      tag=&quot;auditd-sender&quot;
+      severity=&quot;info&quot;
+      facility=&quot;local6&quot;)
+</code></pre>
+
+<p>Ensure you restart the syslog server after making these changes:</p>
+
+<pre><code>systemctl restart rsyslog.service
+</code></pre>
+
+<h2 id="log-rotation-for-servers">Log Rotation for Servers</h2>
+
+<p>The last component in the log server is too ensure log files are regularly
+rotated and compressed. My per server log volume is relatively small so I
+rotate my logs weekly and keep a years worth for each machine.</p>
+
+<p>I stick the following configuration file at
+<code>/etc/logrotate.d/rsyslog_server.conf</code>. This assumes you already have
+<a href="/notes/logrotate/" target="_blank">logrotate</a> configured.</p>
+
+<pre><code>/var/log/remote/*/audit.log
+/var/log/remote/*/boot.log
+/var/log/remote/*/cron
+/var/log/remote/*/maillog
+/var/log/remote/*/messages
+/var/log/remote/*/secure
+/var/log/remote/*/spooler {
+  # Keep three years worth of logs (52 weeks * 3 years)
+  weekly
+  rotate 52
+
+  # If the file is missing, or empty just skip it and don't bother creating a
+  # file if it's missing, rsyslog can handle it.
+  missingok
+  notifempty
+  nocreate
+
+  # Append the date to any rotated log files instead of an arbitrary number and
+  # compress any rotated logs (with the exception of the most recent one).
+  compress
+  delaycompress
+  dateext
+  dateformat .%Y%m%d
+
+  # When all the logs are done being rotated notify Rsyslog that it needs to
+  # reopen all it's file descriptors.
+  sharedscripts
+  postrotate
+    [ -s /var/run/syslogd.pid ] &amp;&amp; kill -HUP $(cat /var/run/syslogd.pid) &amp;&gt; /dev/null || true
+  endscript
+}
+</code></pre>
+
+<h2 id="relp">RELP</h2>
+
+<p>RELP is a custom log protocol created by the maintainers of RSyslog attempting
+to ensure logs are reliably delivered to particular servers. In practice I&rsquo;ve
+had significant issues RELP, mostly around it&rsquo;s reliability (ironically) at
+sending logs when all systems are operating normally and at low volumes.</p>
+
+<p>RELP was never able to pass any of my deployment tests reliably enough for me
+to be able to make use of it in production and I highly encourage it not be
+used.</p>
+
+<h2 id="signature-providers">Signature Providers</h2>
+
+<p>RSyslog has integrated <a href="http://www.rsyslog.com/doc/sigprov_gt.html" target="_blank">signature provider support</a> through a third party
+service called <a href="http://guardtime.com/" target="_blank">GuardTime</a>. The Rsyslog developers have claimed other
+signature provider modules will be provided in the future but give no
+indications on possible timelines or how they might be implemented.</p>
+
+<p>GuardTime itself as a service isn&rsquo;t well documented, their entire site being a
+shrine to abstract meaningless buzz words. What I have been able to gather is
+that they implement some form of a block chain (it is unclear whether it is
+public or not) and they use the aggregated signatures of everyone requesting
+signatures of hashes as part of this block chain. I could be <em>way</em> off on this
+as the documentation is very sparse, old and is largely based off of jumps of
+intuition.</p>
+
+<p>GuardTime itself seems to have been having issues. They shut down their API due
+to DoS attacks now requiring an account. It also requires trusting them as a
+third party, even though they claim this is not the case (they provide no
+technical information backing this claim).</p>
+
+<p>Signing logs is not an easy problem. Systemd is also attempting to solve the
+problem in their own way, but there is a lot of criticism and valid arguments
+over their implementation.</p>
+
+<p>I work in environments that by definition don&rsquo;t trust third parties, so until
+there is a self-hosted solution for providing signatures, I can&rsquo;t recommend
+this.</p>
+
+<h2 id="personal-views">Personal Views</h2>
+
+<p>I use RSyslog because it is IMHO the best open source log daemon available. I
+am appalled by the developers compatibility breaking changes between minor
+versions that I&rsquo;ve experienced, the self-aggrandizing (&lsquo;RainerScript&rsquo;&hellip;),
+inconsistent documentation, and general lack of support that I&rsquo;ve witnessed.</p>
+
+<p>That being said, I have yet to see even a commercial offering that works as
+well as RSyslog. The developers are continuing to develop in a security
+concious way (such as integrating encryption, and third party message
+signatures) and stability (such as log queues).</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='mailto:sam@stelfox.net' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/SamStelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://keybase.io/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Keybase account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <g transform="matrix(0.5, 0, 0, 0.5, -120,-205)">
+    <path d="M247.8,451.8c-0.6-1.3-1.4-3.1-1.8-4l-0.6-1.7l-2,2.2l-2,2.2 l-0.2-4.2c-0.3-6,0.2-12.2,1.2-16.6c2.3-9.8,9.5-18.7,18.8-23.4l2.1-1l-0.5-1.5c-0.3-0.8-0.6-2.5-0.7-3.6l-0.2-2.1l-2.1-0.2 c-3.2-0.3-4.9-1.2-6-3.5c-0.6-1.2-0.6-1.4-0.4-4.6c0.2-4.2,0.5-5.1,1.8-6.5c1.6-1.8,2.7-2.1,6.7-1.9c2.9,0.2,3.5,0.3,4.8,0.9 c0.8,0.4,1.5,0.8,1.6,0.8c0.1,0,1-1.1,2.1-2.6l1.9-2.7l1.2,0.7c0.7,0.4,1.5,0.9,1.9,1.1l0.7,0.4l-0.6,1.5c-0.3,0.8-0.7,2.2-0.8,2.9 l-0.2,1.4l1.7,0.2c6.1,0.6,10.7,4.3,12.4,9.9c0.5,1.8,0.5,5.3,0,7c-0.5,1.6-0.5,1.7-0.1,1.7c0.7,0,5.4,2.3,7.3,3.5 c3.7,2.4,8,6.6,10.4,10.2c4.5,6.7,6.4,14,5.6,22c-0.4,4.8-1.3,8.6-2.9,12.3l-0.6,1.4l-2.5,0l-2.5,0l1.2-2.4 c1.3-2.6,2.3-6.2,2.8-9.4c0.3-2.2,0.4-8.2,0.1-9.3l-0.2-0.7l-1.3,1.4c-3.2,3.5-7.9,4.5-14.2,2.8c-5.4-1.4-7.6-1.7-12.7-1.7 c-3.9,0-5.2,0.1-7.3,0.6c-5.8,1.3-9.9,3.2-15.6,7.3c-2.1,1.5-3.8,2.7-3.9,2.7c-0.1,0,0.2-1,0.6-2.3c0.4-1.3,1.1-3.4,1.5-4.8 l0.8-2.5l-0.9,0.9c-0.5,0.5-1.9,1.9-3.1,3.2l-2.1,2.3l0.5,1.9c0.6,2.5,2,5.6,3.5,7.9c0.6,1,1.1,1.8,1.1,1.9s-1.2,0.1-2.6,0.1h-2.6 L247.8,451.8L247.8,451.8z M256.6,427.6c4.8-5.1,8.7-9.2,8.8-9.2c0.1,0.1-0.4,1.6-0.9,3.3c-3.3,10.4-4,12.4-3.9,12.5 c0,0,1.2-0.4,2.5-0.9c8.5-3.7,18.4-4.2,28.9-1.4c4.7,1.2,6.5,1.2,8.8,0c1.3-0.7,1.8-1.1,2.4-2.1c1.1-1.7,1.2-4.1,0.5-6.3 c-1.7-4.8-8.3-11-14.5-13.7c-3.2-1.4-3.4-1.4-4.1-0.7l-0.6,0.6l2.6,3.2c1.4,1.7,2.9,3.6,3.1,4.1c0.6,1.2,0.7,3.1,0.1,4.3 c-0.8,1.7-3.2,2.9-5.1,2.5c-0.8-0.2-1.1-0.1-1.9,0.5c-2.2,1.6-4.6,1.2-6.6-1.2c-1.6-1.8-2-2.7-2.1-4.5c0-0.9-0.3-2-0.5-2.4 c-0.3-0.6-0.4-1.3-0.4-2.2l0.1-1.4l-1.3-0.3c-1.8-0.5-3.9-1.5-5.1-2.4c-0.6-0.4-1.1-0.8-1.3-0.8s-1.5,0.6-2.9,1.3 c-9.7,5-16,14.3-17,24.8c-0.1,1-0.2,2.3-0.3,2.8l-0.1,0.9l1.1-1.1C247.4,437.3,251.8,432.7,256.6,427.6L256.6,427.6z M282.5,420.2 c0.9-0.7,1.7-1.3,1.9-1.3c0.1,0,0.4,0.3,0.7,0.7c0.5,0.8,1.4,0.8,1.8,0.1c0.3-0.5,0.3-0.6-5.6-7.8c-3.5-4.3-4.2-5-4.7-5 c-1.2,0.1-0.9,1,1,3.3l1.8,2.2l-1,0.8c-1.1,1-1.2,1.2-0.5,1.8c0.5,0.5,0.6,0.4,1.6-0.3l1.1-0.7l0.7,0.6c0.4,0.3,0.6,0.8,0.6,0.9 c0,0.2-0.8,0.9-1.7,1.7c-0.9,0.7-1.6,1.5-1.6,1.7c0,0.3,0.5,1.1,1.4,2.2C280.3,421.7,280.8,421.5,282.5,420.2L282.5,420.2z  M272.2,406c0.6-1.8,2.6-3.2,4.6-3.2c1.1,0,2.7,0.9,3.8,2.1l1,1.2l0.9-1.1c2.5-2.8,2.8-6.7,0.8-10.1c-1.5-2.5-4.3-4-8.2-4.4 c-2.1-0.2-2.6-0.4-3.7-1.5l-0.8-0.8l-0.4,0.6c-0.8,1.2-2.5,5.1-3,6.6c-0.7,2.3-0.4,5.9,0.5,7.7c0.9,1.7,3.3,4,4,3.7 C271.8,406.9,272,406.5,272.2,406L272.2,406z M263.3,392.4c0.2-0.5,0.7-1.8,1.2-2.8c0.5-1,0.9-2,0.9-2.3c0-0.9-1-1.3-3.7-1.5 c-2.4-0.2-2.6-0.1-3.1,0.4c-0.4,0.4-0.6,0.9-0.6,1.6c0,0.6-0.1,1.7-0.2,2.6c-0.2,2.1,0.1,2.5,2.2,2.8 C263.1,393.4,263,393.4,263.3,392.4z M260.2,390c0-1.7,0.2-1.9,1.6-1.9h1.3v1.4v1.4h-1.4h-1.4V390z M266.5,448.3 c-0.6-0.6-0.8-1-0.8-2c0-1.9,1.1-3,2.9-3c1.7,0,2.9,1.2,2.9,2.9c0,1.8-1.1,2.8-3,2.9C267.5,449.1,267.1,448.9,266.5,448.3 L266.5,448.3z M285.8,448.6c-2.3-1.8-1.1-5.3,1.8-5.3c1.8,0,2.8,1.1,2.9,3c0,1.1-0.1,1.4-0.8,2s-1,0.8-2,0.8 C286.8,449.1,286.2,448.9,285.8,448.6L285.8,448.6z"/>
+  </g>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://facebook.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Facebook account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://linkedin.com/in/samstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Linkedin account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+       &copy; 2011-2017 Sam Stelfox - Content license information can be found on the <a rel='license' href='/licenses/'>licensing page</a>.
+  </p>
+</div>
+
+      </div>
+    </footer>
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+</html>
+

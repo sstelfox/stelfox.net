@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='I followed the TAILS setup guide to get a secure offline environment running to perform this generation task. The steps I took are documented in the tails document.
+Initial Key Creation For simplicity I wanted to clear out the GnuPG configuration that starts out in place. Makes things a lot nicer later on.
+rm -rf ~/.gnupg/*  I pulled in the .gnupg/gpg.conf from my dotfiles by hand.
+And begin the key generation process'>
+<meta property='og:title' content='GPG Process Notes • Sam Stelfox'>
+<meta property='og:description' content='I followed the TAILS setup guide to get a secure offline environment running to perform this generation task. The steps I took are documented in the tails document.
+Initial Key Creation For simplicity I wanted to clear out the GnuPG configuration that starts out in place. Makes things a lot nicer later on.
+rm -rf ~/.gnupg/*  I pulled in the .gnupg/gpg.conf from my dotfiles by hand.
+And begin the key generation process'>
+<meta property='og:url' content='https://stelfox.net/notes/gpg-process-notes/'>
+<meta property='og:site_name' content='Sam Stelfox'>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'><meta property='article:tag' content='gpg'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-09T23:35:34Z'/><meta property='article:modified_time' content='2017-10-09T23:35:34Z'/>
+
+  <title>GPG Process Notes • Sam Stelfox</title>
+  <link rel='canonical' href='https://stelfox.net/notes/gpg-process-notes/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-32188490-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-notes'>
+  <div class='site'>
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/posts/'>Blog Posts</a>
+    </li>
+  <li>
+      <a href='/notes/'>Various Notes</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sam Stelfox</p>
+          
+          <p class='site-description subtitle'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>GPG Process Notes</h1>
+      
+
+    </div>
+    
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p>I followed the TAILS setup guide to get a secure offline environment running to
+perform this generation task. The steps I took are documented in the tails
+document.</p>
+
+<h2 id="initial-key-creation">Initial Key Creation</h2>
+
+<p>For simplicity I wanted to clear out the GnuPG configuration that starts out in
+place. Makes things a lot nicer later on.</p>
+
+<pre><code>rm -rf ~/.gnupg/*
+</code></pre>
+
+<p>I pulled in the .gnupg/gpg.conf from my dotfiles by hand.</p>
+
+<p>And begin the key generation process</p>
+
+<pre><code>gpg --expert --gen-key
+</code></pre>
+
+<p>Choose &lsquo;8&rsquo; which is RSA (set your own capabilities). Disable all the
+capabilities except for Certify and press &lsquo;q&rsquo; to continue. Use a 4096 bit key.
+Set the expiration to 2 years. The certificate can be resigned and republished
+with a later expiration date.</p>
+
+<p>Set the personal attributes appropriately, a passphrase and let the key
+generation happen. Once done, sub-keys need to be generated. We need to edit
+the existing key to create more keys.</p>
+
+<pre><code>gpg --expert --edit-key &lt;email used in key&gt;
+</code></pre>
+
+<p>Add any additional email addresses you might need to the key.</p>
+
+<pre><code>gpg&gt; adduid
+gpg&gt; uid 1
+gpg&gt; primary
+</code></pre>
+
+<p>Generate the sub keys:</p>
+
+<pre><code>gpg&gt; addkey
+</code></pre>
+
+<p>The above will require the master key&rsquo;s private key. Create another &lsquo;8&rsquo; type
+key with only the &lsquo;Sign&rsquo; capability and 2048 bits valid for 6 months Do this
+again for the encryption and authentication keys. A higher bit usage may be
+useful, some smartcards only support 2048, if higher bits are supported 3072 or
+4096 may be better.</p>
+
+<p>I cropped and scale an image of myself down to 120x144 (Quality at 50% still
+accurately reflected my likeness quite well and came in at 2.8Kb). The image
+has to be under 4Kb but the smaller the better. I ended by ensuring the file
+was stripped of metadata and minimized as much as I could with <code>jpegoptim -s</code>.
+It has to be transferred to the secure TAILS environment and then added to the
+certificate while in the editkey mode we&rsquo;re currently in at this point in the
+tutorial.</p>
+
+<p>Turns out the size can be up to 240x288&hellip;</p>
+
+<pre><code>gpg&gt; addphoto
+</code></pre>
+
+<p>And follow the prompts. When everything is good save the changes made:</p>
+
+<pre><code>gpg&gt; save
+</code></pre>
+
+<p>Now I need to setup a backup for all the contents in case they&rsquo;re lost or
+displaced. We need to backup the keyrings, a raw copy of the master private
+key, a revocation certificate just in case, then the public key.  Backup and
+export ~/.gnupg/secring.gpg and ~/.gnupg/pubring.gpg</p>
+
+<pre><code>mkdir ~/gpg_backups
+cp ~/.gnupg/{sec,pub}ring.gpg ~/gpg_backups/
+gpg -a --export-secret-key sstelfox@bedroomprogrammers.net &gt; ~/gpg_backups/secret_key.gpg
+gpg -a --export sstelfox@bedroomprogrammers.net &gt; ~/gpg_backups/publickey.gpg
+gpg -a --gen-revoke sstelfox@bedroomprogrammers.net &gt; ~/gpg_backups/revocation_cert.gpg
+</code></pre>
+
+<p>For the revocation key choose &lsquo;Key has been compromised&rsquo; and an empty
+description, as that is the intended usage for this particular CRL.</p>
+
+<p>We also want a <code>paperkey</code> backup file of the private key.</p>
+
+<pre><code>gpg --export-secret-key sstelfox@bedroomprogrammers.net | paperkey &gt; ~/gpg_backups/paperkey.bak
+</code></pre>
+
+<p>It is expected that the paperkey.bak file is printed out on a piece of
+acid-free paper and put someplace very very safe. In the worst possible
+scenario, this needs to be hand typed back into a text file. Once done
+restoration can be done by pulling in your public key and the typed file like
+the following:</p>
+
+<pre><code>paperkey --pubring ~/gpg_backups/publickey.gpg \
+  --secrets ~/gpg_backups/paperkey.bak --output ~/recovered_secret.gpg
+</code></pre>
+
+<p>We need to then export just the subkeys for day to day usage. This is a
+non-obvious practice.</p>
+
+<p>Take out the subkeys:</p>
+
+<pre><code>gpg -a --export-secret-subkeys sstelfox@bedroomprogrammers.net \
+  &gt; ~/gpg_backups/subkey_secrets.gpg
+</code></pre>
+
+<p>Delete the secret keys:</p>
+
+<pre><code>gpg --delete-secret-keys sstelfox@bedroomprogrammers.net
+</code></pre>
+
+<p>You&rsquo;ll need to double confirm the deletion. We now have all the public keys we
+want and no secret keys&hellip; We need to now import back in just the subkeys.</p>
+
+<pre><code>gpg --import ~/gpg_backups/subkey_secrets.gpg
+</code></pre>
+
+<p>You should see just the subkeys in the the secret ring:</p>
+
+<pre><code>gpg -K
+</code></pre>
+
+<p>We can then export just the &lsquo;laptop&rsquo; keys.</p>
+
+<pre><code>gpg -a --export-secret-keys sstelfox@bedroomprogrammers.net &gt; ~/gpg_backup/laptop_keys_secret.gpg
+gpg -a --export sstelfox@bedroomprogrammers.net &gt; ~/gpg_backup/laptop_keys_public.gpg
+</code></pre>
+
+<p>These two files need are what will be transferred to the laptop and other
+machines that they are needed. To import the two files:</p>
+
+<pre><code>gpg --import laptop_keys_public.gpg
+gpg --import laptop_keys_secret.gpg
+</code></pre>
+
+<p>Laptop keyrings aren&rsquo;t needed with the smartcard assuming the public key
+portions are published at the URL set on the smartcard.</p>
+
+<h2 id="normal-smartcards">Normal Smartcards</h2>
+
+<p>The secret keys are best suited to be stored on a smartcard (such as a YubiKey,
+though that needs extra configuration). This assumes that pcscd and libccid are
+installed on the system being used. TAILS is already setup for it.</p>
+
+<p>The recommended reader &amp; tokens for this kind of use are OpenPGP Smartcard V2
+(with breakout) combined with a Gemalto USB Shell Token V2.</p>
+
+<p>By default these keys have a user &amp; admin key set respectively to 123456 and
+12345678. If the user pin is mistyped 3 times the card is blocked until the
+admin pin is provided. If the admin pin is provided incorrectly three times the
+card will be destroyed. We need to change these from the default like so:</p>
+
+<pre><code>gpg --card-edit
+&gt; admin
+&gt; passwd
+</code></pre>
+
+<p>Change the pin then the admin pin (option 1, then 3 respectively). While in we
+should set the url metadata field to provide the location where your public key
+can be downloaded. In my case <code>https://stelfox.net/publickey.gpg</code> this can be
+set using the following command:</p>
+
+<pre><code>&gt; url
+</code></pre>
+
+<p>Also a few other bits of metadata:</p>
+
+<pre><code>&gt; name
+&gt; lang
+</code></pre>
+
+<p>One thing that may be worth considering is the &lsquo;Signature PIN&rsquo; value being set
+to &lsquo;not forced&rsquo;. As far as I can tell this is only used to tell the gpg-agent
+whether it&rsquo;s allowed to cache the PIN for performing signatures or not.</p>
+
+<p>It will reduce the security of your card if a PIN isn&rsquo;t required for every
+signature performed but it make it quite a bit easier to use as part of a
+normal workflow. Hostiles won&rsquo;t be able to get the key material but they will
+be able to sign data on your behalf that will be very difficult to prove didn&rsquo;t
+come from you.</p>
+
+<p>The recommendation is to always force the requirement of a PIN. I believe with
+a five minute timeout the risk is acceptable and can make lots of fast changes
+inside a git repository managable. The pin will be required again regardless of
+time if the card is removed and readded.</p>
+
+<p>Exit out and open up the gpg &ndash;edit-key view again. We need to add the subkeys.
+First we need to switch to the private key view:</p>
+
+<pre><code>&gt; toggle
+</code></pre>
+
+<p>For the three keys (numbered 1-3) you want to transfer them using the following
+commands:</p>
+
+<pre><code>&gt; key 1
+&gt; keytocard
+&gt; key 1
+</code></pre>
+
+<p>This selects the keys individually, copies them, then deselects them. It needs
+to be done for each of them. End this with a &lsquo;save&rsquo; command and you should be
+left with just stubs of the keys in the secret keyring.</p>
+
+<p>On new machines that need to have the stubs added we can perform the following
+status:</p>
+
+<pre><code>gpg --card-edit
+&gt; fetch
+&gt; quit
+</code></pre>
+
+<p>You should be able to view the stubs and their presence on the card with:</p>
+
+<pre><code>gpg -K
+gpg --card-status
+</code></pre>
+
+<p>Should be able to test that the card is working by encrypting a message and
+then decrypting it with smartcard.</p>
+
+<pre><code>cat &lt;&lt; EOF &gt; message.txt
+Just a secret test message...
+EOF
+
+gpg -esar sstelfox@bedroomprogrammers.net message.txt
+</code></pre>
+
+<p>It should ask you for your pin before continuing. Decrypting can be done using
+the following:</p>
+
+<pre><code>gpg -d message.txt.asc
+</code></pre>
+
+<p>That confirms that the signing key &amp; encryption key are both working. The
+authentication key is for using the GPG agent as an SSH agent. To test this one
+we need to run the gpg-agent with it&rsquo;s SSH compatibility layer like so:</p>
+
+<pre><code>gpg-agent --enable-ssh-support
+source ~/.gpg-agent-info
+</code></pre>
+
+<p>Test to make sure a card is showing up:</p>
+
+<pre><code>ssh-add -l
+</code></pre>
+
+<p>To get it in an appropriate format for authorized_keys file:</p>
+
+<pre><code>ssh-add -L
+</code></pre>
+
+<p>For use on other linux systems the scdaemon binary is required which may be in
+a different package&hellip;</p>
+
+<ul>
+<li>Additional notes: <a href="https://wiki.fsfe.org/TechDocs/CardHowtos/CardWithSubkeysUsingBackups" target="_blank">https://wiki.fsfe.org/TechDocs/CardHowtos/CardWithSubkeysUsingBackups</a></li>
+</ul>
+
+<p>We need to check the GPG configuration (gpg.conf) against that link as we may
+need to sign and encrypt with an additional alternate key (hidden-encrypt-to
+and default-recipient entries).</p>
+
+<p>On gentoo I needed to change the default use flags for app-crypt/gnupg with the
+following:</p>
+
+<pre><code># /etc/portage/package.use/gnupg
+
+app-crypt/gnupg smartcard usb
+</code></pre>
+
+<h2 id="final-tasks">Final Tasks</h2>
+
+<p>Get the key ID of the primary key from <code>gpg -k</code> and push it to the common
+public key server:</p>
+
+<pre><code>gpg --send-keys 0xBEBEF280BCE92620
+</code></pre>
+
+<p>Also export the file for uploading to my website:</p>
+
+<pre><code>gpg --armor --export 0xBEBEF280BCE92620 &gt; publickey.gpg
+</code></pre>
+
+<p>The only time the master key should be required to come out to play:</p>
+
+<ul>
+<li>You need your main key (e.g. to sign another PGP key)</li>
+<li>You have to replace your card and want to reuse the subkeys</li>
+<li>Revoking subkeys that have been compromised</li>
+<li>Your card was lost or stolen and you need to revoke the subkeys</li>
+</ul>
+
+<p>TAILS should be booted backup, if a new key needs to get signed it needs to be
+imported from a file. Then signed with <code>gpg --sign-key &lt;Key ID&gt;</code>.</p>
+
+<h2 id="key-signing-party">Key Signing Party</h2>
+
+<p>Get a fingerprint summary file and print out copies for people present using
+the following command:</p>
+
+<pre><code>gpg --fingerprint sstelfox@bedroomprogrammers.net &gt; key_for_partying.txt
+</code></pre>
+
+<p>Pull keys by their IDs (0x12345678 for the example), compare the contents of
+the key to what you expect, sign the key, push it to the keyserver, and email
+the owner a copy of their signature.</p>
+
+<pre><code>gpg --recv-keys 0x12345678
+gpg --list-keys 0x12345678
+gpg --sign-key 0x12345678
+
+gpg --send-keys --keyserver keyserver.ubuntu.com 0x12345678
+gpg --send-keys --keyserver hkps.pool.sks-keyservers.net 0x12345678
+
+gpg --armor --export 0x12345678 --output 0x12345678.signed-by.your-id.asc
+</code></pre>
+
+<p>Email the 0x12345678.signed-by.your-id.asc file to one of the emails listed in
+the key. When someone sends you a signature just import it like so:</p>
+
+<pre><code>gpg --import your-id.signed-by.0x12345678.asc
+</code></pre>
+
+<p>You can see your signatures with:</p>
+
+<pre><code>gpg --list-sigs &lt;your-id&gt;
+</code></pre>
+
+<p>More note URLs:</p>
+
+<ul>
+<li><a href="https://help.ubuntu.com/community/GnuPrivacyGuardHowto" target="_blank">https://help.ubuntu.com/community/GnuPrivacyGuardHowto</a></li>
+</ul>
+
+<h2 id="git-notes">Git Notes</h2>
+
+<p>Git needs to be configured with which key to use for signatures. First you need
+to find your key ID, this can be done using the following command:</p>
+
+<pre><code>gpg --list-secret-keys
+</code></pre>
+
+<p>The key ID will look something like: <code>8EE30EAB</code>. Configure the global signing
+key using the following command, replacing the sample key ID with yours:</p>
+
+<pre><code>git config --global user.signingkey 8EE30EAB
+</code></pre>
+
+<p>Ensure that they are doing this automatically:</p>
+
+<pre><code>git config --global commit.gpgsign true
+</code></pre>
+
+<p>This will ask you for your pin or password on your GPG key everytime you commit
+which can be remedied by using a GPG agent. This will reduce your security
+generally though.</p>
+
+<h2 id="key-transitions">Key Transitions</h2>
+
+<p>For key transitions where your key hasn&rsquo;t been compromised, a transition
+statement needs to be published by both the old and new key. I have a <a href="/note_files/gnupg/key_transition_template.txt">sample
+transition statement</a> that can be filled in with your respective
+information. Variables in message are embedded with {var} commands are {{cmd}}.</p>
+
+<p>The variables in the template are firstName, fullName, email, oldKeyId,
+newKeyId, pubKeyUrl, and pubStmntUrl. The pubKeyUrl and pubStmntUrl variables
+should be valid paths to files on an HTTPS protected webserver.</p>
+
+<p>Once you&rsquo;ve filled out the transition statement you need to ensure both keys
+are cross signed and the signatures are published.</p>
+
+<pre><code>gpg --local-user $oldKeyId --sign-key $newKeyId
+gpg --local-user $newKeyId --sign-key $oldKeyId
+gpg --send-keys $oldKeyId $newKeyId
+</code></pre>
+
+<p>The file itself still needs to be signed by both keys which can be done with
+the following command:</p>
+
+<pre><code>gpg --local-user $oldKeyId --local-user $newKeyId --clearsign $keyTransitionFile
+</code></pre>
+
+<p>If both keys don&rsquo;t exist on the same machine you&rsquo;ll need to refer to the
+section titled &lsquo;Multiple Clearsigned Signatures&rsquo; for how to handle the
+situation.</p>
+
+<p>I recommend you publish the key transition with a name that includes the date,
+like <code>key-transition-2017-08-17.txt</code>.</p>
+
+<h2 id="expiration-renewal-of-subkeys">Expiration / Renewal of Subkeys</h2>
+
+<p>TODO: I need to cover certificate key transitions and signed key transition
+statements.</p>
+
+<h3 id="option-1-generate-a-new-signing-encryption-key">Option 1: Generate a new signing / encryption key</h3>
+
+<p>Pros:</p>
+
+<ul>
+<li>Most secure</li>
+<li>Some level of forward secrecy (over large time scales)</li>
+<li>Helps protect against unknown key compromises</li>
+</ul>
+
+<p>Cons:</p>
+
+<ul>
+<li>Only one keypair stored per smartcard (decrypting old files means restoring a
+backup of the old key)</li>
+<li>More complicated</li>
+<li>Requires users to refresh their keys about you</li>
+</ul>
+
+<p>Steps:</p>
+
+<ol>
+<li>Generate new keys</li>
+<li>Generate CRLs for old keys</li>
+<li>Load keys on to smartcard</li>
+<li>Push new keys and CRLs to keyservers</li>
+</ol>
+
+<h3 id="option-2-extend-expiration">Option 2: Extend Expiration</h3>
+
+<p>Pros:</p>
+
+<ul>
+<li>Simple</li>
+<li>Fast</li>
+</ul>
+
+<pre><code>gpg --edit-key 0x12345678
+gpg&gt; key 1
+gpg&gt; expire
+...
+gpg&gt; key 1
+gpg&gt; key 2
+gpg&gt; expire
+...
+gpg&gt; save
+
+gpg --send-keys 0x12345678
+</code></pre>
+
+<h2 id="maintenance">Maintenance</h2>
+
+<p>To ensure we get updated keys and revocation announcements the keys in your
+keyring should be periodically refreshed with the public key server. This can
+be done all at once using the following command:</p>
+
+<pre><code>gpg2 --refresh-keys
+</code></pre>
+
+<p>Likewise after modifying your own key it should be pushed to the public key
+servers for consumption and availability of others.</p>
+
+<pre><code>PRIMARY_KEY_EMAIL=sstelfox@bedroomprogrammers.net
+gpg2 --send-key $(gpg2 -k $PRIMARY_EMAIL | grep pub | awk '{ print $2 }' | cut -d '/' -f 2)
+</code></pre>
+
+<p>There is a social network disclosure that occurs when all keys are refreshed at
+once. The description of this disclosure is:</p>
+
+<blockquote>
+<p>We assume there probably exists at least one subset of public keys in this
+keyring that identifies it, i.e. no other individual&rsquo;s keyring contain the
+same subset of public keys.</p>
+</blockquote>
+
+<p>A personal thought potentially making this attack easier, it is very likely
+that one of the keys being refreshed is owner of the keyring itself.</p>
+
+<p>Trusted SSL communications (hkps) eliminates this threat for passive snoopers,
+the analysis could still be done on the keyserver itself.</p>
+
+<p>To avoid this individual keys would have to be refreshed independently over
+time. The requests could still be tied to the keyring machine&rsquo;s IP address to
+correlate all the refreshed keys to build back up the contents of the keyring.
+Avoiding this would require use of individual Tor circuits to mask and
+distribute key refreshes.</p>
+
+<p>A project has been built up to handle this issue. The following are relevant:</p>
+
+<ul>
+<li><a href="https://code.openhub.net/file?fid=BbMaEKchr9cDAOVs8ozX5mJ40g8&amp;cid=RfbvTf3fwdw&amp;fp=405976&amp;mp&amp;projSelected=true#L0" target="_blank">https://code.openhub.net/file?fid=BbMaEKchr9cDAOVs8ozX5mJ40g8&amp;cid=RfbvTf3fwdw&amp;fp=405976&amp;mp&amp;projSelected=true#L0</a></li>
+<li><a href="https://github.com/EtiennePerot/parcimonie.sh/blob/master/parcimonie.sh" target="_blank">https://github.com/EtiennePerot/parcimonie.sh/blob/master/parcimonie.sh</a></li>
+</ul>
+
+<h2 id="diagnostics">Diagnostics</h2>
+
+<h3 id="no-usuable-subkey">No Usuable Subkey</h3>
+
+<p>One one of my devices I was persistently getting an odd error message whenever
+I tried to sign something. The error message was:</p>
+
+<pre><code>$ gpg2 -esar sam@stelfox.net sample-file
+gpg: no default secret key: Unusable secret key
+gpg: tor-setup-script.sh: sign+encrypt failed: Unusable secret key
+</code></pre>
+
+<p>Turns out I hadn&rsquo;t updated my public keys on that device and <code>gpg2 --card-edit</code>
+followed by a <code>fetch</code> didn&rsquo;t actually update my certificate. I needed to
+refresh the key from the key server to get my new signatures and public key and
+retrust it.</p>
+
+<pre><code>gpg2 --refresh-keys 0x30856D4EA0FFBA8F
+gpg2 --edit-key 0x30856D4EA0FFBA8F
+trust
+</code></pre>
+
+<h3 id="card-not-visible-to-user-may-be-seen-by-root">Card Not Visible to User (May be seen by root)</h3>
+
+<p>I installed <code>pcsc-tools</code> to get <code>pcsc_scan</code> but I don&rsquo;t believe that
+contributed to the fix. Ultimately I needed to start up the <code>pcscd</code> service and
+replug my yubikey.</p>
+
+<h3 id="unable-to-connect-to-dirmngr-ipc-connect-call-failed">Unable to connect to dirmngr (IPC connect call failed)</h3>
+
+<p>While trying to refresh keys I was getting the following error:</p>
+
+<pre><code>gpg: connecting dirmngr at '/run/user/1000/gnupg/S.dirmngr' failed: IPC connect call failed
+</code></pre>
+
+<p>I rebooted the machine, and that didn&rsquo;t solve it. Ultimately I believe it was
+permissions / ownership issues on the <code>~/.gnupg/crls.d</code> directory but I can&rsquo;t
+be entirely sure.</p>
+
+<p>I solved this issue by deleting everything in my <code>.gnupg</code> directory and
+checking out the version from my dotfiles again.</p>
+
+<h2 id="remote-usage-of-smartcard">Remote Usage of Smartcard</h2>
+
+<p>Basically relies on the extra-socket option for gpg-agent. May be able to
+accomplish this with something like the following command (path may be
+incorrect):</p>
+
+<pre><code>ssh -R /run/user/1000/gnupg/S.gpg-agent:/home/sstelfox/.gnupg/S.gpg-agent.remote  -o &quot;StreamLocalBindUnlink=yes&quot; remote-host
+</code></pre>
+
+<p>This could also live in an <code>ssh/config</code> parameter like so:</p>
+
+<pre><code>Host remote
+  RemoteForward /run/user/1000/gnupg/S.gpg-agent:/home/sstelfox/.gnupg/S.gpg-agent.remote
+  StreamLocalBindUnlink yes
+</code></pre>
+
+<p>The following command should work but will warn about the agent being in
+restricted mode.</p>
+
+<pre><code>gpg-connect-agent /bye
+</code></pre>
+
+<h2 id="multiple-clearsigned-signatures">Multiple Clearsigned Signatures</h2>
+
+<p>If multiple keys on different machines need to perform a clearsign on a
+document the normal method doesn&rsquo;t support combining these signatures to be
+verified in one pass. This is valuable for allowing multiple independent people
+to attest to the validity of a document and make it easy for people to validate
+the correctness of it.</p>
+
+<h3 id="notes">Notes</h3>
+
+<p>If the private keys are on the same machine the <code>--local-user</code> flag can simply
+be specified multiple times. This is likely the most applicable for
+key-transition statements.</p>
+
+<pre><code>gpg2 --local-user pers1 --local-user pers2 --clearsign content
+</code></pre>
+
+<p>ONLY PARTIALLY IDEAL: Detached signatures can be combined in the same way and
+don&rsquo;t require a lot of the sed magic used here. A detached signature can be
+generated with:</p>
+
+<pre><code>gpg2 --armor --detach-sign content
+</code></pre>
+
+<p>If this is done only the dearmor, split, combine, enarmor steps need to be
+performed.</p>
+
+<h3 id="process">Process</h3>
+
+<p>First we need content to sign:</p>
+
+<pre><code>echo 'A very important statement about a very important topic.' &gt; content
+</code></pre>
+
+<p>Each signatory should receive or generate a copy of the content and verify it.
+This transport is beyond the scope of this document but could easily be done
+with a standard <code>gpg2 -esa -r pers1 -r pers2 content</code> and emailed then
+decrypted.</p>
+
+<p>Once each user has a copy and verified it. They need to perform a normal
+clearsign on the content and send the signed message back to an individual to
+perform the combinatory process.</p>
+
+<pre><code>gpg2 --clearsign content
+</code></pre>
+
+<p>This assumes you now have the signed contents file from pers1 and pers2 in the
+files <code>content.pers1.asc</code> and <code>content.pers2.asc</code>. Verify both signatures are
+valid:</p>
+
+<pre><code>gpg2 --verify content.pers1.asc
+gpg2 --verify content.pers2.asc
+</code></pre>
+
+<p>We need to verify the content is still identical in both files (one of them
+could have changed the content before signing to be tricky). This is kind of a
+formality since the signature won&rsquo;t check out for at least one of them if the
+content differs between the two in any way.</p>
+
+<pre><code>sed -n '1,/SIGNATURE/ p' content.pers1.asc | sha1sum
+sed -n '1,/SIGNATURE/ p' content.pers2.asc | sha1sum
+</code></pre>
+
+<p>We then need to extract just the signature blocks from each message and turn
+them into the raw gpg2 packets:</p>
+
+<pre><code>sed -n '/SIGNATURE/,$ p' content.pers1.asc | gpg2 --dearmor | gpgsplit --no-split &gt; pers1.sig
+sed -n '/SIGNATURE/,$ p' content.pers2.asc | gpg2 --dearmor | gpgsplit --no-split &gt; pers2.sig
+</code></pre>
+
+<p>We then combine them into one enarmored signature (order doesn&rsquo;t matter):</p>
+
+<pre><code>cat pers1.sig pers2.sig | gpg2 --enarmor | sed -n '5,$ p' | grep -v -- ----- &gt; combo.sig
+</code></pre>
+
+<p>And append the signatures back onto the content:</p>
+
+<pre><code>(sed -n '1,/SIGNATURE/ p' content.pers1.asc; echo; cat combo.sig; \
+  echo '-----END PGP SIGNATURE-----') &gt; content.combo.asc
+</code></pre>
+
+<p>Verify the signatures are still good:</p>
+
+<pre><code>gpg2 --verify content.combo.asc
+</code></pre>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/gpg'>Gpg</a>, <a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/security'>Security</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='mailto:sam@stelfox.net' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/SamStelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://keybase.io/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Keybase account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <g transform="matrix(0.5, 0, 0, 0.5, -120,-205)">
+    <path d="M247.8,451.8c-0.6-1.3-1.4-3.1-1.8-4l-0.6-1.7l-2,2.2l-2,2.2 l-0.2-4.2c-0.3-6,0.2-12.2,1.2-16.6c2.3-9.8,9.5-18.7,18.8-23.4l2.1-1l-0.5-1.5c-0.3-0.8-0.6-2.5-0.7-3.6l-0.2-2.1l-2.1-0.2 c-3.2-0.3-4.9-1.2-6-3.5c-0.6-1.2-0.6-1.4-0.4-4.6c0.2-4.2,0.5-5.1,1.8-6.5c1.6-1.8,2.7-2.1,6.7-1.9c2.9,0.2,3.5,0.3,4.8,0.9 c0.8,0.4,1.5,0.8,1.6,0.8c0.1,0,1-1.1,2.1-2.6l1.9-2.7l1.2,0.7c0.7,0.4,1.5,0.9,1.9,1.1l0.7,0.4l-0.6,1.5c-0.3,0.8-0.7,2.2-0.8,2.9 l-0.2,1.4l1.7,0.2c6.1,0.6,10.7,4.3,12.4,9.9c0.5,1.8,0.5,5.3,0,7c-0.5,1.6-0.5,1.7-0.1,1.7c0.7,0,5.4,2.3,7.3,3.5 c3.7,2.4,8,6.6,10.4,10.2c4.5,6.7,6.4,14,5.6,22c-0.4,4.8-1.3,8.6-2.9,12.3l-0.6,1.4l-2.5,0l-2.5,0l1.2-2.4 c1.3-2.6,2.3-6.2,2.8-9.4c0.3-2.2,0.4-8.2,0.1-9.3l-0.2-0.7l-1.3,1.4c-3.2,3.5-7.9,4.5-14.2,2.8c-5.4-1.4-7.6-1.7-12.7-1.7 c-3.9,0-5.2,0.1-7.3,0.6c-5.8,1.3-9.9,3.2-15.6,7.3c-2.1,1.5-3.8,2.7-3.9,2.7c-0.1,0,0.2-1,0.6-2.3c0.4-1.3,1.1-3.4,1.5-4.8 l0.8-2.5l-0.9,0.9c-0.5,0.5-1.9,1.9-3.1,3.2l-2.1,2.3l0.5,1.9c0.6,2.5,2,5.6,3.5,7.9c0.6,1,1.1,1.8,1.1,1.9s-1.2,0.1-2.6,0.1h-2.6 L247.8,451.8L247.8,451.8z M256.6,427.6c4.8-5.1,8.7-9.2,8.8-9.2c0.1,0.1-0.4,1.6-0.9,3.3c-3.3,10.4-4,12.4-3.9,12.5 c0,0,1.2-0.4,2.5-0.9c8.5-3.7,18.4-4.2,28.9-1.4c4.7,1.2,6.5,1.2,8.8,0c1.3-0.7,1.8-1.1,2.4-2.1c1.1-1.7,1.2-4.1,0.5-6.3 c-1.7-4.8-8.3-11-14.5-13.7c-3.2-1.4-3.4-1.4-4.1-0.7l-0.6,0.6l2.6,3.2c1.4,1.7,2.9,3.6,3.1,4.1c0.6,1.2,0.7,3.1,0.1,4.3 c-0.8,1.7-3.2,2.9-5.1,2.5c-0.8-0.2-1.1-0.1-1.9,0.5c-2.2,1.6-4.6,1.2-6.6-1.2c-1.6-1.8-2-2.7-2.1-4.5c0-0.9-0.3-2-0.5-2.4 c-0.3-0.6-0.4-1.3-0.4-2.2l0.1-1.4l-1.3-0.3c-1.8-0.5-3.9-1.5-5.1-2.4c-0.6-0.4-1.1-0.8-1.3-0.8s-1.5,0.6-2.9,1.3 c-9.7,5-16,14.3-17,24.8c-0.1,1-0.2,2.3-0.3,2.8l-0.1,0.9l1.1-1.1C247.4,437.3,251.8,432.7,256.6,427.6L256.6,427.6z M282.5,420.2 c0.9-0.7,1.7-1.3,1.9-1.3c0.1,0,0.4,0.3,0.7,0.7c0.5,0.8,1.4,0.8,1.8,0.1c0.3-0.5,0.3-0.6-5.6-7.8c-3.5-4.3-4.2-5-4.7-5 c-1.2,0.1-0.9,1,1,3.3l1.8,2.2l-1,0.8c-1.1,1-1.2,1.2-0.5,1.8c0.5,0.5,0.6,0.4,1.6-0.3l1.1-0.7l0.7,0.6c0.4,0.3,0.6,0.8,0.6,0.9 c0,0.2-0.8,0.9-1.7,1.7c-0.9,0.7-1.6,1.5-1.6,1.7c0,0.3,0.5,1.1,1.4,2.2C280.3,421.7,280.8,421.5,282.5,420.2L282.5,420.2z  M272.2,406c0.6-1.8,2.6-3.2,4.6-3.2c1.1,0,2.7,0.9,3.8,2.1l1,1.2l0.9-1.1c2.5-2.8,2.8-6.7,0.8-10.1c-1.5-2.5-4.3-4-8.2-4.4 c-2.1-0.2-2.6-0.4-3.7-1.5l-0.8-0.8l-0.4,0.6c-0.8,1.2-2.5,5.1-3,6.6c-0.7,2.3-0.4,5.9,0.5,7.7c0.9,1.7,3.3,4,4,3.7 C271.8,406.9,272,406.5,272.2,406L272.2,406z M263.3,392.4c0.2-0.5,0.7-1.8,1.2-2.8c0.5-1,0.9-2,0.9-2.3c0-0.9-1-1.3-3.7-1.5 c-2.4-0.2-2.6-0.1-3.1,0.4c-0.4,0.4-0.6,0.9-0.6,1.6c0,0.6-0.1,1.7-0.2,2.6c-0.2,2.1,0.1,2.5,2.2,2.8 C263.1,393.4,263,393.4,263.3,392.4z M260.2,390c0-1.7,0.2-1.9,1.6-1.9h1.3v1.4v1.4h-1.4h-1.4V390z M266.5,448.3 c-0.6-0.6-0.8-1-0.8-2c0-1.9,1.1-3,2.9-3c1.7,0,2.9,1.2,2.9,2.9c0,1.8-1.1,2.8-3,2.9C267.5,449.1,267.1,448.9,266.5,448.3 L266.5,448.3z M285.8,448.6c-2.3-1.8-1.1-5.3,1.8-5.3c1.8,0,2.8,1.1,2.9,3c0,1.1-0.1,1.4-0.8,2s-1,0.8-2,0.8 C286.8,449.1,286.2,448.9,285.8,448.6L285.8,448.6z"/>
+  </g>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://facebook.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Facebook account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://linkedin.com/in/samstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Linkedin account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+       &copy; 2011-2017 Sam Stelfox - Content license information can be found on the <a rel='license' href='/licenses/'>licensing page</a>.
+  </p>
+</div>
+
+      </div>
+    </footer>
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+</html>
+

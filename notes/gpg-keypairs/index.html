@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Use of subkeys Sources:
+ https://alexcabal.com/creating-the-perfect-gpg-keypair/ http://www.phillylinux.org/keys/terminal.html https://wiki.debian.org/subkeys http://tjl73.altervista.org/secure_keygen/en/en.html  Subkeys are important as they can prevent the full loss of identity in the event a laptop is stolen or compromised. A master keypair should be isolated via airgap (stored on a USB stick and only used on a non-network enabled Live CD for example).'>
+<meta property='og:title' content='GPG Keypairs • Sam Stelfox'>
+<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Use of subkeys Sources:
+ https://alexcabal.com/creating-the-perfect-gpg-keypair/ http://www.phillylinux.org/keys/terminal.html https://wiki.debian.org/subkeys http://tjl73.altervista.org/secure_keygen/en/en.html  Subkeys are important as they can prevent the full loss of identity in the event a laptop is stolen or compromised. A master keypair should be isolated via airgap (stored on a USB stick and only used on a non-network enabled Live CD for example).'>
+<meta property='og:url' content='https://stelfox.net/notes/gpg-keypairs/'>
+<meta property='og:site_name' content='Sam Stelfox'>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'>
+
+  <title>GPG Keypairs • Sam Stelfox</title>
+  <link rel='canonical' href='https://stelfox.net/notes/gpg-keypairs/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'><link rel='stylesheet' href='/css/custom.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-32188490-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-notes'>
+  <div class='site'>
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/posts/'>Blog Posts</a>
+    </li>
+  <li>
+      <a href='/notes/'>Various Notes</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sam Stelfox</p>
+          
+          <p class='site-description subtitle'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>GPG Keypairs</h1>
+      
+
+    </div>
+    
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</em></strong></p>
+
+<h2 id="use-of-subkeys">Use of subkeys</h2>
+
+<p>Sources:</p>
+
+<ul>
+<li><a href="https://alexcabal.com/creating-the-perfect-gpg-keypair/" target="_blank">https://alexcabal.com/creating-the-perfect-gpg-keypair/</a></li>
+<li><a href="http://www.phillylinux.org/keys/terminal.html" target="_blank">http://www.phillylinux.org/keys/terminal.html</a></li>
+<li><a href="https://wiki.debian.org/subkeys" target="_blank">https://wiki.debian.org/subkeys</a></li>
+<li><a href="http://tjl73.altervista.org/secure_keygen/en/en.html" target="_blank">http://tjl73.altervista.org/secure_keygen/en/en.html</a></li>
+</ul>
+
+<p>Subkeys are important as they can prevent the full loss of identity in the
+event a laptop is stolen or compromised. A master keypair should be isolated
+via airgap (stored on a USB stick and only used on a non-network enabled Live
+CD for example).</p>
+
+<p>Create initial keypair:</p>
+
+<p>NOTE TO SELF: Try adding <code>--digest-algo SHA256</code> to the following command as it
+seems it will use SHA1 for the key signature by defualt (I dont know if this
+will work).</p>
+
+<pre><code>[user@host ~]$ gpg --gen-key
+</code></pre>
+
+<ul>
+<li>Choose 1 RSA and RSA (default)</li>
+<li>Keysize: 4096</li>
+<li>0 (Key does not expire -&gt; see Key expiration)</li>
+<li>Provide name (Sam Stelfox)</li>
+<li>Provide email (sam@stelfox.net)</li>
+<li>No comment</li>
+<li>Verify information is correct</li>
+<li>Provide a strong passphrase</li>
+</ul>
+
+<p>At the end it will let you know what your key ID is as 8 hexidecimal characters
+(hint: look for the line that says &ldquo;marked as ultimately trusted&rdquo;). You will
+want to replace any instances of <code>&lt;keyid&gt;</code> in future steps with this value.</p>
+
+<p>At this point we have the master key which will be used to generation of the
+sub-keys. Signing other peoples keys should be done with the master keypair to
+prevent signature expiration when a subkey expires.</p>
+
+<p>I have an alternate email address that Id like to keep associated with this key
+as well so I added another identifier like so:</p>
+
+<pre><code>[user@host ~]$ gpg --edit-key &lt;keyid&gt;
+gpg&gt; adduid
+</code></pre>
+
+<ul>
+<li>Provide real name</li>
+<li>Alternate email address</li>
+<li>Comment (optional)</li>
+<li>Verify the information is accurate</li>
+<li>Provide your password</li>
+</ul>
+
+<p>I also like to explicitely list the keyserver pools that I use to make updates
+to my keys easier to find. This is done with the following command:</p>
+
+<p>NOTE TO SELF: The following is untested.</p>
+
+<pre><code>gpg&gt; keyserver hkp://pool.sks-keyservers.net
+</code></pre>
+
+<p>For key-completeness I choose to add a picture to my master (and thus
+subsequent keys) of myself. A few things to note about the picture, its best to
+use a smaller image as the image will increase the size of your public key, but
+you should still be visible and identifiable within it.</p>
+
+<p>Make sure you choose a picture you feel is appropriate, you need to
+redistribute the public key to everyone that has ever received it to get rid of
+the older version. I chose to use a 200x200px image in JPG format.</p>
+
+<p>I also saved the JPG at a lower quality (50%), disabled progressive
+enhancement, enabled optimization, changed subsampling to 4:4:4, smoothing to
+0.30 and removed the comments, this resulted in a filesize of 5.2Kb.</p>
+
+<p>I also used the <code>exif</code> tool to verify that it had no EXIF/Metadata within the
+image itself as the whole file would be stored within the public key and I
+didnt wish to reveal anything inside the key I didnt explicitely add.</p>
+
+<pre><code>gpg&gt; addphoto ~/Pictures/headshot_small.jpg
+</code></pre>
+
+<p>It conviniently opens up the image in a preview window before confirming the
+image is correct. It will confirm your passphrase then add it too your key.
+Finally save the changes:</p>
+
+<pre><code>gpg&gt; save
+</code></pre>
+
+<p>We want to prefer stronger hashes and ciphers. You should do extensive personal
+research on what you prefer. The ciphers your version of gpg supports should be
+at the top of the output of <code>gpg -h</code> for me it was the following:</p>
+
+<pre><code>[user@host ~]$ gpg -h
+&lt;snip&gt;
+Supported algorithms:
+Pubkey: RSA, RSA-E, RSA-S, ELG-E, DSA
+Cipher: IDEA, 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH,
+        CAMELLIA128, CAMELLIA192, CAMELLIA256
+        Hash: MD5, SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+        Compression: Uncompressed, ZIP, ZLIB, BZIP2
+&lt;snip&gt;
+</code></pre>
+
+<p>I personally recommend AGAINST the following ciphers: IDEA, 3DES, CAST5,
+BLOWFISH. As well as the MD5 hash method. You may also want to remove SHA1 from
+your preferences as it too may be broken in the forseable lifetime of your key,
+for the same reason I chose to drop the 128 key-bit versions of AES and
+CAMELLIA (I almost dropped AES192 as there are attacks known to reduce the
+keysize to just above 128 but decided against it for compatibility with other
+clients) I use the following preferences on my personal public key:</p>
+
+<pre><code>[user@host ~]$ gpg --edit-key &lt;keyid&gt;
+gpg&gt; setpref SHA512 SHA384 SHA256 SHA224 RIPEMD160 CAMELLIA256 AES256 CAMELLIA192 AES192 CAMELLIA128 ZLIB BZIP2 ZIP Uncompressed
+gpg&gt; save
+</code></pre>
+
+<p>The sad thing was that it didnt want to remove 3DES from my list of preferred
+ciphers. Im guessing the idea behind this was too provide a common fallback in
+the event that the other encryption algorithms arent available to the other
+person. This isnt the best solution for me, there are a lot of times when I
+would prefer to not send information at all rather than quietly use an insecure
+algorithm and assume my message is protected.</p>
+
+<p>Ultimately this looks like its a fault of RFC conformance. RFC4880, section 9.2
+specifies OpenPGP implementations MUST implement TripleDES and then in section
+13.2 states &ldquo;if it is not explicitly in the list, it is tacitly at the end.
+However, it is good form to place it there explicitly.&rdquo;</p>
+
+<p>Apparently its the same for SHA1.</p>
+
+<p>Alright lets create our signing subkey:</p>
+
+<pre><code>[user@host ~]$ gpg --edit-key &lt;keyid&gt;
+gpg&gt; addkey
+</code></pre>
+
+<ul>
+<li>Provide your passphrase</li>
+<li>Choose 4 RSA (sign only)</li>
+<li>Choose 4096 bit key</li>
+<li>Set expiration of 13 months (13m), and accept the verification.</li>
+<li>&ldquo;Really create?&rdquo; y</li>
+</ul>
+
+<p>You may also want to create a subkey for encrypting / decrypting content. This
+isnt always valuable as once the key expires youll still need to keep the
+private key around to decrypt content for that key. I choose to deal with this
+so I will:</p>
+
+<ul>
+<li>Provide your passphrase</li>
+<li>Choose 5 Elgamal (encrypt only)</li>
+<li>Choose 4096 bit key</li>
+<li>Set expiration of 13 months (13m), and accept the verification</li>
+<li>&ldquo;Really create?&rdquo; y</li>
+</ul>
+
+<p>A note on Elgamal. I chose it for my encryption key not because RSA is any less
+secure, but because there is more active (public) work going on to break
+factoring algorithms than discrete logarithm problems. This doesnt mean an
+advancement in factoring wouldnt weaken Elgamals log based approach but it
+would at the very least be less direct.</p>
+
+<p>Ive also been told Elgamal is more universally compatible with PGP
+implementations for an added bonus (though I dont know anything about the
+accuracy).</p>
+
+<p>Make sure you save the new keys:</p>
+
+<pre><code>gpg&gt; save
+</code></pre>
+
+<p>We also want to generate a pre-generated revocation of our keys just in case
+the unthinkable happens to it, or we lose the password, anything that would
+make our key compromised for use. This doesnt publish the CRL, just creates a
+file that can be used at a later date.</p>
+
+<p>It is important that this be stored separately and just as securely as the
+master key (which we will be exporting later).</p>
+
+<pre><code>[user@host ~]$ gpg --output &lt;keyid&gt;.gpg.crl --gen-revoke &lt;keyid&gt;
+</code></pre>
+
+<p>It will ask you about generating the revocation and the reason. This CRL should
+only be used in the event you lose access to your master key for some reason.
+There isnt a particularily good pre-defined reason for the revocation so I go
+ahead with the &lsquo;worst&rsquo; which is the key has been compromised.</p>
+
+<p>I also chose to add the following description to the revocation as it provides
+enough information to people with my keys to understand why this CRL might have
+been used:</p>
+
+<blockquote>
+<p>Master key needed to be revoked due too loss of password, access, or
+compromise. This was a pregenerated CRL, please contact me for more
+specifics.</p>
+</blockquote>
+
+<p>Before going any further, secure this file.</p>
+
+<p>Now lets create a backup of the master keypair:</p>
+
+<pre><code>[user@host ~]$ gpg --export-secret-keys --armor &lt;keyid&gt; &gt; &lt;keyid&gt;.private.gpg-key
+[user@host ~]$ gpg --export --armor &lt;keyid&gt; &gt; &lt;keyid&gt;.public.gpg-key
+</code></pre>
+
+<p>These two files are your private and public portions of your key, keep these
+just as secure as the CRL and ideally in a different location. Dont keep them
+on your laptop or other mobile devices, perferrably off any network enabled
+device as well.</p>
+
+<p>Now we need to transform our keypairs into the ones that are safe for use on my
+laptops and other mobile devices. First we will export all the subkeys into a
+file:</p>
+
+<pre><code>[user@host ~]$ gpg --export-secret-subkeys &lt;keyid&gt; &gt; subkeys
+[user@host ~]$ gpg --delete-secret-key &lt;keyid&gt;
+</code></pre>
+
+<p>The deletion will verify you REALLY want to do this twice, yes you do. You did
+backup your keys right? Now we will import the subkeys again and clean up the
+file.</p>
+
+<pre><code>[user@host ~]$ gpg --import subkeys &lt;keyid&gt;.public.gpg-key
+[user@host ~]$ shred -n 6 -u subkeys
+</code></pre>
+
+<p>You can verify that the master signing subkey is not in the keypair in the
+keyring by running <code>gpg -K</code>. The first line should have a <code>sec#</code> instead of
+<code>sec</code> indicating the private key is missing.</p>
+
+<p>You can now upload your public key to the various key server pools. I use the
+following command to upload mine:</p>
+
+<pre><code>[user@host ~]$ gpg --send-key --keyserver hkp://pool.sks-keyservers.net &lt;keyid&gt;
+</code></pre>
+
+<h2 id="exchanging-keys-with-others">Exchanging Keys with Others</h2>
+
+<p>Get your fingerprint, and write it down, print it out, put it on your business
+card, some physical means of providing it too others. You can get your
+fingerprint with the following command:</p>
+
+<pre><code>[user@host ~]$ gpg --fingerprint &lt;keyid&gt;
+</code></pre>
+
+<p>Also note down the keyservers that you use as they may be using a pool that
+isnt synced with yours.</p>
+
+<p>Collect other peoples names, key IDs, and keyservers. When back at your
+air-gapped box with your MASTER keypair present, receive, sign and provide them
+with their signature files (email works since you now have their keys). The
+following example will use a friends key ID of E4758D1D:</p>
+
+<pre><code>[user@host ~]$ gpg --recv-keys E4758D1D --keyserver &lt;their-keyserver&gt;
+[user@host ~]$ gpg --sign-key E4758D1D
+[user@host ~]$ gpg --armor --output E4758D1D.signed-by.&lt;keyid&gt;.asc --export E4758D1D
+</code></pre>
+
+<p>You will want to import these exported signatures into your laptop keyring and
+any signatures you get back on your key into both your laptop keyring and the
+master keyring like so:</p>
+
+<pre><code>[user@host ~]$ gpg --import E4758D1D.signed-by.&lt;keyid&gt;.asc
+[user@host ~]$ gpg --import &lt;keyid&gt;.signed-by.E4758D1D.asc
+</code></pre>
+
+<p>Once you have received the signatures you will want to update your key on the
+keyservers so it includes the signatures.</p>
+
+<pre><code>[user@host ~]$ gpg --send-key --keyserver hkp://pool.sks-keyservers.net &lt;keyid&gt;
+</code></pre>
+
+<h2 id="in-the-event-of-compromise">In the Event of Compromise</h2>
+
+<p>If you need to revoke subkeys, get your master keypair out and import it with
+the following commands:</p>
+
+<pre><code>[user@host ~]$ gpg --import &lt;keyid&gt;.public.gpg-key &lt;keyid&gt;.private.gpg-key
+</code></pre>
+
+<p>Iteractively revoke the subkeys:</p>
+
+<pre><code>[user@host ~]$ gpg --edit-key &lt;keyid&gt;
+gpg&gt; key 1
+gpg&gt; key 2
+gpg&gt; key 3
+gpg&gt; revkey
+gpg&gt; save
+</code></pre>
+
+<p>It will ask your for the reason, a comment, and your passphrase. You will need
+to send the updated keys to the keyserver and go through the generation process
+again for subkeys.</p>
+
+<h2 id="key-expiration">Key Expiration</h2>
+
+<p>Additional Sources:</p>
+
+<ul>
+<li><a href="http://madduck.net/blog/2006.06.20:expiring-gpg/" target="_blank">http://madduck.net/blog/2006.06.20:expiring-gpg/</a></li>
+<li><a href="http://sun4you.org/kobaan/RW/files/kobaan-gpg-expired-keys-cleanup-howto.html" target="_blank">http://sun4you.org/kobaan/RW/files/kobaan-gpg-expired-keys-cleanup-howto.html</a></li>
+</ul>
+
+<p>So key expiration is one of the things I had to research the best practices
+for. It seems there are a few schools of thought.</p>
+
+<p>The first and seemingly most obvious is too set an expiration on all of your
+keys. This has the consequence of forcing you to either edit the expire date or
+create a new master key. Either way the public portion of your key has to be
+re-issued. This also expires and disconnects all your signatures forcing you to
+resign and redistribute those as well.</p>
+
+<p>The second is at the opposite extreme. No key should ever expire, if your key
+is compromised you should be able to issue CRLs and expire it manually. This is
+far from best practice in any PKI situation but is easier to handle. The
+immediate cost is that people will trust all signatures, and encrypted content
+from your compromised key until they retrieve the revocation from any
+keyservers, which in some cases is longer than a key should rightfully exist
+(or not at all).</p>
+
+<p>The third and final option is the one Im personally most preferential too.
+Allow the master key to never expire, but have a reasonable expiration time on
+all subkeys (1-2 years). Ensure signatures of other users keys are done with
+the master key. Keep the master isolated across an airgap and encrypted.</p>
+
+<p>Only subkeys and the public portion of the master should exist on any machine
+besides the dedicated airgap. This allows for the subkeys to expire
+automatically without the rediculous hassle of having to re-sign all trusted
+peers keys.</p>
+
+<h2 id="useful-commands">Useful commands</h2>
+
+<p>I used the following commands on an exported private key to see the contents
+and verify the subkeys were also included:</p>
+
+<pre><code>[user@host ~]$ gpg --dry-run -vvv --allow-secret-key-import --import &lt;keyid&gt;.private.gpg-key
+</code></pre>
+
+<p>Viewing signatures on a key:</p>
+
+<pre><code>[user@host ~]$ gpg --list-sigs &lt;keyid&gt;
+</code></pre>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  
+  </div>
+</footer>
+
+
+  </article>
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='mailto:sam@stelfox.net' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/SamStelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://keybase.io/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Keybase account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <g transform="matrix(0.5, 0, 0, 0.5, -120,-205)">
+    <path d="M247.8,451.8c-0.6-1.3-1.4-3.1-1.8-4l-0.6-1.7l-2,2.2l-2,2.2 l-0.2-4.2c-0.3-6,0.2-12.2,1.2-16.6c2.3-9.8,9.5-18.7,18.8-23.4l2.1-1l-0.5-1.5c-0.3-0.8-0.6-2.5-0.7-3.6l-0.2-2.1l-2.1-0.2 c-3.2-0.3-4.9-1.2-6-3.5c-0.6-1.2-0.6-1.4-0.4-4.6c0.2-4.2,0.5-5.1,1.8-6.5c1.6-1.8,2.7-2.1,6.7-1.9c2.9,0.2,3.5,0.3,4.8,0.9 c0.8,0.4,1.5,0.8,1.6,0.8c0.1,0,1-1.1,2.1-2.6l1.9-2.7l1.2,0.7c0.7,0.4,1.5,0.9,1.9,1.1l0.7,0.4l-0.6,1.5c-0.3,0.8-0.7,2.2-0.8,2.9 l-0.2,1.4l1.7,0.2c6.1,0.6,10.7,4.3,12.4,9.9c0.5,1.8,0.5,5.3,0,7c-0.5,1.6-0.5,1.7-0.1,1.7c0.7,0,5.4,2.3,7.3,3.5 c3.7,2.4,8,6.6,10.4,10.2c4.5,6.7,6.4,14,5.6,22c-0.4,4.8-1.3,8.6-2.9,12.3l-0.6,1.4l-2.5,0l-2.5,0l1.2-2.4 c1.3-2.6,2.3-6.2,2.8-9.4c0.3-2.2,0.4-8.2,0.1-9.3l-0.2-0.7l-1.3,1.4c-3.2,3.5-7.9,4.5-14.2,2.8c-5.4-1.4-7.6-1.7-12.7-1.7 c-3.9,0-5.2,0.1-7.3,0.6c-5.8,1.3-9.9,3.2-15.6,7.3c-2.1,1.5-3.8,2.7-3.9,2.7c-0.1,0,0.2-1,0.6-2.3c0.4-1.3,1.1-3.4,1.5-4.8 l0.8-2.5l-0.9,0.9c-0.5,0.5-1.9,1.9-3.1,3.2l-2.1,2.3l0.5,1.9c0.6,2.5,2,5.6,3.5,7.9c0.6,1,1.1,1.8,1.1,1.9s-1.2,0.1-2.6,0.1h-2.6 L247.8,451.8L247.8,451.8z M256.6,427.6c4.8-5.1,8.7-9.2,8.8-9.2c0.1,0.1-0.4,1.6-0.9,3.3c-3.3,10.4-4,12.4-3.9,12.5 c0,0,1.2-0.4,2.5-0.9c8.5-3.7,18.4-4.2,28.9-1.4c4.7,1.2,6.5,1.2,8.8,0c1.3-0.7,1.8-1.1,2.4-2.1c1.1-1.7,1.2-4.1,0.5-6.3 c-1.7-4.8-8.3-11-14.5-13.7c-3.2-1.4-3.4-1.4-4.1-0.7l-0.6,0.6l2.6,3.2c1.4,1.7,2.9,3.6,3.1,4.1c0.6,1.2,0.7,3.1,0.1,4.3 c-0.8,1.7-3.2,2.9-5.1,2.5c-0.8-0.2-1.1-0.1-1.9,0.5c-2.2,1.6-4.6,1.2-6.6-1.2c-1.6-1.8-2-2.7-2.1-4.5c0-0.9-0.3-2-0.5-2.4 c-0.3-0.6-0.4-1.3-0.4-2.2l0.1-1.4l-1.3-0.3c-1.8-0.5-3.9-1.5-5.1-2.4c-0.6-0.4-1.1-0.8-1.3-0.8s-1.5,0.6-2.9,1.3 c-9.7,5-16,14.3-17,24.8c-0.1,1-0.2,2.3-0.3,2.8l-0.1,0.9l1.1-1.1C247.4,437.3,251.8,432.7,256.6,427.6L256.6,427.6z M282.5,420.2 c0.9-0.7,1.7-1.3,1.9-1.3c0.1,0,0.4,0.3,0.7,0.7c0.5,0.8,1.4,0.8,1.8,0.1c0.3-0.5,0.3-0.6-5.6-7.8c-3.5-4.3-4.2-5-4.7-5 c-1.2,0.1-0.9,1,1,3.3l1.8,2.2l-1,0.8c-1.1,1-1.2,1.2-0.5,1.8c0.5,0.5,0.6,0.4,1.6-0.3l1.1-0.7l0.7,0.6c0.4,0.3,0.6,0.8,0.6,0.9 c0,0.2-0.8,0.9-1.7,1.7c-0.9,0.7-1.6,1.5-1.6,1.7c0,0.3,0.5,1.1,1.4,2.2C280.3,421.7,280.8,421.5,282.5,420.2L282.5,420.2z  M272.2,406c0.6-1.8,2.6-3.2,4.6-3.2c1.1,0,2.7,0.9,3.8,2.1l1,1.2l0.9-1.1c2.5-2.8,2.8-6.7,0.8-10.1c-1.5-2.5-4.3-4-8.2-4.4 c-2.1-0.2-2.6-0.4-3.7-1.5l-0.8-0.8l-0.4,0.6c-0.8,1.2-2.5,5.1-3,6.6c-0.7,2.3-0.4,5.9,0.5,7.7c0.9,1.7,3.3,4,4,3.7 C271.8,406.9,272,406.5,272.2,406L272.2,406z M263.3,392.4c0.2-0.5,0.7-1.8,1.2-2.8c0.5-1,0.9-2,0.9-2.3c0-0.9-1-1.3-3.7-1.5 c-2.4-0.2-2.6-0.1-3.1,0.4c-0.4,0.4-0.6,0.9-0.6,1.6c0,0.6-0.1,1.7-0.2,2.6c-0.2,2.1,0.1,2.5,2.2,2.8 C263.1,393.4,263,393.4,263.3,392.4z M260.2,390c0-1.7,0.2-1.9,1.6-1.9h1.3v1.4v1.4h-1.4h-1.4V390z M266.5,448.3 c-0.6-0.6-0.8-1-0.8-2c0-1.9,1.1-3,2.9-3c1.7,0,2.9,1.2,2.9,2.9c0,1.8-1.1,2.8-3,2.9C267.5,449.1,267.1,448.9,266.5,448.3 L266.5,448.3z M285.8,448.6c-2.3-1.8-1.1-5.3,1.8-5.3c1.8,0,2.8,1.1,2.9,3c0,1.1-0.1,1.4-0.8,2s-1,0.8-2,0.8 C286.8,449.1,286.2,448.9,285.8,448.6L285.8,448.6z"/>
+  </g>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://facebook.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Facebook account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://linkedin.com/in/samstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Linkedin account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+       &copy; 2011-2017 Sam Stelfox - Content license information can be found on the <a rel='license' href='/licenses/'>licensing page</a>.
+  </p>
+</div>
+
+      </div>
+    </footer>
+  </div><script src='/assets/js/main.f29c93b9.js'></script><script src='/js/custom.js'></script></body>
+</html>
+
