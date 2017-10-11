@@ -21,7 +21,7 @@ With good backups in place this can help identify what changes were made by an
 attacker after a breach which can be invaluable in knowing both the impact and
 intent of a security incident.
 
-## Import Caveat
+## Important Caveat
 
 There does seems to be an issue that causes core dumps like so:
 
@@ -71,10 +71,10 @@ following command:
 Depending on the amount of packages installed on your system and the speed of
 your disks this can take quite some time (on a fairly minimal production system
 for me this took about two minutes). You then need to copy the created database
-into the reference location:
+into the reference location (these locations are dependent on [my config][3]):
 
 ```sh
-# cp /var/lib/aide/aide.db{.new,}.gz
+# cp /var/lib/aide/aide-$(hostname -f).db.new.gz /var/lib/aide/reference/aide-$(hostname -f).db.gz
 ```
 
 You can confirm the system is working with:
