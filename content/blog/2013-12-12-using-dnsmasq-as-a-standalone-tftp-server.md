@@ -8,9 +8,8 @@ title: Using Dnsmasq as a Standalone TFTP Server
 ---
 
 *If you've come across this blog post with the intention of setting up TFTP on
-an modern version of OpenWRT I have a [more recent blog post]({{< relref
-"2014-07-01-using-openwrts-dnsmasq-as-a-tftp-server.md" >}}) detailing how too
-configure your system.*
+an modern version of OpenWRT I have a [more recent blog post][1] detailing how
+too configure your system.*
 
 I found myself in need of a TFTP server but wanted to avoid having all of the
 xinet.d packages and services on my system (even if they were disabled). While
@@ -54,3 +53,5 @@ systemctl start dnsmasq.service
 
 Voila, TFTP running and happy. If you have a firewall running you'll also want
 to open ports 69/tcp and 69/udp (though I suspect only the UDP one is needed).
+
+[1]: {{< relref "2014-07-01-using-openwrts-dnsmasq-as-a-tftp-server.md" >}}

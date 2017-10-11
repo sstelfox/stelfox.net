@@ -21,9 +21,9 @@ locks up all the terminals in the same window, and prevents you from changing
 to the other windows.
 
 I've had this issue happen to me one too many times but never thought of
-looking for a solution until a friend of mine, [Gabe
-Koss](http://gabekoss.com/), made a passing comment along the lines of "Too bad
-tmux can't rate limit the output of a terminal".
+looking for a solution until a friend of mine, [Gabe Koss][1], made a passing
+comment along the lines of "Too bad tmux can't rate limit the output of a
+terminal".
 
 A quick search through the doc and two relatively recent configuration options
 popped out doing exactly what I was looking for (c0-change-internal, and
@@ -40,11 +40,10 @@ the tmux man page, the trigger will catch if the number of c0 sequences per
 will start displaying an update once every interval number of milliseconds.
 
 I can't see faster than my eye's refresh rate so that seems like a decent
-starting point. According to
-[wikipedia](http://en.wikipedia.org/wiki/Frame_rate) the human eye/brain
-interface can process 10-12 images per second but we can notice 'choppiness'
-below 48 FPS.  Since I won't be reading anything flying by that fast I settled
-on a maximum rate of 10 FPS updated in my shell, or an interval of '100ms'.
+starting point. According to [wikipedia][2] the human eye/brain interface can
+process 10-12 images per second but we can notice 'choppiness' below 48 FPS.
+Since I won't be reading anything flying by that fast I settled on a maximum
+rate of 10 FPS updated in my shell, or an interval of '100ms'.
 
 For the trigger I was signficantly less scientific, I dropped the trigger by
 50, reloaded my tmux configuration, cat'd a large file and tested whether I
@@ -59,3 +58,6 @@ better shape:
 setw -g c0-change-interval 50
 setw -g c0-change-trigger  75
 ```
+
+[1]: http://gabekoss.com/
+[2]: http://en.wikipedia.org/wiki/Frame_rate

@@ -54,10 +54,9 @@ in the same format.
 
 I couldn't find any good Ruby code that calculated either, and the alternatives
 were some dense C++. Luckily SSH fingerprints are pretty documented in
-[RFC4253](http://www.ietf.org/rfc/rfc4253.txt) and
-[RFC4716](http://www.ietf.org/rfc/rfc4716.txt). Fingerprints on RSA keys for
-use with OpenSSL are less clear, and there is a different method for
-calculating the fingerprints of certificates.
+[RFC4253][1] and [RFC4716][2]. Fingerprints on RSA keys for use with OpenSSL
+are less clear, and there is a different method for calculating the
+fingerprints of certificates.
 
 Slowly working through the undocumented bits of Ruby's OpenSSL wrapper, the
 RFCs and a couple of C++ implementations I finally got a set of working
@@ -90,7 +89,7 @@ upper case hex codes).
 The next one I got working was the SSH fingerprints thanks to the RFCs metioned
 earlier.
 
-```by
+```ruby
 require 'openssl'
 
 path_to_key = '/tmp/ssh_key'
@@ -106,9 +105,8 @@ Calculating a SHA1 fingerprint for SSH hosts is as simple as replacing the
 'MD5' class with 'SHA1' or any of the other support digest algorithms.
 
 The last one was the hardest to track down and implement, eventually I found
-the answer in [RFC3279](http://www.ietf.org/rfc/rfc3279.txt) under section
-2.3.1 for the format of the public key I would need to generate before
-performing a digest calculation on it.
+the answer in [RFC3279][3] under section 2.3.1 for the format of the public key
+I would need to generate before performing a digest calculation on it.
 
 ```ruby
 require 'openssl'
@@ -122,3 +120,7 @@ data_string = OpenSSL::ASN1::Sequence([
 ])
 puts OpenSSL::Digest::SHA1.hexdigest(data_string.to_der).scan(/../).join(':')
 ```
+
+[1]: http://www.ietf.org/rfc/rfc4253.txt
+[2]: http://www.ietf.org/rfc/rfc4716.txt
+[3]: http://www.ietf.org/rfc/rfc3279.txt
