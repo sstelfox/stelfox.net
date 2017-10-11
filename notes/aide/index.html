@@ -97,7 +97,7 @@ With good backups in place this can help identify what changes were made by an
 attacker after a breach which can be invaluable in knowing both the impact and
 intent of a security incident.</p>
 
-<h2 id="import-caveat">Import Caveat</h2>
+<h2 id="important-caveat">Important Caveat</h2>
 
 <p>There does seems to be an issue that causes core dumps like so:</p>
 
@@ -142,8 +142,8 @@ following command:</p>
 <p>Depending on the amount of packages installed on your system and the speed of
 your disks this can take quite some time (on a fairly minimal production system
 for me this took about two minutes). You then need to copy the created database
-into the reference location:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"># cp /var/lib/aide/aide.db<span style="color:#f92672">{</span>.new,<span style="color:#f92672">}</span>.gz</code></pre></div>
+into the reference location (these locations are dependent on <a href="/note_files/aide/aide.conf">my config</a>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"># cp /var/lib/aide/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.new.gz /var/lib/aide/reference/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.gz</code></pre></div>
 <p>You can confirm the system is working with:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"># aide -C</code></pre></div>
 <p>If any monitored file or directory&rsquo;s attributes changed they will be reported
