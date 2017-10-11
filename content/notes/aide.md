@@ -60,12 +60,30 @@ files or installed packages may also trigger this.
 
 ## Initial Setup
 
-The defaults are sane for usage on a single system. After the initial
-installation the database needs to be initialized which can be done with the
-following command:
+The defaults are reasonably sane so you can continue with the default config
+that ships with several distributions, but there are several things it will
+miss. Arch Linux's default doesn't catch:
+
+* SELinux and extended attributes (though SELinux doesn't apply)
+* Permissions and security hearings under /dev
+* Any of the content or security attributes for most files under /etc
+* /lib64 (though if it's a symlink it's likely covered)
+* /srv (though it's not commonly used)
+
+I have one [that avoids][3] these issues. I recommend reviewing it,
+understanding it, and adjusting it for your environment before installing it to
+`/etc/aide.conf`. Be sure to restrict access to the file appropriately:
 
 ```sh
-# aide -i
+chmod 0600 /etc/aide.conf
+chown root:root /etc/aide.conf
+```
+
+You need to initialize the database as a baseline for the system, which can be
+done with the following command:
+
+```sh
+aide --init
 ```
 
 Depending on the amount of packages installed on your system and the speed of
@@ -74,13 +92,13 @@ for me this took about two minutes). You then need to copy the created database
 into the reference location (these locations are dependent on [my config][3]):
 
 ```sh
-# cp /var/lib/aide/aide-$(hostname -f).db.new.gz /var/lib/aide/reference/aide-$(hostname -f).db.gz
+cp /var/lib/aide/aide-$(hostname -f).db.new.gz /var/lib/aide/reference/aide-$(hostname -f).db.gz
 ```
 
 You can confirm the system is working with:
 
 ```sh
-# aide -C
+aide --check
 ```
 
 If any monitored file or directory's attributes changed they will be reported
@@ -97,7 +115,7 @@ If you make any changes it is wise to validate the config afterwards by
 running:
 
 ```sh
-# aide -D
+aide --config-check
 ```
 
 It will produce no output and exit with a zero status if the configuration is
