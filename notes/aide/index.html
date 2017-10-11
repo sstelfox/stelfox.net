@@ -135,17 +135,33 @@ files or installed packages may also trigger this.</p>
 
 <h2 id="initial-setup">Initial Setup</h2>
 
-<p>The defaults are sane for usage on a single system. After the initial
-installation the database needs to be initialized which can be done with the
-following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"># aide -i</code></pre></div>
+<p>The defaults are reasonably sane so you can continue with the default config
+that ships with several distributions, but there are several things it will
+miss. Arch Linux&rsquo;s default doesn&rsquo;t catch:</p>
+
+<ul>
+<li>SELinux and extended attributes (though SELinux doesn&rsquo;t apply)</li>
+<li>Permissions and security hearings under /dev</li>
+<li>Any of the content or security attributes for most files under /etc</li>
+<li>/lib64 (though if it&rsquo;s a symlink it&rsquo;s likely covered)</li>
+<li>/srv (though it&rsquo;s not commonly used)</li>
+</ul>
+
+<p>I have one <a href="/note_files/aide/aide.conf">that avoids</a> these issues. I recommend reviewing it,
+understanding it, and adjusting it for your environment before installing it to
+<code>/etc/aide.conf</code>. Be sure to restrict access to the file appropriately:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">chmod <span style="color:#ae81ff">0600</span> /etc/aide.conf
+chown root:root /etc/aide.conf</code></pre></div>
+<p>You need to initialize the database as a baseline for the system, which can be
+done with the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">aide --init</code></pre></div>
 <p>Depending on the amount of packages installed on your system and the speed of
 your disks this can take quite some time (on a fairly minimal production system
 for me this took about two minutes). You then need to copy the created database
 into the reference location (these locations are dependent on <a href="/note_files/aide/aide.conf">my config</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"># cp /var/lib/aide/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.new.gz /var/lib/aide/reference/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.gz</code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cp /var/lib/aide/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.new.gz /var/lib/aide/reference/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.gz</code></pre></div>
 <p>You can confirm the system is working with:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"># aide -C</code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">aide --check</code></pre></div>
 <p>If any monitored file or directory&rsquo;s attributes changed they will be reported
 to both stdout and written to <code>/var/log/aide/aide.log</code>. This file is always
 completely rewritten after every run, if you want to keep historical reports,
@@ -158,7 +174,7 @@ files of your system as they may not be included in the default config.</p>
 
 <p>If you make any changes it is wise to validate the config afterwards by
 running:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"># aide -D</code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">aide --config-check</code></pre></div>
 <p>It will produce no output and exit with a zero status if the configuration is
 valid.</p>
 
