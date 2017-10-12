@@ -1,0 +1,91 @@
+# /etc/audit/audit.rules
+
+# Please note: Audit rules vary based on the platform it is running on. These
+# rules are written for a x86_64 system. If your system is not x86_64 you'll
+# want to pay special attention to these rules and look for things that may be
+# missing for your architecture.
+
+# Reset any existing rules currently in the kernel
+-D
+
+# Increase our buffer size to prevent spikes of messages from DoS'ing the
+# system. These don't consume much memory relative to the amount commonly found
+# in servers. If the system is incredibly busy in ways that trigger these audit
+# messages you will likely want to increase this buffer size and tune down what
+# is being audited.
+-b 8192
+
+# The kernel should not perform any kind of time based backoff if the backlog
+# limit is reached. This only really applies if the failure mode is not set to
+# panic.
+--backlog_wait_time 0
+
+# What should the kernel do if the auditing subsystem fails for any reason? A
+# value of 0 is silent, basically do nothing. 1 will print an error to the
+# kernel log. Finally, 2, the safest but most disruptive option is to trigger a
+# kernel panic. Generally while tuning I recommend setting this 1. Once the
+# rules have been tested and are stable, changing this to 2 is the safe bet.
+-f 1
+
+# Ensure the loginuid remains immutable. This prevents even administrative
+# users from masquerading as any other user, but may cause issues with some
+# container systems.
+--loginuid-immutable
+
+## Don't Audit Rules
+
+# Audit rules are first-match-exit, and there are certain types of messages we
+# may not care to log. The following three rules are some examples of calls
+# that may want to be filtered out.
+
+# Cron jobs are regular and expected, for these logs they are likely going to
+# be noise. If you enable this rule ensure changes to the system cron files are
+# audited.
+#-a never,user -F subj_type=crond_t
+
+# If you use chrony as your time keeping client. It makes quite a few small
+# changes to the time during its normal operation. To avoid flooding the logs
+# with these message we can exclude chrony time changes:
+#-a never,exit -F arch=b64 -S adjtimex -F auid=unset -F uid=chrony -F subj_type=chronyd_t
+
+# If you're hosting a public SSH server on the default port or any other
+# service that may get scanned or botted regularily you may want to enable this
+# rule. It can be interesting, but you'll mostly be receiving junk from bots
+# trying common passwords on your server and general internet scans...
+#-a always,exclude -F msgtype=CRYPTO_KEY_USER
+
+## 32bit Monitoring
+
+# On 64 bit hosts, 32 bit compatibility calls are becoming increasingly rare.
+# Everything should generally be running in 64 bit mode. This rule logs any
+# attempts on the system to make use of the 32 bit ABIs. Another alternative
+# for this may be to custom compile your kernel without the ABI entirely.
+-a always,exit -F arch=b32 -S all -k 32bit-abi
+
+## Monitor Changes to Time
+
+-a always,exit -F arch=b64 -S adjtimex,settimeofday,stime -k timeChange
+-a always,exit -F arch=b64 -S clock_settime -F a0=0x0 -k timeChange
+# TODO: This line needs testing as it can apparently make false positives...
+#-a always,exit -F arch=b64 -S clock_adjtime -k timeChange
+-w /etc/localtime -p wa -k timeChange
+
+## Monitor Changes to the Systems Identity
+
+-a always,exit -b arch=b64 -S sethostname,setdomainname -k systemIdentity
+-w /etc/conf.d/hostname -p wa -k systemIdentity
+-w /etc/hostname -p wa -k systemIdentity
+
+## Network Configuration Changes (TODO)
+
+-w /etc/hosts -p wa -k networkChange
+
+### TODO: This file is still a work in progress ###
+
+# This controls the state of the auditing subsystem. -e 0 disables the auditing
+# system entirely, -e 1 will enable the system, and -e 2 will enable the system
+# and prevent any future changes to the auditing rules (requiring a restart for
+# rules to be removed or added). During rule tuning, this should be set to -e
+# 1. Once the rules are in place it should be upgraded to -e 2 to ensure
+# attackers can't disable the auditing rules.
+-e 1

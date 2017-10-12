@@ -1,8 +1,8 @@
 build:
-	hugo
+	@hugo
 
 clean:
-	rm -rf public/*
+	@rm -rf public/*
 
 depends:
 	go get -u -v github.com/gohugoio/hugo
