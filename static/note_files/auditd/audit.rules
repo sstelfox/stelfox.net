@@ -54,6 +54,8 @@
 # trying common passwords on your server and general internet scans...
 #-a always,exclude -F msgtype=CRYPTO_KEY_USER
 
+# TODO: You'll likely want to filter out PROCTITLE events...
+
 # Fail fast for common syscalls
 #-a exit,never -F arch=b64 -S brk,close,dup2,fcntl,fstat,fstatat,lstat,mmap,munmap,nanosleep,open,read,rt_sigaction,stat,write
 
@@ -217,6 +219,7 @@
 
 ## Monitor Network Accepts & Connects
 
+# TODO: May want to find a way to ignore local unix sockets
 -a always,exit -F arch=b64 -S accept,connect -F key=networkControl
 
 # This controls the state of the auditing subsystem. -e 0 disables the auditing
