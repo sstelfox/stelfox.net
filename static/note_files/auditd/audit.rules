@@ -67,7 +67,7 @@
 
 ## Monitor Changes to Time
 
--a always,exit -F arch=b64 -S adjtimex,settimeofday,stime -F key=timeChange
+-a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=timeChange
 -a always,exit -F arch=b64 -S clock_settime -F a0=0x0 -F key=timeChange
 # TODO: This line needs testing as it can apparently make false positives...
 #-a always,exit -F arch=b64 -S clock_adjtime -F key=timeChange
@@ -75,7 +75,7 @@
 
 ## Network Environment Changes
 
--a always,exit -b arch=b64 -S sethostname,setdomainname -F key=systemIdentity
+-a always,exit -F arch=b64 -S sethostname,setdomainname -F key=systemIdentity
 -a always,exit -F path=/etc/conf.d/hostname -F perm=wa -F key=systemIdentity
 -a always,exit -F path=/etc/hostname -F perm=wa -F key=systemIdentity
 
@@ -146,7 +146,7 @@
 -a always,exit -F path=/etc/audisp -F perm=wa -F key=auditIntegrity
 -a always,exit -F path=/etc/audit -F perm=wa -F key=auditIntegrity
 -a always,exit -F path=/etc/libaudit.conf -F perm=wa -F key=auditIntegrity
--a always,exit -F path=/var/log/audit -F perm=wa -F auid>=1000 auid!=4294967295 -F key=auditIntegrity
+-a always,exit -F path=/var/log/audit -F perm=wa -F auid>=1000 -F auid!=4294967295 -F key=auditIntegrity
 
 ## AIDE Needs to be Protected as Well
 
@@ -180,7 +180,7 @@
 
 ## Monitor the MAC Policy
 
--a always,exit -F path=/etc/selinux -r wa -F key=macPolicy
+-a always,exit -F path=/etc/selinux -F perm=wa -F key=macPolicy
 
 ## Mount and Unmount Operations
 
@@ -188,7 +188,7 @@
 
 ## Detect an admin accessing other user's files
 
--a always,exit -F path=/home -F uid=0 -F auid>=1000 auid!=4294967295 -C auid!=obj_uid -F key=powerAbuse
+-a always,exit -F path=/home -F uid=0 -F auid>=1000 -F auid!=4294967295 -C auid!=obj_uid -F key=powerAbuse
 
 ## Monitor Container Creation & Configuration
 
