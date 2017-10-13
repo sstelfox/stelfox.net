@@ -3,17 +3,17 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:title' content='Blog Posts • Sam Stelfox'>
-<meta property='og:description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:url' content='https://stelfox.net/blog/'>
+<meta name='description' content='Auditd collects any configured syscall execution with critical security metadata associated with the event. This can help enrich other security tools such as AIDE to determine what user and process are responsible for the change.
+For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&rsquo;s audit subsystem, may trigger a kernel panic.'>
+<meta property='og:title' content='Auditd • Sam Stelfox'>
+<meta property='og:description' content='Auditd collects any configured syscall execution with critical security metadata associated with the event. This can help enrich other security tools such as AIDE to determine what user and process are responsible for the change.
+For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&rsquo;s audit subsystem, may trigger a kernel panic.'>
+<meta property='og:url' content='https://stelfox.net/notes/auditd/'>
 <meta property='og:site_name' content='Sam Stelfox'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content='2017-10-12T15:33:21-04:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-12T15:33:21-04:00'/><meta property='article:modified_time' content='2017-10-12T15:33:21-04:00'/>
 
-  <title>Blog Posts • Sam Stelfox</title>
-  <link rel='canonical' href='https://stelfox.net/blog/'>
-  
-    <link href="https://stelfox.net/blog/index.xml" rel="alternate" type="application/rss+xml" title="Sam Stelfox" />
+  <title>Auditd • Sam Stelfox</title>
+  <link rel='canonical' href='https://stelfox.net/notes/auditd/'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -29,7 +29,7 @@ ga('send', 'pageview');
 </head>
 
 
-<body class='section type-blog'>
+<body class='page type-notes'>
   <div class='site'>
     <a class='screen-reader' href='#main'>Skip to Content</a>
     <header id='header' class='header-container'>
@@ -43,7 +43,7 @@ ga('send', 'pageview');
       <a href='/about/'>About</a>
     </li>
   <li>
-      <a class='current' aria-current='page' href='/blog/'>Blog Posts</a>
+      <a href='/blog/'>Blog Posts</a>
     </li>
   <li>
       <a href='/notes/'>Various Notes</a>
@@ -63,257 +63,119 @@ ga('send', 'pageview');
 
 
 <main id='main' class='main'>
-  <header class='header-container'>
-    <div class='header list-header'>
-      <div class='header-info'>
-        <h1 class='title'>Blog Posts</h1>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Auditd</h1>
+      
 
-        
-
-      </div>
     </div>
-  </header>
+    
 
-  
-  <div class='entry'>
+  </div>
+</header>
+
+    
+    
+
     <div class='entry-content'>
-  <p>Here I&rsquo;ve collected my thoughts over time. If you find anything particularly
-useful, or in error I hope you&rsquo;ll take the time to <a href="mailto:sam@stelfox.net" target="_blank">send me an email</a>.</p>
+  
+
+<p>Auditd collects any configured syscall execution with critical security
+metadata associated with the event. This can help enrich other security tools
+such as <a href="/notes/aide/" target="_blank">AIDE</a> to determine what user and process are responsible for the
+change.</p>
+
+<p>For reliable operation the rules should be carefully tuned to your system.
+Tracking every write to disk will generate an unreasonable amount of events and
+depending on the configuration of the kernel&rsquo;s audit subsystem, may trigger a
+kernel panic.</p>
+
+<p>Auditd will also identify the IP address a remote user is connecting in allow
+cross system tracing of events.</p>
+
+<h2 id="recommended-events-to-audit">Recommended Events to Audit</h2>
+
+<ul>
+<li>All logins to the system</li>
+<li>Writes &amp; attribute changes on sensitive files that are largely static
+(think /etc)</li>
+<li>Writes &amp; attribute changes to critical system binaries</li>
+<li>Write to the kernel / initramfs</li>
+<li>Any program executed with root privileges</li>
+<li>Any program execution that has the suid bit set</li>
+<li>Changes to SELinux policies</li>
+<li>Time / Date changes (both to the system and sensitive files)</li>
+<li>Truncation of log files</li>
+<li>Access to the audit and audit reporting tools and logs</li>
+<li>Creation, modification, and deletion of special files (think mknod)</li>
+<li>Mount and Unmount operations</li>
+<li>User &amp; Group creation and removal</li>
+<li>Read/write access to private key material</li>
+<li>Changes to the hostname</li>
+<li>Any failure to access a file</li>
+<li>Changes to power state (such as shutdown)</li>
+<li>Administrative access to user home directories</li>
+<li>Executions out of temporary directories (Only important if this is possible,
+but never hurts)</li>
+</ul>
+
+<h2 id="log-integrity">Log Integrity</h2>
+
+<p>For these logs to be meaningful they need to be shipped off a system. Auditd
+itself can receive audit events over the network and comes with a utility for
+pushing them over the network. Without kerberos though these events are sent
+without authentication or encryption and could be tampered with or spoofed by a
+crafty attacker.</p>
+
+<p>Some log aggregators are able to read (tail) files and consume the lines as
+events (such as <a href="/notes/rsyslog/" target="_blank">RSyslog</a>) and do so over a SSL or otherwise encrypted
+tunnel.</p>
+
+<p>The final option for getting logs off the system, is to specify a custom
+dispatcher using the <code>dispatcher</code> config option in <code>/etc/audit/auditd.conf</code>.
+This needs to be an executable on the system that will take audit records
+through STDIN. A custom dispatcher could POST individual events to an API, log
+the events directly to syslog, or anything else that can be coded. This will be
+run with root permissions, so the ability for it to drop permissions is highly
+desirable.</p>
+
+<h2 id="configuration">Configuration</h2>
+
+<p>I have a sample <a href="/note_files/auditd/auditd.conf">/etc/audit/auditd.conf</a> and <a href="/note_files/auditd/libaudit.conf">/etc/libaudit.conf</a>
+available as well as a matching set of <a href="/note_files/auditd/audit.rules">/etc/audit/audit.rules</a> that are
+tuned for my environments. I consider them a good starting point for other
+people wanting detailed auditing logs.</p>
+
+<h2 id="more-references">More References</h2>
+
+<ul>
+<li><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html" target="_blank">https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html</a></li>
+<li><a href="http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf" target="_blank">http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf</a></li>
+<li><a href="https://security.stackexchange.com/questions/4629/simple-example-auditd-configuration" target="_blank">https://security.stackexchange.com/questions/4629/simple-example-auditd-configuration</a></li>
+</ul>
 
 </div>
 
-  </div>
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
-
-  <div class='list-container'>
-    <ul class='list'>
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2016-02-26T17:45:22-05:00'>2016, Feb 26</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2016/02/better-practices-with-sudo/'>Better Practices With Sudo</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2016-02-18T15:46:12-05:00'>2016, Feb 18</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2016/02/sharing-context-between-dependent-rake-tasks/'>Sharing Context Between Dependent Rake Tasks</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2015-04-22T16:47:10-04:00'>2015, Apr 22</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2015/04/ruby-code-quality-metrics/'>Ruby Code Quality Metrics</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2015-04-13T20:47:40-04:00'>2015, Apr 13</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2015/04/creating-an-empty-git-branch/'>Creating an Empty Git Branch</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2015-02-23T12:49:13-05:00'>2015, Feb 23</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2015/02/unbuffered-pipe-filters/'>Unbuffered Pipe Filters</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2014-08-12T16:16:14-04:00'>2014, Aug 12</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2014/08/dependency-prelink-issues/'>Dependency Prelink Issues</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2014-08-01T19:50:24-04:00'>2014, Aug 01</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2014/08/fast-hex-to-decimal-in-bash/'>Fast Hex to Decimal in Bash</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2014-07-30T10:46:13-04:00'>2014, Jul 30</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2014/07/spf-and-dkim-records-in-route-53/'>SPF &amp; DKIM Records in Route 53</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2014-07-22T21:54:59-04:00'>2014, Jul 22</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2014/07/unregistering-from-whisperpush-after-flashing-a-new-rom/'>Unregistering From WhisperPush After Flashing a New ROM</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2014-07-01T21:26:45-04:00'>2014, Jul 01</time>
-</span>
-
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2014/07/using-openwrts-dnsmasq-as-a-tftp-server/'>Using OpenWRT&#39;s Dnsmasq as a TFTP Server</a>
-      </h3>
-    </header>
-  </article>
-</li>
-
-      
-    </ul>
-
-    
-<nav class='pagination'>
-  <div class='page-links'>
-    
-      
-      <span class='page-link current'>
-        <span class='screen-reader'>Current page: </span>1</span>
-      
-    
-      
-      <a class='page-link' href='/blog/page/2/'>
-        <span class='screen-reader'>Page: </span>2</a>
-      
-    
-      
-        <span class='page-link dots'>&hellip;</span>
-        
-      
-    
-      
-        
-      
-    
-      
-      <a class='page-link' href='/blog/page/5/'>
-        <span class='screen-reader'>Page: </span>5</a>
-      
-    
-
-    
-    <a class='page-link' href='/blog/page/2/'>
-      <span class='screen-reader'>Next page</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
   
 </svg>
-</a>
-    
-  </div>
-</nav>
-
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/security'>Security</a></div>
 
   </div>
+</footer>
+
+
+  </article>
 </main>
 
     <footer id='footer' class='footer-container'>
