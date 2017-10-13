@@ -75,6 +75,7 @@ people wanting detailed auditing logs.
 * https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html
 * http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf
 * https://security.stackexchange.com/questions/4629/simple-example-auditd-configuration
+* https://linux-audit.com/tuning-auditd-high-performance-linux-auditing/
 
 [1]: {{< relref "notes/aide.md" >}}
 [2]: {{< relref "notes/rsyslog.md" >}}
