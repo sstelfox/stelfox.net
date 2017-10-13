@@ -31,13 +31,17 @@ git clone --branch gh-pages --single-branch git@github.com:sstelfox/stelfox.net.
 make build
 
 # Deploy the new changes
-pushd public/ &> /dev/null
-if ! git diff --quiet --exit-code; then
-  git add -A
-  git commit -m "Site content update"
-  git push
+if [ "${STEALTH:-}" != "true" ]; then
+  pushd public/ &> /dev/null
+
+  if ! git diff --quiet --exit-code; then
+    git add -A
+    git commit -m "Site content update"
+    git push
+  fi
+
+  popd &> /dev/null
 fi
-popd &> /dev/null
 
 # Sync the file to the webserver as well
 rsync -vrz --delete --cvs-exclude public/ web01:sites/stelfox.net/
