@@ -31,3 +31,5 @@ date
 hwclock --show
 ```
 
+[1]: {{< relref "notes/chronyd.md" >}}
+[2]: {{< relref "notes/ntpd.md" >}}
