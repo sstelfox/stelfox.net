@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tips - Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+    <link>https://stelfox.net/tags/tips/</link>
+    <description>Recent content in Tips - Sam Stelfox&#39;s Thoughts &amp; Notes</description>
+    <language>en-US</language>
+    <managingEditor>Sam Stelfox</managingEditor>
+    <webMaster>Sam Stelfox</webMaster>
+    <lastBuildDate>Mon, 09 Oct 2017 23:05:43 +0000</lastBuildDate><atom:link href="https://stelfox.net/tags/tips/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Disk Errors</title>
+      <link>https://stelfox.net/notes/disk-errors/</link>
+      <pubDate>Mon, 09 Oct 2017 23:05:43 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/disk-errors/</guid>
+      <description>This is a weird file&amp;hellip; But while installing gentoo on a disk I started getting a weird error when printing the current partitions on the drive:
+Warning: The driver descriptor says the physical block size is 2048 bytes, but Linux says it is 512 bytes.  The only thing I&amp;rsquo;ve been able to find anywhere about this is &amp;ldquo;a low-level device tool (like dd) wrote blocks at the wrong size directly onto the device&amp;rdquo;.</description>
+    </item><item>
+      <title>Creating an Empty Git Branch</title>
+      <link>https://stelfox.net/blog/2015/04/creating-an-empty-git-branch/</link>
+      <pubDate>Mon, 13 Apr 2015 20:47:40 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2015/04/creating-an-empty-git-branch/</guid>
+      <description>Every now and then I find myself wanting to create a new empty branch in an existing repository. It&amp;rsquo;s useful for things such as Github Pages so you&amp;rsquo;re able to keep your content source in the master branch while only keeping the output in the gh-pages branch. I&amp;rsquo;ve also used it for testing a complete rewrite of a code base without the overhead of creating a new repo and copying access permissions.</description>
+    </item><item>
+      <title>Unbuffered Pipe Filters</title>
+      <link>https://stelfox.net/blog/2015/02/unbuffered-pipe-filters/</link>
+      <pubDate>Mon, 23 Feb 2015 12:49:13 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2015/02/unbuffered-pipe-filters/</guid>
+      <description>I need to filter a live logstream for only relevant events and quickly hit an issue that I wasn&amp;rsquo;t expecting. The grep in my pipe chain was waiting until it received all the output from the prior command before it began to attempt to filter it.
+Reading through the grep man page I came across the --line-buffered flag which provides exactly what I needed. I wasn&amp;rsquo;t using the tail command but it serves really well in this situation to demonstrate the use:</description>
+    </item><item>
+      <title>Fast Hex to Decimal in Bash</title>
+      <link>https://stelfox.net/blog/2014/08/fast-hex-to-decimal-in-bash/</link>
+      <pubDate>Fri, 01 Aug 2014 19:50:24 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/08/fast-hex-to-decimal-in-bash/</guid>
+      <description>I needed too turn some hexidecimal values into decimal in a bash script and found a real easy way too do it. The following is a very short bash script demostrating how too turn the hexidecimal string &amp;ldquo;deadbeefcafe&amp;rdquo; into it&amp;rsquo;s equivalent decimal value of &amp;ldquo;244837814094590&amp;rdquo;.
+#!/bin/bash  INPUT=&amp;#34;deadbeefcafe&amp;#34; OUTPUT=$((0x${INPUT})) echo $OUTPUT</description>
+    </item><item>
+      <title>Extracting Content From Markdown</title>
+      <link>https://stelfox.net/blog/2014/05/extracting-content-from-markdown/</link>
+      <pubDate>Fri, 30 May 2014 18:34:29 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/05/extracting-content-from-markdown/</guid>
+      <description>Recently I&amp;rsquo;ve been playing around with building a pure javascript full text search engine for static content sites like this one. One of the challenges with doing this has been working around the Markdown markup embedded in the written content.
+Most of the markdown syntax can be stripped out simply by removing all non-alphanumeric characters from the document and move on. This doesn&amp;rsquo;t solve one of the bigger challenges I&amp;rsquo;ve experienced&amp;hellip; code blocks.</description>
+    </item><item>
+      <title>One-Liner SSL Certificate Generation</title>
+      <link>https://stelfox.net/blog/2014/03/one-liner-ssl-certificate-generation/</link>
+      <pubDate>Fri, 28 Mar 2014 14:52:51 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/03/one-liner-ssl-certificate-generation/</guid>
+      <description>I regularily find myself in need of generating a quick SSL key and certificate pair. I&amp;rsquo;ve been using a one-liner for a while to generate these certificates. No annoying user prompts just a quick fast certificate pair.
+echo -e &amp;#34;XX\n\n \n \n\n$(hostname)\n\n&amp;#34; | openssl req -new -x509 -newkey \  rsa:2048 -keyout service.key -nodes -days 90 -out service.crt &amp;amp;&amp;gt; /dev/null The cert uses the hostname of whatever machine you generated it on.</description>
+    </item><item>
+      <title>Finding Ruby Subclasses</title>
+      <link>https://stelfox.net/blog/2014/02/finding-ruby-subclasses/</link>
+      <pubDate>Thu, 20 Feb 2014 07:48:24 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/02/finding-ruby-subclasses/</guid>
+      <description>While working through a problem I found it would be immensely useful to be able to enumerate all of the current subclasses of a particular class. After thinking about this for a while I settled on a good old friend of mine, ObjectSpace.
+For those not familiar with the ObjectSpace module, it is a means to inspect and access the items being tracked by Ruby&amp;rsquo;s garbage collector. This means it has a hook into every living object, and more dangerously, every near-death object.</description>
+    </item><item>
+      <title>Setting Linux System Timezone</title>
+      <link>https://stelfox.net/blog/2014/02/setting-linux-system-timezone/</link>
+      <pubDate>Sat, 01 Feb 2014 13:50:46 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/02/setting-linux-system-timezone/</guid>
+      <description>I change the timezone on the linux systems so rarely that I almost always have to look it up. I&amp;rsquo;m writing it up here for my own personal reference. With any luck it&amp;rsquo;ll also help others.
+The system timezone is controlled by the /etc/localtime file and is generally symlinked to locale files stored in /usr/share/zoneinfo. Generally I like to keep my systems on UTC as I my machines are in several timezones and it makes all the logs have consistent times.</description>
+    </item><item>
+      <title>Updating BMC on Dell PowerEdge C6100</title>
+      <link>https://stelfox.net/blog/2013/12/updating-bmc-on-dell-poweredge-c6100/</link>
+      <pubDate>Mon, 16 Dec 2013 21:26:13 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/12/updating-bmc-on-dell-poweredge-c6100/</guid>
+      <description>I just received my Dell PowerEdge C6100 and found it&amp;rsquo;s software quite a bit outdated. After searching around quite a bit I found the resources lacking for explaining how to perform these updates. So in this post I&amp;rsquo;m going to quickly cover updating the BMC firmware on each blade.
+The system I received had four different versions of the BMC software installed, additionally Two were branded as MegaRAC and the others branded as Dell.</description>
+    </item><item>
+      <title>Updating the BIOS on Dell Poweredge C6100</title>
+      <link>https://stelfox.net/blog/2013/12/updating-the-bios-on-dell-poweredge-c6100/</link>
+      <pubDate>Mon, 16 Dec 2013 09:39:02 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/12/updating-the-bios-on-dell-poweredge-c6100/</guid>
+      <description>The BIOS was quite a bit more complicated and there was a few options that I had available to try, all of which require either Windows or DOS environments. I don&amp;rsquo;t have any legal copies of Windows to put on my server and didn&amp;rsquo;t want to go through all that effort`
+It really needs to be done within a DOS environment. I downloaded the file PEC6100BIOS017000.exe from Dell&amp;rsquo;s support website (locally hosted copy) as well as the 2.</description>
+    </item></channel>
+</rss>
