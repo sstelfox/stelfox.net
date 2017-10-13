@@ -4,7 +4,6 @@ slug: the-case-of-an-empty-executable
 tags:
 - linux
 title: The Case of an Empty Executable
-draft: true
 ---
 
 I recently came across a [short article][1] written about a decade ago. It was
