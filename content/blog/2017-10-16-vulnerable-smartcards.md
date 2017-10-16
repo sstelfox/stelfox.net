@@ -13,8 +13,8 @@ The vulnerability lies in shortcuts taken to speed up the key generation using
 the library. The performance increase makes the private key vulnerable to
 factorization attacks using an extension to [Coppersmith's attack][4].
 
-It has been confirmed that Yubikey 4s are effected as are many nations national
-ID cards. Earlier versions of Yubikey were not affected (including my
+It has been [confirmed that Yubikey 4s][10] are effected as are many nations
+national ID cards. Earlier versions of Yubikey were not affected (including my
 preference the Neo). This brings up a controversial decision [made by
 Yubico][5] a little over a year ago to switch from tested open source and
 widely inspected libraries, to closed source versions.
@@ -52,6 +52,11 @@ financed attacker in under a month.
 If you have a GPG key, or the public portion of any RSA key that may be
 affected you can test it using a [convenient online analyzer][9].
 
+***Update:*** Yubico is providing mitigation recommendations and optional
+[YubiKey replacements][11]. There are also reports rolling in that Github is
+taking the proactive step of disabling all keys that have been found to be weak
+according to the ROCA tests (Well done Github!).
+
 [1]: {{< relref "blog/2017-10-16-a-krack-in-the-defenses.md" >}}
 [2]: https://crocs.fi.muni.cz/public/papers/rsa_ccs17
 [3]: https://www.commoncriteriaportal.org/files/epfiles/0782V2a_pdf.pdf
@@ -61,3 +66,5 @@ affected you can test it using a [convenient online analyzer][9].
 [7]: https://en.wikipedia.org/wiki/Security_through_obscurity
 [8]: https://developers.yubico.com/ykneo-openpgp/SecurityAdvisory%202015-04-14.html
 [9]: https://keychest.net/roca
+[10]: https://www.yubico.com/2017/10/infineon-rsa-key-generation-issue/
+[11]: https://www.yubico.com/keycheck
