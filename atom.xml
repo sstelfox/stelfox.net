@@ -7,7 +7,16 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster>
-    <lastBuildDate>Mon, 16 Oct 2017 12:25:58 -0400</lastBuildDate><atom:link href="https://stelfox.net/atom.xml" rel="self" type="application/rss+xml" /><item>
+    <lastBuildDate>Mon, 16 Oct 2017 23:20:20 -0400</lastBuildDate><atom:link href="https://stelfox.net/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Linux Audit Rule Paths</title>
+      <link>https://stelfox.net/blog/2017/10/linux-audit-rule-paths/</link>
+      <pubDate>Mon, 16 Oct 2017 23:20:20 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/linux-audit-rule-paths/</guid>
+      <description>I encountered a little bit of confusion while rewriting my auditd rules which some Googling did not help me solve.
+When monitoring a file or directory there are two forms the rules can take. They are effectively equivalent in their functionality. The simpler form is the following format:
+-w /etc/shadow -p wa -w /boot -p wa -w /etc/dont_readme -p r  These three rules are all behaving slightly differently. The first will audit any writes or attribute changes to the shadow file.</description>
+    </item><item>
       <title>Vulnerable Smartcards</title>
       <link>https://stelfox.net/blog/2017/10/vulnerable-smartcards/</link>
       <pubDate>Mon, 16 Oct 2017 12:25:58 -0400</pubDate>
@@ -85,14 +94,5 @@ And begin the key generation process</description>
       <guid>https://stelfox.net/notes/disk-errors/</guid>
       <description>This is a weird file&amp;hellip; But while installing gentoo on a disk I started getting a weird error when printing the current partitions on the drive:
 Warning: The driver descriptor says the physical block size is 2048 bytes, but Linux says it is 512 bytes.  The only thing I&amp;rsquo;ve been able to find anywhere about this is &amp;ldquo;a low-level device tool (like dd) wrote blocks at the wrong size directly onto the device&amp;rdquo;.</description>
-    </item><item>
-      <title>GRE Tunnel</title>
-      <link>https://stelfox.net/notes/gre-tunnel/</link>
-      <pubDate>Mon, 09 Oct 2017 22:14:23 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/gre-tunnel/</guid>
-      <description>GRE encapsulates all layer 2 traffic, but does so through an unencrypted tunnel. Sensitive traffic should exclusively go through a lower level encrypted tunnel like IPSec.
-Firewall The following iptables need to be enabled to allow the GRE traffic to and from the system. This should be restricted to / from IP addresses as well.
--A INPUT -p 47 -j ACCEPT -A OUTPUT -p 47 -j ACCEPT  Manual Setup I&amp;rsquo;ve seen several setups on the internet that make some&amp;hellip; Odd choices.</description>
     </item></channel>
 </rss>

@@ -7,7 +7,16 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster>
-    <lastBuildDate>Mon, 16 Oct 2017 12:25:58 -0400</lastBuildDate><atom:link href="https://stelfox.net/blog/atom.xml" rel="self" type="application/rss+xml" /><item>
+    <lastBuildDate>Mon, 16 Oct 2017 23:20:20 -0400</lastBuildDate><atom:link href="https://stelfox.net/blog/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Linux Audit Rule Paths</title>
+      <link>https://stelfox.net/blog/2017/10/linux-audit-rule-paths/</link>
+      <pubDate>Mon, 16 Oct 2017 23:20:20 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/linux-audit-rule-paths/</guid>
+      <description>I encountered a little bit of confusion while rewriting my auditd rules which some Googling did not help me solve.
+When monitoring a file or directory there are two forms the rules can take. They are effectively equivalent in their functionality. The simpler form is the following format:
+-w /etc/shadow -p wa -w /boot -p wa -w /etc/dont_readme -p r  These three rules are all behaving slightly differently. The first will audit any writes or attribute changes to the shadow file.</description>
+    </item><item>
       <title>Vulnerable Smartcards</title>
       <link>https://stelfox.net/blog/2017/10/vulnerable-smartcards/</link>
       <pubDate>Mon, 16 Oct 2017 12:25:58 -0400</pubDate>
@@ -89,13 +98,5 @@ Reading through the grep man page I came across the --line-buffered flag which p
       <guid>https://stelfox.net/blog/2014/08/dependency-prelink-issues/</guid>
       <description>While running an aide check on one of my servers after updating it, I started seeing a large number of very concerning warning messages:
 /usr/sbin/prelink: /bin/mailx: at least one of file&#39;s dependencies has changed since prelinking Error on exit of prelink child process /usr/sbin/prelink: /bin/rpm: at least one of file&#39;s dependencies has changed since prelinking Error on exit of prelink child process /usr/sbin/prelink: /sbin/readahead: at least one of file&#39;s dependencies has changed since prelinking Error on exit of prelink child process /usr/sbin/prelink: /lib64/libkrb5.</description>
-    </item><item>
-      <title>Fast Hex to Decimal in Bash</title>
-      <link>https://stelfox.net/blog/2014/08/fast-hex-to-decimal-in-bash/</link>
-      <pubDate>Fri, 01 Aug 2014 19:50:24 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2014/08/fast-hex-to-decimal-in-bash/</guid>
-      <description>I needed too turn some hexidecimal values into decimal in a bash script and found a real easy way too do it. The following is a very short bash script demostrating how too turn the hexidecimal string &amp;ldquo;deadbeefcafe&amp;rdquo; into it&amp;rsquo;s equivalent decimal value of &amp;ldquo;244837814094590&amp;rdquo;.
-#!/bin/bash  INPUT=&amp;#34;deadbeefcafe&amp;#34; OUTPUT=$((0x${INPUT})) echo $OUTPUT</description>
     </item></channel>
 </rss>

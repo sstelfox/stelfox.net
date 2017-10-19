@@ -84,13 +84,11 @@
 -a always,exit -F path=/etc/conf.d/net -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/hosts -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/ipsec.conf -F perm=wa -F key=networkChange
--a always,exit -F path=/etc/ipsec.d -F perm=wa -F key=networkChange
--a always,exit -F path=/etc/ipsec.secrets -F perm=wa -F key=networkChange
+-a always,exit -F dir=/etc/ipsec.d -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/issue -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/issue.net -F perm=wa -F key=networkChange
--a always,exit -F path=/etc/netlabel.rules -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/resolv.conf -F perm=wa -F key=networkChange
--a always,exit -F path=/etc/wpa_supplicant -F perm=wa -F key=networkChange
+-a always,exit -F dir=/etc/wpa_supplicant -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/wpa_supplicant.conf -F perm=wa -F key=networkChange
 
 ## System Calls That Were Denied
@@ -117,18 +115,18 @@
 -a always,exit -F path=/etc/login.defs -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/group -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/gshadow -F perm=wa -F key=authConfig
--a always,exit -F path=/etc/pam.d -F perm=wa -F key=authConfig
+-a always,exit -F dir=/etc/pam.d -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/passwd -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/securetty -F perm=wa -F key=authConfig
--a always,exit -F path=/etc/security -F perm=wa -F key=authConfig
+-a always,exit -F dir=/etc/security -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/shadow -F perm=wa -F key=authConfig
--a always,exit -F path=/etc/sudoers.d -F perm=wa -F key=authConfig
+-a always,exit -F dir=/etc/sudoers.d -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/sudoers -F perm=wa -F key=authConfig
 
 ## System Startup Scripts
 
--a always,exit -F path=/etc/conf.d -F perm=wa -F key=initConfig
--a always,exit -F path=/etc/init.d -F perm=wa -F key=initConfig
+-a always,exit -F dir=/etc/conf.d -F perm=wa -F key=initConfig
+-a always,exit -F dir=/etc/init.d -F perm=wa -F key=initConfig
 -a always,exit -F path=/etc/rc.conf -F perm=wa -F key=initConfig
 
 ## Personality syscalls may be an attempt to bypass auditd
@@ -143,17 +141,17 @@
 -a always,exit -F path=/usr/sbin/aureport -F perm=x -F key=auditLogs
 -a always,exit -F path=/usr/sbin/ausearch -F perm=x -F key=auditLogs
 -a always,exit -F path=/usr/sbin/auvirt -F perm=x -F key=auditLogs
--a always,exit -F path=/var/log/audit -F perm=r -F key=auditLogs
+-a always,exit -F dir=/var/log/audit -F perm=r -F key=auditLogs
 
--a always,exit -F path=/etc/audisp -F perm=wa -F key=auditIntegrity
--a always,exit -F path=/etc/audit -F perm=wa -F key=auditIntegrity
+-a always,exit -F dir=/etc/audisp -F perm=wa -F key=auditIntegrity
+-a always,exit -F dir=/etc/audit -F perm=wa -F key=auditIntegrity
 -a always,exit -F path=/etc/libaudit.conf -F perm=wa -F key=auditIntegrity
--a always,exit -F path=/var/log/audit -F perm=wa -F auid>=1000 -F auid!=4294967295 -F key=auditIntegrity
+-a always,exit -F dir=/var/log/audit -F perm=wa -F auid>=1000 -F auid!=4294967295 -F key=auditIntegrity
 
 ## AIDE Needs to be Protected as Well
 
 -a always,exit -F path=/etc/aide.conf -F perm=wa -F key=aideChange
--a always,exit -F path=/var/lib/aide -F perm=wa -F key=aideChange
+-a always,exit -F dir=/var/lib/aide -F perm=wa -F key=aideChange
 
 ## Monitor Elevation of Privileges
 
@@ -173,16 +171,16 @@
 
 -a always,exit -F arch=b64 -F path=/etc/cron.allow -F perm=wa -F key=cronChange
 -a always,exit -F arch=b64 -F path=/etc/cron.deny -F perm=wa -F key=cronChange
--a always,exit -F arch=b64 -F path=/etc/cron.d -F perm=wa -F key=cronChange
--a always,exit -F arch=b64 -F path=/etc/cron.daily -F perm=wa -F key=cronChange
--a always,exit -F arch=b64 -F path=/etc/cron.monthly -F perm=wa -F key=cronChange
--a always,exit -F arch=b64 -F path=/etc/cron.weekly -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F dir=/etc/cron.d -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F dir=/etc/cron.daily -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F dir=/etc/cron.monthly -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F dir=/etc/cron.weekly -F perm=wa -F key=cronChange
 -a always,exit -F arch=b64 -F path=/etc/crontab -F perm=wa -F key=cronChange
 -a always,exit -F arch=b64 -F path=/var/spool/cron/root -F perm=wa -F key=cronChange
 
 ## Monitor the MAC Policy
 
--a always,exit -F path=/etc/selinux -F perm=wa -F key=macPolicy
+-a always,exit -F dir=/etc/selinux -F perm=wa -F key=macPolicy
 
 ## Mount and Unmount Operations
 
@@ -190,7 +188,7 @@
 
 ## Detect an admin accessing other user's files
 
--a always,exit -F path=/home -F uid=0 -F auid>=1000 -F auid!=4294967295 -C auid!=obj_uid -F key=powerAbuse
+-a always,exit -F dir=/home -F uid=0 -F auid>=1000 -F auid!=4294967295 -C auid!=obj_uid -F key=powerAbuse
 
 ## Monitor Container Creation & Configuration
 
@@ -209,13 +207,13 @@
 
 -a always,exit -F arch=b64 -S init_module,finit_module -F key=moduleLoad
 -a always,exit -F arch=b64 -S delete_module -F key=moduleUnload
--a always,exit -F path=/etc/modprobe.d -F perm=wa -F key=moduleConfig
+-a always,exit -F dir=/etc/modprobe.d -F perm=wa -F key=moduleConfig
 
 ## Mail Server Config Monitoring
 
 -a always,exit -F path=/etc/aliases -F perm=wa -F key=mailConfig
--a always,exit -F path=/etc/mail -F perm=wa -F key=mailConfig
--a always,exit -F path=/etc/postfix -F perm=wa -F key=mailConfig
+-a always,exit -F dir=/etc/mail -F perm=wa -F key=mailConfig
+-a always,exit -F dir=/etc/postfix -F perm=wa -F key=mailConfig
 
 ## Monitor Network Accepts & Connects
 

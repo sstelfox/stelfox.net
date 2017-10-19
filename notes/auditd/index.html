@@ -148,6 +148,50 @@ available as well as a matching set of <a href="/note_files/auditd/audit.rules">
 tuned for my environments. I consider them a good starting point for other
 people wanting detailed auditing logs.</p>
 
+<h2 id="audit-dispatcher">Audit Dispatcher</h2>
+
+<p>By default auditd has two mechanisms for sending audit events to an
+administrator for review. The first and common one is to log directly to disk.
+The other is to pass the events to a dispatch program. This is a very powerful
+second option as the other program will receive a binary stream of all events
+from auditd and can do anything with them.</p>
+
+<p>Auditd comes with a dispatcher with the ability to send the messages directly
+to syslog, to a remote auditd instance, or to a unix socket. I normally use the
+log file option rather than the dispatcher, and use the ability to read in
+files as a log source inside my syslog daemon of choice to get those messages
+to a central log server. Sending them directly to syslog is signficantly more
+efficient (push vs poll).</p>
+
+<p>If you use another dispatcher other than the one that comes with auditd, be
+aware that it will be started up with root privileges.</p>
+
+<p>Unfortunately it seems like the dispatcher that comes with auditd 2.6.4 is
+broken. With all plugins disabled (to eliminate them as a source of an issue),
+I was still receiving the following message in syslog:</p>
+
+<pre><code>Dispatcher protocol mismatch, exiting
+</code></pre>
+
+<p>Which of course, hasn&rsquo;t seemed to have been encountered by anyone else online.
+Digging through the source code, it seems audispd hasn&rsquo;t been updated for an
+update to the protocol built into auditd. I&rsquo;ll have to look into either fixing
+the source or writing my own dispatcher&hellip;</p>
+
+<p>I wasn&rsquo;t able to find anything about fixes that may be related so I&rsquo;m unsure
+when it was fixed. I updated to 2.7.1 and it seemed to resolve that issue.</p>
+
+<p>To get the information going to syslog I made two relatively small changes to
+the exising configs. You really only need to set &lsquo;active&rsquo; to yes in
+<code>/etc/audisp/plugins.d/syslog.conf</code>. I made minor tweaks to the configs to
+better support my logging environment (I keep local6 reserved for auditd
+records). These two files include my relevant changes:</p>
+
+<ul>
+<li><a href="/note_files/auditd/audispd.conf">/etc/audisp/audispd.conf</a></li>
+<li><a href="/note_files/auditd/audispd_syslog.conf">/etc/audisp/plugins.d/syslog.conf</a></li>
+</ul>
+
 <h2 id="more-references">More References</h2>
 
 <ul>
