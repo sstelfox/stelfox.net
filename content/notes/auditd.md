@@ -86,15 +86,11 @@ to a central log server. Sending them directly to syslog is signficantly more
 efficient (push vs poll).
 
 If you use another dispatcher other than the one that comes with auditd, be
-aware that it will be started up with root privileges. I had to delete the
-existing plugin configs on my system as they were subtlely broken and sending
-errors. This also led me to learn that any failures in the dispatcher will have
-it exit, auditd will continue to run and the only way to know it failed is by
-checking the logs or the running processes.
+aware that it will be started up with root privileges.
 
-Unfortunately it seems like the dispatcher that comes with auditd is broken.
-With all plugins disabled to eliminate any potential issues, I was still
-receiving the following message in syslog:
+Unfortunately it seems like the dispatcher that comes with auditd 2.6.4 is
+broken. With all plugins disabled (to eliminate them as a source of an issue),
+I was still receiving the following message in syslog:
 
 ```
 Dispatcher protocol mismatch, exiting
@@ -104,6 +100,18 @@ Which of course, hasn't seemed to have been encountered by anyone else online.
 Digging through the source code, it seems audispd hasn't been updated for an
 update to the protocol built into auditd. I'll have to look into either fixing
 the source or writing my own dispatcher...
+
+I wasn't able to find anything about fixes that may be related so I'm unsure
+when it was fixed. I updated to 2.7.1 and it seemed to resolve that issue.
+
+To get the information going to syslog I made two relatively small changes to
+the exising configs. You really only need to set 'active' to yes in
+`/etc/audisp/plugins.d/syslog.conf`. I made minor tweaks to the configs to
+better support my logging environment (I keep local6 reserved for auditd
+records). These two files include my relevant changes:
+
+* [/etc/audisp/audispd.conf][6]
+* [/etc/audisp/plugins.d/syslog.conf][7]
 
 ## More References
 
@@ -117,3 +125,5 @@ the source or writing my own dispatcher...
 [3]: /note_files/auditd/auditd.conf
 [4]: /note_files/auditd/libaudit.conf
 [5]: /note_files/auditd/audit.rules
+[6]: /note_files/auditd/audispd.conf
+[7]: /note_files/auditd/audispd_syslog.conf
