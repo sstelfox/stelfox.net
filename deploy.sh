@@ -42,16 +42,16 @@ if [ "${STEALTH:-}" != "true" ]; then
   pushd public/ &> /dev/null
   if ! git diff --quiet --exit-code; then
     git add -A
-    git commit --allow-empty-message
-    git push
+    git commit -m '' --allow-empty-message
+    git push origin HEAD:gh-pages
   fi
   popd &> /dev/null
 
   # We may have committed to public/, if so we need to update the submodule
   # reference.
   if ! git diff --quiet --exit-code; then
-    git add .
-    git commit --allow-empty-message
+    git add -A
+    git commit -m '' --allow-empty-message
     git push
   fi
 fi
