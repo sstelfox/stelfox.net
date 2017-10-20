@@ -1,9 +1,6 @@
-Better caching headers on content. Recommended files and cache time (not sure
-how I could handle the analytics one...):
+Apparently I need to redo how google analytics is setup on my page...
 
 https://www.google-analytics.com/analytics.js (2 hours)
-https://stelfox.net/assets/css/main.77da63e1.css (5 days)
-https://stelfox.net/assets/js/main.f29c93b9.js (5 days)
 
 Blocking CSS resources:
 
