@@ -85,9 +85,8 @@ partially compromised system, an egress ruleset can help prevent an attacker
 from using the machine as a springboard to launch further attacks on the
 internal networks.
 
-IPv4 and IPv6 traffic have separate firewalls. Strong examples for configuring
-[IPTables][9] and [IP6Tables][10] can be found on their respective
-configuration pages.
+IPv4 and IPv6 traffic have separate firewalls. I have examples and a decent
+base config on the [IPTables][9] page.
 
 ## Networking
 
@@ -526,8 +525,7 @@ settings can be found in `/etc/security/limits.conf`
 [4]: http://benchmarks.cisecurity.org/en-us/
 [5]: http://www.sans.org/reading_room/
 [8]: {{< relref "notes/partitioning.md" >}}
-[8]: {{< relref "notes/iptables.md" >}}
-[8]: {{< relref "notes/ip6tables.md" >}}
+[9]: {{< relref "notes/iptables.md" >}}
 [11]: {{< relref "notes/network.md" >}}
 [12]: {{< relref "notes/rsyslog.md" >}}
 [13]: {{< relref "notes/logrotate.md" >}}
