@@ -9,7 +9,7 @@ title: Syslog-NG
 Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced
 processing and log centralization while maintaining a sane configuration file
 syntax. I've recently come to vastly prefer it over my previous long term
-favority [Rsyslog][3].
+favorite [Rsyslog][3].
 
 It's important to note that when modifying the logs statements, they will be
 processed in order. This means log statements that finalize a message will
