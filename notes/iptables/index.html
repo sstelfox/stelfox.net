@@ -3,16 +3,14 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-iptables is the bread and butter linux firewall and the last defence before traffic gets to the applications themselves.
-Security Notes Since I strongly believe in the defence in-depth strategy, a very strong hardened firewall both ingress and egress is very important.'>
+<meta name='description' content='iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&rsquo;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
+It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&rsquo;ll find your rule set stored in different locations but the following list are where I&rsquo;ve seen them before:'>
 <meta property='og:title' content='IPTables • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-iptables is the bread and butter linux firewall and the last defence before traffic gets to the applications themselves.
-Security Notes Since I strongly believe in the defence in-depth strategy, a very strong hardened firewall both ingress and egress is very important.'>
+<meta property='og:description' content='iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&rsquo;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
+It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&rsquo;ll find your rule set stored in different locations but the following list are where I&rsquo;ve seen them before:'>
 <meta property='og:url' content='https://stelfox.net/notes/iptables/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='Notes'>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-20T12:14:02-04:00'/><meta property='article:modified_time' content='2017-10-20T12:14:02-04:00'/>
 
   <title>IPTables • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/iptables/'>
@@ -84,324 +82,84 @@ ga('send', 'pageview');
     <div class='entry-content'>
   
 
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
+<p>iptables (and ip6tables) is a simple application for interacting directly with
+the Linux kernel&rsquo;s netfilter firewall. nftables is attempting to replace it.
+nftables has better performance but is incredibly complex and difficult to use.
+Until the tooling and usability around nftables is addressed iptables will
+likely remain the reigning champion.</p>
 
-<p>iptables is the bread and butter linux firewall and the last defence before
-traffic gets to the applications themselves.</p>
+<p>It is important that your systems have effective ingress and egress rules.
+Depending on your host OS, you&rsquo;ll find your rule set stored in different
+locations but the following list are where I&rsquo;ve seen them before:</p>
 
-<h2 id="security-notes">Security Notes</h2>
+<ul>
+<li>/etc/conf.d/iptables, /etc/conf.d/ip6tables</li>
+<li>/etc/sysconfig/iptables, /etc/conf.d/ip6tables</li>
+<li>/var/lib/iptables/rules-save, /var/lib/ip6tables/rules-save</li>
+</ul>
 
-<p>Since I strongly believe in the defence in-depth strategy, a very strong
-hardened firewall both ingress and egress is very important. Ensuring that
-iptables has a minimum number of ports open and is not allowing any more than
-absolutely necessary for the server to perform it&rsquo;s duties is one of the first
-tasks that should be undertaken after any addition or removal of network
-services on a machine.</p>
+<p>I have a base rule set that I riff off of for <a href="/note_files/iptables/iptables.rules">iptables</a>, and
+<a href="/note_files/iptables/ip6tables.rules">ip6tables</a>. It can generally be hardened a tad depending on the local
+services you have available (such as a DNS resolver, local NTP servers, or an
+HTTP(S) proxy).</p>
 
-<p>I&rsquo;ve configured the default firewall with a few special case rules, such as
-preventing non-standard scans and hampering standard scans (enough so that nmap
-will stall out), preventing DOS attacks on any service running unless they&rsquo;ve
-been excluded from this rule.</p>
+<h2 id="logging-from-rules">Logging From Rules</h2>
 
-<h2 id="logging">Logging</h2>
-
-<p>IPTables doesn&rsquo;t provide a way to change the facility that it uses to log
-messages, however you can get around this limitation if you are using
-<a href="/notes/rsyslog/" target="_blank">RSyslog</a>. Rsyslog can match based on a known prefix within the message,
-IPTables can also be configured to prepend a configurable prefix to a log file.</p>
-
-<h3 id="rsyslog">RSyslog</h3>
-
-<p>First we&rsquo;ll tell RSyslog what to do with the messages when they are received.
-The following configuration should be added near the top of <code>/etc/rsyslog.conf</code>
-but after loading any modules, this will prevent RSyslog from logging the
-firewall messages anywhere else.</p>
-
-<pre><code># Log firewall messages to a separate file and skip the rest of the rules
-:msg, startswith, &quot;iptables: &quot; -/var/log/iptables.log
-&amp; ~
-</code></pre>
-
-<p>If you want the messages to appear in other logs leave out the line &ldquo;&amp; ~&ldquo;.</p>
-
-<p>You&rsquo;ll need to reload RSyslog at this point for the changes to go into effect.</p>
-
-<h3 id="log-rotation">Log Rotation</h3>
-
-<p>We also need to tell logrotate how to handle the log file. These options are
-configurable, as it stands the configuration below saves one week worth of
-logs, and rotates them daily. After rotating it sends a HUP signal to rsyslog
-so that they release their file handles and start logging in the new files.
-This should be placed in <code>/etc/logrotate.d/iptables</code>.</p>
-
-<pre><code>/var/log/iptables.log {
-  rotate 7
-  missingok
-  notifempty
-  daily
-  postrotate
-    /bin/kill -HUP `cat /var/run/syslogd.pid 2&gt; /dev/null` 2&gt; /dev/null || true
-    /bin/kill -HUP `cat /var/run/rsyslogd.pid 2&gt; /dev/null` 2&gt; /dev/null || true
-  endscript
-}
-</code></pre>
-
-<h3 id="iptables-logs">IPTables Logs</h3>
+<p>If you&rsquo;re using my <a href="/notes/auditd/" target="_blank">auditd</a> rules, you&rsquo;ll already have a detailed log of any
+connection to or from the system so this may be of little use. Sometimes it&rsquo;s
+valuable to log attempts that don&rsquo;t successfully make it through the firewall
+(such as failed outbound network attempts).  These are also valuable if your
+system has too many connections for the auditd rules to be effective, or you&rsquo;re
+not using my rule set.</p>
 
 <p>The final step is actually making iptables log the information you want. This
 is as simple as appending <code>--log-prefix &quot;iptables: &quot;</code> to whatever LOG targets
 you have configured. Like so:</p>
 
-<pre><code>-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j LOG --log-prefix &quot;iptables: &quot;
+<p>The following rule will log any new SSH connection attempts on the default port
+for any traffic that successfully makes it to the rule:</p>
+
+<pre><code>-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j LOG --log-prefix &quot;sshConn: &quot;
 </code></pre>
 
-<p>That firewall rule, if placed above any accept rules will log all new
-connections to the machine&rsquo;s SSH server after restarting iptables.</p>
+<h2 id="additional-gentoo-config">Additional Gentoo Config</h2>
 
-<h2 id="config-files">Config Files</h2>
+<p>Gentoo&rsquo;s defaults have an annoying habit to override the rules every time the
+service is shut down. Before enabling the services I additionally drop the
+configs around service control in place at <a href="/note_files/iptables/gentoo_iptables_conf">/etc/conf.d/iptables</a> and
+<a href="/note_files/iptables/gentoo_ip6tables_conf">/etc/conf.d/ip6tables</a>.</p>
 
-<p>There is only one config file of note for Red Hat based systems:</p>
-
-<ul>
-<li>/etc/sysconfig/iptables</li>
-</ul>
-
-<h3 id="etc-sysconfig-iptables">/etc/sysconfig/iptables</h3>
-
-<p>The following is the default iptables rule set that I start from, changed
-necessary for a service to run are noted on those services pages. It is pretty
-well commented so reading through it should give anyone a pretty good idea of
-what&rsquo;s going on.</p>
-
-<pre><code>*filter
-:INPUT DROP [0:0]
-:FORWARD DROP [0:0]
-:OUTPUT DROP [0:0]
-
-# Custom chains
-:RFC1918 - [0:0]
-:NO_FLOOD - [0:0]
-:NO_SCANS - [0:0]
-:SERVICES - [0:0]
-
-# I trust the loop back device
--A INPUT -i lo -j ACCEPT
--A OUTPUT -o lo -j ACCEPT
-
-# If an address has been declared evil in the past hour just drop all packets
-# from it, they can go eat a dick until they're good for a whole hour
--A INPUT -m recent --name EVIL --update --seconds 3600 -j DROP
-
-# For those that are less evil they have to be bad 10 times in an hour before
-# I'll tell them to go eat a dick
--A INPUT -m recent --name LESSEVIL --update --seconds 3600 --hitcount 10 -j DROP
-
-# Any already established connections should continue to be allowed
--A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-
-# RFC1918 details reserved networks, none of them are routable across the
-# internet. As such none should be talking to us except the ones we are a
-# part of
--A INPUT -j RFC1918
-
-# Large number of connections / flood attacks = bad for business, this
-# will cap the number of new connections/second that a remote system
-# can open. This may need to be tweaked depending on the services running
--A INPUT -j NO_FLOOD
-
-# Check to see if the traffic matches any known type of scan, see the comments
-# in the NO_SCANS chain for more information
--A INPUT -j NO_SCANS
-
-# Go through the chain of approved services
--A INPUT -j SERVICES
-
-# For local traffic that we haven't allowed I want to stop it gracefully
-# so local applications don't have to wait for the packets to time out
--A INPUT -s 10.13.37.64/26 -j REJECT
--A INPUT -s 10.13.37.128/26 -j REJECT
--A INPUT -s 10.13.37.192/26 -j REJECT
-
-# There is a default drop policy but I want to do it explicitly
--A INPUT -j DROP -m recent --set --name LESSEVIL
-
-# None of these networks should be able to reach us as they aren't routable
-# across the internet. The only exception being the local subnets we use
--A RFC1918 -s 10.13.37.0/26 -j RETURN
--A RFC1918 -s 10.13.37.64/26 -j RETURN
--A RFC1918 -s 10.13.37.128/26 -j RETURN
--A RFC1918 -s 10.13.37.192/26 -j RETURN
--A RFC1918 -s 10.0.0.0/8 -j LOG --log-prefix &quot;Spoofed 10 source IP&quot;
--A RFC1918 -s 10.0.0.0/8 -j DROP
-# The 127 address space is not actually defined in RFC1918 however since we are
-# already trusting our loop back device we shouldn't see any traffic from these
-# addresses at this point in the filter
--A RFC1918 -s 127.0.0.0/8 -j LOG --log-prefix &quot;Spoofed 127 source IP&quot;
--A RFC1918 -s 127.0.0.0/8 -j DROP
--A RFC1918 -s 172.16.0.0/12 -j LOG --log-prefix &quot;Spoofed 172 source IP&quot;
--A RFC1918 -s 172.16.0.0/12 -j DROP
--A RFC1918 -s 192.168.0.0/16 -j LOG --log-prefix &quot;Spoofed 192 source IP&quot;
--A RFC1918 -s 192.168.0.0/16 -j DROP
-
-# This chain rate limits new connections to all the services. There shouldn't
-# be a lot of connections directly to this server, so lots of connections from
-# one address probably indicates an attack
-#
-# This rule only kicks in if someone tries to open 20 new connections within
-# 5 seconds. This is a pretty wide margin so it shouldn't affect normal services
--A NO_FLOOD -m state --state NEW -m recent --name FLOOD --set
--A NO_FLOOD -m state --state NEW -m recent --name FLOOD --update --seconds 5 --hitcount 20 --rttl -j LOG --log-prefix &quot;Excessive new connections&quot;
--A NO_FLOOD -m state --state NEW -m recent --name FLOOD --update --seconds 5 --hitcount 20 --rttl -j DROP
-
-# These are various types of scans, I can check whats open by logging in
-# so there shouldn't ever be a reason this machine is getting scanned. Where
-# I know the name of the specific type of scan I have it mentioned. No valid
-# traffic should have any of these values
-#
-# Block XMAS tree scans
--A NO_SCANS -m tcp -p tcp --tcp-flags ALL ALL -j LOG --log-prefix &quot;XMAS tree scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags ALL ALL -j DROP -m recent --set --name EVIL
-
-# Block Null scans
--A NO_SCANS -m tcp -p tcp --tcp-flags ALL NONE -j LOG --log-prefix &quot;Null scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags ALL NONE -j DROP -m recent --set --name EVIL
-
-# Stealth scan
--A NO_SCANS -m tcp -p tcp --tcp-flags SYN,ACK SYN,ACK -m state --state NEW -j LOG --log-prefix &quot;Stealth scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags SYN,ACK SYN,ACK -m state --state NEW -j DROP -m recent --set --name EVIL
-
-# SYN/FIN scan
--A NO_SCANS -m tcp -p tcp --tcp-flags SYN,FIN SYN,FIN -j LOG --log-prefix &quot;SYN/FIN scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP -m recent --set --name EVIL
-
-# SYN/RST scan
--A NO_SCANS -m tcp -p tcp --tcp-flags SYN,RST SYN,RST -j LOG --log-prefix &quot;SYN/RST scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags SYN,RST SYN,RST -j DROP -m recent --set --name EVIL
-
-# Unknown, this is close to the XMAS tree attack however its missing PSH
--A NO_SCANS -m tcp -p tcp --tcp-flags ALL SYN,ACK,RST,URG,FIN -j LOG --log-prefix &quot;Almost XMAS scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags ALL SYN,ACK,RST,URG,FIN -j DROP -m recent --set --name EVIL
-
-# FIN/RST scan
--A NO_SCANS -m tcp -p tcp --tcp-flags FIN,RST FIN -j LOG --log-prefix &quot;FIN/RST scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags FIN,RST FIN -j DROP -m recent --set --name EVIL
-
-# ACK/FIN scan
--A NO_SCANS -m tcp -p tcp --tcp-flags ACK,FIN FIN -j LOG --log-prefix &quot;ACK/FIN scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags ACK,FIN FIN -j DROP -m recent --set --name EVIL
-
-# ACK/PSH scan
--A NO_SCANS -m tcp -p tcp --tcp-flags ACK,PSH PSH -j LOG --log-prefix &quot;ACK/PSH scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags ACK,PSH PSH -j DROP -m recent --set --name EVIL
-
-# ACK/URG scan
--A NO_SCANS -m tcp -p tcp --tcp-flags ACK,URG URG -j LOG --log-prefix &quot;ACK/URG scan attempt&quot;
--A NO_SCANS -m tcp -p tcp --tcp-flags ACK,URG URG -j DROP -m recent --set --name EVIL
-
-# Allow SSH, but no more than 5 new connections every fifteen minutes outside of the local net
-# This will also prevent the log from filling up with these messages by just dropping more connections
--A SERVICES -s 10.13.37.128/26 -m tcp -p tcp --dport 22 -j ACCEPT
--A SERVICES -s 10.13.37.192/26 -m tcp -p tcp --dport 22 -j ACCEPT
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 900 --hitcount 6 --rttl --name SSH -j DROP
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 900 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &quot;SSH Brute Force&quot;
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 900 --hitcount 5 --rttl --name SSH -j REJECT
--A SERVICES -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
-
-# Accept ping from the internal subnets
--A SERVICES -s 10.13.37.64/26 -p icmp --icmp-type 8 -j ACCEPT
--A SERVICES -s 10.13.37.128/26 -p icmp --icmp-type 8 -j ACCEPT
--A SERVICES -s 10.13.37.192/26 -p icmp --icmp-type 8 -j ACCEPT
-
-# Allow already established outgoing connections
--A OUTPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-
-# Allow DNS queries to the forwarder
--A OUTPUT -d 10.13.37.193 -m udp -p udp --dport 53 -j ACCEPT
-
-# Allow time sync updates from the local time source
--A OUTPUT -d 10.13.37.193 -m udp -p udp --dport 123 -j ACCEPT
-
-# We need to make sure that the server can update itself when needed, this
-# could be locked down a lot more by providing a local repository. It would
-# also reduce overall traffic consumption and speed up updates/installs
--A OUTPUT -m tcp -p tcp --dport 80 -j ACCEPT
--A OUTPUT -m tcp -p tcp --dport 443 -j ACCEPT
-
-# We send out email reports, let them out but log them
--A OUTPUT -m tcp -p tcp --dport 25 -j LOG --log-prefix &quot;Email sent&quot;
--A OUTPUT -m tcp -p tcp --dport 25 -j ACCEPT
-
-# Anything else we don't want, but stop it gracefully so we don't have to
-# wait for programs to time out
--A OUTPUT -j REJECT
-
-COMMIT
-</code></pre>
+<p>This expects the iptables rules to be at <code>/var/lib/iptables/rules-save</code> and
+<code>/var/lib/ip6tables/rules-save</code>.</p>
 
 <h2 id="blocking-isps-as-numbers">Blocking ISPs/AS Numbers</h2>
 
-<p>The following script generates rules to block the subnets associates with given
-AS numbers. AS numbers can be found on <a href="ftp://ftp.arin.net/info/asn.txt" target="_blank">Arin&rsquo;s website</a> and <a href="http://www.team-cymru.org/Services/ip-to-asn.html" target="_blank">Team Cymru</a>
-keeps a list of other places that keep this information.</p>
-
-<p>block_as.sh:</p>
-
-<pre><code>#!/bin/bash
-
-ASLIST=&quot;$@&quot;
-
-for ASNO in $ASLIST; do
-  SUFFIX=&quot;$ASNO&quot;;
-  #SUFFIX=&quot;&quot; # enable this to gather all rules in one chain
-  echo &quot;iptables -N reject_as$SUFFIX&quot;;
-  echo &quot;ip6tables -N reject_as$SUFFIX&quot;;
-  whois -B -i origin &quot;AS$ASNO&quot; \
-    | grep '^route' \
-    | while read proto prefix rest; do
-        case &quot;$proto&quot; in
-          route:) prog=iptables; ;;
-          route6:) prog=ip6tables; ;;
-          *) prog=echo; ;;
-        esac
-        echo &quot;$prog -A &quot;reject_as$SUFFIX&quot; -s $prefix -j REJECT&quot;;
-      done;
-done
-</code></pre>
+<p>I&rsquo;ve created <a href="/note_files/iptables/block_as.sh">a script</a> that generates rules to block the subnets associates
+with given AS numbers. AS numbers can be found on <a href="ftp://ftp.arin.net/info/asn.txt" target="_blank">Arin&rsquo;s website</a> and <a href="http://www.team-cymru.org/Services/ip-to-asn.html" target="_blank">Team
+Cymru</a> keeps a list of other places that keep this information.</p>
 
 <p>It fetches all network via whois and generates appropriate iptables rules.
 Maybe you have to adjust your whois-Query since I only ran tests against the
 ripe db.</p>
 
-<p>Looks something like this:</p>
-
-<pre><code>[root@localhost ~]# ./block_as.sh 3320 6724
-iptables -N reject_as3320
-ip6tables -N reject_as3320
-iptables -A reject_as3320 -s 193.103.152.0/22 -j REJECT
-[...]
-iptables -A reject_as3320 -s 134.97.128.0/17 -j REJECT
-iptables -A reject_as3320 -s 194.156.246.0/24 -j REJECT
-iptables -A reject_as3320 -s 91.222.232.0/22 -j REJECT
-ip6tables -A reject_as3320 -s 2003:0000::/19 -j REJECT
-ip6tables -A reject_as3320 -s 2003:0000::/20 -j REJECT
-iptables -N reject_as6724
-ip6tables -N reject_as6724
-iptables -A reject_as6724 -s 192.67.198.0/24 -j REJECT
-[...]
-iptables -A reject_as6724 -s 85.214.0.0/15 -j REJECT
-iptables -A reject_as6724 -s 81.169.128.0/17 -j REJECT
-ip6tables -A reject_as6724 -s 2a01:238::/32 -j REJECT
-</code></pre>
+<p>This script could be made significantly more efficient, and safer to update by
+switching to ipsets, but I haven&rsquo;t gotten around to it.</p>
 
 </div>
 
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/security'>Security</a></div>
+
   </div>
 </footer>
 

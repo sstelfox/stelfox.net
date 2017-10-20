@@ -3,14 +3,14 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='yum install mutt -y  Do a basic configuration in ~/.muttrc
-# Name to be displayed on sent emails: set my_name = Sam Stelfox # Use the Maildir format set mbox_type = Maildir set folder = ~/Maildir set spoolfile = &#43;/ # How often to check for new mail (in seconds) set mail_check = 150 # Cache messages and headers locally to speed up some operations, this is # mostly valuable when retrieving email via IMAP or POP.'>
+<meta name='description' content='I keep a copy of my mutt config both here on the site as well as in my public dotfiles. Eventually I&rsquo;ll likely document my reasoning, preferences and the tradeoffs made in that config (and change my mind on most in the process).
+Vim Since I use vim as my editor I also added the following line to my vim configuration file to autowrap my lines at 72 characters, but only for mutt composed messsages.'>
 <meta property='og:title' content='Mutt • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='yum install mutt -y  Do a basic configuration in ~/.muttrc
-# Name to be displayed on sent emails: set my_name = Sam Stelfox # Use the Maildir format set mbox_type = Maildir set folder = ~/Maildir set spoolfile = &#43;/ # How often to check for new mail (in seconds) set mail_check = 150 # Cache messages and headers locally to speed up some operations, this is # mostly valuable when retrieving email via IMAP or POP.'>
+<meta property='og:description' content='I keep a copy of my mutt config both here on the site as well as in my public dotfiles. Eventually I&rsquo;ll likely document my reasoning, preferences and the tradeoffs made in that config (and change my mind on most in the process).
+Vim Since I use vim as my editor I also added the following line to my vim configuration file to autowrap my lines at 72 characters, but only for mutt composed messsages.'>
 <meta property='og:url' content='https://stelfox.net/notes/mutt/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='Notes'>
+<meta property='og:type' content='article'><meta property='article:section' content='Notes'><meta property='article:tag' content='cli'><meta property='article:tag' content='linux'><meta property='article:published_time' content='2017-10-20T12:51:00-04:00'/><meta property='article:modified_time' content='2017-10-20T12:51:00-04:00'/>
 
   <title>Mutt • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/mutt/'>
@@ -82,163 +82,10 @@ ga('send', 'pageview');
     <div class='entry-content'>
   
 
-<pre><code>yum install mutt -y
-</code></pre>
-
-<p>Do a basic configuration in <code>~/.muttrc</code></p>
-
-<pre><code># Name to be displayed on sent emails:
-set my_name = Sam Stelfox
-
-# Use the Maildir format
-set mbox_type = Maildir
-set folder = ~/Maildir
-set spoolfile = +/
-
-# How often to check for new mail (in seconds)
-set mail_check = 150
-
-# Cache messages and headers locally to speed up some operations, this is
-# mostly valuable when retrieving email via IMAP or POP.
-set header_cache = ~/.cache/mutt
-set message_cachedir = ~/.cache/mutt
-
-# Where to store sent emails and drafts
-set record = +Sent
-set postponed = +Drafts
-
-# When using GMail properly you should uncomment the following lines
-#unset record
-#set postponed = +[Gmail]/Drafts
-
-# The path to our editor of choice
-set editor = /usr/bin/vim
-
-# Blow away the user agent
-unset user_agent
-
-# A personal custom header for my amusement
-my_hdr X-Access-Validation: `dd if=/dev/urandom bs=1 count=16 2&gt;/dev/null | hexdump | head -n 1`
-
-set date_format=&quot;%Y%m%d %T&quot;
-set index_format=&quot;%2C %Z [%d] %f %s&quot;
-
-# Path to a signature file
-set signature = &quot;.signature&quot;
-
-# Ensure our emails are sent with a decent character set
-set send_charset = utf-8
-
-# Display all the headers when viewing an email
-unignore headers *
-
-# Disable +s at beginning of wrapped lines
-set markers = no
-
-# Cancel a message when subject is blank
-set abort_nosubject = yes
-
-# Asks to include message when replying
-set include = ask-yes
-
-# Asks to postpone a message when not sent
-set postpone = ask-yes
-
-# Delete messages without asking when Mutt is quit
-set delete = yes
-
-# sort messages by thread
-set sort = threads
-
-# Set quotemark to 1 byte
-set indent_str = &quot;&gt; &quot;
-
-# Collapse old messages
-set collapse_unread = no
-
-## Colours for items in the index
-color index brightcyan black ~N
-color index brightred black ~O
-color index brightyellow black ~F
-color index black green ~T
-color index brightred black ~D
-
-## Highlights inside the body of a message.
-
-## URLs
-color body brightgreen black &quot;(http|ftp|news|telnet|finger)://[^ \&quot;\t\r\n]*&quot;
-color body brightgreen black &quot;mailto:[-a-z_0-9.]+@[-a-z_0-9.]+&quot;
-
-## Email addresses.
-color body brightgreen black &quot;[-a-z_0-9.%$]+@[-a-z_0-9.]+\\.[-a-z][-a-z]+&quot;
-
-## Header
-color header green black &quot;^from:&quot;
-color header green black &quot;^to:&quot;
-color header green black &quot;^cc:&quot;
-color header green black &quot;^date:&quot;
-color header yellow black &quot;^reply-to:&quot;
-color header brightcyan black &quot;^subject:&quot;
-color header red black &quot;^x-spam-rule:&quot;
-color header green black &quot;^x-mailer:&quot;
-color header yellow black &quot;^message-id:&quot;
-color header yellow black &quot;^Organization:&quot;
-color header yellow black &quot;^Organisation:&quot;
-color header yellow black &quot;^User-Agent:&quot;
-color header yellow black &quot;^message-id: .*pine&quot;
-color header red black &quot;^x-spam-rule:&quot;
-color header green black &quot;^x-mailer:&quot;
-color header yellow black &quot;^message-id:&quot;
-color header yellow black &quot;^Organization:&quot;
-color header yellow black &quot;^Organisation:&quot;
-color header yellow black &quot;^User-Agent:&quot;
-color header yellow black &quot;^X-Message-Flag:&quot;
-color header yellow black &quot;^X-Spam-Status:&quot;
-color header yellow black &quot;^X-SpamProbe:&quot;
-color header red black &quot;^X-SpamProbe: SPAM&quot;
-
-## Coloring quoted text - coloring the first 7 levels:
-color quoted cyan black
-color quoted1 yellow black
-color quoted2 red black
-color quoted3 green black
-color quoted4 cyan black
-color quoted5 yellow black
-color quoted6 red black
-color quoted7 green black
-
-## Default color definitions
-color signature brightmagenta black
-color indicator black cyan
-color attachment black green
-color error red black
-color message white black
-color search brightwhite magenta
-color status brightyellow blue
-color tree brightblue black
-color normal white black
-color tilde green black
-color bold brightyellow black
-#color underline magenta black
-color markers brightcyan black
-color status green black
-color indicator default red
-
-# When using IMAP these will automatically open a connection, and keep it
-# open. Otherwise these wont do anything.
-unset imap_passive
-set imap_keepalive = 300
-
-# Configure what SMTP server to use
-set realname = $my_name
-set from = &quot;admin@0x378.net&quot;
-set envelope_from = &quot;yes&quot;
-set use_from = yes
-set smtp_url = smtp://127.0.0.1
-
-# activate TLS if available on the server
-set ssl_starttls = yes
-</code></pre>
+<p>I keep a copy of my mutt config both <a href="/note_files/mutt/muttrc">here on the site</a> as well as in my
+<a href="https://github.com/sstelfox/dotfiles" target="_blank">public dotfiles</a>. Eventually I&rsquo;ll likely document my reasoning, preferences
+and the tradeoffs made in that config (and change my mind on most in the
+process).</p>
 
 <h2 id="vim">Vim</h2>
 
@@ -254,7 +101,16 @@ composed messsages.</p>
     
 <footer class='entry-footer-container'>
   <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/cli'>Cli</a>, <a class='tag' href='/tags/linux'>Linux</a></div>
+
   </div>
 </footer>
 
