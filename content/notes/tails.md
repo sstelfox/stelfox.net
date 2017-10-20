@@ -67,4 +67,4 @@ other options but they're not officially recommended.
 
 Restart into the USB drive again, but activate the 'Use persistence?' flag and
 enter your passphrase before clicking on 'Login'. Anything stored in the Places
-> Persistent location will be saved between environments.
+-> Persistent location will be saved between environments.
