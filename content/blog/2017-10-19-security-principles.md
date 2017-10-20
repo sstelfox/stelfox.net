@@ -13,7 +13,7 @@ Security][1] (published in 2008).
 
 I've replicated section 2.4 from the linked document (I have removed the
 footnotes, but it is otherwise unchanged) in its entirety here for safe keeping
-and to hopefully help expose them to more people.
+and to hopefully help expose this to more people.
 
 When addressing server security issues, it is an excellent idea to keep in mind
 the following general information security principles:
