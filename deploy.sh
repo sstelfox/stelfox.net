@@ -28,6 +28,10 @@ popd &> /dev/null
 git submodule sync
 git submodule update --remote
 
+pushd public/ &> /dev/null
+git pull origin gh-pages
+popd &> /dev/null
+
 # Build the site
 make build
 
