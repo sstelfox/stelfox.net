@@ -32,7 +32,7 @@ git submodule update --remote
 make build
 
 # Deploy the new changes
-rsync -rtzi --delete --cvs-exclude public/ web01:sites/stelfox.net/
+rsync -rczi --delete --cvs-exclude public/ web01:sites/stelfox.net/
 
 # Sometimes I want to make a minor change without syncing it back to github
 # (little games and things with friends, changes would give away clues). In
