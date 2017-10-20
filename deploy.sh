@@ -42,7 +42,7 @@ if [ "${STEALTH:-}" != "true" ]; then
   pushd public/ &> /dev/null
   if ! git diff --quiet --exit-code; then
     git add -A
-    git commit -m "Site content update"
+    git commit --allow-empty-message
     git push
   fi
   popd &> /dev/null
@@ -51,7 +51,7 @@ if [ "${STEALTH:-}" != "true" ]; then
   # reference.
   if ! git diff --quiet --exit-code; then
     git add .
-    git commit -m "Deploy new site content"
+    git commit --allow-empty-message
     git push
   fi
 fi
