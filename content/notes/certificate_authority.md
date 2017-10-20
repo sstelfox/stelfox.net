@@ -7,8 +7,8 @@ also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.***
 
 This page goes through how to create a local PKI infrastructure for use with
-all the other components listed in this wiki and many not mentioned at all. It
-uses OpenSSL and provides scripts, information about choices made during the
+all the other components listed in my notes and many may not mention it at all.
+It uses OpenSSL and provides scripts, information about choices made during the
 process and where to go next.
 
 ## Security Notes
