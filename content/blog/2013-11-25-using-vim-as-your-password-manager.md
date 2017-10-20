@@ -7,8 +7,8 @@ tags:
 title: Using VIM as Your Password Manager
 ---
 
-There are all kinds of password managers out there. Everything from [web
-services][1] that are quite solid and respectible, to [native][2] [desktop][3]
+There are all kinds of password managers out there. Everything from web
+services that are quite solid and respectible, to [native][1] [desktop][2]
 apps.
 
 A lot of these are simply too heavy for me, involve installing software on a
@@ -99,9 +99,8 @@ tied to my indented file format.
 # vim: fdm=indent fdn=1 sw=2:
 ```
 
-[1]: https://www.passpack.com/en/home/
-[2]: https://lastpass.com/
-[3]: http://keepass.info/
+[1]: https://lastpass.com/
+[2]: http://keepass.info/
 [4]: https://en.wikipedia.org/wiki/PKZIP
 [5]: http://vim.wikia.com/wiki/Encryption
 [6]: http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdn20o8

@@ -40,6 +40,5 @@ initiator-address 10.0.0.100
 
 * http://fedoraproject.org/wiki/Scsi-target-utils_Quickstart_Guide - High Quality
 * `http://www.ryanuber.com/a-quick-introduction-to-gfs2-over-iscsi.html` (dead link) - Transition from iSCSI to GFS2
-* http://www.rainingpackets.com/wiki/doku.php?id=iscsi_cheat_sheet - iSCSI cheat sheet (includes client config)
 
 [1]: {{< relref "notes/iscsi.md" >}}

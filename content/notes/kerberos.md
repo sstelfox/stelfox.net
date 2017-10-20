@@ -204,11 +204,6 @@ as well:
   }
 ```
 
-## References
-
-* [Kerberos Infrastructure Howto][3]
-* http://linsec.ca/Using_Kerberos_5_for_Single_Sign-On_Authentication
-
 ## Notes on Cached Client Login
 
 * http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html
@@ -218,4 +213,3 @@ as well:
 
 [1]: {{< relref "notes/ntpd.md" >}}
 [2]: {{< relref "notes/chronyd.md" >}}
-[3]: http://cryptnet.net/fdp/admin/kerby-infra/en/kerby-infra.html#configure

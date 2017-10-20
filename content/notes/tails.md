@@ -36,8 +36,7 @@ gpg --import tails-signing-local.key
 gpg --refresh-keys
 ```
 
-Now I need the ISO, the safest method is via torrent. The torrent was available
-at the following URL: https://tails.boum.org/torrents/files/tails-i386-2.5.torrent
+Now I need the ISO, the safest method is via torrent.
 
 ```sh
 curl -s https://tails.boum.org/torrents/files/tails-i386-2.5.torrent -o tails-i386-2.5.torrent

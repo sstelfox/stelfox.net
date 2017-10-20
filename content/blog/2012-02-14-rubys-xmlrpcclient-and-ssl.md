@@ -1,6 +1,5 @@
 ---
 date: 2012-02-14 18:08:51+00:00
-slug: "rubys-xmlrpcclient-and-ssl"
 tags:
 - development
 - ruby
@@ -52,8 +51,8 @@ warning: peer certificate won't be verified in this SSL session
 Ruby has taken the approach of by default not including any trusted certificate
 authorities which I greatly appreciate especially considering that in 2010 and
 2011 12 certificate authorities were known to have been hacked including major
-ones such as [VeriSign][1], and [DigiNotar][2]. Some of which were [proven][3]
-to have issued false certificates.
+ones such as VeriSign, and [DigiNotar][2]. Some of which were [proven][3] to
+have issued false certificates.
 
 Since XMLRPC::Client doesn't expose it's SSL trust settings through it's
 methods I went on a bit of a journey through Google to find an answer. What I
@@ -128,7 +127,6 @@ we've already setup (but before it's been called), grab the of Net::HTTP and
 tells it to force peer verification and to use the certificate file we created
 before. No more warning, and we're actually safe.
 
-[1]: http://www.informationweek.com/news/security/management/232600406
 [2]: http://www.symantec.com/connect/blogs/diginotar-ssl-breach-update
 [3]: http://nakedsecurity.sophos.com/2011/08/29/falsely-issued-google-ssl-certificate-in-the-wild-for-more-than-5-weeks/
 [4]: http://stackoverflow.com/questions/9199660/why-is-ruby-unable-to-verify-an-ssl-certificate

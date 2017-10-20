@@ -9,9 +9,9 @@ title: Unregistering From WhisperPush After Flashing a New ROM
 
 I've been playing around with my Nexus 5 lately. It was quickly rooted and I
 began playing with various ROMs that had been pre-built for the Nexus 5. My
-first stop was the [CyanogenMod][1]. Since I'd last used CyanogenMod they added
-a built-in framework that provides [transparent text][2] [message
-encryption][3] called WhisperPush.
+first stop was the CyanogenMod. Since I'd last used CyanogenMod they added a
+built-in framework that provides [transparent text][2] message encryption
+called WhisperPush.
 
 WhisperPush is an implementation of [Moxie Marlinspike's][4] highly respected
 TextSecure and I was very excited at the possibility of using it. I immediately
@@ -103,7 +103,5 @@ with a status code of 204. The output will look something like the following
 I don't have any way too check that I'm unregistered but it seems too have
 worked. Here is hoping this helps some else out in the future.
 
-[1]: http://www.cyanogenmod.org/
 [2]: https://whispersystems.org/blog/cyanogen-integration/
-[3]: http://www.cyanogenmod.org/blog/whisperpush-secure-messaging-integration
 [4]: http://thoughtcrime.org/

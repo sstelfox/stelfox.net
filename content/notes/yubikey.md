@@ -22,7 +22,11 @@ dnf install ykpers -y
 ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=
 ```
 
-This will hit the API with a URL like: https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
+This will hit the API with a URL like:
+
+```
+https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
+```
 
 The API can then return a token that for accessing additional functionality.
 

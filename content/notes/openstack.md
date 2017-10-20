@@ -13,10 +13,7 @@ very easily broken out on to their own machines or multiple machines.
 A few references that I've used generally for assistance figuring out what I
 need:
 
-* http://docs.openstack.org/essex/openstack-compute/install/yum/content/compute-system-requirements.html
 * http://fedoraproject.org/wiki/Getting_started_with_OpenStack_on_Fedora_17
-* `http://docs.openstack.org/trunk/openstack-compute/admin/content/configuration-qpid.html` (Dead link)
-* https://cwiki.apache.org/qpid/qpid-design-configuration.html
 * http://wiki.openstack.org/QpidSupport
 * https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst
 * https://github.com/openstack/keystone/blob/master/etc/keystone.conf.sample

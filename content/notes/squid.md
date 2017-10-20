@@ -8,7 +8,6 @@ until I get around to updating it.***
 
 * http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/
 * http://gofedora.com/how-to-configure-squid-proxy-server/
-* http://wiki.squid-cache.org/ConfigExamples/Portal/Splash
 * http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html
 * http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos
 * http://wiki.squid-cache.org/Features/NegotiateAuthentication

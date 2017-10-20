@@ -10,7 +10,6 @@ until I get around to updating it.***
 
 Sources:
 
-* http://devblog.mixlr.com/2012/06/26/how-we-use-nginx-lua-and-redis-to-beta-ify-mixlr/
 * http://wiki.nginx.org/HttpRedis2Module
 * http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/
 

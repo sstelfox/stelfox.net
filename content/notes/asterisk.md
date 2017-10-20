@@ -19,7 +19,7 @@ into using kamailio as a front end SIP router though this doesn't seem to be
 necessary unless we want to start handling multi-thousands of calls
 concurrently.
 
-A [few][1] [references][2] for help when building FreeSWITCH.
+A few [references][2] for help when building FreeSWITCH.
 
 ## Previous Reasoning
 
@@ -775,7 +775,6 @@ it has a codec for the audio file loaded). I strongly suggest the music be in
 Please refer to my notes on [Festival][7] for more information on text to
 speech with asterisk.
 
-[1]: http://oneitguy.com/blog/freeswitch-spa3000-openwrt
 [2]: http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/
 [3]: http://google.com/voice
 [4]: http://www.sipgate.com/

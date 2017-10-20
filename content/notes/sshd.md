@@ -258,7 +258,6 @@ A few references:
 ## Multiplex-Sessions & Signed PubKeys
 
 * http://comments.gmane.org/gmane.network.openssh.general/8269
-* http://blog.johnjosephbachir.org/2006/11/19/multiplex-several-ssh-sessions-over-a-single-tcp-connection/
 
 ## Published SSH Host Keys
 

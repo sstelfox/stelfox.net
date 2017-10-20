@@ -42,7 +42,6 @@ dmesg | tail  or so
 ```
 
 * http://www.cyberciti.biz/faq/centos-fedora-rhel-nfs-v4-configuration/
-* http://fedorasolved.org/post-install-solutions/nfsv4-fedora  <-- ++
 * http://www.server-world.info/en/note?os=Fedora_15&p=nfs
 * http://tldp.org/HOWTO/NFS-HOWTO/security.html
 * http://www.linuxjournal.com/article/4880

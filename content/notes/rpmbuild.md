@@ -9,9 +9,7 @@ until I get around to updating it.***
 Sources:
 
 * https://fedoraproject.org/wiki/How_to_create_an_RPM_package
-* http://wiki.mandriva.com/en/Policies/RpmSpecProposal
 * https://fedoraproject.org/wiki/Packaging:Guidelines
-* http://rpm.org/max-rpm-snapshot/s1-rpm-inside-macros.html
 
 Create a build user whose sole purpose is to handle building packages. Do not
 use root under any circumstances.

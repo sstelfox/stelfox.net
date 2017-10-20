@@ -2,8 +2,6 @@
 title: Openstack Keystone
 ---
 
-# Openstack Keystone
-
 ## Installation/Configuration
 
 Install the required packages with the following command:
@@ -467,7 +465,6 @@ general. These features that I haven't documented here yet are as follows:
   * Breaking out permissions into more explicit roles
   * What can I actually accomplish with this file?
 
-[1]: ../mysql/
-[2]: ../openstack/
-[3]: ../certificate_authority/
-
+[1]: {{< relref "notes/mysql.md" >}}
+[2]: {{< relref "notes/openstack.md" >}}
+[3]: {{< relref "notes/certificate_authority.md" >}}

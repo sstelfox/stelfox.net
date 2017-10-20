@@ -9,7 +9,6 @@ until I get around to updating it.***
 Consider [Postfix][1] instead. It was written with security in mind.
 
 * http://www.sendmail.com/sm/open_source/docs/m4/tweaking_config.html
-* http://www.bga.org/~lessem/psyc5112/usail/mail/configuration/
 * http://etutorials.org/Linux+systems/red+hat+linux+bible+fedora+enterprise+edition/Part+IV+Red+Hat+Linux+Network+and+Server+Setup/Chapter+19+Setting+Up+a+Mail+Server/Configuring+sendmail/
 * http://www.fredshack.com/docs/sendmail.html
 

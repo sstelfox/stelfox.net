@@ -13,9 +13,9 @@ capable of rebroadcasting video streams with or without audio.
 ## Setup Process
 
 As of this writing Fedora 16 comes with Icecast version 2.3.2, the associated
-documentation can be found on the [Icecast Website][1]. I found some
+documentation can be found on the Icecast website. I found some
 documentation had been removed rather than updated along with the software and
-that documentation can be found in [version 2.0.1's][2] documentation.
+that documentation can be found in version 2.0.1's documentation.
 
 ### Networking
 
@@ -1112,8 +1112,6 @@ Todo...
 * `http://koorenneef.nl/content/run-your-own-online-radio-station-icecast2-and-ezstream-howto` -> Dead link
 * http://www.linuxcertif.com/man/1/ezstream/
 
-[1]: http://www.icecast.org/docs/icecast-2.3.2/icecast2_config_file.html
-[2]: http://www.icecast.org/docs/icecast-2.0.1/icecast2_config_file.html
 [3]: {{< relref "notes/iptables.md" >}}
 [4]: {{< relref "notes/password_security.md" >}}
 [5]: /note_files/icecast/silence.ogg
