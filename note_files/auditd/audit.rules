@@ -159,6 +159,10 @@
 -a always,exit -F arch=b64 -S setuid,setresuid -F a0=0 -F exe=/usr/bin/sudo -F key=elevatedPrivs
 -a always,exit -F arch=b64 -S execve -C auid!=euid -F key=elevatedPrivs
 
+## Other Program Execution
+
+-a always,exit -F arch=b64 -S execve -F key=regularExec
+
 ## Library Search Paths
 
 -a always,exit -F arch=b64 -F path=/etc/ld.so.conf -F perm=wa -F key=libPath
@@ -215,9 +219,8 @@
 -a always,exit -F dir=/etc/mail -F perm=wa -F key=mailConfig
 -a always,exit -F dir=/etc/postfix -F perm=wa -F key=mailConfig
 
-## Monitor Network Accepts & Connects
+## Monitor Network & Unix Socket Accepts & Connects
 
-# TODO: May want to find a way to ignore local unix sockets
 -a always,exit -F arch=b64 -S accept,connect -F key=networkControl
 
 # This controls the state of the auditing subsystem. -e 0 disables the auditing

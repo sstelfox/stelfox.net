@@ -6,8 +6,23 @@
     <description>Recent content in Linux - Sam Stelfox&#39;s Thoughts &amp; Notes</description>
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
-    <webMaster>Sam Stelfox</webMaster>
-    <lastBuildDate>Thu, 19 Oct 2017 19:56:00 -0400</lastBuildDate><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" /><item>
+    <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Mutt</title>
+      <link>https://stelfox.net/notes/mutt/</link>
+      <pubDate>Fri, 20 Oct 2017 12:51:00 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/mutt/</guid>
+      <description>I keep a copy of my mutt config both here on the site as well as in my public dotfiles. Eventually I&amp;rsquo;ll likely document my reasoning, preferences and the tradeoffs made in that config (and change my mind on most in the process).
+Vim Since I use vim as my editor I also added the following line to my vim configuration file to autowrap my lines at 72 characters, but only for mutt composed messsages.</description>
+    </item><item>
+      <title>IPTables</title>
+      <link>https://stelfox.net/notes/iptables/</link>
+      <pubDate>Fri, 20 Oct 2017 12:14:02 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/iptables/</guid>
+      <description>iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&amp;rsquo;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
+It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&amp;rsquo;ll find your rule set stored in different locations but the following list are where I&amp;rsquo;ve seen them before:</description>
+    </item><item>
       <title>Syslog-NG</title>
       <link>https://stelfox.net/notes/syslog-ng/</link>
       <pubDate>Thu, 19 Oct 2017 19:56:00 -0400</pubDate>
@@ -64,8 +79,8 @@ This can be run periodically to detect manipulation of critical system files, th
       <author>Sam Stelfox</author>
       <guid>https://stelfox.net/notes/yubikey/</guid>
       <description>Smart Card NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
-NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like: https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
-The API can then return a token that for accessing additional functionality.
+NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like:
+https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh  The API can then return a token that for accessing additional functionality.
 Resetting This will wipe all keys, user, and admin pins on the card.</description>
     </item><item>
       <title>GPG Process Notes</title>
@@ -77,22 +92,5 @@ Resetting This will wipe all keys, user, and admin pins on the card.</descriptio
 Initial Key Creation For simplicity I wanted to clear out the GnuPG configuration that starts out in place. Makes things a lot nicer later on.
 rm -rf ~/.gnupg/*  I pulled in the .gnupg/gpg.conf from my dotfiles by hand.
 And begin the key generation process</description>
-    </item><item>
-      <title>Disk Errors</title>
-      <link>https://stelfox.net/notes/disk-errors/</link>
-      <pubDate>Mon, 09 Oct 2017 23:05:43 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/disk-errors/</guid>
-      <description>This is a weird file&amp;hellip; But while installing gentoo on a disk I started getting a weird error when printing the current partitions on the drive:
-Warning: The driver descriptor says the physical block size is 2048 bytes, but Linux says it is 512 bytes.  The only thing I&amp;rsquo;ve been able to find anywhere about this is &amp;ldquo;a low-level device tool (like dd) wrote blocks at the wrong size directly onto the device&amp;rdquo;.</description>
-    </item><item>
-      <title>GRE Tunnel</title>
-      <link>https://stelfox.net/notes/gre-tunnel/</link>
-      <pubDate>Mon, 09 Oct 2017 22:14:23 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/gre-tunnel/</guid>
-      <description>GRE encapsulates all layer 2 traffic, but does so through an unencrypted tunnel. Sensitive traffic should exclusively go through a lower level encrypted tunnel like IPSec.
-Firewall The following iptables need to be enabled to allow the GRE traffic to and from the system. This should be restricted to / from IP addresses as well.
--A INPUT -p 47 -j ACCEPT -A OUTPUT -p 47 -j ACCEPT  Manual Setup I&amp;rsquo;ve seen several setups on the internet that make some&amp;hellip; Odd choices.</description>
     </item></channel>
 </rss>
