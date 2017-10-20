@@ -18,30 +18,40 @@ if [ "${DEBUG:-}" = "true" ]; then
   set -o xtrace
 fi
 
-# Blow away the public directory if it exists
-if [ -d public ]; then
-  rm -rf public
-fi
+# Blow away anything that doesn't belong
+pushd public/ &> /dev/null
+git add -A
+git reset --hard
+popd &> /dev/null
 
-# Clone our Github pages branch into the public directory, limiting the clone
-# to only information about that branch.
-git clone --branch gh-pages --single-branch git@github.com:sstelfox/stelfox.net.git public
+# Ensure public matches upstream
+git submodule sync
+git submodule update --remote
 
 # Build the site
 make build
 
 # Deploy the new changes
-if [ "${STEALTH:-}" != "true" ]; then
-  pushd public/ &> /dev/null
+rsync -rtzi --delete --cvs-exclude public/ web01:sites/stelfox.net/
 
+# Sometimes I want to make a minor change without syncing it back to github
+# (little games and things with friends, changes would give away clues). In
+# these situations I don't commit and deploy the changes.
+if [ "${STEALTH:-}" != "true" ]; then
+  # gh-page branch update
+  pushd public/ &> /dev/null
   if ! git diff --quiet --exit-code; then
     git add -A
     git commit -m "Site content update"
     git push
   fi
-
   popd &> /dev/null
-fi
 
-# Sync the file to the webserver as well
-rsync -vrz --delete --cvs-exclude public/ web01:sites/stelfox.net/
+  # We may have committed to public/, if so we need to update the submodule
+  # reference.
+  if ! git diff --quiet --exit-code; then
+    git add .
+    git commit -m "Deploy new site content"
+    git push
+  fi
+fi
