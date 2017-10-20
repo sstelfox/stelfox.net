@@ -14,6 +14,21 @@ I generally publish drafts of posts and notes before publishing them on my
 site, so if you dig around you can probably get an idea of what I'm currently
 working on.
 
+If you would like to build my website yourself for some reason you can perform
+the following commands on a system that has go already installed:
+
+```
+make depends
+make
+```
+
+Or to run a live server with the content:
+
+```
+make depends
+make server
+```
+
 [1]: https://gohugo.io/
 [2]: https://themes.gohugo.io/theme/minimo/
 [3]: https://github.com/MunifTanjim
