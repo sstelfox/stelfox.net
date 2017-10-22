@@ -18,7 +18,7 @@ be greeted with this message while trying to figure out what to do:
 > This firewall ruleset will not be active until at least one rule is added.
 
 The creative solution I came up with was to add an SSH rule with a custom IP of
-'::1/128'. The loopback IPv6 address... The drop all rule showed up and unless
+`::1/128`. The loopback IPv6 address... The drop all rule showed up and unless
 there is some bug in Vultr's firewalling nothing should be able to reach these
 instances over IPv6.
 
