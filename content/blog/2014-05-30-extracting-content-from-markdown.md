@@ -14,13 +14,13 @@ written content.
 
 Most of the markdown syntax can be stripped out simply by removing all
 non-alphanumeric characters from the document and move on. This doesn't solve
-one of the bigger challenges I've experienced... code blocks. Code blocks have
-plenty of regular english-ish words and can easily skew keyword detection
+one of the bigger challenges I've experienced... Code blocks. Code blocks have
+plenty of regular English-ish words and can easily skew keyword detection
 within it.
 
 I didn't want to write my own Markdown parser, so I started with the one
-already in use by this site's renderer ([redcarpet][1]). Another Github user,
-[Markus Koller or toupeira on Github][2] provided [the basis][3] for the code
+already in use by this site's renderer ([redcarpet][1]). Another GitHub user,
+[Markus Koller or toupeira on GitHub][2] provided [the basis][3] for the code
 that became the redcarpet "StripDown" formatter, which was designed to
 essentially render a Markdown document without the markup.
 

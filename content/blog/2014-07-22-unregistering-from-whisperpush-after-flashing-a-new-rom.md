@@ -55,7 +55,7 @@ performing the following steps:
     ```
 
 7. Note down the value for `pref_registered_number` (this should be your phone
-   number with a preceeding '+') and `pre_push_password`.
+   number with a preceding '+') and `pre_push_password`.
 8. Exit the shell.
 
 Finally too unregister we need too make a DELETE request against the

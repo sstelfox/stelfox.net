@@ -20,7 +20,7 @@ A [thread][1] on the Serve the Home forums lead to me too a solution, even
 though my symptoms didn't quite match up with what I was experiencing.
 
 I downloaded the [PowerEdge C6100 Owner's Manual][2] for the jumper
-information, and found it too be redudant. The board itself has each of the
+information, and found it too be redundant. The board itself has each of the
 jumpers clearly labeled.
 
 After pulling the affected chassis out of the server I connected the pins for

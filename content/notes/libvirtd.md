@@ -183,7 +183,7 @@ that passes VLAN20 into a guest as it's native network card.
 
 I'm assuming the trunked port on the host is eth1, please adjust the following
 configuration to match what your network has. This example is also specific to
-the RedHat architecture. The configuration will be different than it is here
+the Red Hat architecture. The configuration will be different than it is here
 (and I have not documented it).
 
 You will need to make sure that the package `bridge-utils` is installed on the

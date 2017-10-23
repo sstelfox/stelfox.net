@@ -29,11 +29,11 @@ displaying the issue were in the packages that got updated.
 What was the next worse scenario? The packages had been tampered with and I
 just installed malicious files. This didn't seem likely as the packages are all
 signed with GPG and an aide check would have caught tampering with my trust
-database, the gpg binary, or the aide binary. Still a key could have been
-comprimised.
+database, the `gpg` binary, or the aide binary. Still a key could have been
+compromised.
 
 After some Googling I came across people with similar issues, (including one
-annoyingly paywalled RedHat article on the issue). Several people simply ended
+annoyingly paywalled Red Hat article on the issue). Several people simply ended
 the conversation on the assumption the user with the issue had been hacked.
 Finally I [came across one helpful individual][1] with the fix. The binaries
 just need to have their prelink cache updated again. This can be accomplished

@@ -7,7 +7,7 @@ tags:
 title: Unbuffered Pipe Filters
 ---
 
-I need to filter a live logstream for only relevant events and quickly hit an
+I need to filter a live log stream for only relevant events and quickly hit an
 issue that I wasn't expecting. The `grep` in my pipe chain was waiting until it
 received all the output from the prior command before it began to attempt to
 filter it.

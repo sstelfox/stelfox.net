@@ -74,16 +74,16 @@ $ exec ./test
 ```
 
 How sinister! Someone had gotten to them first, I have to go higher into their
-organization. This calls for... the source. I quickly traverse into the builtin
+organization. This calls for... The Source. I quickly traverse into the builtin
 directory and identify the commonality `parse_and_execute`. This is where it
 gets a little fuzzy as bash is a rather complicated code base and I didn't want
 to spend to much time on this in the middle of the night.
 
 After parsing the file, it does seem to treat it as a script (as expected).
 There are two possibilities here and I didn't trace down which was true. Either
-parse_and_execute is simply returning with a success or it is sending the
-contents to `execute_command_internal`, which in turn defaults to a successfuly
-return value.
+`parse_and_execute` is simply returning with a success or it is sending the
+contents to `execute_command_internal`, which in turn defaults to a
+successfully return value.
 
 The motive remains unclear, but no harm seems to be getting done so I'm going
 to call this one case closed. It'd be interesting to see how other shells

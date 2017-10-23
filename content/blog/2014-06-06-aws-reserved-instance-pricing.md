@@ -9,7 +9,7 @@ title: AWS Reserved Instance Pricing
 The current large project I'm working on is going to be hosted on AWS and I was
 requested to do a cost estimate. Looking into it, it quickly became clear that
 reserved instances could potentially save quite a bit of cash but there was a
-catch (isn't there alway).
+catch (isn't there always?).
 
 There is an upfront cost for reserving the instance and in exchange you get a
 reduced hourly rate. After running the numbers one thing wasn't clear too me,

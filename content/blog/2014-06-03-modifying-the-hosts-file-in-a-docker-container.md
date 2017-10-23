@@ -21,8 +21,8 @@ the /etc/hosts file inside the environment.
 Docker mounts an /etc/hosts file inside it's containers, read-only, and the
 container's 'root' user has had it's mount permissions revoked so it's not able
 to be modified. Other users have encountered this issue, and a [novel
-workaround was put forward][1]. The solution however makes use of perl, and is
-specific too ubuntu base systems.
+workaround was put forward][1]. The solution however makes use of Perl, and is
+specific too Ubuntu base systems.
 
 I'll explain the solution after showing a more general way to accomplish the
 same thing. Different linux systems will store their libraries in different
@@ -54,7 +54,7 @@ ENV LD_LIBRARY_PATH /override_lib
 ```
 
 So what is this actually doing? On linux systems, name configurations such as
-DNS, username, and group lookups are generally handled by the 'nss' or name
+DNS, username, and group lookups are generally handled by the `nss` or name
 service switch configuration tools including the hosts file. The library that
 we're copying and modifying is a very specific to reading from files on the
 system and includes the default paths to these files.

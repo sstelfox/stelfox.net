@@ -7,9 +7,9 @@ tags:
 title: "Fast Hex to Decimal in Bash"
 ---
 
-I needed too turn some hexidecimal values into decimal in a bash script and
+I needed too turn some hexadecimal values into decimal in a bash script and
 found a real easy way too do it. The following is a very short bash script
-demostrating how too turn the hexidecimal string "deadbeefcafe" into it's
+demonstrating how too turn the hexadecimal string "deadbeefcafe" into it's
 equivalent decimal value of "244837814094590".
 
 ```bash

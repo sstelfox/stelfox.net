@@ -23,11 +23,11 @@ enables the HStore extension by default on all newly created databases. Too
 understand this you need to know a bit about PostgreSQL's behavior.
 
 When a new database is created, PostgreSQL creates a copy of a special
-pre-existing database named 'template1' by default. Anything done too this
+pre-existing database named `template1` by default. Anything done too this
 database will be reflected in all new databases, including enabling extensions.
 
 Too enable the HStore extension on the `template1` database you can execute the
-following command (generally as the postgres user or with your authentication
+following command (generally as the `postgres` user or with your authentication
 of choice).
 
 ```
@@ -39,7 +39,7 @@ psql -d template1 -c 'CREATE EXTENSION hstore;'
 The above solution doesn't sit well with me. While it's uncommon for any
 individual PostgreSQL server to be shared among different applications with
 different databases, the possibility is there. Perhaps the application will get
-de-commisioned and the DBA will simply drop the associated database and roles
+decommissioned and the DBA will simply drop the associated database and roles
 instead of setting up a new one.
 
 Disconnecting the requirements of the application from the application itself
@@ -50,7 +50,7 @@ overtime, migrations. They're solid, well tested, and encapsulate not only how
 to get the database to a particular state but also how to return it back to
 it's prior state (generally).
 
-We can also do this without using raw SQL which now also seems a bit... off to
+We can also do this without using raw SQL which now also seems a bit... Off to
 me. The following is a sample Rails migration that will both enable and disable
 the extension:
 

@@ -7,13 +7,13 @@ title: Creating an Empty Git Branch
 ---
 
 Every now and then I find myself wanting to create a new empty branch in an
-existing repository. It's useful for things such as [Github Pages][1] so you're
+existing repository. It's useful for things such as [GitHub Pages][1] so you're
 able to keep your content source in the master branch while only keeping the
-output in the gh-pages branch. I've also used it for testing a complete rewrite
-of a code base without the overhead of creating a new repo and copying access
-permissions.
+output in the `gh-pages` branch. I've also used it for testing a complete
+rewrite of a code base without the overhead of creating a new repo and copying
+access permissions.
 
-This is a pretty straight forward trick to do. You create the brach by
+This is a pretty straight forward trick to do. You create the branch by
 indicating you want the new branch to be an orphan by passing the '--orphan'
 flag like so:
 

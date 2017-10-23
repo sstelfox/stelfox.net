@@ -43,7 +43,7 @@ particular decision, I assumed I should be using it *instead* of the TXT record
 I've used for every other domain, and it would be handled correctly or more
 intelligently.
 
-Solution: Either switch the SPF record too a TXT record. or my preference
+Solution: Either switch the SPF record too a TXT record or, my preference,
 duplicate it into a TXT record so you have both.
 
 ## Invalid DKIM record
@@ -59,7 +59,7 @@ default._domainkey.example.tld.   IN      TXT     ( "v=DKIM1; k=rsa; t=y; s=emai
           "nJQ4+lXWqzYtuX9xdNH46ck2HUl56Ob4cy3/gYCJBWrAsCAwEAAQ==" )  ; ----- DKIM key default for example.tld
 ```
 
-Copying and pasting everything between the parens in the value field and
+Copying and pasting everything between the parentheses in the value field and
 pasting them into Route 53 works flawlessly. The catch? This won't be treated
 as a single record, but three individual responses. None of which are complete
 and valid DKIM records.
@@ -98,8 +98,8 @@ looks like Bind might not do it for you though I suspected that was more for
 readability of zone files rather than a technical limitation (and I haven't
 tested whether Bind is intelligent enough too handle just a long string).
 
-Solution: Take the original output of Bind between the parens and just remove
-the newline characters, leave the quotation marks and spaces between the
+Solution: Take the original output of Bind between the parentheses and just
+remove the newline characters, leave the quotation marks and spaces between the
 sections like the following sample and you'll be golden:
 
 ```

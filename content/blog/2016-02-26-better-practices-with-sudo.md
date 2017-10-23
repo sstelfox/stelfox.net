@@ -32,11 +32,11 @@ Permission to use sudo is still restricted to a subset of trusted
 administrators.
 
 Using this default configuration is forming bad habits and after working
-through it it's not particularily hard to make a drastic improvement on the
+through it it's not particularly hard to make a drastic improvement on the
 granularity of control.
 
 I'm going to work through the changes I've made slowly building up my final
-config.
+configuration.
 
 ***These changes, if made incorrectly or with the wrong paths to binaries may
 effect your ability to get privileged access to the system. I strongly
@@ -55,7 +55,7 @@ variables passed through anyway. If you work on multi-lingual systems or
 otherwise your administrators make use of multiple system locales, you will
 want to re-introduce the locale values used.
 
-My entire starting sudo config is the following:
+My entire starting sudo configuration is the following:
 
 ```
 Defaults env_reset
@@ -75,8 +75,8 @@ group will only be executing commands as the root user. Executing as other
 user's directly should be a special case and added separately.
 
 Usually distributions also include additional sudo configuration by including
-all files in /etc/sudoers.d. This config isn't going to be terribly long so we
-may as well KISS it and not allow the inclusion of other files.
+all files in /etc/sudoers.d. This configuration isn't going to be terribly long
+so we may as well KISS it and not allow the inclusion of other files.
 
 ## No Need for the su
 
@@ -90,9 +90,9 @@ They are creating to different types of shells. Executing `sudo su -` creates
 a login shell, while `sudo -s` doesn't. Both can be subtly changed to provide
 the other type (Adding the `-i` flag to sudo, or removing the `-` from su).
 
-A login shell resets your environment, spawns the new
-user's default shell (in this case root's default shell) and executes the
-user's profile scripts in addition to the shell's rc files.
+A login shell resets your environment, spawns the new user's default shell (in
+this case root's default shell) and executes the user's profile scripts in
+addition to the shell's rc files.
 
 By not using a login shell, administrators can keep their preferred shells
 while allowing selective bits of their configuration (whitelisted environment
@@ -105,7 +105,7 @@ The only way to enforce this transition is to blacklist `su` directly.
 A blacklist is added by creating a command alias that includes the commands to
 be blacklisted, then adjusting ACLs to make use of them. These need to be
 defined before they're used. Generally this means all command aliases are at
-the top of the config file. The following command alias will be used for our
+the top of the configuration file. The following command alias will be used for our
 blacklist. The path to `su` is valid for CentOS 7, other distributions do
 vary.
 
@@ -226,7 +226,7 @@ encourage you to try the whitelist approach first as it does offer
 substantially better protection against this potential abuse.
 
 Before applying this it is useful to know how this works and what it's
-limitations are. Sudo disables the exec call using LD_PRELOAD and defining an
+limitations are. Sudo disables the exec call using `LD_PRELOAD` and defining an
 alternate version of the system call. This is largely effective, but will only
 work with dynamically linked programs (most coming from a distribution are
 going to be dynamically linked).
@@ -301,7 +301,7 @@ additional potential attack vector around TTYs under the 'use_pty' option:
 
 I haven't been able to find any attacks that exploit this possibility, but I
 have yet to be impacted by turning that feature on within sudo. Making both
-changes can be done by adding the following line to the sudoers config.
+changes can be done by adding the following line to the sudoers configuration.
 
 ```
 Defaults requiretty, use_pty
@@ -364,13 +364,13 @@ session like so:
 $ sudo sudoreplay 000001
 ```
 
-Refer to the man page of sudoreplay for additional tricks such as speeding up
+Refer to the man page of `sudoreplay` for additional tricks such as speeding up
 playback.
 
-## Final Config
+## Final Configuration
 
-Some of the options from above I have combined into a single config line. This
-uses the stricter whitelist policy for exec privileges.
+Some of the options from above I have combined into a single configuration
+line. This uses the stricter whitelist policy for exec privileges.
 
 ```
 # /etc/sudoers

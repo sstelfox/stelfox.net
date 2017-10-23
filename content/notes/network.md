@@ -6,7 +6,7 @@ title: Network
 also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.***
 
-## RedHat Based Systems
+## Red Hat Based Systems
 
 ### Simple Static IP Address
 

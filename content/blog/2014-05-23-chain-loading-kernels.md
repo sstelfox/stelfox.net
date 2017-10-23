@@ -21,7 +21,7 @@ In all cases the process was pretty much the same, though there were some
 custom changes to the preliminary init system depending on what I needed to get
 done, especially with the last one which I may cover in a different article.
 
-In all cases these were done on a RedHat based distribution like CentOS,
+In all cases these were done on a Red Hat based distribution like CentOS,
 Scientific Linux, RHEL, or even Fedora. For those users of Debian based systems
 you'll need to adjust the scripts too your system though I can't imagine
 anything other than the package names changing.

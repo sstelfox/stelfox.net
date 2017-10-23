@@ -10,7 +10,7 @@ title: Sharing Context Between Dependent Rake Tasks
 I use Rakefiles quite a bit like traditional Makefiles, in that I specify
 immediate dependencies for an individual task and Rake will execute all of
 them. If a file or directory is the dependency and it exists, the task that
-creates it will be skipped. A contrieved Rakefile example might look like:
+creates it will be skipped. A contrived Rakefile example might look like:
 
 ```ruby
 file 'sample' do |t|
