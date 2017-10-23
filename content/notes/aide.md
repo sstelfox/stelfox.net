@@ -36,16 +36,16 @@ for any of the hashes (I tested all the ones available to me individually).
 The issue itself could be with the specific compiled version (community/aide
 0.16-1 on arch linux) I was testing with.
 
-After strace'ing down the files it was having issues with I simply excluded the
-files that were triggering the issue from checksum validation. I couldn't find
-anything unusual about the files themselves though... no extended attributes,
-normal permissions, readable... Maybe a bug in libmhash?
+After `strace`'ing down the files it was having issues with I simply excluded
+the files that were triggering the issue from checksum validation. I couldn't
+find anything unusual about the files themselves though... No extended
+attributes, normal permissions, readable... Maybe a bug in `libmhash`?
 
 ## Secure Usage
 
 While this utility provides no preventative defense measures, it is extremely
 useful in the detection of malicious behavior on the host. To perform this
-detection, a cron job should periodically have AIDE analyse the files it is
+detection, a cron job should periodically have AIDE analyze the files it is
 monitoring and report the findings. A central logging system should be setup to
 consume these reports.
 
@@ -54,15 +54,15 @@ and well maintained. To accomplish this I recommend hosting a read-only NFS
 volume mounted at a known location to store the current database.
 
 This database will likely need to be updated after every system update as
-critical binaries and config files may have been updated. If an automation
-system like [puppet][1] is in use, automatic modification of configuration
-files or installed packages may also trigger this.
+critical binaries and configuration files may have been updated. If an
+automation system like [puppet][1] is in use, automatic modification of
+configuration files or installed packages may also trigger this.
 
 ## Initial Setup
 
-The defaults are reasonably sane so you can continue with the default config
-that ships with several distributions, but there are several things it will
-miss. Arch Linux's default doesn't catch:
+The defaults are reasonably sane so you can continue with the default
+configuration that ships with several distributions, but there are several
+things it will miss. Arch Linux's default doesn't catch:
 
 * SELinux and extended attributes (though SELinux doesn't apply)
 * Permissions and security hearings under /dev
@@ -89,7 +89,8 @@ aide --init
 Depending on the amount of packages installed on your system and the speed of
 your disks this can take quite some time (on a fairly minimal production system
 for me this took about two minutes). You then need to copy the created database
-into the reference location (these locations are dependent on [my config][3]):
+into the reference location (these locations are dependent on [my
+  configuration][3]):
 
 ```sh
 cp /var/lib/aide/aide-$(hostname -f).db.new.gz /var/lib/aide/reference/aide-$(hostname -f).db.gz
@@ -102,16 +103,16 @@ aide --check
 ```
 
 If any monitored file or directory's attributes changed they will be reported
-to both stdout and written to `/var/log/aide/aide.log`. This file is always
+to both STDOUT and written to `/var/log/aide/aide.log`. This file is always
 completely rewritten after every run, if you want to keep historical reports,
 [logrotate][2] can be used to move these files aside.
 
 I do recommend reviewing the configuration file both to ensure all critical
 system directories are covered on your systems and to be aware of what is
 monitored and to what extent. Pay special attention to the package manager
-files of your system as they may not be included in the default config.
+files of your system as they may not be included in the default configuration.
 
-If you make any changes it is wise to validate the config afterwards by
+If you make any changes it is wise to validate the configuration afterwards by
 running:
 
 ```sh
@@ -123,9 +124,9 @@ valid.
 
 I have a modified configuration file covering my general use case
 [available][3], a slightly tweaked [cron job][4] ([original here][5]), and
-slightly [modified script][6] to check AIDE itegrity remotely using SSH
-(original in the contrib directory of the AIDE source). If you use any of these
-you will likely need to adjust paths to match the config.
+slightly [modified script][6] to check AIDE integrity remotely using SSH
+(original in the `contrib` directory of the AIDE source). If you use any of
+these you will likely need to adjust paths to match the configuration.
 
 [1]: {{< relref "notes/puppet.md" >}}
 [2]: {{< relref "notes/logrotate.md" >}}

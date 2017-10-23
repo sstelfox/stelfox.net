@@ -93,17 +93,17 @@ source auditd {
 };
 ```
 
-This config will poll the file once a second for any changes (you may want to
-drop this for programs that don't log as often). I recommend setting a program,
-facility, and priority as the defaults are not ideal for daemon logs. Know what
-the flags mean and set them according to the file you're pulling in.
+This configuration will poll the file once a second for any changes (you may
+want to drop this for programs that don't log as often). I recommend setting a
+program, facility, and priority as the defaults are not ideal for daemon logs.
+Know what the flags mean and set them according to the file you're pulling in.
 
 ## Receiving Secure Logs from Other Hosts
 
 System logs hold valuable diagnostic and security related events, but may
 accidentally contain additional sensitive information. Whenever possible, log
 senders should be authenticated and should be using an encrypted transport
-mechanism. This is very easy to setup and tune with syslog-ng.
+mechanism. This is very easy to setup and tune with Syslog-ng.
 
 You should create a [certificate authority][1] dedicated to authenticating
 clients to your logging infrastructure. The server cert does not have to be
@@ -119,7 +119,7 @@ keys should be in the PEM format.
 
 Create two directories `/etc/syslog-ng/ca.d` and `/etc/syslog-ng/crl.d`. Place
 the CA certificate in the `ca.d` directory and switch to that directory.
-syslog-ng uses the hashed directory format so a symlink needs to be created
+Syslog-ng uses the hashed directory format so a symlink needs to be created
 with it's hash. The following one liner will create the appropriate hash link
 for the certificate authority file `syslog_clients.crt`:
 
@@ -130,10 +130,10 @@ ln -s syslog_clients.crt $(openssl x509 -noout -hash -in syslog_clients.crt).0
 If you have a CRL associated with the client certificate (doesn't hurt to
 pre-generate an empty one and configure it now) place it in the `crl.d`
 directory. This also needs a hash identifier but the name is slightly
-different. This assumes a CRL file name of syslog_clients.crl, and that you're
-in the `crl.d` directory:
+different. This assumes a CRL file name of `syslog_clients.crl`, and that
+you're in the `crl.d` directory:
 
-TODO: Check and see if this works, x509 may need to be replaced with crl.
+TODO: Check and see if this works, `x509` may need to be replaced with `crl`.
 Ultimately the hash identifier needs to be the hash of the issuing CA so it may
 simply need to be reused from the last step.
 
@@ -141,7 +141,7 @@ simply need to be reused from the last step.
 ln -s syslog_clients.crl $(openssl x509 -noout -hash -in syslog_clients.crl).r0
 ```
 
-You'll also want to generate custom a custom dhparam file using the following
+You'll also want to generate custom a custom `dhparam` file using the following
 command:
 
 ```
@@ -158,7 +158,7 @@ openssl ciphers -v | grep TLSv1.2 | awk '{ print $1 }' | tr '\n' ':' | sed -e 's
 ```
 
 The output of the above will be used in the `ciphers` parameter to `tls` in the
-config below.
+configuration below.
 
 Similarly with ECDH curves, view what is supported on your system (and remove
 the NIST curves just in case they really are untrustworthy):
@@ -168,7 +168,7 @@ openssl ecparam -list_curves | sed 's/://g' | awk '{ print $1 }' | grep -v prime
 ```
 
 This list will be used as the contents of the `ecdh_curve_list` parameter to
-`tls` in the config below.
+`tls` in the configuration below.
 
 ```
 source tlsListener {
@@ -215,7 +215,7 @@ Those being the `max_connections`, `so_rcvbuf` and `so_sndbuf`.
 The `max_connections` option is easy, it should be set based on the number of
 log clients you expect to have. There is memory overhead for each of these
 slots so setting it very high to ignore it isn't ideal, it's still a good idea
-to give yourself ~30% overhead to accomadate future clients and reconnection
+to give yourself ~30% overhead to accommodate future clients and reconnection
 surges when the server may not be aware clients disconnected.
 
 The buffer settings should be set based on the peak number of messages any
@@ -237,24 +237,24 @@ since we received them authenticated, and encrypted. It is very unlikely they
 were tampered with in transit. This is used to differentiate with logs that
 came in through the UDP network mechanism from clients that don't support
 sending their logs over TLS. If you prefer to save the few bytes with every
-message you can remove the `tags` config or adjust it to your liking.
+message you can remove the `tags` configuration or adjust it to your liking.
 
 The other is the path for per-host logs (defined in the destination). I would
 consider carefully what the most likely use case of the logs are going to be
 (when are you going to want to access them?). There are generally two schools
-of thought for these types of file, host centric or date centric.
+of thought for these types of file, host-centric or date-centric.
 
 If you are likely going to be using your raw log files to investigate an issue
 on an individual host (performance issue, limited security breach, etc) then a
 host centric view is going to be most efficient for you. If instead you want to
-see paterns or similarities between many hosts at once during a certain time
+see patterns or similarities between many hosts at once during a certain time
 window (large security breach, common changes such as package upgrades between
 several hosts, etc), it'll likely be easier to work with your logs based on the
 date. I prefer the host centric approach as I additionally push my logs into
-graylog, but limit the time window that graylog keeps relying on these on disk
-files for long term archiving.
+`graylog`, but limit the time window that `graylog` keeps relying on these on
+disk files for long term archiving.
 
-You'll need to allow tcp port 6514 inbound on your host's firewall from your
+You'll need to allow TCP port 6514 inbound on your host's firewall from your
 log clients (I usually allow the whole network since this is a heavily
 authenticated service).
 
@@ -295,14 +295,15 @@ The log statements between to the two can be combined to simplify the reasoning
 around what will end up in the final logs. Filtering of specific sources and be
 handled with channels within the log context if so desired.
 
-You'll need to open udp port 514 inbound from your insecure log client to allow
+You'll need to open UDP port 514 inbound from your insecure log client to allow
 the logs through.
 
 ### Secure Flag Spoofing
 
-With the current config it is possible for an insecure client to set the secure
-flag before syslog-ng receives it. Ideally this source would remove the tag if
-it is set. A rewrite rule like the following can be used to remove the tag:
+With the current configuration it is possible for an insecure client to set the
+secure flag before syslog-ng receives it. Ideally this source would remove the
+tag if it is set. A rewrite rule like the following can be used to remove the
+tag:
 
 ```
 rewrite secureRemoval {
@@ -338,8 +339,8 @@ chain of certs) into `/etc/syslog-ng/ca.d` and perform the same hashing step on
 each individual certificate as was done in the server portion.
 
 If the server certificate is publicly verifiable, you can instead point
-`ca_dir` at the system directory (which on my test system is /etc/ssl/certs).
-Ensure this directory uses the hashing format by looking for taletell symlinks
+`ca_dir` at the system directory (which on my test system is `/etc/ssl/certs`).
+Ensure this directory uses the hashing format by looking for tell-tale symlinks
 with names similar to `ce5e74ef.0`.
 
 ```
@@ -381,7 +382,7 @@ system is less valuable here than on the receiver.
 The disk / memory buffer has two modes of operation which should be considered
 based on your deployment. When the `reliable` option is disabled, and the
 connection to the log server is backed up or lost, messages will begin by first
-queueing to memory and when that fills up will begin queueing to disk.
+queuing to memory and when that fills up will begin queuing to disk.
 
 The documentation on the reliable mode was a bit confusing but if I read it
 correctly, when lost it will buffer to both memory and disk, when the memory
@@ -395,8 +396,8 @@ hit. For the systems I operate that performance penalty for a slim chance of
 message loss is not worth the trade off, but environments under certain
 compliance requirements may not have the luxury of allowing that trade off.
 
-You'll need to allow tcp port 6514 outbound in your host's firewall to the
-logserver to ensure your logs arrive.
+You'll need to allow TCP port 6514 outbound in your host's firewall to the log
+server to ensure your logs arrive.
 
 While not required, I highly recommend enabling mark messages (in another
 section in this document) for all outbound network based destinations to be
@@ -409,7 +410,7 @@ whether the sending host has not sent anything because it or its logging daemon
 are down or if there simply has not been any log generated on the machine.
 
 The destinations themselves can take a couple of mark options to send along a
-mark notice whenever there has been no desitnation traffic. The following is an
+mark notice whenever there has been no destination traffic. The following is an
 example of sending a mark after 15 minutes of inactivity to a destination:
 
 ```
@@ -418,8 +419,8 @@ mark_mode(dst_idle);
 ```
 
 There are more mark modes which can be specified and are detailed in chapter 9
-of the syslog-ng OSE admin guide (though dst_idle, none, and periodical are the
-only ones I find of value).
+of the syslog-ng OSE admin guide (though `dst_idle`, `none`, and `periodical`
+are the only ones I find of value).
 
 ## Testing Sources, Filters, and Destinations
 
@@ -473,7 +474,7 @@ If you perform filtering based on IP you'll need to modify the specific IP to
 match against 127.0.0.1.
 
 Establish your test and check all of your filters for both positive and
-negative matches, and ensure all configured destinations are outputing the
+negative matches, and ensure all configured destinations are outputting the
 expected results. Once testing is complete, be sure to remove the extra source.
 
 I like to additionally test, on an actual system what messages I might be
@@ -498,7 +499,7 @@ log { source(local); destination(fallback); flags(fallback); };
 If you have [auditd][2] configured to send it's messages to syslog via it's
 dispatcher it is useful to filter those out into their own file so the audit
 reporting tools can still operate on them. The following example is intended to
-be used with the config documented on my [auditd][2] page as well as the
+be used with the configuration documented on my [auditd][2] page as well as the
 listener defined in the secure log reception section in on this page.
 
 Pay attention to the location of where these blocks are placed as they include
@@ -536,7 +537,7 @@ log {
 ```
 
 With this in place you can make use of the audit tools as normal, while on the
-log host, by cat'ing in appropriate file(s) into the tool. For an example:
+log host, by `cat`'ing in appropriate file(s) into the tool. For an example:
 
 ```
 cat /var/log/remote/testhost.example.tld/2017/10/19_audit.log | aureport --interpret --failed --executable
@@ -558,13 +559,13 @@ on-error(fallback-to-string);
 
 ## Future Work
 
-There is a package named logcheck that seems interesting for extracting
+There is a package named `logcheck` that seems interesting for extracting
 anomalous events from logs. It may be useful directly or at least as a
-reference for anomalous events. syslog-ng is capable of some pretty powerful
-processing, which when combined with the smtp endpoint, may be sufficient on
-its own (there are also more powerful tools such as graylog as well).
+reference for anomalous events. Syslog-ng is capable of some pretty powerful
+processing, which when combined with the SMTP endpoint, may be sufficient on
+its own (there are also more powerful tools such as Graylog as well).
 
-There are use flags for enable smtp destinations, json handling, and amqp
+There are use flags for enable SMTP destinations, JSON handling, and AMQP
 destinations. They may be useful and should be looked into to see what kind of
 value I can get out of them.
 

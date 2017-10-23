@@ -23,9 +23,9 @@ striking-evening-moss.stelfox.net
 ```
 
 The second name is a CNAME intended to be redirectable to new instances or
-servers if an old one dies or otherwise needs to be decomissioned. This is tied
-directly to the function of the machine, while letting the machine behind the
-name be replaceable.
+servers if an old one dies or otherwise needs to be decommissioned. This is
+tied directly to the function of the machine, while letting the machine behind
+the name be replaceable.
 
 This name is a combination of a short purpose code, a serial number (indicating
 the specific instances of the purpose), what environment it runs in
@@ -64,7 +64,7 @@ documents the purpose codes I've generated for specific uses.
 ## List of Environments
 
 Similar to the purpose codes, these are the chosen three letter codes for
-different enviroments.
+different environments.
 
 * dev - Development
 * tst - Testing
