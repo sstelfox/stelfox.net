@@ -1,5 +1,7 @@
 ---
 date: 2012-08-07 14:09:33+00:00
+slug: adding-a-table-prefix-to-datamapper-tables
+tags:
 - development
 - ruby
 title: Adding a Table Prefix to DataMapper Tables
