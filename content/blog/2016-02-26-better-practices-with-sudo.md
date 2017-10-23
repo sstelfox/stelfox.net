@@ -25,10 +25,11 @@ gotten sudo to the 'good enough' point without ever learning how to configure
 it properly countless times, which mostly meant leaving the distribution's
 defaults.
 
-At face value, executing a shell this way doen't seem to pose a problem. We use
-auditd to record administrative changes, and the kernel can track our original
-login UID and record that in addition to our effective user ID. Permission to
-use sudo is still restricted to a subset of trusted administrators.
+At face value, executing a shell this way doesn't seem to pose a problem. We
+use auditd to record administrative changes, and the kernel can track our
+original login UID and record that in addition to our effective user ID.
+Permission to use sudo is still restricted to a subset of trusted
+administrators.
 
 Using this default configuration is forming bad habits and after working
 through it it's not particularily hard to make a drastic improvement on the

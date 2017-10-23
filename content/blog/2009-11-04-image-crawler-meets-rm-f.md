@@ -16,9 +16,9 @@ directory the images were being saved in to see the results and my ssh session
 locked up... Or so I thought. I hit Ctrl-C and nothing happened... So I closed
 my window and opened a new one.
 
-Maybe there was a filename that hit some weird glitch in `ls` causing it too
-lock up. Not a big deal I can start from scratch. I cd'd to the directory and
-ran an `rm -f *` and was greeted with this:
+Maybe there was a file name that hit some weird glitch in `ls` causing it too
+lock up. Not a big deal I can start from scratch. I switched to the directory
+and ran an `rm -f *` and was greeted with this:
 
 ```
 /bin/rm: Argument list too long.
@@ -34,12 +34,12 @@ that said:
 > GNU 'rm', like every program that uses the 'getopt' function to parse its
 > arguments...
 
-Alrighty moving on... so getopt is parsing it's options... man and info pages
-on getopt don't really reveal anything...
+Moving on... getopt is parsing it's options... man and info pages on getopt
+don't really reveal anything...
 
 After some creative Googling I found the answer: getopt's argument limit is
-1024. So... how many files did I have? I wanted to give ls one more try... I
-typed it in and sure enough console froze... or did it? I walked away and
+1024. How many files did I have? I wanted to give ls one more try... I
+typed it in and sure enough console froze... Or did it? I walked away and
 did other things. When I came back I had a list of files longer than my
 console buffer. I was smarter the second time around: `ls | wc -l`. After
 about five minutes it came back again with just the number.

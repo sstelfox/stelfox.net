@@ -30,7 +30,7 @@ notes I'd like to make available for people:
 * WPA & WPA2 both personal and enterprise are effected
 * The WiFi association key (your network's passphrase) is safe, this attack
   breaks a per-client session key.
-* Assume all your traffic is being sent in plaintext and can be manipulated by
+* Assume all your traffic is being sent in plain text and can be manipulated by
   an attacker until you have patched.
 
 If you have a VPN available to your client devices, having it active will

@@ -43,7 +43,7 @@ in this style:
 Before changing my rules over to this form I checked a couple to ensure they
 were behaving correctly then migrated the rest. After applying the new rules I
 found quite a few audit records I'd expect missing. If I had kept reading (the
-next line from the last manpage) I would have found this:
+next line from the last man page) I would have found this:
 
 > If you place a watch on a directory, its the same as using the -F dir option
 > on a syscall rule.

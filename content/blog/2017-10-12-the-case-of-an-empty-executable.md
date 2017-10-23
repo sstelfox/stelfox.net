@@ -8,7 +8,7 @@ title: The Case of an Empty Executable
 
 I recently came across a [short article][1] written about a decade ago. It was
 a curious thing already as it was hosted in a user's home directory off a
-webserver with the standard '~<username>' showing up in the URL. The important
+web server with the standard '~<username>' showing up in the URL. The important
 part that caught my eye was this:
 
 > The "true" program does nothing; it merely exits with a zero exit status.

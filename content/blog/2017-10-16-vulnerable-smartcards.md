@@ -2,7 +2,7 @@
 date: 2017-10-16 12:25:58-04:00
 tags:
 - security
-title: Vulnerable Smartcards
+title: Vulnerable Smart Cards
 ---
 
 In addition to the [WiFi vulnerability][1] a much more limited vulnerability
@@ -13,8 +13,8 @@ The vulnerability lies in shortcuts taken to speed up the key generation using
 the library. The performance increase makes the private key vulnerable to
 factorization attacks using an extension to [Coppersmith's attack][4].
 
-It has been [confirmed that Yubikey 4s][10] are effected as are many nations
-national ID cards. Earlier versions of Yubikey were not affected (including my
+It has been [confirmed that YubiKey 4s][10] are effected as are many nations
+national ID cards. Earlier versions of YubiKey were not affected (including my
 preference the Neo). This brings up a controversial decision [made by
 Yubico][5] a little over a year ago to switch from tested open source and
 widely inspected libraries, to closed source versions.
@@ -37,7 +37,7 @@ snippet:
 
 It seems they didn't roll their own crypto library, which is good but also
 belies the first part of this sentence. The latter part is concerning. If they
-can't be updated all Yubikey 4s out there can not and should never ever be used
+can't be updated all YubiKey 4s out there can not and should never ever be used
 for key generation and there is nothing consumers that have already purchased
 the devices can do about their existing faulty devices without purchasing a
 new one or with any luck have Yubico replace them with a non-vulnerable
@@ -53,9 +53,9 @@ If you have a GPG key, or the public portion of any RSA key that may be
 affected you can test it using a [convenient online analyzer][9].
 
 ***Update:*** Yubico is providing mitigation recommendations and optional
-[YubiKey replacements][11]. There are also reports rolling in that Github is
+[YubiKey replacements][11]. There are also reports rolling in that GitHub is
 taking the proactive step of disabling all keys that have been found to be weak
-according to the ROCA tests (Well done Github!).
+according to the ROCA tests (Well done GitHub!).
 
 [1]: {{< relref "blog/2017-10-16-a-krack-in-the-defenses.md" >}}
 [2]: https://crocs.fi.muni.cz/public/papers/rsa_ccs17
