@@ -40,19 +40,19 @@ the tmux man page, the trigger will catch if the number of c0 sequences per
 will start displaying an update once every interval number of milliseconds.
 
 I can't see faster than my eye's refresh rate so that seems like a decent
-starting point. According to [wikipedia][2] the human eye/brain interface can
+starting point. According to [Wikipedia][2] the human eye/brain interface can
 process 10-12 images per second but we can notice 'choppiness' below 48 FPS.
 Since I won't be reading anything flying by that fast I settled on a maximum
 rate of 10 FPS updated in my shell, or an interval of '100ms'.
 
-For the trigger I was signficantly less scientific, I dropped the trigger by
-50, reloaded my tmux configuration, cat'd a large file and tested whether I
+For the trigger I was significantly less scientific, I dropped the trigger by
+50, reloaded my tmux configuration, `cat`'d a large file and tested whether I
 could immediately kill the process and move between panes. I finally settled on
 a value of '75' for the trigger rate. It does make the output seem a little
-choppy but it is signficantly nicer to not kill my terminal.
+choppy but it is significantly nicer to not kill my terminal.
 
-TL;DR Add the following lines to your ~/.tmux.conf file and you'll be in a much
-better shape:
+TL;DR Add the following lines to your `~/.tmux.conf` file and you'll be in a
+much better shape:
 
 ```
 setw -g c0-change-interval 50

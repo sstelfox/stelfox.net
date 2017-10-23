@@ -51,7 +51,7 @@ anything that happens on their network.
 
 But those arguments against have very little to do with security. So what is
 all this hype about NAT being a form of security through obscurity? The
-argument I come across whenever I ask neigh-sayers about NAT, is that if a user
+argument I come across whenever I ask naysayers about NAT, is that if a user
 gets infected then the network can still be enumerated behind the NAT as if all
 the computers were on the Internet. This argument has one fatal flaw. It is
 depending on a user to get infected. A firewall has this exact same

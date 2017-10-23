@@ -38,7 +38,7 @@ Another, more protective layer that IPv6 gives you for free is it's sheer size.
 
 Doing a pure enumeration of a single home subnet remotely (that is you are not
 on the link IPv6 local link) would take millennia by some estimations, as
-opposed the the IPv4 address space which could be done at home in a matter of
+opposed the IPv4 address space which could be done at home in a matter of
 weeks. One house vs the world. That is the scale we are now working at in IPv6.
 
 The vast scale, however, while enough to defend against random scans, will not
@@ -77,7 +77,8 @@ hostiles.
 
 I use Fedora 17 and it took me a while to figure out how to enable privacy
 addresses the "Red Hat" way. You can easily do it generally on any Linux system
-with sysctl. Just add the following to your /etc/sysctl.conf and reload sysctl:
+with sysctl. Just add the following to your `/etc/sysctl.conf` and reload
+sysctl:
 
 ```ini
 net.ipv6.conf.all.use_tempaddr = 2
@@ -86,9 +87,9 @@ net.ipv6.conf.default.use_tempaddr = 2
 
 But that isn't the "Red Hat" way. Red Hat manages it's interfaces and network
 configuration through various interface configuration files living in
-/etc/sysconfig/network-scripts. For any IPv6 enabled interface you can turn on
-privacy addresses with the following line for example in
-"/etc/sysconfig/network-scripts/ifcfg-eth0":
+`/etc/sysconfig/network-scripts`. For any IPv6 enabled interface you can turn
+on privacy addresses with the following line for example in
+`/etc/sysconfig/network-scripts/ifcfg-eth0`:
 
 ```sh
 IPV6_PRIVACY="rfc3041"

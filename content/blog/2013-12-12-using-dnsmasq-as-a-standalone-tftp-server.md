@@ -20,13 +20,13 @@ I already have a DNS and DHCP server on my network and didn't want dnsmasq to
 take on either of those roles so my first challenge was finding a way to
 prevent dnsmasq from running those bits of it's code, or failing that I would
 just firewall off the service. Luckily it's quite easy to disable both bits of
-funtionality.
+functionality.
 
 For DHCP you simply have to leave out any of the dhcp option in the
-configuation file, DNS you just tell it to operate on port 0 and it will be
+configuration file, DNS you just tell it to operate on port 0 and it will be
 disabled.
 
-So my whole config starting out looks like this:
+So my whole configuration starting out looks like this:
 
 ```
 # Disable DNS
@@ -34,7 +34,7 @@ port=0
 ```
 
 Now I need to configure the TFTP bits of dnsmasq. This too was rather simple
-only requiring me to add the following to my already terse config file:
+only requiring me to add the following to my already terse configuration file:
 
 ```
 # Enable the TFTP server
@@ -52,6 +52,7 @@ systemctl start dnsmasq.service
 ```
 
 Voila, TFTP running and happy. If you have a firewall running you'll also want
-to open ports 69/tcp and 69/udp (though I suspect only the UDP one is needed).
+to open ports `69/tcp` and `69/udp` (though I suspect only the UDP one is
+needed).
 
 [1]: {{< relref "2014-07-01-using-openwrts-dnsmasq-as-a-tftp-server.md" >}}

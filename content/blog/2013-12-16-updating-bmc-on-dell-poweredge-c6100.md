@@ -34,11 +34,11 @@ modifications for DCS and any attempts to modify the BIOS or BMC will likely
 cause you to end up bricking the remote management board or the motherboard.
 
 Even with the regular board there is always a risk of bricking it, though
-firmware updates have gotten a lot more reliable and I haven't experienced a
-mis-flashed motherboard in years. You've been warned.
+firmware updates have gotten a lot more reliable and I haven't experienced an
+incorrectly flashed motherboard in years. You've been warned.
 
-The BMC was fairly straight-foward. I installed the 64-bit version of Fedora 19
-on a thumbdrive, downloaded version 1.30 of the BMC software (get the file
+The BMC was fairly straight forward. I installed the 64-bit version of Fedora
+19 on a thumb drive, downloaded version 1.30 of the BMC software (get the file
 named `PEC6100BMC130.exe`). The file itself is a self-extracting zip archive
 which can be extracted using the regular unzip utility.
 

@@ -26,8 +26,8 @@ Other timezones can be found in the `/usr/share/zoneinfo` and are generally
 broken up by continent with a few exceptions.
 
 As a user it's obviously more useful to see the time in my local timezone and
-this can be overridden on a per-user basis using the TZ environment variable. I
-stick this in my `~/.bashrc` file and it just works transparently:
+this can be overridden on a per-user basis using the `TZ` environment variable.
+I stick this in my `~/.bashrc` file and it just works transparently:
 
 ```sh
 export TZ="America/Los_Angeles"

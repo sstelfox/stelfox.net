@@ -27,8 +27,8 @@ File.basename(self.url)
 
 It will work, but not when creating additional versions such as thumbnails as
 the file hasn't actually been created yet so a URL can't be built and you'll
-get an error trying to perform File.basename(nil). You'd need to go back up to
-the model and get the normal version's URL like so:
+get an error trying to perform `File.basename(nil)`. You'd need to go back up
+to the model and get the normal version's URL like so:
 
 ```ruby
 File.basename(self.model.asset.url)
@@ -36,8 +36,8 @@ File.basename(self.model.asset.url)
 
 Now if you're trying to get the file name to build part of the store_dir,
 you've just created an infinite loop! Ruby will be happy to tell you that the
-stack level too deep (SystemStackError). So ultimately how did I end up getting
-it into my store_dir?
+stack level too deep (`SystemStackError`). So ultimately how did I end up
+getting it into my store_dir?
 
 ```ruby
 self.model.attributes["asset"]

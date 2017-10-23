@@ -8,7 +8,7 @@ title: Using VIM as Your Password Manager
 ---
 
 There are all kinds of password managers out there. Everything from web
-services that are quite solid and respectible, to [native][1] [desktop][2]
+services that are quite solid and respectable, to [native][1] [desktop][2]
 apps.
 
 A lot of these are simply too heavy for me, involve installing software on a
@@ -17,7 +17,7 @@ remember multiple account details before you could get access to any individual
 password.
 
 Due too the various complexities and lack of matching use cases a couple years
-ago I set out to develop my own open-source version of Passpack. In the interim
+ago I set out to develop my own open-source version of PassPack. In the interim
 though I needed a solution for keeping track of my hundreds of various accounts
 and their passwords.
 

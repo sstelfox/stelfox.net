@@ -3,7 +3,7 @@ date: 2014-01-18 22:47:37 -0500
 slug: starting-puppetmaster-on-fedora-19
 tags:
 - linux
-title: Starting Puppetmaster on Fedora 19
+title: Starting Puppet Master on Fedora 19
 ---
 
 I was trying to get puppet running out of the box on Fedora 19 and found a bug
@@ -31,16 +31,16 @@ out puppet, additionally I would briefly see the `puppetmaster` service open up
 port 8140 before systemd would kill it.
 
 Turns out the systemd service script is looking in the wrong location for the
-pidfile. All of the pids are stored in `/var/run/puppet/` with a filename of
+pid file. All of the pids are stored in `/var/run/puppet/` with a filename of
 either `agent.pid` or `master.pid` depending on the mode it was run as. The
 systemd script, as the log indicates is looking for the pid files in
 `/run/puppet`.
 
 The real solution would be to bring this too the attention of the script
 maintainers, but I haven't had a lot of luck going through those processes.
-Instead you can work around the issue without any beauracracy by changing the
-rundir configuration option in `/etc/puppet/puppet.conf` to `/run/puppet`, and
-creating `/run/puppet` (with puppet as the user and group owning the
+Instead you can work around the issue without any bureaucracy by changing the
+`rundir` configuration option in `/etc/puppet/puppet.conf` to `/run/puppet`,
+and creating `/run/puppet` (with puppet as the user and group owning the
 directory).
 
 After that, voila! The service starts up. You'd think a QA process would catch

@@ -11,7 +11,7 @@ I found myself writing another bash script that should exit should any of the
 few commands within it fail to run. As I began writing some error handling
 after each command, and isolating the sections into bash functions I figured
 there had to be a better way. After a little Googling and a trip through the
-bash manpages sure enough:
+bash man pages sure enough:
 
 ```sh
 #!/bin/bash

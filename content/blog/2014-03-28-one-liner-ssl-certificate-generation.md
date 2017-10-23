@@ -7,7 +7,7 @@ tags:
 title: One-Liner SSL Certificate Generation
 ---
 
-I regularily find myself in need of generating a quick SSL key and certificate
+I regularly find myself in need of generating a quick SSL key and certificate
 pair. I've been using a one-liner for a while to generate these certificates.
 No annoying user prompts just a quick fast certificate pair.
 

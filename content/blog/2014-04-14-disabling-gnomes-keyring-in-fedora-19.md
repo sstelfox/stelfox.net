@@ -18,7 +18,7 @@ get the exact working again):
 Warning: Unable to connect to SSH agent
 ```
 
-I also noticed that periodically I got a Gnome keyring popup asking for my SSH
+I also noticed that periodically I got a Gnome keyring pop-up asking for my SSH
 agent rather than my command-line client. I'm personally not a big fan of
 Gnome, but I deal with because it's the default for Fedora, tends to stay out
 of your way, and switching to something else is just not a project I've had
@@ -47,7 +47,7 @@ unset GNOME_KEYRING_CONTROL SSH_AUTH_SOCK GPG_AGENT_INFO GNOME_KEYRING_PID
 ```
 
 I share my dotfiles along a lot of different systems and don't like
-system-specific behaivior getting in there. Instead I choose to find what was
+system-specific behavior getting in there. Instead I choose to find what was
 starting up the keyring daemon and preventing it from doing so. Without a good
 place to start and stubbornly refusing to Google this particular problem I took
 the brute force approach of grep for the binary name in the `/etc` directory.
@@ -62,8 +62,8 @@ rm -f gnome-keyring-{gpg,pkcs11,secrets,ssh}.desktop
 ```
 
 The first solution will keep your system in a default state, but this will
-permanently prevent the obnoxious behaivior on your system for all users and
-prevents you from adding hacks to your bashrc to work around mis-behaving
+permanently prevent the obnoxious behavior on your system for all users and
+prevents you from adding hacks to your bashrc to work around misbehaving
 software.
 
 I hope this helps someone else!

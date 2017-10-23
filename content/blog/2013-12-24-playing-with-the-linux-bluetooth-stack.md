@@ -18,8 +18,8 @@ If you get an error like the following:
 Operation not possible due to RF-kill
 ```
 
-You'll need to unblock access to the resource using rfkill. You can unblock all
-blocked devices like so:
+You'll need to unblock access to the resource using `rfkill`. You can unblock
+all blocked devices like so:
 
 ```sh
 rfkill unblock all

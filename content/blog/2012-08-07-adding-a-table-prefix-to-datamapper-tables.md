@@ -1,7 +1,5 @@
 ---
 date: 2012-08-07 14:09:33+00:00
-slug: adding-a-table-prefix-to-datamapper-tables
-tags:
 - development
 - ruby
 title: Adding a Table Prefix to DataMapper Tables
@@ -15,9 +13,9 @@ my reading through the source of the data_mapper gem only to find that there
 was no feature for simply defining a prefix.
 
 Reading through the source though did allow me to find any easy way to
-implement such functionality. The following snippet is a minimalistic
-data_mapper initialization and setup of one model with a table prefix of
-"source_" (chosen at random and of no significance).
+implement such functionality. The following snippet is a minimalist data_mapper
+initialization and setup of one model with a table prefix of "source_" (chosen
+at random and of no significance).
 
 ```ruby
 # encoding: utf-8

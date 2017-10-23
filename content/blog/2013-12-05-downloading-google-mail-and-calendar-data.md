@@ -6,7 +6,7 @@ tags:
 title: Downloading Google Mail and Calendar Data
 ---
 
-I [recently posted][1] a guide on backing up your Gmail with fetchmail. This
+I [recently posted][1] a guide on backing up your Gmail with `fetchmail`. This
 unfortunately doesn't include your calendar data. It seems like backing up was
 a hot enough topic that the Google Gmail team are [releasing an official backup
 method][2].  It's not completely in the wild yet but I definitely look forward

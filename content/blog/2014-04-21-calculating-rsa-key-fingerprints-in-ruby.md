@@ -8,7 +8,7 @@ tags:
 title: Calculating RSA Key Fingerprints in Ruby
 ---
 
-I regularily find myself working on projects that involve the manipulation and
+I regularly find myself working on projects that involve the manipulation and
 storage of RSA keys. In the past I've never had to worry about identification
 or presentation of these keys. Normally I've only got one too three pairs at
 most that I'm manipulating (server, certificate authority, client).
@@ -45,7 +45,7 @@ ssh-keygen -lf /etc/ssh/ssh_host_key.pub
 ```
 
 It will work when the path is either a private RSA key or a public key
-formatted for SSH authorizied key files.
+formatted for SSH authorized key files.
 
 X509 certificates also use a key fingerprint to help identify a certificate's
 signing authority. What I rapidly learned through this investigation was that
@@ -86,7 +86,7 @@ openssl x509 -in /tmp/sample.crt -noout -fingerprint
 Please note that case sensitivity doesn't matter here (OpenSSL will return
 upper case hex codes).
 
-The next one I got working was the SSH fingerprints thanks to the RFCs metioned
+The next one I got working was the SSH fingerprints thanks to the RFCs mentioned
 earlier.
 
 ```ruby

@@ -29,7 +29,7 @@ can not get into the Administrators menu which is where all the juicy bits seem
 to be. I've found that the factory reset code is 7517517, though that doesn't
 get me anything beyond cleaning up it's last known phone number.
 
-Through a very thorough nmap scan I've found that ports TCP 21, 79, 113, 513,
+Through a very thorough `nmap` scan I've found that ports TCP 21, 79, 113, 513,
 514, 554, 5060, 7022, and 8080 are all open. There doesn't appear to be any UDP
 ports available which actually surprised me, since SIP over UDP is pretty
 common.
@@ -48,7 +48,7 @@ SSH-2.0-dropbear_0.45
 Bingo. SSH it is, and an old version of dropbear at that.  Unfortunately as the
 one poster I found said the password was neither blank nor 'root'. I suspect
 that they had an older firmware revision and these 'bugs' were ironed out in a
-later revision. That's ok though it'll just take a bit more work.
+later revision. That's OK though it'll just take a bit more work.
 
 As for port 8080 it is definitely running a web configuration interface. All it
 asks for is a password (which we don't have). The extension for the login page

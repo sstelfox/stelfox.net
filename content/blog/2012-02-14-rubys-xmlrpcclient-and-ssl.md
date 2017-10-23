@@ -84,7 +84,7 @@ you'll need to verify the server's certificate.
 
 The server I was connecting to was using a [RapidSSL][6] certificate, who has
 been verified by [GeoTrust][7]. You want to grab their certificates base64
-encoded in PEM format. Stick them all in a "ca.crt" file.
+encoded in PEM format. Stick them all in a `ca.crt` file.
 
 How do we get XMLRPC::Client to actually use that information without hacking
 it all to pieces? Net::HTTP has a few methods that allow you to set the
@@ -93,7 +93,7 @@ XMLRPC::Client allowed to you specify this directly somehow I would've been a
 lot happier.
 
 Here's that code snippet again, this time forcing certificate verification with
-the ca.crt file. This code assumes that the ca.crt file lives in the same
+the `ca.crt` file. This code assumes that the `ca.crt` file lives in the same
 directory as the connection script:
 
 ```ruby

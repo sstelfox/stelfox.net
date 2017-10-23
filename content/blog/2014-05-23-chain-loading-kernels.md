@@ -104,7 +104,7 @@ exec /sbin/init.original "$@"
 
 After rebooting you should be in your new kernel which you can verify with
 `uname -a` and also by examining the `/proc/cmdline` file for the existence of
-the 'kexeced' flag.
+the `kexeced` flag.
 
 If you modify the script above, be very careful as any execution error will
 cause your system to die and recovery will only be possible by mounting the

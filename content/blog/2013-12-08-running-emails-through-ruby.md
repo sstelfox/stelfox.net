@@ -71,7 +71,7 @@ in `~/.bin/mail-counter.rb`, if you've stored it in a different location you'll
 want to update your path to reflect that.
 
 Filters in procmail are handled by using the pipe helper. The following is a
-minimum working example of a procmailrc file to make use of our filter:
+minimum working example of a `procmailrc` file to make use of our filter:
 
 ```bash
 MAILDIR=$HOME

@@ -156,11 +156,11 @@ User.create(:username => 'admin', :password => 'admin')
 User.first(:username => 'admin').check_password('admin')
 ```
 
-One of the key ways this separation increases the security of real users's
-hashes is by having a large number of fake hashes in the hash table that the
-attackers will have to crack at the same time. As a bonus I've written a module
-to handle just that for the code I've already provided. Once again this is
-licensed under the MIT license and should not be considered production ready.
+One of the key ways this separation increases the security of real users hashes
+is by having a large number of fake hashes in the hash table that the attackers
+will have to crack at the same time. As a bonus I've written a module to handle
+just that for the code I've already provided. Once again this is licensed under
+the MIT license and should not be considered production ready.
 
 ```ruby
 # This is the code above, you can also include everything below

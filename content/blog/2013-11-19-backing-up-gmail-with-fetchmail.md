@@ -9,13 +9,13 @@ title: Backing up Gmail with fetchmail
 
 This morning I found myself in need of a large set of emails to test a
 particular set of code. Ideally these emails would be broken out into easily
-digestable pieces, and it was strictly for my own personal testing so I wasn't
+digestible pieces, and it was strictly for my own personal testing so I wasn't
 concerned with using my own live data for this test (There will probably be
 another post on this project later on).
 
 Having used `fetchmail` with good results in the past I decided it was a good
 idea to take this opportunity to also backup my Gmail account into the common
-Maildir format (which essentially breaks out emails into individual files
+`Maildir` format (which essentially breaks out emails into individual files
 meeting my requirements).
 
 The first step was to enable POP access to my account through Gmail's

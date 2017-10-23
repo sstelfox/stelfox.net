@@ -9,21 +9,21 @@ title: Keep Your Gems Updated
 
 I recently went back through my backups recently and found quite a few old
 abandoned projects. Looking back on the code I see some things I'm impressed
-with, but the majority of the code I wouldn't write today. Thats not to say the
-code is bad, or doesn't function. It did exactly what I wanted to accomplish at
-the time, just not necessarily in the most efficient way.
+with, but the majority of the code I wouldn't write today. That's not to say
+the code is bad, or doesn't function. It did exactly what I wanted to
+accomplish at the time, just not necessarily in the most efficient way.
 
 This archive of old code made me start wondering how much old code I'm using in
 the projects that I'm currently writing. Not code that I've written but code
 that I'm depending on, specifically gems. As of this writing I have 26 active
 ruby projects in various states of development all of which make use of RVM and
-bundler.
+`bundler`.
 
-Conveniently enough, bundler provides an easy way to update all the gems
+Conveniently enough, `bundler` provides an easy way to update all the gems
 installed in a project unless specific version information was provided in the
-Gemfile. None of my projects have had a version directly specified in the
-Gemfile with the exception of Rails. Each project also has solid test coverage
-(though I must admit it's usually not complete).
+`Gemfile`. None of my projects have had a version directly specified in the
+`Gemfile` with the exception of Rails. Each project also has solid test
+coverage (though I must admit it's usually not complete).
 
 For each project I went through and ran `bundle update` and kept track of the
 results. I did not keep track of unique gems so the four Rails projects
@@ -33,7 +33,7 @@ project.
 
 Across all of the different projects I had 2214 gems installed. Of those 813
 had updates. My initial plan was to go through the updates and see how many of
-those updates were security or bugfixes, how many were added features, or
+those updates were security or bug fixes, how many were added features, or
 performance improvements, but I wasn't counting on the shear number of gems
 that my projects were depending on.
 

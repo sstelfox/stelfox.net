@@ -12,13 +12,13 @@ to enumerate all of the current subclasses of a particular class. After
 thinking about this for a while I settled on a good old friend of mine,
 `ObjectSpace`.
 
-For those not familiar with the ObjectSpace module, it is a means to inspect
+For those not familiar with the `ObjectSpace` module, it is a means to inspect
 and access the items being tracked by Ruby's garbage collector. This means it
 has a hook into every living object, and more dangerously, every near-death
 object.
 
 `ObjectSpace` provides a method for enumerating instances of a specific class,
-specifcally named `each_object` which takes a class. With Ruby all classes are
+specifically named `each_object` which takes a class. With Ruby all classes are
 in fact instances of the `Class` class. This allows us to enumerate every
 available class by passing it to the enumerator like so:
 
