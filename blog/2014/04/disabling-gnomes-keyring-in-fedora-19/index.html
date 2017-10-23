@@ -118,7 +118,7 @@ get the exact working again):</p>
 <pre><code>Warning: Unable to connect to SSH agent
 </code></pre>
 
-<p>I also noticed that periodically I got a Gnome keyring popup asking for my SSH
+<p>I also noticed that periodically I got a Gnome keyring pop-up asking for my SSH
 agent rather than my command-line client. I&rsquo;m personally not a big fan of
 Gnome, but I deal with because it&rsquo;s the default for Fedora, tends to stay out
 of your way, and switching to something else is just not a project I&rsquo;ve had
@@ -143,7 +143,7 @@ running, kill it and clean up after it. It might look something like this:</p>
 
 unset GNOME_KEYRING_CONTROL SSH_AUTH_SOCK GPG_AGENT_INFO GNOME_KEYRING_PID</code></pre></div>
 <p>I share my dotfiles along a lot of different systems and don&rsquo;t like
-system-specific behaivior getting in there. Instead I choose to find what was
+system-specific behavior getting in there. Instead I choose to find what was
 starting up the keyring daemon and preventing it from doing so. Without a good
 place to start and stubbornly refusing to Google this particular problem I took
 the brute force approach of grep for the binary name in the <code>/etc</code> directory.</p>
@@ -154,8 +154,8 @@ to purge them from my system:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cd /etc/xdg/autostart
 rm -f gnome-keyring-<span style="color:#f92672">{</span>gpg,pkcs11,secrets,ssh<span style="color:#f92672">}</span>.desktop</code></pre></div>
 <p>The first solution will keep your system in a default state, but this will
-permanently prevent the obnoxious behaivior on your system for all users and
-prevents you from adding hacks to your bashrc to work around mis-behaving
+permanently prevent the obnoxious behavior on your system for all users and
+prevents you from adding hacks to your bashrc to work around misbehaving
 software.</p>
 
 <p>I hope this helps someone else!</p>

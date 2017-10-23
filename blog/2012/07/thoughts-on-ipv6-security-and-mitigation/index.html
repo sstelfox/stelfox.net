@@ -136,7 +136,7 @@ Another, more protective layer that IPv6 gives you for free is it&rsquo;s sheer 
 
 <p>Doing a pure enumeration of a single home subnet remotely (that is you are not
 on the link IPv6 local link) would take millennia by some estimations, as
-opposed the the IPv4 address space which could be done at home in a matter of
+opposed the IPv4 address space which could be done at home in a matter of
 weeks. One house vs the world. That is the scale we are now working at in IPv6.</p>
 
 <p>The vast scale, however, while enough to defend against random scans, will not
@@ -175,14 +175,15 @@ hostiles.</p>
 
 <p>I use Fedora 17 and it took me a while to figure out how to enable privacy
 addresses the &ldquo;Red Hat&rdquo; way. You can easily do it generally on any Linux system
-with sysctl. Just add the following to your /etc/sysctl.conf and reload sysctl:</p>
+with sysctl. Just add the following to your <code>/etc/sysctl.conf</code> and reload
+sysctl:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#a6e22e">net.ipv6.conf.all.use_tempaddr</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2</span>
 <span style="color:#a6e22e">net.ipv6.conf.default.use_tempaddr</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2</span></code></pre></div>
 <p>But that isn&rsquo;t the &ldquo;Red Hat&rdquo; way. Red Hat manages it&rsquo;s interfaces and network
 configuration through various interface configuration files living in
-/etc/sysconfig/network-scripts. For any IPv6 enabled interface you can turn on
-privacy addresses with the following line for example in
-&ldquo;/etc/sysconfig/network-scripts/ifcfg-eth0&rdquo;:</p>
+<code>/etc/sysconfig/network-scripts</code>. For any IPv6 enabled interface you can turn
+on privacy addresses with the following line for example in
+<code>/etc/sysconfig/network-scripts/ifcfg-eth0</code>:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">IPV6_PRIVACY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rfc3041&#34;</span></code></pre></div>
 <p>After restarting your network interfaces they will additionally have privacy
 addresses that will be change automatically. The interfaces still have the MAC

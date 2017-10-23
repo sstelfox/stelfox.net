@@ -110,7 +110,7 @@ cross system tracing of events.</p>
 <li>Truncation of log files</li>
 <li>Access to the audit and audit reporting tools and logs</li>
 <li>Creation, modification, and deletion of special files (think mknod)</li>
-<li>Mount and Unmount operations</li>
+<li>Mount and unmount operations</li>
 <li>User &amp; Group creation and removal</li>
 <li>Read/write access to private key material</li>
 <li>Changes to the hostname</li>
@@ -125,7 +125,7 @@ but never hurts)</li>
 
 <p>For these logs to be meaningful they need to be shipped off a system. Auditd
 itself can receive audit events over the network and comes with a utility for
-pushing them over the network. Without kerberos though these events are sent
+pushing them over the network. Without Kerberos though these events are sent
 without authentication or encryption and could be tampered with or spoofed by a
 crafty attacker.</p>
 
@@ -134,12 +134,12 @@ events (such as <a href="/notes/rsyslog/" target="_blank">RSyslog</a>) and do so
 tunnel.</p>
 
 <p>The final option for getting logs off the system, is to specify a custom
-dispatcher using the <code>dispatcher</code> config option in <code>/etc/audit/auditd.conf</code>.
-This needs to be an executable on the system that will take audit records
-through STDIN. A custom dispatcher could POST individual events to an API, log
-the events directly to syslog, or anything else that can be coded. This will be
-run with root permissions, so the ability for it to drop permissions is highly
-desirable.</p>
+dispatcher using the <code>dispatcher</code> configuration option in
+<code>/etc/audit/auditd.conf</code>.  This needs to be an executable on the system that
+will take audit records through STDIN. A custom dispatcher could POST
+individual events to an API, log the events directly to syslog, or anything
+else that can be coded. This will be run with root permissions, so the ability
+for it to drop permissions is highly desirable.</p>
 
 <h2 id="configuration">Configuration</h2>
 
@@ -160,7 +160,7 @@ from auditd and can do anything with them.</p>
 to syslog, to a remote auditd instance, or to a unix socket. I normally use the
 log file option rather than the dispatcher, and use the ability to read in
 files as a log source inside my syslog daemon of choice to get those messages
-to a central log server. Sending them directly to syslog is signficantly more
+to a central log server. Sending them directly to syslog is significantly more
 efficient (push vs poll).</p>
 
 <p>If you use another dispatcher other than the one that comes with auditd, be
@@ -174,7 +174,7 @@ I was still receiving the following message in syslog:</p>
 </code></pre>
 
 <p>Which of course, hasn&rsquo;t seemed to have been encountered by anyone else online.
-Digging through the source code, it seems audispd hasn&rsquo;t been updated for an
+Digging through the source code, it seems <code>audispd</code> hasn&rsquo;t been updated for an
 update to the protocol built into auditd. I&rsquo;ll have to look into either fixing
 the source or writing my own dispatcher&hellip;</p>
 
@@ -182,9 +182,9 @@ the source or writing my own dispatcher&hellip;</p>
 when it was fixed. I updated to 2.7.1 and it seemed to resolve that issue.</p>
 
 <p>To get the information going to syslog I made two relatively small changes to
-the exising configs. You really only need to set &lsquo;active&rsquo; to yes in
-<code>/etc/audisp/plugins.d/syslog.conf</code>. I made minor tweaks to the configs to
-better support my logging environment (I keep local6 reserved for auditd
+the existing configurations. You really only need to set &lsquo;active&rsquo; to yes in
+<code>/etc/audisp/plugins.d/syslog.conf</code>. I made minor tweaks to the configuration
+to better support my logging environment (I keep <code>local6</code> reserved for auditd
 records). These two files include my relevant changes:</p>
 
 <ul>

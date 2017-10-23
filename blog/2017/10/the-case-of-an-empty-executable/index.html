@@ -3,10 +3,10 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I recently came across a short article written about a decade ago. It was a curious thing already as it was hosted in a user&rsquo;s home directory off a webserver with the standard &lsquo;~&rsquo; showing up in the URL. The important part that caught my eye was this:
+<meta name='description' content='I recently came across a short article written about a decade ago. It was a curious thing already as it was hosted in a user&rsquo;s home directory off a web server with the standard &lsquo;~&rsquo; showing up in the URL. The important part that caught my eye was this:
  The &ldquo;true&rdquo; program does nothing; it merely exits with a zero exit status. This can be done with an empty file that&rsquo;s marked executable, and that&rsquo;s what it was in the earliest unix system libraries.'>
 <meta property='og:title' content='The Case of an Empty Executable • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I recently came across a short article written about a decade ago. It was a curious thing already as it was hosted in a user&rsquo;s home directory off a webserver with the standard &lsquo;~&rsquo; showing up in the URL. The important part that caught my eye was this:
+<meta property='og:description' content='I recently came across a short article written about a decade ago. It was a curious thing already as it was hosted in a user&rsquo;s home directory off a web server with the standard &lsquo;~&rsquo; showing up in the URL. The important part that caught my eye was this:
  The &ldquo;true&rdquo; program does nothing; it merely exits with a zero exit status. This can be done with an empty file that&rsquo;s marked executable, and that&rsquo;s what it was in the earliest unix system libraries.'>
 <meta property='og:url' content='https://stelfox.net/blog/2017/10/the-case-of-an-empty-executable/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
@@ -109,7 +109,7 @@ ga('send', 'pageview');
     <div class='entry-content'>
   <p>I recently came across a <a href="http://trillian.mit.edu/~jc/humor/ATT_Copyright_true.html" target="_blank">short article</a> written about a decade ago. It was
 a curious thing already as it was hosted in a user&rsquo;s home directory off a
-webserver with the standard &lsquo;~<username>&rsquo; showing up in the URL. The important
+web server with the standard &lsquo;~<username>&rsquo; showing up in the URL. The important
 part that caught my eye was this:</p>
 
 <blockquote>
@@ -173,16 +173,16 @@ $ exec ./test
 </code></pre>
 
 <p>How sinister! Someone had gotten to them first, I have to go higher into their
-organization. This calls for&hellip; the source. I quickly traverse into the builtin
+organization. This calls for&hellip; The Source. I quickly traverse into the builtin
 directory and identify the commonality <code>parse_and_execute</code>. This is where it
 gets a little fuzzy as bash is a rather complicated code base and I didn&rsquo;t want
 to spend to much time on this in the middle of the night.</p>
 
 <p>After parsing the file, it does seem to treat it as a script (as expected).
 There are two possibilities here and I didn&rsquo;t trace down which was true. Either
-parse_and_execute is simply returning with a success or it is sending the
-contents to <code>execute_command_internal</code>, which in turn defaults to a successfuly
-return value.</p>
+<code>parse_and_execute</code> is simply returning with a success or it is sending the
+contents to <code>execute_command_internal</code>, which in turn defaults to a
+successfully return value.</p>
 
 <p>The motive remains unclear, but no harm seems to be getting done so I&rsquo;m going
 to call this one case closed. It&rsquo;d be interesting to see how other shells

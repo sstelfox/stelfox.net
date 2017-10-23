@@ -116,9 +116,9 @@ directory the images were being saved in to see the results and my ssh session
 locked up&hellip; Or so I thought. I hit Ctrl-C and nothing happened&hellip; So I closed
 my window and opened a new one.</p>
 
-<p>Maybe there was a filename that hit some weird glitch in <code>ls</code> causing it too
-lock up. Not a big deal I can start from scratch. I cd&rsquo;d to the directory and
-ran an <code>rm -f *</code> and was greeted with this:</p>
+<p>Maybe there was a file name that hit some weird glitch in <code>ls</code> causing it too
+lock up. Not a big deal I can start from scratch. I switched to the directory
+and ran an <code>rm -f *</code> and was greeted with this:</p>
 
 <pre><code>/bin/rm: Argument list too long.
 </code></pre>
@@ -135,12 +135,12 @@ that said:</p>
 arguments&hellip;</p>
 </blockquote>
 
-<p>Alrighty moving on&hellip; so getopt is parsing it&rsquo;s options&hellip; man and info pages
-on getopt don&rsquo;t really reveal anything&hellip;</p>
+<p>Moving on&hellip; getopt is parsing it&rsquo;s options&hellip; man and info pages on getopt
+don&rsquo;t really reveal anything&hellip;</p>
 
 <p>After some creative Googling I found the answer: getopt&rsquo;s argument limit is
-1024. So&hellip; how many files did I have? I wanted to give ls one more try&hellip; I
-typed it in and sure enough console froze&hellip; or did it? I walked away and
+1024. How many files did I have? I wanted to give ls one more try&hellip; I
+typed it in and sure enough console froze&hellip; Or did it? I walked away and
 did other things. When I came back I had a list of files longer than my
 console buffer. I was smarter the second time around: <code>ls | wc -l</code>. After
 about five minutes it came back again with just the number.</p>

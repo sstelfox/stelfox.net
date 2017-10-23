@@ -111,16 +111,16 @@ for any of the hashes (I tested all the ones available to me individually).</p>
 <p>The issue itself could be with the specific compiled version (community/aide
 0.16-1 on arch linux) I was testing with.</p>
 
-<p>After strace&rsquo;ing down the files it was having issues with I simply excluded the
-files that were triggering the issue from checksum validation. I couldn&rsquo;t find
-anything unusual about the files themselves though&hellip; no extended attributes,
-normal permissions, readable&hellip; Maybe a bug in libmhash?</p>
+<p>After <code>strace</code>&lsquo;ing down the files it was having issues with I simply excluded
+the files that were triggering the issue from checksum validation. I couldn&rsquo;t
+find anything unusual about the files themselves though&hellip; No extended
+attributes, normal permissions, readable&hellip; Maybe a bug in <code>libmhash</code>?</p>
 
 <h2 id="secure-usage">Secure Usage</h2>
 
 <p>While this utility provides no preventative defense measures, it is extremely
 useful in the detection of malicious behavior on the host. To perform this
-detection, a cron job should periodically have AIDE analyse the files it is
+detection, a cron job should periodically have AIDE analyze the files it is
 monitoring and report the findings. A central logging system should be setup to
 consume these reports.</p>
 
@@ -129,15 +129,15 @@ and well maintained. To accomplish this I recommend hosting a read-only NFS
 volume mounted at a known location to store the current database.</p>
 
 <p>This database will likely need to be updated after every system update as
-critical binaries and config files may have been updated. If an automation
-system like <a href="/notes/puppet/" target="_blank">puppet</a> is in use, automatic modification of configuration
-files or installed packages may also trigger this.</p>
+critical binaries and configuration files may have been updated. If an
+automation system like <a href="/notes/puppet/" target="_blank">puppet</a> is in use, automatic modification of
+configuration files or installed packages may also trigger this.</p>
 
 <h2 id="initial-setup">Initial Setup</h2>
 
-<p>The defaults are reasonably sane so you can continue with the default config
-that ships with several distributions, but there are several things it will
-miss. Arch Linux&rsquo;s default doesn&rsquo;t catch:</p>
+<p>The defaults are reasonably sane so you can continue with the default
+configuration that ships with several distributions, but there are several
+things it will miss. Arch Linux&rsquo;s default doesn&rsquo;t catch:</p>
 
 <ul>
 <li>SELinux and extended attributes (though SELinux doesn&rsquo;t apply)</li>
@@ -158,21 +158,22 @@ done with the following command:</p>
 <p>Depending on the amount of packages installed on your system and the speed of
 your disks this can take quite some time (on a fairly minimal production system
 for me this took about two minutes). You then need to copy the created database
-into the reference location (these locations are dependent on <a href="/note_files/aide/aide.conf">my config</a>):</p>
+into the reference location (these locations are dependent on <a href="/note_files/aide/aide.conf">my
+  configuration</a>):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cp /var/lib/aide/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.new.gz /var/lib/aide/reference/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.gz</code></pre></div>
 <p>You can confirm the system is working with:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">aide --check</code></pre></div>
 <p>If any monitored file or directory&rsquo;s attributes changed they will be reported
-to both stdout and written to <code>/var/log/aide/aide.log</code>. This file is always
+to both STDOUT and written to <code>/var/log/aide/aide.log</code>. This file is always
 completely rewritten after every run, if you want to keep historical reports,
 <a href="/notes/logrotate/" target="_blank">logrotate</a> can be used to move these files aside.</p>
 
 <p>I do recommend reviewing the configuration file both to ensure all critical
 system directories are covered on your systems and to be aware of what is
 monitored and to what extent. Pay special attention to the package manager
-files of your system as they may not be included in the default config.</p>
+files of your system as they may not be included in the default configuration.</p>
 
-<p>If you make any changes it is wise to validate the config afterwards by
+<p>If you make any changes it is wise to validate the configuration afterwards by
 running:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">aide --config-check</code></pre></div>
 <p>It will produce no output and exit with a zero status if the configuration is
@@ -180,9 +181,9 @@ valid.</p>
 
 <p>I have a modified configuration file covering my general use case
 <a href="/note_files/aide/aide.conf">available</a>, a slightly tweaked <a href="/note_files/aide/aide.cron">cron job</a> (<a href="http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-forensics/aide/files/aide.cron" target="_blank">original here</a>), and
-slightly <a href="/note_files/aide/sshaide.sh">modified script</a> to check AIDE itegrity remotely using SSH
-(original in the contrib directory of the AIDE source). If you use any of these
-you will likely need to adjust paths to match the config.</p>
+slightly <a href="/note_files/aide/sshaide.sh">modified script</a> to check AIDE integrity remotely using SSH
+(original in the <code>contrib</code> directory of the AIDE source). If you use any of
+these you will likely need to adjust paths to match the configuration.</p>
 
 </div>
 

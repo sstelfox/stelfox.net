@@ -119,13 +119,13 @@ to get the base filename like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>basename(self<span style="color:#f92672">.</span>url)</code></pre></div>
 <p>It will work, but not when creating additional versions such as thumbnails as
 the file hasn&rsquo;t actually been created yet so a URL can&rsquo;t be built and you&rsquo;ll
-get an error trying to perform File.basename(nil). You&rsquo;d need to go back up to
-the model and get the normal version&rsquo;s URL like so:</p>
+get an error trying to perform <code>File.basename(nil)</code>. You&rsquo;d need to go back up
+to the model and get the normal version&rsquo;s URL like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>basename(self<span style="color:#f92672">.</span>model<span style="color:#f92672">.</span>asset<span style="color:#f92672">.</span>url)</code></pre></div>
 <p>Now if you&rsquo;re trying to get the file name to build part of the store_dir,
 you&rsquo;ve just created an infinite loop! Ruby will be happy to tell you that the
-stack level too deep (SystemStackError). So ultimately how did I end up getting
-it into my store_dir?</p>
+stack level too deep (<code>SystemStackError</code>). So ultimately how did I end up
+getting it into my store_dir?</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">self<span style="color:#f92672">.</span>model<span style="color:#f92672">.</span>attributes<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;asset&#34;</span><span style="color:#f92672">]</span></code></pre></div>
 <p>The file name gets stored raw directly in the database, and thus you can pull
 it out by accessing the value directly without going through the accessor that

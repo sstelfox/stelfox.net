@@ -121,8 +121,8 @@ the /etc/hosts file inside the environment.</p>
 <p>Docker mounts an /etc/hosts file inside it&rsquo;s containers, read-only, and the
 container&rsquo;s &lsquo;root&rsquo; user has had it&rsquo;s mount permissions revoked so it&rsquo;s not able
 to be modified. Other users have encountered this issue, and a <a href="https://stackoverflow.com/questions/19414543/how-can-i-make-etc-hosts-writable-by-root-in-a-docker-container" target="_blank">novel
-workaround was put forward</a>. The solution however makes use of perl, and is
-specific too ubuntu base systems.</p>
+workaround was put forward</a>. The solution however makes use of Perl, and is
+specific too Ubuntu base systems.</p>
 
 <p>I&rsquo;ll explain the solution after showing a more general way to accomplish the
 same thing. Different linux systems will store their libraries in different
@@ -146,7 +146,7 @@ instead.</p>
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> sed -ie <span style="color:#e6db74">&#39;s:/etc/hosts:/var/hosts:g&#39;</span> /override_lib/libnss_files.so.2<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">ENV</span><span style="color:#e6db74"> LD_LIBRARY_PATH /override_lib</span></code></pre></div>
 <p>So what is this actually doing? On linux systems, name configurations such as
-DNS, username, and group lookups are generally handled by the &lsquo;nss&rsquo; or name
+DNS, username, and group lookups are generally handled by the <code>nss</code> or name
 service switch configuration tools including the hosts file. The library that
 we&rsquo;re copying and modifying is a very specific to reading from files on the
 system and includes the default paths to these files.</p>

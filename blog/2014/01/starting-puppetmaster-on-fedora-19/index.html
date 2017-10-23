@@ -6,7 +6,7 @@
 <meta name='description' content='I was trying to get puppet running out of the box on Fedora 19 and found a bug exists in their systemd service file. After installing puppet and puppet-server, whenever I tried to start the server with the following command:
 systemctl start puppetmaster.service It would hang for a long time and the following error message would show up in the log:
 Jan 19 03:42:18 puppet-01 puppet-master[1166]: Starting Puppet master version 3.'>
-<meta property='og:title' content='Starting Puppetmaster on Fedora 19 • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:title' content='Starting Puppet Master on Fedora 19 • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='I was trying to get puppet running out of the box on Fedora 19 and found a bug exists in their systemd service file. After installing puppet and puppet-server, whenever I tried to start the server with the following command:
 systemctl start puppetmaster.service It would hang for a long time and the following error message would show up in the log:
 Jan 19 03:42:18 puppet-01 puppet-master[1166]: Starting Puppet master version 3.'>
@@ -14,7 +14,7 @@ Jan 19 03:42:18 puppet-01 puppet-master[1166]: Starting Puppet master version 3.
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='linux'><meta property='article:published_time' content='2014-01-18T22:47:37-05:00'/><meta property='article:modified_time' content='2014-01-18T22:47:37-05:00'/>
 
-  <title>Starting Puppetmaster on Fedora 19 • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <title>Starting Puppet Master on Fedora 19 • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2014/01/starting-puppetmaster-on-fedora-19/'>
   
   
@@ -69,7 +69,7 @@ ga('send', 'pageview');
     <header class='header-container'>
   <div class='header entry-header'>
     <div class='header-info'>
-      <h1 class='title'>Starting Puppetmaster on Fedora 19</h1>
+      <h1 class='title'>Starting Puppet Master on Fedora 19</h1>
       
 
     </div>
@@ -129,16 +129,16 @@ out puppet, additionally I would briefly see the <code>puppetmaster</code> servi
 port 8140 before systemd would kill it.</p>
 
 <p>Turns out the systemd service script is looking in the wrong location for the
-pidfile. All of the pids are stored in <code>/var/run/puppet/</code> with a filename of
+pid file. All of the pids are stored in <code>/var/run/puppet/</code> with a filename of
 either <code>agent.pid</code> or <code>master.pid</code> depending on the mode it was run as. The
 systemd script, as the log indicates is looking for the pid files in
 <code>/run/puppet</code>.</p>
 
 <p>The real solution would be to bring this too the attention of the script
 maintainers, but I haven&rsquo;t had a lot of luck going through those processes.
-Instead you can work around the issue without any beauracracy by changing the
-rundir configuration option in <code>/etc/puppet/puppet.conf</code> to <code>/run/puppet</code>, and
-creating <code>/run/puppet</code> (with puppet as the user and group owning the
+Instead you can work around the issue without any bureaucracy by changing the
+<code>rundir</code> configuration option in <code>/etc/puppet/puppet.conf</code> to <code>/run/puppet</code>,
+and creating <code>/run/puppet</code> (with puppet as the user and group owning the
 directory).</p>
 
 <p>After that, voila! The service starts up. You&rsquo;d think a QA process would catch

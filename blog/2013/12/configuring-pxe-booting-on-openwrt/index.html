@@ -3,10 +3,10 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I needed to support PXE booting on my home network. I use OpenWRT as my main router and DHCP server and it took me a bit of searching how to configure the BOOTP next server to redirect local clients to my Arch TFTP/NFS server for booting, so I&rsquo;m placing the config here to help others who might be looking to do the same thing.
+<meta name='description' content='I needed to support PXE booting on my home network. I use OpenWRT as my main router and DHCP server and it took me a bit of searching how to configure the BOOTP next server to redirect local clients to my Arch TFTP/NFS server for booting, so I&rsquo;m placing the configuration here to help others who might be looking to do the same thing.
 It&rsquo;s worth noting that this isn&rsquo;t a guide on setting up PXE booting completely on an OpenWRT, you&rsquo;ll need another system that is running a configured TFTP server.'>
 <meta property='og:title' content='Configuring PXE Booting on OpenWRT • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I needed to support PXE booting on my home network. I use OpenWRT as my main router and DHCP server and it took me a bit of searching how to configure the BOOTP next server to redirect local clients to my Arch TFTP/NFS server for booting, so I&rsquo;m placing the config here to help others who might be looking to do the same thing.
+<meta property='og:description' content='I needed to support PXE booting on my home network. I use OpenWRT as my main router and DHCP server and it took me a bit of searching how to configure the BOOTP next server to redirect local clients to my Arch TFTP/NFS server for booting, so I&rsquo;m placing the configuration here to help others who might be looking to do the same thing.
 It&rsquo;s worth noting that this isn&rsquo;t a guide on setting up PXE booting completely on an OpenWRT, you&rsquo;ll need another system that is running a configured TFTP server.'>
 <meta property='og:url' content='https://stelfox.net/blog/2013/12/configuring-pxe-booting-on-openwrt/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
@@ -110,16 +110,16 @@ One min read
   <p>I needed to support PXE booting on my home network. I use OpenWRT as my main
 router and DHCP server and it took me a bit of searching how to configure the
 BOOTP next server to redirect local clients to my Arch TFTP/NFS server for
-booting, so I&rsquo;m placing the config here to help others who might be looking to
-do the same thing.</p>
+booting, so I&rsquo;m placing the configuration here to help others who might be
+looking to do the same thing.</p>
 
 <p>It&rsquo;s worth noting that this isn&rsquo;t a guide on setting up PXE booting completely
 on an OpenWRT, you&rsquo;ll need another system that is running a configured TFTP
 server. I&rsquo;ll write up how I setup my Arch box as a TFTP server at a later date.</p>
 
-<p>The config itself was very simple; You just need to add a couple lines to
-<code>/etc/config/dhcp</code>. You&rsquo;ll want to replace 10.0.0.45 with whatever your local
-TFTP server is.</p>
+<p>The configuration itself was very simple; You just need to add a couple lines
+to <code>/etc/config/dhcp</code>. You&rsquo;ll want to replace 10.0.0.45 with whatever your
+local TFTP server is.</p>
 
 <pre><code>config boot linux
   option filename      'pxelinux.0'
@@ -127,9 +127,9 @@ TFTP server is.</p>
   option servername    'Arch-Pixie'
 </code></pre>
 
-<p>The filename <code>pxelinux.0</code> is from syslinux, and the servername has no technical
-meaning, but it provides nice information to the clients. In this case I&rsquo;ve
-used the name of my Arch linux server that I&rsquo;ll be booting off of.</p>
+<p>The filename <code>pxelinux.0</code> is from Syslinux, and the <code>servername</code> has no
+technical meaning, but it provides nice information to the clients. In this
+case I&rsquo;ve used the name of my Arch linux server that I&rsquo;ll be booting off of.</p>
 
 <p>Hope this helps someone out. Cheers!</p>
 

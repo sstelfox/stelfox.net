@@ -120,20 +120,20 @@ TFTP server.</p>
 take on either of those roles so my first challenge was finding a way to
 prevent dnsmasq from running those bits of it&rsquo;s code, or failing that I would
 just firewall off the service. Luckily it&rsquo;s quite easy to disable both bits of
-funtionality.</p>
+functionality.</p>
 
 <p>For DHCP you simply have to leave out any of the dhcp option in the
-configuation file, DNS you just tell it to operate on port 0 and it will be
+configuration file, DNS you just tell it to operate on port 0 and it will be
 disabled.</p>
 
-<p>So my whole config starting out looks like this:</p>
+<p>So my whole configuration starting out looks like this:</p>
 
 <pre><code># Disable DNS
 port=0
 </code></pre>
 
 <p>Now I need to configure the TFTP bits of dnsmasq. This too was rather simple
-only requiring me to add the following to my already terse config file:</p>
+only requiring me to add the following to my already terse configuration file:</p>
 
 <pre><code># Enable the TFTP server
 enable-tftp
@@ -146,7 +146,8 @@ following commands:</p>
 systemctl enable dnsmasq.service
 systemctl start dnsmasq.service</code></pre></div>
 <p>Voila, TFTP running and happy. If you have a firewall running you&rsquo;ll also want
-to open ports 69/tcp and 69/udp (though I suspect only the UDP one is needed).</p>
+to open ports <code>69/tcp</code> and <code>69/udp</code> (though I suspect only the UDP one is
+needed).</p>
 
 </div>
 
@@ -182,7 +183,7 @@ to open ports 69/tcp and 69/udp (though I suspect only the UDP one is needed).</
         <span class='screen-reader'>Previous post: </span>Configuring PXE Booting on OpenWRT</a>
     </div><div class='next-entry'>
       <a href='/blog/2013/12/updating-the-bios-on-dell-poweredge-c6100/'>
-        <span class='screen-reader'>Next post: </span>Updating the BIOS on Dell Poweredge C6100<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+        <span class='screen-reader'>Next post: </span>Updating the BIOS on Dell PowerEdge C6100<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>

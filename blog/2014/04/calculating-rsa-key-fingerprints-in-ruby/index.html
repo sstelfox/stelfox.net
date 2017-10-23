@@ -3,10 +3,10 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I regularily find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&rsquo;ve never had to worry about identification or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at most that I&rsquo;m manipulating (server, certificate authority, client).
+<meta name='description' content='I regularly find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&rsquo;ve never had to worry about identification or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at most that I&rsquo;m manipulating (server, certificate authority, client).
 I&rsquo;ve not found myself working on a project that involves presenting the certificates to users for selection and comparison. The obvious way too do this is take a page out of other developer&rsquo;s books and present the key&rsquo;s fingerprint.'>
 <meta property='og:title' content='Calculating RSA Key Fingerprints in Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I regularily find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&rsquo;ve never had to worry about identification or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at most that I&rsquo;m manipulating (server, certificate authority, client).
+<meta property='og:description' content='I regularly find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&rsquo;ve never had to worry about identification or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at most that I&rsquo;m manipulating (server, certificate authority, client).
 I&rsquo;ve not found myself working on a project that involves presenting the certificates to users for selection and comparison. The obvious way too do this is take a page out of other developer&rsquo;s books and present the key&rsquo;s fingerprint.'>
 <meta property='og:url' content='https://stelfox.net/blog/2014/04/calculating-rsa-key-fingerprints-in-ruby/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
@@ -107,7 +107,7 @@ ga('send', 'pageview');
     
 
     <div class='entry-content'>
-  <p>I regularily find myself working on projects that involve the manipulation and
+  <p>I regularly find myself working on projects that involve the manipulation and
 storage of RSA keys. In the past I&rsquo;ve never had to worry about identification
 or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at
 most that I&rsquo;m manipulating (server, certificate authority, client).</p>
@@ -139,7 +139,7 @@ the <code>ssh-keygen</code> command like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ssh-keygen -lf ~/.ssh/id_rsa
 ssh-keygen -lf /etc/ssh/ssh_host_key.pub</code></pre></div>
 <p>It will work when the path is either a private RSA key or a public key
-formatted for SSH authorizied key files.</p>
+formatted for SSH authorized key files.</p>
 
 <p>X509 certificates also use a key fingerprint to help identify a certificate&rsquo;s
 signing authority. What I rapidly learned through this investigation was that
@@ -174,7 +174,7 @@ the following command:</p>
 <p>Please note that case sensitivity doesn&rsquo;t matter here (OpenSSL will return
 upper case hex codes).</p>
 
-<p>The next one I got working was the SSH fingerprints thanks to the RFCs metioned
+<p>The next one I got working was the SSH fingerprints thanks to the RFCs mentioned
 earlier.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;openssl&#39;</span>
 

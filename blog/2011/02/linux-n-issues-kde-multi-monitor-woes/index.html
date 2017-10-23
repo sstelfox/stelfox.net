@@ -115,7 +115,7 @@ for a solid month and a half without a single issue.</p>
 <p>Earlier this week I started having issues with my wireless card on some
 networks, but not at all of them. The most prominent one being my home network.
 I&rsquo;ve had issues with my access point dropping connections before on a wide
-array of machines and not actually dropping it (ie: my laptop would see it as
+array of machines and not actually dropping it (IE: my laptop would see it as
 connected but the AP wouldn&rsquo;t exchange traffic with it). So when I started
 seeing this behavior I expected that issue to have cropped up again.</p>
 
@@ -131,7 +131,7 @@ seeing this behavior I expected that issue to have cropped up again.</p>
 over again, which quickly became frustrating but I didn&rsquo;t have time to mess
 with it so I just plugged into an ethernet port and went about my business.</p>
 
-<p>The next day I received my the logwatch from my laptop (Yes, my laptop sends
+<p>The next day I received my the <code>logwatch</code> from my laptop (Yes, my laptop sends
 it&rsquo;s logs to my email) and it mentioned more than 20,000 new entries of an
 error I&rsquo;ve never seen before:</p>
 
@@ -147,14 +147,14 @@ card and all the networks I was having issues with support &lsquo;N&rsquo;. Good
 passed to it that I believe just disables &lsquo;N&rsquo;. This is all well and good but I
 haven&rsquo;t had to manually pass options to a kernel module for a couple of
 releases now (I think the last was Fedora 10). Since then the file
-<em>/etc/modules.conf</em> has been deprecated in favor of placing files in
-<em>/etc/modules.d/</em>. There are some files that come stock in there but none are
+<code>/etc/modules.conf</code> has been deprecated in favor of placing files in
+<code>/etc/modules.d/</code>. There are some files that come stock in there but none are
 passing parameters to modules and the naming scheme doesn&rsquo;t seem to conform to
 anything.</p>
 
 <p>I was unsure if there was something specific I had to name the file or if it
 needed to be in one of the existing files. I ended up creating the
-file <em>/etc/modprobe.d/iwlagn.conf</em> and putting the following in it:</p>
+file <code>/etc/modprobe.d/iwlagn.conf</code> and putting the following in it:</p>
 
 <pre><code>options iwlagn 11n_disable=1
 # This one might be needed instead
@@ -189,7 +189,7 @@ That <em>used to</em> be there&hellip;</p>
 
 <p>I hunted around before getting frustrated and searching around online. Sure
 enough other people were annoyed by this regression but the solution was very
-easy (though it appears you have to do it everytime).</p>
+easy (though it appears you have to do it every time).</p>
 
 <p>To set the primary monitor to my laptop screen (LCDS1) I just opened a shell
 and put this in:</p>

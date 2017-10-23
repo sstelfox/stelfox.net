@@ -167,17 +167,17 @@ file:</p>
 };
 </code></pre>
 
-<p>This config will poll the file once a second for any changes (you may want to
-drop this for programs that don&rsquo;t log as often). I recommend setting a program,
-facility, and priority as the defaults are not ideal for daemon logs. Know what
-the flags mean and set them according to the file you&rsquo;re pulling in.</p>
+<p>This configuration will poll the file once a second for any changes (you may
+want to drop this for programs that don&rsquo;t log as often). I recommend setting a
+program, facility, and priority as the defaults are not ideal for daemon logs.
+Know what the flags mean and set them according to the file you&rsquo;re pulling in.</p>
 
 <h2 id="receiving-secure-logs-from-other-hosts">Receiving Secure Logs from Other Hosts</h2>
 
 <p>System logs hold valuable diagnostic and security related events, but may
 accidentally contain additional sensitive information. Whenever possible, log
 senders should be authenticated and should be using an encrypted transport
-mechanism. This is very easy to setup and tune with syslog-ng.</p>
+mechanism. This is very easy to setup and tune with Syslog-ng.</p>
 
 <p>You should create a <a href="/notes/building-a-certificate-authority/" target="_blank">certificate authority</a> dedicated to authenticating
 clients to your logging infrastructure. The server cert does not have to be
@@ -193,7 +193,7 @@ keys should be in the PEM format.</p>
 
 <p>Create two directories <code>/etc/syslog-ng/ca.d</code> and <code>/etc/syslog-ng/crl.d</code>. Place
 the CA certificate in the <code>ca.d</code> directory and switch to that directory.
-syslog-ng uses the hashed directory format so a symlink needs to be created
+Syslog-ng uses the hashed directory format so a symlink needs to be created
 with it&rsquo;s hash. The following one liner will create the appropriate hash link
 for the certificate authority file <code>syslog_clients.crt</code>:</p>
 
@@ -203,17 +203,17 @@ for the certificate authority file <code>syslog_clients.crt</code>:</p>
 <p>If you have a CRL associated with the client certificate (doesn&rsquo;t hurt to
 pre-generate an empty one and configure it now) place it in the <code>crl.d</code>
 directory. This also needs a hash identifier but the name is slightly
-different. This assumes a CRL file name of syslog_clients.crl, and that you&rsquo;re
-in the <code>crl.d</code> directory:</p>
+different. This assumes a CRL file name of <code>syslog_clients.crl</code>, and that
+you&rsquo;re in the <code>crl.d</code> directory:</p>
 
-<p>TODO: Check and see if this works, x509 may need to be replaced with crl.
+<p>TODO: Check and see if this works, <code>x509</code> may need to be replaced with <code>crl</code>.
 Ultimately the hash identifier needs to be the hash of the issuing CA so it may
 simply need to be reused from the last step.</p>
 
 <pre><code>ln -s syslog_clients.crl $(openssl x509 -noout -hash -in syslog_clients.crl).r0
 </code></pre>
 
-<p>You&rsquo;ll also want to generate custom a custom dhparam file using the following
+<p>You&rsquo;ll also want to generate custom a custom <code>dhparam</code> file using the following
 command:</p>
 
 <pre><code>openssl dhparam -out /etc/syslog-ng/dhparam.pem 2048
@@ -228,7 +228,7 @@ of these your log server supports by running the following command on it:</p>
 </code></pre>
 
 <p>The output of the above will be used in the <code>ciphers</code> parameter to <code>tls</code> in the
-config below.</p>
+configuration below.</p>
 
 <p>Similarly with ECDH curves, view what is supported on your system (and remove
 the NIST curves just in case they really are untrustworthy):</p>
@@ -237,7 +237,7 @@ the NIST curves just in case they really are untrustworthy):</p>
 </code></pre>
 
 <p>This list will be used as the contents of the <code>ecdh_curve_list</code> parameter to
-<code>tls</code> in the config below.</p>
+<code>tls</code> in the configuration below.</p>
 
 <pre><code>source tlsListener {
   max_connections(100)
@@ -283,7 +283,7 @@ Those being the <code>max_connections</code>, <code>so_rcvbuf</code> and <code>s
 <p>The <code>max_connections</code> option is easy, it should be set based on the number of
 log clients you expect to have. There is memory overhead for each of these
 slots so setting it very high to ignore it isn&rsquo;t ideal, it&rsquo;s still a good idea
-to give yourself ~30% overhead to accomadate future clients and reconnection
+to give yourself ~30% overhead to accommodate future clients and reconnection
 surges when the server may not be aware clients disconnected.</p>
 
 <p>The buffer settings should be set based on the peak number of messages any
@@ -305,24 +305,24 @@ since we received them authenticated, and encrypted. It is very unlikely they
 were tampered with in transit. This is used to differentiate with logs that
 came in through the UDP network mechanism from clients that don&rsquo;t support
 sending their logs over TLS. If you prefer to save the few bytes with every
-message you can remove the <code>tags</code> config or adjust it to your liking.</p>
+message you can remove the <code>tags</code> configuration or adjust it to your liking.</p>
 
 <p>The other is the path for per-host logs (defined in the destination). I would
 consider carefully what the most likely use case of the logs are going to be
 (when are you going to want to access them?). There are generally two schools
-of thought for these types of file, host centric or date centric.</p>
+of thought for these types of file, host-centric or date-centric.</p>
 
 <p>If you are likely going to be using your raw log files to investigate an issue
 on an individual host (performance issue, limited security breach, etc) then a
 host centric view is going to be most efficient for you. If instead you want to
-see paterns or similarities between many hosts at once during a certain time
+see patterns or similarities between many hosts at once during a certain time
 window (large security breach, common changes such as package upgrades between
 several hosts, etc), it&rsquo;ll likely be easier to work with your logs based on the
 date. I prefer the host centric approach as I additionally push my logs into
-graylog, but limit the time window that graylog keeps relying on these on disk
-files for long term archiving.</p>
+<code>graylog</code>, but limit the time window that <code>graylog</code> keeps relying on these on
+disk files for long term archiving.</p>
 
-<p>You&rsquo;ll need to allow tcp port 6514 inbound on your host&rsquo;s firewall from your
+<p>You&rsquo;ll need to allow TCP port 6514 inbound on your host&rsquo;s firewall from your
 log clients (I usually allow the whole network since this is a heavily
 authenticated service).</p>
 
@@ -362,14 +362,15 @@ destination from there.</p>
 around what will end up in the final logs. Filtering of specific sources and be
 handled with channels within the log context if so desired.</p>
 
-<p>You&rsquo;ll need to open udp port 514 inbound from your insecure log client to allow
+<p>You&rsquo;ll need to open UDP port 514 inbound from your insecure log client to allow
 the logs through.</p>
 
 <h3 id="secure-flag-spoofing">Secure Flag Spoofing</h3>
 
-<p>With the current config it is possible for an insecure client to set the secure
-flag before syslog-ng receives it. Ideally this source would remove the tag if
-it is set. A rewrite rule like the following can be used to remove the tag:</p>
+<p>With the current configuration it is possible for an insecure client to set the
+secure flag before syslog-ng receives it. Ideally this source would remove the
+tag if it is set. A rewrite rule like the following can be used to remove the
+tag:</p>
 
 <pre><code>rewrite secureRemoval {
   clear_tag(secure);
@@ -402,8 +403,8 @@ chain of certs) into <code>/etc/syslog-ng/ca.d</code> and perform the same hashi
 each individual certificate as was done in the server portion.</p>
 
 <p>If the server certificate is publicly verifiable, you can instead point
-<code>ca_dir</code> at the system directory (which on my test system is /etc/ssl/certs).
-Ensure this directory uses the hashing format by looking for taletell symlinks
+<code>ca_dir</code> at the system directory (which on my test system is <code>/etc/ssl/certs</code>).
+Ensure this directory uses the hashing format by looking for tell-tale symlinks
 with names similar to <code>ce5e74ef.0</code>.</p>
 
 <pre><code>destination tlsLogServer {
@@ -444,7 +445,7 @@ system is less valuable here than on the receiver.</p>
 <p>The disk / memory buffer has two modes of operation which should be considered
 based on your deployment. When the <code>reliable</code> option is disabled, and the
 connection to the log server is backed up or lost, messages will begin by first
-queueing to memory and when that fills up will begin queueing to disk.</p>
+queuing to memory and when that fills up will begin queuing to disk.</p>
 
 <p>The documentation on the reliable mode was a bit confusing but if I read it
 correctly, when lost it will buffer to both memory and disk, when the memory
@@ -458,8 +459,8 @@ hit. For the systems I operate that performance penalty for a slim chance of
 message loss is not worth the trade off, but environments under certain
 compliance requirements may not have the luxury of allowing that trade off.</p>
 
-<p>You&rsquo;ll need to allow tcp port 6514 outbound in your host&rsquo;s firewall to the
-logserver to ensure your logs arrive.</p>
+<p>You&rsquo;ll need to allow TCP port 6514 outbound in your host&rsquo;s firewall to the log
+server to ensure your logs arrive.</p>
 
 <p>While not required, I highly recommend enabling mark messages (in another
 section in this document) for all outbound network based destinations to be
@@ -472,7 +473,7 @@ whether the sending host has not sent anything because it or its logging daemon
 are down or if there simply has not been any log generated on the machine.</p>
 
 <p>The destinations themselves can take a couple of mark options to send along a
-mark notice whenever there has been no desitnation traffic. The following is an
+mark notice whenever there has been no destination traffic. The following is an
 example of sending a mark after 15 minutes of inactivity to a destination:</p>
 
 <pre><code>mark_freq(900);
@@ -480,8 +481,8 @@ mark_mode(dst_idle);
 </code></pre>
 
 <p>There are more mark modes which can be specified and are detailed in chapter 9
-of the syslog-ng OSE admin guide (though dst_idle, none, and periodical are the
-only ones I find of value).</p>
+of the syslog-ng OSE admin guide (though <code>dst_idle</code>, <code>none</code>, and <code>periodical</code>
+are the only ones I find of value).</p>
 
 <h2 id="testing-sources-filters-and-destinations">Testing Sources, Filters, and Destinations</h2>
 
@@ -532,7 +533,7 @@ portion after the dot.</p>
 match against 127.0.0.1.</p>
 
 <p>Establish your test and check all of your filters for both positive and
-negative matches, and ensure all configured destinations are outputing the
+negative matches, and ensure all configured destinations are outputting the
 expected results. Once testing is complete, be sure to remove the extra source.</p>
 
 <p>I like to additionally test, on an actual system what messages I might be
@@ -556,7 +557,7 @@ log { source(local); destination(fallback); flags(fallback); };
 <p>If you have <a href="/notes/auditd/" target="_blank">auditd</a> configured to send it&rsquo;s messages to syslog via it&rsquo;s
 dispatcher it is useful to filter those out into their own file so the audit
 reporting tools can still operate on them. The following example is intended to
-be used with the config documented on my <a href="/notes/auditd/" target="_blank">auditd</a> page as well as the
+be used with the configuration documented on my <a href="/notes/auditd/" target="_blank">auditd</a> page as well as the
 listener defined in the secure log reception section in on this page.</p>
 
 <p>Pay attention to the location of where these blocks are placed as they include
@@ -593,7 +594,7 @@ log {
 </code></pre>
 
 <p>With this in place you can make use of the audit tools as normal, while on the
-log host, by cat&rsquo;ing in appropriate file(s) into the tool. For an example:</p>
+log host, by <code>cat</code>&lsquo;ing in appropriate file(s) into the tool. For an example:</p>
 
 <pre><code>cat /var/log/remote/testhost.example.tld/2017/10/19_audit.log | aureport --interpret --failed --executable
 </code></pre>
@@ -613,13 +614,13 @@ the following global option:</p>
 
 <h2 id="future-work">Future Work</h2>
 
-<p>There is a package named logcheck that seems interesting for extracting
+<p>There is a package named <code>logcheck</code> that seems interesting for extracting
 anomalous events from logs. It may be useful directly or at least as a
-reference for anomalous events. syslog-ng is capable of some pretty powerful
-processing, which when combined with the smtp endpoint, may be sufficient on
-its own (there are also more powerful tools such as graylog as well).</p>
+reference for anomalous events. Syslog-ng is capable of some pretty powerful
+processing, which when combined with the SMTP endpoint, may be sufficient on
+its own (there are also more powerful tools such as Graylog as well).</p>
 
-<p>There are use flags for enable smtp destinations, json handling, and amqp
+<p>There are use flags for enable SMTP destinations, JSON handling, and AMQP
 destinations. They may be useful and should be looked into to see what kind of
 value I can get out of them.</p>
 
