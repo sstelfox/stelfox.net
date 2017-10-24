@@ -6,7 +6,7 @@ tags:
 title: Yubikey
 ---
 
-## Smart Card NEO
+## NEO
 
 ```
 dnf install ykpers -y
