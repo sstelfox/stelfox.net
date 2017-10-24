@@ -7,6 +7,23 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Investigating LVM From Dracut</title>
+      <link>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</link>
+      <pubDate>Tue, 24 Oct 2017 11:45:07 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</guid>
+      <description>In my my last post, I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
+Turns out that the commands I&amp;rsquo;m normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the lvm tool like so:
+$ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to notice that block device of my root filesystem was missing due to a missing kernel driver&amp;hellip;</description>
+    </item><item>
+      <title>Visible Yet Missing Logical Volumes</title>
+      <link>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</link>
+      <pubDate>Tue, 24 Oct 2017 10:58:12 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</guid>
+      <description>While working on an automated install script for an embedded board, I hit an issue with the logical volumes never showing up in /dev/mapper, and in turn unable to be mounted. This left me in the dracut emergency shell (after about three minutes), with little to go on beyond the following error:
+[187.508531] dracut Warning: Could not boot. [187.510560] dracut Warning: /dev/disk/by-uuid/5681-902D does not exist [187.512534] dracut Warning: /dev/mapper/system-root does not exit [187.</description>
+    </item><item>
       <title>Mutt</title>
       <link>https://stelfox.net/notes/mutt/</link>
       <pubDate>Fri, 20 Oct 2017 12:51:00 -0400</pubDate>
@@ -72,25 +89,5 @@ For reliable operation the rules should be carefully tuned to your system. Track
       <guid>https://stelfox.net/notes/aide/</guid>
       <description>AIDE (Advanced Intrusion Detection Environment) is a file and directory integrity checker that compares the current hashes, permissions, and attributes of files directories against a known database built from the system.
 This can be run periodically to detect manipulation of critical system files, though a motivated attacker with an appropriate level of permissions could modify this database or disable the check as long as the system is able to write to it.</description>
-    </item><item>
-      <title>Yubikey</title>
-      <link>https://stelfox.net/notes/yubikey/</link>
-      <pubDate>Tue, 10 Oct 2017 00:28:32 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/yubikey/</guid>
-      <description>NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
-NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like:
-https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh  The API can then return a token that for accessing additional functionality.
-Resetting This will wipe all keys, user, and admin pins on the card.</description>
-    </item><item>
-      <title>GPG Process Notes</title>
-      <link>https://stelfox.net/notes/gpg-process-notes/</link>
-      <pubDate>Mon, 09 Oct 2017 23:35:34 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/gpg-process-notes/</guid>
-      <description>I followed the TAILS setup guide to get a secure offline environment running to perform this generation task. The steps I took are documented in the tails document.
-Initial Key Creation For simplicity I wanted to clear out the GnuPG configuration that starts out in place. Makes things a lot nicer later on.
-rm -rf ~/.gnupg/*  I pulled in the .gnupg/gpg.conf from my dotfiles by hand.
-And begin the key generation process</description>
     </item></channel>
 </rss>

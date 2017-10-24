@@ -87,7 +87,7 @@ also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.</em></strong></p>
 
 <p>There are two different means of client configuration. Fedora has a package
-<code>ntpdate</code> that should be installed instead of <a href="/notes/ntpd/" target="_blank">ntpd</a>. Whenever it is started
+<code>ntpdate</code> that should be installed instead of <a href="/notes/ntpd/">ntpd</a>. Whenever it is started
 it will synchronize the server&rsquo;s clock to any configured time servers.  It
 needs to be told about time servers it should be synchronizing to in the
 <code>/etc/ntp/step-tickers</code>. It then needs to be turned on using the following
@@ -98,11 +98,11 @@ command:</p>
 
 <p>If the server doesn&rsquo;t have the ntpdate service (ntpdate seems like it&rsquo;s being
 deprecated though I can&rsquo;t imagine why) than the same thing can be accomplished
-by installing <a href="/notes/ntpd/" target="_blank">ntpd</a> and adding a cron job to synchronize the time.</p>
+by installing <a href="/notes/ntpd/">ntpd</a> and adding a cron job to synchronize the time.</p>
 
 <p>The following command will add a cron entry that will get run hourly and
 synchronize the time against the time server configured for the ntp daemon
-(You&rsquo;ll want to reference <a href="/notes/ntpd/" target="_blank">ntpd</a> for that configuration.</p>
+(You&rsquo;ll want to reference <a href="/notes/ntpd/">ntpd</a> for that configuration.</p>
 
 <pre><code>echo '0 * * * * root /usr/sbin/ntpd -q -u ntp:ntp' &gt; /etc/cron.d/ntpd
 </code></pre>
