@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/notes/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>CFSSL</title>
+      <link>https://stelfox.net/notes/cfssl/</link>
+      <pubDate>Tue, 24 Oct 2017 18:39:22 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/cfssl/</guid>
+      <description>CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&amp;rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I&amp;rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains.</description>
+    </item><item>
       <title>Server Naming Convention</title>
       <link>https://stelfox.net/notes/server-naming-convention/</link>
       <pubDate>Fri, 20 Oct 2017 19:59:02 -0400</pubDate>
@@ -69,7 +77,7 @@ This can be run periodically to detect manipulation of critical system files, th
       <pubDate>Tue, 10 Oct 2017 00:28:32 +0000</pubDate>
       <author>Sam Stelfox</author>
       <guid>https://stelfox.net/notes/yubikey/</guid>
-      <description>Smart Card NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
+      <description>NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
 NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like:
 https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh  The API can then return a token that for accessing additional functionality.
 Resetting This will wipe all keys, user, and admin pins on the card.</description>
@@ -83,13 +91,5 @@ Resetting This will wipe all keys, user, and admin pins on the card.</descriptio
 Initial Key Creation For simplicity I wanted to clear out the GnuPG configuration that starts out in place. Makes things a lot nicer later on.
 rm -rf ~/.gnupg/*  I pulled in the .gnupg/gpg.conf from my dotfiles by hand.
 And begin the key generation process</description>
-    </item><item>
-      <title>Disk Errors</title>
-      <link>https://stelfox.net/notes/disk-errors/</link>
-      <pubDate>Mon, 09 Oct 2017 23:05:43 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/disk-errors/</guid>
-      <description>This is a weird file&amp;hellip; But while installing gentoo on a disk I started getting a weird error when printing the current partitions on the drive:
-Warning: The driver descriptor says the physical block size is 2048 bytes, but Linux says it is 512 bytes.  The only thing I&amp;rsquo;ve been able to find anywhere about this is &amp;ldquo;a low-level device tool (like dd) wrote blocks at the wrong size directly onto the device&amp;rdquo;.</description>
     </item></channel>
 </rss>

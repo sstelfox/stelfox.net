@@ -147,7 +147,7 @@ this certificate was good however I continued to get the message:</p>
 <p>Ruby has taken the approach of by default not including any trusted certificate
 authorities which I greatly appreciate especially considering that in 2010 and
 2011 12 certificate authorities were known to have been hacked including major
-ones such as VeriSign, and <a href="http://www.symantec.com/connect/blogs/diginotar-ssl-breach-update">DigiNotar</a>. Some of which were <a href="http://nakedsecurity.sophos.com/2011/08/29/falsely-issued-google-ssl-certificate-in-the-wild-for-more-than-5-weeks/">proven</a> to
+ones such as VeriSign, and <a href="http://www.symantec.com/connect/blogs/diginotar-ssl-breach-update" target="_blank">DigiNotar</a>. Some of which were <a href="http://nakedsecurity.sophos.com/2011/08/29/falsely-issued-google-ssl-certificate-in-the-wild-for-more-than-5-weeks/" target="_blank">proven</a> to
 have issued false certificates.</p>
 
 <p>Since XMLRPC::Client doesn&rsquo;t expose it&rsquo;s SSL trust settings through it&rsquo;s
@@ -165,9 +165,9 @@ and over-riding how it was establishing connections</li>
 </ul>
 
 <p>I couldn&rsquo;t find a solution out there that didn&rsquo;t the security conscious voice
-in my head scream in despair. I asked on <a href="http://stackoverflow.com/questions/9199660/why-is-ruby-unable-to-verify-an-ssl-certificate">StackOverflow</a> for a good
+in my head scream in despair. I asked on <a href="http://stackoverflow.com/questions/9199660/why-is-ruby-unable-to-verify-an-ssl-certificate" target="_blank">StackOverflow</a> for a good
 solution. When I asked I didn&rsquo;t have a good grasp on how Ruby was handling SSL
-certificates at all. The thorough answer from <a href="http://stackoverflow.com/a/9238221/95114">emboss</a> didn&rsquo;t quite answer
+certificates at all. The thorough answer from <a href="http://stackoverflow.com/a/9238221/95114" target="_blank">emboss</a> didn&rsquo;t quite answer
 my question but it gave me more than enough to really hunt down what I wanted.</p>
 
 <p>First stop, I needed the certificates that I&rsquo;ll be using to verify the
@@ -180,8 +180,8 @@ little different so you&rsquo;ll have to find this out on your own. With Chrome 
 perhaps others) you can download each of the certificates in the chain that
 you&rsquo;ll need to verify the server&rsquo;s certificate.</p>
 
-<p>The server I was connecting to was using a <a href="http://www.rapidssl.com/">RapidSSL</a> certificate, who has
-been verified by <a href="http://www.geotrust.com/">GeoTrust</a>. You want to grab their certificates base64
+<p>The server I was connecting to was using a <a href="http://www.rapidssl.com/" target="_blank">RapidSSL</a> certificate, who has
+been verified by <a href="http://www.geotrust.com/" target="_blank">GeoTrust</a>. You want to grab their certificates base64
 encoded in PEM format. Stick them all in a <code>ca.crt</code> file.</p>
 
 <p>How do we get XMLRPC::Client to actually use that information without hacking

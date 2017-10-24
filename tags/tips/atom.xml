@@ -7,23 +7,6 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/tips/atom.xml" rel="self" type="application/rss+xml" /><item>
-      <title>Investigating LVM From Dracut</title>
-      <link>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</link>
-      <pubDate>Tue, 24 Oct 2017 11:45:07 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</guid>
-      <description>In my my last post, I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
-Turns out that the commands I&amp;rsquo;m normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the lvm tool like so:
-$ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to notice that block device of my root filesystem was missing due to a missing kernel driver&amp;hellip;</description>
-    </item><item>
-      <title>Visible Yet Missing Logical Volumes</title>
-      <link>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</link>
-      <pubDate>Tue, 24 Oct 2017 10:58:12 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</guid>
-      <description>While working on an automated install script for an embedded board, I hit an issue with the logical volumes never showing up in /dev/mapper, and in turn unable to be mounted. This left me in the dracut emergency shell (after about three minutes), with little to go on beyond the following error:
-[187.508531] dracut Warning: Could not boot. [187.510560] dracut Warning: /dev/disk/by-uuid/5681-902D does not exist [187.512534] dracut Warning: /dev/mapper/system-root does not exit [187.</description>
-    </item><item>
       <title>Vultr Deny All Firewall</title>
       <link>https://stelfox.net/blog/2017/10/vultr-deny-all-firewall/</link>
       <pubDate>Fri, 20 Oct 2017 17:18:36 -0400</pubDate>
@@ -87,5 +70,21 @@ Most of the markdown syntax can be stripped out simply by removing all non-alpha
       <guid>https://stelfox.net/blog/2014/03/one-liner-ssl-certificate-generation/</guid>
       <description>I regularly find myself in need of generating a quick SSL key and certificate pair. I&amp;rsquo;ve been using a one-liner for a while to generate these certificates. No annoying user prompts just a quick fast certificate pair.
 echo -e &amp;#34;XX\n\n \n \n\n$(hostname)\n\n&amp;#34; | openssl req -new -x509 -newkey \  rsa:2048 -keyout service.key -nodes -days 90 -out service.crt &amp;amp;&amp;gt; /dev/null The cert uses the hostname of whatever machine you generated it on.</description>
+    </item><item>
+      <title>Finding Ruby Subclasses</title>
+      <link>https://stelfox.net/blog/2014/02/finding-ruby-subclasses/</link>
+      <pubDate>Thu, 20 Feb 2014 07:48:24 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/02/finding-ruby-subclasses/</guid>
+      <description>While working through a problem I found it would be immensely useful to be able to enumerate all of the current subclasses of a particular class. After thinking about this for a while I settled on a good old friend of mine, ObjectSpace.
+For those not familiar with the ObjectSpace module, it is a means to inspect and access the items being tracked by Ruby&amp;rsquo;s garbage collector. This means it has a hook into every living object, and more dangerously, every near-death object.</description>
+    </item><item>
+      <title>Setting Linux System Timezone</title>
+      <link>https://stelfox.net/blog/2014/02/setting-linux-system-timezone/</link>
+      <pubDate>Sat, 01 Feb 2014 13:50:46 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/02/setting-linux-system-timezone/</guid>
+      <description>I change the timezone on the linux systems so rarely that I almost always have to look it up. I&amp;rsquo;m writing it up here for my own personal reference. With any luck it&amp;rsquo;ll also help others.
+The system timezone is controlled by the /etc/localtime file and is generally symlinked to locale files stored in /usr/share/zoneinfo. Generally I like to keep my systems on UTC as I my machines are in several timezones and it makes all the logs have consistent times.</description>
     </item></channel>
 </rss>
