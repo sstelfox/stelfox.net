@@ -7,6 +7,15 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/blog/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Investigating LVM From Dracut</title>
+      <link>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</link>
+      <pubDate>Tue, 24 Oct 2017 11:45:07 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</guid>
+      <description>In my my last post, I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
+Turns out that the commands I&amp;rsquo;m normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the lvm tool like so:
+$ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to notice that block device of my root filesystem was missing due to a missing kernel driver&amp;hellip;</description>
+    </item><item>
       <title>Visible Yet Missing Logical Volumes</title>
       <link>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</link>
       <pubDate>Tue, 24 Oct 2017 10:58:12 -0400</pubDate>
@@ -90,13 +99,5 @@ restricting which commands can be run with sudo.&lt;/p&gt;
       <guid>https://stelfox.net/blog/2016/02/sharing-context-between-dependent-rake-tasks/</guid>
       <description>I use Rakefiles quite a bit like traditional Makefiles, in that I specify immediate dependencies for an individual task and Rake will execute all of them. If a file or directory is the dependency and it exists, the task that creates it will be skipped. A contrived Rakefile example might look like:
 file &amp;#39;sample&amp;#39; do |t| puts &amp;#39;Creating sample directory&amp;#39; Dir.mkdir(t.name) end file &amp;#39;sample/population.txt&amp;#39; =&amp;gt; [&amp;#39;sample&amp;#39;] do |t| puts &amp;#39;Creating sample population file.</description>
-    </item><item>
-      <title>Ruby Code Quality Metrics</title>
-      <link>https://stelfox.net/blog/2015/04/ruby-code-quality-metrics/</link>
-      <pubDate>Wed, 22 Apr 2015 16:47:10 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2015/04/ruby-code-quality-metrics/</guid>
-      <description>I like getting unopinionated feedback on the quality of the code I write. Sometimes I can get this from other developers but they tend to get annoyed being asked after every commit whether they consider it an improvement.
-There are a few utilities for Ruby codebases such as flay, flog, and rubocop as well as hosted services such as Code Climate that can help you identify chunks of code that can use some work.</description>
     </item></channel>
 </rss>

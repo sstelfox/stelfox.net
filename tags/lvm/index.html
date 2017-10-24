@@ -3,21 +3,17 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-This is the client configuration for iSCSI, please refer to iSCSId for the server portion.
-Configuration yum install iscsi-initiator-utils -y
-iscsid.startup = /etc/rc.d/init.d/iscsid force-start node.startup = automatic node.session.auth.authmethod = CHAP node.session.auth.username = client1 node.'>
-<meta property='og:title' content='iSCSI • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-This is the client configuration for iSCSI, please refer to iSCSId for the server portion.
-Configuration yum install iscsi-initiator-utils -y
-iscsid.startup = /etc/rc.d/init.d/iscsid force-start node.startup = automatic node.session.auth.authmethod = CHAP node.session.auth.username = client1 node.'>
-<meta property='og:url' content='https://stelfox.net/notes/iscsi/'>
+<meta name='description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
+<meta property='og:title' content='Tag: Lvm • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
+<meta property='og:url' content='https://stelfox.net/tags/lvm/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='Notes'>
+<meta property='og:type' content='website'><meta property='og:updated_time' content='2017-10-24T11:45:07-04:00'/>
 
-  <title>iSCSI • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/iscsi/'>
+  <title>Tag: Lvm • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/tags/lvm/'>
+  
+    <link href="https://stelfox.net/tags/lvm/atom.xml" rel="alternate" type="application/rss+xml" title="Sam Stelfox&#39;s Thoughts &amp; Notes" />
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -33,7 +29,7 @@ ga('send', 'pageview');
 </head>
 
 
-<body class='page type-notes'>
+<body class='taxonomy type-page taxonomyTerm-tag'>
   <div class='site'>
     <a class='screen-reader' href='#main'>Skip to Content</a>
     <header id='header' class='header-container'>
@@ -67,97 +63,63 @@ ga('send', 'pageview');
 
 
 <main id='main' class='main'>
-  <article lang='en' class='entry'>
-    <header class='header-container'>
-  <div class='header entry-header'>
-    <div class='header-info'>
-      <h1 class='title'>iSCSI</h1>
+  <header class='header-container'>
+    <div class='header list-header'>
+      <div class='header-info'>
+        <h1 class='title'><span class='taxonomy-type'>Tag: </span>Lvm</h1>
+
+        
+
+      </div>
+    </div>
+  </header>
+
+  
+
+  <div class='list-container'>
+    <ul class='list'>
       
+        <li class='list-item'>
+  <article>
+    <div class='meta'>
+      <span>
+  <span class='screen-reader'>Posted on </span>
+  <time datetime='2017-10-24T11:45:07-04:00'>2017, Oct 24</time>
+</span>
 
     </div>
-    
-
-  </div>
-</header>
-
-    
-    
-
-    <div class='entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
-<p>This is the client configuration for iSCSI, please refer to <a href="/notes/iscsid/">iSCSId</a> for the
-server portion.</p>
-
-<h2 id="configuration">Configuration</h2>
-
-<p>yum install iscsi-initiator-utils -y</p>
-
-<pre><code>iscsid.startup = /etc/rc.d/init.d/iscsid force-start
-node.startup = automatic
-
-node.session.auth.authmethod = CHAP
-node.session.auth.username = client1
-node.session.auth.password = XXXXXXXXXXXX
-
-discovery.sendtargets.auth.authmethod = CHAP
-discovery.sendtargets.auth.username = client1
-discovery.sendtargets.auth.password = XXXXXXXXXXXX
-
-node.conn[0].timeo.login_timeout = 10
-node.conn[0].timeo.logout_timeout = 10
-node.conn[0].timeo.noop_out_interval = 5
-node.conn[0].timeo.noop_out_timeout = 5
-
-node.session.cmds_max = 128
-node.session.err_timeo.abort_timeout = 15
-node.session.err_timeo.lu_reset_timeout = 30
-node.session.err_timeo.tgt_reset_timeout = 30
-node.session.initial_login_retry_max = 5
-node.session.timeo.replacement_timeout = 120
-node.session.queue_depth = 32
-node.session.xmit_thread_priority = -20
-
-#node.session.iscsi.InitialR2T = Yes
-node.session.iscsi.InitialR2T = No
-
-#node.session.iscsi.ImmediateData = No
-node.session.iscsi.ImmediateData = Yes
-
-node.session.iscsi.FirstBurstLength = 262144
-node.session.iscsi.MaxBurstLength = 16776192
-node.conn[0].iscsi.MaxRecvDataSegmentLength = 262144
-node.conn[0].iscsi.MaxXmitDataSegmentLength = 0
-discovery.sendtargets.iscsi.MaxRecvDataSegmentLength = 32768
-
-#node.conn[0].iscsi.HeaderDigest = CRC32C,None
-node.conn[0].iscsi.HeaderDigest = None
-
-node.session.iscsi.FastAbort = Yes
-</code></pre>
-
-<pre><code>[root@localhost ~]# chkconfig iscsi on
-[root@localhost ~]# chkconfig iscsid on
-[root@localhost ~]# service iscsi start
-[root@localhost ~]# service iscsid start
-[root@localhost ~]# iscsiadm --mode discovery --type sendtargets --portal &lt;service_ip&gt;
-</code></pre>
-
-</div>
-
-    
-<footer class='entry-footer-container'>
-  <div class='entry-footer'>
-  
-  </div>
-</footer>
-
-
+    <header class='list-item-header'>
+      <h3 class='list-item-title'>
+        <a href='/blog/2017/10/investigating-lvm-from-dracut/'>Investigating LVM From Dracut</a>
+      </h3>
+    </header>
   </article>
+</li>
+
+      
+        <li class='list-item'>
+  <article>
+    <div class='meta'>
+      <span>
+  <span class='screen-reader'>Posted on </span>
+  <time datetime='2017-10-24T10:58:12-04:00'>2017, Oct 24</time>
+</span>
+
+    </div>
+    <header class='list-item-header'>
+      <h3 class='list-item-title'>
+        <a href='/blog/2017/10/visible-yet-missing-logical-volumes/'>Visible Yet Missing Logical Volumes</a>
+      </h3>
+    </header>
+  </article>
+</li>
+
+      
+    </ul>
+
+    
+
+  </div>
 </main>
 
     <footer id='footer' class='footer-container'>
