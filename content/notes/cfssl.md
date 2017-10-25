@@ -20,6 +20,9 @@ NEO][2] as long as you don't need > 1 signature/sec (which I definitely don't).
 You could also set it up with a Red October server for private key management,
 which could in turn be HSM backed.
 
+I haven't settled on software or processes to reliably handle my PKI
+infrastructure.
+
 ## Installation
 
 These notes assume you have a working [golang][3] installation. To install
@@ -121,7 +124,8 @@ servers). I created the following file in `sources/servers.json`:
 And generate the servers CA with the following command:
 
 ```
-cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem -config config.json -profile subca source/servers.json > json/servers.json
+cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem \
+  -config config.json -profile subca source/servers.json > json/servers.json
 ```
 
 Which can in turn be turned into normal certificates as before with the
@@ -176,32 +180,17 @@ to be validated as well.
 And generate the key and certificate:
 
 ```
-cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem -config config.json -profile server source/testhost.json > json/testhost.json
+cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem \
+  -config config.json -profile server source/testhost.json > json/testhost.json
 cat json/testhost.json | cfssljson -bare output/testhost
 ```
 
 ## Distributing Trust
 
-You'll want to combine the certificate authority and server CAs (and any other
-relevant sub-CAs) into one file like the following:
-
-```
-cat output/root.pem output/server.pem > local-ca.pem
-```
-
-You'll want to trust this with one of the following methods (depends on how
-your distro is setup). This list is not comprehensive, you may need to identify
-a new method.
-
-Method 1:
-
-```
-mkdir -p /usr/local/share/ca-certificates
-cp local-ca.pem /usr/local/share/ca-certificates/
-update-ca-certificates
-```
-
-(I lost my other notes)
+I generally recommend distributing the CA certificate for the specific service
+to the specific service and not make it a generally trusted the system as a
+whole. This is especially true for this program as without a HSM there is no
+protection over any of the private keys.
 
 [1]: https://github.com/cloudflare/cfssl
 [2]: {{< relref "notes/yubikey.md" >}}
