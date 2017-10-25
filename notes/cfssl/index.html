@@ -96,6 +96,9 @@ NEO</a> as long as you don&rsquo;t need &gt; 1 signature/sec (which I definitely
 You could also set it up with a Red October server for private key management,
 which could in turn be HSM backed.</p>
 
+<p>I haven&rsquo;t settled on software or processes to reliably handle my PKI
+infrastructure.</p>
+
 <h2 id="installation">Installation</h2>
 
 <p>These notes assume you have a working <a href="https://golang.org/">golang</a> installation. To install
@@ -179,7 +182,8 @@ servers). I created the following file in <code>sources/servers.json</code>:</p>
 }</code></pre></div>
 <p>And generate the servers CA with the following command:</p>
 
-<pre><code>cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem -config config.json -profile subca source/servers.json &gt; json/servers.json
+<pre><code>cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem \
+  -config config.json -profile subca source/servers.json &gt; json/servers.json
 </code></pre>
 
 <p>Which can in turn be turned into normal certificates as before with the
@@ -224,30 +228,17 @@ to be validated as well.</p>
 }</code></pre></div>
 <p>And generate the key and certificate:</p>
 
-<pre><code>cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem -config config.json -profile server source/testhost.json &gt; json/testhost.json
+<pre><code>cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem \
+  -config config.json -profile server source/testhost.json &gt; json/testhost.json
 cat json/testhost.json | cfssljson -bare output/testhost
 </code></pre>
 
 <h2 id="distributing-trust">Distributing Trust</h2>
 
-<p>You&rsquo;ll want to combine the certificate authority and server CAs (and any other
-relevant sub-CAs) into one file like the following:</p>
-
-<pre><code>cat output/root.pem output/server.pem &gt; local-ca.pem
-</code></pre>
-
-<p>You&rsquo;ll want to trust this with one of the following methods (depends on how
-your distro is setup). This list is not comprehensive, you may need to identify
-a new method.</p>
-
-<p>Method 1:</p>
-
-<pre><code>mkdir -p /usr/local/share/ca-certificates
-cp local-ca.pem /usr/local/share/ca-certificates/
-update-ca-certificates
-</code></pre>
-
-<p>(I lost my other notes)</p>
+<p>I generally recommend distributing the CA certificate for the specific service
+to the specific service and not make it a generally trusted the system as a
+whole. This is especially true for this program as without a HSM there is no
+protection over any of the private keys.</p>
 
 </div>
 
