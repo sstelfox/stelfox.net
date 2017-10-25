@@ -74,6 +74,15 @@ It has been confirmed that YubiKey 4s are effected as are many nations national 
       <description>I recently came across a short article written about a decade ago. It was a curious thing already as it was hosted in a user&amp;rsquo;s home directory off a web server with the standard &amp;lsquo;~&amp;rsquo; showing up in the URL. The important part that caught my eye was this:
  The &amp;ldquo;true&amp;rdquo; program does nothing; it merely exits with a zero exit status. This can be done with an empty file that&amp;rsquo;s marked executable, and that&amp;rsquo;s what it was in the earliest unix system libraries.</description>
     </item><item>
+      <title>Hash Cash</title>
+      <link>https://stelfox.net/blog/2016/09/hash-cash/</link>
+      <pubDate>Wed, 14 Sep 2016 01:36:59 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2016/09/hash-cash/</guid>
+      <description>This is an interesting proof of work concept. The first example I have found of this in the wild is to prevent abuse for anonymous account registration on an IRC network.
+I reviewed it&amp;rsquo;s source and found that it requests a seed, and payload from a backend PHP script. It assumes that a target collision will happen within 1,000,000 iterations.
+This is broken up into 10 iterations. A pool of four WebWorkers are spawned.</description>
+    </item><item>
       <title>Better Practices With Sudo</title>
       <link>https://stelfox.net/blog/2016/02/better-practices-with-sudo/</link>
       <pubDate>Fri, 26 Feb 2016 17:45:22 -0500</pubDate>
@@ -91,13 +100,5 @@ practices with regard to sudo; Using it to execute a root shell only, and not
 restricting which commands can be run with sudo.&lt;/p&gt;
 
 &lt;p&gt;&lt;/p&gt;</description>
-    </item><item>
-      <title>Sharing Context Between Dependent Rake Tasks</title>
-      <link>https://stelfox.net/blog/2016/02/sharing-context-between-dependent-rake-tasks/</link>
-      <pubDate>Thu, 18 Feb 2016 15:46:12 -0500</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2016/02/sharing-context-between-dependent-rake-tasks/</guid>
-      <description>I use Rakefiles quite a bit like traditional Makefiles, in that I specify immediate dependencies for an individual task and Rake will execute all of them. If a file or directory is the dependency and it exists, the task that creates it will be skipped. A contrived Rakefile example might look like:
-file &amp;#39;sample&amp;#39; do |t| puts &amp;#39;Creating sample directory&amp;#39; Dir.mkdir(t.name) end file &amp;#39;sample/population.txt&amp;#39; =&amp;gt; [&amp;#39;sample&amp;#39;] do |t| puts &amp;#39;Creating sample population file.</description>
     </item></channel>
 </rss>
