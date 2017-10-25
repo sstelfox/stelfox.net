@@ -72,11 +72,11 @@ things it will miss. Arch Linux's default doesn't catch:
 
 I have one [that avoids][3] these issues. I recommend reviewing it,
 understanding it, and adjusting it for your environment before installing it to
-`/etc/aide.conf`. Be sure to restrict access to the file appropriately:
+`/etc/aide/aide.conf`. Be sure to restrict access to the file appropriately:
 
 ```sh
-chmod 0600 /etc/aide.conf
-chown root:root /etc/aide.conf
+chmod 0600 /etc/aide/aide.conf
+chown root:root /etc/aide/aide.conf
 ```
 
 You need to initialize the database as a baseline for the system, which can be
@@ -93,6 +93,7 @@ into the reference location (these locations are dependent on [my
   configuration][3]):
 
 ```sh
+mkdir -p /var/lib/aide/reference
 cp /var/lib/aide/aide-$(hostname -f).db.new.gz /var/lib/aide/reference/aide-$(hostname -f).db.gz
 ```
 

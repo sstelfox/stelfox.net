@@ -113,6 +113,12 @@ records). These two files include my relevant changes:
 * [/etc/audisp/audispd.conf][6]
 * [/etc/audisp/plugins.d/syslog.conf][7]
 
+If you reliably have your audit records going to syslog, you may want to
+consider removing or reducing the amount of audit logs stored. For a system
+that generates significant numbers of logs, the syslog route can be quite a bit
+more efficient, and support significantly more messages (this will only work
+with disk queues removed).
+
 ## More References
 
 * https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html
