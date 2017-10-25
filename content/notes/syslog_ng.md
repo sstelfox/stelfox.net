@@ -1,5 +1,5 @@
 ---
-date: 2017-10-19 19:56:00-04:00
+date: 2017-10-25 01:56:02-04:00
 tags:
 - linux
 - security
@@ -561,6 +561,11 @@ the following global option:
 on-error(fallback-to-string);
 ```
 
+## Log Rotation
+
+Syslog-ng doesn't handle log rotation on its own, but [logrotate][5] will
+handle this quite well.
+
 ## Future Work
 
 There is a package named `logcheck` that seems interesting for extracting
@@ -588,3 +593,4 @@ validity information.
 [2]: {{< relref "notes/auditd.md" >}}
 [3]: {{< relref "notes/rsyslog.md" >}}
 [4]: /note_files/syslog-ng/syslog-ng.conf
+[5]: {{< relref "notes/logrotate.md" >}}
