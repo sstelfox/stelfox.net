@@ -18,6 +18,8 @@ tool for optimizing the processing path of logs but can result in unexpected
 behavior if you don't pay attention when re-ordering the statements.
 
 ```
+# /etc/syslog-ng/syslog-ng.conf
+
 @version: 3.7
 @module system-source
 
@@ -67,6 +69,8 @@ log { source(local); filter(messages); destination(messageFile); };
 log { source(local); filter(spool); destination(spoolFile); };
 log { source(local); filter(syslog); destination(syslogFile); };
 ```
+
+The base config can also be downloaded [from me][4].
 
 ## Using a Log File as a Source
 
@@ -200,7 +204,7 @@ source tlsListener {
 
 destination networkLogs {
   file(
-    /var/log/remote/${HOST}/${YEAR}/${MONTH}/${DAY}_sys.log
+    /var/log/remote/${HOST}/${YEAR}-${MONTH}-${DAY}_sys.log
 
     create_dirs(yes)
   )
@@ -508,7 +512,7 @@ a `final` flag to prevent polluting the normal logs from the hosts.
 ```
 destination networkAuditFile {
   file (
-    /var/log/remote/${HOST}/${YEAR}/${MONTH}/${DAY}_audit.log
+    /var/log/remote/${HOST}/${YEAR}-${MONTH}-${DAY}_audit.log
 
     # We need to strip out the headers so the utilities can understand the
     # format
@@ -583,3 +587,4 @@ validity information.
 [1]: {{< relref "notes/certificate_authority.md" >}}
 [2]: {{< relref "notes/auditd.md" >}}
 [3]: {{< relref "notes/rsyslog.md" >}}
+[4]: /note_files/syslog-ng/syslog-ng.conf
