@@ -149,9 +149,9 @@ things it will miss. Arch Linux&rsquo;s default doesn&rsquo;t catch:</p>
 
 <p>I have one <a href="/note_files/aide/aide.conf">that avoids</a> these issues. I recommend reviewing it,
 understanding it, and adjusting it for your environment before installing it to
-<code>/etc/aide.conf</code>. Be sure to restrict access to the file appropriately:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">chmod <span style="color:#ae81ff">0600</span> /etc/aide.conf
-chown root:root /etc/aide.conf</code></pre></div>
+<code>/etc/aide/aide.conf</code>. Be sure to restrict access to the file appropriately:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">chmod <span style="color:#ae81ff">0600</span> /etc/aide/aide.conf
+chown root:root /etc/aide/aide.conf</code></pre></div>
 <p>You need to initialize the database as a baseline for the system, which can be
 done with the following command:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">aide --init</code></pre></div>
@@ -160,7 +160,8 @@ your disks this can take quite some time (on a fairly minimal production system
 for me this took about two minutes). You then need to copy the created database
 into the reference location (these locations are dependent on <a href="/note_files/aide/aide.conf">my
   configuration</a>):</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cp /var/lib/aide/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.new.gz /var/lib/aide/reference/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.gz</code></pre></div>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">mkdir -p /var/lib/aide/reference
+cp /var/lib/aide/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.new.gz /var/lib/aide/reference/aide-<span style="color:#66d9ef">$(</span>hostname -f<span style="color:#66d9ef">)</span>.db.gz</code></pre></div>
 <p>You can confirm the system is working with:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">aide --check</code></pre></div>
 <p>If any monitored file or directory&rsquo;s attributes changed they will be reported
