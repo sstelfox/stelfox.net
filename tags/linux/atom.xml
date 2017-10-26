@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Cron Daemon</title>
+      <link>https://stelfox.net/notes/cron-daemon/</link>
+      <pubDate>Thu, 26 Oct 2017 17:35:42 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/cron-daemon/</guid>
+      <description>Cron is a pretty standard utility and there isn&amp;rsquo;t much to it. I generally use cronie as my cron daemon with the associated anacron. Cron runs tasks periodically, and anacron helps ensure that a missed task will get run if it was off or powercycled when it would have otherwise run.
+File Format The config format differs slightly between crontabs, regular cron files, and anacron entries. At the beginning of all the files environment variables can be set using key=value pairs to control the behavior of cron and anacron followed by entries for that file one to a line.</description>
+    </item><item>
       <title>Syslog-NG</title>
       <link>https://stelfox.net/notes/syslog-ng/</link>
       <pubDate>Wed, 25 Oct 2017 01:56:02 -0400</pubDate>
@@ -81,13 +89,5 @@ date +%s This will get you the current unix timestamp. On the target system need
       <guid>https://stelfox.net/notes/auditd/</guid>
       <description>Auditd collects any configured syscall execution with critical security metadata associated with the event. This can help enrich other security tools such as AIDE to determine what user and process are responsible for the change.
 For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&amp;rsquo;s audit subsystem, may trigger a kernel panic.</description>
-    </item><item>
-      <title>AIDE</title>
-      <link>https://stelfox.net/notes/aide/</link>
-      <pubDate>Wed, 11 Oct 2017 02:19:45 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/aide/</guid>
-      <description>AIDE (Advanced Intrusion Detection Environment) is a file and directory integrity checker that compares the current hashes, permissions, and attributes of files directories against a known database built from the system.
-This can be run periodically to detect manipulation of critical system files, though a motivated attacker with an appropriate level of permissions could modify this database or disable the check as long as the system is able to write to it.</description>
     </item></channel>
 </rss>
