@@ -1,18 +1,18 @@
 # /etc/audit/audit.rules
 
-# Please note: Audit rules vary based on the platform it is running on. These
-# rules are written for a x86_64 system. If your system is not x86_64 you'll
-# want to pay special attention to these rules and look for things that may be
-# missing for your architecture.
+# NOTE: Audit rules vary based on the platform it is running on. These rules
+# are written for a x86_64 system whose kernel doesn't support 32 bit
+# applications. Binary paths are very specific as well. If your system doesn't
+# match this profile you'll want to pay special attention to these rules and
+# adapt them to your architecture.
 
 # Reset any existing rules currently in the kernel
 -D
 
 # Increase our buffer size to prevent spikes of messages from DoS'ing the
-# system. These don't consume much memory relative to the amount commonly found
-# in servers. If the system is incredibly busy in ways that trigger these audit
-# messages you will likely want to increase this buffer size and tune down what
-# is being audited.
+# system. This buffer is quite huge as it is, and the individual messages don't
+# take up much actual system memory. It may be worth while for you to monitor
+# the use of the backlog and adjust this accordingly.
 -b 8192
 
 # The kernel should not perform any kind of time based backoff if the backlog
@@ -32,11 +32,60 @@
 # container systems.
 --loginuid-immutable
 
-## Don't Audit Rules
+# IMPORTANT PERFORMANCE NOTE: Audit rules are first-match-exit, and thus the
+# number of checks per system call depend on the ordering of the rules in this
+# file. To support high performance, the rules after this message are ordered
+# roughly based on frequency they're expected to be seen in my environments,
+# pay attention to this distribution for yourself.
+#
+# The filesystem monitoring calls are very efficient as far as lookups are
+# concerned, so this performance monitoring concern is largely only for the
+# syscall only rules.
+#
+# Some rules are specifically ordered to ensure a more specific rule happens
+# before a catch all (such as elevated privileges over all execution
+# monitoring).
 
-# Audit rules are first-match-exit, and there are certain types of messages we
-# may not care to log. The following three rules are some examples of calls
-# that may want to be filtered out.
+# On 64 bit hosts, 32 bit compatibility calls are becoming increasingly rare.
+# Everything should generally be running in 64 bit mode. This rule logs any
+# attempts on the system to make use of the 32 bit ABIs.
+#
+# I compile my kernel without 32bit support so this rule isn't useful
+#-a always,exit -F arch=b32 -S all -F key=32bitABI
+
+# PROCTITLE is an annoying & frequent message that has no appreciable security
+# benefit (I suppose it could be used for data exfiltration though...)
+-a exclude,always -F msgtype=PROCTITLE
+
+# Monitor Network & Unix Socket Accepts & Connects
+-a always,exit -F arch=b64 -S accept,connect -F key=networkControl
+
+# Monitor Elevation of Privileges
+-a always,exit -F arch=b64 -S setuid,setresuid -F a0=0 -F exe=/bin/su -F key=elevatedPrivs
+-a always,exit -F arch=b64 -S setuid,setresuid -F a0=0 -F exe=/usr/bin/sudo -F key=elevatedPrivs
+-a always,exit -F arch=b64 -S execve -C auid!=euid -F key=elevatedPrivs
+
+# All Other Program Execution
+-a always,exit -F arch=b64 -S execve -F key=regularExec
+
+# Monitor changes to the system time, this can have a dangerous impact on
+# logging if the time were to change incorrectly. On the other hand many NTP
+# clients make subtle small changes frequently, so this can become a very
+# verbose log.
+-a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=timeChange
+-a always,exit -F arch=b64 -S clock_settime -F a0=0x0 -F key=timeChange
+# TODO: This line needs testing as it is a huge potential source of false
+# positives
+-a always,exit -F arch=b64 -S clock_adjtime -F key=timeChange
+-a always,exit -F path=/etc/localtime -F perm=wa -F key=timeChange
+
+
+
+
+
+
+
+
 
 # Cron jobs are regular and expected, for these logs they are likely going to
 # be noise. If you enable this rule ensure changes to the system cron files are
@@ -54,45 +103,20 @@
 # trying common passwords on your server and general internet scans...
 #-a always,exclude -F msgtype=CRYPTO_KEY_USER
 
-# TODO: You'll likely want to filter out PROCTITLE events...
-
 # Fail fast for common syscalls
 #-a exit,never -F arch=b64 -S brk,close,dup2,fcntl,fstat,fstatat,lstat,mmap,munmap,nanosleep,open,read,rt_sigaction,stat,write
 
-## 32bit Monitoring
-
-# On 64 bit hosts, 32 bit compatibility calls are becoming increasingly rare.
-# Everything should generally be running in 64 bit mode. This rule logs any
-# attempts on the system to make use of the 32 bit ABIs. Another alternative
-# for this may be to custom compile your kernel without the ABI entirely.
--a always,exit -F arch=b32 -S all -F key=32bitABI
-
-## Monitor Changes to Time
-
--a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=timeChange
--a always,exit -F arch=b64 -S clock_settime -F a0=0x0 -F key=timeChange
-# TODO: This line needs testing as it can apparently make false positives...
-#-a always,exit -F arch=b64 -S clock_adjtime -F key=timeChange
--a always,exit -F path=/etc/localtime -F perm=wa -F key=timeChange
-
-## Network Environment Changes
-
+# Network Environment Changes
 -a always,exit -F arch=b64 -S sethostname,setdomainname -F key=systemIdentity
 -a always,exit -F path=/etc/conf.d/hostname -F perm=wa -F key=systemIdentity
--a always,exit -F path=/etc/hostname -F perm=wa -F key=systemIdentity
-
 -a always,exit -F path=/etc/conf.d/net -F perm=wa -F key=networkChange
+-a always,exit -F path=/etc/hostname -F perm=wa -F key=systemIdentity
 -a always,exit -F path=/etc/hosts -F perm=wa -F key=networkChange
--a always,exit -F path=/etc/ipsec.conf -F perm=wa -F key=networkChange
--a always,exit -F dir=/etc/ipsec.d -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/issue -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/issue.net -F perm=wa -F key=networkChange
 -a always,exit -F path=/etc/resolv.conf -F perm=wa -F key=networkChange
--a always,exit -F dir=/etc/wpa_supplicant -F perm=wa -F key=networkChange
--a always,exit -F path=/etc/wpa_supplicant.conf -F perm=wa -F key=networkChange
 
-## System Calls That Were Denied
-
+# System Calls That Were Denied
 -a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EACCES -F key=failedAccess
 -a always,exit -F arch=b64 -S open,openat,open_by_handle_at -F exit=-EPERM -F key=failedAccess
 -a always,exit -F arch=b64 -S close -F exit=-EIO -F key=failedAccess
@@ -106,122 +130,91 @@
 -a always,exit -F arch=b64 -S chmod,lsetxattr,lremovexattr,removexattr,rename,renameat,setxattr,truncate -F exit=-EACCES -F key=failedPermMod
 -a always,exit -F arch=b64 -S chmod,lsetxattr,lremovexattr,removexattr,rename,renameat,setxattr,truncate -F exit=-EPERM -F key=failedPermMod
 
-## Successful File Removals
-
+# Successful File Removals
 -a always,exit -F arch=b64 -S unlink,unlinkat,rename,renameat -F auid>=500 -F auid!=4294967295 -F key=successfulDelete
 
-## Authentication Configuration
-
--a always,exit -F path=/etc/login.defs -F perm=wa -F key=authConfig
+# Authentication Configuration
+-a always,exit -F dir=/etc/pam.d -F perm=wa -F key=authConfig
+-a always,exit -F dir=/etc/security -F perm=wa -F key=authConfig
+-a always,exit -F dir=/etc/sudoers.d -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/group -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/gshadow -F perm=wa -F key=authConfig
--a always,exit -F dir=/etc/pam.d -F perm=wa -F key=authConfig
+-a always,exit -F path=/etc/login.defs -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/passwd -F perm=wa -F key=authConfig
--a always,exit -F path=/etc/securetty -F perm=wa -F key=authConfig
--a always,exit -F dir=/etc/security -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/shadow -F perm=wa -F key=authConfig
--a always,exit -F dir=/etc/sudoers.d -F perm=wa -F key=authConfig
 -a always,exit -F path=/etc/sudoers -F perm=wa -F key=authConfig
 
-## System Startup Scripts
-
+# System Startup Scripts
 -a always,exit -F dir=/etc/conf.d -F perm=wa -F key=initConfig
 -a always,exit -F dir=/etc/init.d -F perm=wa -F key=initConfig
 -a always,exit -F path=/etc/rc.conf -F perm=wa -F key=initConfig
 
-## Personality syscalls may be an attempt to bypass auditd
+# Personality syscalls may be an attempt to bypass auditd
 -a always,exit -F arch=b64 -S personality -F a0!=4294967295 -F key=bypassAttempt
 
-## Monitor Changes to the Audit Logs
-
+# Monitor Changes to the Audit Logs
+#
 # TODO: May be valuable to remove non-user users from this, but I should see
 # how many logs are actually generated
--a always,exit -F path=/usr/sbin/aulast -F perm=x -F key=auditLogs
--a always,exit -F path=/usr/sbin/aulastlogin -F perm=x -F key=auditLogs
--a always,exit -F path=/usr/sbin/aureport -F perm=x -F key=auditLogs
--a always,exit -F path=/usr/sbin/ausearch -F perm=x -F key=auditLogs
--a always,exit -F path=/usr/sbin/auvirt -F perm=x -F key=auditLogs
--a always,exit -F dir=/var/log/audit -F perm=r -F key=auditLogs
-
 -a always,exit -F dir=/etc/audisp -F perm=wa -F key=auditIntegrity
 -a always,exit -F dir=/etc/audit -F perm=wa -F key=auditIntegrity
--a always,exit -F path=/etc/libaudit.conf -F perm=wa -F key=auditIntegrity
+-a always,exit -F dir=/var/log/audit -F perm=r -F key=auditLogs
 -a always,exit -F dir=/var/log/audit -F perm=wa -F auid>=1000 -F auid!=4294967295 -F key=auditIntegrity
+-a always,exit -F path=/etc/libaudit.conf -F perm=wa -F key=auditIntegrity
+-a always,exit -F path=/sbin/aureport -F perm=x -F key=auditLogs
+-a always,exit -F path=/sbin/ausearch -F perm=x -F key=auditLogs
+-a always,exit -F path=/usr/bin/aulast -F perm=x -F key=auditLogs
+-a always,exit -F path=/usr/sbin/auvirt -F perm=x -F key=auditLogs
 
-## AIDE Needs to be Protected as Well
-
--a always,exit -F path=/etc/aide.conf -F perm=wa -F key=aideChange
+# AIDE Needs to be Protected as Well
 -a always,exit -F dir=/var/lib/aide -F perm=wa -F key=aideChange
+-a always,exit -F path=/etc/aide.conf -F perm=wa -F key=aideChange
 
-## Monitor Elevation of Privileges
-
--a always,exit -F arch=b64 -S setuid,setresuid -F a0=0 -F exe=/usr/bin/su -F key=elevatedPrivs
--a always,exit -F arch=b64 -S setuid,setresuid -F a0=0 -F exe=/usr/bin/sudo -F key=elevatedPrivs
--a always,exit -F arch=b64 -S execve -C auid!=euid -F key=elevatedPrivs
-
-## Other Program Execution
-
--a always,exit -F arch=b64 -S execve -F key=regularExec
-
-## Library Search Paths
-
+# Library Search Paths
 -a always,exit -F arch=b64 -F path=/etc/ld.so.conf -F perm=wa -F key=libPath
 
-## Monitor Changes to Kernel Parameters
-
+# Monitor Changes to Kernel Parameters
 -a always,exit -F arch=b64 -F path=/etc/sysctl.conf -F perm=wa -F key=sysctl
 
-## Sensitive Cron Settings
-
--a always,exit -F arch=b64 -F path=/etc/cron.allow -F perm=wa -F key=cronChange
--a always,exit -F arch=b64 -F path=/etc/cron.deny -F perm=wa -F key=cronChange
--a always,exit -F arch=b64 -F dir=/etc/cron.d -F perm=wa -F key=cronChange
+# Sensitive Cron Settings
 -a always,exit -F arch=b64 -F dir=/etc/cron.daily -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F dir=/etc/cron.d -F perm=wa -F key=cronChange
 -a always,exit -F arch=b64 -F dir=/etc/cron.monthly -F perm=wa -F key=cronChange
 -a always,exit -F arch=b64 -F dir=/etc/cron.weekly -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F path=/etc/anacrontab -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F path=/etc/cron.allow -F perm=wa -F key=cronChange
+-a always,exit -F arch=b64 -F path=/etc/cron.deny -F perm=wa -F key=cronChange
 -a always,exit -F arch=b64 -F path=/etc/crontab -F perm=wa -F key=cronChange
 -a always,exit -F arch=b64 -F path=/var/spool/cron/root -F perm=wa -F key=cronChange
 
-## Monitor the MAC Policy
-
+# Monitor the MAC Policy
 -a always,exit -F dir=/etc/selinux -F perm=wa -F key=macPolicy
 
-## Mount and Unmount Operations
-
+# Mount and Unmount Operations
 -a always,exit -F arch=b64 -S mount,umount2 -F auid!=4294967295 -F key=mediaChange
 
-## Detect an admin accessing other user's files
-
+# Detect an admin accessing other user's files
 -a always,exit -F dir=/home -F uid=0 -F auid>=1000 -F auid!=4294967295 -C auid!=obj_uid -F key=powerAbuse
 
-## Monitor Container Creation & Configuration
-
+# Monitor Container Creation & Configuration
 -a always,exit -F arch=b64 -S clone -F a0&0x7C020000 -F key=containerCreate
 -a always,exit -F arch=b64 -S setns,unshare -F key=containerConfig
 -a always,exit -F path=/usr/bin/docker -F perm=x -F key=docker
 
-## Monitor Code Injection
+# Mail Server Config Monitoring
+-a always,exit -F dir=/etc/mail -F perm=wa -F key=mailConfig
+-a always,exit -F dir=/etc/postfix -F perm=wa -F key=mailConfig
 
--a always,exit -F arch=b64 -S ptrace -F key=tracing
--a always,exit -F arch=b64 -S ptrace -F a0=0x4 -F key=codeInjection
--a always,exit -F arch=b64 -S ptrace -F a0=0x5 -F key=dataInjection
--a always,exit -F arch=b64 -S ptrace -F a0=0x6 -F key=registerInjection
-
-## Module Loading & Unloading
-
+# Module Loading & Unloading
 -a always,exit -F arch=b64 -S init_module,finit_module -F key=moduleLoad
 -a always,exit -F arch=b64 -S delete_module -F key=moduleUnload
 -a always,exit -F dir=/etc/modprobe.d -F perm=wa -F key=moduleConfig
 
-## Mail Server Config Monitoring
-
--a always,exit -F path=/etc/aliases -F perm=wa -F key=mailConfig
--a always,exit -F dir=/etc/mail -F perm=wa -F key=mailConfig
--a always,exit -F dir=/etc/postfix -F perm=wa -F key=mailConfig
-
-## Monitor Network & Unix Socket Accepts & Connects
-
--a always,exit -F arch=b64 -S accept,connect -F key=networkControl
+# Monitor Code Injection
+-a always,exit -F arch=b64 -S ptrace -F key=tracing
+-a always,exit -F arch=b64 -S ptrace -F a0=0x4 -F key=codeInjection
+-a always,exit -F arch=b64 -S ptrace -F a0=0x5 -F key=dataInjection
+-a always,exit -F arch=b64 -S ptrace -F a0=0x6 -F key=registerInjection
 
 # This controls the state of the auditing subsystem. -e 0 disables the auditing
 # system entirely, -e 1 will enable the system, and -e 2 will enable the system
