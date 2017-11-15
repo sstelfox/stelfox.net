@@ -3,17 +3,17 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:title' content='Tag: Security • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:url' content='https://stelfox.net/tags/security/'>
+<meta name='description' content='While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
+ * Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2.'>
+<meta property='og:title' content='Downgrading Glibc in Gentoo • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
+ * Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2.'>
+<meta property='og:url' content='https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content='2017-11-15T12:27:45Z'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='linux'><meta property='article:tag' content='gentoo'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2017-11-15T12:27:45Z'/><meta property='article:modified_time' content='2017-11-15T12:27:45Z'/>
 
-  <title>Tag: Security • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/tags/security/'>
-  
-    <link href="https://stelfox.net/tags/security/atom.xml" rel="alternate" type="application/rss+xml" title="Sam Stelfox&#39;s Thoughts &amp; Notes" />
+  <title>Downgrading Glibc in Gentoo • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -29,7 +29,7 @@ ga('send', 'pageview');
 </head>
 
 
-<body class='taxonomy type-page taxonomyTerm-tag'>
+<body class='page type-blog'>
   <div class='site'>
     <a class='screen-reader' href='#main'>Skip to Content</a>
     <header id='header' class='header-container'>
@@ -63,88 +63,136 @@ ga('send', 'pageview');
 
 
 <main id='main' class='main'>
-  <header class='header-container'>
-    <div class='header list-header'>
-      <div class='header-info'>
-        <h1 class='title'><span class='taxonomy-type'>Tag: </span>Security</h1>
-
-        
-
-      </div>
-    </div>
-  </header>
-
-  
-
-  <div class='list-container'>
-    <ul class='list'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Downgrading Glibc in Gentoo</h1>
       
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2011-02-17T18:15:02Z'>2011, Feb 17</time>
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-11-15T12:27:45Z'>2017, Nov 15</time>
 </span>
 
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2011/02/the-home-network-and-nat-as-a-security-layer/'>The Home Network and NAT as a Security Layer</a>
-      </h3>
-    </header>
-  </article>
-</li>
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/> 
+  
+</svg>
+2 mins read
+</span>
 
-      
-        <li class='list-item'>
-  <article>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/notes/tails-setup-notes/'>Tails Setup Notes</a>
-      </h3>
-    </header>
-  </article>
-</li>
 
-      
-    </ul>
+</div>
+
+
+  </div>
+</header>
 
     
-<nav class='pagination'>
-  <div class='page-links'>
     
-    <a class='page-link' href='/tags/security/page/2/'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+
+    <div class='entry-content'>
+  <p>While refining some automated setup scripts at some point I upgraded to a
+testing/unstable version of glibc. When I attempted to get the box back on to
+the stable version I hit a solid protection mechanism built into the portage
+scripts that prevents downgrading glibc. Attempts will give you the following
+error message:</p>
+
+<pre><code> * Sanity check to keep you from breaking your system:
+ *  Downgrading glibc is not supported and a sure way to destruction
+ * ERROR: sys-libs/glibc-2.25-r9::gentoo failed (pretend phase):
+ *   aborting to save your system
+</code></pre>
+
+<p>It is correct in that this is a very dangerous thing to do. For my use case
+this was a non-production system that I was using to test various
+configurations and hardening procedures so didn&rsquo;t particularly care if the
+packages all became corrupt. I was also confident that my method would be
+relatively safe (fully bootstrapping the system).</p>
+
+<p>To disable this check (you should seriously understand what you&rsquo;re doing and/or
+not care about the system you perform this on if you continue) you need to edit
+the appropriate eclass file which exists at
+<code>/usr/portage/eclass/toolchain-glibc.eclass</code>. Locate the following line and
+disable it by prefixing it with a hash sign (#).</p>
+
+<pre><code>die &quot;aborting to save your system&quot;
+</code></pre>
+
+<p>For the version I was editing it was line 507.</p>
+
+<p>To do this downgrade safely I performed the following steps (this will take a
+while as it fully boostraps your entire system):</p>
+
+<ul>
+<li>Review all use flags and accept keywords to ensure you&rsquo;ll be in the state you
+want to</li>
+<li>Sync the repository metadata (<code>emerge --sync</code>)</li>
+<li>Disable the glibc safety check documented above</li>
+<li>Run the following commands to re-bootstrap the system and undo the safety
+check modification by resyncing:</li>
+</ul>
+
+<pre><code>/usr/portage/scripts/bootstrap.sh
+emerge --emptytree --with-bdeps=y @world
+emerge --depclean
+emerge --sync
+</code></pre>
+
+<p>Reboot to ensure all running programs are on the correct versions and the
+system should be back in a happy state.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/gentoo'>Gentoo</a>, <a class='tag' href='/tags/tips'>Tips</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/2017/11/file-in-wrong-format/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
   <polyline points="10 18 4 12 10 6"/>
   
 </svg>
-<span class='screen-reader'>Previous page</span>
-    </a>
-    
-      
-      <a class='page-link' href='/tags/security/'>
-        <span class='screen-reader'>Page: </span>1</a>
-      
-    
-      
-      <a class='page-link' href='/tags/security/page/2/'>
-        <span class='screen-reader'>Page: </span>2</a>
-      
-    
-      
-      <span class='page-link current'>
-        <span class='screen-reader'>Current page: </span>3</span>
-      
-    
-
-    
-  </div>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>File in Wrong Format</a>
+    </div></div>
 </nav>
 
-
-  </div>
+  
 </main>
 
     <footer id='footer' class='footer-container'>
