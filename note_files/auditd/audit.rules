@@ -70,8 +70,9 @@
 -a always,exit -F arch=b64 -S setuid,setresuid -F a0=0 -F exe=/usr/bin/sudo -F key=elevatedPrivs
 -a always,exit -F arch=b64 -S execve -C auid!=euid -F key=elevatedPrivs
 
-# All Other Program Execution
--a always,exit -F arch=b64 -S execve -F key=regularExec
+# All Other Program Execution, useful in highly secure environments less useful
+# on desktops.
+#-a always,exit -F arch=b64 -S execve -F key=regularExec
 
 # Monitor changes to the system time, this can have a dangerous impact on
 # logging if the time were to change incorrectly. On the other hand many NTP
