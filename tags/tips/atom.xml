@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/tips/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Converting CPIO Files to Tarballs</title>
+      <link>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</link>
+      <pubDate>Mon, 04 Dec 2017 22:46:56 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</guid>
+      <description>I needed to convert a directory full of CPIO files to tar balls. This quick script did the trick for me but didn&amp;rsquo;t preserve the user / group. Running it as root will preserve the ownership information but that wasn&amp;rsquo;t important for my immediate use case.
+#!/bin/bash SRC_DIR=$(pwd) for i in *.cpio; do CPIO_TMP_DIR=&amp;quot;$(mktemp -d /tmp/cpioconv.XXXX)&amp;quot; (cd ${CPIO_TMP_DIR} &amp;amp;&amp;amp; cpio -idm &amp;lt; &amp;quot;${SRC_DIR}/${i}&amp;quot; &amp;amp;&amp;amp; tar -cf ${SRC_DIR}/${i%%.cpio}.tar .) rm -rf ${CPIO_TMP_DIR} done  </description>
+    </item><item>
       <title>Unusable Secret Key</title>
       <link>https://stelfox.net/blog/2017/12/unusable-secret-key/</link>
       <pubDate>Mon, 04 Dec 2017 11:38:01 -0500</pubDate>
@@ -79,12 +87,5 @@ When monitoring a file or directory there are two forms the rules can take. They
       <guid>https://stelfox.net/notes/disk-errors/</guid>
       <description>This is a weird file&amp;hellip; But while installing gentoo on a disk I started getting a weird error when printing the current partitions on the drive:
 Warning: The driver descriptor says the physical block size is 2048 bytes, but Linux says it is 512 bytes.  The only thing I&amp;rsquo;ve been able to find anywhere about this is &amp;ldquo;a low-level device tool (like dd) wrote blocks at the wrong size directly onto the device&amp;rdquo;.</description>
-    </item><item>
-      <title>Creating an Empty Git Branch</title>
-      <link>https://stelfox.net/blog/2015/04/creating-an-empty-git-branch/</link>
-      <pubDate>Mon, 13 Apr 2015 20:47:40 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2015/04/creating-an-empty-git-branch/</guid>
-      <description>Every now and then I find myself wanting to create a new empty branch in an existing repository. It&amp;rsquo;s useful for things such as GitHub Pages so you&amp;rsquo;re able to keep your content source in the master branch while only keeping the output in the gh-pages branch. I&amp;rsquo;ve also used it for testing a complete rewrite of a code base without the overhead of creating a new repo and copying access permissions.</description>
     </item></channel>
 </rss>

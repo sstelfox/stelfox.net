@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Converting CPIO Files to Tarballs</title>
+      <link>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</link>
+      <pubDate>Mon, 04 Dec 2017 22:46:56 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</guid>
+      <description>I needed to convert a directory full of CPIO files to tar balls. This quick script did the trick for me but didn&amp;rsquo;t preserve the user / group. Running it as root will preserve the ownership information but that wasn&amp;rsquo;t important for my immediate use case.
+#!/bin/bash SRC_DIR=$(pwd) for i in *.cpio; do CPIO_TMP_DIR=&amp;quot;$(mktemp -d /tmp/cpioconv.XXXX)&amp;quot; (cd ${CPIO_TMP_DIR} &amp;amp;&amp;amp; cpio -idm &amp;lt; &amp;quot;${SRC_DIR}/${i}&amp;quot; &amp;amp;&amp;amp; tar -cf ${SRC_DIR}/${i%%.cpio}.tar .) rm -rf ${CPIO_TMP_DIR} done  </description>
+    </item><item>
       <title>Unusable Secret Key</title>
       <link>https://stelfox.net/blog/2017/12/unusable-secret-key/</link>
       <pubDate>Mon, 04 Dec 2017 11:38:01 -0500</pubDate>
@@ -78,14 +86,5 @@ It&amp;rsquo;s important to note that when modifying the logs statements, they w
       <guid>https://stelfox.net/notes/cfssl/</guid>
       <description>CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&amp;rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
 I&amp;rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains.</description>
-    </item><item>
-      <title>Investigating LVM From Dracut</title>
-      <link>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</link>
-      <pubDate>Tue, 24 Oct 2017 11:45:07 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</guid>
-      <description>In my my last post, I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
-Turns out that the commands I&amp;rsquo;m normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the lvm tool like so:
-$ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to notice that block device of my root filesystem was missing due to a missing kernel driver&amp;hellip;</description>
     </item></channel>
 </rss>

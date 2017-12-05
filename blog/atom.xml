@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/blog/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Converting CPIO Files to Tarballs</title>
+      <link>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</link>
+      <pubDate>Mon, 04 Dec 2017 22:46:56 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</guid>
+      <description>I needed to convert a directory full of CPIO files to tar balls. This quick script did the trick for me but didn&amp;rsquo;t preserve the user / group. Running it as root will preserve the ownership information but that wasn&amp;rsquo;t important for my immediate use case.
+#!/bin/bash SRC_DIR=$(pwd) for i in *.cpio; do CPIO_TMP_DIR=&amp;quot;$(mktemp -d /tmp/cpioconv.XXXX)&amp;quot; (cd ${CPIO_TMP_DIR} &amp;amp;&amp;amp; cpio -idm &amp;lt; &amp;quot;${SRC_DIR}/${i}&amp;quot; &amp;amp;&amp;amp; tar -cf ${SRC_DIR}/${i%%.cpio}.tar .) rm -rf ${CPIO_TMP_DIR} done  </description>
+    </item><item>
       <title>Unusable Secret Key</title>
       <link>https://stelfox.net/blog/2017/12/unusable-secret-key/</link>
       <pubDate>Mon, 04 Dec 2017 11:38:01 -0500</pubDate>
@@ -79,13 +87,5 @@ $ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to not
       <guid>https://stelfox.net/blog/2017/10/vultr-deny-all-firewall/</guid>
       <description>While setting up new instances on Vultr for testing, I wanted to initially ensure that no traffic beyond my own could touch the instances. After adding a matching rule for SSH to my IPv4 address, a default rule shows up that drops any unspecified traffic. Switching to the IPv6 I wanted to add a drop all rule (as I wouldn&amp;rsquo;t be using IPv6 until the system was up).
 The interface only allows accept rules to be created and additionally you&amp;rsquo;ll be greeted with this message while trying to figure out what to do:</description>
-    </item><item>
-      <title>Security Principles</title>
-      <link>https://stelfox.net/blog/2017/10/security-principles/</link>
-      <pubDate>Thu, 19 Oct 2017 05:19:12 +0000</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/10/security-principles/</guid>
-      <description>While reviewing current security hardening practices put out by several organizations and attempting to filter the good recommendations from the outdated legislated requirements, I came across one of the best descriptions of basic security principles. You can find it in the NIST Guide to General Server Security (published in 2008).
-I&amp;rsquo;ve replicated section 2.4 from the linked document (I have removed the footnotes, but it is otherwise unchanged) in its entirety here for safe keeping and to hopefully help expose this to more people.</description>
     </item></channel>
 </rss>

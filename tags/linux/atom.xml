@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Converting CPIO Files to Tarballs</title>
+      <link>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</link>
+      <pubDate>Mon, 04 Dec 2017 22:46:56 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</guid>
+      <description>I needed to convert a directory full of CPIO files to tar balls. This quick script did the trick for me but didn&amp;rsquo;t preserve the user / group. Running it as root will preserve the ownership information but that wasn&amp;rsquo;t important for my immediate use case.
+#!/bin/bash SRC_DIR=$(pwd) for i in *.cpio; do CPIO_TMP_DIR=&amp;quot;$(mktemp -d /tmp/cpioconv.XXXX)&amp;quot; (cd ${CPIO_TMP_DIR} &amp;amp;&amp;amp; cpio -idm &amp;lt; &amp;quot;${SRC_DIR}/${i}&amp;quot; &amp;amp;&amp;amp; tar -cf ${SRC_DIR}/${i%%.cpio}.tar .) rm -rf ${CPIO_TMP_DIR} done  </description>
+    </item><item>
       <title>XFCE Failed to Connect to Socket</title>
       <link>https://stelfox.net/blog/2017/11/xfce-failed-to-connect-to-socket/</link>
       <pubDate>Mon, 27 Nov 2017 17:23:09 +0500</pubDate>
@@ -80,13 +88,5 @@ $ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to not
       <guid>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</guid>
       <description>While working on an automated install script for an embedded board, I hit an issue with the logical volumes never showing up in /dev/mapper, and in turn unable to be mounted. This left me in the dracut emergency shell (after about three minutes), with little to go on beyond the following error:
 [187.508531] dracut Warning: Could not boot. [187.510560] dracut Warning: /dev/disk/by-uuid/5681-902D does not exist [187.512534] dracut Warning: /dev/mapper/system-root does not exit [187.</description>
-    </item><item>
-      <title>Mutt</title>
-      <link>https://stelfox.net/notes/mutt/</link>
-      <pubDate>Fri, 20 Oct 2017 12:51:00 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/mutt/</guid>
-      <description>I keep a copy of my mutt config both here on the site as well as in my public dotfiles. Eventually I&amp;rsquo;ll likely document my reasoning, preferences and the tradeoffs made in that config (and change my mind on most in the process).
-Vim Since I use vim as my editor I also added the following line to my vim configuration file to autowrap my lines at 72 characters, but only for mutt composed messsages.</description>
     </item></channel>
 </rss>
