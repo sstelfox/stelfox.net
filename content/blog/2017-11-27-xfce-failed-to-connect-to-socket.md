@@ -12,10 +12,23 @@ into an error every time I logged into XFCE from lightdm (I didn't try starting
 up XFCE any other way). There are tons of blog posts that relate to systemd,
 ubuntu, or crouton but none related to Gentoo.
 
-There error in particular is:
+The first error message that pops up is:
 
 ```
+Unable to contact settings server
+
 Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused
+```
+
+Once you click through there was a second error message, but I believe it was
+due to the previous error and not actually an issue:
+
+```
+Unable to load a failsafe session
+
+Unable to determine failsafe session name. Possible causes: xfconfd isn't
+running (D-Bus setup problem), environment variable $XDG_CONFIG_DIRS is set
+incorrectly (must include "/etc"), or xfce4-session is installed incorrectly.
 ```
 
 Where the x's are replaced with a random string. My issue ultimately was dbus
