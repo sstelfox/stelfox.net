@@ -1,5 +1,5 @@
 ---
-date: 2017-12-07T10:28:02-05:00
+date: ???
 draft: true
 tags:
 - thoughts
