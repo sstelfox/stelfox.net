@@ -217,6 +217,14 @@ the system compile (seriously this is going to take a hot minute):
 arm-xilinx-linux-gnueabi-emerge --update --newuse --deep @system
 ```
 
+There is one final gotcha with the root filesystem, the commands to date will
+not create several important directories. These can be created with the
+following command:
+
+```
+mkdir -p /usr/arm-xilinx-linux-gnueabi/{dev,home,proc,root,sys}
+```
+
 At this point you should have a mostly complete root filesystem and may want to
 start diverging from this guide (but pay attention to the kernel modules
 section, and the rebuild section). There are a couple of things that won't
@@ -467,7 +475,36 @@ sync
 umount /mnt/peyco/boot /mnt/peyco/root
 ```
 
-Stick the filesystem on to the board and let it boot up.
+Stick the filesystem on to the board and let it boot up. If you're following
+this guide you should be able to get to a login screen and be able to login
+with root / root. The device should be on the network and you should be able to
+SSH to the device. For my board at the very least I haven't gotten the hardware
+clock working correctly, before continuing we need to set the clock correctly.
+You can reference the build host's time using the following command:
+
+```
+date +%s
+```
+
+And set it on the board using the following command (replacing VALUE with
+the value returned above):
+
+```
+date --set="@VALUE"
+```
+
+We now need to sync the system's packages and fix portage. This is where we
+have to work around the issue of it being incorrectly installed:
+
+```
+PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --sync
+PYTHONPATH='/usr/lib64/python2.7/site-packages' env-update
+. /etc/profile
+
+PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --oneshot sys-apps/portage
+USE="dev-util/pkgconfig internal-glib" emerge --update --newuse --deep @world
+emerge --update --newuse --deep @world
+```
 
 [1]: http://www.wiki.xilinx.com/PetaLinux
 [2]: https://www.yoctoproject.org/
