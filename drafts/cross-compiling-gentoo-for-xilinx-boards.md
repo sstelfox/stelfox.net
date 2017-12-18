@@ -394,8 +394,8 @@ point operations) and in the case of this root filesystem we at a minimum want
 to fix the incorrectly built portage package so everything is usable normally.
 
 Before transferring this it's a good idea to preemptively adjust the make
-config to no longer be a cross environment. This can be done with the following
-command:
+config to no longer be a cross environment, and remove the special case for
+portage. This can be done with the following command:
 
 ```
 cat << 'EOF' > /usr/arm-xilinx-linux-gnueabi/etc/portage/make.conf
@@ -416,6 +416,8 @@ LINGUAS='en'
 
 PYTHON_TARGETS='python2_7'
 EOF
+
+rm -f /usr/arm-xilinx-linux-gnueabi/etc/portage/package.use/portage
 ```
 
 We now need to package up our root filesystem:
@@ -431,9 +433,14 @@ likely than not). For me the device showed up as mmcblk0 on my machine. Confirm
 yours before following the next steps:
 
 ```
-parted -a optimal /dev/mmcblk0 -- mklabel msdos
-parted -a optimal /dev/mmcblk0 -- mkpart primary fat32 100 600
-parted -a optimal /dev/mmcblk0 -- mkpart primary ext4 600 -1
+dd if=/dev/zero bs=1M count=1 oflag=sync of=/dev/mmcblk0
+
+parted --script -a optimal /dev/mmcblk0 -- mklabel msdos
+parted --script -a optimal /dev/mmcblk0 -- mkpart primary fat32 100 600
+parted --script -a optimal /dev/mmcblk0 -- mkpart primary ext4 600 -1
+
+dd if=/dev/zero bs=1M count=1 oflag=sync of=/dev/mmcblk0p1
+dd if=/dev/zero bs=1M count=1 oflag=sync of=/dev/mmcblk0p2
 
 mkfs.vfat -n BOOT -F 32 /dev/mmcblk0p1
 mkfs.ext4 -L rootfs /dev/mmcblk0p2
