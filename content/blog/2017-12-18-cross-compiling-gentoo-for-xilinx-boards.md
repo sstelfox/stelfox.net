@@ -11,7 +11,7 @@ title: Cross-Compiling Gentoo for Xilinx Boards
 *Note: If you've come here looking to build a root filesystem for 32 bit ARM
 devices I suspect everything but the build tuple will be the same. The issues
 that need to be worked around largely packaging and profile issues that should
-all be the same*
+all be the same.*
 
 I got a hold of a Zynq 7100 development board, and while I've played with some
 embedded ARM microcontrollers such as the STM32F3 series and more basic RISC
