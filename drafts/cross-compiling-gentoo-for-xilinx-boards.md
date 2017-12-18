@@ -219,7 +219,8 @@ arm-xilinx-linux-gnueabi-emerge --update --newuse --deep @system
 
 At this point you should have a mostly complete root filesystem and may want to
 start diverging from this guide (but pay attention to the kernel modules
-section). There are a couple of things that won't currently work, specifically:
+section, and the rebuild section). There are a couple of things that won't
+currently work, specifically:
 
 * Authentication
 * Serial Console
@@ -357,17 +358,109 @@ ln -s /etc/init.d/sshd sshd
 
 This is a pretty solid foundation for any root Linux system. Everything at this
 point is going to preferential and determined by your project requirements. A
-few things you may want to include though
+few things you may want to include:
 
 * VIM
 * NTPd or Chronyd for time keeping
 * A syslog server (I recommend syslog-ng) and in turn logrotate
 * Network performance testing tools (such as iperf3)
 
-Once you're done there are likely things left behind you don't necessarily
-need.
+From the above list I wanted both VIM and iperf3 and thus ran the following:
+
+```
+echo 'net-misc/iperf ~arm' > /usr/arm-xilinx-linux-gnueabi/etc/portage/package.keywords/network_utils
+echo 'app-editors/vim minimal' > /usr/arm-xilinx-linux-gnueabi/etc/portage/package.use/vim
+arm-xilinx-linux-gnueabi-emerge app-editors/vim net-misc/iperf
+```
 
 ## Rebuilding on the System
+
+Once all the packages you want for your base system are installed, the root may
+be in a an inconsitent state. It's a good idea to run a sync, global use
+update, a preserved rebuild and dependency clean on the board before
+continuing:
+
+```
+emerge --sync
+arm-xilinx-linux-gnueabi-emerge --update --newuse --deep @world
+arm-xilinx-linux-gnueabi-emerge @preserved-rebuild
+arm-xilinx-linux-gnueabi-emerge --depclean
+```
+
+We now need to get the root filesystem on a live board and rebuilding
+everything with the native compiler. I mentioned this earlier, but cross
+compiled applications can behave a little oddly (especially around floating
+point operations) and in the case of this root filesystem we at a minimum want
+to fix the incorrectly built portage package so everything is usable normally.
+
+Before transferring this it's a good idea to preemptively adjust the make
+config to no longer be a cross environment. This can be done with the following
+command:
+
+```
+cat << 'EOF' > /usr/arm-xilinx-linux-gnueabi/etc/portage/make.conf
+ARCH='arm'
+CFLAGS='-O2 -pipe'
+CXXFLAGS="${CFLAGS}"
+CHOST='arm-xilinx-linux-gnueabi'
+
+ACCEPT_KEYWORDS='arm'
+EMERGE_DEFAULT_OPTS='--jobs 3 --load-average 2'
+FEATURES='sandbox noman noinfo nodoc'
+USE="${ARCH} pam"
+
+ELIBC='glibc'
+
+L10N='en'
+LINGUAS='en'
+
+PYTHON_TARGETS='python2_7'
+EOF
+```
+
+We now need to package up our root filesystem:
+
+```
+tar -cJf ~/xilinx_root_non_native.txz -C /usr/arm-xilinx-linux-gnueabi .
+```
+
+This next bit requires the proper settings in PetaLinux and a completed build
+(you'll need your own BOOT.BIN, image.ub, and system.dtb files). After
+inserting an appropriately size SD card (You're going to want 4 or 8Gb more
+likely than not). For me the device showed up as mmcblk0 on my machine. Confirm
+yours before following the next steps:
+
+```
+parted -a optimal /dev/mmcblk0 -- mklabel msdos
+parted -a optimal /dev/mmcblk0 -- mkpart primary fat32 100 600
+parted -a optimal /dev/mmcblk0 -- mkpart primary ext4 600 -1
+
+mkfs.vfat -n BOOT -F 32 /dev/mmcblk0p1
+mkfs.ext4 -L rootfs /dev/mmcblk0p2
+
+mkdir -p /mnt/peyco/boot
+mount /dev/mmcblk0p1 /mnt/peyco/boot
+
+mkdir -p /mnt/peyco/root
+mount /dev/mmcblk0p2 /mnt/peyco/root
+```
+
+You'll need to copy BOOT.BIN, image.ub, and system.dtb to /mnt/peyco/boot and
+extract the root filesystem into the root directory (compressed version still
+lives at ~/xilinx_root_non_native.txz).
+
+```
+tar -xf ~/xilinx_root_non_native.txz -C /mnt/peyco/root
+```
+
+Ensure the writes complete and cleanly unmount the filesystems:
+
+```
+sync
+umount /mnt/peyco/boot /mnt/peyco/root
+```
+
+Stick the filesystem on to the board and let it boot up.
 
 [1]: http://www.wiki.xilinx.com/PetaLinux
 [2]: https://www.yoctoproject.org/
