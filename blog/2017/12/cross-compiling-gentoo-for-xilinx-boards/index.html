@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Note: If you&rsquo;ve come here looking to build a root filesystem for 32 bit ARM devices I suspect everything but the build tuple will be the same. The issues that need to be worked around largely packaging and profile issues that should all be the same
+I got a hold of a Zynq 7100 development board, and while I&rsquo;ve played with some embedded ARM microcontrollers such as the STM32F3 series and more basic RISC style microcontrollers like Atmel&rsquo;s SAMD10 and Atmega lines, I&rsquo;ve never played with FPGA development before so I considered this an interesting learning opportunity.'>
+<meta property='og:title' content='Cross-Compiling Gentoo for Xilinx Boards • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='Note: If you&rsquo;ve come here looking to build a root filesystem for 32 bit ARM devices I suspect everything but the build tuple will be the same. The issues that need to be worked around largely packaging and profile issues that should all be the same
+I got a hold of a Zynq 7100 development board, and while I&rsquo;ve played with some embedded ARM microcontrollers such as the STM32F3 series and more basic RISC style microcontrollers like Atmel&rsquo;s SAMD10 and Atmega lines, I&rsquo;ve never played with FPGA development before so I considered this an interesting learning opportunity.'>
+<meta property='og:url' content='https://stelfox.net/blog/2017/12/cross-compiling-gentoo-for-xilinx-boards/'>
+<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='arm'><meta property='article:tag' content='embedded'><meta property='article:tag' content='linux'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2017-12-18T17:49:22-05:00'/><meta property='article:modified_time' content='2017-12-18T17:49:22-05:00'/>
+
+  <title>Cross-Compiling Gentoo for Xilinx Boards • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2017/12/cross-compiling-gentoo-for-xilinx-boards/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700&subset=latin'>
+<link rel='stylesheet' href='/assets/css/main.77da63e1.css'>
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-32188490-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+
+</head>
+
+
+<body class='page type-blog'>
+  <div class='site'>
+    <a class='screen-reader' href='#main'>Skip to Content</a>
+    <header id='header' class='header-container'>
+      <div class='header site-header'>
+        <nav id='main-menu' class='main-menu-container' aria-label='Main Menu'>
+  <ul class='main-menu'>
+  <li>
+      <a href='/'>Home</a>
+    </li>
+  <li>
+      <a href='/about/'>About</a>
+    </li>
+  <li>
+      <a href='/blog/'>Blog Posts</a>
+    </li>
+  <li>
+      <a href='/notes/'>Various Notes</a>
+    </li>
+  
+  </ul>
+</nav>
+
+        <div class='header-info'>
+          
+          <p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p>
+          
+          <p class='site-description subtitle'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+        </div>
+      </div>
+    </header>
+
+
+<main id='main' class='main'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>Cross-Compiling Gentoo for Xilinx Boards</h1>
+      
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2017-12-18T17:49:22-05:00'>2017, Dec 18</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/> 
+  
+</svg>
+12 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  
+
+<p><em>Note: If you&rsquo;ve come here looking to build a root filesystem for 32 bit ARM
+devices I suspect everything but the build tuple will be the same. The issues
+that need to be worked around largely packaging and profile issues that should
+all be the same</em></p>
+
+<p>I got a hold of a Zynq 7100 development board, and while I&rsquo;ve played with some
+embedded ARM microcontrollers such as the STM32F3 series and more basic RISC
+style microcontrollers like Atmel&rsquo;s SAMD10 and Atmega lines, I&rsquo;ve never played
+with FPGA development before so I considered this an interesting learning
+opportunity.</p>
+
+<p>To do development of the FPGA and generally use the board at all you have to
+shell out $2,995 for a non-transferable license of a proprietary piece of
+software called Vivado to develop on the FPGA. For a hobby project just
+exploring the board this isn&rsquo;t going to fly. There is a 30-day evaluation
+version though and there are guides to getting it to work in Linux.</p>
+
+<p>For this post I&rsquo;m going to gloss over this part and get to the meat of the
+largest issue I had while attempting to bootstrap the Linux portion of this
+development board. Xilinx maintains its own very rough hacked together
+distribution called <a href="http://www.wiki.xilinx.com/PetaLinux">PetaLinux</a> which is just a very poorly designed wrapper
+around <a href="https://www.yoctoproject.org/">Yocto Linux</a>.</p>
+
+<p>Unfortunately I haven&rsquo;t been fully able to remove PetaLinux from my build, I
+still need to use it to integrate the board specifics with the Linux kernel and
+in turn compile the Linux kernel, u-boot, and handle the configuration to point
+at a root filesystem living on the SD card. PetaLinux&rsquo;s incredibly limited
+documentation can at least get you this far. This post covers building that
+root filesystem and guides around some of the problems the Gentoo cross process
+doesn&rsquo;t cover.</p>
+
+<p>I want a target that is a bit more inclusive than most embedded Linux root
+filesystems (think IoT devices). This device is less constrained than devices
+like most OpenWRT capable devices (we&rsquo;re not limited to 16MB of space). Let&rsquo;s
+quickly define some criteria that will determine the successful build of a root
+filesystem:</p>
+
+<ul>
+<li>It will have all the utilities necessary to support interactive logins</li>
+<li>It will have a working file editor</li>
+<li>It will have a valid native compiler for itself</li>
+<li>It will have a working package manager to allow it to extend itself</li>
+</ul>
+
+<p>From this set of goals we will both be able to re-compile everything natively
+on the board if we so choose, and get access to the vast majority of packaged
+software from the Gentoo repositories as well as easily perform project
+development directly.</p>
+
+<p>To get started you will have to have a working Gentoo install to start the
+cross compilation from. I&rsquo;ve personally had issues with the hardened, SELinux,
+and no-multilib profile variants. If you encounter issues I strongly recommend
+trying the standard system profile on your build host. I&rsquo;m also sure there is
+probably some way to get the portage cross tooling working in other
+distributions, but I&rsquo;ll leave that as an exercise to the reader.</p>
+
+<h2 id="tooling">Tooling</h2>
+
+<p>To get started we&rsquo;re going to want to setup an overlay specifically for our
+cross development. This will allow customization of the profile for the device
+later on. This is largely for use beyond this guide and is a good practice to
+separate changes from your system and the target board.</p>
+
+<p>These commands are pretty straight forward and do need to be run as root:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">mkdir -p /usr/local/overlay/portage-crossdev/<span style="color:#f92672">{</span>profiles,metadata<span style="color:#f92672">}</span>
+echo <span style="color:#e6db74">&#39;crossdev&#39;</span> &gt; /usr/local/overlay/portage-crossdev/profiles/repo_name
+echo <span style="color:#e6db74">&#39;masters = gentoo&#39;</span> &gt;
+/usr/local/overlay/portage-crossdev/metadata/layout.conf
+chown -R portage:portage /usr/local/overlay/portage-crossdev
+
+cat <span style="color:#e6db74">&lt;&lt; EOF &gt; /usr/local/overlay/portage-crossdev/metadata/layout.conf
+</span><span style="color:#e6db74">masters = gentoo
+</span><span style="color:#e6db74">thin-manifests = true
+</span><span style="color:#e6db74">EOF</span>
+
+mkdir -p /etc/portage/repos.conf
+cat <span style="color:#e6db74">&lt;&lt; EOF &gt; /etc/portage/repos.conf/crossdev.conf
+</span><span style="color:#e6db74">[crossdev]
+</span><span style="color:#e6db74">location = /usr/local/overlay/portage-crossdev
+</span><span style="color:#e6db74">priority = 10
+</span><span style="color:#e6db74">masters = gentoo
+</span><span style="color:#e6db74">auto-sync = no
+</span><span style="color:#e6db74">EOF</span></code></pre></div>
+<p>With our overlay setup we now need to install the cross development tools (once
+again as root):</p>
+
+<pre><code>emerge sys-devel/crossdev
+</code></pre>
+
+<p>The next step is to build our initial tool chain. Having worked with many tool
+chains before this is absolutely the easiest time I&rsquo;ve ever had setting one up.
+One command will get you all the way to a C/C++ compiler, linker, bintools, and
+a standard library. The specific tool chain target tuple is for a glibc based
+tool chain, on a Xilinx variant of an arm processor (or
+arm-xilinx-linux-gnueabi).</p>
+
+<pre><code>crossdev --stable -s4 -v -t arm-xilinx-linux-gnueabi
+</code></pre>
+
+<p>This will result in a very bare bones root filesystem in
+<code>/usr/arm-xilinx-linux-gnueabi</code>. This doesn&rsquo;t really have anything of value
+yet.</p>
+
+<h2 id="base-system">Base System</h2>
+
+<p>We need to configure portage and then a profile for our build. First off the
+portage configuration, this exists in
+<code>/etc/arm-xilinx-linux-gnueabi/etc/portage/make.conf</code> and varies slightly from
+the default.</p>
+
+<pre><code>CHOST='arm-xilinx-linux-gnueabi'
+CBUILD='x86_64-pc-linux-gnu'
+ARCH='arm'
+
+HOSTCC='x86_64-pc-linux-gnu-gcc'
+
+CFLAGS='-O2 -pipe -fomit-frame-pointer'
+CXXFLAGS=&quot;${CFLAGS}&quot;
+
+ROOT=&quot;/usr/${CHOST}/&quot;
+
+ACCEPT_KEYWORDS='arm'
+
+USE=&quot;${ARCH}&quot;
+
+FEATURES='sandbox noman noinfo nodoc'
+
+# Be sure we dont overwrite pkgs from another repo..
+PKGDIR=&quot;${ROOT}packages/&quot;
+PORTAGE_TMPDIR=&quot;${ROOT}tmp/&quot;
+
+ELIBC='glibc'
+
+PKG_CONFIG_PATH=&quot;${ROOT}usr/lib/pkgconfig/&quot;
+
+PYTHON_TARGETS='python2_7'
+</code></pre>
+
+<p>If you pay attention compared to the defaults there are a few changes I&rsquo;ve
+explicitly made:</p>
+
+<ol>
+<li>Do not build packages, we simply don&rsquo;t need them</li>
+<li>Allow PAM to be included</li>
+<li>Reject the testing arm packages (~arm keyword)</li>
+<li>Re-enable the file collision protections between packages</li>
+<li>Explicitly define our valid python target at 2.7 only</li>
+</ol>
+
+<p>The first three align with my original stated goals, building will be allowed
+and preferred on the device so we won&rsquo;t need to host any packages. We want a
+standard interactive login and ideally we want a stable system (as much as
+possible). The last one is personal preference as in my build (after this guide
+is over) I&rsquo;ll be using software that doesn&rsquo;t work on Python 3 variants.</p>
+
+<p>The fourth change is something I want to draw specific attention to. This is
+disabled by default because the stock ARM profile is inherently broken. It
+attempts to force both a complete busybox system in addition to the standard
+Gentoo base. The faux busybox binaries directly conflict and you&rsquo;ll end up in a
+weird mixed state that isn&rsquo;t good. This is true of libraries as well which will
+result in some core libraries failing to compile (<code>dev-libs/gmp</code> was the first
+one that failed on me).</p>
+
+<p>To both fix that issue and allow us to have a clean build, I needed to build a
+custom Gentoo profile for targeting this device. This minimal profile will work
+cleanly for our target.</p>
+
+<pre><code>rm /usr/arm-xilinx-linux-gnueabi/etc/portage/make.profile
+mkdir /usr/arm-xilinx-linux-gnueabi/etc/portage/make.profile
+echo 5 &gt; /usr/arm-xilinx-linux-gnueabi/etc/portage/make.profile/eabi
+cat &lt;&lt; EOF &gt; /usr/arm-xilinx-linux-gnueabi/etc/portage/make.profile/parent
+/usr/portage/profiles/base
+/usr/portage/profiles/arch/arm/armv7a
+EOF
+
+mkdir -p /usr/arm-xilinx-linux-gnueabi/etc/portage/package.keywords
+cat &lt;&lt; EOF &gt; /usr/arm-xilinx-linux-gnueabi/etc/portage/package.keywords/system
+sys-apps/coreutils ~arm
+sys-apps/sandbox ~arm
+EOF
+</code></pre>
+
+<p>There is one final workaround we&rsquo;re going to need to put in place before we can
+begin compiling our system. Currently <code>sys-apps/portage</code> and
+<code>dev-python/pyxattr</code> are incorrectly packaged and will use the system library
+paths rather than those in the chroot.</p>
+
+<p>This prevents both of them from being compiled with native extensions and
+incorrectly places the files inside the chroot (They&rsquo;re in the 64 bit path on a
+32 bit target). This is fixable once we have the root filesystem on the device
+but in the meantime we need to set some use flags to avoid the issue:</p>
+
+<pre><code>mkdir -p /usr/arm-xilinx-linux-gnueabi/etc/portage/package.use
+echo 'sys-apps/portage -native-extensions -xattr' &gt; /usr/arm-xilinx-linux-gnueabi/etc/portage/package.use/portage
+</code></pre>
+
+<p>With that in place sit back grab a cup of your favorite warm beverage and watch
+the system compile (seriously this is going to take a hot minute):</p>
+
+<pre><code>arm-xilinx-linux-gnueabi-emerge --update --newuse --deep @system
+</code></pre>
+
+<p>There is one final gotcha with the root filesystem, the commands to date will
+not create several important directories. These can be created with the
+following command:</p>
+
+<pre><code>mkdir -p /usr/arm-xilinx-linux-gnueabi/{dev,home,proc,root,sys}
+</code></pre>
+
+<p>At this point you should have a mostly complete root filesystem and may want to
+start diverging from this guide (but pay attention to the kernel modules
+section, and the rebuild section). There are a couple of things that won&rsquo;t
+currently work, specifically:</p>
+
+<ul>
+<li>Authentication</li>
+<li>Serial Console</li>
+<li>Networking</li>
+</ul>
+
+<h2 id="authentication-serial-usage">Authentication &amp; Serial Usage</h2>
+
+<p>First authentication, we need to provide root with a password and PAM needs its
+configuration files to function. We can&rsquo;t use the native tools (without qemu
+binary emulation) to change the password so the fastest way to give root a
+password is to pregenerate a password hash and drop it directly into the
+relevant files. If you&rsquo;d like to keep going you can use the hash below for the
+super secure password &lsquo;root&rsquo; (I don&rsquo;t recommend it):</p>
+
+<pre><code>sed -i 's`root:[^:]*:`root:$6$ufWqa3MP$CfFwj0M7tW15gUYBRVms3GG2FJTRMAhlpkwV7Bp4aro6mGFHmotMjHoePNoTd1Gf9fgzh/jJM3rvJgkGgSjz31:`' /usr/arm-xilinx-linux-gnueabi/etc/shadow
+</code></pre>
+
+<p>And the requisite PAM configuration files:</p>
+
+<pre><code>arm-xilinx-linux-gnueabi-emerge sys-auth/pambase
+</code></pre>
+
+<p>The serial console is going to be more device specific and is a bit tricky to
+figure out. To find this out on my board I created a service that collected the
+names of all devices under <code>/dev</code>, logged them to a file and found mine to be
+<code>ttyPS0</code> (also one I&rsquo;ve never seen before).</p>
+
+<p>The following command will replace the default serial configuration with one
+for this device (you may also have to change the baud rate it&rsquo;s running at):</p>
+
+<pre><code>sed -i 's`^s0:.*$`ps0:12345:respawn:/sbin/agetty -L 115200 ttyPS0 vt100`' /usr/arm-xilinx-linux-gnueabi/etc/inittab
+</code></pre>
+
+<h2 id="networking">Networking</h2>
+
+<pre><code>arm-xilinx-linux-gnueabi-emerge sys-apps/net-tools net-misc/netifrc \
+  net-misc/dhcpcd net-misc/iputils sys-apps/iproute2
+</code></pre>
+
+<p>To get it to come up by default, since we can&rsquo;t use the <code>rc</code> tools natively yet
+we can cheat. This assumes your kernel is configured to use the legacy network
+names (which are more consistent and predictable :-/). This will setup eth0 to
+come up automatically and use DHCP to grab an address on the network:</p>
+
+<pre><code>cat &lt;&lt; 'EOF' &gt; /usr/arm-xilinx-linux-gnueabi/etc/conf.d/net
+# /etc/conf.d/net
+modules=&quot;iproute2&quot;
+
+# Default DHCP config for interfaces
+dhcp=&quot;release nonis nontp&quot;
+
+config_eth0=&quot;dhcp&quot;
+EOF
+
+echo 'arm-board' &gt; /usr/arm-xilinx-linux-gnueabi/etc/hostname
+echo 'hostname=&quot;arm-board.localhost&quot;' &gt;
+/usr/arm-xilinx-linux-gnueabi/etc/conf.d/hostname
+cat &lt;&lt; 'EOF' &gt; /usr/arm-xilinx-linux-gnueabi/etc/hosts
+# /etc/hosts
+
+127.0.0.1 localhost4 localhost
+::1       localhost6 localhost
+EOF
+
+cd /usr/arm-xilinx-linux-gnueabi/etc/init.d/
+ln -s net.lo net.eth0
+
+cd /usr/arm-xilinx-linux-gnueabi/etc/runlevels/default/
+ln -s /etc/init.d/net.eth0 net.eth0
+</code></pre>
+
+<h2 id="kernel-modules">Kernel Modules</h2>
+
+<p>Part of the kernel build that has to happen still in the PetaLinux environment
+are kernel modules. One of the build artifacts is the root filesystem PetaLinux
+thinks you&rsquo;re going to use. These contain very important kernel modules which
+need to be extracted.</p>
+
+<p>Inside the root of your PetaLinux project after a build you should find a file
+<code>images/linux/rootfs.tar.gz</code> which will have a directory inside it
+<code>./lib/modules</code>. The contents need to be transferred to your root filesystem.
+If you transfer that to the system you&rsquo;re building the board root on you can
+extract all of the appropriate files using the following command:</p>
+
+<pre><code>tar -xf rootfs.tar.gz -C /usr/arm-xilinx-linux-gnueabi/ ./lib/modules
+</code></pre>
+
+<p>You can verify they are present by confirming a directory that looks along the
+lines of <code>4.9.0-xilinx-v2017.2</code> exists in
+<code>/usr/arm-xilinx-linux-gnueabi/lib/modules/</code>.</p>
+
+<h2 id="ssh-server">SSH Server</h2>
+
+<p>If you would additionally like an SSH server running (that supports root
+login) there is a bit of a trick. User privilege separation requires a
+dedicated user and group named <code>sshd</code> for this to work.</p>
+
+<p>The OpenSSH ebuild doesn&rsquo;t create this user and I&rsquo;m not entirely sure what
+does. For now we can solve this issue by creating the user and group manually.</p>
+
+<pre><code>arm-xilinx-linux-gnueabi-emerge net-misc/openssh
+
+echo 'sshd:x:22:22:added by portage for openssh:/var/empty:/sbin/nologin' &gt;&gt; /usr/arm-xilinx-linux-gnueabi/etc/passwd
+echo 'sshd:*:0:0:::::' &gt;&gt; /usr/arm-xilinx-linux-gnueabi/etc/shadow
+echo 'sshd:x:22:' &gt;&gt; /usr/arm-xilinx-linux-gnueabi/etc/group
+
+cat &lt;&lt; 'EOF' &gt; /usr/arm-xilinx-linux-gnueabi/etc/ssh/sshd_config
+# /etc/ssh/sshd_config
+
+HostKeyAlgorithms ssh-ed25519,ecdsa-sha2-nistp521,ssh-rsa
+
+ClientAliveInterval 10
+
+UseDNS no
+
+AllowTcpForwarding no
+UsePAM yes
+
+PasswordAuthentication yes
+PermitRootLogin yes
+EOF
+
+cd /usr/arm-xilinx-linux-gnueabi/etc/runlevels/default/
+ln -s /etc/init.d/sshd sshd
+</code></pre>
+
+<h2 id="additional-tools">Additional Tools</h2>
+
+<p>This is a pretty solid foundation for any root Linux system. Everything at this
+point is going to preferential and determined by your project requirements. A
+few things you may want to include:</p>
+
+<ul>
+<li>VIM</li>
+<li>NTPd or Chronyd for time keeping</li>
+<li>A syslog server (I recommend syslog-ng) and in turn logrotate</li>
+<li>Network performance testing tools (such as iperf3)</li>
+</ul>
+
+<p>From the above list I wanted both VIM and iperf3 and thus ran the following:</p>
+
+<pre><code>echo 'net-misc/iperf ~arm' &gt; /usr/arm-xilinx-linux-gnueabi/etc/portage/package.keywords/network_utils
+echo 'app-editors/vim minimal' &gt; /usr/arm-xilinx-linux-gnueabi/etc/portage/package.use/vim
+arm-xilinx-linux-gnueabi-emerge app-editors/vim net-misc/iperf
+</code></pre>
+
+<h2 id="rebuilding-on-the-system">Rebuilding on the System</h2>
+
+<p>Once all the packages you want for your base system are installed, the root may
+be in a an inconsitent state. It&rsquo;s a good idea to run a sync, global use
+update, a preserved rebuild and dependency clean on the board before
+continuing:</p>
+
+<pre><code>emerge --sync
+arm-xilinx-linux-gnueabi-emerge --update --newuse --deep @world
+arm-xilinx-linux-gnueabi-emerge @preserved-rebuild
+arm-xilinx-linux-gnueabi-emerge --depclean
+</code></pre>
+
+<p>We now need to get the root filesystem on a live board and rebuilding cleaning
+up some of the mismatch package flags and irregularities introduced by the
+cross compilation process. At a minimum want to fix the incorrectly built
+portage package so everything is usable normally.</p>
+
+<p>Before transferring this it&rsquo;s a good idea to preemptively adjust the make
+config to no longer be a cross environment, and remove the special case for
+portage. This can be done with the following command:</p>
+
+<pre><code>cat &lt;&lt; 'EOF' &gt; /usr/arm-xilinx-linux-gnueabi/etc/portage/make.conf
+ARCH='arm'
+CFLAGS='-O2 -pipe'
+CXXFLAGS=&quot;${CFLAGS}&quot;
+CHOST='arm-xilinx-linux-gnueabi'
+
+ACCEPT_KEYWORDS='arm'
+EMERGE_DEFAULT_OPTS='--jobs 3 --load-average 2'
+FEATURES='sandbox noman noinfo nodoc'
+USE=&quot;${ARCH} pam&quot;
+
+ELIBC='glibc'
+
+L10N='en'
+LINGUAS='en'
+
+PYTHON_TARGETS='python2_7'
+EOF
+
+rm -f /usr/arm-xilinx-linux-gnueabi/etc/portage/package.use/portage
+</code></pre>
+
+<p>We now need to package up our root filesystem:</p>
+
+<pre><code>tar -cJf ~/xilinx_root_non_native.txz -C /usr/arm-xilinx-linux-gnueabi .
+</code></pre>
+
+<p>This next bit requires the proper settings in PetaLinux and a completed build
+(you&rsquo;ll need your own BOOT.BIN, image.ub, and system.dtb files). After
+inserting an appropriately size SD card (You&rsquo;re going to want 4 or 8Gb more
+likely than not). For me the device showed up as mmcblk0 on my machine. Confirm
+yours before following the next steps:</p>
+
+<pre><code>dd if=/dev/zero bs=1M count=1 oflag=sync of=/dev/mmcblk0
+
+parted --script -a optimal /dev/mmcblk0 -- mklabel msdos
+parted --script -a optimal /dev/mmcblk0 -- mkpart primary fat32 100 600
+parted --script -a optimal /dev/mmcblk0 -- mkpart primary ext4 600 -1
+
+dd if=/dev/zero bs=1M count=1 oflag=sync of=/dev/mmcblk0p1
+dd if=/dev/zero bs=1M count=1 oflag=sync of=/dev/mmcblk0p2
+
+mkfs.vfat -n BOOT -F 32 /dev/mmcblk0p1
+mkfs.ext4 -L rootfs /dev/mmcblk0p2
+
+mkdir -p /mnt/boot
+mount /dev/mmcblk0p1 /mnt/boot
+
+mkdir -p /mnt/root
+mount /dev/mmcblk0p2 /mnt/root
+</code></pre>
+
+<p>You&rsquo;ll need to copy BOOT.BIN, image.ub, and system.dtb to /mnt/boot and
+extract the root filesystem into the root directory (compressed version still
+lives at ~/xilinx_root_non_native.txz).</p>
+
+<pre><code>tar -xf ~/xilinx_root_non_native.txz -C /mnt/root
+</code></pre>
+
+<p>Ensure the writes complete and cleanly unmount the filesystems:</p>
+
+<pre><code>sync
+umount /mnt/boot /mnt/root
+</code></pre>
+
+<p>Stick the filesystem on to the board and let it boot up. If you&rsquo;re following
+this guide you should be able to get to a login screen and be able to login
+with root / root. The device should be on the network and you should be able to
+SSH to the device. For my board at the very least I haven&rsquo;t gotten the hardware
+clock working correctly, before continuing we need to set the clock correctly.
+You can reference the build host&rsquo;s time using the following command:</p>
+
+<pre><code>date +%s
+</code></pre>
+
+<p>And set it on the board using the following command (replacing VALUE with
+the value returned above):</p>
+
+<pre><code>date --set=&quot;@VALUE&quot;
+</code></pre>
+
+<p>We now need to sync the system&rsquo;s packages and fix portage. This is where we
+have to work around the issue of it being incorrectly installed:</p>
+
+<pre><code>PYTHONPATH='/usr/lib64/python2.7/site-packages' env-update
+
+cat &lt;&lt; 'EOF' &gt; /etc/locale.gen
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+EOF
+
+locale-gen
+
+. /etc/profile
+
+PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --sync
+
+PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --oneshot sys-apps/portage
+USE=&quot;dev-util/pkgconfig internal-glib&quot; emerge dev-util/pkgconfig
+emerge --update --newuse --deep @world
+</code></pre>
+
+<p>The last will recompile quite a few packages (though not all). I recommend
+shutting the system down, removing the SD card and making a clean backup of the
+root by performing the following commands once the drive is back in your
+machine (this assumes the same device name as before):</p>
+
+<pre><code>mount /dev/mmcblk0p2 /mnt/root
+rm -rf /mnt/root/root/.bash_history /mnt/root/etc/ssh/ssh_host* /usr/portage/*
+tar -cJf ~/xilinx_root_native.txz -C /mnt/root .
+</code></pre>
+
+<p>You now have a solid base to perform development on and a good backup in case
+you mess up. I hope this helps someone else out there.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/arm'>Arm</a>, <a class='tag' href='/tags/embedded'>Embedded</a>, <a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/tips'>Tips</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/2017/12/converting-cpio-files-to-tarballs/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Converting CPIO Files to Tarballs</a>
+    </div></div>
+</nav>
+
+  
+</main>
+
+    <footer id='footer' class='footer-container'>
+      <div class='footer'>
+        <div class='social-menu-container'>
+  <nav aria-label='Social Menu'>
+    <ul class='social-menu'><li>
+        <a href='mailto:sam@stelfox.net' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Contact via Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Github account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://twitter.com/SamStelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Twitter account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://keybase.io/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Keybase account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <g transform="matrix(0.5, 0, 0, 0.5, -120,-205)">
+    <path d="M247.8,451.8c-0.6-1.3-1.4-3.1-1.8-4l-0.6-1.7l-2,2.2l-2,2.2 l-0.2-4.2c-0.3-6,0.2-12.2,1.2-16.6c2.3-9.8,9.5-18.7,18.8-23.4l2.1-1l-0.5-1.5c-0.3-0.8-0.6-2.5-0.7-3.6l-0.2-2.1l-2.1-0.2 c-3.2-0.3-4.9-1.2-6-3.5c-0.6-1.2-0.6-1.4-0.4-4.6c0.2-4.2,0.5-5.1,1.8-6.5c1.6-1.8,2.7-2.1,6.7-1.9c2.9,0.2,3.5,0.3,4.8,0.9 c0.8,0.4,1.5,0.8,1.6,0.8c0.1,0,1-1.1,2.1-2.6l1.9-2.7l1.2,0.7c0.7,0.4,1.5,0.9,1.9,1.1l0.7,0.4l-0.6,1.5c-0.3,0.8-0.7,2.2-0.8,2.9 l-0.2,1.4l1.7,0.2c6.1,0.6,10.7,4.3,12.4,9.9c0.5,1.8,0.5,5.3,0,7c-0.5,1.6-0.5,1.7-0.1,1.7c0.7,0,5.4,2.3,7.3,3.5 c3.7,2.4,8,6.6,10.4,10.2c4.5,6.7,6.4,14,5.6,22c-0.4,4.8-1.3,8.6-2.9,12.3l-0.6,1.4l-2.5,0l-2.5,0l1.2-2.4 c1.3-2.6,2.3-6.2,2.8-9.4c0.3-2.2,0.4-8.2,0.1-9.3l-0.2-0.7l-1.3,1.4c-3.2,3.5-7.9,4.5-14.2,2.8c-5.4-1.4-7.6-1.7-12.7-1.7 c-3.9,0-5.2,0.1-7.3,0.6c-5.8,1.3-9.9,3.2-15.6,7.3c-2.1,1.5-3.8,2.7-3.9,2.7c-0.1,0,0.2-1,0.6-2.3c0.4-1.3,1.1-3.4,1.5-4.8 l0.8-2.5l-0.9,0.9c-0.5,0.5-1.9,1.9-3.1,3.2l-2.1,2.3l0.5,1.9c0.6,2.5,2,5.6,3.5,7.9c0.6,1,1.1,1.8,1.1,1.9s-1.2,0.1-2.6,0.1h-2.6 L247.8,451.8L247.8,451.8z M256.6,427.6c4.8-5.1,8.7-9.2,8.8-9.2c0.1,0.1-0.4,1.6-0.9,3.3c-3.3,10.4-4,12.4-3.9,12.5 c0,0,1.2-0.4,2.5-0.9c8.5-3.7,18.4-4.2,28.9-1.4c4.7,1.2,6.5,1.2,8.8,0c1.3-0.7,1.8-1.1,2.4-2.1c1.1-1.7,1.2-4.1,0.5-6.3 c-1.7-4.8-8.3-11-14.5-13.7c-3.2-1.4-3.4-1.4-4.1-0.7l-0.6,0.6l2.6,3.2c1.4,1.7,2.9,3.6,3.1,4.1c0.6,1.2,0.7,3.1,0.1,4.3 c-0.8,1.7-3.2,2.9-5.1,2.5c-0.8-0.2-1.1-0.1-1.9,0.5c-2.2,1.6-4.6,1.2-6.6-1.2c-1.6-1.8-2-2.7-2.1-4.5c0-0.9-0.3-2-0.5-2.4 c-0.3-0.6-0.4-1.3-0.4-2.2l0.1-1.4l-1.3-0.3c-1.8-0.5-3.9-1.5-5.1-2.4c-0.6-0.4-1.1-0.8-1.3-0.8s-1.5,0.6-2.9,1.3 c-9.7,5-16,14.3-17,24.8c-0.1,1-0.2,2.3-0.3,2.8l-0.1,0.9l1.1-1.1C247.4,437.3,251.8,432.7,256.6,427.6L256.6,427.6z M282.5,420.2 c0.9-0.7,1.7-1.3,1.9-1.3c0.1,0,0.4,0.3,0.7,0.7c0.5,0.8,1.4,0.8,1.8,0.1c0.3-0.5,0.3-0.6-5.6-7.8c-3.5-4.3-4.2-5-4.7-5 c-1.2,0.1-0.9,1,1,3.3l1.8,2.2l-1,0.8c-1.1,1-1.2,1.2-0.5,1.8c0.5,0.5,0.6,0.4,1.6-0.3l1.1-0.7l0.7,0.6c0.4,0.3,0.6,0.8,0.6,0.9 c0,0.2-0.8,0.9-1.7,1.7c-0.9,0.7-1.6,1.5-1.6,1.7c0,0.3,0.5,1.1,1.4,2.2C280.3,421.7,280.8,421.5,282.5,420.2L282.5,420.2z  M272.2,406c0.6-1.8,2.6-3.2,4.6-3.2c1.1,0,2.7,0.9,3.8,2.1l1,1.2l0.9-1.1c2.5-2.8,2.8-6.7,0.8-10.1c-1.5-2.5-4.3-4-8.2-4.4 c-2.1-0.2-2.6-0.4-3.7-1.5l-0.8-0.8l-0.4,0.6c-0.8,1.2-2.5,5.1-3,6.6c-0.7,2.3-0.4,5.9,0.5,7.7c0.9,1.7,3.3,4,4,3.7 C271.8,406.9,272,406.5,272.2,406L272.2,406z M263.3,392.4c0.2-0.5,0.7-1.8,1.2-2.8c0.5-1,0.9-2,0.9-2.3c0-0.9-1-1.3-3.7-1.5 c-2.4-0.2-2.6-0.1-3.1,0.4c-0.4,0.4-0.6,0.9-0.6,1.6c0,0.6-0.1,1.7-0.2,2.6c-0.2,2.1,0.1,2.5,2.2,2.8 C263.1,393.4,263,393.4,263.3,392.4z M260.2,390c0-1.7,0.2-1.9,1.6-1.9h1.3v1.4v1.4h-1.4h-1.4V390z M266.5,448.3 c-0.6-0.6-0.8-1-0.8-2c0-1.9,1.1-3,2.9-3c1.7,0,2.9,1.2,2.9,2.9c0,1.8-1.1,2.8-3,2.9C267.5,449.1,267.1,448.9,266.5,448.3 L266.5,448.3z M285.8,448.6c-2.3-1.8-1.1-5.3,1.8-5.3c1.8,0,2.8,1.1,2.9,3c0,1.1-0.1,1.4-0.8,2s-1,0.8-2,0.8 C286.8,449.1,286.2,448.9,285.8,448.6L285.8,448.6z"/>
+  </g>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://facebook.com/sstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Facebook account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://linkedin.com/in/samstelfox' target='_blank' rel='noopener'>
+          <span class='screen-reader'>Open Linkedin account in new tab</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path stroke-width="1.8" d="m5.839218,4.101561c0,1.211972 -0.974141,2.194011 -2.176459,2.194011s-2.176459,-0.982039 -2.176459,-2.194011c0,-1.211094 0.974141,-2.194011 2.176459,-2.194011s2.176459,0.982917 2.176459,2.194011zm0.017552,3.94922l-4.388022,0l0,14.04167l4.388022,0l0,-14.04167zm7.005038,0l-4.359939,0l0,14.04167l4.360816,0l0,-7.370999c0,-4.098413 5.291077,-4.433657 5.291077,0l0,7.370999l4.377491,0l0,-8.89101c0,-6.915523 -7.829986,-6.66365 -9.669445,-3.259423l0,-1.891237z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</div>
+        <div class='copyright'>
+  <p>
+        
+          
+        
+      
+       &copy; 2011-2017 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a>
+  </p>
+</div>
+
+      </div>
+    </footer>
+  </div><script src='/assets/js/main.f29c93b9.js'></script></body>
+</html>
+

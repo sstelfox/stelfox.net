@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/blog/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Cross-Compiling Gentoo for Xilinx Boards</title>
+      <link>https://stelfox.net/blog/2017/12/cross-compiling-gentoo-for-xilinx-boards/</link>
+      <pubDate>Mon, 18 Dec 2017 17:49:22 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/12/cross-compiling-gentoo-for-xilinx-boards/</guid>
+      <description>Note: If you&amp;rsquo;ve come here looking to build a root filesystem for 32 bit ARM devices I suspect everything but the build tuple will be the same. The issues that need to be worked around largely packaging and profile issues that should all be the same
+I got a hold of a Zynq 7100 development board, and while I&amp;rsquo;ve played with some embedded ARM microcontrollers such as the STM32F3 series and more basic RISC style microcontrollers like Atmel&amp;rsquo;s SAMD10 and Atmega lines, I&amp;rsquo;ve never played with FPGA development before so I considered this an interesting learning opportunity.</description>
+    </item><item>
       <title>Converting CPIO Files to Tarballs</title>
       <link>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</link>
       <pubDate>Mon, 04 Dec 2017 22:46:56 -0500</pubDate>
@@ -28,8 +36,8 @@
       <author>Sam Stelfox</author>
       <guid>https://stelfox.net/blog/2017/11/xfce-failed-to-connect-to-socket/</guid>
       <description>While trying to build up a minimal Gentoo graphical environment I kept running into an error every time I logged into XFCE from lightdm (I didn&amp;rsquo;t try starting up XFCE any other way). There are tons of blog posts that relate to systemd, ubuntu, or crouton but none related to Gentoo.
-There error in particular is:
-Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused  Where the x&amp;rsquo;s are replaced with a random string.</description>
+The first error message that pops up is:
+Unable to contact settings server Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused  Once you click through there was a second error message, but I believe it was due to the previous error and not actually an issue:</description>
     </item><item>
       <title>Unable to Enter LUKS Passphrase</title>
       <link>https://stelfox.net/blog/2017/11/unable-to-enter-luks-passphrase/</link>
@@ -79,13 +87,5 @@ $ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to not
       <guid>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</guid>
       <description>While working on an automated install script for an embedded board, I hit an issue with the logical volumes never showing up in /dev/mapper, and in turn unable to be mounted. This left me in the dracut emergency shell (after about three minutes), with little to go on beyond the following error:
 [187.508531] dracut Warning: Could not boot. [187.510560] dracut Warning: /dev/disk/by-uuid/5681-902D does not exist [187.512534] dracut Warning: /dev/mapper/system-root does not exit [187.</description>
-    </item><item>
-      <title>Vultr Deny All Firewall</title>
-      <link>https://stelfox.net/blog/2017/10/vultr-deny-all-firewall/</link>
-      <pubDate>Fri, 20 Oct 2017 17:18:36 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/10/vultr-deny-all-firewall/</guid>
-      <description>While setting up new instances on Vultr for testing, I wanted to initially ensure that no traffic beyond my own could touch the instances. After adding a matching rule for SSH to my IPv4 address, a default rule shows up that drops any unspecified traffic. Switching to the IPv6 I wanted to add a drop all rule (as I wouldn&amp;rsquo;t be using IPv6 until the system was up).
-The interface only allows accept rules to be created and additionally you&amp;rsquo;ll be greeted with this message while trying to figure out what to do:</description>
     </item></channel>
 </rss>

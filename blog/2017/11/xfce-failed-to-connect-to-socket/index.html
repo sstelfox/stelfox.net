@@ -4,12 +4,12 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='While trying to build up a minimal Gentoo graphical environment I kept running into an error every time I logged into XFCE from lightdm (I didn&rsquo;t try starting up XFCE any other way). There are tons of blog posts that relate to systemd, ubuntu, or crouton but none related to Gentoo.
-There error in particular is:
-Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused  Where the x&rsquo;s are replaced with a random string.'>
+The first error message that pops up is:
+Unable to contact settings server Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused  Once you click through there was a second error message, but I believe it was due to the previous error and not actually an issue:'>
 <meta property='og:title' content='XFCE Failed to Connect to Socket • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='While trying to build up a minimal Gentoo graphical environment I kept running into an error every time I logged into XFCE from lightdm (I didn&rsquo;t try starting up XFCE any other way). There are tons of blog posts that relate to systemd, ubuntu, or crouton but none related to Gentoo.
-There error in particular is:
-Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused  Where the x&rsquo;s are replaced with a random string.'>
+The first error message that pops up is:
+Unable to contact settings server Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused  Once you click through there was a second error message, but I believe it was due to the previous error and not actually an issue:'>
 <meta property='og:url' content='https://stelfox.net/blog/2017/11/xfce-failed-to-connect-to-socket/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='linux'><meta property='article:tag' content='gentoo'><meta property='article:tag' content='xfce'><meta property='article:published_time' content='2017-11-27T17:23:09&#43;05:00'/><meta property='article:modified_time' content='2017-11-27T17:23:09&#43;05:00'/>
@@ -114,9 +114,21 @@ into an error every time I logged into XFCE from lightdm (I didn&rsquo;t try sta
 up XFCE any other way). There are tons of blog posts that relate to systemd,
 ubuntu, or crouton but none related to Gentoo.</p>
 
-<p>There error in particular is:</p>
+<p>The first error message that pops up is:</p>
 
-<pre><code>Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused
+<pre><code>Unable to contact settings server
+
+Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused
+</code></pre>
+
+<p>Once you click through there was a second error message, but I believe it was
+due to the previous error and not actually an issue:</p>
+
+<pre><code>Unable to load a failsafe session
+
+Unable to determine failsafe session name. Possible causes: xfconfd isn't
+running (D-Bus setup problem), environment variable $XDG_CONFIG_DIRS is set
+incorrectly (must include &quot;/etc&quot;), or xfce4-session is installed incorrectly.
 </code></pre>
 
 <p>Where the x&rsquo;s are replaced with a random string. My issue ultimately was dbus
