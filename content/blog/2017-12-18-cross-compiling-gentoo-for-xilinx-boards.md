@@ -1,5 +1,5 @@
 ---
-date: 
+date: 2017-12-18T17:49:22-05:00
 tags:
 - arm
 - embedded
@@ -51,17 +51,16 @@ filesystem:
 * It will have a working package manager to allow it to extend itself
 
 From this set of goals we will both be able to re-compile everything natively
-on the board (to avoid some issues that have traditionally plagued cross
-compiled environments) and get access to the vast majority of packaged software
-from the Gentoo repositories as well as easily perform project development
-directly.
+on the board if we so choose, and get access to the vast majority of packaged
+software from the Gentoo repositories as well as easily perform project
+development directly.
 
 To get started you will have to have a working Gentoo install to start the
 cross compilation from. I've personally had issues with the hardened, SELinux,
 and no-multilib profile variants. If you encounter issues I strongly recommend
-trying the standard system profile. I'm also sure there is probably some way to
-get the portage cross tooling working in other distributions, but I'll leave
-that as an exercise to the reader.
+trying the standard system profile on your build host. I'm also sure there is
+probably some way to get the portage cross tooling working in other
+distributions, but I'll leave that as an exercise to the reader.
 
 ## Tooling
 
@@ -395,11 +394,10 @@ arm-xilinx-linux-gnueabi-emerge @preserved-rebuild
 arm-xilinx-linux-gnueabi-emerge --depclean
 ```
 
-We now need to get the root filesystem on a live board and rebuilding
-everything with the native compiler. I mentioned this earlier, but cross
-compiled applications can behave a little oddly (especially around floating
-point operations) and in the case of this root filesystem we at a minimum want
-to fix the incorrectly built portage package so everything is usable normally.
+We now need to get the root filesystem on a live board and rebuilding cleaning
+up some of the mismatch package flags and irregularities introduced by the
+cross compilation process. At a minimum want to fix the incorrectly built
+portage package so everything is usable normally.
 
 Before transferring this it's a good idea to preemptively adjust the make
 config to no longer be a cross environment, and remove the special case for
@@ -453,26 +451,26 @@ dd if=/dev/zero bs=1M count=1 oflag=sync of=/dev/mmcblk0p2
 mkfs.vfat -n BOOT -F 32 /dev/mmcblk0p1
 mkfs.ext4 -L rootfs /dev/mmcblk0p2
 
-mkdir -p /mnt/peyco/boot
-mount /dev/mmcblk0p1 /mnt/peyco/boot
+mkdir -p /mnt/boot
+mount /dev/mmcblk0p1 /mnt/boot
 
-mkdir -p /mnt/peyco/root
-mount /dev/mmcblk0p2 /mnt/peyco/root
+mkdir -p /mnt/root
+mount /dev/mmcblk0p2 /mnt/root
 ```
 
-You'll need to copy BOOT.BIN, image.ub, and system.dtb to /mnt/peyco/boot and
+You'll need to copy BOOT.BIN, image.ub, and system.dtb to /mnt/boot and
 extract the root filesystem into the root directory (compressed version still
 lives at ~/xilinx_root_non_native.txz).
 
 ```
-tar -xf ~/xilinx_root_non_native.txz -C /mnt/peyco/root
+tar -xf ~/xilinx_root_non_native.txz -C /mnt/root
 ```
 
 Ensure the writes complete and cleanly unmount the filesystems:
 
 ```
 sync
-umount /mnt/peyco/boot /mnt/peyco/root
+umount /mnt/boot /mnt/root
 ```
 
 Stick the filesystem on to the board and let it boot up. If you're following
@@ -497,14 +495,37 @@ We now need to sync the system's packages and fix portage. This is where we
 have to work around the issue of it being incorrectly installed:
 
 ```
-PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --sync
 PYTHONPATH='/usr/lib64/python2.7/site-packages' env-update
+
+cat << 'EOF' > /etc/locale.gen
+en_US ISO-8859-1
+en_US.UTF-8 UTF-8
+EOF
+
+locale-gen
+
 . /etc/profile
 
+PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --sync
+
 PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --oneshot sys-apps/portage
-USE="dev-util/pkgconfig internal-glib" emerge --update --newuse --deep @world
+USE="dev-util/pkgconfig internal-glib" emerge dev-util/pkgconfig
 emerge --update --newuse --deep @world
 ```
+
+The last will recompile quite a few packages (though not all). I recommend
+shutting the system down, removing the SD card and making a clean backup of the
+root by performing the following commands once the drive is back in your
+machine (this assumes the same device name as before):
+
+```
+mount /dev/mmcblk0p2 /mnt/root
+rm -rf /mnt/root/root/.bash_history /mnt/root/etc/ssh/ssh_host* /usr/portage/*
+tar -cJf ~/xilinx_root_native.txz -C /mnt/root .
+```
+
+You now have a solid base to perform development on and a good backup in case
+you mess up. I hope this helps someone else out there.
 
 [1]: http://www.wiki.xilinx.com/PetaLinux
 [2]: https://www.yoctoproject.org/
