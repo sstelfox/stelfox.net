@@ -503,13 +503,19 @@ en_US.UTF-8 UTF-8
 EOF
 
 locale-gen
+eselect locale set "$(eselect locale list | grep 'en_US.utf8' | awk '{ print $1 }' | grep -oE '[0-9]+')"
+env-update
 
 . /etc/profile
 
 PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --sync
-
 PYTHONPATH='/usr/lib64/python2.7/site-packages' emerge --oneshot sys-apps/portage
+
+# There is a circular dependency that has to be broken during this update
 USE="dev-util/pkgconfig internal-glib" emerge dev-util/pkgconfig
+
+# With the circular update broken we can update everything (this will recompile
+# pkgconfig again)
 emerge --update --newuse --deep @world
 ```
 
