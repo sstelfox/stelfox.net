@@ -288,8 +288,7 @@ config_eth0="dhcp"
 EOF
 
 echo 'arm-board' > /usr/arm-xilinx-linux-gnueabi/etc/hostname
-echo 'hostname="arm-board.localhost"' >
-/usr/arm-xilinx-linux-gnueabi/etc/conf.d/hostname
+echo 'hostname="arm-board.localhost"' > /usr/arm-xilinx-linux-gnueabi/etc/conf.d/hostname
 cat << 'EOF' > /usr/arm-xilinx-linux-gnueabi/etc/hosts
 # /etc/hosts
 
@@ -302,6 +301,7 @@ ln -s net.lo net.eth0
 
 cd /usr/arm-xilinx-linux-gnueabi/etc/runlevels/default/
 ln -s /etc/init.d/net.eth0 net.eth0
+rm -f netmount
 ```
 
 ## Kernel Modules
@@ -383,9 +383,8 @@ arm-xilinx-linux-gnueabi-emerge app-editors/vim net-misc/iperf
 ## Rebuilding on the System
 
 Once all the packages you want for your base system are installed, the root may
-be in a an inconsitent state. It's a good idea to run a sync, global use
-update, a preserved rebuild and dependency clean on the board before
-continuing:
+be in an inconsitent state. It's a good idea to run a sync, global use update,
+a preserved rebuild, and dependency clean on the board before continuing:
 
 ```
 emerge --sync
@@ -411,7 +410,6 @@ CXXFLAGS="${CFLAGS}"
 CHOST='arm-xilinx-linux-gnueabi'
 
 ACCEPT_KEYWORDS='arm'
-EMERGE_DEFAULT_OPTS='--jobs 3 --load-average 2'
 FEATURES='sandbox noman noinfo nodoc'
 USE="${ARCH} pam"
 
@@ -473,12 +471,15 @@ sync
 umount /mnt/boot /mnt/root
 ```
 
-Stick the filesystem on to the board and let it boot up. If you're following
+Stick the microSD card into the board and let it boot up. If you're following
 this guide you should be able to get to a login screen and be able to login
-with root / root. The device should be on the network and you should be able to
-SSH to the device. For my board at the very least I haven't gotten the hardware
-clock working correctly, before continuing we need to set the clock correctly.
-You can reference the build host's time using the following command:
+with root / root.
+
+The device should be on the network and you should be able to SSH to the
+device. For my board at the very least I haven't gotten the hardware clock
+working correctly so it needs to be set manually upon every boot. Before we can
+compile quite a few of the packages the date needs to be roughly correct. You
+can reference the build host's time using the following command:
 
 ```
 date +%s
@@ -492,7 +493,8 @@ date --set="@VALUE"
 ```
 
 We now need to sync the system's packages and fix portage. This is where we
-have to work around the issue of it being incorrectly installed:
+have to work around the issue of portage being incorrectly installed by
+prefixing any use of the portage python module with a '64 bit' path:
 
 ```
 PYTHONPATH='/usr/lib64/python2.7/site-packages' env-update
@@ -501,10 +503,10 @@ cat << 'EOF' > /etc/locale.gen
 en_US ISO-8859-1
 en_US.UTF-8 UTF-8
 EOF
-
 locale-gen
-eselect locale set "$(eselect locale list | grep 'en_US.utf8' | awk '{ print $1 }' | grep -oE '[0-9]+')"
-env-update
+
+PYTHONPATH='/usr/lib64/python2.7/site-packages' eselect locale set "$(eselect locale list | grep 'en_US.utf8' | awk '{ print $1 }' | grep -oE '[0-9]+')"
+PYTHONPATH='/usr/lib64/python2.7/site-packages' env-update
 
 . /etc/profile
 
