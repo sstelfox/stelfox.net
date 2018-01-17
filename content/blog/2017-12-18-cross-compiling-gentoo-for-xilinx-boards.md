@@ -187,8 +187,8 @@ cat << EOF > /usr/arm-xilinx-linux-gnueabi/etc/portage/make.profile/parent
 /usr/portage/profiles/arch/arm/armv7a
 EOF
 
-mkdir -p /usr/arm-xilinx-linux-gnueabi/etc/portage/package.keywords
-cat << EOF > /usr/arm-xilinx-linux-gnueabi/etc/portage/package.keywords/system
+mkdir -p /usr/arm-xilinx-linux-gnueabi/etc/portage/package.accept_keywords
+cat << EOF > /usr/arm-xilinx-linux-gnueabi/etc/portage/package.accept_keywords/system
 sys-apps/coreutils ~arm
 sys-apps/sandbox ~arm
 EOF
@@ -375,7 +375,7 @@ few things you may want to include:
 From the above list I wanted both VIM and iperf3 and thus ran the following:
 
 ```
-echo 'net-misc/iperf ~arm' > /usr/arm-xilinx-linux-gnueabi/etc/portage/package.keywords/network_utils
+echo 'net-misc/iperf ~arm' > /usr/arm-xilinx-linux-gnueabi/etc/portage/package.accept_keywords/network_utils
 echo 'app-editors/vim minimal' > /usr/arm-xilinx-linux-gnueabi/etc/portage/package.use/vim
 arm-xilinx-linux-gnueabi-emerge app-editors/vim net-misc/iperf
 ```
