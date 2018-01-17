@@ -108,7 +108,7 @@ tool chain, on a Xilinx variant of an arm processor (or
 arm-xilinx-linux-gnueabi).
 
 ```
-crossdev --stable -s4 -v -t arm-xilinx-linux-gnueabi
+crossdev --stable -s4 -t arm-xilinx-linux-gnueabi
 ```
 
 This will result in a very bare bones root filesystem in
