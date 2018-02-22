@@ -23,3 +23,8 @@ I can do a bunch of testing without it. This is the fastest most direct example
 I've found: https://www.linux.com/blog/simple-kexec-example
 
 A more in depth discussion of it: http://www.linux-mag.com/id/2998/
+
+## USB Guard
+
+Look into the linux utility 'usbguard' and see if it's worth anything, do a
+review and/or tech notes on it.
