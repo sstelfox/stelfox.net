@@ -7,6 +7,22 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Converting OpenLDAP Schemas to LDIF</title>
+      <link>https://stelfox.net/blog/2018/03/converting-openldap-schemas-to-ldif/</link>
+      <pubDate>Sat, 24 Mar 2018 20:20:22 -0600</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2018/03/converting-openldap-schemas-to-ldif/</guid>
+      <description>I&amp;rsquo;ve been writing software to work against an OpenLDAP instance, with a highly customized schema. The operators of the existing system only had the schema files and searching around found several elaborate ways to convert the files which I tried with mixed success. After doing the research to figure this out, it became clear I could probably have used slapcat and have dumped the active schema directly to LDIF.
+As a sample of how I converted these, I&amp;rsquo;ll use the rfc2307bis.</description>
+    </item><item>
+      <title>Including LDIF Files in OpenLDAP</title>
+      <link>https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/</link>
+      <pubDate>Sat, 24 Mar 2018 20:20:22 -0600</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/</guid>
+      <description>While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
+I was specifically trying to bootstrap an OpenLDAP server, with it&amp;rsquo;s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior.</description>
+    </item><item>
       <title>Cross-Compiling Gentoo for Xilinx Boards</title>
       <link>https://stelfox.net/blog/2017/12/cross-compiling-gentoo-for-xilinx-boards/</link>
       <pubDate>Mon, 18 Dec 2017 17:49:22 -0500</pubDate>
@@ -71,22 +87,5 @@ I recently encountered a weird issue with them that resulted in an esoteric erro
       <guid>https://stelfox.net/notes/cron-daemon/</guid>
       <description>Cron is a pretty standard utility and there isn&amp;rsquo;t much to it. I generally use cronie as my cron daemon with the associated anacron. Cron runs tasks periodically, and anacron helps ensure that a missed task will get run if it was off or powercycled when it would have otherwise run.
 File Format The config format differs slightly between crontabs, regular cron files, and anacron entries. At the beginning of all the files environment variables can be set using key=value pairs to control the behavior of cron and anacron followed by entries for that file one to a line.</description>
-    </item><item>
-      <title>Syslog-NG</title>
-      <link>https://stelfox.net/notes/syslog-ng/</link>
-      <pubDate>Wed, 25 Oct 2017 01:56:02 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/notes/syslog-ng/</guid>
-      <description>Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced processing and log centralization while maintaining a sane configuration file syntax. I&amp;rsquo;ve recently come to vastly prefer it over my previous long term favorite Rsyslog.
-It&amp;rsquo;s important to note that when modifying the logs statements, they will be processed in order. This means log statements that finalize a message will never make it past that statement. This finalization behavior can be a great tool for optimizing the processing path of logs but can result in unexpected behavior if you don&amp;rsquo;t pay attention when re-ordering the statements.</description>
-    </item><item>
-      <title>Investigating LVM From Dracut</title>
-      <link>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</link>
-      <pubDate>Tue, 24 Oct 2017 11:45:07 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</guid>
-      <description>In my my last post, I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
-Turns out that the commands I&amp;rsquo;m normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the lvm tool like so:
-$ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to notice that block device of my root filesystem was missing due to a missing kernel driver&amp;hellip;</description>
     </item></channel>
 </rss>
