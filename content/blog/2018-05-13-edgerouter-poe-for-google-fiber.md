@@ -80,7 +80,7 @@ const __u8 ip_tos2prio[16]={0,0,0,0,2,2,2,2,6,6,6,4,4,4,4};
 The priority values are defined by the 802.1p standard which maps to:
 
 | PCP value | Priority    | Acronym | Traffic types                       |
-|:---------:|:-----------:| ------- | ----------------------------------- |
+|:---------:|:-----------:|:-------:| ----------------------------------- |
 | 1         | 0 (lowest)  | BK      | Background                          |
 | 0         | 1 (default) | BE      | Best effort                         |
 | 2         | 2           | EE      | Excellent effort                    |
