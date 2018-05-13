@@ -403,6 +403,7 @@ service {
     ubnt-discover {
         disable
     }
+    /* Need to go over the security trade offs here... */
     upnp2 {
         /* Need to go over ACLs */
         listen-on switch0
