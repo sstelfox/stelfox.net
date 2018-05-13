@@ -61,6 +61,37 @@ Some data to incorporate:
 ^ from link up to IPv6 connectivity (both router & LAN) 23 seconds
 ^ from IPv6 connectivity to IPv4 connectivity 3 minutes 46 seconds
 
+I should talk about why I left out MSS clamping (which stevejenkins's config
+has). To set it I should discuss MTU detection, IPV6 shouldn't need it...
+
+Mention error during QoS mapping:
+
+```
+egress-qos can only be set at vlan creation for 2
+```
+
+Relevant useful code mapping for QoS values of DSCP -> SO_PRIORITY (it gets bit
+shifted down 1 for the priority mapping):
+
+```
+const __u8 ip_tos2prio[16]={0,0,0,0,2,2,2,2,6,6,6,4,4,4,4};
+```
+
+The priority values are defined by the 802.1p standard which maps to:
+
+```
+| PCP value | Priority    | Acronym | Traffic types                       |
+|:---------:|:-----------:| ------- | ----------------------------------- |
+| 1         | 0 (lowest)  | BK      | Background                          |
+| 0         | 1 (default) | BE      | Best effort                         |
+| 2         | 2           | EE      | Excellent effort                    |
+| 3         | 3           | CA      | Critical applications               |
+| 4         | 4           | VI      | Video, < 100 ms latency and jitter  |
+| 5         | 5           | VO      | Voice, < 10 ms latency and jitter   |
+| 6         | 6           | IC      | Internetwork control                |
+| 7         | 7 (highest) | NC      | Network control                     |
+```
+
 Raw config:
 
 ```
@@ -219,8 +250,8 @@ interfaces {
                 /* This is debateable and seems to work either way, cover the discussion */
                 rapid-commit enable
             }
-            /* This is worth going over as most example configs only cover 0:3, and 0:2 is useful to discuss */
-            egress-qos "0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3"
+            /* This is worth going over as most example configs only cover 0:3, or universal mappings... */
+            egress-qos "0:3 1:3 2:3 3:3 4:4 5:5 6:6 7:7"
             firewall {
                 in {
                     ipv6-name WANv6_IN
@@ -405,7 +436,31 @@ service {
     }
     /* Need to go over the security trade offs here... */
     upnp2 {
-        /* Need to go over ACLs */
+        acl {
+            rule 10 {
+                action deny
+                local-port 0-1024
+                subnet 0.0.0.0/0
+            }
+            rule 20 {
+                action deny
+                external-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100
+                subnet 0.0.0.0/0
+            }
+            rule 30 {
+                action deny
+                local-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100
+                subnet 0.0.0.0/0
+            }
+            rule 40 {
+                action allow
+                subnet 10.202.254.0/24
+            }
+            rule 100 {
+                action deny
+                subnet 0.0.0.0/0
+            }
+        }
         listen-on switch0
         nat-pmp disable
         secure-mode enable
@@ -492,4 +547,6 @@ Refs:
 * https://community.ubnt.com/t5/EdgeRouter/IPv6-DHCPv6-and-DHCPv6-PD/td-p/1115361
 * https://kazoo.ga/dhcpv6-pd-for-native-ipv6/
 * https://community.ubnt.com/t5/EdgeRouter/The-generation-of-etc-radvd-conf-is-missing-my-configuration/td-p/1355531
+* https://community.ubnt.com/t5/EdgeRouter/ERlite-1-5-upnp2-secure-mode/td-p/923222
+* https://stackoverflow.com/questions/19810839/skb-priority-and-iptos-and-ping-q
 
