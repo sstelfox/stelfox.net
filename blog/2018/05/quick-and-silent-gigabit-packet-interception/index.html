@@ -3,19 +3,17 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I needed to generate crypt-style SHA512 passwords in ruby for an /etc/shadow file. After a bunch of Googling and messing around with the OpenSSL library I finally found a very simple built-in way to handle this.
-require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&rsquo;ll get a string that looks like:
-$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.  If you don&rsquo;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&rsquo;t recommended.'>
-<meta property='og:title' content='Creating Crypt Style SHA512 Passwords With Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I needed to generate crypt-style SHA512 passwords in ruby for an /etc/shadow file. After a bunch of Googling and messing around with the OpenSSL library I finally found a very simple built-in way to handle this.
-require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&rsquo;ll get a string that looks like:
-$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.  If you don&rsquo;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&rsquo;t recommended.'>
-<meta property='og:url' content='https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/'>
+<meta name='description' content='I regularly find myself inspecting traffic on Linux systems. Usually I&rsquo;m already on the client or server when doing this (such as when diagnosing weird low level app behavior, or unknown, or unusual traffic). It has been a while since I&rsquo;ve needed to silently be the wire between two black boxes.
+While verifying link level information about bypassing my Google Fiber Network Box I needed to be that wire again. Before I connected any wires to anything I needed to be sure I wouldn&rsquo;t accidentally leak traffic as I wasn&rsquo;t sure what would impact the link.'>
+<meta property='og:title' content='Quick and Silent Gigabit Packet Interception • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='I regularly find myself inspecting traffic on Linux systems. Usually I&rsquo;m already on the client or server when doing this (such as when diagnosing weird low level app behavior, or unknown, or unusual traffic). It has been a while since I&rsquo;ve needed to silently be the wire between two black boxes.
+While verifying link level information about bypassing my Google Fiber Network Box I needed to be that wire again. Before I connected any wires to anything I needed to be sure I wouldn&rsquo;t accidentally leak traffic as I wasn&rsquo;t sure what would impact the link.'>
+<meta property='og:url' content='https://stelfox.net/blog/2018/05/quick-and-silent-gigabit-packet-interception/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='development'><meta property='article:tag' content='linux'><meta property='article:tag' content='ruby'><meta property='article:tag' content='security'><meta property='article:published_time' content='2014-02-17T15:28:27-05:00'/><meta property='article:modified_time' content='2014-02-17T15:28:27-05:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='linux'><meta property='article:tag' content='network'><meta property='article:published_time' content='2018-05-13T00:55:09-06:00'/><meta property='article:modified_time' content='2018-05-13T00:55:09-06:00'/>
 
-  <title>Creating Crypt Style SHA512 Passwords With Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/'>
+  <title>Quick and Silent Gigabit Packet Interception • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2018/05/quick-and-silent-gigabit-packet-interception/'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -69,7 +67,7 @@ ga('send', 'pageview');
     <header class='header-container'>
   <div class='header entry-header'>
     <div class='header-info'>
-      <h1 class='title'>Creating Crypt Style SHA512 Passwords With Ruby</h1>
+      <h1 class='title'>Quick and Silent Gigabit Packet Interception</h1>
       
 
     </div>
@@ -84,7 +82,7 @@ ga('send', 'pageview');
   
 </svg>
 <span class='screen-reader'>Posted on </span>
-  <time class='date' datetime='2014-02-17T15:28:27-05:00'>2014, Feb 17</time>
+  <time class='date' datetime='2018-05-13T00:55:09-06:00'>2018, May 13</time>
 </span>
 
   
@@ -95,7 +93,7 @@ ga('send', 'pageview');
   <polyline points="12 6 12 12 15 15"/> 
   
 </svg>
-One min read
+2 mins read
 </span>
 
 
@@ -109,21 +107,46 @@ One min read
     
 
     <div class='entry-content'>
-  <p>I needed to generate crypt-style SHA512 passwords in ruby for an <code>/etc/shadow</code>
-file. After a bunch of Googling and messing around with the OpenSSL library I
-finally found a very simple built-in way to handle this.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;securerandom&#39;</span>
+  <p>I regularly find myself inspecting traffic on Linux systems. Usually I&rsquo;m
+already on the client or server when doing this (such as when diagnosing weird
+low level app behavior, or unknown, or unusual traffic). It has been a while
+since I&rsquo;ve needed to silently be the wire between two black boxes.</p>
 
-<span style="color:#e6db74">&#39;password&#39;</span><span style="color:#f92672">.</span>crypt(<span style="color:#e6db74">&#39;$6$&#39;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SecureRandom</span><span style="color:#f92672">.</span>random_number(<span style="color:#ae81ff">36</span> <span style="color:#f92672">**</span> <span style="color:#ae81ff">8</span>)<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">36</span>))</code></pre></div>
-<p>You&rsquo;ll get a string that looks like:</p>
+<p>While verifying link level information about bypassing my Google Fiber Network
+Box I needed to be that wire again. Before I connected any wires to anything I
+needed to be sure I wouldn&rsquo;t accidentally leak traffic as I wasn&rsquo;t sure what
+would impact the link.</p>
 
-<pre><code>$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.
-</code></pre>
+<p>You&rsquo;ll need a Linux computer with two gigabit ethernet ports. My last two
+laptops haven&rsquo;t had any built in ethernet ports, but USB gigabit adapters are
+cheap and I already had a bunch.</p>
 
-<p>If you don&rsquo;t want to use the <code>SecureRandom</code> module you can replace the random
-call with simply <code>rand(36 ** 8)</code> though this isn&rsquo;t recommended.</p>
+<p>I went through and disabled the services that would configure network
+interfaces (NetworkManager and ModemManager) as well as all of the networking
+services on my system, and confirming your firewalls are all going to allow the
+traffic through.</p>
 
-<p>Enjoy!</p>
+<p>I double checked no packets were sent out up on link up by listening on each
+respective interface, plugging in to a powered but otherwise disconnected
+switch, and bringing the interface up.</p>
+
+<p>Once I&rsquo;d verified everything in one root terminal I ran:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ip link set eth0 promisc on multicast off arp off
+ip link set eth1 promisc on multicast off arp off
+
+ip link add name intercept0 type bridge
+ip link set intercept0 promisc on multicast off arp off up
+
+ip link set eth0 master intercept0
+ip link set eth1 master intercept0</code></pre></div>
+<p>In another terminal either as root, or as a user in the <code>wireshark</code> group begin
+recording the traffic of interest:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">tshark -i intercept0 -w recording.pcap</code></pre></div>
+<p>At this point, connect the cables between the two boxes of interest. When ready
+bring the links up:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ip link set eth0 up
+ip link set eth1 up</code></pre></div>
+<p>Welcome to being the wire.</p>
 
 </div>
 
@@ -138,7 +161,7 @@ call with simply <code>rand(36 ** 8)</code> though this isn&rsquo;t recommended.
   
 </svg>
 </span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/development'>Development</a>, <a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/ruby'>Ruby</a>, <a class='tag' href='/tags/security'>Security</a></div>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/network'>Network</a></div>
 
   </div>
 </footer>
@@ -148,7 +171,7 @@ call with simply <code>rand(36 ** 8)</code> though this isn&rsquo;t recommended.
   
 <nav class='entry-nav-container'>
   <div class='entry-nav'><div class='prev-entry'>
-      <a href='/blog/2014/02/setting-linux-system-timezone/'>
+      <a href='/blog/2018/03/converting-openldap-schemas-to-ldif/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -156,17 +179,7 @@ call with simply <code>rand(36 ** 8)</code> though this isn&rsquo;t recommended.
   
 </svg>
  Previous</span>
-        <span class='screen-reader'>Previous post: </span>Setting Linux System Timezone</a>
-    </div><div class='next-entry'>
-      <a href='/blog/2014/02/finding-ruby-subclasses/'>
-        <span class='screen-reader'>Next post: </span>Finding Ruby Subclasses<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
+        <span class='screen-reader'>Previous post: </span>Converting OpenLDAP Schemas to LDIF</a>
     </div></div>
 </nav>
 

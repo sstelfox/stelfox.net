@@ -3,19 +3,17 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I needed to generate crypt-style SHA512 passwords in ruby for an /etc/shadow file. After a bunch of Googling and messing around with the OpenSSL library I finally found a very simple built-in way to handle this.
-require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&rsquo;ll get a string that looks like:
-$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.  If you don&rsquo;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&rsquo;t recommended.'>
-<meta property='og:title' content='Creating Crypt Style SHA512 Passwords With Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I needed to generate crypt-style SHA512 passwords in ruby for an /etc/shadow file. After a bunch of Googling and messing around with the OpenSSL library I finally found a very simple built-in way to handle this.
-require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&rsquo;ll get a string that looks like:
-$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.  If you don&rsquo;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&rsquo;t recommended.'>
-<meta property='og:url' content='https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/'>
+<meta name='description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
+<meta property='og:title' content='Tag: Network • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
+<meta property='og:url' content='https://stelfox.net/tags/network/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='development'><meta property='article:tag' content='linux'><meta property='article:tag' content='ruby'><meta property='article:tag' content='security'><meta property='article:published_time' content='2014-02-17T15:28:27-05:00'/><meta property='article:modified_time' content='2014-02-17T15:28:27-05:00'/>
+<meta property='og:type' content='website'><meta property='og:updated_time' content='2018-05-13T00:55:09-06:00'/>
 
-  <title>Creating Crypt Style SHA512 Passwords With Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/'>
+  <title>Tag: Network • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/tags/network/'>
+  
+    <link href="https://stelfox.net/tags/network/atom.xml" rel="alternate" type="application/rss+xml" title="Sam Stelfox&#39;s Thoughts &amp; Notes" />
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -31,7 +29,7 @@ ga('send', 'pageview');
 </head>
 
 
-<body class='page type-blog'>
+<body class='taxonomy type-tags taxonomyTerm-tag'>
   <div class='site'>
     <a class='screen-reader' href='#main'>Skip to Content</a>
     <header id='header' class='header-container'>
@@ -65,112 +63,45 @@ ga('send', 'pageview');
 
 
 <main id='main' class='main'>
-  <article lang='en' class='entry'>
-    <header class='header-container'>
-  <div class='header entry-header'>
-    <div class='header-info'>
-      <h1 class='title'>Creating Crypt Style SHA512 Passwords With Ruby</h1>
+  <header class='header-container'>
+    <div class='header list-header'>
+      <div class='header-info'>
+        <h1 class='title'><span class='taxonomy-type'>Tag: </span>Network</h1>
+
+        
+
+      </div>
+    </div>
+  </header>
+
+  
+
+  <div class='list-container'>
+    <ul class='list'>
       
+        <li class='list-item'>
+  <article>
+    <div class='meta'>
+      <span>
+  <span class='screen-reader'>Posted on </span>
+  <time datetime='2018-05-13T00:55:09-06:00'>2018, May 13</time>
+</span>
 
     </div>
-    
-<div class='meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader'>Posted on </span>
-  <time class='date' datetime='2014-02-17T15:28:27-05:00'>2014, Feb 17</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/> 
-  
-</svg>
-One min read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-    
-    
-
-    <div class='entry-content'>
-  <p>I needed to generate crypt-style SHA512 passwords in ruby for an <code>/etc/shadow</code>
-file. After a bunch of Googling and messing around with the OpenSSL library I
-finally found a very simple built-in way to handle this.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;securerandom&#39;</span>
-
-<span style="color:#e6db74">&#39;password&#39;</span><span style="color:#f92672">.</span>crypt(<span style="color:#e6db74">&#39;$6$&#39;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SecureRandom</span><span style="color:#f92672">.</span>random_number(<span style="color:#ae81ff">36</span> <span style="color:#f92672">**</span> <span style="color:#ae81ff">8</span>)<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">36</span>))</code></pre></div>
-<p>You&rsquo;ll get a string that looks like:</p>
-
-<pre><code>$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.
-</code></pre>
-
-<p>If you don&rsquo;t want to use the <code>SecureRandom</code> module you can replace the random
-call with simply <code>rand(36 ** 8)</code> though this isn&rsquo;t recommended.</p>
-
-<p>Enjoy!</p>
-
-</div>
-
-    
-<footer class='entry-footer-container'>
-  <div class='entry-footer'>
-  <div class='tags'>
-  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
-  <line x1="7" y1="7" x2="7" y2="7"/>
-  
-</svg>
-</span>
-  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/development'>Development</a>, <a class='tag' href='/tags/linux'>Linux</a>, <a class='tag' href='/tags/ruby'>Ruby</a>, <a class='tag' href='/tags/security'>Security</a></div>
-
-  </div>
-</footer>
-
-
+    <header class='list-item-header'>
+      <h3 class='list-item-title'>
+        <a href='/blog/2018/05/quick-and-silent-gigabit-packet-interception/'>Quick and Silent Gigabit Packet Interception</a>
+      </h3>
+    </header>
   </article>
-  
-<nav class='entry-nav-container'>
-  <div class='entry-nav'><div class='prev-entry'>
-      <a href='/blog/2014/02/setting-linux-system-timezone/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader'>Previous post: </span>Setting Linux System Timezone</a>
-    </div><div class='next-entry'>
-      <a href='/blog/2014/02/finding-ruby-subclasses/'>
-        <span class='screen-reader'>Next post: </span>Finding Ruby Subclasses<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
+</li>
 
-  
+      
+    </ul>
+
+    
+
+  </div>
 </main>
 
     <footer id='footer' class='footer-container'>

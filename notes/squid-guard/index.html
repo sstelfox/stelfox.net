@@ -806,7 +806,7 @@ want to access directly in my whitelist file.</p>
 
 <h2 id="sample-error-page">Sample Error Page</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
-  <span style="color:#66d9ef">function</span> <span style="color:#f92672"></span><span style="color:#a6e22e">uuid</span>() {
+  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">uuid</span>() {
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sprintf</span>( <span style="color:#e6db74">&#39;%04x%04x-%04x-%04x-%04x-%04x%04x%04x&#39;</span>,
       <span style="color:#75715e">// 32 bits for &#34;time_low&#34;
 </span><span style="color:#75715e"></span>      <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> ), <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> ),
@@ -828,175 +828,176 @@ want to access directly in my whitelist file.</p>
     );
   }
 <span style="color:#75715e">?&gt;</span>
-&lt;!DOCTYPE&gt;
-&lt;html&gt;
-  &lt;head&gt;
-    &lt;title&gt;This Site Has Been Blocked&lt;/title&gt;
-    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
-    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
-    &lt;style type=&#34;text/css&#34;&gt;
-      @font-face {
-        font-family: &#39;Tangerine&#39;;
-        src: local(&#39;Tangerine&#39;), url(&#39;http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf&#39;) format(&#39;truetype&#39;);
+<span style="color:#75715e">&lt;!DOCTYPE&gt;</span>
+&lt;<span style="color:#f92672">html</span>&gt;
+  &lt;<span style="color:#f92672">head</span>&gt;
+    &lt;<span style="color:#f92672">title</span>&gt;This Site Has Been Blocked&lt;/<span style="color:#f92672">title</span>&gt;
+    &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=&#34;</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;icon&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;image/x-icon&#34;</span> /&gt;
+    &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34;</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;icon&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;image/x-icon&#34;</span> /&gt;
+    &lt;<span style="color:#f92672">style</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/css&#34;</span>&gt;
+      @<span style="color:#66d9ef">font-face</span> {
+        <span style="color:#f92672">font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Tangerine&#39;</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">src</span><span style="color:#f92672">:</span> <span style="color:#f92672">local</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;Tangerine&#39;</span><span style="color:#f92672">),</span> <span style="color:#f92672">url</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">format</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;truetype&#39;</span><span style="color:#f92672">);</span>
       }
-      body {
-        font-family: serif;
-        padding: 0;
-        margin: 0;
-        background: #FFF8DC;
+      <span style="color:#f92672">body</span> {
+        <span style="color:#66d9ef">font-family</span>: <span style="color:#66d9ef">serif</span>;
+        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#FFF8DC</span>;
       }
       #page {
-        border: 1px solid #CC9;
-        border-top: 0px;
-        position: relative;
-        width: 960px;
-        margin: auto;
-        background: #FFF;
-        height: 95%;
-        box-shadow: 0 0 2em #CC9;
-        overflow: hidden;
-        border-bottom-left-radius: 1em;
-        border-bottom-right-radius: 1em;
+        <span style="color:#66d9ef">border</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#66d9ef">solid</span> <span style="color:#ae81ff">#CC9</span>;
+        <span style="color:#66d9ef">border-top</span>: <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
+        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">960</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#66d9ef">margin</span>: <span style="color:#66d9ef">auto</span>;
+        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#FFF</span>;
+        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">95</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#66d9ef">box-shadow</span>: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">#CC9</span>;
+        <span style="color:#66d9ef">overflow</span>: <span style="color:#66d9ef">hidden</span>;
+        <span style="color:#66d9ef">border-bottom-left-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">border-bottom-right-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
       }
       #main {
-        position: relative;
-        overflow: hidden;
+        <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
+        <span style="color:#66d9ef">overflow</span>: <span style="color:#66d9ef">hidden</span>;
       }
       #content {
-        overflow: auto;
-        padding: 1em 2em;
-        box-shadow: inset 0 0 0.5em #CC9;
-        height: 100%;
+        <span style="color:#66d9ef">overflow</span>: <span style="color:#66d9ef">auto</span>;
+        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">box-shadow</span>: <span style="color:#66d9ef">inset</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0.5</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">#CC9</span>;
+        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
       }
-      header {
-        background: #CFC;
-        font-family: &#39;Tangerine&#39;, serif;
-        font-size: 2em;
-        max-height: 80px;
-        padding-top: 0.25em;
+      <span style="color:#f92672">header</span> {
+        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#CFC</span>;
+        <span style="color:#66d9ef">font-family</span>: <span style="color:#e6db74">&#39;Tangerine&#39;</span>, <span style="color:#66d9ef">serif</span>;
+        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">2</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">max-height</span>: <span style="color:#ae81ff">80</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#66d9ef">padding-top</span>: <span style="color:#ae81ff">0.25</span><span style="color:#66d9ef">em</span>;
       }
-      header h1,h4 {
-        padding: 0;
-        margin: 0;
-        margin-left: 1.0em;
-        display: inline-block;
-        text-decoration: underline;
+      <span style="color:#f92672">header</span> <span style="color:#f92672">h1</span><span style="color:#f92672">,</span><span style="color:#f92672">h4</span> {
+        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">margin-left</span>: <span style="color:#ae81ff">1.0</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">inline</span><span style="color:#f92672">-</span><span style="color:#66d9ef">block</span>;
+        <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">underline</span>;
       }
-      footer {
-        background: #CFC;
-        border-bottom-left-radius: 1em;
-        border-bottom-right-radius: 1em;
-        padding: 0.3em 0;
-        font-size: 0.7em;
-        position: absolute;
-        width: 100%;
-        bottom: 0px;
-        text-align: center;
+      <span style="color:#f92672">footer</span> {
+        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#CFC</span>;
+        <span style="color:#66d9ef">border-bottom-left-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">border-bottom-right-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0.3</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.7</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">absolute</span>;
+        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#66d9ef">bottom</span>: <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">center</span>;
       }
-      nav p {
-        margin-bottom: 0;
+      <span style="color:#f92672">nav</span> <span style="color:#f92672">p</span> {
+        <span style="color:#66d9ef">margin-bottom</span>: <span style="color:#ae81ff">0</span>;
       }
-      nav {
-        background: #CFC;
-        margin: 0;
-        padding: 0 0 0 1em;
-        font-size: 0.8em;
-        width: 16%;
-        height: 100%;
-        float: left;
-        box-shadow: 0 4px 6px 0 #CC9;
+      <span style="color:#f92672">nav</span> {
+        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#CFC</span>;
+        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.8</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">16</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        <span style="color:#66d9ef">float</span>: <span style="color:#66d9ef">left</span>;
+        <span style="color:#66d9ef">box-shadow</span>: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">4</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">#CC9</span>;
       }
-      nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
+      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> {
+        <span style="color:#66d9ef">list-style</span>: <span style="color:#66d9ef">none</span>;
+        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span>;
       }
-      nav ul li {
-        padding-left: 1em;
+      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> <span style="color:#f92672">li</span> {
+        <span style="color:#66d9ef">padding-left</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
       }
-      nav ul li a {
-        color: #552;
-        text-decoration: none;
+      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> <span style="color:#f92672">li</span> <span style="color:#f92672">a</span> {
+        <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#552</span>;
+        <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">none</span>;
       }
-      nav ul li a:hover {
-        text-decoration: underline;
+      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> <span style="color:#f92672">li</span> <span style="color:#f92672">a</span>:<span style="color:#a6e22e">hover</span> {
+        <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">underline</span>;
       }
-      table {
-        margin: auto;
-        font-size: 0.8em;
-        font-family: sans-serif;
+      <span style="color:#f92672">table</span> {
+        <span style="color:#66d9ef">margin</span>: <span style="color:#66d9ef">auto</span>;
+        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.8</span><span style="color:#66d9ef">em</span>;
+        <span style="color:#66d9ef">font-family</span>: <span style="color:#66d9ef">sans-serif</span>;
       }
-      th {
-        text-align: left;
-        vertical-align: top;
-        width: 100px;
-        font-weight: normal;
+      <span style="color:#f92672">th</span> {
+        <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">left</span>;
+        <span style="color:#66d9ef">vertical-align</span>: <span style="color:#66d9ef">top</span>;
+        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
+        <span style="color:#66d9ef">font-weight</span>: <span style="color:#66d9ef">normal</span>;
       }
-    &lt;/style&gt;
-  &lt;/head&gt;
-  &lt;body&gt;
-    &lt;div id=&#39;page&#39;&gt;
-      &lt;header&gt;
-        &lt;h1&gt;BedroomProgrammers.net&lt;/h1&gt;
-        &lt;h4&gt;Intricacy requires well rested minds&lt;/h4&gt;
-      &lt;/header&gt;
-      &lt;div id=&#34;main&#34;&gt;
-        &lt;nav&gt;
-          &lt;p&gt;Informative Links:&lt;/p&gt;
-          &lt;ul&gt;
-            &lt;li&gt;- &lt;a href=&#34;#&#34;&gt;Acceptable Use Policy&lt;/a&gt;&lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/nav&gt;
-        &lt;div id=&#34;content&#34;&gt;
-          &lt;section&gt;
-            &lt;h2&gt;This Page Has Been Blocked&lt;/h2&gt;
-            &lt;p&gt;This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.&lt;/p&gt;
-            &lt;p&gt;If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.&lt;/p&gt;
-            &lt;p&gt;Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn&#39;t take holidays... neither does this system.&lt;/p&gt;
-          &lt;/section&gt;
-          &lt;hr /&gt;
-          &lt;section&gt;
-            &lt;table&gt;
-              &lt;tr&gt;
-                &lt;th&gt;Timestamp&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">date</span>(<span style="color:#a6e22e">DATE_W3C</span>); <span style="color:#75715e">?&gt;</span>&lt;/td&gt;
-              &lt;/tr&gt;
-              &lt;tr&gt;
-                &lt;th&gt;Request ID&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">uuid</span>(); <span style="color:#75715e">?&gt;</span>
-              &lt;/tr&gt;
-              &lt;tr&gt;
-                &lt;th&gt;IP Address&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientaddr&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/td&gt;
-              &lt;/tr&gt;
-              &lt;tr&gt;
-                &lt;th&gt;Hostname&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientname&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/td&gt;
-              &lt;/tr&gt;
-              &lt;tr&gt;
-                &lt;th&gt;User&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientuser&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/td&gt;
-                &lt;/tr&gt;
-              &lt;tr&gt;
-                &lt;th&gt;Client Group&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientgroup&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/td&gt;
-              &lt;/tr&gt;
-              &lt;tr&gt;
-                &lt;th&gt;URL Group&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;targetgroup&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/td&gt;
-              &lt;/tr&gt;
-              &lt;tr&gt;
-                &lt;th&gt;Blacklisted URL&lt;/th&gt;
-                &lt;td&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;url&#39;</span>] <span style="color:#f92672">.</span> $_GET[<span style="color:#e6db74">&#39;uri&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/td&gt;
-              &lt;/tr&gt;
-            &lt;/table&gt;
-          &lt;/section&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;
-      &lt;footer&gt;© 2011 Me!&lt;/footer&gt;
-    &lt;/div&gt;
-  &lt;/body&gt;
-&lt;/html&gt;</code></pre></div>
+    &lt;/<span style="color:#f92672">style</span>&gt;
+  &lt;/<span style="color:#f92672">head</span>&gt;
+  &lt;<span style="color:#f92672">body</span>&gt;
+    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;page&#39;</span>&gt;
+      &lt;<span style="color:#f92672">header</span>&gt;
+        &lt;<span style="color:#f92672">h1</span>&gt;BedroomProgrammers.net&lt;/<span style="color:#f92672">h1</span>&gt;
+        &lt;<span style="color:#f92672">h4</span>&gt;Intricacy requires well rested minds&lt;/<span style="color:#f92672">h4</span>&gt;
+      &lt;/<span style="color:#f92672">header</span>&gt;
+      &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;main&#34;</span>&gt;
+        &lt;<span style="color:#f92672">nav</span>&gt;
+          &lt;<span style="color:#f92672">p</span>&gt;Informative Links:&lt;/<span style="color:#f92672">p</span>&gt;
+          &lt;<span style="color:#f92672">ul</span>&gt;
+            &lt;<span style="color:#f92672">li</span>&gt;- &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span>&gt;Acceptable Use Policy&lt;/<span style="color:#f92672">a</span>&gt;&lt;/<span style="color:#f92672">li</span>&gt;
+          &lt;/<span style="color:#f92672">ul</span>&gt;
+        &lt;/<span style="color:#f92672">nav</span>&gt;
+        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content&#34;</span>&gt;
+          &lt;<span style="color:#f92672">section</span>&gt;
+            &lt;<span style="color:#f92672">h2</span>&gt;This Page Has Been Blocked&lt;/<span style="color:#f92672">h2</span>&gt;
+            &lt;<span style="color:#f92672">p</span>&gt;This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.&lt;/<span style="color:#f92672">p</span>&gt;
+            &lt;<span style="color:#f92672">p</span>&gt;If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.&lt;/<span style="color:#f92672">p</span>&gt;
+            &lt;<span style="color:#f92672">p</span>&gt;Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn&#39;t take holidays... neither does this system.&lt;/<span style="color:#f92672">p</span>&gt;
+          &lt;/<span style="color:#f92672">section</span>&gt;
+          &lt;<span style="color:#f92672">hr</span> /&gt;
+          &lt;<span style="color:#f92672">section</span>&gt;
+            &lt;<span style="color:#f92672">table</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;Timestamp&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">date</span>(<span style="color:#a6e22e">DATE_W3C</span>); <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
+              &lt;/<span style="color:#f92672">tr</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;Request ID&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">uuid</span>(); <span style="color:#75715e">?&gt;</span>
+              &lt;/<span style="color:#f92672">tr</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;IP Address&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientaddr&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
+              &lt;/<span style="color:#f92672">tr</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;Hostname&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientname&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
+              &lt;/<span style="color:#f92672">tr</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;User&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientuser&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
+                &lt;/<span style="color:#f92672">tr</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;Client Group&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientgroup&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
+              &lt;/<span style="color:#f92672">tr</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;URL Group&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;targetgroup&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
+              &lt;/<span style="color:#f92672">tr</span>&gt;
+              &lt;<span style="color:#f92672">tr</span>&gt;
+                &lt;<span style="color:#f92672">th</span>&gt;Blacklisted URL&lt;/<span style="color:#f92672">th</span>&gt;
+                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;url&#39;</span>] <span style="color:#f92672">.</span> $_GET[<span style="color:#e6db74">&#39;uri&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
+              &lt;/<span style="color:#f92672">tr</span>&gt;
+            &lt;/<span style="color:#f92672">table</span>&gt;
+          &lt;/<span style="color:#f92672">section</span>&gt;
+        &lt;/<span style="color:#f92672">div</span>&gt;
+      &lt;/<span style="color:#f92672">div</span>&gt;
+      &lt;<span style="color:#f92672">footer</span>&gt;<span style="color:#960050;background-color:#1e0010">&amp;</span>copy 2011 Me!&lt;/<span style="color:#f92672">footer</span>&gt;
+    &lt;/<span style="color:#f92672">div</span>&gt;
+  &lt;/<span style="color:#f92672">body</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div>
 </div>
 
     
