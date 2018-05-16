@@ -613,12 +613,12 @@ service {
             }
             rule 20 {
                 action deny
-                external-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100
+                external-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100,9200
                 subnet 0.0.0.0/0
             }
             rule 30 {
                 action deny
-                local-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100
+                local-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100,9200
                 subnet 0.0.0.0/0
             }
             rule 40 {
@@ -712,3 +712,5 @@ Refs:
 * https://kazoo.ga/dhcpv6-pd-for-native-ipv6/
 * https://community.ubnt.com/t5/EdgeRouter/The-generation-of-etc-radvd-conf-is-missing-my-configuration/td-p/1355531
 * https://community.ubnt.com/t5/EdgeRouter/ERlite-1-5-upnp2-secure-mode/td-p/923222
+* https://flyovercountry.org/2014/02/google-fiber-gigabit-speeds-your-router-part-1-vlans/
+* http://itnutt.com/how-to-bypass-google-fibers-network-box/
