@@ -1,5 +1,5 @@
 ---
-date: 2018-05-13T13:55:09-06:00
+date: 2018-05-15T18:41:09-06:00
 draft: true
 tags:
 - network
@@ -714,3 +714,6 @@ Refs:
 * https://community.ubnt.com/t5/EdgeRouter/ERlite-1-5-upnp2-secure-mode/td-p/923222
 * https://flyovercountry.org/2014/02/google-fiber-gigabit-speeds-your-router-part-1-vlans/
 * http://itnutt.com/how-to-bypass-google-fibers-network-box/
+* https://netswat.com/blog/google-fiber-ubiquitis-edgerouter/
+* https://netswat.com/blog/wp-content/uploads/2016/07/Edge-Setup-Interfacesv3.txt
+* https://netswat.com/blog/wp-content/uploads/2016/07/EdgeRouter-TVScript6.txt
