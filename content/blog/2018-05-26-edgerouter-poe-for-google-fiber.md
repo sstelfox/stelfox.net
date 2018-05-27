@@ -66,47 +66,6 @@ offloading for VLAN tagging available so this is not an issue for this router.
 For anyone using this as a reference for another router, you'll want to make
 sure yours supports this.
 
-## Connectivity & Basic Setup
-
-To configure the router, connect the fiber jack to eth0 on the router and make
-sure the fiber jack doesn't have its external power connected. SSH into your
-router (this will depend on your current settings, or do a full reset and use
-the default static IP setting) and go into configure mode:
-
-```
-configure
-```
-
-I want to start with a mostly clean slate. This is probably unecessary but I'm
-going to carefully go through all my settings while I'm at it. So lets go
-nuclear:
-
-```
-delete firewall
-delete interfaces
-delete service
-delete system
-```
-
-Be very careful at this point. If you commit you'll need to do a factory reset
-to get back in. So let's make sure we have basic LAN connectivity again. This
-requires a user account, IPv4 addresses, and a DHCP server (ok you don't need
-this but I'm doing it anyway.
-
-```
-set system login user admin level admin
-set system login user admin full-name "Admin User"
-set system login user admin authentication plaintext-password "dontUseThisPassword"
-```
-
-You'll of course want to use an actual password. That last command will take a
-few seconds as it generates the encrypted hash.
-
-I use two networks, if you only need one then omit the setup of eth1. The
-switch0 interface is my normal LAN, eth0 will be my WAN, and eth1 my DMZ.
-
-## IPv4 Firewall
-
 ## Basic Connectivity
 
 The first task was to get basic IPv4 connectivity going. When I started the
@@ -143,17 +102,29 @@ tried are:
 4. 0:3 1:3 2:3 3:3 4:4 5:5 6:6 7:7
 5. 0:6
 
+To configure the router, connect the fiber jack to eth0 on the router and make
+sure the fiber jack doesn't have its external power connected. SSH into your
+router (this will depend on your current settings, or do a full reset and use
+the default static IP setting) and go into configure mode:
+
+```
+configure
+```
+
 There are a lot of changes that need to be made, the one thing you'll want to
 double check is the name of your firewall rules which should have already been
 setup. By default they get named `WAN_IN`, `WANv6_IN`, `WAN_LOCAL`, and
-`WANv6_LOCAL` and I didn't need to make any changes to them. Because there are
-so many changes, we're going to start from a clean slate:
+`WANv6_LOCAL` and I didn't need to make any changes to them to get things
+working. Because there are so many changes from the default WAN settings, we're
+going to start from a clean slate:
 
 ```
 delete interfaces ethernet eth0
 ```
 
-Now we'll setup the basic physical connection again:
+Now we need to setup the physical connection details again and we'll add the
+PoE configuration to power the jack. Please note that these will not go into
+effect until we commit them (which we're going to wait to do until later).
 
 ```
 edit interfaces ethernet eth0
@@ -173,7 +144,7 @@ IPv6 having these in place can prevent accidents if it ever gets enabled.
 edit interfaces ethernet eth0 vif 2
 set description Internet
 set address dhcp
-set egress-qos 0:3
+set egress-qos "0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3"
 set firewall in name WAN_IN
 set firewall in ipv6-name WANv6_IN
 set firewall local name WAN_LOCAL
@@ -182,7 +153,7 @@ exit
 ```
 
 To ensure the routing performance is as good as it can be, we want to ensure
-hardware offload is configured.
+the relevant hardware offload settings are configured:
 
 ```
 edit system offload
@@ -192,9 +163,10 @@ exit
 ```
 
 At this point we need to commit the change to allow the VLAN interface to be
-created, but the routing won't be setup correctly yet. The outbound interface
-for NAT will also need to be updated and recommitted. You'll want to double
-check your NAT rule number matches mine (5010).
+created. Routing won't work yet, but this will power the jack and get it
+booting. To get basic routing working the outbound interface for NAT will also
+need to be updated and recommitted. You'll want to double check your NAT rule
+number matches mine (5010).
 
 ```
 commit
