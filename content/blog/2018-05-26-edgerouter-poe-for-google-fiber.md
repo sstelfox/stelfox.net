@@ -66,6 +66,47 @@ offloading for VLAN tagging available so this is not an issue for this router.
 For anyone using this as a reference for another router, you'll want to make
 sure yours supports this.
 
+## Connectivity & Basic Setup
+
+To configure the router, connect the fiber jack to eth0 on the router and make
+sure the fiber jack doesn't have its external power connected. SSH into your
+router (this will depend on your current settings, or do a full reset and use
+the default static IP setting) and go into configure mode:
+
+```
+configure
+```
+
+I want to start with a mostly clean slate. This is probably unecessary but I'm
+going to carefully go through all my settings while I'm at it. So lets go
+nuclear:
+
+```
+delete firewall
+delete interfaces
+delete service
+delete system
+```
+
+Be very careful at this point. If you commit you'll need to do a factory reset
+to get back in. So let's make sure we have basic LAN connectivity again. This
+requires a user account, IPv4 addresses, and a DHCP server (ok you don't need
+this but I'm doing it anyway.
+
+```
+set system login user admin level admin
+set system login user admin full-name "Admin User"
+set system login user admin authentication plaintext-password "dontUseThisPassword"
+```
+
+You'll of course want to use an actual password. That last command will take a
+few seconds as it generates the encrypted hash.
+
+I use two networks, if you only need one then omit the setup of eth1. The
+switch0 interface is my normal LAN, eth0 will be my WAN, and eth1 my DMZ.
+
+## IPv4 Firewall
+
 ## Basic Connectivity
 
 The first task was to get basic IPv4 connectivity going. When I started the
@@ -101,14 +142,6 @@ tried are:
 3. 0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3
 4. 0:3 1:3 2:3 3:3 4:4 5:5 6:6 7:7
 5. 0:6
-
-To configure the router, connect the fiber jack to eth0 on the router and make
-sure the fiber jack doesn't have its external power connected. SSH into your
-router and go into configure mode:
-
-```
-configure
-```
 
 There are a lot of changes that need to be made, the one thing you'll want to
 double check is the name of your firewall rules which should have already been
