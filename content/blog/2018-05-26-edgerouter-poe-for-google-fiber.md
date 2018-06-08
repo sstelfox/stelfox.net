@@ -1,5 +1,5 @@
 ---
-date: 2018-05-15T18:41:09-06:00
+date: 2018-05-26T18:41:09-06:00
 draft: true
 tags:
 - network
@@ -8,40 +8,34 @@ title: Setting Up EdgeRouter PoE on Google Fiber
 ---
 
 I recently moved to an area with Google Fiber and jumped on the chance to have
-a cheap, fast, low-latency connection by a company that was actively supporting
-the real tenets of net neutrality. I already had a router that was capable of
-routing a gigabit worth of small packets (The [Ubiquiti EdgeRouter PoE 5][1]).
+a cheap and fast connection, and I didn't need to sell my soul to certain other
+companies. I already owned a [Ubiquiti EdgeRouter PoE 5][1] which has been
+battle tested at easily routing a gigabit worth of small packets.
 
-When setting up my service I chatted with a support representative that told me
-that I could use my own router, but I would still need the Google Fiber Network
-Box. When picking up the box from the local store presence, they confirmed the
-same thing and told me I just needed to put the Network Box into bridge mode.
+When setting up my service, the representative I talked to told me I was able
+to use my own router, but I would still need to get a Google Fiber Network Box.
+I confirmed this with the staff who handed me the network box, informing me I
+just had to "put it into bridge mode". Turns out there is no bridge mode, and
+no you don't need the Fiber Box.
 
-After returning home, I plugged everything in and verified my service was
-working with the box. I setup my router, running through the 'Basic Setup'
-wizard. I confirmed everything was working with double NAT then I went to
-enable bridge modem the network box...
-
-Except there is no bridge mode. Let the frantic Googling begin.
-
-[Other][2] [people][3] have been in this situation [before][4] and have written
-up their own very good documentation on very similar setups. A lot of the
-information is at least a year old so it was worth double checking. I also
-found that many of them went more complex than I needed in some ways (a
-dedicated guest VLAN) and in other ways not far enough (IPv6, custom DNS).
+After much Googling and confirming those two points, I came across [other][2]
+[people][3] have been in this situation [before][4] and have written up their
+own very good documentation on very similar setups. A lot of the information is
+at least a year old so it was worth going over carefully, and didn't go quite
+as far as I'd like.
 
 One thing I will say ahead of time. I'm not adventuring into the TV service as
 I don't have it. From the messages I read, if you want this a cheap Gigabit
 switch between your router and the fiber jack that you can additionally plug
-the TV box into will do the trick (but you'll want to disable the PoE settings
-if you go this route).
+the TV box into will do the trick (but you want to avoid powering the jack with
+PoE if you go this route).
 
 There was some discussion from an official Google representative in one of the
 many threads that made a passing mention they would switch to untagged traffic
 so I wanted to verify what was happening. For this I [became the wire][5] and
 sniffed the traffic directly. The settings on the wire matched the contents of
 a deleted post from a Google representative early on in [this thread][4]
-reproduced here:
+reproduced here for future reference:
 
 > Here's the gory details if you really want to use your own router:
 >
@@ -62,50 +56,56 @@ reproduced here:
 > your network, and which will also probably affect tv service quality.
 
 One other piece of information that I gleaned from the traffic capture is that
-the IPv6 prefix length of /56. If you reproduce this, look into the DHCPv6
-messages for a pair of solicit / request (actually a response but that is how
-it is labeled).
+the IPv6 prefix length of /56. If you want to reproduce this, look into the
+DHCPv6 messages for a pair of solicit / request (actually a response but that
+is how it is labeled).
 
-I was concerned about the VLAN tagging as it may force the packets to be
-software routed preventing me from hitting the full potential of the
-connection. The EdgeRouter PoE though has hardware offloading for VLAN tagging
-available so this turned out not to be an issue. For anyone using this as a
-reference for another router, you'll want to make sure it supports this.
+I had some initial concern about VLAN tagging as I suspected it may force
+software handling of all routed packets. The EdgeRouter PoE has hardware
+offloading for VLAN tagging available so this is not an issue for this router.
+For anyone using this as a reference for another router, you'll want to make
+sure yours supports this.
 
 ## Basic Connectivity
 
 The first task was to get basic IPv4 connectivity going. When I started the
 configuration my router was on version 1.9.1.1, which I upgraded to 1.10.1
-*after* I finished all of the configuration, not just from this section
-([always keep your network equipment updated][6]).
+*after* I finished all of the configuration. I didn't have any issues with the
+software, everything seemed very stable.
 
-To accomplish this we need outbound traffic tagged with VLAN 2. If we want to
-get the full speed out of our link we additionally need to mark our egress
-packets with the appropriate service control values. Setting these up is best
-done all at once as changes to the egress QoS mapping requires [manual editing
-and restarting][7] of the router. As a bonus we'll also power the Fiber Jack
-using PoE from the EdgeRouter.
+The basic connectivity just requires tagging outbound traffic with VLAN 2, to
+get the full speed the packets additionally need to have the correct 802.1q QoS
+tags. The one bonus we'll add that is totally unecessary is powering the jack
+with PoE since we're already going to messing with that interface.
 
-As far as I can tell, there is no way on the EdgeRouter PoE to perform egress
-mapping on different traffic protocols (maybe using the advanced traffic
-control settings but I didn't explore those). I don't care about IGMP traffic
-(this will largely be for the TV service) so I ignored those settings and I
-confirmed that DHCP will get an address when tagged with a QoS value of 3
-(which is what the bulk traffic should be tagged with), but this may be the
-reason behind the [connectivity times I'm experiencing][8].
+*Sidenote: If you want to play with egress values, changing after the fact
+requires editing of the [config on disk and a full restart][7]. It's kind of a
+pain to go through a bunch of different options.*
 
-I tried several mapping values for different types of traffic and ultimately it
-does seem that the `0:3` mapping most other people are doing seems to work just
-fine. For completeness these are the other mappings I've tried:
+The EdgeRouter PoE doesn't seem to be able to adjust QoS settings based on the
+protocol (I could be wrong I didn't look into this too deeply, maybe the
+advanced traffic control stuff?), but since I don't have the TV service, I
+don't have the IGMP traffic to worry about. That just leaves DHCPv4 packets.
 
-* 0:2
-* 0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3
-* 0:3 1:3 2:3 3:3 4:4 5:5 6:6 7:7
-* 0:6
+I confirmed that DHCPv4 will get an address when tagged with a QoS value of 3
+(which is what the bulk traffic should be tagged with). Later on, I go into
+detail [about an issue][8] that I think could be potentially related to this
+but I haven't done additional testing.
 
-To actually perform the setup, connect the fiber jack to eth0 on the router and
-make sure the fiber jack doesn't have its external power connected. SSH into
-your router and go into configure mode:
+I tried several mapping values for different types of traffic and settled on
+mapping everything to a QoS value of 3 (option 3 below). The mappings that I
+tried are:
+
+1. 0:2
+2. 0:3
+3. 0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3
+4. 0:3 1:3 2:3 3:3 4:4 5:5 6:6 7:7
+5. 0:6
+
+To configure the router, connect the fiber jack to eth0 on the router and make
+sure the fiber jack doesn't have its external power connected. SSH into your
+router (this will depend on your current settings, or do a full reset and use
+the default static IP setting) and go into configure mode:
 
 ```
 configure
@@ -114,14 +114,17 @@ configure
 There are a lot of changes that need to be made, the one thing you'll want to
 double check is the name of your firewall rules which should have already been
 setup. By default they get named `WAN_IN`, `WANv6_IN`, `WAN_LOCAL`, and
-`WANv6_LOCAL` and I didn't need to make any changes to them. Because there are
-so many changes, we're going to start from a clean slate:
+`WANv6_LOCAL` and I didn't need to make any changes to them to get things
+working. Because there are so many changes from the default WAN settings, we're
+going to start from a clean slate:
 
 ```
 delete interfaces ethernet eth0
 ```
 
-Now we'll setup the basic physical connection again:
+Now we need to setup the physical connection details again and we'll add the
+PoE configuration to power the jack. Please note that these will not go into
+effect until we commit them (which we're going to wait to do until later).
 
 ```
 edit interfaces ethernet eth0
@@ -141,7 +144,7 @@ IPv6 having these in place can prevent accidents if it ever gets enabled.
 edit interfaces ethernet eth0 vif 2
 set description Internet
 set address dhcp
-set egress-qos 0:3
+set egress-qos "0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3"
 set firewall in name WAN_IN
 set firewall in ipv6-name WANv6_IN
 set firewall local name WAN_LOCAL
@@ -150,7 +153,7 @@ exit
 ```
 
 To ensure the routing performance is as good as it can be, we want to ensure
-hardware offload is configured.
+the relevant hardware offload settings are configured:
 
 ```
 edit system offload
@@ -160,9 +163,10 @@ exit
 ```
 
 At this point we need to commit the change to allow the VLAN interface to be
-created, but the routing won't be setup correctly yet. The outbound interface
-for NAT will also need to be updated and recommitted. You'll want to double
-check your NAT rule number matches mine (5010).
+created. Routing won't work yet, but this will power the jack and get it
+booting. To get basic routing working the outbound interface for NAT will also
+need to be updated and recommitted. You'll want to double check your NAT rule
+number matches mine (5010).
 
 ```
 commit
