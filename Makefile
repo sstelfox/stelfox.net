@@ -1,5 +1,7 @@
+# Note to self: this is included because it seems like hugo isn't handling
+# time zones correctly
 build:
-	@hugo
+	@hugo --buildFuture
 
 clean:
 	@rm -rf public/*
