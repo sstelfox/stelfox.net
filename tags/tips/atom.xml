@@ -7,6 +7,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/tips/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>SPF and Google Site Verification in Route 53</title>
+      <link>https://stelfox.net/blog/2018/06/spf-and-google-site-verification-in-route-53/</link>
+      <pubDate>Thu, 14 Jun 2018 11:36:09 -0600</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2018/06/spf-and-google-site-verification-in-route-53/</guid>
+      <description>Route53 doesn&amp;rsquo;t allow multiple definitions of the same name/type pair of DNS entries which is quite a headache. This is the first time I&amp;rsquo;ve had a conflict of a TXT record in Route53 at the base, specifically both Google&amp;rsquo;s site verification, and SPF records both want to live at the root of the domain. The site verification record needs to stay around as Google periodically re-verifies the domain.
+To get this to work you need to quote both the Google verification string and the SPF record, but you also have to ensure that there is a newline in the field.</description>
+    </item><item>
       <title>Timelapse of a Linux Desktop</title>
       <link>https://stelfox.net/blog/2018/06/timelapse-of-a-linux-desktop/</link>
       <pubDate>Fri, 08 Jun 2018 16:37:39 -0600</pubDate>
@@ -77,14 +85,5 @@ I came across one issue which didn&amp;rsquo;t seem to have a well-documented so
       <guid>https://stelfox.net/blog/2017/11/gentoo-fstab-failure/</guid>
       <description>I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&amp;rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
 I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only.</description>
-    </item><item>
-      <title>Investigating LVM From Dracut</title>
-      <link>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</link>
-      <pubDate>Tue, 24 Oct 2017 11:45:07 -0400</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</guid>
-      <description>In my my last post, I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
-Turns out that the commands I&amp;rsquo;m normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the lvm tool like so:
-$ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to notice that block device of my root filesystem was missing due to a missing kernel driver&amp;hellip;</description>
     </item></channel>
 </rss>

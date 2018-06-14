@@ -3,17 +3,17 @@
 <head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:title' content='Tag: Frustration • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Thoughts from a software engineer, systems architect and Linux gubernāre.'>
-<meta property='og:url' content='https://stelfox.net/tags/frustration/'>
+<meta name='description' content='Route53 doesn&rsquo;t allow multiple definitions of the same name/type pair of DNS entries which is quite a headache. This is the first time I&rsquo;ve had a conflict of a TXT record in Route53 at the base, specifically both Google&rsquo;s site verification, and SPF records both want to live at the root of the domain. The site verification record needs to stay around as Google periodically re-verifies the domain.
+To get this to work you need to quote both the Google verification string and the SPF record, but you also have to ensure that there is a newline in the field.'>
+<meta property='og:title' content='SPF and Google Site Verification in Route 53 • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='Route53 doesn&rsquo;t allow multiple definitions of the same name/type pair of DNS entries which is quite a headache. This is the first time I&rsquo;ve had a conflict of a TXT record in Route53 at the base, specifically both Google&rsquo;s site verification, and SPF records both want to live at the root of the domain. The site verification record needs to stay around as Google periodically re-verifies the domain.
+To get this to work you need to quote both the Google verification string and the SPF record, but you also have to ensure that there is a newline in the field.'>
+<meta property='og:url' content='https://stelfox.net/blog/2018/06/spf-and-google-site-verification-in-route-53/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content='2018-06-14T11:36:09-06:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Blog'><meta property='article:tag' content='aws'><meta property='article:tag' content='dns'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-06-14T11:36:09-06:00'/><meta property='article:modified_time' content='2018-06-14T11:36:09-06:00'/>
 
-  <title>Tag: Frustration • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/tags/frustration/'>
-  
-    <link href="https://stelfox.net/tags/frustration/atom.xml" rel="alternate" type="application/rss+xml" title="Sam Stelfox&#39;s Thoughts &amp; Notes" />
+  <title>SPF and Google Site Verification in Route 53 • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2018/06/spf-and-google-site-verification-in-route-53/'>
   
   
   <link rel='icon' href='/favicon.ico'>
@@ -33,7 +33,7 @@ if (!doNotTrack) {
 </head>
 
 
-<body class='taxonomy type-tags taxonomyTerm-tag'>
+<body class='page type-blog'>
   <div class='site'>
     <a class='screen-reader' href='#main'>Skip to Content</a>
     <header id='header' class='header-container'>
@@ -67,45 +67,103 @@ if (!doNotTrack) {
 
 
 <main id='main' class='main'>
-  <header class='header-container'>
-    <div class='header list-header'>
-      <div class='header-info'>
-        <h1 class='title'><span class='taxonomy-type'>Tag: </span>Frustration</h1>
-
-        
-
-      </div>
-    </div>
-  </header>
-
-  
-
-  <div class='list-container'>
-    <ul class='list'>
+  <article lang='en' class='entry'>
+    <header class='header-container'>
+  <div class='header entry-header'>
+    <div class='header-info'>
+      <h1 class='title'>SPF and Google Site Verification in Route 53</h1>
       
-        <li class='list-item'>
-  <article>
-    <div class='meta'>
-      <span>
-  <span class='screen-reader'>Posted on </span>
-  <time datetime='2018-05-23T07:53:19-06:00'>2018, May 23</time>
+
+    </div>
+    
+<div class='meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader'>Posted on </span>
+  <time class='date' datetime='2018-06-14T11:36:09-06:00'>2018, Jun 14</time>
 </span>
 
-    </div>
-    <header class='list-item-header'>
-      <h3 class='list-item-title'>
-        <a href='/blog/2018/05/parsing-http-responses-in-ruby/'>Parsing HTTP Responses in Ruby</a>
-      </h3>
-    </header>
-  </article>
-</li>
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/> 
+  
+</svg>
+One min read
+</span>
 
-      
-    </ul>
 
-    
+</div>
+
 
   </div>
+</header>
+
+    
+    
+
+    <div class='entry-content'>
+  <p>Route53 doesn&rsquo;t allow multiple definitions of the same name/type pair of DNS
+entries which is quite a headache. This is the first time I&rsquo;ve had a conflict
+of a TXT record in Route53 at the base, specifically both Google&rsquo;s site
+verification, and SPF records both want to live at the root of the domain. The
+site verification record needs to stay around as Google periodically
+re-verifies the domain.</p>
+
+<p>To get this to work you need to quote both the Google verification string and
+the SPF record, but you also have to ensure that there is a newline in the
+field. The contents of the entry should look something like this:</p>
+
+<pre><code>&quot;google-site-verification=&lt;auth string&gt;&quot;
+&quot;v=spf1 include:_spf.google.com ~all&quot;
+</code></pre>
+
+<p>You can use <a href="https://toolbox.googleapps.com/apps/checkmx/check">Google&rsquo;s MX Toolbox</a> to verify the SPF record.</p>
+
+</div>
+
+    
+<footer class='entry-footer-container'>
+  <div class='entry-footer'>
+  <div class='tags'>
+  <span class='taxonomyTerm-icon'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+</span>
+  <span class='screen-reader'>Tags: </span><a class='tag' href='/tags/aws'>Aws</a>, <a class='tag' href='/tags/dns'>Dns</a>, <a class='tag' href='/tags/tips'>Tips</a></div>
+
+  </div>
+</footer>
+
+
+  </article>
+  
+<nav class='entry-nav-container'>
+  <div class='entry-nav'><div class='prev-entry'>
+      <a href='/blog/2018/06/timelapse-of-a-linux-desktop/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader'>Previous post: </span>Timelapse of a Linux Desktop</a>
+    </div></div>
+</nav>
+
+  
 </main>
 
     <footer id='footer' class='footer-container'>
