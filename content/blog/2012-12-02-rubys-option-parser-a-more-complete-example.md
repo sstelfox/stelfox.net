@@ -9,13 +9,13 @@ title: Ruby's Option Parser - a More Complete Example
 
 Recently while writing a Ruby program I needed to parse some command line
 options. Helpfully Ruby provides a module named `OptionParser` to make this
-easy.  I found a few parts of the documentation ambiguous and a few others down
+easy. I found a few parts of the documentation ambiguous and a few others down
 right confusing.
 
 The catch I hit was the required field. In my mind the definition of a required
 argument is something that needs to be passed on the command line to continue.
-What `OptionParser` actually means is that a value isn't required when the
-argument is passed. `OptionParser` already provides boolean switches, so when
+What`OptionParser` actually means is that a value isn't required when the
+argument is passed.`OptionParser` already provides boolean switches, so when
 someone would use an optional switch is beyond me.
 
 To make it a little more clear and to have something to work from in the future

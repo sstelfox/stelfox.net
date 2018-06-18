@@ -2,7 +2,7 @@
 date: 2018-05-23T07:53:19-06:00
 tags:
 - ruby
-- frustration
+- tips
 title: Parsing HTTP Responses in Ruby
 ---
 
