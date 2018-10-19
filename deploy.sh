@@ -36,7 +36,7 @@ popd &> /dev/null
 make build
 
 # Deploy the new changes
-rsync -rczi --delete --cvs-exclude public/ web01:sites/stelfox.net/
+rsync -rczi --delete --cvs-exclude public/ singing-evening-road.stelfox.net:/var/www/stelfox.net/root/
 
 # Sometimes I want to make a minor change without syncing it back to github
 # (little games and things with friends, changes would give away clues). In
