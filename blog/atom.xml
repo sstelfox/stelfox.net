@@ -7,6 +7,15 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/blog/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Weird CloudFlare Behavior</title>
+      <link>https://stelfox.net/blog/2018/10/weird-cloudflare-behavior/</link>
+      <pubDate>Sun, 21 Oct 2018 22:36:09 -0600</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2018/10/weird-cloudflare-behavior/</guid>
+      <description>While working on a replacement webserver, I encountered some odd behavior which took a bit to track down to CloudFlare. This isn&amp;rsquo;t a bug or an issue with CloudFlare, it was just unexpected.
+The server was configured to respond to www.example.tld as well as example.tld, to both encrypted and unencrypted connections. Any requests to the www. domain get redirected to https://example.tld. The config was roughly:
+server { listen 80; listen [::]:80; listen 443 ssl http2; listen [::]:443 ssl http2; server_name www.</description>
+    </item><item>
       <title>It&#39;s Never the Firewall</title>
       <link>https://stelfox.net/blog/2018/10/its-never-the-firewall/</link>
       <pubDate>Sun, 14 Oct 2018 13:36:09 -0600</pubDate>
@@ -76,12 +85,5 @@ I got a hold of a Zynq 7100 development board, and while I&amp;rsquo;ve played w
       <guid>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</guid>
       <description>I needed to convert a directory full of CPIO files to tar balls. This quick script did the trick for me but didn&amp;rsquo;t preserve the user / group. Running it as root will preserve the ownership information but that wasn&amp;rsquo;t important for my immediate use case.
 #!/bin/bash SRC_DIR=$(pwd) for i in *.cpio; do CPIO_TMP_DIR=&amp;quot;$(mktemp -d /tmp/cpioconv.XXXX)&amp;quot; (cd ${CPIO_TMP_DIR} &amp;amp;&amp;amp; cpio -idm &amp;lt; &amp;quot;${SRC_DIR}/${i}&amp;quot; &amp;amp;&amp;amp; tar -cf ${SRC_DIR}/${i%%.cpio}.tar .) rm -rf ${CPIO_TMP_DIR} done  </description>
-    </item><item>
-      <title>Unusable Secret Key</title>
-      <link>https://stelfox.net/blog/2017/12/unusable-secret-key/</link>
-      <pubDate>Mon, 04 Dec 2017 11:38:01 -0500</pubDate>
-      <author>Sam Stelfox</author>
-      <guid>https://stelfox.net/blog/2017/12/unusable-secret-key/</guid>
-      <description>I use a Yubikey NEO to store subkeys used for signing and authentication. I started experiencing a weird issue with it. It coincided with me rebuilding my system so diagnosing it ended up being harder than normal. The behavior I experienced allowed me to use the key to authenticate (SSH&amp;rsquo;ing worked fine) but any attempt to sign new data resulted in an &amp;lsquo;Unusuable secret key&amp;rsquo; error. For git this resulted in the following message:</description>
     </item></channel>
 </rss>
