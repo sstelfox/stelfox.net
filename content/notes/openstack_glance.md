@@ -25,5 +25,5 @@ GRANT ALL ON glance.* TO 'glance'@'10.100.0.%' IDENTIFIED BY 'LongStrongUniquePa
 FLUSH PRIVILEGES;
 ```
 
-[1]: {{< relref "notes/mysql.md" >}}
-[2]: {{< relref "notes/openstack.md" >}}
+[1]: {{< ref "./mysql.md" >}}
+[2]: {{< ref "./openstack.md" >}}

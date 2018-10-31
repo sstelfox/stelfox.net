@@ -78,4 +78,4 @@ mkfs.ext4 /dev/mapper/cryptTest
 cryptsetup luksClose /dev/mapper/cryptTest
 ```
 
-[1]: {{< relref "notes/swap.md" >}}
+[1]: {{< ref "./swap.md" >}}

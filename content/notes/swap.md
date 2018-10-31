@@ -78,4 +78,4 @@ right before the cryptsetup invocation add the line "modprobe dm-mod" to load
 the kernel module. Otherwise you'll get a "Command failed: Incompatible
 libdevmapper" error.
 
-[1]: {{< relref "notes/data_recovery.md" >}}
+[1]: {{< ref "./data_recovery.md" >}}

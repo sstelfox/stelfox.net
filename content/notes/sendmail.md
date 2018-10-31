@@ -28,4 +28,4 @@ command:
 yum install sendmail-cf -y
 ```
 
-[1]: {{< relref "notes/postfix.md" >}}
+[1]: {{< ref "./postfix.md" >}}

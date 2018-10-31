@@ -126,8 +126,8 @@ with disk queues removed).
 * https://security.stackexchange.com/questions/4629/simple-example-auditd-configuration
 * https://linux-audit.com/tuning-auditd-high-performance-linux-auditing/
 
-[1]: {{< relref "notes/aide.md" >}}
-[2]: {{< relref "notes/rsyslog.md" >}}
+[1]: {{< ref "./aide.md" >}}
+[2]: {{< ref "./rsyslog.md" >}}
 [3]: /note_files/auditd/auditd.conf
 [4]: /note_files/auditd/libaudit.conf
 [5]: /note_files/auditd/audit.rules

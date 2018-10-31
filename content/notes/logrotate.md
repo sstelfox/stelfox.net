@@ -21,4 +21,4 @@ such as `yum` and [`nginx`][1]. Defaults for configurations are configured in
 for specific log files. Where appropriate you'll find the rotation
 configurations I use on the relevant service pages.
 
-[1]: {{< relref "notes/nginx.md" >}}
+[1]: {{< ref "./nginx.md" >}}

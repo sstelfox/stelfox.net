@@ -15,5 +15,5 @@ to poking around in it.
 Now if only Google let you download everything they know about you as well...
 Would definitely make for an interesting read.
 
-[1]: {{< relref "blog/2013-11-19-backing-up-gmail-with-fetchmail.md" >}}
+[1]: {{< ref "./2013-11-19-backing-up-gmail-with-fetchmail.md" >}}
 [2]: http://gmailblog.blogspot.com/2013/12/download-copy-of-your-gmail-and-google.html

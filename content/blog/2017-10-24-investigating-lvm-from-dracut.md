@@ -23,4 +23,4 @@ $ lvm lvscan
 For my particular issue, it led me to notice that block device of my root
 filesystem was missing due to a missing kernel driver...
 
-[1]:{{< relref "blog/2017-10-24-visible-yet-missing-logical-volumes.md" >}}
+[1]:{{< ref "./2017-10-24-visible-yet-missing-logical-volumes.md" >}}

@@ -379,4 +379,4 @@ chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
 -A SERVICE -m tcp -p tcp --dport 5671 -j ACCEPT
 ```
 
-[1]: {{< relref "notes/certificate_authority.md" >}}
+[1]: {{< ref "./certificate_authority.md" >}}

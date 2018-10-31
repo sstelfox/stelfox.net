@@ -983,4 +983,4 @@ I wasn't able to get this working at the current time as there is a bug in
 passenger 3.0.12 that prevents it from being compiled with GCC 4.6.
 
 [1]: http://www.ietf.org/rfc/rfc3546.txt
-[2]: {{< relref "notes/ruby.md" >}}
+[2]: {{< ref "./ruby.md" >}}

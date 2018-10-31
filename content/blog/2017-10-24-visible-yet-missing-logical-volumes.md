@@ -48,4 +48,4 @@ This didn't fix the LVM volumes showing up at boot but it did allow me to get
 back into my root filesystem as a chroot so I could investigate the issue which
 I've finished documenting in [another post][1].
 
-[1]: {{< relref "blog/2017-10-24-investigating-lvm-from-dracut.md" >}}
+[1]: {{< ref "./2017-10-24-investigating-lvm-from-dracut.md" >}}

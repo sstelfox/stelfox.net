@@ -83,5 +83,5 @@ ezstream.xml
 </ezstream>
 ```
 
-[1]: {{< relref "notes/icecast.md" >}}
-[2]: {{< relref "notes/samba.md" >}}
+[1]: {{< ref "./icecast.md" >}}
+[2]: {{< ref "./samba.md" >}}

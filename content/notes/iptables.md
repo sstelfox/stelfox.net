@@ -70,7 +70,7 @@ switching to ipsets, but I haven't gotten around to it.
 
 [1]: /note_files/iptables/iptables.rules
 [2]: /note_files/iptables/ip6tables.rules
-[3]: {{< relref "notes/auditd.md" >}}
+[3]: {{< ref "./auditd.md" >}}
 [4]: /note_files/iptables/gentoo_iptables_conf
 [5]: /note_files/iptables/gentoo_ip6tables_conf
 [6]: /note_files/iptables/block_as.sh

@@ -465,6 +465,6 @@ general. These features that I haven't documented here yet are as follows:
   * Breaking out permissions into more explicit roles
   * What can I actually accomplish with this file?
 
-[1]: {{< relref "notes/mysql.md" >}}
-[2]: {{< relref "notes/openstack.md" >}}
-[3]: {{< relref "notes/certificate_authority.md" >}}
+[1]: {{< ref "./mysql.md" >}}
+[2]: {{< ref "./openstack.md" >}}
+[3]: {{< ref "./certificate_authority.md" >}}

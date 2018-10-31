@@ -37,6 +37,6 @@ through a web site hosted on an [Apache][5] installation. Please refer to that
 guide for firewall and configuration on that service.
 
 [1]: http://www.list.org/
-[2]: {{< relref "notes/postfix.md" >}}
-[3]: {{< relref "notes/sendmail.md" >}}
-[5]: {{< relref "notes/httpd.md" >}}
+[2]: {{< ref "./postfix.md" >}}
+[3]: {{< ref "./sendmail.md" >}}
+[5]: {{< ref "./httpd.md" >}}

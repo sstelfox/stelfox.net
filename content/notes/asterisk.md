@@ -779,5 +779,5 @@ speech with asterisk.
 [3]: http://google.com/voice
 [4]: http://www.sipgate.com/
 [5]: http://code.google.com/p/pygooglevoice/
-[6]: {{< relref "notes/fail2ban.md" >}}
-[7]: {{< relref "notes/festival.md" >}}
+[6]: {{< ref "./fail2ban.md" >}}
+[7]: {{< ref "./festival.md" >}}

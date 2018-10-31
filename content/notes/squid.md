@@ -398,4 +398,4 @@ export NO_PROXY=.i.0x378.net
 You can include credentials by prepending the `user:pass@` to the hosts of the
 protocols above.
 
-[1]: {{< relref "notes/squid_guard.md" >}}
+[1]: {{< ref "./squid_guard.md" >}}

@@ -387,4 +387,4 @@ The above shows that I have 75 matches and the IPs (removed) that matched
 against which rule.
 
 [1]: https://bugzilla.redhat.com/show_bug.cgi?id=244275
-[2]: {{< relref "notes/mysql.md" >}}
+[2]: {{< ref "./mysql.md" >}}

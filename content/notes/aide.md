@@ -129,8 +129,8 @@ slightly [modified script][6] to check AIDE integrity remotely using SSH
 (original in the `contrib` directory of the AIDE source). If you use any of
 these you will likely need to adjust paths to match the configuration.
 
-[1]: {{< relref "notes/puppet.md" >}}
-[2]: {{< relref "notes/logrotate.md" >}}
+[1]: {{< ref "./puppet.md" >}}
+[2]: {{< ref "./logrotate.md" >}}
 [3]: /note_files/aide/aide.conf
 [4]: /note_files/aide/aide.cron
 [5]: http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-forensics/aide/files/aide.cron

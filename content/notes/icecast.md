@@ -1112,6 +1112,6 @@ Todo...
 * `http://koorenneef.nl/content/run-your-own-online-radio-station-icecast2-and-ezstream-howto` -> Dead link
 * http://www.linuxcertif.com/man/1/ezstream/
 
-[3]: {{< relref "notes/iptables.md" >}}
-[4]: {{< relref "notes/password_security.md" >}}
+[3]: {{< ref "./iptables.md" >}}
+[4]: {{< ref "./password_security.md" >}}
 [5]: /note_files/icecast/silence.ogg

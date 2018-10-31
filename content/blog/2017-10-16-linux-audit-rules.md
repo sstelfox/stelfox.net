@@ -65,4 +65,4 @@ that it is not.
 If anyone else comes across this, `path=` is not recursive, `dir=` is. Be
 careful when translating your rules.
 
-[1]: {{< relref "notes/auditd.md" >}}
+[1]: {{< ref "../notes/auditd.md" >}}

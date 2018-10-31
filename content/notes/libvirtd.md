@@ -388,4 +388,4 @@ virt-install --connect qemu:///system \
 
 * https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/
 
-[1]: {{< relref "notes/iptables.md" >}}
+[1]: {{< ref "./iptables.md" >}}

@@ -144,4 +144,4 @@ current status of the ntpd service like so:
  gnomon.cc.colum .USNO.           1 u    1   64    1   51.110  -15.607   2.697
 ```
 
-[1]: {{< relref "notes/iptables.md" >}}
+[1]: {{< ref "./iptables.md" >}}

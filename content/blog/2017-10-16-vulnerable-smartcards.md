@@ -57,7 +57,7 @@ affected you can test it using a [convenient online analyzer][9].
 taking the proactive step of disabling all keys that have been found to be weak
 according to the ROCA tests (Well done GitHub!).
 
-[1]: {{< relref "blog/2017-10-16-a-krack-in-the-defenses.md" >}}
+[1]: {{< ref "./2017-10-16-a-krack-in-the-defenses.md" >}}
 [2]: https://crocs.fi.muni.cz/public/papers/rsa_ccs17
 [3]: https://www.commoncriteriaportal.org/files/epfiles/0782V2a_pdf.pdf
 [4]: https://en.wikipedia.org/wiki/Coppersmith%27s_attack

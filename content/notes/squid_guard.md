@@ -929,5 +929,5 @@ want to access directly in my whitelist file.
 </html>
 ```
 
-[1]: {{< relref "notes/squid.md" >}}
+[1]: {{< ref "./squid.md" >}}
 [2]: http://www.shallalist.de/

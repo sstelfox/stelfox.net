@@ -524,14 +524,14 @@ settings can be found in `/etc/security/limits.conf`
 [3]: http://web.nvd.nist.gov/view/ncp/repository
 [4]: http://benchmarks.cisecurity.org/en-us/
 [5]: http://www.sans.org/reading_room/
-[8]: {{< relref "notes/partitioning.md" >}}
-[9]: {{< relref "notes/iptables.md" >}}
-[11]: {{< relref "notes/network.md" >}}
-[12]: {{< relref "notes/rsyslog.md" >}}
-[13]: {{< relref "notes/logrotate.md" >}}
-[14]: {{< relref "notes/logwatch.md" >}}
-[15]: {{< relref "notes/sshd.md" >}}
-[16]: {{< relref "notes/ntpd.md" >}}
-[17]: {{< relref "notes/chronyd.md" >}}
-[20]: {{< relref "notes/mysql.md" >}}
-[25]: {{< relref "notes/certificate_authority.md" >}}
+[8]: {{< ref "./partitioning.md" >}}
+[9]: {{< ref "./iptables.md" >}}
+[11]: {{< ref "./network.md" >}}
+[12]: {{< ref "./rsyslog.md" >}}
+[13]: {{< ref "./logrotate.md" >}}
+[14]: {{< ref "./logwatch.md" >}}
+[15]: {{< ref "./sshd.md" >}}
+[16]: {{< ref "./ntpd.md" >}}
+[17]: {{< ref "./chronyd.md" >}}
+[20]: {{< ref "./mysql.md" >}}
+[25]: {{< ref "./certificate_authority.md" >}}

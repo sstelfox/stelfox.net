@@ -193,5 +193,5 @@ whole. This is especially true for this program as without a HSM there is no
 protection over any of the private keys.
 
 [1]: https://github.com/cloudflare/cfssl
-[2]: {{< relref "notes/yubikey.md" >}}
+[2]: {{< ref "./yubikey.md" >}}
 [3]: https://golang.org/

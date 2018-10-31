@@ -94,5 +94,5 @@ article:
 * http://stackoverflow.com/questions/273262/best-practices-with-stdin-in-ruby
 * http://www.jstorimer.com/blogs/workingwithcode/7766125-writing-ruby-scripts-that-respect-pipelines
 
-[1]: {{< relref "blog/2013-11-19-backing-up-gmail-with-fetchmail.md" >}}
+[1]: {{< ref "./2013-11-19-backing-up-gmail-with-fetchmail.md" >}}
 [2]: https://github.com/mikel/mail

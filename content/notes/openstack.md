@@ -135,9 +135,9 @@ Additional notes:
 * `http://docs.openstack.org/trunk/openstack-object-storage/admin/content/memcached-considerations.html` (Dead link)
 * http://www.cybera.ca/tech-radar/using-memcached-openstack-nova
 
-[1]: {{< relref "notes/mysql.md" >}}
-[2]: {{< relref "notes/qpid.md" >}}
-[3]: {{< relref "notes/chronyd.md" >}}
-[4]: {{< relref "notes/memcached.md" >}}
-[5]: {{< relref "notes/openstack_keystone.md" >}}
-[6]: {{< relref "notes/openstack_glance.md" >}}
+[1]: {{< ref "./mysql.md" >}}
+[2]: {{< ref "./qpid.md" >}}
+[3]: {{< ref "./chronyd.md" >}}
+[4]: {{< ref "./memcached.md" >}}
+[5]: {{< ref "./openstack_keystone.md" >}}
+[6]: {{< ref "./openstack_glance.md" >}}
