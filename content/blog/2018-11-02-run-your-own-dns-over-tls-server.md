@@ -185,6 +185,25 @@ server:
 
 remote-control:
   control-enable: yes
+  control-interface: ::1
+
+  server-key-file: "/etc/unbound/unbound_server.key"
+  server-cert-file: "/etc/unbound/unbound_server.pem"
+
+  control-key-file: "/etc/unbound/unbound_control.key"
+  control-cert-file: "/etc/unbound/unbound_control.pem"
+
+auth-zone:
+  name: "."
+  for-downstream: no
+  for-upstream: yes
+  fallback-enabled: yes
+  master: b.root-servers.net
+  master: c.root-servers.net
+  master: e.root-servers.net
+  master: f.root-servers.net
+  master: g.root-servers.net
+  master: k.root-servers.net
 ```
 
 I always need to stress changes like these should be understood before being
