@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='I recently had cause to use OpenVPN on the standard HTTPS port to protect my traffic. This was done as a compromise with administrators who didn&rsquo;t want to change their egress filtering, but wanted to allow me to continue doing my normal work.
+I already run several webservers, including this one, and didn&rsquo;t want to give up exclusive access to the precious TCP port 443. The recommended way to deal with this is to make use of the port-share option built into OpenVPN.'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Performance Impact of OpenVPN Port Sharing • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='I recently had cause to use OpenVPN on the standard HTTPS port to protect my traffic. This was done as a compromise with administrators who didn&rsquo;t want to change their egress filtering, but wanted to allow me to continue doing my normal work.
+I already run several webservers, including this one, and didn&rsquo;t want to give up exclusive access to the precious TCP port 443. The recommended way to deal with this is to make use of the port-share option built into OpenVPN.'>
+<meta property='og:url' content='https://stelfox.net/blog/2018/11/performance-impact-of-openvpn-port-sharing/'>
+<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='linux'><meta property='article:tag' content='openvpn'><meta property='article:tag' content='performance'><meta property='article:tag' content='security'><meta property='article:published_time' content='2018-11-04T19:38:35-06:00'/><meta property='article:modified_time' content='2018-11-04T19:38:35-06:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.51-DEV" />
+
+  <title>Performance Impact of OpenVPN Port Sharing • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2018/11/performance-impact-of-openvpn-port-sharing/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.4267b3fa.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-32188490-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+
+
+<body class='page type-blog'>
+
+  <div class='site'>
+
+    <a class='screen-reader-text' href='#content'>Skip to Content</a>
+
+    <div class='main'>
+
+      <nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/about/'>About</a>
+      </li><li class='item'>
+        <a href='/blog/'>Blog Posts</a>
+      </li><li class='item'>
+        <a href='/notes/'>Various Notes</a>
+      </li></ul>
+  </div>
+</nav>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Performance Impact of OpenVPN Port Sharing</h1>
+      
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2018-11-04T19:38:35-06:00'>2018, Nov 04</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+2 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class='container entry-content'>
+  <p>I recently had cause to use OpenVPN on the standard HTTPS port to protect my
+traffic. This was done as a compromise with administrators who didn&rsquo;t want to
+change their egress filtering, but wanted to allow me to continue doing my
+normal work.</p>
+
+<p>I already run several webservers, including this one, and didn&rsquo;t want to give
+up exclusive access to the precious TCP port 443. The recommended way to deal
+with this is to make use of the <code>port-share</code> option built into OpenVPN. This
+left me with two choices, run this on an existing server sharing the port with
+existing websites, or setup a dedicated server just for this instance of
+OpenVPN.</p>
+
+<p>I couldn&rsquo;t find any other posts that took a look at how this port sharing
+effects the performance of the HTTPS server so I felt like doing a quick
+analysis for other curious parties.</p>
+
+<p>I setup a fresh Nginx server with Let&rsquo;s Encrypt certificates that mimics my
+production setup and used <code>ab</code> to bench the service for 30 seconds. The mean
+measured rate was 288.70 +/- 14.39 requests per second. Mean request
+fullfillment took 3.47 +/- 0.17 ms.</p>
+
+<p>After enabling <code>port-share</code> on OpenVPN I reran the exact same test. The result
+was 139.76 +/- 67.68 requests per second. Mean measured request fullfillment
+7.44 +/- 4.16 ms.</p>
+
+<p>That is a 51% peak request handling reduction, each request has an additional
+4-8ms of latency, and an almost 40x increase of jitter. That is a massive
+relative impact but the vast majority of the websites I run need won&rsquo;t be
+terribly impacted by that additional latency.</p>
+
+<p>I ultimately ended up setting up a seperate server for OpenVPN as I didn&rsquo;t want
+to mess with known working systems.</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/linux/'>linux</a>, <a class='tag' href='/tags/openvpn/'>openvpn</a>, <a class='tag' href='/tags/performance/'>performance</a>, <a class='tag' href='/tags/security/'>security</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/blog/2018/11/run-your-own-dns-over-tls-server/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>Run Your Own DNS-over-TLS Server</a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p> &copy; 2011-2018 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__public_path__='\/assets\/js\/'</script>
+
+<script src='/assets/js/main.59f76c44.js'></script>
+
+</body>
+
+</html>
+
