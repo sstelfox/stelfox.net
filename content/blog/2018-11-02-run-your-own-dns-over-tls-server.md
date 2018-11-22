@@ -64,9 +64,10 @@ in the config around options that aren't immediately obvious from their names.
 # /etc/unbound/unbound.conf
 
 server:
+  verbosity: 1
+
   interface-automatic: no
   num-threads: 4
-  verbosity: 1
 
   # Disable statistics collection
   statistics-interval: 0
