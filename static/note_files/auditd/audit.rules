@@ -189,6 +189,13 @@
 # Detect an admin accessing other user's files
 -a always,exit -F dir=/home -F uid=0 -F auid>=1000 -F auid!=4294967295 -C auid!=obj_uid -F key=powerAbuse
 
+# This is almost silly, but almost as a rule of thumb attackers run 'whoami'
+# and/or 'id' almost immediately after being able to run commands. These two
+# binaries are used infrequently enough by normal users this generally won't
+# produce a large amount of logs
+-a always,exit -F path=/usr/bin/id -F perm=x -f key=selfIdentification
+-a always,exit -F path=/usr/bin/whoami -F perm=x -f key=selfIdentification
+
 ## Additional Rules That May Be Useful
 
 # Cron jobs are regular and expected, for these logs they are likely going to
@@ -198,7 +205,8 @@
 
 # If you use chrony as your time keeping client. It makes quite a few small
 # changes to the time during its normal operation. To avoid flooding the logs
-# with these message we can exclude chrony time changes:
+# with these message we can exclude chrony time changes. This rule should be
+# inserted before the other time monitoring tools.
 #-a never,exit -F arch=b64 -S adjtimex -F auid=unset -F uid=chrony -F subj_type=chronyd_t
 
 # If you're hosting a public SSH server on the default port or any other
