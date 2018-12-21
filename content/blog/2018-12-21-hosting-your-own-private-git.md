@@ -19,8 +19,8 @@ integrations a private repository can quickly allow your team to keep
 collaborating.
 
 If you're using Linux or Mac OS X, setting up a local repo that you can push to
-is incredibly trivial. You simply create a place for it, initialize it as a git
-repo, then push to it like so:
+is trivial. You simply create a place for it, initialize it as a git repo, then
+push to it like so:
 
 ```
 mkdir -p ~/repos/private_repo.git
