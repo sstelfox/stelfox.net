@@ -31,3 +31,10 @@ spaces. There was a lot of room available in both, but even some individual IPs
 overlapped and renumbering would prove problematic and time consuming.
 Eventually these two VPCs were intended to be merged anyway, but business
 requirements needed a basic level of communication sooner.
+
+The solution I came up with may be useful for others in a pinch; Two layers of
+1:1 NAT were employed allowing each to communicate with what each side seemed
+to believe were unique IPs.
+
+To accomplish this you'll need an EC2 host with a public IP address (an Elastic
+IP is recommended) in each of the VPCs.
