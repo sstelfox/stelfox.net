@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='IPSec is a well known and well understood protocol that is pretty easy to get setup and going&hellip; Most of the time. While setting up an IPSec tunnel to an AWS host I came across a new and unique experience that didn&rsquo;t seem to have an easily searchable solution.
+I had two CentOS 7 EC2 instances, each set up with their own Elastic IP in a default VPC. I installed and configured libreswan with the following config:'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Fighting IPSec on AWS • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='IPSec is a well known and well understood protocol that is pretty easy to get setup and going&hellip; Most of the time. While setting up an IPSec tunnel to an AWS host I came across a new and unique experience that didn&rsquo;t seem to have an easily searchable solution.
+I had two CentOS 7 EC2 instances, each set up with their own Elastic IP in a default VPC. I installed and configured libreswan with the following config:'>
+<meta property='og:url' content='https://stelfox.net/blog/2019/03/fighting-ipsec-on-aws/'>
+<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='ipsec'><meta property='article:tag' content='linux'><meta property='article:tag' content='networking'><meta property='article:published_time' content='2019-03-14T21:26:30-04:00'/><meta property='article:modified_time' content='2019-03-14T21:26:30-04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.50-DEV" />
+
+  <title>Fighting IPSec on AWS • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2019/03/fighting-ipsec-on-aws/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.4a10984a.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-32188490-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-blog'>
+
+  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/about/'>About</a>
+      </li><li class='item'>
+        <a href='/blog/'>Blog Posts</a>
+      </li><li class='item'>
+        <a href='/notes/'>Various Notes</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Fighting IPSec on AWS</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2019-03-14T21:26:30-04:00'>2019, Mar 14</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+2 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class='container entry-content'>
+  <p>IPSec is a well known and well understood protocol that is pretty easy to get
+setup and going&hellip; Most of the time. While setting up an IPSec tunnel to an AWS
+host I came across a new and unique experience that didn&rsquo;t seem to have an
+easily searchable solution.</p>
+
+<p>I had two CentOS 7 EC2 instances, each set up with their own Elastic IP in a
+default VPC. I installed and configured libreswan with the following config:</p>
+
+<pre><code>conn setup
+  protostack=netkey
+
+conn site-tunnel
+  auto=start
+  pfs=yes
+
+  leftid=@left_tunnel_server_name
+  rightid=@right_tunnel_server_name
+  left=%defaultroute
+  right=&lt;remote-ip&gt;
+
+  authby=rsasig
+  leftrsasigkey=&lt;left-key&gt;
+  rightrsasigkey=&lt;right-key&gt;
+</code></pre>
+
+<p>The IPSec link came up without issue but pings were timing out without a
+response. When sniffing the incoming packets, I was appropriately seeing the
+ICMP echo requests coming in encapsulated in the tunnel and being reinjected.
+There was never a response being generated.</p>
+
+<p>The traffic capture was also pretty clear as to why. The encapsulated packet
+had the elastic IP as the destination which the EC2 instance doesn&rsquo;t
+<em>ACTUALLY</em> have and wasn&rsquo;t aware&hellip; So it didn&rsquo;t attempt to respond.</p>
+
+<p>I went down a bit of a rabbit hole attempting to get the instance to recognize
+that address with limited success. Adding the IP to an additional loopback
+interface&hellip; IPTables DNAT rules&hellip; Some of them worked but they were dirty
+hacks that would have been left until something blew up&hellip;</p>
+
+<p>The solution was simple and even improved the overall performance of the
+link. By default libreswan operates in <code>tunnel</code> mode which sends along the
+destination information as well (and can be used for routing network across).
+For the use I almost always use these links for, <code>transport</code> is more
+appropriate and has less protocol overhead.</p>
+
+<p>By adding the follwing line to the connection configuration on both sides the
+problem vanished:</p>
+
+<pre><code>  type=transport
+</code></pre>
+
+<p>With any luck the next person that comes across this issue will find this post
+and their life will be a tad bit easier.</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/ipsec/'>ipsec</a>, <a class='tag' href='/tags/linux/'>linux</a>, <a class='tag' href='/tags/networking/'>networking</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/blog/2018/12/hosting-your-own-private-git-repo/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>Hosting Your Own Private Git Repo</a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__public_path__='\/assets\/js\/'</script>
+
+<script src='/assets/js/main.fae8ed32.js'></script>
+
+</body>
+
+</html>
+
