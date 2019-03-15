@@ -35,7 +35,7 @@ conn site-tunnel
 
 The IPSec link came up without issue but pings were timing out without a
 response. When sniffing the incoming packets, I was appropriately seeing the
-ICMP echo requests coming in encapsulated in the tunnel and being reinjected.
+ICMP echo requests coming in encapsulated in the tunnel and being re-injected.
 There was never a response being generated.
 
 The traffic capture was also pretty clear as to why. The encapsulated packet
@@ -53,7 +53,7 @@ destination information as well (and can be used for routing network across).
 For the use I almost always use these links for, `transport` is more
 appropriate and has less protocol overhead.
 
-By adding the follwing line to the connection configuration on both sides the
+By adding the following line to the connection configuration on both sides the
 problem vanished:
 
 ```
