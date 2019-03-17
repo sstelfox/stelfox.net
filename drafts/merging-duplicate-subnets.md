@@ -36,5 +36,6 @@ The solution I came up with may be useful for others in a pinch; Two layers of
 1:1 NAT were employed allowing each to communicate with what each side seemed
 to believe were unique IPs.
 
-To accomplish this you'll need an EC2 host with a public IP address (an Elastic
-IP is recommended) in each of the VPCs.
+If you'd like to follow along you'll need two VPCs, each with two EC2 instances
+to work as the tunnel hosts and likely two more to be test hosts to make use of
+the tunnels.
