@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Sometimes it becomes important to understand how your cloud provider implements certain networking details. While working through an issue in AWS I needed to understand how they handle public IP addressing. While this issue for me was specific to an Elastic IP all of their public addresses are handled this way and may bite you even without them. The problems specifically crop up when a hosted piece of software does NAT traversal detection and changes it&rsquo;s behavior based on the result.'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='AWS Elastic IP Details • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='Sometimes it becomes important to understand how your cloud provider implements certain networking details. While working through an issue in AWS I needed to understand how they handle public IP addressing. While this issue for me was specific to an Elastic IP all of their public addresses are handled this way and may bite you even without them. The problems specifically crop up when a hosted piece of software does NAT traversal detection and changes it&rsquo;s behavior based on the result.'>
+<meta property='og:url' content='https://stelfox.net/blog/2019/03/aws-elastic-ip-details/'>
+<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='aws'><meta property='article:tag' content='networking'><meta property='article:published_time' content='2019-03-17T16:26:30-05:00'/><meta property='article:modified_time' content='2019-03-17T16:26:30-05:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.51-DEV" />
+
+  <title>AWS Elastic IP Details • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2019/03/aws-elastic-ip-details/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.4a10984a.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-32188490-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-blog'>
+
+  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/about/'>About</a>
+      </li><li class='item'>
+        <a href='/blog/'>Blog Posts</a>
+      </li><li class='item'>
+        <a href='/notes/'>Various Notes</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>AWS Elastic IP Details</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2019-03-17T16:26:30-05:00'>2019, Mar 17</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+3 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class='container entry-content'>
+  <p>Sometimes it becomes important to understand how your cloud provider implements
+certain networking details. While working through an issue in AWS I needed to
+understand how they handle public IP addressing. While this issue for me was
+specific to an Elastic IP all of their public addresses are handled this way
+and may bite you even without them. The problems specifically crop up when a
+hosted piece of software does NAT traversal detection and changes it&rsquo;s behavior
+based on the result.</p>
+
+<p>Amazon attaches public IP address to EC2 instances (and likely other of their
+hosted services) through 1:1 NAT mapping of external to internal addresses. All
+traffic will reach your instance without issue, but your system&rsquo;s native
+networking stack will (by default) not become aware of what that public IP is.</p>
+
+<p>In most cases this isn&rsquo;t an issue, the traffic ends up at your instance and is
+properly changed to the internal address so your system responds without any
+additional configuration work.</p>
+
+<p>The first issue is tunneled traffic. I <a href="/blog/2019/03/fighting-ipsec-on-aws/">experienced this</a> in my last post
+with IPSec. The tunneled traffic is not modified by going through a 1:1 NAT and
+your host will not recognize the external address inside the tunnel, which in
+most cases will result in silently dropped packets (the &ldquo;oh this isn&rsquo;t for me&rdquo;
+syndrome).</p>
+
+<p>There are ways to get your system to respond to tunneled packets with other IP
+addresses such as treating it like a high-availability shared virtual server IP
+address but I have yet to find a clean way to deal with responding to the
+address. IPSec had a way to deal with this built in directly and I&rsquo;d refer you
+back to <a href="/blog/2019/03/fighting-ipsec-on-aws/">my other post</a> to read about that.</p>
+
+<p>Usually sniffing the tunneled traffic is enough to diagnose these issues.
+What is a bit more pernicious, is when a server changes its behavior when it
+detects a NAT in place. This requires deeper understanding of the protocol in
+use and in some cases the specific server implementation. Once again this post
+is ultimately about IPSec (and specifically libreswan).</p>
+
+<p>While you don&rsquo;t have to make any changes to get IPSec working with AWS public
+IPs it will detect the NAT and start encapsulating the traffic. The
+encapsulation will require an additional port being opened on your security
+group firewall but more importantly, it will add variable latency and
+additional processing overhead to each packet. Not everything is sensitive to
+this but you&rsquo;ll be needlessly adding overhead to your network traffic is you
+don&rsquo;t address it. In my case (AWS VPC to AWS VPC) there aren&rsquo;t any meaningful
+NATs in place that require this encapsulation to function appropriately.</p>
+
+<p>If you encounter this and are using libreswan on AWS you only need to add the
+following two lines to your tunnel&rsquo;s config disable this behavior:</p>
+
+<pre><code>encapsulation=no
+nat-keepalive=no
+</code></pre>
+
+<p>I hope this helps someone else diagnose weird behavior when working with public
+IP addresses on AWS.</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/aws/'>aws</a>, <a class='tag' href='/tags/networking/'>networking</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/blog/2019/03/fighting-ipsec-on-aws/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>Fighting IPSec on AWS</a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__public_path__='\/assets\/js\/'</script>
+
+<script src='/assets/js/main.fae8ed32.js'></script>
+
+</body>
+
+</html>
+
