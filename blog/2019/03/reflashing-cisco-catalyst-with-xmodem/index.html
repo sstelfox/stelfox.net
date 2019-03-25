@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang='en'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='One of the Cisco Catalyst 3750 I had to work on recently had it&rsquo;s flash completely wiped. When this happens you can only flash the filesystem using the XMODEM serial console. This is a fairly well documented process on Windows. On Linux most of the documented ways involve switching between multiple utilities and can be tricky. I wanted to documented how I did this and possibly help other in the same situation.'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Reflashing Cisco Catalyst With XMODEM • Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:description' content='One of the Cisco Catalyst 3750 I had to work on recently had it&rsquo;s flash completely wiped. When this happens you can only flash the filesystem using the XMODEM serial console. This is a fairly well documented process on Windows. On Linux most of the documented ways involve switching between multiple utilities and can be tricky. I wanted to documented how I did this and possibly help other in the same situation.'>
+<meta property='og:url' content='https://stelfox.net/blog/2019/03/reflashing-cisco-catalyst-with-xmodem/'>
+<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
+<meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='cisco'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2019-03-24T23:26:30-04:00'/><meta property='article:modified_time' content='2019-03-24T23:26:30-04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.50-DEV" />
+
+  <title>Reflashing Cisco Catalyst With XMODEM • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
+  <link rel='canonical' href='https://stelfox.net/blog/2019/03/reflashing-cisco-catalyst-with-xmodem/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.4a10984a.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-32188490-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-blog'>
+
+  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
+  <div class='container'>
+    
+    <ul><li class='item'>
+        <a href='/'>Home</a>
+      </li><li class='item'>
+        <a href='/about/'>About</a>
+      </li><li class='item'>
+        <a href='/blog/'>Blog Posts</a>
+      </li><li class='item'>
+        <a href='/notes/'>Various Notes</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='en' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Reflashing Cisco Catalyst With XMODEM</h1>
+      
+
+    </div>
+    <div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Posted on </span>
+  <time class='entry-date' datetime='2019-03-24T23:26:30-04:00'>2019, Mar 24</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+5 mins read
+</span>
+
+
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class='container entry-content'>
+  <p>One of the Cisco Catalyst 3750 I had to work on recently had it&rsquo;s flash
+completely wiped. When this happens you can only flash the filesystem using the
+XMODEM serial console. This is a fairly well documented process on Windows. On
+Linux most of the documented ways involve switching between multiple utilities
+and can be tricky. I wanted to documented how I did this and possibly help
+other in the same situation.</p>
+
+<p>I&rsquo;m doing this on Fedora, but the only thing specific to Fedora is installing
+the packages which can be done with the following command (and are pretty
+standard names):</p>
+
+<pre><code>dnf install lrzsz screen -y
+</code></pre>
+
+<p>From an external perspective the switch was rapidly blinking it&rsquo;s <code>SYST</code> light
+with all of the other lights off. I connected up a console cable, the serial
+port showed up as <code>/dev/ttyUSB0</code>. We&rsquo;ll connect to the serial port using screen
+with the following command:</p>
+
+<pre><code>sudo screen /dev/ttyUSB0 9600
+</code></pre>
+
+<p>Power cycling the switch gets you the boot messages that show us the issue:</p>
+
+<pre><code>Using driver version 1 for media type 1
+Base ethernet MAC Address: xx:xx:xx:xx:xx:xx
+Xmodem file system is available.
+The password-recovery mechanism is enabled.
+Initializing Flash...
+mifs[2]: 0 files, 1 directories
+mifs[2]: Total bytes     :    3870720
+mifs[2]: Bytes used      :       1024
+mifs[2]: Bytes available :    3869696
+mifs[2]: mifs fsck took 0 seconds.
+mifs[3]: 0 files, 1 directories
+mifs[3]: Total bytes     :   27998208
+mifs[3]: Bytes used      :       1024
+mifs[3]: Bytes available :   27997184
+mifs[3]: mifs fsck took 1 seconds.
+...done Initializing Flash.
+done.
+Loading &quot;flash:/c3750-ipservicesk9-mz-15.0-2_SE10a.bin&quot;...flash:/c3750-ipservicesk9-mz-15.0-2_SE10a.bin: no such file or directory
+
+Error loading &quot;flash:/c3750-ipservicesk9-mz-15.0-2_SE10a.bin&quot;
+
+Interrupt within 5 seconds to abort boot process.
+Boot process failed...
+
+The system is unable to boot automatically.  The BOOT
+environment variable needs to be set to a bootable
+image.
+
+
+switch:
+</code></pre>
+
+<p>We can confirm this isn&rsquo;t just a badly named file quickly:</p>
+
+<pre><code>switch: dir flash:/
+Directory of flash://
+
+
+27997184 bytes available (1024 bytes used)
+
+switch:
+</code></pre>
+
+<p>Definitely nothing present. At this point we need to use XMODEM to get the
+firmware file. You&rsquo;ll need to use your support contract to get the latest
+firmware for your model of switch. I made sure this file was in my current
+directory (saves some time in a bit). For me this file was named
+<code>c3750-ipservicesk9-mz.150-2.SE10a.bin</code> you&rsquo;ll want to replace this with the
+appropriate filename you pull yourself. Right, carrying on.</p>
+
+<p>XMODEM is a very slow process especially when we use the default speed of 9600
+baud. We can speed this process up by 12x by adjusting the baud rate. You can
+skip this bit though if you&rsquo;re willing to wait several hours for the file to
+transfer.</p>
+
+<p>To speed up the baud rate execute the following command, be aware that your
+terminal is expected to immediately become responsive and this is fine:</p>
+
+<pre><code>switch: set BAUD 115200
+</code></pre>
+
+<p>Kill the screen session by pressing <code>Ctrl-a</code> quickly following by a lone <code>k</code>.
+It will prompt you to confirm exiting the session, do so with <code>y</code> and start a
+new session with the higher baud rate:</p>
+
+<pre><code>sudo screen /dev/ttyUSB0 115200
+</code></pre>
+
+<p>Press return and you&rsquo;ll get back to the switch prompt. This next bit is tricky
+as there is about a ten second timeout between starting the copy command and
+needing to being the transfer. If you don&rsquo;t quite make it I&rsquo;ve got a tip after
+the command below:</p>
+
+<pre><code>switch: copy xmodem:/ flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
+</code></pre>
+
+<p>Quick press <code>Ctrl-a</code> followed by <code>:</code>. In the prompt that shows up type in the
+following:</p>
+
+<pre><code>exec !! sx -b -X c3750-ipservicesk9-mz.150-2.SE10a.bin
+</code></pre>
+
+<p>If you get an error, it reports as cancelled, it times out just try again. This
+time though after pressing <code>Ctrl-a</code> and <code>:</code> you can press your up arrow to
+bring up the last run command. Assuming you typed it in correctly this should
+give you enough time to start the transfer. It will show you the progress of
+the transfer which depending on size will take between twenty and thirty
+minutes (or hours if you didn&rsquo;t update the baud rate).</p>
+
+<p>Site note: One of the benefits of performing the <code>sx</code> command through screen is
+that if anything happens to your terminal the transfer will continue. This was
+particularly important for me at the time as I found myself SSH&rsquo;d into a laptop
+far away from myself over an unstable and shared cell connection running these
+commands.</p>
+
+<p>When it&rsquo;s complete you&rsquo;re going to want to ensure the <code>BOOT</code> variable properly
+matches the filename you just transferred:</p>
+
+<pre><code>set BOOT flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
+</code></pre>
+
+<p>We&rsquo;re going to reset the baud rate back to normal (skip this if you didn&rsquo;t
+update your baud rate) which will cause you to loose the connection again:</p>
+
+<pre><code>unset BAUD
+</code></pre>
+
+<p>Disconnect as we did before and reconnect at the 9600 rate. One final command
+should start the switch and get you back into the good graces of the Cisco CLI:</p>
+
+<pre><code>switch: boot
+</code></pre>
+
+<p>One final tip, if you want to access the boot menu of the switch I had a hell
+of a time trying to figure out how to actually send the break command to
+interrupt the boot menu. None of the recommended combinations of <code>Ctrl</code>, <code>Alt</code>,
+<code>Shift</code>, <code>b</code>, <code>Break</code>, and <code>Scroll Lock</code>. You can instead press the <code>Mode</code>
+button on the front of the switch to emulate this break key.</p>
+
+<p>Cheers friends. Hope this helps another CLI adventurer.</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/cisco/'>cisco</a>, <a class='tag' href='/tags/tips/'>tips</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/blog/2019/03/aws-elastic-ip-details/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Previous</span>
+        <span class='screen-reader-text'>Previous post: </span>AWS Elastic IP Details</a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__public_path__='\/assets\/js\/'</script>
+
+<script src='/assets/js/main.fae8ed32.js'></script>
+
+</body>
+
+</html>
+
