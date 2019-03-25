@@ -62,9 +62,9 @@ additionally install the following software:
 
 If you're not on AWS you'll also want to make sure that NetworkManager and
 firewalld are both ***removed from the system***. They will break the
-configurations you put in place if left to their own devices. If you remove
-NetworkManager remember to enable the network service. For good measure here is
-a minimal DHCP config you can use to configure `eth0` on your system:
+configurations you put in place if left to their own machinations. If you
+remove NetworkManager remember to enable the network service. For good measure
+here is a minimal DHCP config you can use to configure `eth0` on your system:
 
 ```
 # /etc/sysconfig/network-scripts/ifcfg-eth0
