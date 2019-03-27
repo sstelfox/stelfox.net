@@ -331,15 +331,56 @@ You may notice that I'm specifying `10.0.0.0/12` instead of `10.0.0.0/8`. This
 is a limitation I mentioned at the beginning of this article which worked in my
 instance. You can't uniquely map a larger network into a smaller network. If
 your hosts are more scattered this is where you'll need to start duplicating
-rules and using smaller subnet masks for targetted groups of hosts. There will
+rules and using smaller subnet masks for targeted groups of hosts. There will
 be other rules coming up shortly you'll need to update as well.
 
 As part of this our rules won't forward traffic coming from our tunnel hosts
-subnet of `10.255.254.0/30` as it is way outside of `10.0.0.0/12`. We'll need
-to fix this sooner or later 
+subnet of `10.255.254.0/30` as it is way outside of `10.0.0.0/12`. Simply
+allowing this subnet won't allow us to receive the responses to any traffic
+leaving our tunnel hosts for the opposite network as the source address will
+appear local to the VPC. We can reserve two more addresses within the range of
+`172.16.0.0/12` to work as our tunnel endpoints. This isn't strictly necessary
+if you really need the two addresses but they make diagnostics significantly
+simpler.
 
-If you restarted the firewall, ran `tcpdump` on the `eth0` interface of west
-and ping'd a 172.16.0.0/12.
+We can map our two addresses appropriately using the fixed 1:1 NAT mapping in
+the kernel by adding the following rules in the `nat` section of each tunnel
+hosts firewall:
+
+```
+-A PREROUTING -i tun0 -d 172.31.254.1 -j DNAT --to-destination 10.255.254.1
+-A PREROUTING -i tun0 -d 172.31.254.2 -j DNAT --to-destination 10.255.254.2
+
+-A POSTROUTING -o tun0 -d 10.255.254.1 -j SNAT --to-source 172.31.254.1
+-A POSTROUTING -o tun0 -d 10.255.254.2 -j SNAT --to-source 172.31.254.2
+```
+
+Only half of these rules apply to each tunnel host, but it doesn't hurt having
+both sets on both hosts and it keeps us symmetrical. You should be able to ping
+each of the tunnel hosts equivalent `172.31.254.0/30` address at this point.
+
+Right now if a client host added a route pointing at either of the tunnel host
+for the mapped network it would make it out the opposite tunnel host's `eth0`
+interface but it would still have a `10.0.0.0/12` source address and the packet
+would never return to the tunnel host, much less the host on the other network.
+
+This is a bit tricky as we only want to rewrite the source address (requiring a
+`POSTROUTING` rule) but only want it to effect mapped traffic addresses coming
+in from a normal VPC network, and `POSTROUTING` can't match on source
+interface. We want to handle this rewriting before any other changes have
+occurred which requires us to do the source address rewriting happen on the
+source tunnel host.
+
+To handle this we can use a combination of traffic markers and our handy
+`NETMAP` target. On both of the tunnel hosts add the following two rules to the
+`nat` section:
+
+```
+-A PREROUTING -i tun0 -d 172.16.0.0/12 -s 10.0.0.0/12 -j MARK --set-mark 0x01
+-A POSTROUTING -o tun0 -m mark --mark 0x01 -s 10.0.0.0/12 -j NETMAP --to 172.16.0.0/12
+```
+
+
 
 
 
@@ -362,5 +403,80 @@ TODO
 ## Hardening
 
 TODO
+
+## Troubleshooting
+
+If you've run through everything and you're having issues getting traffic
+flowing here are some things that might help diagnose the source of the issue:
+
+* Restart the tunnel host's network
+* Verify the tunnel host's firewalls match the final reference firewall below
+* Restart the tunnel host's firewalls
+* Ensure `libreswan` service is up and running (`/var/log/messages` will have
+  any errors it encounters if the tunnel isn't coming up
+* Verify the GRE tunnel is up by pinging the other end
+* Check the routing table on both tunnel hosts
+* Ensure source and destination hosts are within the `10.0.0.0/12` range
+* Make sure the source / destination checking is disabled on the tunnel host's
+  EC2 instances
+* Check to make sure the VPC routing tables include `172.16.0.0/12` pointing at
+  the tunnel hosts in both networks.
+* Check the relevant security groups to make sure all other traffic is allowed
+  to/from the tunnel hosts in each security group
+
+If all else fails sniff the traffic on the interfaces you expect for the
+packets in each place to make sure they're going where you expect.
+
+TODO: Deeper diagnostics?
+
+## Final Reference Firewall
+
+If you had issues following along with incrementally building up our firewall
+(I'm sorry!) the final firewall you should end up with (comments removed)
+should like the following:
+
+```
+# /etc/sysconfig/iptables
+
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+-A PREROUTING -i tun0 -d 172.31.254.1 -j DNAT --to-destination 10.255.254.1
+-A PREROUTING -i tun0 -d 172.31.254.2 -j DNAT --to-destination 10.255.254.2
+
+-A POSTROUTING -o tun0 -d 10.255.254.1 -j SNAT --to-source 172.31.254.1
+-A POSTROUTING -o tun0 -d 10.255.254.2 -j SNAT --to-source 172.31.254.2
+
+-A PREROUTING -i tun0 -d 172.16.0.0/12 -j NETMAP --to 10.0.0.0/12
+-A PREROUTING -i tun0 -d 172.16.0.0/12 -s 10.0.0.0/12 -j MARK --set-mark 0x01
+-A POSTROUTING -o tun0 -m mark --mark 0x01 -s 10.0.0.0/12 -j NETMAP --to 172.16.0.0/12
+
+COMMIT
+
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+
+-A INPUT -m tcp -p tcp --dport 22 -j ACCEPT
+
+-A INPUT -p esp -j ACCEPT
+-A INPUT -m udp -p udp --sport 500 --dport 500 -j ACCEPT
+
+-A FORWARD -i eth0 -o tun0 -s 10.0.0.0/12 -d 172.16.0.0/12 -j ACCEPT
+-A FORWARD -i tun0 -o eth0 -s 172.16.0.0/12 -d 10.0.0.0/12 -j ACCEPT
+
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+
+COMMIT
+```
 
 [1]: {{< relref "2019-03-17-aws-elastic-ip-details.md" >}}
