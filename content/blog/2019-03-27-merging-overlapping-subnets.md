@@ -54,12 +54,12 @@ If you'd like to follow along you'll need two VPCs, each with two EC2 instances
 to work as the tunnel hosts and likely two more to be test hosts to make use of
 the tunnels.
 
-The part is easy, we'll use CentOS 7 hosts as a base. You'll need to
+This part is easy, we'll use CentOS 7 hosts as a base. You'll need to
 additionally install the following software:
 
 * iptables-services
 * libreswan
-* tcpdump
+* tcpdump (optional but invaluable to diagnose issues)
 
 If you're not on AWS you'll also want to make sure that NetworkManager and
 firewalld are both ***removed from the system***. They will break the
@@ -121,12 +121,12 @@ defined the `nat` table and switched the default action on the `INPUT` and
 anyways so this doesn't actually change the behavior of the firewall.
 
 Defining the `nat` table doesn't change any behavior either, but I'll be
-referencing it later on in the post and you should add the rules between the
-chains and the `COMMIT` message. If you get confused by any of my instructions
-around adding the firewall rules, there is a complete ruleset at the end of the
-post you can reference directly.
+referencing it later on in the post and you should add the rules where
+indicated by the comment. If you get confused by any of my instructions around
+adding the firewall rules, there is a complete ruleset at the end of the post
+you can reference directly.
 
-Make sure the firewall is enabled and running:
+Finally let's make sure the firewall is enabled and running:
 
 ```
 systemctl enable iptables.service
@@ -139,15 +139,15 @@ From this point on it is going to become important to distinguish the two
 networks I'll be bridging. This method is very symmetric (all the firewalls and
 configs should effectively be the same on the two tunnel instances) but there
 are a few places where the remote IP and local IPs need to be referenced. Going
-forward I'm going to refer to the two networks as east and west but these are
-arbitrary labels.
+forward I'm going to refer to the two networks as `east` and `west` but these
+are arbitrary labels.
 
 You'll need to collect the public IP from the AWS console for your tunnel hosts
-in both the east and west. For me I'm going to use `5.5.5.5` for the west IP
-and `7.7.7.7` for the east IP. If you see these in the configs you'll want to
-replace them with the appropriate values for your networks. If you expect this
-to last a long time or will be a business critical tunnel I highly recommend
-using an Elastic IP on each of these hosts.
+in both the `east` and `west`. For me I'm going to use `5.5.5.5` for the `west`
+IP and `7.7.7.7` for the `east` IP. If you see these in the configs you'll want
+to replace them with the appropriate values for your networks. If you expect
+this to last a long time or will be a business critical tunnel I highly
+recommend using an Elastic IP on each of these hosts.
 
 You'll need to setup a dedicated security group for each of the tunnel hosts.
 To avoid bouncing back and forth between these the security groups as we
@@ -166,21 +166,23 @@ in the following table. These are inbound rules only and can be hardened a bit
 
 You'll want to replace `{other public IP}` with the public IP of the tunnel
 host in the opposite network. For example if this is the security group for the
-west tunnel host, you'd be allowing the traffic from `7.7.7.7`.
+`west` tunnel host, you'd be allowing the traffic from `7.7.7.7`.
 
 If you're doing this in another environment you may also need `UDP/4500` from
 the other public IP when NAT traversal is required. AWS EC2 instances are NAT'd
 [but we can work around that][1] and will include that later on.
 
-With the security groups in place, the local firewalls configured make sure
+With the security groups in place, and the local firewalls configured make sure
 each host can ping each other. If they can great! If not, double check all the
-IPs, security group rule, and iptables rules all match what I have here.
+IPs, security group rules, and iptables rules all match what I have documented
+here.
 
 ## The IPSec Tunnel
 
 This tunnel provides strong authentication and encryption for all the traffic
 that will be exchanged between the two networks. We've already installed the
-required packages we just need to configure the various bits.
+required packages we just need to configure the various pieces to get it
+running.
 
 First let's handle the firewall. In the `/etc/sysconfig/iptables` file we
 standardized on earlier we need to add a couple of rules to each tunnel host
@@ -193,21 +195,20 @@ and before the `REJECT` rules:
 #-A INPUT -m udp -p udp --sport 4500 --dport 4500 -j ACCEPT
 ```
 
-This will allow tunneled packets and key exchange through this firewall. If
+This will allow tunneled packets and key exchange through the firewall. If
 you're not on AWS when setting this up you may need to uncomment that third
 rule for NAT traversal packets.
 
 These rules are pretty unrestricted, but we have already narrowed down who will
-actually be able to connect using the security group for these machines. By
-leaving this specification out here our IPTables rules can remain symmetric on
-both hosts.
+be able to connect using the security group for these machines. By leaving a
+more refined specification out of our definition here our IPTables rules can
+remain symmetric on both hosts making automated management through a devops
+tool simpler.
 
 Next up there are some specific sysctl settings that need to be adjusted for
-the tunneled packets to not be rejected by the kernel. I believe these are
-required because after the packet has been authenticated and decrypted it is
-re-injected into the interface that it was original received on which can
-run-afoul of the reverse path filters, but I could be wrong on this (I'd love
-to hear from you if you know better).
+the tunneled packets to not be rejected by the kernel. The reason behind the
+sysctl settings is pretty well [documented on LibreSwan's FAQ][4] if you're
+curious for why they're needed.
 
 You'll want to append the following to `/etc/sysctl.conf` on both tunnel hosts:
 
@@ -241,7 +242,7 @@ include /etc/ipsec.d/*.conf
 ```
 
 IPSec has a couple of ways of handling authentication. The most secure is
-asymmetric encryption using RSA keys which requires each host to have private
+asymmetric encryption using RSA keys which requires each host to have a private
 key and knowledge of the other host's public key. To these keys on each tunnel
 host run the following commands:
 
@@ -256,19 +257,19 @@ but need to get the public keys of each host first so they can verify each
 other.
 
 On our `west` host, which will be our `left` host for the IPSec config retrieve
-the public key with the following two commands:
+the public key with the following two commands. The output will be one very
+long line that begins with `leftrsasigkey=` record this entire output.
 
 ```
 CKAID="$(sudo ipsec showhostkey --list | head -n 1 | awk '{ print $NF }')"
 sudo ipsec showhostkey --left --ckaid ${CKAID} | tail -n 1
 ```
 
-The output will be one very long line that begins with `leftrsasigkey=` record
-this entire output. A bit of an explanation of those two commands. The first
-one extracts the unique key identifier for the first ipsec key present, while
-the second gets the actual public key for that identifier. We'll need to repeat
-the process on our `east` host slightly modified which will be our `right`
-host:
+A bit of an explanation of those two commands. The first one extracts the
+unique key identifier for the first key present (there shouldn't be any
+others), while the second gets the actual public key for that identifier. We'll
+need to repeat the process on our `east` host slightly modified which will be
+our `right` host:
 
 ```
 CKAID="$(sudo ipsec showhostkey --list | head -n 1 | awk '{ print $NF }')"
@@ -296,9 +297,9 @@ conn vpc-link-tunnel
 ```
 
 Be sure to replace the `{west external ip}` with the external IP address of our
-west server and likewise the `{east external ip}` with the external IP address
-of our east server. Be sure to replace the last two lines with the output of
-the two keys we got from our west and east tunnel hosts.
+`west` server and likewise the `{east external ip}` with the external IP
+address of our `east` server. Be sure to replace the last two lines with the
+output of the two keys we got from our `west` and `east` tunnel hosts.
 
 That's it for the IPSec configuration, let's start the daemon up and verify
 that it's working on both tunnel servers:
@@ -325,7 +326,8 @@ If the loaded count is 0, double check the presence and file names as well as
 the global config. If you've properly loaded the config but it isn't coming up
 as active, review the contents of `/var/log/secure` for any IPSec error
 messages. If there is an authentication error, most likely the public keys got
-copied incorrectly. Make sure that both keys exist in both configs.
+copied incorrectly. Make sure that both keys exist in both configs and match
+the outputs from the key extraction commands earlier on.
 
 If there are connection issues there are quite a few other bits that could have
 gone wrong. Review the firewalls, security groups, and IPSec configs to make
@@ -380,6 +382,10 @@ firewalls:
 -A OUTPUT -p gre -j DROP
 ```
 
+These three lines are all that is required to enforce that all of our traffic
+being routed between the two networks will always be encrypted if they have any
+hope of making it.
+
 Restart the firewall so the change can take effect:
 
 ```
@@ -411,7 +417,7 @@ EOF
 
 For completeness I've included `MY_OUTER_IPADDR` and `KEY` commented out as
 they may be useful for other GRE tunnels but not necessary for this one. For
-the west server `{current side external IP}` should be replaced by the west
+the `west` server `{current side external IP}` should be replaced by the `west`
 tunnel server's external IP and `{opposing side external IP}` with the east
 tunnel server's external IP. Reverse the settings on the east tunnel server.
 
@@ -433,7 +439,7 @@ have an output similar to the following:
 
 You're specifically looking for the `UP` and `LOWER_UP` flags. You can double
 check the tunnel is functioning by pinging `10.255.254.1` and `10.255.254.2`
-from the east and west tunnel host respectively.
+from the `east` and `west` tunnel host respectively.
 
 We now have a private encrypted layer 2 tunnel between the two VPC tunnel
 hosts, next up is to get other traffic in the VPC passing across the tunnel.
@@ -457,7 +463,7 @@ We need to ensure each tunnel server routes our mapping network to the other
 one. This should be added / removed based on the status of our GRE tunnel so
 we'll add it as a static route in `/etc/sysconfig/network-scripts/route-tun0`.
 
-For our west tunnel server the contents of the file should be:
+For our `west` tunnel server the contents of the file should be:
 
 ```
 172.16.0.0/12 via 10.255.254.2
@@ -479,8 +485,8 @@ sudo ip -4 route
 
 You should see the new route present in the routing table, but now we have a
 problem. If the firewalls allowed us to forward traffic right now, any traffic
-either tunnel host received with a destination of 172.16.0.0/12 would ping pong
-back and forth across the tunnel until it's TTL expired. This would end up
+either tunnel host received with a destination of `172.16.0.0/12` would ping
+pong back and forth across the tunnel until it's TTL expired. This would end up
 being a nasty traffic amplification issue if we allowed it.
 
 Handling this requires us to rewrite the packet destination received from the
@@ -536,7 +542,8 @@ hosts firewall:
 
 Only half of these rules apply to each tunnel host, but it doesn't hurt having
 both sets on both hosts and it keeps us symmetrical. You should be able to ping
-each of the tunnel hosts equivalent `172.31.254.0/30` address at this point.
+each of the tunnel hosts equivalent `172.31.254.0/30` address at this point (if
+you restart the firewall).
 
 Right now if a client host added a route pointing at either of the tunnel host
 for the mapped network it would make it out the opposite tunnel host's `eth0`
@@ -573,12 +580,12 @@ other hosts need to learn how to send their traffic to the other side...
 
 Hosts inside a VPC will directly send traffic to any other host within it's
 defined network. For networks beyond their VPC subnet (such as our
-172.16.0.0/12) network will send their traffic to their default gateway which
+`172.16.0.0/12`) network will send their traffic to their default gateway which
 is the VPC router. These routers are configurable within the AWS web console by
 going to the `VPC` section, finding the relevant VPC you're using and clicking
 on the link to your `Main Route Table`.
 
-Under the `Routes` subtab on the selected Route Table, click on the `Edit
+Under the `Routes` sub-tab on the selected Route Table, click on the `Edit
 routes` button. Add `172.16.0.0/12` as a destination to the routes. Click on
 the `Target` drop down, choose `Instance` and find your VPC tunnel host in the
 list. Click `Save Routes` and allow a minute or two for the route to update.
@@ -592,7 +599,7 @@ There is one final thing generally stopping our traffic from flowing freely. By
 default every single EC2 instance drops any traffic that reaches an EC2
 instance with a source or destination address that doesn't match the IP that
 has been assigned to that instance. This is generally a very useful protection,
-but we'll be shooting out packets with source addresses in the 172.16.0.0/12
+but we'll be shooting out packets with source addresses in the `172.16.0.0/12`
 range so need to disable this protection on each of tunnel hosts.
 
 Find your tunnel host in the list of your EC2 instances. Right click on the
@@ -613,9 +620,9 @@ two octets are left unchanged.
 
 Some examples of what this translation looks like:
 
-* 10.0.0.2 becomes 172.16.0.2
-* 10.4.1.80 becomes 172.20.1.80
-* 10.30.56.100 becomes 172.46.56.100 and is unroutable
+* `10.0.0.2` becomes `172.16.0.2`
+* `10.4.1.80` becomes `172.20.1.80`
+* `10.30.56.100` becomes `172.46.56.100` and is unroutable
 
 No matter which side of the tunnel you're on the other side's addresses will
 always be mapped this way.
@@ -624,10 +631,10 @@ always be mapped this way.
 
 We have some fairly wide open firewall rules for passing traffic on the
 tunneling hosts themselves and in the security groups on them. These can
-certainly be tighted further and I'll even cover some situations in a bit about
-when you might want to do that. As it stands right now the internal private IP
-addresses of the tunnel host's and clients haven't matter beyond whether or not
-they were in the routable range.
+certainly be tightened further and I'll even cover some situations in a bit
+about when you might want to do that. As it stands right now the internal
+private IP addresses of the tunnel host's and clients haven't matter beyond
+whether or not they were in the routable range.
 
 If you use ephemeral containers or autoscaling IP addresses are going to change
 frequently. To harden the rules on the tunnel hosts themselves would need to be
@@ -642,7 +649,7 @@ entire other VPC access to that service port. In a lot of cases that will be
 enough and additional network controls such as inter-service authentication
 will be sufficient to mitigating additional issues.
 
-If you do need finer granulatity you can start by limiting traffic on the VPC
+If you do need finer granularity you can start by limiting traffic on the VPC
 tunnel's inbound security group from the opposite side. If that is not fine
 grained enough you can eventually resort to firewall rules in the `FORWARD`
 chain itself.
@@ -756,3 +763,4 @@ COMMIT
 [1]: {{< relref "2019-03-17-aws-elastic-ip-details.md" >}}
 [2]: mailto:sam@stelfox.net
 [3]: https://github.com/sstelfox/stelfox.net/issues/new
+[4]: https://libreswan.org/wiki/FAQ
