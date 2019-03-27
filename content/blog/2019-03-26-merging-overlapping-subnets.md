@@ -250,6 +250,12 @@ NOTE: East - 7.7.7.7 - 10.255.254.2 - 172.31.254.2
 
 TODO
 
+
+
+
+
+
+
 ## The GRE Tunnel
 
 The GRE overlay isn't required for this to work and does add 24 bytes of
@@ -275,10 +281,23 @@ If these benefits don't justify the 24 byte per packet overhead to you, you're
 welcome to skip this section but you'll need to figure out the changes to the
 firewall rules and routing tables on your own later on.
 
+
+
+
+
+
+
+
 NOTE: West - 5.5.5.5 - 10.255.254.1 - 172.31.254.1
 NOTE: East - 7.7.7.7 - 10.255.254.2 - 172.31.254.2
 
 TODO
+
+
+
+
+
+
 
 ```
 sudo service network restart
@@ -454,7 +473,13 @@ packets in each place to make sure they're going where you expect.
 
 TODO: Deeper diagnostics?
 
-## Final Reference Firewall
+## Conclusion
+
+This post was quite a wild ride for me to write up. If you've made it this far
+I'm incredibly flattered. I hope this helps other people out there and I would
+especially love to hear from anyone that makes use of this information.
+
+## Reference Firewall
 
 If you had issues following along with incrementally building up our firewall
 (I'm sorry!) the final firewall you should end up with (comments removed)
