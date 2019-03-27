@@ -11,7 +11,7 @@ title: Merging Overlapping Subnets
 Once upon a time there was a single AWS account. In this AWS account was
 several regions but a single VPC. To make sure expansions into other regions
 was possible this VPC chose to use the largest private subnet which just so
-happened to also be the default (10.0.0.0/8).
+happened to also be the default (`10.0.0.0/8`).
 
 Another AWS account enter the picture and while they were single they came to
 the same conclusion and followed the best practices and defaults to their
@@ -38,12 +38,12 @@ we can map into without potentially wrecking havoc on access to random sites on
 the internet.
 
 I was lucky in that all the hosts that need to talk to each other had addresses
-on both sides below 10.7.0.x. This is more addresses than are available to the
-192.168.0.0/16 private address space but covers only about 25% of the
-172.16.0.0/16 space. If you're in a worse situation where hosts are properly
-scattered all over the 10.0.0.0/8 address you can still use this technique but
-it will require a bit more manual configuration mapping allocating either /24
-to route or in the most extreme case individual host addresses.
+on both sides below `10.7.0.x`. This is more addresses than are available to
+the `192.168.0.0/16` private address space but covers only about 25% of the
+`172.16.0.0/16` space. If you're in a worse situation where hosts are properly
+scattered all over the `10.0.0.0/8` address you can still use this technique
+but it will require a bit more manual configuration mapping allocating either
+/24 to route or in the most extreme case individual host addresses.
 
 Before we go any further, I definitely consider this technique to be a band-aid
 for the issue. For longer term connectivity some form of migration should be
