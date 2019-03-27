@@ -220,6 +220,31 @@ net.ipv4.conf.eth0.rp_filter = 0
 
 With that in place run `sysctl -p` to apply the new settings.
 
+We'll quickly do a global IPSec config to make sure we're on the same page.
+Replace the contents of `/etc/ipsec.conf` on each tunnel host with the
+following:
+
+```
+# /etc/ipsec.conf
+
+config setup
+  protostack=netkey
+
+include /etc/ipsec.d/*.conf
+```
+
+IPSec has a couple of ways of handling authentication. The most secure is
+asymmetric encryption using RSA keys which requires each host to have private
+key material and knowledge of the other host's public key. To generate this
+material on each tunnel run the following commands:
+
+```
+sudo ipsec initnss
+sudo ipsec newhostkey --output /etc/ipsec.secrets
+```
+
+
+
 NOTE: West - 5.5.5.5 - 10.255.254.1 - 172.31.254.1
 NOTE: East - 7.7.7.7 - 10.255.254.2 - 172.31.254.2
 
