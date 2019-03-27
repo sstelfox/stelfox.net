@@ -1,6 +1,5 @@
 ---
 date: 2019-03-27 19:11:30-04:00
-draft: true
 tags:
 - aws
 - ipsec
