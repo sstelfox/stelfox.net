@@ -23,8 +23,7 @@ of time...
 But in this story there is a darkness looming. Communication was not everything
 either of them desired. There were secret things that couldn't be said in
 public forums of the internet but they both desperately wanted share. There was
-a solution... But it involved dark magics. Things that would work but *should not
-be done*. Sometimes there isn't a choice.
+a solution... But it involved dark magicks.
 
 I found myself in a situation where two AWS VPCs needed to communicate
 sensitive data between the two, but they were using overlapping IP address
@@ -127,6 +126,13 @@ chains and the `COMMIT` message. If you get confused by any of my instructions
 around adding the firewall rules, there is a complete ruleset at the end of the
 post you can reference directly.
 
+Make sure the firewall is enabled and running:
+
+```
+systemctl enable iptables.service
+systemctl start iptables.service
+```
+
 ## Basic Connectivity
 
 From this point on it is going to become important to distinguish the two
@@ -218,7 +224,8 @@ net.ipv4.conf.all.rp_filter = 0
 net.ipv4.conf.eth0.rp_filter = 0
 ```
 
-With that in place run `sysctl -p` to apply the new settings.
+With that in place run `sysctl -p` to apply the new settings and `systemctl
+restart iptables.service` to update the firewall rules.
 
 We'll quickly do a global IPSec config to make sure we're on the same page.
 Replace the contents of `/etc/ipsec.conf` on each tunnel host with the
@@ -235,8 +242,8 @@ include /etc/ipsec.d/*.conf
 
 IPSec has a couple of ways of handling authentication. The most secure is
 asymmetric encryption using RSA keys which requires each host to have private
-key material and knowledge of the other host's public key. To generate this
-material on each tunnel run the following commands:
+key and knowledge of the other host's public key. To these keys on each tunnel
+host run the following commands:
 
 ```
 sudo ipsec initnss
@@ -253,6 +260,10 @@ TODO
 
 
 
+```
+systemctl enable ipsec.service
+systemctl start ipsec.service
+```
 
 
 
@@ -300,7 +311,7 @@ TODO
 
 
 ```
-sudo service network restart
+sudo systemctl restart network.service
 ```
 
 ## Tunnel Host Routing and Rewriting
