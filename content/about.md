@@ -24,9 +24,11 @@ run maker faires.
 
 I work on software in some of my free time, usually trying to learn something
 new or recreating a service that I use regularly (either because it has a flaw
-that is annoying me, or to better understand the problem space). There are few
-things I enjoy as much as holding another world in my hands, washed in the
-smell of the tannins mingling with a good cup of coffee in the morning.
+that is annoying me, or to better understand the problem space).
+
+I deeply enjoy reading; There are few things I enjoy as much as holding another
+world in my hands, washed in the smell of the tannins mingling with a good cup
+of coffee in the morning.
 
 For a more detailed professional breakdown, I encourage you to peruse my
 [LinkedIn][3] profile. If you'd like to get a hold of me to ask about a
