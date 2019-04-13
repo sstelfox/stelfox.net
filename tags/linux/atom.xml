@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>linux - Sam Stelfox&#39;s Thoughts &amp; Notes</title>
@@ -7,6 +6,14 @@
     <language>en-US</language>
     <managingEditor>Sam Stelfox</managingEditor>
     <webMaster>Sam Stelfox</webMaster><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" /><item>
+      <title>Fixing Dark Input Boxes in Firefox</title>
+      <link>https://stelfox.net/blog/2019/04/fixing-dark-input-boxes-in-firefox/</link>
+      <pubDate>Sat, 13 Apr 2019 11:53:22 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2019/04/fixing-dark-input-boxes-in-firefox/</guid>
+      <description>I recently began trying out Cinnamon as my desktop environment and I&amp;rsquo;ve been thoroughly enjoying it. The only issue I was having was occasionally a page&amp;rsquo;s form input fields would have a dark background while still having dark text making it impossible to read, and very difficult to write.
+It wasn&amp;rsquo;t happening everywhere, and I couldn&amp;rsquo;t track down what about a website would cause the issue. Most prominently for me was when this showed up in AWS&amp;rsquo;s interface.</description>
+    </item><item>
       <title>Merging Overlapping Subnets</title>
       <link>https://stelfox.net/blog/2019/03/merging-overlapping-subnets/</link>
       <pubDate>Wed, 27 Mar 2019 19:11:30 -0400</pubDate>
@@ -85,5 +92,414 @@ While verifying link level information about bypassing my Google Fiber Network B
       <guid>https://stelfox.net/blog/2018/03/converting-openldap-schemas-to-ldif/</guid>
       <description>I&amp;rsquo;ve been writing software to work against an OpenLDAP instance, with a highly customized schema. The operators of the existing system only had the schema files and searching around found several elaborate ways to convert the files which I tried with mixed success. After doing the research to figure this out, it became clear I could probably have used slapcat and have dumped the active schema directly to LDIF.
 As a sample of how I converted these, I&amp;rsquo;ll use the rfc2307bis.</description>
+    </item><item>
+      <title>Including LDIF Files in OpenLDAP</title>
+      <link>https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/</link>
+      <pubDate>Sat, 24 Mar 2018 20:20:22 -0600</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/</guid>
+      <description>While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
+I was specifically trying to bootstrap an OpenLDAP server, with it&amp;rsquo;s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior.</description>
+    </item><item>
+      <title>Cross-Compiling Gentoo for Xilinx Boards</title>
+      <link>https://stelfox.net/blog/2017/12/cross-compiling-gentoo-for-xilinx-boards/</link>
+      <pubDate>Mon, 18 Dec 2017 17:49:22 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/12/cross-compiling-gentoo-for-xilinx-boards/</guid>
+      <description>Note: If you&amp;rsquo;ve come here looking to build a root filesystem for 32 bit ARM devices I suspect everything but the build tuple will be the same. The issues that need to be worked around largely packaging and profile issues that should all be the same.
+I got a hold of a Zynq 7100 development board, and while I&amp;rsquo;ve played with some embedded ARM microcontrollers such as the STM32F3 series and more basic RISC style microcontrollers like Atmel&amp;rsquo;s SAMD10 and Atmega lines, I&amp;rsquo;ve never played with FPGA development before so I considered this an interesting learning opportunity.</description>
+    </item><item>
+      <title>Converting CPIO Files to Tarballs</title>
+      <link>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</link>
+      <pubDate>Mon, 04 Dec 2017 22:46:56 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/12/converting-cpio-files-to-tarballs/</guid>
+      <description>I needed to convert a directory full of CPIO files to tar balls. This quick script did the trick for me but didn&amp;rsquo;t preserve the user / group. Running it as root will preserve the ownership information but that wasn&amp;rsquo;t important for my immediate use case.
+#!/bin/bash SRC_DIR=$(pwd) for i in *.cpio; do CPIO_TMP_DIR=&amp;quot;$(mktemp -d /tmp/cpioconv.XXXX)&amp;quot; (cd ${CPIO_TMP_DIR} &amp;amp;&amp;amp; cpio -idm &amp;lt; &amp;quot;${SRC_DIR}/${i}&amp;quot; &amp;amp;&amp;amp; tar -cf ${SRC_DIR}/${i%%.cpio}.tar .) rm -rf ${CPIO_TMP_DIR} done  </description>
+    </item><item>
+      <title>XFCE Failed to Connect to Socket</title>
+      <link>https://stelfox.net/blog/2017/11/xfce-failed-to-connect-to-socket/</link>
+      <pubDate>Mon, 27 Nov 2017 17:23:09 +0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/11/xfce-failed-to-connect-to-socket/</guid>
+      <description>While trying to build up a minimal Gentoo graphical environment I kept running into an error every time I logged into XFCE from lightdm (I didn&amp;rsquo;t try starting up XFCE any other way). There are tons of blog posts that relate to systemd, ubuntu, or crouton but none related to Gentoo.
+The first error message that pops up is:
+Unable to contact settings server Failed to connect to socket /tmp/dbus-xxxxxxxxx: Connection refused  Once you click through there was a second error message, but I believe it was due to the previous error and not actually an issue:</description>
+    </item><item>
+      <title>Unable to Enter LUKS Passphrase</title>
+      <link>https://stelfox.net/blog/2017/11/unable-to-enter-luks-passphrase/</link>
+      <pubDate>Sun, 26 Nov 2017 21:49:51 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/11/unable-to-enter-luks-passphrase/</guid>
+      <description>While setting up a gentoo install with a full disk encryption, I continuously got to a point where the passphrase would show up on boot but I was unable to enter the passphrase. The behavior of the keyboard was also odd, it would toggle it&amp;rsquo;s numlock light every couple of button presses.
+Once again this was an issue that was hard to search for, and most other people asking it seemed to only get snarky non-answers which seem so prevalent in forums.</description>
+    </item><item>
+      <title>Downgrading Glibc in Gentoo</title>
+      <link>https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/</link>
+      <pubDate>Wed, 15 Nov 2017 12:27:45 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/</guid>
+      <description>While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
+ * Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2.</description>
+    </item><item>
+      <title>File in Wrong Format</title>
+      <link>https://stelfox.net/blog/2017/11/file-in-wrong-format/</link>
+      <pubDate>Mon, 13 Nov 2017 13:44:00 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/11/file-in-wrong-format/</guid>
+      <description>I have been recently attempting to cross compile a custom Gentoo profile targetting a Xilinx board as I found their distribution to be unmanageable (PetaLinux as hacked together sub-distro of Yocto). I had several issues with the default profile (embedded) conflicting with other critical packages. I&amp;rsquo;ll do a detailed post later on for building that entire root filesystem.
+I came across one issue which didn&amp;rsquo;t seem to have a well-documented solution.</description>
+    </item><item>
+      <title>Gentoo Fstab Failure</title>
+      <link>https://stelfox.net/blog/2017/11/gentoo-fstab-failure/</link>
+      <pubDate>Wed, 01 Nov 2017 11:12:34 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/11/gentoo-fstab-failure/</guid>
+      <description>I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&amp;rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
+I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only.</description>
+    </item><item>
+      <title>Cron Daemon</title>
+      <link>https://stelfox.net/notes/cron-daemon/</link>
+      <pubDate>Thu, 26 Oct 2017 17:35:42 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/cron-daemon/</guid>
+      <description>Cron is a pretty standard utility and there isn&amp;rsquo;t much to it. I generally use cronie as my cron daemon with the associated anacron. Cron runs tasks periodically, and anacron helps ensure that a missed task will get run if it was off or powercycled when it would have otherwise run.
+File Format The config format differs slightly between crontabs, regular cron files, and anacron entries. At the beginning of all the files environment variables can be set using key=value pairs to control the behavior of cron and anacron followed by entries for that file one to a line.</description>
+    </item><item>
+      <title>Syslog-NG</title>
+      <link>https://stelfox.net/notes/syslog-ng/</link>
+      <pubDate>Wed, 25 Oct 2017 01:56:02 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/syslog-ng/</guid>
+      <description>Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced processing and log centralization while maintaining a sane configuration file syntax. I&amp;rsquo;ve recently come to vastly prefer it over my previous long term favorite Rsyslog.
+It&amp;rsquo;s important to note that when modifying the logs statements, they will be processed in order. This means log statements that finalize a message will never make it past that statement. This finalization behavior can be a great tool for optimizing the processing path of logs but can result in unexpected behavior if you don&amp;rsquo;t pay attention when re-ordering the statements.</description>
+    </item><item>
+      <title>Investigating LVM From Dracut</title>
+      <link>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</link>
+      <pubDate>Tue, 24 Oct 2017 11:45:07 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/investigating-lvm-from-dracut/</guid>
+      <description>In my my last post, I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
+Turns out that the commands I&amp;rsquo;m normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the lvm tool like so:
+$ lvm vgscan $ lvm pvscan $ lvm lvscan For my particular issue, it led me to notice that block device of my root filesystem was missing due to a missing kernel driver&amp;hellip;</description>
+    </item><item>
+      <title>Visible Yet Missing Logical Volumes</title>
+      <link>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</link>
+      <pubDate>Tue, 24 Oct 2017 10:58:12 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/visible-yet-missing-logical-volumes/</guid>
+      <description>While working on an automated install script for an embedded board, I hit an issue with the logical volumes never showing up in /dev/mapper, and in turn unable to be mounted. This left me in the dracut emergency shell (after about three minutes), with little to go on beyond the following error:
+[187.508531] dracut Warning: Could not boot. [187.510560] dracut Warning: /dev/disk/by-uuid/5681-902D does not exist [187.512534] dracut Warning: /dev/mapper/system-root does not exit [187.</description>
+    </item><item>
+      <title>Mutt</title>
+      <link>https://stelfox.net/notes/mutt/</link>
+      <pubDate>Fri, 20 Oct 2017 12:51:00 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/mutt/</guid>
+      <description>I keep a copy of my mutt config both here on the site as well as in my public dotfiles. Eventually I&amp;rsquo;ll likely document my reasoning, preferences and the tradeoffs made in that config (and change my mind on most in the process).
+Vim Since I use vim as my editor I also added the following line to my vim configuration file to autowrap my lines at 72 characters, but only for mutt composed messsages.</description>
+    </item><item>
+      <title>IPTables</title>
+      <link>https://stelfox.net/notes/iptables/</link>
+      <pubDate>Fri, 20 Oct 2017 12:14:02 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/iptables/</guid>
+      <description>iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&amp;rsquo;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
+It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&amp;rsquo;ll find your rule set stored in different locations but the following list are where I&amp;rsquo;ve seen them before:</description>
+    </item><item>
+      <title>Linux Audit Rule Paths</title>
+      <link>https://stelfox.net/blog/2017/10/linux-audit-rule-paths/</link>
+      <pubDate>Mon, 16 Oct 2017 23:20:20 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/linux-audit-rule-paths/</guid>
+      <description>I encountered a little bit of confusion while rewriting my auditd rules which some Googling did not help me solve.
+When monitoring a file or directory there are two forms the rules can take. They are effectively equivalent in their functionality. The simpler form is the following format:
+-w /etc/shadow -p wa -w /boot -p wa -w /etc/dont_readme -p r  These three rules are all behaving slightly differently. The first will audit any writes or attribute changes to the shadow file.</description>
+    </item><item>
+      <title>Time</title>
+      <link>https://stelfox.net/notes/time/</link>
+      <pubDate>Fri, 13 Oct 2017 12:30:23 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/time/</guid>
+      <description>This is a very basic operation on a Linux system, but I have to interact with it so rarely since I run either chronyd or ntpd on all of machines. Occasionally, I find a device that needs a helping hand.
+On a device with a known good time (or approximate enough):
+date +%s This will get you the current unix timestamp. On the target system needing updating as root (replacing &amp;lt;unix timestamp&amp;gt; with the results from the last command):</description>
+    </item><item>
+      <title>The Case of an Empty Executable</title>
+      <link>https://stelfox.net/blog/2017/10/the-case-of-an-empty-executable/</link>
+      <pubDate>Thu, 12 Oct 2017 23:09:01 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2017/10/the-case-of-an-empty-executable/</guid>
+      <description>I recently came across a short article written about a decade ago. It was a curious thing already as it was hosted in a user&amp;rsquo;s home directory off a web server with the standard &amp;lsquo;~&amp;rsquo; showing up in the URL. The important part that caught my eye was this:
+ The &amp;ldquo;true&amp;rdquo; program does nothing; it merely exits with a zero exit status. This can be done with an empty file that&amp;rsquo;s marked executable, and that&amp;rsquo;s what it was in the earliest unix system libraries.</description>
+    </item><item>
+      <title>Auditd</title>
+      <link>https://stelfox.net/notes/auditd/</link>
+      <pubDate>Thu, 12 Oct 2017 15:33:21 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/auditd/</guid>
+      <description>Auditd collects any configured syscall execution with critical security metadata associated with the event. This can help enrich other security tools such as AIDE to determine what user and process are responsible for the change.
+For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&amp;rsquo;s audit subsystem, may trigger a kernel panic.</description>
+    </item><item>
+      <title>AIDE</title>
+      <link>https://stelfox.net/notes/aide/</link>
+      <pubDate>Wed, 11 Oct 2017 02:19:45 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/aide/</guid>
+      <description>AIDE (Advanced Intrusion Detection Environment) is a file and directory integrity checker that compares the current hashes, permissions, and attributes of files directories against a known database built from the system.
+This can be run periodically to detect manipulation of critical system files, though a motivated attacker with an appropriate level of permissions could modify this database or disable the check as long as the system is able to write to it.</description>
+    </item><item>
+      <title>Yubikey</title>
+      <link>https://stelfox.net/notes/yubikey/</link>
+      <pubDate>Tue, 10 Oct 2017 00:28:32 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/yubikey/</guid>
+      <description>NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
+NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like:
+https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh  The API can then return a token that for accessing additional functionality.
+Resetting This will wipe all keys, user, and admin pins on the card.</description>
+    </item><item>
+      <title>GPG Process Notes</title>
+      <link>https://stelfox.net/notes/gpg-process-notes/</link>
+      <pubDate>Mon, 09 Oct 2017 23:35:34 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/gpg-process-notes/</guid>
+      <description>I followed the TAILS setup guide to get a secure offline environment running to perform this generation task. The steps I took are documented in the tails document.
+Initial Key Creation For simplicity I wanted to clear out the GnuPG configuration that starts out in place. Makes things a lot nicer later on.
+rm -rf ~/.gnupg/*  I pulled in the .gnupg/gpg.conf from my dotfiles by hand.
+And begin the key generation process</description>
+    </item><item>
+      <title>Disk Errors</title>
+      <link>https://stelfox.net/notes/disk-errors/</link>
+      <pubDate>Mon, 09 Oct 2017 23:05:43 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/disk-errors/</guid>
+      <description>This is a weird file&amp;hellip; But while installing gentoo on a disk I started getting a weird error when printing the current partitions on the drive:
+Warning: The driver descriptor says the physical block size is 2048 bytes, but Linux says it is 512 bytes.  The only thing I&amp;rsquo;ve been able to find anywhere about this is &amp;ldquo;a low-level device tool (like dd) wrote blocks at the wrong size directly onto the device&amp;rdquo;.</description>
+    </item><item>
+      <title>GRE Tunnel</title>
+      <link>https://stelfox.net/notes/gre-tunnel/</link>
+      <pubDate>Mon, 09 Oct 2017 22:14:23 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/gre-tunnel/</guid>
+      <description>GRE encapsulates all layer 2 traffic, but does so through an unencrypted tunnel. Sensitive traffic should exclusively go through a lower level encrypted tunnel like IPSec.
+Firewall The following iptables need to be enabled to allow the GRE traffic to and from the system. This should be restricted to / from IP addresses as well.
+-A INPUT -p 47 -j ACCEPT -A OUTPUT -p 47 -j ACCEPT  Manual Setup I&amp;rsquo;ve seen several setups on the internet that make some&amp;hellip; Odd choices.</description>
+    </item><item>
+      <title>Amanda</title>
+      <link>https://stelfox.net/notes/amanda/</link>
+      <pubDate>Mon, 09 Oct 2017 14:50:23 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/amanda/</guid>
+      <description>Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open source computer archiving tool that is able to back up data residing on multiple computers on a network.
+I am not a huge fan of having xinetd or perl on my system and this is reliant on both, however, there does not currently seem to be any reasonable open source alternatives that support managing a tape library.</description>
+    </item><item>
+      <title>Better Practices With Sudo</title>
+      <link>https://stelfox.net/blog/2016/02/better-practices-with-sudo/</link>
+      <pubDate>Fri, 26 Feb 2016 17:45:22 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2016/02/better-practices-with-sudo/</guid>
+      <description>&lt;p&gt;I work with a lot of different linux machines from embedded devices, to cloud
+servers and open stack hosts. For many of them I&amp;rsquo;m either the sole
+administrator or one of three or less with administrative access. Where there
+are multiple administrative users, we all are generally working as backups to
+each other. We use sudo whenever we need to execute a task with privileges on
+any of these machines with no direct root login permitted remotely.&lt;/p&gt;
+
+&lt;p&gt;I must confess I have established two habits over time that are against best
+practices with regard to sudo; Using it to execute a root shell only, and not
+restricting which commands can be run with sudo.&lt;/p&gt;</description>
+    </item><item>
+      <title>Unbuffered Pipe Filters</title>
+      <link>https://stelfox.net/blog/2015/02/unbuffered-pipe-filters/</link>
+      <pubDate>Mon, 23 Feb 2015 12:49:13 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2015/02/unbuffered-pipe-filters/</guid>
+      <description>I need to filter a live log stream for only relevant events and quickly hit an issue that I wasn&amp;rsquo;t expecting. The grep in my pipe chain was waiting until it received all the output from the prior command before it began to attempt to filter it.
+Reading through the grep man page I came across the --line-buffered flag which provides exactly what I needed. I wasn&amp;rsquo;t using the tail command but it serves really well in this situation to demonstrate the use:</description>
+    </item><item>
+      <title>Dependency Prelink Issues</title>
+      <link>https://stelfox.net/blog/2014/08/dependency-prelink-issues/</link>
+      <pubDate>Tue, 12 Aug 2014 16:16:14 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/08/dependency-prelink-issues/</guid>
+      <description>While running an aide check on one of my servers after updating it, I started seeing a large number of very concerning warning messages:
+/usr/sbin/prelink: /bin/mailx: at least one of file&#39;s dependencies has changed since prelinking Error on exit of prelink child process /usr/sbin/prelink: /bin/rpm: at least one of file&#39;s dependencies has changed since prelinking Error on exit of prelink child process /usr/sbin/prelink: /sbin/readahead: at least one of file&#39;s dependencies has changed since prelinking Error on exit of prelink child process /usr/sbin/prelink: /lib64/libkrb5.</description>
+    </item><item>
+      <title>Fast Hex to Decimal in Bash</title>
+      <link>https://stelfox.net/blog/2014/08/fast-hex-to-decimal-in-bash/</link>
+      <pubDate>Fri, 01 Aug 2014 19:50:24 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/08/fast-hex-to-decimal-in-bash/</guid>
+      <description>I needed too turn some hexadecimal values into decimal in a bash script and found a real easy way too do it. The following is a very short bash script demonstrating how too turn the hexadecimal string &amp;ldquo;deadbeefcafe&amp;rdquo; into it&amp;rsquo;s equivalent decimal value of &amp;ldquo;244837814094590&amp;rdquo;.
+#!/bin/bash  INPUT=&amp;#34;deadbeefcafe&amp;#34; OUTPUT=$((0x${INPUT})) echo $OUTPUT</description>
+    </item><item>
+      <title>Using OpenWRT&#39;s Dnsmasq as a TFTP Server</title>
+      <link>https://stelfox.net/blog/2014/07/using-openwrts-dnsmasq-as-a-tftp-server/</link>
+      <pubDate>Tue, 01 Jul 2014 21:26:45 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/07/using-openwrts-dnsmasq-as-a-tftp-server/</guid>
+      <description>I recently reflashed my primary router to a newer version of OpenWRT and attempted to follow my own directions written in an earlier blog post to add PXE booting to my local network using the dnsmasq service built in. After following my advice I found that the dnsmasq service wasn&amp;rsquo;t starting.
+Looking into the logread output I finally saw that this was due too a permission issue. Combining this with the output of ps too identify the user that dnsmasq was running on I was able to both modify my instructions and use OpenWRT&amp;rsquo;s own configuration system to perform the configuration instead of modifying the dnsmasq configuration.</description>
+    </item><item>
+      <title>Modifying the Hosts File in a Docker Container</title>
+      <link>https://stelfox.net/blog/2014/06/modifying-the-hosts-file-in-a-docker-container/</link>
+      <pubDate>Tue, 03 Jun 2014 11:43:59 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/06/modifying-the-hosts-file-in-a-docker-container/</guid>
+      <description>Before I describe the issue that I encountered, let me be very clear. This hack is potentially dangerous and should absolutely only be done in development environments. This won&amp;rsquo;t affect your host system, only the docker container so the most damage you&amp;rsquo;ll do is prevent hostname and possibly user/group lookups within the container itself.
+Alright with that out of the way, I was actively working on a codebase that uses subdomains as part of the identifier.</description>
+    </item><item>
+      <title>Chain Loading Kernels</title>
+      <link>https://stelfox.net/blog/2014/05/chain-loading-kernels/</link>
+      <pubDate>Fri, 23 May 2014 11:39:16 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/05/chain-loading-kernels/</guid>
+      <description>I&amp;rsquo;ve found several places where I needed to be able to update my kernels but for one reason or another can&amp;rsquo;t update the kernel that gets booted initially. A couple of these situations were:
+ Running Custom or Updated Kernels on DigitalOcean (this is one of their biggest failings IMHO) Allowing updating of kernels on embedded linux devices that require their kernel flashed into NVRAM. Running an embedded system that used an active/backup partition scheme for updating.</description>
+    </item><item>
+      <title>Disabling Gnome&#39;s Keyring in Fedora 19</title>
+      <link>https://stelfox.net/blog/2014/04/disabling-gnomes-keyring-in-fedora-19/</link>
+      <pubDate>Mon, 14 Apr 2014 10:19:23 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/04/disabling-gnomes-keyring-in-fedora-19/</guid>
+      <description>An update too Fedora a while ago started causing some unexpected behavior with my dotfiles. Specifically the way I was handling my SSH agent. My SSH keys when added to my agent automatically expire after a couple of hours.
+After the update, when that expiration came I started receiving errors in my shell that looked similar to the following (Since I fixed it I am not able to get the exact working again):</description>
+    </item><item>
+      <title>One-Liner SSL Certificate Generation</title>
+      <link>https://stelfox.net/blog/2014/03/one-liner-ssl-certificate-generation/</link>
+      <pubDate>Fri, 28 Mar 2014 14:52:51 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/03/one-liner-ssl-certificate-generation/</guid>
+      <description>I regularly find myself in need of generating a quick SSL key and certificate pair. I&amp;rsquo;ve been using a one-liner for a while to generate these certificates. No annoying user prompts just a quick fast certificate pair.
+echo -e &amp;#34;XX\n\n \n \n\n$(hostname)\n\n&amp;#34; | openssl req -new -x509 -newkey \  rsa:2048 -keyout service.key -nodes -days 90 -out service.crt &amp;amp;&amp;gt; /dev/null The cert uses the hostname of whatever machine you generated it on.</description>
+    </item><item>
+      <title>Preventing Tmux Lockups</title>
+      <link>https://stelfox.net/blog/2014/03/preventing-tmux-lockups/</link>
+      <pubDate>Fri, 28 Mar 2014 12:56:12 -0400</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/03/preventing-tmux-lockups/</guid>
+      <description>Anyone that has used SSH, Tmux or Screen for a while will have inevitably dumped excessive output to their terminal. Depending on the size of the output you may have experienced the dreaded lockup. That horrible realization seconds after you hit the command where signals just stop working and you just have to sit there and wait for your terminal to catch up.
+There is a piece of remote connection software called Mosh that I&amp;rsquo;ve been told handles this pretty well, but I don&amp;rsquo;t yet trust its security model and it doesn&amp;rsquo;t prevent the same thing from happening locally.</description>
+    </item><item>
+      <title>Creating Crypt Style SHA512 Passwords With Ruby</title>
+      <link>https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/</link>
+      <pubDate>Mon, 17 Feb 2014 15:28:27 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/</guid>
+      <description>I needed to generate crypt-style SHA512 passwords in ruby for an /etc/shadow file. After a bunch of Googling and messing around with the OpenSSL library I finally found a very simple built-in way to handle this.
+require &amp;#39;securerandom&amp;#39; &amp;#39;password&amp;#39;.crypt(&amp;#39;$6$&amp;#39; + SecureRandom.random_number(36 ** 8).to_s(36)) You&amp;rsquo;ll get a string that looks like:
+$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.  If you don&amp;rsquo;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&amp;rsquo;t recommended.</description>
+    </item><item>
+      <title>Setting Linux System Timezone</title>
+      <link>https://stelfox.net/blog/2014/02/setting-linux-system-timezone/</link>
+      <pubDate>Sat, 01 Feb 2014 13:50:46 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/02/setting-linux-system-timezone/</guid>
+      <description>I change the timezone on the linux systems so rarely that I almost always have to look it up. I&amp;rsquo;m writing it up here for my own personal reference. With any luck it&amp;rsquo;ll also help others.
+The system timezone is controlled by the /etc/localtime file and is generally symlinked to locale files stored in /usr/share/zoneinfo. Generally I like to keep my systems on UTC as I my machines are in several timezones and it makes all the logs have consistent times.</description>
+    </item><item>
+      <title>Starting Puppet Master on Fedora 19</title>
+      <link>https://stelfox.net/blog/2014/01/starting-puppetmaster-on-fedora-19/</link>
+      <pubDate>Sat, 18 Jan 2014 22:47:37 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2014/01/starting-puppetmaster-on-fedora-19/</guid>
+      <description>I was trying to get puppet running out of the box on Fedora 19 and found a bug exists in their systemd service file. After installing puppet and puppet-server, whenever I tried to start the server with the following command:
+systemctl start puppetmaster.service It would hang for a long time and the following error message would show up in the log:
+Jan 19 03:42:18 puppet-01 puppet-master[1166]: Starting Puppet master version 3.</description>
+    </item><item>
+      <title>Playing With the Linux Bluetooth Stack</title>
+      <link>https://stelfox.net/blog/2013/12/playing-with-the-linux-bluetooth-stack/</link>
+      <pubDate>Tue, 24 Dec 2013 14:53:27 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/12/playing-with-the-linux-bluetooth-stack/</guid>
+      <description>List all available bluetooth interfaces:
+hciconfig -a If you get an error like the following:
+Operation not possible due to RF-kill  You&amp;rsquo;ll need to unblock access to the resource using rfkill. You can unblock all blocked devices like so:
+rfkill unblock all Before doing any iBeacon stuff you should disable scanning:
+hciconfig hci0 noscanhcitool -i hci0 cmd 0x08 0x0008 1E 02 01 1A 1A FF 4C 00 02 15 [ 92 77 83 0A B2 EB 49 0F A1 DD 7F E3 8C 49 2E DE ] [ 00 00 ] [ 00 00 ] C5 00 hcitool -i hci0 leadv LE set advertise enable on hci1 returned status 12  </description>
+    </item><item>
+      <title>Using Dnsmasq as a Standalone TFTP Server</title>
+      <link>https://stelfox.net/blog/2013/12/using-dnsmasq-as-a-standalone-tftp-server/</link>
+      <pubDate>Thu, 12 Dec 2013 18:29:46 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/12/using-dnsmasq-as-a-standalone-tftp-server/</guid>
+      <description>If you&amp;rsquo;ve come across this blog post with the intention of setting up TFTP on an modern version of OpenWRT I have a more recent blog post detailing how too configure your system.
+I found myself in need of a TFTP server but wanted to avoid having all of the xinet.d packages and services on my system (even if they were disabled). While looking for alternatives I found out that dnsmasq has a built-in read-only TFTP server.</description>
+    </item><item>
+      <title>Configuring PXE Booting on OpenWRT</title>
+      <link>https://stelfox.net/blog/2013/12/configuring-pxe-booting-on-openwrt/</link>
+      <pubDate>Wed, 11 Dec 2013 08:40:44 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/12/configuring-pxe-booting-on-openwrt/</guid>
+      <description>I needed to support PXE booting on my home network. I use OpenWRT as my main router and DHCP server and it took me a bit of searching how to configure the BOOTP next server to redirect local clients to my Arch TFTP/NFS server for booting, so I&amp;rsquo;m placing the configuration here to help others who might be looking to do the same thing.
+It&amp;rsquo;s worth noting that this isn&amp;rsquo;t a guide on setting up PXE booting completely on an OpenWRT, you&amp;rsquo;ll need another system that is running a configured TFTP server.</description>
+    </item><item>
+      <title>Running Emails Through Ruby</title>
+      <link>https://stelfox.net/blog/2013/12/running-emails-through-ruby/</link>
+      <pubDate>Sun, 08 Dec 2013 09:32:05 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/12/running-emails-through-ruby/</guid>
+      <description>Following up on my earlier post where I covered how to backup your Gmail account using fetchmail and procmail; I wanted to cover how I was additionally processing received mail through ruby.
+This was part of a larger project where I was doing statistical analysis on my email while evaluating various data stores. To get the emails into the various data stores, I used the ruby script to parse, process and store the emails as they came in.</description>
+    </item><item>
+      <title>Fail Fast in Bash Scripts</title>
+      <link>https://stelfox.net/blog/2013/11/fail-fast-in-bash-scripts/</link>
+      <pubDate>Tue, 26 Nov 2013 15:19:40 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/11/fail-fast-in-bash-scripts/</guid>
+      <description>I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash  function error_handler() { echo &amp;#34;Error occurred in script at line: ${1}.</description>
+    </item><item>
+      <title>Using VIM as Your Password Manager</title>
+      <link>https://stelfox.net/blog/2013/11/using-vim-as-your-password-manager/</link>
+      <pubDate>Mon, 25 Nov 2013 15:10:46 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/11/using-vim-as-your-password-manager/</guid>
+      <description>There are all kinds of password managers out there. Everything from web services that are quite solid and respectable, to native desktop apps.
+A lot of these are simply too heavy for me, involve installing software on a computer to access in addition to sharing the file around, or required you to remember multiple account details before you could get access to any individual password.
+Due too the various complexities and lack of matching use cases a couple years ago I set out to develop my own open-source version of PassPack.</description>
+    </item><item>
+      <title>Backing up Gmail with fetchmail</title>
+      <link>https://stelfox.net/blog/2013/11/backing-up-gmail-with-fetchmail/</link>
+      <pubDate>Tue, 19 Nov 2013 09:55:40 -0500</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2013/11/backing-up-gmail-with-fetchmail/</guid>
+      <description>This morning I found myself in need of a large set of emails to test a particular set of code. Ideally these emails would be broken out into easily digestible pieces, and it was strictly for my own personal testing so I wasn&amp;rsquo;t concerned with using my own live data for this test (There will probably be another post on this project later on).
+Having used fetchmail with good results in the past I decided it was a good idea to take this opportunity to also backup my Gmail account into the common Maildir format (which essentially breaks out emails into individual files meeting my requirements).</description>
+    </item><item>
+      <title>Linux N Issues &amp; KDE Multi-Monitor Woes</title>
+      <link>https://stelfox.net/blog/2011/02/linux-n-issues-kde-multi-monitor-woes/</link>
+      <pubDate>Fri, 25 Feb 2011 14:37:39 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2011/02/linux-n-issues-kde-multi-monitor-woes/</guid>
+      <description>So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE spin mind you) on my ThinkPad. I&amp;rsquo;m pleasantly surprised with hows it&amp;rsquo;s working everything seems to be working out the box very stably. I used it without issue for a solid month and a half without a single issue.
+Earlier this week I started having issues with my wireless card on some networks, but not at all of them.</description>
+    </item><item>
+      <title>Image Crawler Meets rm -f *</title>
+      <link>https://stelfox.net/blog/2009/11/image-crawler-meets-rm-f/</link>
+      <pubDate>Wed, 04 Nov 2009 21:36:45 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/blog/2009/11/image-crawler-meets-rm-f/</guid>
+      <description>I wrote a simple web crawler that archived any images it found from a site with a large number of backgrounds. I wanted to have rolling backgrounds that almost never repeated.
+I let my crawler go and stopped it after a 24 hour period. I ran ls on the directory the images were being saved in to see the results and my ssh session locked up&amp;hellip; Or so I thought. I hit Ctrl-C and nothing happened&amp;hellip; So I closed my window and opened a new one.</description>
+    </item><item>
+      <title>Data Recovery</title>
+      <link>https://stelfox.net/notes/data-recovery/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/data-recovery/</guid>
+      <description>Recovering Data from Swap Sometimes useful bits of information can be recovered from swap. Whether it&amp;rsquo;s encryption keys, documents that were being worked on or anything else that might&amp;rsquo;ve ended up in RAM. To search through the swap for interesting bits (and depending on the size this might take a while) you can execute the following command as root or sudo to do it:
+[root@localhost ~]# strings `/bin/swapon -s | tail -1 | awk &#39;{print $1}&#39;` | less  The command above uses the swapon utility to list all of the swap devices in use; look at the last line of the output (most people only have one swap device); extract only the path to the device node.</description>
+    </item><item>
+      <title>Tails Setup Notes</title>
+      <link>https://stelfox.net/notes/tails-setup-notes/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>Sam Stelfox</author>
+      <guid>https://stelfox.net/notes/tails-setup-notes/</guid>
+      <description>This is relevant for TAILS version 2.5 and basically follows their install guide.
+I needed 2 USB sticks each at least 4Gb in size, and a spare laptop to take these notes on and read the instructions.
+I downloaded a copy of the Tails GPG key from several machines located on wildly disparate internet connections like so:
+curl -s https://tails.boum.org/tails-signing.key -o tails-signing-local.key for i in ircp io proc; do ssh $i &amp;#39;curl -s https://tails.</description>
     </item></channel>
 </rss>
