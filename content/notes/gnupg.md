@@ -212,6 +212,21 @@ a five minute timeout the risk is acceptable and can make lots of fast changes
 inside a git repository managable. The pin will be required again regardless of
 time if the card is removed and readded.
 
+NOTE: There seems to be a better option. Using the `yubikey-manager` package in
+Fedora (present in at least Fedora 29) we can enforce the requirement of
+touching the pad whenever one of the keys is used. Enter pin once for the
+timeout windows then touch for every action. This has the benefit of being a
+much easier workflow while preventing an attacker from using the key without a
+physical presence. This can be done with the following commands:
+
+```
+ykman openpgp touch sig on
+ykman openpgp touch aut on
+ykman openpgp touch enc on
+```
+
+The above requires having a YubiKey 4 or later.
+
 Exit out and open up the gpg --edit-key view again. We need to add the subkeys.
 First we need to switch to the private key view:
 
