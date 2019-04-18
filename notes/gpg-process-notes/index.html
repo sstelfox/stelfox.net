@@ -100,7 +100,7 @@ if (!doNotTrack) {
   <polyline points="12 6 12 12 15 15"/>
   
 </svg>
-14 mins read
+15 mins read
 </span>
 
 
@@ -301,6 +301,20 @@ come from you.</p>
 a five minute timeout the risk is acceptable and can make lots of fast changes
 inside a git repository managable. The pin will be required again regardless of
 time if the card is removed and readded.</p>
+
+<p>NOTE: There seems to be a better option. Using the <code>yubikey-manager</code> package in
+Fedora (present in at least Fedora 29) we can enforce the requirement of
+touching the pad whenever one of the keys is used. Enter pin once for the
+timeout windows then touch for every action. This has the benefit of being a
+much easier workflow while preventing an attacker from using the key without a
+physical presence. This can be done with the following commands:</p>
+
+<pre><code>ykman openpgp touch sig on
+ykman openpgp touch aut on
+ykman openpgp touch enc on
+</code></pre>
+
+<p>The above requires having a YubiKey 4 or later.</p>
 
 <p>Exit out and open up the gpg &ndash;edit-key view again. We need to add the subkeys.
 First we need to switch to the private key view:</p>
