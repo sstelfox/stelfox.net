@@ -72,7 +72,37 @@ switch: dir flash:/
 Directory of flash://
 
 
-27997184 bytes available (1024 bytes used)
+32513024 bytes available (1024 bytes used)
+
+switch:
+```
+
+If you you get the following error:
+
+```
+switch: dir flash:
+unable to stat flash:/: invalid argument
+```
+
+The flash hardware hasn't been enabled yet. We need to initialize it with the
+`flash_init` command which will allow us access to the flash again:
+
+```
+switch: flash_init
+Initializing Flash...
+flashfs[0]: 0 files, 1 directories
+flashfs[0]: 0 orphaned files, 0 orphaned directories
+flashfs[0]: Total bytes: 32514048
+flashfs[0]: Bytes used: 1024
+flashfs[0]: Bytes available: 32513024
+flashfs[0]: flashfs fsck took 6 seconds.
+...done Initializing Flash.
+
+switch: dir flash:/
+Directory of flash://
+
+
+32513024 bytes available (1024 bytes used)
 
 switch:
 ```
