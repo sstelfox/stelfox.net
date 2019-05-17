@@ -28,3 +28,8 @@ A more in depth discussion of it: http://www.linux-mag.com/id/2998/
 
 Look into the linux utility 'usbguard' and see if it's worth anything, do a
 review and/or tech notes on it.
+
+## Page Profiling Based on DNS Prefetch Fingerprints
+
+Can I fingerprint what page on a site a device was looking at based on the
+prefetched DNS requests chrome performs?
