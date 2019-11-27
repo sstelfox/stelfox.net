@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Recommended / Best Practices  /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot  Creating an LVM partition Create a Physical Partition  Open the drive in fdisk, create a new primary partition Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM Write the partition table  Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)  Volume Group Creation This point needs a bit of thinking before doing.'>
+Recommended / Best Practices  /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot  Creating an LVM partition Create a Physical Partition  Open the drive in fdisk, create a new primary partition Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM Write the partition table  Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created) Volume Group Creation This point needs a bit of thinking before doing.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Partitioning • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Recommended / Best Practices  /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot  Creating an LVM partition Create a Physical Partition  Open the drive in fdisk, create a new primary partition Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM Write the partition table  Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)  Volume Group Creation This point needs a bit of thinking before doing.'>
+Recommended / Best Practices  /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot  Creating an LVM partition Create a Physical Partition  Open the drive in fdisk, create a new primary partition Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM Write the partition table  Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created) Volume Group Creation This point needs a bit of thinking before doing.'>
 <meta property='og:url' content='https://stelfox.net/notes/partitioning/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Partitioning • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/partitioning/'>
@@ -110,14 +110,10 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
-<h2 id="recommended-best-practices">Recommended / Best Practices</h2>
-
+until I get around to updating it.</strong></em></p>
+<h2 id="recommended--best-practices">Recommended / Best Practices</h2>
 <ul>
 <li>/boot 200Mb</li>
 <li>swap 1.5x times the amount of RAM</li>
@@ -129,47 +125,30 @@ until I get around to updating it.</em></strong></p>
 <li>/var/log/audit</li>
 <li>Encrypt all partitions except /boot</li>
 </ul>
-
 <h2 id="creating-an-lvm-partition">Creating an LVM partition</h2>
-
 <h3 id="create-a-physical-partition">Create a Physical Partition</h3>
-
 <ul>
 <li>Open the drive in fdisk, create a new primary partition</li>
 <li>Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM</li>
 <li>Write the partition table</li>
 </ul>
-
 <h3 id="create-physical-lvm-volume">Create Physical LVM Volume</h3>
-
 <pre><code>pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)
-</code></pre>
-
-<h3 id="volume-group-creation">Volume Group Creation</h3>
-
+</code></pre><h3 id="volume-group-creation">Volume Group Creation</h3>
 <p>This point needs a bit of thinking before doing. There is a limit on the number
 of physical extents that can be accessed. This in turn limits the size of the
 volume group. This limit is 65,536 extents.</p>
-
 <p>The default size is 4MB/extent. This by default leads to a limit of 256GB per
 volume group. 8MB/extent gets you 512GB. The maximum size I see needing is
 32MB/extent for a size of 2TB. The following example uses an extent size of
 16MB and assumes the partition is <code>/dev/sdc1</code>.</p>
-
 <pre><code>vgcreate -s 16M vg_test /dev/sdc1
-</code></pre>
-
-<h3 id="logical-volume-creation">Logical Volume Creation</h3>
-
+</code></pre><h3 id="logical-volume-creation">Logical Volume Creation</h3>
 <p>The following creates a 1GB logical volume group, there does not seem to be a
 way to create a logical volume with all the remaining space in the volume
 group.</p>
-
 <pre><code>lvcreate -L 1G -n lv_test vg_test
-</code></pre>
-
-<h2 id="securing-partitions">Securing Partitions</h2>
-
+</code></pre><h2 id="securing-partitions">Securing Partitions</h2>
 <ul>
 <li>Add <code>nodev</code> to all non-root local ext{2,3,4} partitions in <code>/etc/fstab</code></li>
 <li>Add <code>nosuid</code> and <code>noexec</code> to <code>/tmp</code> partition</li>
@@ -180,16 +159,13 @@ partitions</li>
 <li>Dynamically <a href="https://stelfox.net/notes/swap/">encrypt the swap partition</a> (not for any machine that will be
 hibernated)</li>
 </ul>
-
 <h2 id="encrypting-additional-partitions">Encrypting Additional Partitions</h2>
-
 <pre><code>cryptsetup luksFormat -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test
 cryptsetup luksOpen -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test \
   cryptTest
 mkfs.ext4 /dev/mapper/cryptTest
 cryptsetup luksClose /dev/mapper/cryptTest
 </code></pre>
-
 </div>
 
   
@@ -232,7 +208,7 @@ cryptsetup luksClose /dev/mapper/cryptTest
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

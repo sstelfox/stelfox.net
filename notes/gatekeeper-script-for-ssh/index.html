@@ -2,20 +2,20 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='If you&rsquo;ve already implemented the SSH keys for authentication and have a password on your key then you&rsquo;ve already achieved multi-factor authentication to a certain degree.
-The gatekeeper script is something that I haven&rsquo;t come across on any other systems that other people administer. Perhaps it&rsquo;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
-A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&rsquo;t secure, asking the user random questions after authentication couldn&rsquo;t hurt security.'>
+<meta name='description' content='If you&#39;ve already implemented the SSH keys for authentication and have a password on your key then you&#39;ve already achieved multi-factor authentication to a certain degree.
+The gatekeeper script is something that I haven&#39;t come across on any other systems that other people administer. Perhaps it&#39;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
+A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&#39;t secure, asking the user random questions after authentication couldn&#39;t hurt security.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Gatekeeper Script for SSH • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='If you&rsquo;ve already implemented the SSH keys for authentication and have a password on your key then you&rsquo;ve already achieved multi-factor authentication to a certain degree.
-The gatekeeper script is something that I haven&rsquo;t come across on any other systems that other people administer. Perhaps it&rsquo;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
-A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&rsquo;t secure, asking the user random questions after authentication couldn&rsquo;t hurt security.'>
+<meta property='og:description' content='If you&#39;ve already implemented the SSH keys for authentication and have a password on your key then you&#39;ve already achieved multi-factor authentication to a certain degree.
+The gatekeeper script is something that I haven&#39;t come across on any other systems that other people administer. Perhaps it&#39;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
+A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&#39;t secure, asking the user random questions after authentication couldn&#39;t hurt security.'>
 <meta property='og:url' content='https://stelfox.net/notes/gatekeeper-script-for-ssh/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Gatekeeper Script for SSH • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/gatekeeper-script-for-ssh/'>
@@ -112,23 +112,20 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>If you&rsquo;ve already implemented the SSH keys for authentication and have a
-password on your key then you&rsquo;ve already achieved multi-factor authentication
+  <p>If you've already implemented the SSH keys for authentication and have a
+password on your key then you've already achieved multi-factor authentication
 to a certain degree.</p>
-
-<p>The gatekeeper script is something that I haven&rsquo;t come across on any other
-systems that other people administer. Perhaps it&rsquo;s too much trouble for them
+<p>The gatekeeper script is something that I haven't come across on any other
+systems that other people administer. Perhaps it's too much trouble for them
 without much gain. I had the idea for this while watching a James Bond movie.</p>
-
 <p>A Russian systems engineer put riddles on one of his machines that you had to
-go through in order to access the system, while this alone isn&rsquo;t secure, asking
-the user random questions after authentication couldn&rsquo;t hurt security. I highly
+go through in order to access the system, while this alone isn't secure, asking
+the user random questions after authentication couldn't hurt security. I highly
 recommend using some logic that changes periodically, but the client can
 remotely deduce.</p>
-
 <p>First we need to make a script to handle the additional authentication. Please
 note that the following script is just an example, most of the security is in
-place but you&rsquo;ll want to implement your own logic for the questions and
+place but you'll want to implement your own logic for the questions and
 answers.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e">#!/bin/sh
 </span><span style="color:#75715e"></span><span style="color:#75715e"># gatekeeper.sh - Post-login access question script</span>
@@ -136,7 +133,7 @@ answers.</p>
 <span style="color:#75715e"># In the event that a user tries to get crafty and Ctrl-C out of the script</span>
 <span style="color:#75715e"># we&#39;ll just kill the connection</span>
 trap jail INT
-jail<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+jail<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   kill -9 $PPID
   exit <span style="color:#ae81ff">0</span>
 <span style="color:#f92672">}</span>
@@ -167,7 +164,7 @@ jail<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
       $SHELL -l
       exit <span style="color:#ae81ff">0</span>
     <span style="color:#66d9ef">else</span>
-      logger <span style="color:#e6db74">&#34;Gatekeeper: </span>$USER<span style="color:#e6db74"> login failed from </span>$SSH_CLIENT<span style="color:#e6db74">&#34;</span>
+      logger <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Gatekeeper: </span>$USER<span style="color:#e6db74"> login failed from </span>$SSH_CLIENT<span style="color:#e6db74">&#34;</span>
       kill -9 $PPID
       exit <span style="color:#ae81ff">0</span>
     <span style="color:#66d9ef">fi</span>
@@ -185,18 +182,15 @@ jail<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 <span style="color:#75715e"># kill the session. This will prevent SCP and SFTP unless they are configured</span>
 <span style="color:#75715e"># to bypass the script.</span>
 kill -9 $PPID
-exit <span style="color:#ae81ff">0</span></code></pre></div>
-<p>Put this script in <code>/etc/ssh/gatekeeper.sh</code> and change it&rsquo;s permissions to 755
+exit <span style="color:#ae81ff">0</span>
+</code></pre></div><p>Put this script in <code>/etc/ssh/gatekeeper.sh</code> and change it's permissions to 755
 with the owner being root. To make the SSH server pass off control to the
-Gatekeeper script once it&rsquo;s done authenticating a user, we&rsquo;ll use the
-&lsquo;ForceCommand&rsquo; command in SSHd&rsquo;s config file (<code>/etc/ssh/sshd_config</code>). Add the
+Gatekeeper script once it's done authenticating a user, we'll use the
+&lsquo;ForceCommand&rsquo; command in SSHd's config file (<code>/etc/ssh/sshd_config</code>). Add the
 following line to the end of the config and restart the SSH daemon.</p>
-
 <pre><code>ForceCommand /etc/ssh/gatekeeper.sh
-</code></pre>
-
-<p>Assuming everything went according to plan, when you SSH into the remote server
-once your done authenticating it&rsquo;ll ask for the token. Putting in &lsquo;muffins&rsquo;
+</code></pre><p>Assuming everything went according to plan, when you SSH into the remote server
+once your done authenticating it'll ask for the token. Putting in &lsquo;muffins&rsquo;
 should get you to your shell, while anything else will kill the connection.</p>
 
 </div>
@@ -212,7 +206,7 @@ should get you to your shell, while anything else will kill the connection.</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/grub/'>
+      <a href='/notes/gpio/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -220,10 +214,10 @@ should get you to your shell, while anything else will kill the connection.</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Grub</a>
+        <span class='screen-reader-text'>Previous post: </span>GPIO</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/gpsd/'>
-        <span class='screen-reader-text'>Next post: </span>GPSd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/festival/'>
+        <span class='screen-reader-text'>Next post: </span>Festival<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -241,7 +235,7 @@ should get you to your shell, while anything else will kill the connection.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

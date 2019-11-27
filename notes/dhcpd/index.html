@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT  Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be.'>
+Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='DHCPd • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT  Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be.'>
+Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be.'>
 <meta property='og:url' content='https://stelfox.net/notes/dhcpd/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>DHCPd • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/dhcpd/'>
@@ -110,22 +110,14 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="firewall-adjustments">Firewall Adjustments</h2>
-
 <pre><code># Accept DHCP requests
 -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
-<h3 id="etc-dhcp-dhcpd-conf">/etc/dhcp/dhcpd.conf</h3>
-
+</code></pre><h2 id="configuration">Configuration</h2>
+<h3 id="etcdhcpdhcpdconf">/etc/dhcp/dhcpd.conf</h3>
 <pre><code># Default lease time information
 min-lease-time 300;
 max-lease-time 86400;
@@ -199,19 +191,14 @@ subnet 10.13.37.128 netmask 255.255.255.192 {
 
 # Include my known clients configurations
 include &quot;/etc/dhcp/known-hosts.conf&quot;;
-</code></pre>
-
-<h3 id="etc-dhcp-known-clients-conf">/etc/dhcp/known-clients.conf</h3>
-
+</code></pre><h3 id="etcdhcpknownclientsconf">/etc/dhcp/known-clients.conf</h3>
 <p>This file needs to be created by hand. Initially it is empty, clients should be
 added as needed.</p>
-
 <pre><code>host caerleon {
     hardware ethernet 00:25:22:0d:6d:66;
     fixed-address 10.13.37.140;
 }
 </code></pre>
-
 </div>
 
   
@@ -225,7 +212,7 @@ added as needed.</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/data-recovery/'>
+      <a href='/notes/duplicity/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -233,10 +220,10 @@ added as needed.</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Data Recovery</a>
+        <span class='screen-reader-text'>Previous post: </span>Duplicity</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/chronyd/'>
-        <span class='screen-reader-text'>Next post: </span>Chronyd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/data-recovery/'>
+        <span class='screen-reader-text'>Next post: </span>Data Recovery<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -254,7 +241,7 @@ added as needed.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -2,20 +2,20 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='While working on a replacement webserver, I encountered some odd behavior which took a bit to track down to CloudFlare. This isn&rsquo;t a bug or an issue with CloudFlare, it was just unexpected.
+<meta name='description' content='While working on a replacement webserver, I encountered some odd behavior which took a bit to track down to CloudFlare. This isn&#39;t a bug or an issue with CloudFlare, it was just unexpected.
 The server was configured to respond to www.example.tld as well as example.tld, to both encrypted and unencrypted connections. Any requests to the www. domain get redirected to https://example.tld. The config was roughly:
 server { listen 80; listen [::]:80; listen 443 ssl http2; listen [::]:443 ssl http2; server_name www.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Weird CloudFlare Behavior • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='While working on a replacement webserver, I encountered some odd behavior which took a bit to track down to CloudFlare. This isn&rsquo;t a bug or an issue with CloudFlare, it was just unexpected.
+<meta property='og:description' content='While working on a replacement webserver, I encountered some odd behavior which took a bit to track down to CloudFlare. This isn&#39;t a bug or an issue with CloudFlare, it was just unexpected.
 The server was configured to respond to www.example.tld as well as example.tld, to both encrypted and unencrypted connections. Any requests to the www. domain get redirected to https://example.tld. The config was roughly:
 server { listen 80; listen [::]:80; listen 443 ssl http2; listen [::]:443 ssl http2; server_name www.'>
 <meta property='og:url' content='https://stelfox.net/blog/2018/10/weird-cloudflare-behavior/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='nginx'><meta property='article:tag' content='linux'><meta property='article:tag' content='cloudflare'><meta property='article:published_time' content='2018-10-21T22:36:09-06:00'/><meta property='article:modified_time' content='2018-10-21T22:36:09-06:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Weird CloudFlare Behavior • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2018/10/weird-cloudflare-behavior/'>
@@ -113,14 +113,12 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>While working on a replacement webserver, I encountered some odd behavior which
-took a bit to track down to CloudFlare. This isn&rsquo;t a bug or an issue with
+took a bit to track down to CloudFlare. This isn't a bug or an issue with
 CloudFlare, it was just unexpected.</p>
-
 <p>The server was configured to respond to <code>www.example.tld</code> as well as
 <code>example.tld</code>, to both encrypted and unencrypted connections. Any requests to
 the <code>www.</code> domain get redirected to <code>https://example.tld</code>. The config was
 roughly:</p>
-
 <pre><code>server {
   listen 80;
   listen [::]:80;
@@ -134,11 +132,8 @@ roughly:</p>
 
   return 301 https://example.tld$request_uri;
 }
-</code></pre>
-
-<p>This worked fine. To match this config, I configured the unencrypted root
+</code></pre><p>This worked fine. To match this config, I configured the unencrypted root
 domain to redirect traffic from http to https with a config like the following:</p>
-
 <pre><code>server {
   listen 80;
   listen [::]:80;
@@ -157,20 +152,16 @@ server {
 
   # Normal site config
 }
-</code></pre>
-
-<p>When I attempted to go to the site, it performed the https redirect, but
+</code></pre><p>When I attempted to go to the site, it performed the https redirect, but
 continued to try to redirect the browser. CloudFlare was hitting my upstream on
 the unencrypted port and always getting the redirect message.</p>
-
 <p>I wanted to leave this in place so clients would have the same experience when
-I bypassed CloudFlare&rsquo;s HTTP CDN proxy. The way I solved this was to simply
+I bypassed CloudFlare's HTTP CDN proxy. The way I solved this was to simply
 turn on &lsquo;Full (strict)&rsquo; SSL setting to ensure CloudFlare also connected to my
 upstream on HTTPS, and relied on the &lsquo;Always Use HTTPS&rsquo; setting when CloudFlare
-was active to maintain the same behavior. If you don&rsquo;t have a valid SSL
-certificate (such as a self signed certificate) you&rsquo;ll have to use &lsquo;Full SSL&rsquo;
+was active to maintain the same behavior. If you don't have a valid SSL
+certificate (such as a self signed certificate) you'll have to use &lsquo;Full SSL&rsquo;
 instead.</p>
-
 <p>Funnily enough, this is apparently <a href="https://support.cloudflare.com/hc/en-us/articles/115000219871">common enough</a> of an issue to be
 mentioned directly in the Help for the SSL configuration within CloudFlare.</p>
 
@@ -223,7 +214,7 @@ mentioned directly in the Help for the SSL configuration within CloudFlare.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

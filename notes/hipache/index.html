@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Installing and setting up hipache. To actually install this I had to open up port tcp/9418 outbound on the server.
-yum install git npm -y npm install hipache -g  Create an initial configuration file:'>
+yum install git npm -y npm install hipache -g Create an initial configuration file:'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Hipache • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Installing and setting up hipache. To actually install this I had to open up port tcp/9418 outbound on the server.
-yum install git npm -y npm install hipache -g  Create an initial configuration file:'>
+yum install git npm -y npm install hipache -g Create an initial configuration file:'>
 <meta property='og:url' content='https://stelfox.net/notes/hipache/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Hipache • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/hipache/'>
@@ -112,19 +112,14 @@ One min read
   
 
   <div class='container entry-content'>
-  <p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Installing and setting up hipache. To actually install this I had to open up
 port <code>tcp/9418</code> outbound on the server.</p>
-
 <pre><code>yum install git npm -y
 npm install hipache -g
-</code></pre>
-
-<p>Create an initial configuration file:</p>
-
+</code></pre><p>Create an initial configuration file:</p>
 <pre><code>cat &lt;&lt; EOF &gt; /etc/hipache.json
 {
   &quot;server&quot;: {
@@ -142,13 +137,9 @@ npm install hipache -g
   &quot;redisPassword&quot;: &quot;password&quot;
 }
 EOF
-</code></pre>
-
-<p>Allow redis access to the local redis servers:</p>
-
+</code></pre><p>Allow redis access to the local redis servers:</p>
 <pre><code>-A OUTPUT -m tcp -p tcp --dport 6379 -d 192.168.122.0/24 -j ACCEPT
 </code></pre>
-
 </div>
 
   
@@ -162,7 +153,7 @@ EOF
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/icecast/'>
+      <a href='/notes/httpd/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -170,7 +161,7 @@ EOF
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>IceCast</a>
+        <span class='screen-reader-text'>Previous post: </span>HTTPd</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/high-availability/'>
         <span class='screen-reader-text'>Next post: </span>High Availability<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -191,7 +182,7 @@ EOF
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

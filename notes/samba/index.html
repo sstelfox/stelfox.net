@@ -15,7 +15,7 @@ SELinux Adjustments SELinux hates Samba and with good reason. To allow authentic
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Samba • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/samba/'>
@@ -112,59 +112,34 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.</p>
-
 <h2 id="selinux-adjustments">SELinux Adjustments</h2>
-
 <p>SELinux hates Samba and with good reason. To allow authenticated clients to
 access the contents of a samba share you need to label the share. The easiest
 way to make this persistent is by adjusting the targeted SELinux config. In the
 following example the only samba share is location at /media/sharing.</p>
-
 <p>Add this to <code>/etc/selinux/targeted/contexts/files/file_contexts</code>:</p>
-
 <pre><code>/media/storage(/.*)?    system_u:object_r:samba_share_t:s0
-</code></pre>
-
-<p>Then run this command:</p>
-
+</code></pre><p>Then run this command:</p>
 <pre><code>[root@localhost ~]# restorecon -R /media/storage
-</code></pre>
-
-<h2 id="on-anonymous-access">On Anonymous Access</h2>
-
+</code></pre><h2 id="on-anonymous-access">On Anonymous Access</h2>
 <p>If you intend to allow anonymous browsing of shares and/or access to a share,
 you will need to create a &lsquo;nobody&rsquo; user with no password and add a few lines to
 the configuration file. Add the user by following the instructions in &lsquo;Managing
 Users&rsquo;</p>
-
 <h2 id="managing-users">Managing Users</h2>
-
 <p>To add a samba user make sure they have an account on the local machine, and
 run the command:</p>
-
 <pre><code>[root@localhost ~]# pdbedit -a &lt;username&gt;
-</code></pre>
-
-<p>To list samba users:</p>
-
+</code></pre><p>To list samba users:</p>
 <pre><code>[root@localhost ~]# pdbedit -L
-</code></pre>
-
-<p>To delete a samba user:</p>
-
+</code></pre><p>To delete a samba user:</p>
 <pre><code>[root@localhost ~]# pdbedit -x &lt;username&gt;
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
-<h3 id="etc-samba-smb-conf">/etc/samba/smb.conf</h3>
+</code></pre><h2 id="configuration">Configuration</h2>
+<h3 id="etcsambasmbconf">/etc/samba/smb.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[global]</span>
 <span style="color:#75715e"># ----------------------- Network-Related Options -------------------------</span>
 
@@ -246,7 +221,8 @@ run the command:</p>
 </span><span style="color:#e6db74">        writable = no
 </span><span style="color:#e6db74">        printable = no
 </span><span style="color:#e6db74">        write list = @users
-</span><span style="color:#e6db74">        guest ok = yes</span></code></pre></div>
+</span><span style="color:#e6db74">        guest ok = yes</span>
+</code></pre></div>
 </div>
 
   
@@ -270,8 +246,8 @@ run the command:</p>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>Sendmail</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/sshd/'>
-        <span class='screen-reader-text'>Next post: </span>SSHd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/ruby/'>
+        <span class='screen-reader-text'>Next post: </span>Ruby<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -289,7 +265,7 @@ run the command:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

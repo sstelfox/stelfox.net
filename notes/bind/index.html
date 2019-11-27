@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall Adjustments A DNS server isn&rsquo;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
--A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT  If you&rsquo;re running named in a chroot you&rsquo;ll also need to add the following line to rsyslog&rsquo;s configuration file so that the chroot doesn&rsquo;t break named&rsquo;s logging.'>
+Firewall Adjustments A DNS server isn&#39;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT If you&#39;re running named in a chroot you&#39;ll also need to add the following line to rsyslog&#39;s configuration file so that the chroot doesn&#39;t break named&#39;s logging.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Bind • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall Adjustments A DNS server isn&rsquo;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
--A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT  If you&rsquo;re running named in a chroot you&rsquo;ll also need to add the following line to rsyslog&rsquo;s configuration file so that the chroot doesn&rsquo;t break named&rsquo;s logging.'>
+Firewall Adjustments A DNS server isn&#39;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT If you&#39;re running named in a chroot you&#39;ll also need to add the following line to rsyslog&#39;s configuration file so that the chroot doesn&#39;t break named&#39;s logging.'>
 <meta property='og:url' content='https://stelfox.net/notes/bind/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Bind • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/bind/'>
@@ -112,32 +112,20 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="firewall-adjustments">Firewall Adjustments</h2>
-
-<p>A DNS server isn&rsquo;t very good unless other machines are able to query it. The
+<p>A DNS server isn't very good unless other machines are able to query it. The
 following allows incoming DNS queries universally.</p>
-
 <pre><code>-A INPUT -p udp -m udp --dport 53 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT
-</code></pre>
-
-<p>If you&rsquo;re running named in a chroot you&rsquo;ll also need to add the following line
-to rsyslog&rsquo;s configuration file so that the chroot doesn&rsquo;t break named&rsquo;s
+</code></pre><p>If you're running named in a chroot you'll also need to add the following line
+to rsyslog's configuration file so that the chroot doesn't break named's
 logging.</p>
-
 <pre><code>$AddUnixListenSocket /var/named/chroot/dev/log
-</code></pre>
-
-<h2 id="config-files">Config Files</h2>
-
-<h3 id="etc-named-conf">/etc/named.conf</h3>
-
+</code></pre><h2 id="config-files">Config Files</h2>
+<h3 id="etcnamedconf">/etc/named.conf</h3>
 <pre><code>include &quot;/etc/named.root.key&quot;;
 
 // Allow no zone transfers. Any slaves should be added here.
@@ -310,29 +298,18 @@ view &quot;bind-chaos&quot; chaos {
     allow-transfer  { none; };
   };
 };
-</code></pre>
-
-<h3 id="etc-rndc-conf">/etc/rndc.conf</h3>
-
+</code></pre><h3 id="etcrndcconf">/etc/rndc.conf</h3>
 <p>This needs to be generated on your own which can be done using the following
 command:</p>
-
 <pre><code>rndc-confgen -b 512 &gt; /etc/rndc.conf
-</code></pre>
-
-<p>The commented out code belongs in <code>/etc/named.conf</code>, just replace the following
+</code></pre><p>The commented out code belongs in <code>/etc/named.conf</code>, just replace the following
 comment with the code:</p>
-
 <pre><code>## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##
-</code></pre>
-
-<p>512 is unfortunately the strongest bit size available for authentication so it
+</code></pre><p>512 is unfortunately the strongest bit size available for authentication so it
 is strongly recommended to firewall off and limit the IP addresses the control
 channel is running on. By default this is exclusively the IPv4 loopback
 address.</p>
-
-<h3 id="var-named-db-bind">/var/named/db.bind</h3>
-
+<h3 id="varnameddbbind">/var/named/db.bind</h3>
 <pre><code>$TTL 86400
 @   CHAOS    SOA   @   rname.invalid.  (
     0   ; serial
@@ -346,10 +323,7 @@ address.</p>
 
 version.bind.   CHAOS TXT &quot;It's over 9000&quot;
 authors.bind.   CHAOS TXT &quot;Nom de plume&quot;
-</code></pre>
-
-<h3 id="var-named-data-internal-1057-name-zone-db">/var/named/data/internal/1057.name.zone.db</h3>
-
+</code></pre><h3 id="varnameddatainternal1057namezonedb">/var/named/data/internal/1057.name.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2012080801  ; Serial number YYYYMMDDNN
@@ -363,10 +337,7 @@ authors.bind.   CHAOS TXT &quot;Nom de plume&quot;
 
 ns1   IN    A         10.87.19.15
 ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
-</code></pre>
-
-<h3 id="var-named-data-internal-19-87-10-in-addr-arpa-zone-db">/var/named/data/internal/19.87.10.in-addr.arpa.zone.db</h3>
-
+</code></pre><h3 id="varnameddatainternal198710inaddrarpazonedb">/var/named/data/internal/19.87.10.in-addr.arpa.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -379,10 +350,7 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
       NS          ns1.1057.name.
 
 15     IN    PTR       ns1.1057.name.
-</code></pre>
-
-<h3 id="var-named-data-internal-0-0-0-0-f-e-0-0-d-c-b-a-1-0-0-2-arpa-zone-db">/var/named/data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
-
+</code></pre><h3 id="varnameddatainternal0000fe00dcba1002arpazonedb">/var/named/data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -395,10 +363,7 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
       NS          ns1.1057.name.
 
 2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.
-</code></pre>
-
-<h3 id="var-named-data-public-1057-name-zone-db">/var/named/data/public/1057.name.zone.db</h3>
-
+</code></pre><h3 id="varnameddatapublic1057namezonedb">/var/named/data/public/1057.name.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2012080801  ; Serial number YYYYMMDDNN
@@ -412,10 +377,7 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
 
 ns1   IN    A         4.2.2.2
 ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
-</code></pre>
-
-<h3 id="var-named-data-public-0-0-0-0-f-e-0-0-d-c-b-a-1-0-0-2-arpa-zone-db">/var/named/data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
-
+</code></pre><h3 id="varnameddatapublic0000fe00dcba1002arpazonedb">/var/named/data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -428,15 +390,11 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
       NS          ns1.1057.name.
 
 2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.
-</code></pre>
-
-<h2 id="ldap-backend">LDAP Backend</h2>
-
+</code></pre><h2 id="ldap-backend">LDAP Backend</h2>
 <p>Using the package <code>bind-dyndb-ldap</code>, an ldap backend can be used either
 exclusively or in addition to other zones. Configuring a simple authenticated
 ldap lookup can be done with something along the line of the following
 configuration:</p>
-
 <pre><code>dynamic-db &quot;my_db_name&quot; {
   library &quot;ldap.so&quot;;
   arg &quot;uri ldap://ldap.example.com&quot;;
@@ -444,36 +402,27 @@ configuration:</p>
   arg &quot;auth_method none&quot;;
   arg &quot;cache_ttl 300&quot;;
 };
-</code></pre>
-
-<p>With this configuration, the LDAP back-end will try to connect to server
+</code></pre><p>With this configuration, the LDAP back-end will try to connect to server
 ldap.example.com with simple authentication, without any password. It will then
 do an LDAP subtree search in the <code>cn=dns,dc=example,dc=com</code> base for entries
 with object class idnsZone, for which the idnsZoneActive attribute is set to
 True.</p>
-
 <p>For each entry it will find, it will register a new zone with BIND. The LDAP
 back-end will keep each record it gets from LDAP in its cache for 5 minutes.</p>
-
 <p>It also supports SASL authentication methods which means we can use encrypted
 authentication and/or kerberos.</p>
-
 <h2 id="ipv6-slow-down">IPv6 Slow down</h2>
-
 <p>If there is a local IPv6 network but it is unrouted bind will regularily
-attempt to contact other nameservers using IPv6 and doesn&rsquo;t seem to cache
+attempt to contact other nameservers using IPv6 and doesn't seem to cache
 whether it was able to reach them or not.</p>
-
 <p>This has a dramatically visible impact on the time it takes to query for a
 name. To prevent this there are really only two options, the first is to make
 the IPv6 network routeable, and the second is to put bind in IPv4 only mode.
 Neither solution is good, but the latter is the only feasible one (This does
-mean it won&rsquo;t even listen on an IPv6 port).</p>
-
+mean it won't even listen on an IPv6 port).</p>
 <pre><code>echo 'OPTIONS=&quot;-4&quot;' &gt;&gt; /etc/sysconfig/named
 service named restart
 </code></pre>
-
 </div>
 
   
@@ -516,7 +465,7 @@ service named restart
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

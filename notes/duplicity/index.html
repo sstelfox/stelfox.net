@@ -15,7 +15,7 @@ I personally want to use public / private key pairs for my backups and contrary 
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Duplicity • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/duplicity/'>
@@ -112,111 +112,75 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Duplicity is a command line backup utility that makes use of the rsync
 libraries to perform incremental backups. It also can use GPG public/private
 keypairs to handle backing up and restoring files.</p>
-
 <p>I personally want to use public / private key pairs for my backups and contrary
 with what I do most of the time I share a single public / private key pair for
 my backups, with a strong pass string on the private key.</p>
-
 <p>This is an adequate level of security for me as the backups will all be
 encrypted and can be decrypted and restored from any of the other machines as
 needed.</p>
-
 <p>The backups are performed to a remote system using SFTP and thus I handle
 per-machine authentication using SSH keys.</p>
-
 <p>Duplicity supports more than SFTP as a backend, however, it will just make my
 scripts less relevant too you.</p>
-
 <h2 id="installation">Installation</h2>
-
 <p>Fedora happily has a package available so this is as easy as:</p>
-
 <pre><code>sudo yum install duplicity python-paramiko -y
-</code></pre>
-
-<p>It also happily doesn&rsquo;t have a whole lot of dependencies.</p>
-
-<p>You&rsquo;ll also need GPG installed if you want to make use of my scripts, this
-won&rsquo;t trample on any GPG setup you may currently have. On Fedora this is
+</code></pre><p>It also happily doesn't have a whole lot of dependencies.</p>
+<p>You'll also need GPG installed if you want to make use of my scripts, this
+won't trample on any GPG setup you may currently have. On Fedora this is
 provided with the gpgme package and can be installed like so:</p>
-
 <pre><code>sudo yum install gpgme -y
-</code></pre>
-
-<h3 id="gpg-key-creation">GPG Key Creation</h3>
-
-<p>You&rsquo;ll only need to perform this process once, afterwards you&rsquo;ll have the
-exported keys to move and backup as you please. I&rsquo;ve chosen to use a 4096 bit
-RSA and RSA key that doesn&rsquo;t expire and has the name &ldquo;System Backups&rdquo; without
+</code></pre><h3 id="gpg-key-creation">GPG Key Creation</h3>
+<p>You'll only need to perform this process once, afterwards you'll have the
+exported keys to move and backup as you please. I've chosen to use a 4096 bit
+RSA and RSA key that doesn't expire and has the name &ldquo;System Backups&rdquo; without
 an email address or a comment.</p>
-
-<p>I&rsquo;ve also set a very long pass string on the key as you&rsquo;ll be relying on this
-to protect all the data on all your systems you&rsquo;ll be backing up with this.
+<p>I've also set a very long pass string on the key as you'll be relying on this
+to protect all the data on all your systems you'll be backing up with this.
 These settings are of course personal preference and a 4096 bit key may be
 overkill for most uses, though I really enjoy overkill when it comes to
 security and peace of mind.</p>
-
 <pre><code>gpg --keyring backup-pub.gpg --secret-keyring backup-sec.gpg \
   --no-default-keyring --gen-key
-</code></pre>
-
-<p>Now we need a way to securely move the generated keys around without worrying
-about. I&rsquo;ve chosen to export the public and private keys, encrypt them with a
+</code></pre><p>Now we need a way to securely move the generated keys around without worrying
+about. I've chosen to export the public and private keys, encrypt them with a
 symmetric pass string and move the resulting file between machines.</p>
-
-<p>The private key should be encrypted anyway but it&rsquo;s one extra layer that can be
+<p>The private key should be encrypted anyway but it's one extra layer that can be
 added on that allows me to feel comfortable enough to leave the whole blob in
 the script without fear of compromising the private key in case that gets
 cracked.</p>
-
 <p>I refer to this password as the &ldquo;installation key&rdquo; as the script will use it to
 decrypt and import the keys into the local GPG on other machines.</p>
-
-<p>First you&rsquo;ll need to get the key ID of the key we just generated. This can be
+<p>First you'll need to get the key ID of the key we just generated. This can be
 done like so:</p>
-
 <pre><code>gpg --keyring backup-pub.gpg --list-keys
 /home/user/.gnupg/backup-pub.gpg
 ------------------------------------
 pub   4096R/01234567 2012-09-24
 uid                  System Backups
 sub   4096R/89ABCDEF 2012-09-24
-</code></pre>
-
-<p>Given the output above our key ID is <code>01234567</code>, you&rsquo;ll want to replace that in
-the following commands with your own key ID. First we&rsquo;ll export the public key,
-there isn&rsquo;t any security concerns here:</p>
-
+</code></pre><p>Given the output above our key ID is <code>01234567</code>, you'll want to replace that in
+the following commands with your own key ID. First we'll export the public key,
+there isn't any security concerns here:</p>
 <pre><code>gpg --keyring backup-pub.gpg --output backup-pubkey.gpg --export 01234567
-</code></pre>
-
-<p>You now have the public key in the file <code>backup-pubkey.gpg</code>. Now we&rsquo;re going to
+</code></pre><p>You now have the public key in the file <code>backup-pubkey.gpg</code>. Now we're going to
 export the private key without saving it, combine it with the public key, and
 encrypt the whole shebang into one file. Watch closely&hellip;</p>
-
 <pre><code>gpg --secret-keyring backup-sec.gpg --export-secret-key 01234567 |
   cat backup-pubkey.gpg - | gpg --armor --symmetric --cipher-algo AES256 \
   --output backup-keys.asc
-</code></pre>
-
-<p>You now have a block of base64 encoded encrypted goodness in the
+</code></pre><p>You now have a block of base64 encoded encrypted goodness in the
 <code>backup-keys.asc</code> file which you can import later on.</p>
-
 <h3 id="gpg-key-import">GPG Key Import</h3>
-
 <pre><code>cat export.asc | gpg2 --decrypt --batch --passphrase &quot;PASSWORD&quot; | gpg2 \
   --keyring backup-pub.gpg --secret-keyring backup-sec.gpg --import
 </code></pre>
-
 </div>
 
   
@@ -240,8 +204,8 @@ encrypt the whole shebang into one file. Watch closely&hellip;</p>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>EZStream</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/data-recovery/'>
-        <span class='screen-reader-text'>Next post: </span>Data Recovery<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/dhcpd/'>
+        <span class='screen-reader-text'>Next post: </span>DHCPd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -259,7 +223,7 @@ encrypt the whole shebang into one file. Watch closely&hellip;</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

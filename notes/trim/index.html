@@ -13,7 +13,7 @@ Configuring This page is referring to TRIM support for SSDs. To enable it add no
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Trim • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/trim/'>
@@ -110,74 +110,50 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="configuring">Configuring</h2>
-
 <p>This page is referring to TRIM support for SSDs. To enable it add
 <code>noatime,discard</code> to the options on all of the fstab partition entries that
 live on the drive. Be sure to disable any swap partitions that live on that
 drive as well.</p>
-
 <h3 id="note-on-encrypted-drives">Note on Encrypted Drives</h3>
-
 <p>Turning TRIM support on for an encrypted hard drive will not actually do
 anything. <code>discard</code> is a file system level option and full disk encryption
-lives below that. It makes sense that it doesn&rsquo;t work, writing a sector full of
+lives below that. It makes sense that it doesn't work, writing a sector full of
 0s to an encrypted partition will result in a sector of encrypted 0s which will
 look more or less like random garbage.</p>
-
-<p>There is a trick to allow this to work but I&rsquo;m not will to go that route due to
+<p>There is a trick to allow this to work but I'm not will to go that route due to
 the security implications of allowing attackers to see where the data lives on
-my hard drive and where it doesn&rsquo;t, but for completeness, I&rsquo;m documenting
+my hard drive and where it doesn't, but for completeness, I'm documenting
 (untested) what needs to be done to enable this.</p>
-
-<p>You&rsquo;ll need to replace <your_device> with the DM mapper crypted partition such
-as <code>/dev/mapper/vg_desktop-lv_root</code>. You&rsquo;ll want to do this for all of the
+<p>You'll need to replace &lt;your_device&gt; with the DM mapper crypted partition such
+as <code>/dev/mapper/vg_desktop-lv_root</code>. You'll want to do this for all of the
 encrypted partitions on the drive.</p>
-
 <pre><code>dmsetup table &lt;your_device&gt; --showkeys
 dmsetup load &lt;your_device&gt; --&quot;&lt;line above&gt; 1 allow_discards&quot;
 dmsetup resume &lt;your_device&gt;
-</code></pre>
-
-<p>Even without TRIM support noatime and no swap partitions are still good
+</code></pre><p>Even without TRIM support noatime and no swap partitions are still good
 performance improvements.</p>
-
 <h2 id="testing">Testing</h2>
-
 <p>This requires you install the <code>hdparm</code> package on Fedora.</p>
-
-<p>To test and make sure that trim support is working, make sure you&rsquo;re in a
+<p>To test and make sure that trim support is working, make sure you're in a
 directory that lives on a partition on the SSD, then create a test file like
 so:</p>
-
 <pre><code>seq 1 1000 &gt; trimtest
 sync
 hdparm --fibmap trimtest
-</code></pre>
-
-<p>You will get output like this:</p>
-
+</code></pre><p>You will get output like this:</p>
 <pre><code>trimtest:
  filesystem blocksize 4096, begins at LBA 0; assuming 512 byte sectors.
  byte_offset  begin_LBA    end_LBA    sectors
            0   25565616   25565623          8
-</code></pre>
-
-<p>The important thing to take into account is the <code>begin_LBA</code> column make note of
-this number and use it in place in the following commands. You&rsquo;ll need to
+</code></pre><p>The important thing to take into account is the <code>begin_LBA</code> column make note of
+this number and use it in place in the following commands. You'll need to
 replace <code>/dev/sda</code> with the device name matching your SSD.</p>
-
 <pre><code>hdparm --read-sector 25565616 /dev/sda
-</code></pre>
-
-<p>You&rsquo;ll receive output that looks a lot like the following:</p>
-
+</code></pre><p>You'll receive output that looks a lot like the following:</p>
 <pre><code>/dev/sda:
 reading sector 25565616: succeeded
 bb2d 06dc 87c3 6bb6 c43c fab7 a0a9 12db
@@ -212,16 +188,11 @@ a25e 9132 39af dab4 81db ea9e a168 204e
 f162 8616 7c6a c7e3 bdb2 cb5c 7620 fd43
 17af b869 978d 6b58 c54f fdc9 8a37 01d2
 f82e b721 631b 3888 bb27 874c 872a 28e0
-</code></pre>
-
-<p>Now we&rsquo;ll remove the file, sync the filesystem and check that sector again:</p>
-
+</code></pre><p>Now we'll remove the file, sync the filesystem and check that sector again:</p>
 <pre><code>rm -f trimtest
 sync
 hdparm --read-sector 25565616 /dev/sda
-</code></pre>
-
-<p>If trim support is working the sector read should be all 0s.</p>
+</code></pre><p>If trim support is working the sector read should be all 0s.</p>
 
 </div>
 
@@ -265,7 +236,7 @@ hdparm --read-sector 25565616 /dev/sda
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

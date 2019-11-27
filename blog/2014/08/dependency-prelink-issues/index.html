@@ -13,7 +13,7 @@
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='linux'><meta property='article:published_time' content='2014-08-12T16:16:14-04:00'/><meta property='article:modified_time' content='2014-08-12T16:16:14-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Dependency Prelink Issues • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2014/08/dependency-prelink-issues/'>
@@ -112,7 +112,6 @@ if (!doNotTrack) {
   <div class='container entry-content'>
   <p>While running an aide check on one of my servers after updating it, I started
 seeing a large number of very concerning warning messages:</p>
-
 <pre><code>/usr/sbin/prelink: /bin/mailx: at least one of file's dependencies has changed since prelinking
 Error on exit of prelink child process
 /usr/sbin/prelink: /bin/rpm: at least one of file's dependencies has changed since prelinking
@@ -122,32 +121,25 @@ Error on exit of prelink child process
 /usr/sbin/prelink: /lib64/libkrb5.so.3.3: at least one of file's dependencies has changed since prelinking
 Error on exit of prelink child process
 /usr/sbin/prelink: /lib64/libgssapi_krb5.so.2.2: at least one of file's dependencies has changed since prelinking
-</code></pre>
-
-<p>The list went on with maybe a total of forty packages and libraries. My initial
-reaction was &lsquo;Did I get hacked?&rsquo;. Before running the updates I ran an aide
+</code></pre><p>The list went on with maybe a total of forty packages and libraries. My initial
+reaction was &lsquo;Did I get hacked?'. Before running the updates I ran an aide
 verification check which returned no issues and the files that were now
 displaying the issue were in the packages that got updated.</p>
-
 <p>What was the next worse scenario? The packages had been tampered with and I
-just installed malicious files. This didn&rsquo;t seem likely as the packages are all
+just installed malicious files. This didn't seem likely as the packages are all
 signed with GPG and an aide check would have caught tampering with my trust
 database, the <code>gpg</code> binary, or the aide binary. Still a key could have been
 compromised.</p>
-
 <p>After some Googling I came across people with similar issues, (including one
 annoyingly paywalled Red Hat article on the issue). Several people simply ended
 the conversation on the assumption the user with the issue had been hacked.
 Finally I <a href="http://lists.centos.org/pipermail/centos/2007-December/049222.html">came across one helpful individual</a> with the fix. The binaries
 just need to have their prelink cache updated again. This can be accomplished
 with the following command on CentOS 6.5 (probably the same on others).</p>
-
 <pre><code>/usr/sbin/prelink -av -mR
-</code></pre>
-
-<p><em>Update:</em> Ultimately I decided to follow <a href="https://stelfox.net/notes/linux-hardening/">my own advice</a> (search for
+</code></pre><p><em>Update:</em> Ultimately I decided to follow <a href="https://stelfox.net/notes/linux-hardening/">my own advice</a> (search for
 prelink) and just simply disabled prelinking too prevent it from interferring
-with aide checks and causing other weird issues. The memory trade-off isn&rsquo;t
+with aide checks and causing other weird issues. The memory trade-off isn't
 valuable enough for me.</p>
 
 </div>
@@ -199,7 +191,7 @@ valuable enough for me.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

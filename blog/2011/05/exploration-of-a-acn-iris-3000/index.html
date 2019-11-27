@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='So I found a dirt cheap video SIP phone (ACN Iris 3000) at a local HAM fest. After looking around I found the vendor has locked in the phone with their specific service with an iron grip and had gone out of business. I guess I should expect that kind of anti-competitive behavior from a business that Donald Trump has a vested interest in.
-I&rsquo;ve come across one post on a forum that seems to have been crawled and copied out every where.'>
+I&#39;ve come across one post on a forum that seems to have been crawled and copied out every where.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Exploration of an ACN Iris 3000 • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='So I found a dirt cheap video SIP phone (ACN Iris 3000) at a local HAM fest. After looking around I found the vendor has locked in the phone with their specific service with an iron grip and had gone out of business. I guess I should expect that kind of anti-competitive behavior from a business that Donald Trump has a vested interest in.
-I&rsquo;ve come across one post on a forum that seems to have been crawled and copied out every where.'>
+I&#39;ve come across one post on a forum that seems to have been crawled and copied out every where.'>
 <meta property='og:url' content='https://stelfox.net/blog/2011/05/exploration-of-a-acn-iris-3000/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='hardware'><meta property='article:published_time' content='2011-05-01T15:48:08Z'/><meta property='article:modified_time' content='2011-05-01T15:48:08Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Exploration of an ACN Iris 3000 • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2011/05/exploration-of-a-acn-iris-3000/'>
@@ -110,79 +110,62 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>So I found a dirt cheap video SIP phone (ACN Iris 3000) at a local HAM fest.
+  <p>So I found a dirt cheap video SIP phone (ACN Iris 3000) at a local HAM fest.
 After looking around I found the vendor has locked in the phone with their
 specific service with an iron grip and had gone out of business. I guess I
 should expect that kind of anti-competitive behavior from a business that
 Donald Trump has a vested interest in.</p>
-
-<p>I&rsquo;ve come across one post on a forum that seems to have been crawled and copied
+<p>I've come across one post on a forum that seems to have been crawled and copied
 out every where. The poster had cracked it and got it working with an Asterisk
 server which is what my ultimate goal for this phone is, however they claim to
 have done it by getting root through telnet. The problem being that port 23
 (telnet) is not open so this was a dead end.</p>
-
-<p>This is a running document of how I&rsquo;m doing it, you&rsquo;ll notice that I&rsquo;m writing
+<p>This is a running document of how I'm doing it, you'll notice that I'm writing
 this as I go.</p>
-
 <h2 id="reconnaissance">Reconnaissance</h2>
-
-<p>First thing&rsquo;s first a little run down of what I&rsquo;ve found. I can change the
-network address and the way it&rsquo;s handling networking (either bridged or NAT). I
+<p>First thing's first a little run down of what I've found. I can change the
+network address and the way it's handling networking (either bridged or NAT). I
 can not get into the Administrators menu which is where all the juicy bits seem
-to be. I&rsquo;ve found that the factory reset code is 7517517, though that doesn&rsquo;t
-get me anything beyond cleaning up it&rsquo;s last known phone number.</p>
-
-<p>Through a very thorough <code>nmap</code> scan I&rsquo;ve found that ports TCP 21, 79, 113, 513,
-514, 554, 5060, 7022, and 8080 are all open. There doesn&rsquo;t appear to be any UDP
+to be. I've found that the factory reset code is 7517517, though that doesn't
+get me anything beyond cleaning up it's last known phone number.</p>
+<p>Through a very thorough <code>nmap</code> scan I've found that ports TCP 21, 79, 113, 513,
+514, 554, 5060, 7022, and 8080 are all open. There doesn't appear to be any UDP
 ports available which actually surprised me, since SIP over UDP is pretty
 common.</p>
-
 <p>7022 and 8080 both immediately caught my eye. 7022 looks like someone moved SSH
 (port 22) to a non-standard port, and 8080 is a very common alternate port for
 HTTP. Connecting to 7022 via telnet confirmed my suspicions of SSH. I received
 this prompt:</p>
-
 <pre><code>Connected to 10.0.0.85.
 Escape character is '^]'.
 SSH-2.0-dropbear_0.45
-</code></pre>
-
-<p>Bingo. SSH it is, and an old version of dropbear at that.  Unfortunately as the
+</code></pre><p>Bingo. SSH it is, and an old version of dropbear at that.  Unfortunately as the
 one poster I found said the password was neither blank nor &lsquo;root&rsquo;. I suspect
 that they had an older firmware revision and these &lsquo;bugs&rsquo; were ironed out in a
-later revision. That&rsquo;s OK though it&rsquo;ll just take a bit more work.</p>
-
+later revision. That's OK though it'll just take a bit more work.</p>
 <p>As for port 8080 it is definitely running a web configuration interface. All it
-asks for is a password (which we don&rsquo;t have). The extension for the login page
+asks for is a password (which we don't have). The extension for the login page
 (esp) makes me suspect that the Iris device is running a copy of AppWebServer
 or something similar and using embedded javascript as the server side
-processing. For now that doesn&rsquo;t provide much but it could be very useful later
+processing. For now that doesn't provide much but it could be very useful later
 on.</p>
-
 <h2 id="attack">Attack</h2>
-
 <p>So while looking for an exploit for DropBear 0.45 I started up a SSH dictionary
 attack and encountered by first real problem. The screen started blinking while
 running three or more threads trying to break in, at first I thought it was
 kind of funny but then it turned off completely.</p>
-
 <p>Turns out the adapter I have for it is only rated for pushing out 500mA and the
 phone itself takes up to 1500mA, apparently I hit that limit and browned-out
-the phone. It still seems to work but if I want to take this route I&rsquo;ll need a
+the phone. It still seems to work but if I want to take this route I'll need a
 more robust power supply. Looking around I found a 1500mA supply and after
 checking the boards for damage I gave it a shot and everything seems to be
 working OK.</p>
-
-<p>Unfortunately I wasn&rsquo;t able to find any viable exploits for that particular
+<p>Unfortunately I wasn't able to find any viable exploits for that particular
 DropBear version as the vulnerabilities that had been found were either DoS
 vulnerabilities or were only useful with valid credentials.</p>
-
 <p>The basic dictionary attack failed and I started up a more comprehensive one. I
 could easily start brute forcing this but it would take a very long time,
-especially if the company realized that a weak password wasn&rsquo;t cutting it.</p>
+especially if the company realized that a weak password wasn't cutting it.</p>
 
 </div>
 
@@ -233,7 +216,7 @@ especially if the company realized that a weak password wasn&rsquo;t cutting it.
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y  rm -f /etc/httpd/conf.d/welcome.conf  There is also an undeclared depedency:
-yum install perl-Text-ParseWords -y  htpasswd -c /etc/nagios/passwd nagiosadmin  Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios.'>
+yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y rm -f /etc/httpd/conf.d/welcome.conf There is also an undeclared depedency:
+yum install perl-Text-ParseWords -y htpasswd -c /etc/nagios/passwd nagiosadmin Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Nagios • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y  rm -f /etc/httpd/conf.d/welcome.conf  There is also an undeclared depedency:
-yum install perl-Text-ParseWords -y  htpasswd -c /etc/nagios/passwd nagiosadmin  Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios.'>
+yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y rm -f /etc/httpd/conf.d/welcome.conf There is also an undeclared depedency:
+yum install perl-Text-ParseWords -y htpasswd -c /etc/nagios/passwd nagiosadmin Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios.'>
 <meta property='og:url' content='https://stelfox.net/notes/nagios/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Nagios • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/nagios/'>
@@ -112,58 +112,37 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <pre><code>yum install nagios nagios-plugins httpd nagios-plugins-load \
   nagios-plugins-users nagios-plugins-http nagios-plugins-ping \
   nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \
   nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y
-</code></pre>
-
-<pre><code>rm -f /etc/httpd/conf.d/welcome.conf
-</code></pre>
-
-<p>There is also an undeclared depedency:</p>
-
+</code></pre><pre><code>rm -f /etc/httpd/conf.d/welcome.conf
+</code></pre><p>There is also an undeclared depedency:</p>
 <pre><code>yum install perl-Text-ParseWords -y
-</code></pre>
-
-<pre><code>htpasswd -c /etc/nagios/passwd nagiosadmin
-</code></pre>
-
-<p>Updates are going to be handled by yum exclusively, so the first change is
+</code></pre><pre><code>htpasswd -c /etc/nagios/passwd nagiosadmin
+</code></pre><p>Updates are going to be handled by yum exclusively, so the first change is
 adjusting <code>check_for_updates=1</code> to <code>0</code>, and for good measure
 <code>bare_update_check=0</code> to <code>1</code> in <code>/etc/nagios/nagios.cfg</code>.</p>
-
 <pre><code>systemctl enable httpd.service
 systemctl enable nagios.service
 systemctl start httpd.service
 systemctl start nagios.service
-</code></pre>
-
-<p>I had a strange issue where the ping plugin wasn&rsquo;t working with an error like
+</code></pre><p>I had a strange issue where the ping plugin wasn't working with an error like
 &ldquo;CRITICAL - Could not interpret output from ping command&rdquo; the solution was to
 give the setuid bit to the ping program like so:</p>
-
 <pre><code>chmod u+s /usr/bin/ping
-</code></pre>
-
-<p>Next steps:</p>
-
+</code></pre><p>Next steps:</p>
 <ul>
 <li>Investigate using nginx instead of apache</li>
 <li>Setup nagios to be the root of apache</li>
 <li>Add SSL to apache</li>
 <li>Add a port forward through to nagios</li>
 </ul>
-
 <h2 id="permission-fixing">Permission Fixing</h2>
-
-<p>In the event all the editing goo breaks nagios&rsquo;s ability to access files I
+<p>In the event all the editing goo breaks nagios's ability to access files I
 wrote the following quick little script to fix the various ownerships and
 permissions.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/bash
@@ -178,7 +157,8 @@ chmod -R u<span style="color:#f92672">=</span>rwX,g<span style="color:#f92672">=
 chmod <span style="color:#ae81ff">0640</span> /etc/nagios/private/resource.cfg /etc/nagios/passwd
 
 <span style="color:#75715e"># And restore any selinux attributes on the files</span>
-restorecon -R /etc/nagios</code></pre></div>
+restorecon -R /etc/nagios
+</code></pre></div>
 </div>
 
   
@@ -202,8 +182,8 @@ restorecon -R /etc/nagios</code></pre></div>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>Network</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/ntpd/'>
-        <span class='screen-reader-text'>Next post: </span>NTPd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/mysql-tuning/'>
+        <span class='screen-reader-text'>Next post: </span>MySQL Tuning<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -221,7 +201,7 @@ restorecon -R /etc/nagios</code></pre></div>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

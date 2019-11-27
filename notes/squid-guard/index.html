@@ -13,7 +13,7 @@ Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes informat
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Squid Guard • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/squid-guard/'>
@@ -110,77 +110,55 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about
 the requested page coming in and checks it against a series of ACLs,
 blacklists, and whitelists in an order specified by the administrator. The
 administrator can redirect offending pages to a block page (which has to be a
 hosted site outside of squid).</p>
-
 <h2 id="installation">Installation</h2>
-
-<p>Don&rsquo;t use the &ldquo;squidGuard&rdquo; service, it is incorrectly defined, looking
+<p>Don't use the &ldquo;squidGuard&rdquo; service, it is incorrectly defined, looking
 for non-existant files, and is poorly implemented. Call squidGuard directly
 from the squid config (see <a href="https://stelfox.net/notes/squid/">Squid</a>).</p>
-
 <p>NOTICE: To use squid guard at all you need to have a web server setup to
 redirect sites that are denied. For this purpose I decided to install apache,
 create a folder &ldquo;guard&rdquo; and within it a file named blocked.php that simply
 prints out the contents of the $_GET variable. With the config provided this
-will show the client&rsquo;s address, name, username, group, category of the
+will show the client's address, name, username, group, category of the
 offending URL and the URL itself. This can be used to properly display an error
-message. I am quite annoyed by how this works&hellip; I&rsquo;d much prefer to just deny
+message. I am quite annoyed by how this works&hellip; I'd much prefer to just deny
 the requests&hellip;</p>
-
 <pre><code>yum install squidGuard -y
-</code></pre>
-
-<h3 id="black-white-lists">Black &amp; White Lists</h3>
-
-<p>Remove the default blacklist file as we&rsquo;re going to use another one. This is a
-necessary step to continue using the rest of these instructions. If you don&rsquo;t
-wan to use the Shalla Lists, you&rsquo;ll have to adapt to the instructions given
-however they shouldn&rsquo;t differ much between different lists.</p>
-
+</code></pre><h3 id="black--white-lists">Black &amp; White Lists</h3>
+<p>Remove the default blacklist file as we're going to use another one. This is a
+necessary step to continue using the rest of these instructions. If you don't
+wan to use the Shalla Lists, you'll have to adapt to the instructions given
+however they shouldn't differ much between different lists.</p>
 <pre><code>[root@localhost ~]# rm -f /var/squidGuard/blacklists.tar.gz
 [root@localhost ~]# mkdir -p /var/squidGuard/blacklists
 [root@localhost ~]# mkdir -p /var/squidGuard/whitelists/custom/
 [root@localhost ~]# touch /var/squidGuard/whitelists/custom/domains
 [root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls
-</code></pre>
-
-<p>Download a blacklist file, <a href="http://www.shallalist.de/">Shalla List</a> seems to be the defacto/good one.</p>
-
+</code></pre><p>Download a blacklist file, <a href="http://www.shallalist.de/">Shalla List</a> seems to be the defacto/good one.</p>
 <pre><code>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2&gt;/dev/null
 [root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz.md5 -o /var/squidGuard/blacklists/shallalist.tar.gz.md5 2&gt; /dev/null
 [root@localhost ~]# cat /var/squidGuard/blacklists/shallalist.tar.gz.md5 &amp;&amp; md5sum /var/squidGuard/blacklists/shallalist.tar.gz
 c50fdc59593bc3e5c5863e2b120f6fed  shallalist.tar.gz
 c50fdc59593bc3e5c5863e2b120f6fed  /var/squidGuard/blacklists/shallalist.tar.gz
-</code></pre>
-
-<p>Note: the md5sums are the same (we received an intact download, the sums will
+</code></pre><p>Note: the md5sums are the same (we received an intact download, the sums will
 be different everytime it updates).</p>
-
-<p>Now that we&rsquo;ve verified the blacklists lets extract them.</p>
-
+<p>Now that we've verified the blacklists lets extract them.</p>
 <pre><code>[root@localhost ~]# cd /var/squidGuard
 [root@localhost squidGuard]# tar -xzvf shallalist.tar.gz --strip-components 1
 [root@localhost squidGuard]# chown -R squid:squid /var/squidGuard/
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
-<p>By default, squidGuard tries to store it&rsquo;s logfiles in <code>/var/log/squidGuard</code>,
+</code></pre><h2 id="configuration">Configuration</h2>
+<p>By default, squidGuard tries to store it's logfiles in <code>/var/log/squidGuard</code>,
 however, since squid starts up squidGuard, squidGuard will be running under the
-squid user. This is important as the squid user won&rsquo;t have permission to
+squid user. This is important as the squid user won't have permission to
 <code>/var/log/squidGuard</code>. We should switch it too <code>/var/log/squid</code>, and ensure
 that <code>/var/squidGuard/blacklists</code> are owned by squid with the squid group.</p>
-
 <pre><code># Configure locations for the rest of squidGuard's files
 dbhome /var/squidGuard
 logdir /var/log/squid
@@ -758,68 +736,44 @@ acl {
     redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
   }
 }
-</code></pre>
-
-<h2 id="live-config-changes">Live Config Changes</h2>
-
+</code></pre><h2 id="live-config-changes">Live Config Changes</h2>
 <p>The squid command &ldquo;squid -k reconfigure&rdquo; DOES re-evaluate squidGuard config
 changes as well. This make it very easy to quickly adjust things all over the
 server without a significant service interruption.</p>
-
 <h2 id="testing-and-diagnostics">Testing and Diagnostics</h2>
-
-<p>So what I&rsquo;ve found in my experimentation is that if there is an issue with
+<p>So what I've found in my experimentation is that if there is an issue with
 squidGuard starting up squid will still success and there will probably not be
 any errors anywhere, it will simply not block anything. This is obviously not
 an ideal situation. To test and make sure that your configuration is good (or
 possibly see the errors that may be preventing the filtering from working) run
 the following command:</p>
-
 <pre><code>[root@localhost ~]# squidGuard -c /etc/squid/squidGuard.conf -C all
-</code></pre>
-
-<p>It will go through and build the database files for every category defined in
+</code></pre><p>It will go through and build the database files for every category defined in
 the configuration then verify that everything is in order. If an error does
-occur you&rsquo;ll see the message:</p>
-
+occur you'll see the message:</p>
 <pre><code>2011-09-20 12:15:50 [7140] Going into emergency mode
-</code></pre>
-
-<p>Look on the line above it and it you&rsquo;ll have to figure out the issue based on
+</code></pre><p>Look on the line above it and it you'll have to figure out the issue based on
 that message.</p>
-
 <p>NOTE: After performing this command all of the database files will be owned by
-root! This won&rsquo;t work, fix the issue running the following command:</p>
-
+root! This won't work, fix the issue running the following command:</p>
 <pre><code>[root@localhost ~]# chown -R squid:squid /var/squidGuard/*
-</code></pre>
-
-<p>Additional permission issues can (usually) be resolved with the following
+</code></pre><p>Additional permission issues can (usually) be resolved with the following
 commands:</p>
-
 <pre><code>[root@localhost ~]# chown -R root:squid /etc/squid
 [root@localhost ~]# chmod 640 /etc/squid/*
-</code></pre>
-
-<p>To test individual rules to make sure things are being redirected or blocked
+</code></pre><p>To test individual rules to make sure things are being redirected or blocked
 correctly you can test squidGuard with something along the following lines:</p>
-
 <pre><code>[root@localhost ~]# su squid -s /bin/bash -
 bash-4.2$ echo &quot;http://porn.com 10.0.0.1/ - - GET&quot; | squidGuard -d -c /etc/squid/squidGuard.conf
-</code></pre>
-
-<p>It will either return nothing (passes the check) or return a URL to redirect
+</code></pre><p>It will either return nothing (passes the check) or return a URL to redirect
 the user too (failed the check). You can replace the 10.0.0.1 with an IP of a
-machine you&rsquo;d like to test the rules with.</p>
-
+machine you'd like to test the rules with.</p>
 <h2 id="security-notes">Security Notes</h2>
-
 <p>squidGuard is an additional layer of protection against known bad sites. It can
 not possibly catch all of the bad sites but it does help. For any general
-browsing that you don&rsquo;t want to restrict the content of, I strongly suggest
+browsing that you don't want to restrict the content of, I strongly suggest
 including the following groups as exclusions. They will help promote anonymous
 safe browsing.</p>
-
 <ul>
 <li>adv</li>
 <li>costtraps</li>
@@ -829,11 +783,9 @@ safe browsing.</p>
 <li>spyware</li>
 <li>trackers</li>
 </ul>
-
 <p>The only one that may cause issues is the &ldquo;in-addr&rdquo; one which blocks going to
 IP addresses directly. I personally get around this by including the sites I
 want to access directly in my whitelist file.</p>
-
 <h2 id="sample-error-page">Sample Error Page</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
   <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">uuid</span>() {
@@ -1041,7 +993,7 @@ want to access directly in my whitelist file.</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/suricata/'>
+      <a href='/notes/sshd/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -1049,7 +1001,7 @@ want to access directly in my whitelist file.</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Suricata</a>
+        <span class='screen-reader-text'>Previous post: </span>SSHd</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/squid/'>
         <span class='screen-reader-text'>Next post: </span>Squid<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -1070,7 +1022,7 @@ want to access directly in my whitelist file.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

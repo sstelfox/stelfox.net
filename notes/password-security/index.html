@@ -15,7 +15,7 @@ Random Password Generation This little ruby snippet generates a random 31 charac
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Password Security • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/password-security/'>
@@ -112,33 +112,27 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="random-password-generation">Random Password Generation</h2>
-
 <p>This little ruby snippet generates a random 31 character string consisting of
 uppercase letters, lowercase letters, and numbers.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e">#!/usr/bin/env ruby</span>
 
-character_set <span style="color:#f92672">=</span>  <span style="color:#f92672">[</span>(<span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">..</span><span style="color:#e6db74">&#39;z&#39;</span>),(<span style="color:#e6db74">&#39;A&#39;</span><span style="color:#f92672">..</span><span style="color:#e6db74">&#39;Z&#39;</span>),(<span style="color:#ae81ff">0</span><span style="color:#f92672">..</span><span style="color:#ae81ff">9</span>)<span style="color:#f92672">].</span>map <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>item<span style="color:#f92672">|</span>
+character_set <span style="color:#f92672">=</span>  <span style="color:#f92672">[</span>(<span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">..</span><span style="color:#e6db74">&#39;z&#39;</span>),(<span style="color:#e6db74">&#39;A&#39;</span><span style="color:#f92672">..</span><span style="color:#e6db74">&#39;Z&#39;</span>),(<span style="color:#ae81ff">0</span><span style="color:#f92672"></span><span style="color:#f92672">..</span><span style="color:#ae81ff">9</span><span style="color:#f92672"></span>)<span style="color:#f92672">]</span><span style="color:#f92672">.</span>map <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>item<span style="color:#f92672">|</span>
   item<span style="color:#f92672">.</span>to_a
 <span style="color:#66d9ef">end</span>
 character_set<span style="color:#f92672">.</span>flatten!
 
-password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
-<span style="color:#ae81ff">31</span><span style="color:#f92672">.</span>times <span style="color:#66d9ef">do</span>
-  password <span style="color:#f92672">+=</span> character_set<span style="color:#f92672">[</span>rand(character_set<span style="color:#f92672">.</span>length)<span style="color:#f92672">].</span>to_s
+password <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">&#34;</span>
+<span style="color:#ae81ff">31</span><span style="color:#f92672"></span><span style="color:#f92672">.</span>times <span style="color:#66d9ef">do</span>
+  password <span style="color:#f92672">+=</span> character_set<span style="color:#f92672">[</span>rand(character_set<span style="color:#f92672">.</span>length)<span style="color:#f92672">]</span><span style="color:#f92672">.</span>to_s
 <span style="color:#66d9ef">end</span>
 
-puts password</code></pre></div>
-<h2 id="shamir-s-secret-sharing-scheme">Shamir&rsquo;s Secret Sharing Scheme</h2>
-
+puts password
+</code></pre></div><h2 id="shamirs-secret-sharing-scheme">Shamir's Secret Sharing Scheme</h2>
 <p>Citing from the Wikipedia article about Secret Sharing:</p>
-
 <pre><code>In cryptography, a secret sharing scheme is a method for distributing a secret
 amongst a group of participants, each of which is allocated a share of the
 secret. The secret can only be reconstructed when the shares are combined
@@ -159,15 +153,12 @@ Note that Shamir's scheme is provable secure, that means: in a (t,n) scheme one
 can prove that it makes no difference whether an attacker has t-1 valid shares
 at his disposal or none at all; as long as he has less than t shares, there is
 no better option than guessing to find out the secret.
-</code></pre>
-
-<p>There is a fedora package named <code>ssss</code> that can split a string up to 128
+</code></pre><p>There is a fedora package named <code>ssss</code> that can split a string up to 128
 characters long into X pieces, requiring at least Y pieces to recover it.
 Assuming the pieces are broken up over several different locations and stored
-in different manners it&rsquo;s a fairly strong way to store passwords or other
+in different manners it's a fairly strong way to store passwords or other
 information that needs to be written once and recovered rarely.  The following
 example uses X = 5, and Y = 3:</p>
-
 <pre><code>[root@localhost ~]# ssss-split -t 3 -n 5
 Generating shares using a (3,5) scheme with dynamic security level.
 Enter the secret, at most 128 ASCII characters: my secret root password
@@ -177,17 +168,11 @@ Using a 184 bit security level.
 3-fa1c3a9c6df8af0779c36de6c33f6e36e989d0e0b91309
 4-468de7d6eb36674c9cf008c8e8fc8c566537ad6301eb9e
 5-4756974923c0dce0a55f4774d09ca7a4865f64f56a4ee0
-</code></pre>
-
-<p>You make get the following error message as well which is safe to ignore as
-long as you&rsquo;re on a fully trusted system, and are the only user of such system.</p>
-
+</code></pre><p>You make get the following error message as well which is safe to ignore as
+long as you're on a fully trusted system, and are the only user of such system.</p>
 <pre><code>WARNING: couldn't get memory lock (ENOMEM, try to adjust RLIMIT_MEMLOCK!).
-</code></pre>
-
-<p>To recover the example above, we need to tell it that we need 3 (being our Y)
+</code></pre><p>To recover the example above, we need to tell it that we need 3 (being our Y)
 of the pieces to recover the password and it can be accomplished like so:</p>
-
 <pre><code>[root@localhost ~]# ssss-combine -t 3
 Enter 3 shares separated by newlines:
 Share [1/3]: 3-fa1c3a9c6df8af0779c36de6c33f6e36e989d0e0b91309
@@ -195,7 +180,6 @@ Share [2/3]: 5-4756974923c0dce0a55f4774d09ca7a4865f64f56a4ee0
 Share [3/3]: 2-fbc74a03a50e14ab406c225afb5f45c40ae11976d2b665
 Resulting secret: my secret root password
 </code></pre>
-
 </div>
 
   
@@ -238,7 +222,7 @@ Resulting secret: my secret root password
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

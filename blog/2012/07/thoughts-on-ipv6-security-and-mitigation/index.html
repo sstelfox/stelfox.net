@@ -2,16 +2,16 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric and now I suddenly have an opinion on the state of IPv6 security. This is something that I&rsquo;ve been meaning to do for some time and have been mulling over in the back of my mind. I&rsquo;ll go over the details from start to finish of setting up hurricane electric on the router in another post as the information to do so is very scattered and disjointed.'>
+<meta name='description' content='I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric and now I suddenly have an opinion on the state of IPv6 security. This is something that I&#39;ve been meaning to do for some time and have been mulling over in the back of my mind. I&#39;ll go over the details from start to finish of setting up hurricane electric on the router in another post as the information to do so is very scattered and disjointed.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Thoughts on IPv6 Security and Mitigation • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric and now I suddenly have an opinion on the state of IPv6 security. This is something that I&rsquo;ve been meaning to do for some time and have been mulling over in the back of my mind. I&rsquo;ll go over the details from start to finish of setting up hurricane electric on the router in another post as the information to do so is very scattered and disjointed.'>
+<meta property='og:description' content='I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric and now I suddenly have an opinion on the state of IPv6 security. This is something that I&#39;ve been meaning to do for some time and have been mulling over in the back of my mind. I&#39;ll go over the details from start to finish of setting up hurricane electric on the router in another post as the information to do so is very scattered and disjointed.'>
 <meta property='og:url' content='https://stelfox.net/blog/2012/07/thoughts-on-ipv6-security-and-mitigation/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='networking'><meta property='article:tag' content='security'><meta property='article:published_time' content='2012-07-22T03:07:42Z'/><meta property='article:modified_time' content='2012-07-22T03:07:42Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Thoughts on IPv6 Security and Mitigation • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2012/07/thoughts-on-ipv6-security-and-mitigation/'>
@@ -110,91 +110,78 @@ if (!doNotTrack) {
   <div class='container entry-content'>
   <p>I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric
 and now I suddenly have an opinion on the state of IPv6 security. This is
-something that I&rsquo;ve been meaning to do for some time and have been mulling over
-in the back of my mind. I&rsquo;ll go over the details from start to finish of
+something that I've been meaning to do for some time and have been mulling over
+in the back of my mind. I'll go over the details from start to finish of
 setting up hurricane electric on the router in another post as the information
 to do so is very scattered and disjointed. It does appear to be very well
 documented on the OpenWRT wiki but I found that they leave out some very
 important steps, so stay tuned for that.</p>
-
 <p>Lets start with the loss of NAT. NAT was never intended to be a security
 measure and lots of people will argue with me for saying that it was. However,
 the truth of the matter is that any machine that is behind a NAT is not
 directly addressable from the internet without someone on the inside
 intentionally poking holes (even if that someone is a bad-guy).</p>
-
 <p>Anyone technically knowledgeable enough can usually use fingerprints of how a
 machine responds to different types of traffic both normal and unusual to
 identify what operating system, version, and specific details about the
 services and potential vulnerabilities of that machine. This information is
 invaluable to attackers.</p>
-
-<p>One of IPv6&rsquo;s biggest selling points (and one that I quite enjoy, don&rsquo;t
+<p>One of IPv6's biggest selling points (and one that I quite enjoy, don't
 misunderstand this post) is that every device is addressable. This can
-potentially allow attackers to learn more about what they&rsquo;re attacking.</p>
-
+potentially allow attackers to learn more about what they're attacking.</p>
 <p>So how do you counter this? Well firewalls can help quite a bit in thwarting OS
-fingerprinting, but even the strongest firewall won&rsquo;t completely prevent this.
-Another, more protective layer that IPv6 gives you for free is it&rsquo;s sheer size.</p>
-
+fingerprinting, but even the strongest firewall won't completely prevent this.
+Another, more protective layer that IPv6 gives you for free is it's sheer size.</p>
 <p>Doing a pure enumeration of a single home subnet remotely (that is you are not
 on the link IPv6 local link) would take millennia by some estimations, as
 opposed the IPv4 address space which could be done at home in a matter of
 weeks. One house vs the world. That is the scale we are now working at in IPv6.</p>
-
 <p>The vast scale, however, while enough to defend against random scans, will not
 prevent your address showing up in server logs that you connect to. A single
 IPv6 address can be scanned just as easily as an IPv4 address.</p>
-
-<p>What&rsquo;s more is that once an attacker has a presence on a subnet they can
+<p>What's more is that once an attacker has a presence on a subnet they can
 enumerate every single machine on that network in a matter of seconds to
 minutes. Since most home users are infected through drive by trojans, found in
 emails, and websites that the user chooses to go to, and attackers are already
 used to not having direct access to a machine from the internet, means the
-slowness and difficulty of the raw scans just simply won&rsquo;t be an issue.</p>
-
+slowness and difficulty of the raw scans just simply won't be an issue.</p>
 <p>Due too the ease of enumerating local networks and that they probably contain
-more vulnerable machines&hellip;. I&rsquo;ll leave that extrapolation as an exercise to my
+more vulnerable machines&hellip;. I'll leave that extrapolation as an exercise to my
 readers. I do predict that infrastructure will become a larger target due to
 this, just to collect their logs to attack home users.</p>
-
 <p>The next thing that I want to bring up is IPv6, by default, uses the
-interface&rsquo;s MAC address to generate the last 12 characters / 48 bits of the
+interface's MAC address to generate the last 12 characters / 48 bits of the
 IPv6 address. The rest of the local address consists of an identifier
 indicating that the address was generated using a MAC address and was not
 randomly generated.</p>
-
 <p>So what does this actually tell us? Well if the OS and OS version can help up
 specify attacks, why not the brand and possibly the model of the MAC address?
 What attack vectors are waiting in the firmware of our ethernet and wireless
 cards? Firmware that almost never gets updated, and is known to have bugs and
 quirks?</p>
-
 <p>That one is actually an easy one, RFC 3041 defines &ldquo;Privacy Addresses&rdquo;. These
 are completely random local addresses that get generated once a day. Logs
 become increasingly useless on the server end, there is a lot of decoys on
-networks, and we&rsquo;re no longer exposing as much information to potential
+networks, and we're no longer exposing as much information to potential
 hostiles.</p>
-
 <p>I use Fedora 17 and it took me a while to figure out how to enable privacy
 addresses the &ldquo;Red Hat&rdquo; way. You can easily do it generally on any Linux system
 with sysctl. Just add the following to your <code>/etc/sysctl.conf</code> and reload
 sysctl:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#a6e22e">net.ipv6.conf.all.use_tempaddr</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2</span>
-<span style="color:#a6e22e">net.ipv6.conf.default.use_tempaddr</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2</span></code></pre></div>
-<p>But that isn&rsquo;t the &ldquo;Red Hat&rdquo; way. Red Hat manages it&rsquo;s interfaces and network
+<span style="color:#a6e22e">net.ipv6.conf.default.use_tempaddr</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2</span>
+</code></pre></div><p>But that isn't the &ldquo;Red Hat&rdquo; way. Red Hat manages it's interfaces and network
 configuration through various interface configuration files living in
 <code>/etc/sysconfig/network-scripts</code>. For any IPv6 enabled interface you can turn
 on privacy addresses with the following line for example in
 <code>/etc/sysconfig/network-scripts/ifcfg-eth0</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">IPV6_PRIVACY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rfc3041&#34;</span></code></pre></div>
-<p>After restarting your network interfaces they will additionally have privacy
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">IPV6_PRIVACY<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;rfc3041&#34;</span>
+</code></pre></div><p>After restarting your network interfaces they will additionally have privacy
 addresses that will be change automatically. The interfaces still have the MAC
 based addresses as well but they will not longer be the default and thus will
 not show up in remote server logs.</p>
-
 <p>Now, what would be a solid and strong step forward was a way to have a local
-machine register it&rsquo;s privacy address with a local IDS/IPS with an expiration,
+machine register it's privacy address with a local IDS/IPS with an expiration,
 and to automatically trigger the IDS/IPS whenever a new connection is made to
 an expired privacy address. It would almost be like a free honey pot on your
 own network.</p>
@@ -248,7 +235,7 @@ own network.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

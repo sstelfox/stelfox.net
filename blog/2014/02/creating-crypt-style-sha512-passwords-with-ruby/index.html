@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='I needed to generate crypt-style SHA512 passwords in ruby for an /etc/shadow file. After a bunch of Googling and messing around with the OpenSSL library I finally found a very simple built-in way to handle this.
-require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&rsquo;ll get a string that looks like:
-$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.  If you don&rsquo;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&rsquo;t recommended.'>
+require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&#39;ll get a string that looks like:
+$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk. If you don&#39;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&#39;t recommended.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Creating Crypt Style SHA512 Passwords With Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='I needed to generate crypt-style SHA512 passwords in ruby for an /etc/shadow file. After a bunch of Googling and messing around with the OpenSSL library I finally found a very simple built-in way to handle this.
-require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&rsquo;ll get a string that looks like:
-$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.  If you don&rsquo;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&rsquo;t recommended.'>
+require &#39;securerandom&#39; &#39;password&#39;.crypt(&#39;$6$&#39; &#43; SecureRandom.random_number(36 ** 8).to_s(36)) You&#39;ll get a string that looks like:
+$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk. If you don&#39;t want to use the SecureRandom module you can replace the random call with simply rand(36 ** 8) though this isn&#39;t recommended.'>
 <meta property='og:url' content='https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='development'><meta property='article:tag' content='linux'><meta property='article:tag' content='ruby'><meta property='article:tag' content='security'><meta property='article:published_time' content='2014-02-17T15:28:27-05:00'/><meta property='article:modified_time' content='2014-02-17T15:28:27-05:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Creating Crypt Style SHA512 Passwords With Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2014/02/creating-crypt-style-sha512-passwords-with-ruby/'>
@@ -117,15 +117,11 @@ file. After a bunch of Googling and messing around with the OpenSSL library I
 finally found a very simple built-in way to handle this.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;securerandom&#39;</span>
 
-<span style="color:#e6db74">&#39;password&#39;</span><span style="color:#f92672">.</span>crypt(<span style="color:#e6db74">&#39;$6$&#39;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SecureRandom</span><span style="color:#f92672">.</span>random_number(<span style="color:#ae81ff">36</span> <span style="color:#f92672">**</span> <span style="color:#ae81ff">8</span>)<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">36</span>))</code></pre></div>
-<p>You&rsquo;ll get a string that looks like:</p>
-
+<span style="color:#e6db74">&#39;password&#39;</span><span style="color:#f92672">.</span>crypt(<span style="color:#e6db74">&#39;$6$&#39;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">SecureRandom</span><span style="color:#f92672">.</span>random_number(<span style="color:#ae81ff">36</span> <span style="color:#f92672"></span><span style="color:#f92672">**</span> <span style="color:#ae81ff">8</span><span style="color:#f92672"></span>)<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">36</span><span style="color:#f92672"></span>))
+</code></pre></div><p>You'll get a string that looks like:</p>
 <pre><code>$6$4dksjo1b$Lt194Dwy7r/7WbM8MezYZysmGcxjaiisgTrTBbHkyBZFXeqQTG0J5hep4wLM/AmYxlGNLRy0OWATLDZCqjwCk.
-</code></pre>
-
-<p>If you don&rsquo;t want to use the <code>SecureRandom</code> module you can replace the random
-call with simply <code>rand(36 ** 8)</code> though this isn&rsquo;t recommended.</p>
-
+</code></pre><p>If you don't want to use the <code>SecureRandom</code> module you can replace the random
+call with simply <code>rand(36 ** 8)</code> though this isn't recommended.</p>
 <p>Enjoy!</p>
 
 </div>
@@ -177,7 +173,7 @@ call with simply <code>rand(36 ** 8)</code> though this isn&rsquo;t recommended.
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-If doing this from within an LXC container you&rsquo;ll need to perform the following two steps (this didnt work):
-mkdir /var/lib/libvirt/lxc/${VMNAME}/dev/net mknod /var/lib/libvirt/lxc/${VMNAME}/dev/net/tun c 10 200  yum install openssl openvpn -y mkdir -p /etc/openvpn/keys cd /etc/openvpn/keys openssl dhparam -rand - 1024 &gt; dh1024.'>
+If doing this from within an LXC container you&#39;ll need to perform the following two steps (this didnt work):
+mkdir /var/lib/libvirt/lxc/${VMNAME}/dev/net mknod /var/lib/libvirt/lxc/${VMNAME}/dev/net/tun c 10 200 yum install openssl openvpn -y mkdir -p /etc/openvpn/keys cd /etc/openvpn/keys openssl dhparam -rand - 1024 &gt; dh1024.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='OpenVPN • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-If doing this from within an LXC container you&rsquo;ll need to perform the following two steps (this didnt work):
-mkdir /var/lib/libvirt/lxc/${VMNAME}/dev/net mknod /var/lib/libvirt/lxc/${VMNAME}/dev/net/tun c 10 200  yum install openssl openvpn -y mkdir -p /etc/openvpn/keys cd /etc/openvpn/keys openssl dhparam -rand - 1024 &gt; dh1024.'>
+If doing this from within an LXC container you&#39;ll need to perform the following two steps (this didnt work):
+mkdir /var/lib/libvirt/lxc/${VMNAME}/dev/net mknod /var/lib/libvirt/lxc/${VMNAME}/dev/net/tun c 10 200 yum install openssl openvpn -y mkdir -p /etc/openvpn/keys cd /etc/openvpn/keys openssl dhparam -rand - 1024 &gt; dh1024.'>
 <meta property='og:url' content='https://stelfox.net/notes/openvpn/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>OpenVPN • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/openvpn/'>
@@ -112,18 +112,14 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
-<p>If doing this from within an LXC container you&rsquo;ll need to perform the following
+until I get around to updating it.</strong></em></p>
+<p>If doing this from within an LXC container you'll need to perform the following
 two steps (this didnt work):</p>
-
 <pre><code>mkdir /var/lib/libvirt/lxc/${VMNAME}/dev/net
 mknod /var/lib/libvirt/lxc/${VMNAME}/dev/net/tun c 10 200
-</code></pre>
-
-<pre><code>yum install openssl openvpn -y
+</code></pre><pre><code>yum install openssl openvpn -y
 mkdir -p /etc/openvpn/keys
 cd /etc/openvpn/keys
 openssl dhparam -rand - 1024 &gt; dh1024.pem
@@ -151,10 +147,7 @@ echo -e 'US\nVermont\nBurlington\nstelfox.net\n\nclient01.stelfox.net\n\n\n\n' \
 # Sign the client cert
 openssl x509 -req -in client.csr -days 365 -CA ca.crt -CAkey ca.key \
   -set_serial 01 -out client.crt
-</code></pre>
-
-<p>Create the server configuration file:</p>
-
+</code></pre><p>Create the server configuration file:</p>
 <pre><code>cat &lt;&lt; EOF &gt; /etc/openvpn/server.conf
 port 1194
 dev tun
@@ -188,14 +181,11 @@ verb 4
 status openvpn-status.log
 log-append openvpn.log
 EOF
-</code></pre>
-
-<pre><code>iptables -t filter -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
+</code></pre><pre><code>iptables -t filter -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -t filter -A FORWARD -s 10.8.0.0/16 -i tun0 -o eth0 -j ACCEPT
 iptables -t nat -A POSTROUTING -s 10.8.0.0/16 -o eth0 -j MASQUERADE
 echo 1 &gt; /proc/sys/net/ipv4/ip_forward
 </code></pre>
-
 </div>
 
   
@@ -209,7 +199,7 @@ echo 1 &gt; /proc/sys/net/ipv4/ip_forward
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/openstack/'>
+      <a href='/notes/pam/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -217,7 +207,7 @@ echo 1 &gt; /proc/sys/net/ipv4/ip_forward
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Openstack</a>
+        <span class='screen-reader-text'>Previous post: </span>PAM</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/openvas/'>
         <span class='screen-reader-text'>Next post: </span>OpenVAS<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -238,7 +228,7 @@ echo 1 &gt; /proc/sys/net/ipv4/ip_forward
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

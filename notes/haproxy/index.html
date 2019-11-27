@@ -13,7 +13,7 @@ Notes on Setup I setup two simple nginx webservers to test this configuration. T
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>HAProxy • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/haproxy/'>
@@ -110,30 +110,22 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="notes-on-setup">Notes on Setup</h2>
-
 <p>I setup two simple nginx webservers to test this configuration. They both
 served up a simple static page whose only contents was an indication of which
 server it was served from.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">yum install haproxy keepalived -y</code></pre></div>
-<p>Setup the logging haproxy will use</p>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">yum install haproxy keepalived -y
+</code></pre></div><p>Setup the logging haproxy will use</p>
 <pre><code>cat &lt;&lt; EOF &gt; /etc/rsyslog.d/haproxy.conf
 local2.*        /var/log/haproxy.log
 EOF
 
 service rsyslog restart
-</code></pre>
-
-<p>The following is the config that worked as an initial pass setting up haproxy.
+</code></pre><p>The following is the config that worked as an initial pass setting up haproxy.
 The configuration lives at <code>/etc/haproxy/haproxy.cfg</code>.</p>
-
 <pre><code>global
   log         /dev/log local2 info
 
@@ -177,21 +169,14 @@ listen ssl :443
   mode    tcp
   server  nginx-01 192.168.122.61:443 check
   server  nginx-02 192.168.122.62:443 check
-</code></pre>
-
-<p>You will also need to open up the outbound firewall to nginx and the inbound
+</code></pre><p>You will also need to open up the outbound firewall to nginx and the inbound
 firewall to the port.</p>
-
 <pre><code>-A INPUT  -m tcp -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
 -A OUTPUT -m tcp -p tcp --dport 80 -j ACCEPT
-</code></pre>
-
-<p>And setup haproxy to run.</p>
-
+</code></pre><p>And setup haproxy to run.</p>
 <pre><code>systemctl enable haproxy.service
 systemctl start haproxy.service
 </code></pre>
-
 </div>
 
   
@@ -205,7 +190,7 @@ systemctl start haproxy.service
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/httpd/'>
+      <a href='/notes/high-availability/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -213,7 +198,7 @@ systemctl start haproxy.service
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>HTTPd</a>
+        <span class='screen-reader-text'>Previous post: </span>High Availability</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/grub/'>
         <span class='screen-reader-text'>Next post: </span>Grub<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -234,7 +219,7 @@ systemctl start haproxy.service
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

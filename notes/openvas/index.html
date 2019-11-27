@@ -17,7 +17,7 @@ Scanner As root run openvas-mkcert like the following:
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>OpenVAS • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/openvas/'>
@@ -114,21 +114,14 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="setup">Setup</h2>
-
 <p>Install the packages <code>nikto</code>, <code>openvas-scanner</code>, <code>openvas-manager</code>, and
 <code>openvas-client</code>.</p>
-
 <h2 id="scanner">Scanner</h2>
-
 <p>As root run openvas-mkcert like the following:</p>
-
 <pre><code>[root@localhost ~]# openvas-mkcert
 -------------------------------------------------------------------------------
                         Creation of the OpenVAS SSL Certificate
@@ -163,12 +156,8 @@ OpenVAS Server :
 Press [ENTER] to exit
 
 [root@localhost ~]#
-</code></pre>
-
-<p>As root get the NVT feed by running the command <code>openvas-nvt-sync</code>.</p>
-
+</code></pre><p>As root get the NVT feed by running the command <code>openvas-nvt-sync</code>.</p>
 <p>Create a certificate for the OpenVAS-Manager to connect to the scanner like so:</p>
-
 <pre><code>[root@localhost ~]# openvas-mkcert-client -i
 This script will now ask you the relevant information to create the SSL client certificates for OpenVAS.
 
@@ -235,13 +224,10 @@ Enter the rules for this user, and hit ctrl-D once you are done:
 (the user can have an empty rules set)
 User om added to OpenVAS.
 [root@localhost ~]#
-</code></pre>
-
-<p>Setup GPG trust of the nvt feed. You&rsquo;ll need to create a GPG key for openvas,
+</code></pre><p>Setup GPG trust of the nvt feed. You'll need to create a GPG key for openvas,
 download and verify the transfer integrity key, import &amp; sign the transfer
 integrity key and turn on plugin signature checking. This can be done with the
 following set of commands:</p>
-
 <pre><code>[root@localhost ~]# mkdir /etc/openvas/gnupg
 [root@localhost ~]# gpg --homedir=/etc/openvas/gnupg --gen-key
 gpg: WARNING: unsafe permissions on homedir `/etc/openvas/gnupg'
@@ -350,47 +336,34 @@ key &quot;OpenVAS Plugin Verifier&quot; (########)
 The signature will be marked as non-exportable.
 
 Really sign? (y/N) y
-</code></pre>
-
-<p>Alright now we need to start up the scanner service for the first time. It will
+</code></pre><p>Alright now we need to start up the scanner service for the first time. It will
 take a LONG time the first time and a significant amount of time everytime
 there are updates to the NVT feed, though not nearly as long for the updates.</p>
-
-<p>It takes so long that the service script will think that it failed. It HASN&rsquo;T,
-it&rsquo;s still doing it magic in the background, it&rsquo;s easiest to just watch it go
-with top. When it finally settles down it&rsquo;ll be ready for the next step.</p>
-
+<p>It takes so long that the service script will think that it failed. It HASN'T,
+it's still doing it magic in the background, it's easiest to just watch it go
+with top. When it finally settles down it'll be ready for the next step.</p>
 <h2 id="openvas-manager">OpenVAS Manager</h2>
-
-<p>Now we need to build the OpenVAS manager database. I&rsquo;m not entirely sure what
+<p>Now we need to build the OpenVAS manager database. I'm not entirely sure what
 the manager gets us as right now we have a working scanner (albeit without
 users). I know it provides alternative connection methods such as an XML based
 API for web services. Hey it might be useful it might not and there is some
-funnyness but it&rsquo;s part of the full installation so I&rsquo;m going to include
+funnyness but it's part of the full installation so I'm going to include
 directions.</p>
-
-<p>That touch at the beginning? Yeah if you don&rsquo;t create that file you&rsquo;ll get a
+<p>That touch at the beginning? Yeah if you don't create that file you'll get a
 &ldquo;Aborted (core dumped)&rdquo; message when you try and rebuild the database. Having
 it in existence though allows it to just run smoothly. Pretty big bug if you
 ask me but one with an easy work around.</p>
-
 <pre><code>[root@localhost ~]# touch /var/lib/openvas/mgr/tasks.db
 [root@localhost ~]# openvasmd --rebuild
-</code></pre>
-
-<h2 id="openvas-administrator">OpenVAS Administrator</h2>
-
-<p>This is getting it&rsquo;s own special section as it isn&rsquo;t available via the standard
-Fedora package repositories annoyingly enough. For the time being I&rsquo;m going to
+</code></pre><h2 id="openvas-administrator">OpenVAS Administrator</h2>
+<p>This is getting it's own special section as it isn't available via the standard
+Fedora package repositories annoyingly enough. For the time being I'm going to
 leave this alone.</p>
-
 <h2 id="creating-users">Creating Users</h2>
-
 <p>I personally prefer using certificate for authentication against the server.
 Easier than typing in a password every time and more secure in some ways. To
 create a user that authenticates with a certificate you need to use the
 <code>openvas-mkcert-client</code> command like so:</p>
-
 <pre><code>[root@localhost ~]# openvas-mkcert-client
 This script will now ask you the relevant information to create the SSL client certificates for OpenVAS.
 
@@ -460,10 +433,7 @@ You will have to copy them by hand.
 [root@localhost ~]# chown -R &lt;username&gt;:&lt;username&gt; /tmp/openvas-mkcert-client.15980/
 [root@localhost ~]# mv /tmp/openvas-mkcert-client.15980/ /home/&lt;username&gt;/
 [root@localhost ~]# cp /etc/pki/openvas/CA/cacert.pem /home/&lt;username&gt;/openvas-mkcert-client.15980/
-</code></pre>
-
-<h2 id="verification">Verification</h2>
-
+</code></pre><h2 id="verification">Verification</h2>
 <p>Save the following script and make it executable.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/sh
 </span><span style="color:#75715e"></span>
@@ -494,7 +464,7 @@ You will have to copy them by hand.
 <span style="color:#75715e"># Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.</span>
 
 LOG<span style="color:#f92672">=</span>/tmp/openvas-check-setup.log
-CHECKVERSION<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>.1.3
+CHECKVERSION<span style="color:#f92672">=</span>2.1.3
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;--server&#34;</span> -o <span style="color:#e6db74">&#34;</span>$2<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;--server&#34;</span> <span style="color:#f92672">]</span>
 <span style="color:#66d9ef">then</span>
@@ -534,14 +504,14 @@ CHECKVERSION<span style="color:#f92672">=</span><span style="color:#ae81ff">2</s
   GSD_MINOR<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;2&#34;</span>
 <span style="color:#66d9ef">fi</span>
 
-echo <span style="color:#e6db74">&#34;openvas-check-setup </span>$CHECKVERSION<span style="color:#e6db74">&#34;</span>
-echo <span style="color:#e6db74">&#34;  Test completeness and readiness of OpenVAS-</span>$VER<span style="color:#e6db74">&#34;</span>
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">openvas-check-setup </span>$CHECKVERSION<span style="color:#e6db74">&#34;</span>
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">  Test completeness and readiness of OpenVAS-</span>$VER<span style="color:#e6db74">&#34;</span>
 echo <span style="color:#e6db74">&#34;&#34;</span>
 echo <span style="color:#e6db74">&#34;  Please report us any non-detected problems and&#34;</span>
 echo <span style="color:#e6db74">&#34;  help us to improve this check routine:&#34;</span>
 echo <span style="color:#e6db74">&#34;  http://lists.wald.intevation.org/mailman/listinfo/openvas-discuss&#34;</span>
 echo <span style="color:#e6db74">&#34;&#34;</span>
-echo <span style="color:#e6db74">&#34;  Send us the log-file (</span>$LOG<span style="color:#e6db74">) to help analyze the problem.&#34;</span>
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">  Send us the log-file (</span>$LOG<span style="color:#e6db74">) to help analyze the problem.</span><span style="color:#e6db74">&#34;</span>
 echo <span style="color:#e6db74">&#34;&#34;</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$MODE<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;desktop&#34;</span> <span style="color:#f92672">]</span>
@@ -551,16 +521,16 @@ echo <span style="color:#e6db74">&#34;&#34;</span>
   echo <span style="color:#e6db74">&#34;&#34;</span>
 <span style="color:#66d9ef">fi</span>
 
-log_and_print <span style="color:#f92672">()</span>
+log_and_print <span style="color:#f92672">(</span><span style="color:#f92672">)</span>
 <span style="color:#f92672">{</span>
   echo <span style="color:#e6db74">&#34;       &#34;</span> $1
   echo <span style="color:#e6db74">&#34;       &#34;</span> $1 &gt;&gt; $LOG
 <span style="color:#f92672">}</span>
 
-check_failed <span style="color:#f92672">()</span>
+check_failed <span style="color:#f92672">(</span><span style="color:#f92672">)</span>
 <span style="color:#f92672">{</span>
   echo <span style="color:#e6db74">&#34;&#34;</span>
-  echo <span style="color:#e6db74">&#34; ERROR: Your OpenVAS-</span>$VER<span style="color:#e6db74"> installation is not yet complete!&#34;</span>
+  echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74"> ERROR: Your OpenVAS-</span>$VER<span style="color:#e6db74"> installation is not yet complete!</span><span style="color:#e6db74">&#34;</span>
   echo <span style="color:#e6db74">&#34;&#34;</span>
   echo <span style="color:#e6db74">&#34;Please follow the instructions marked with FIX above and run this&#34;</span>
   echo <span style="color:#e6db74">&#34;script again.&#34;</span>
@@ -568,21 +538,21 @@ check_failed <span style="color:#f92672">()</span>
   echo <span style="color:#e6db74">&#34;If you think this result is wrong, please report your observation&#34;</span>
   echo <span style="color:#e6db74">&#34;and help us to improve this check routine:&#34;</span>
   echo <span style="color:#e6db74">&#34;http://lists.wald.intevation.org/mailman/listinfo/openvas-discuss&#34;</span>
-  echo <span style="color:#e6db74">&#34;Please attach the log-file (</span>$LOG<span style="color:#e6db74">) to help us analyze the problem.&#34;</span>
+  echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Please attach the log-file (</span>$LOG<span style="color:#e6db74">) to help us analyze the problem.</span><span style="color:#e6db74">&#34;</span>
   echo <span style="color:#e6db74">&#34;&#34;</span>
   exit <span style="color:#ae81ff">1</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># LOG start</span>
-echo <span style="color:#e6db74">&#34;openvas-check-setup </span>$CHECKVERSION<span style="color:#e6db74">&#34;</span> &gt; $LOG
-echo <span style="color:#e6db74">&#34;  Mode:  </span>$MODE<span style="color:#e6db74">&#34;</span> &gt;&gt; $LOG
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">openvas-check-setup </span>$CHECKVERSION<span style="color:#e6db74">&#34;</span> &gt; $LOG
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">  Mode:  </span>$MODE<span style="color:#e6db74">&#34;</span> &gt;&gt; $LOG
 echo <span style="color:#e6db74">&#34;  Date: &#34;</span> <span style="color:#e6db74">`</span>date -R<span style="color:#e6db74">`</span> &gt;&gt; $LOG
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 echo <span style="color:#e6db74">&#34;Step 1: Checking OpenVAS Scanner ... &#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking for old OpenVAS Scanner &lt;= 2.0 ...&#34;</span> &gt;&gt; $LOG
-openvasd -V &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+openvasd -V &gt;&gt; $LOG 2&gt;&amp;<span style="color:#ae81ff">1</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>: <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: Old version of OpenVAS Scanner detected.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;FIX: Please remove the installation of the old OpenVAS Scanner (openvasd).&#34;</span>
@@ -591,7 +561,7 @@ openvasd -V &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span sty
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 echo <span style="color:#e6db74">&#34;Checking presence of OpenVAS Scanner ...&#34;</span> &gt;&gt; $LOG
-openvassd --version &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+openvassd --version &gt;&gt; $LOG 2&gt;&amp;<span style="color:#ae81ff">1</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: No OpenVAS Scanner (openvassd) found.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;FIX: Please install OpenVAS Scanner.&#34;</span>
@@ -603,14 +573,14 @@ echo <span style="color:#e6db74">&#34;Checking OpenVAS Scanner version ...&#34;<
 
 VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>openvassd --version | head -1 | sed -e <span style="color:#e6db74">&#34;s/OpenVAS Scanner //&#34;</span><span style="color:#e6db74">`</span>
 
-<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;^</span>$SCANNER_MAJOR<span style="color:#e6db74">\.</span>$SCANNER_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-  log_and_print <span style="color:#e6db74">&#34;ERROR: OpenVAS Scanner too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
-  log_and_print <span style="color:#e6db74">&#34;FIX: Please install OpenVAS Scanner </span>$SCANNER_MAJOR<span style="color:#e6db74">.</span>$SCANNER_MINOR<span style="color:#e6db74">.&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^</span>$SCANNER_MAJOR<span style="color:#e6db74">\.</span>$SCANNER_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ERROR: OpenVAS Scanner too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Please install OpenVAS Scanner </span>$SCANNER_MAJOR<span style="color:#e6db74">.</span>$SCANNER_MINOR<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
   check_failed
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Scanner is present in version </span>$VERSION<span style="color:#e6db74">.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Scanner is present in version </span>$VERSION<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 
 openvassd -s &gt;&gt; $LOG
 
@@ -623,7 +593,7 @@ CAFILE<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>op
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Scanner CA Certificate is present as </span>$CAFILE<span style="color:#e6db74">.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Scanner CA Certificate is present as </span>$CAFILE<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking NVT collection ...&#34;</span> &gt;&gt; $LOG
 
@@ -634,11 +604,11 @@ PLUGINSFOLDER<span style="color:#f92672">=</span><span style="color:#e6db74">`</
   check_failed
 <span style="color:#66d9ef">fi</span>
 
-OLDPLUGINSFOLDER<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>echo <span style="color:#e6db74">&#34;</span>$PLUGINSFOLDER<span style="color:#e6db74">&#34;</span> | grep -q -v <span style="color:#e6db74">&#34;/var/&#34;</span> <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span><span style="color:#e6db74">`</span>
+OLDPLUGINSFOLDER<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>echo <span style="color:#e6db74">&#34;</span>$PLUGINSFOLDER<span style="color:#e6db74">&#34;</span> | grep -q -v <span style="color:#e6db74">&#34;/var/&#34;</span> 2&gt;&amp;1<span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>: <span style="color:#66d9ef">then</span>
   CONFFILE<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>openvassd -s | grep config_file | sed -e <span style="color:#e6db74">&#34;s/^config_file = //&#34;</span><span style="color:#e6db74">`</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: Your OpenVAS Scanner configuration seems to be from a pre-OpenVAS-4 installation and contains non-FHS compliant paths.&#34;</span>
-  log_and_print <span style="color:#e6db74">&#34;FIX: Delete your OpenVAS Scanner Configuration file (</span>$CONFFILE<span style="color:#e6db74">).&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Delete your OpenVAS Scanner Configuration file (</span>$CONFFILE<span style="color:#e6db74">).</span><span style="color:#e6db74">&#34;</span>
   check_failed
 <span style="color:#66d9ef">fi</span>
 
@@ -650,7 +620,7 @@ NVTCOUNT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: NVT collection in </span>$PLUGINSFOLDER<span style="color:#e6db74"> contains </span>$NVTCOUNT<span style="color:#e6db74"> NVTs.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: NVT collection in </span>$PLUGINSFOLDER<span style="color:#e6db74"> contains </span>$NVTCOUNT<span style="color:#e6db74"> NVTs.</span><span style="color:#e6db74">&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking status of signature checking in OpenVAS Scanner ...&#34;</span> &gt;&gt; $LOG
 NOSIGCHECK<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>openvassd -s | grep nasl_no_signature_check | sed -e <span style="color:#e6db74">&#34;s/^nasl_no_signature_check = //&#34;</span><span style="color:#e6db74">`</span>
@@ -665,7 +635,7 @@ NOSIGCHECK<span style="color:#f92672">=</span><span style="color:#e6db74">`</spa
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 echo <span style="color:#e6db74">&#34;Step 2: Checking OpenVAS Manager ... &#34;</span>
 echo <span style="color:#e6db74">&#34;Checking presence of OpenVAS Manager ...&#34;</span> &gt;&gt; $LOG
-openvasmd --version &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+openvasmd --version &gt;&gt; $LOG 2&gt;&amp;<span style="color:#ae81ff">1</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: No OpenVAS Manager (openvasmd) found.&#34;</span>
@@ -676,18 +646,18 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>openvasmd --version | head -1 | sed -e <span style="color:#e6db74">&#34;s/OpenVAS Manager //&#34;</span><span style="color:#e6db74">`</span>
 
-<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;^</span>$MANAGER_MAJOR<span style="color:#e6db74">\.</span>$MANAGER_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-  log_and_print <span style="color:#e6db74">&#34;ERROR: OpenVAS Manager too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
-  log_and_print <span style="color:#e6db74">&#34;FIX: Please install OpenVAS Manager </span>$MANAGER_MAJOR<span style="color:#e6db74">.</span>$MANAGER_MINOR<span style="color:#e6db74">.&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^</span>$MANAGER_MAJOR<span style="color:#e6db74">\.</span>$MANAGER_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ERROR: OpenVAS Manager too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Please install OpenVAS Manager </span>$MANAGER_MAJOR<span style="color:#e6db74">.</span>$MANAGER_MINOR<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
   check_failed
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Manager is present in version </span>$VERSION<span style="color:#e6db74">.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Manager is present in version </span>$VERSION<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking OpenVAS Manager client certificate ...&#34;</span> &gt;&gt; $LOG
 CERTDIR<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $CAFILE<span style="color:#e6db74">`</span>
-CLIENTCERTFILE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$CERTDIR<span style="color:#e6db74">/clientcert.pem&#34;</span>
+CLIENTCERTFILE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$CERTDIR<span style="color:#e6db74">/clientcert.pem</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -e $CLIENTCERTFILE <span style="color:#f92672">]</span>: <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: No client certificate file of OpenVAS Manager found.&#34;</span>
@@ -696,27 +666,27 @@ CLIENTCERTFILE<span style="color:#f92672">=</span><span style="color:#e6db74">&#
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Manager client certificate is present as </span>$CLIENTCERTFILE<span style="color:#e6db74">.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Manager client certificate is present as </span>$CLIENTCERTFILE<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking OpenVAS Manager database ...&#34;</span> &gt;&gt; $LOG
 <span style="color:#75715e"># Guess openvas state dir from $PLUGINSFOLDER</span>
 STATEDIR<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>dirname $PLUGINSFOLDER<span style="color:#e6db74">`</span>
-TASKSDB<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$STATEDIR<span style="color:#e6db74">/mgr/tasks.db&#34;</span>
+TASKSDB<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$STATEDIR<span style="color:#e6db74">/mgr/tasks.db</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -e $TASKSDB <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-  log_and_print <span style="color:#e6db74">&#34;ERROR: No OpenVAS Manager database found. (Tried: </span>$TASKSDB<span style="color:#e6db74">)&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ERROR: No OpenVAS Manager database found. (Tried: </span>$TASKSDB<span style="color:#e6db74">)</span><span style="color:#e6db74">&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;FIX: Run &#39;openvasmd --rebuild&#39; while OpenVAS Scanner is running.&#34;</span>
   check_failed
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Manager database found in </span>$TASKSDB<span style="color:#e6db74">.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Manager database found in </span>$TASKSDB<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking access rights of OpenVAS Manager database ...&#34;</span> &gt;&gt; $LOG
 TASKSDBPERMS<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>stat -c <span style="color:#e6db74">&#34;%a&#34;</span> <span style="color:#e6db74">&#34;</span>$TASKSDB<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$TASKSDBPERMS<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;600&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: The access rights of the OpenVAS Manager database are incorrect.&#34;</span>
-  log_and_print <span style="color:#e6db74">&#34;FIX: Run &#39;chmod 600 </span>$TASKSDB<span style="color:#e6db74">&#39;.&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Run &#39;chmod 600 </span>$TASKSDB<span style="color:#e6db74">&#39;.</span><span style="color:#e6db74">&#34;</span>
   check_failed
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
@@ -724,7 +694,7 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 log_and_print <span style="color:#e6db74">&#34;OK: Access rights for the OpenVAS Manager database are correct.&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking sqlite3 presence ...&#34;</span> &gt;&gt; $LOG
-SQLITE3<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type sqlite3 <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+SQLITE3<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type sqlite3 2&gt; /dev/null<span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>: <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find sqlite3 binary, extended manager checks of the OpenVAS Manager installation are disabled.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;SUGGEST: Install sqlite3.&#34;</span>
@@ -741,10 +711,10 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z $TASKSDBREV <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     log_and_print <span style="color:#e6db74">&#34;ERROR: Could not determine database revision, database corrupt or in invalid format.&#34;</span>
-    log_and_print <span style="color:#e6db74">&#34;FIX: Delete database at </span>$TASKSDB<span style="color:#e6db74"> and rebuild it.&#34;</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Delete database at </span>$TASKSDB<span style="color:#e6db74"> and rebuild it.</span><span style="color:#e6db74">&#34;</span>
     check_failed
   <span style="color:#66d9ef">else</span>
-    log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Manager database is at revision </span>$TASKSDBREV<span style="color:#e6db74">.&#34;</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Manager database is at revision </span>$TASKSDBREV<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
   echo <span style="color:#e6db74">&#34;Checking database revision expected by OpenVAS Manager ...&#34;</span> &gt;&gt; $LOG
@@ -755,7 +725,7 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
     log_and_print <span style="color:#e6db74">&#34;FIX: Ensure OpenVAS Manager is installed correctly.&#34;</span>
     check_failed
   <span style="color:#66d9ef">else</span>
-    log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Manager expects database at revision </span>$MANAGERDBREV<span style="color:#e6db74">.&#34;</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Manager expects database at revision </span>$MANAGERDBREV<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $TASKSDBREV -lt $MANAGERDBREV <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -774,12 +744,12 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
     log_and_print <span style="color:#e6db74">&#34;FIX: Make sure OpenVAS Scanner is running with an up-to-date NVT collection and run &#39;openvasmd --rebuild&#39;.&#34;</span>
     check_failed
   <span style="color:#66d9ef">else</span>
-    log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Manager database contains information about </span>$DBNVTCOUNT<span style="color:#e6db74"> NVTs.&#34;</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Manager database contains information about </span>$DBNVTCOUNT<span style="color:#e6db74"> NVTs.</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 <span style="color:#66d9ef">fi</span>
 
 echo <span style="color:#e6db74">&#34;Checking xsltproc presence ...&#34;</span> &gt;&gt; $LOG
-XSLTPROC<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type xsltproc <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+XSLTPROC<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type xsltproc 2&gt; /dev/null<span style="color:#e6db74">`</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find xsltproc binary, most report formats will not work.&#34;</span>
@@ -791,7 +761,7 @@ XSLTPROC<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 echo <span style="color:#e6db74">&#34;Step 3: Checking OpenVAS Administrator ... &#34;</span>
 echo <span style="color:#e6db74">&#34;Checking presence of OpenVAS Administrator ...&#34;</span> &gt;&gt; $LOG
-openvasad --version &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+openvasad --version &gt;&gt; $LOG 2&gt;&amp;<span style="color:#ae81ff">1</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: No OpenVAS Administrator (openvasad) found.&#34;</span>
@@ -802,17 +772,17 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>openvasad --version | head -1 | sed -e <span style="color:#e6db74">&#34;s/OpenVAS Administrator //&#34;</span><span style="color:#e6db74">`</span>
 
-<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;^</span>$ADMINISTRATOR_MAJOR<span style="color:#e6db74">\.</span>$ADMINISTRATOR_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-  log_and_print <span style="color:#e6db74">&#34;ERROR: OpenVAS Administrator too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
-  log_and_print <span style="color:#e6db74">&#34;FIX: Please install OpenVAS Administrator </span>$ADMINISTRATOR_MAJOR<span style="color:#e6db74">.</span>$ADMINISTRATOR_MINOR<span style="color:#e6db74">.&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^</span>$ADMINISTRATOR_MAJOR<span style="color:#e6db74">\.</span>$ADMINISTRATOR_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ERROR: OpenVAS Administrator too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Please install OpenVAS Administrator </span>$ADMINISTRATOR_MAJOR<span style="color:#e6db74">.</span>$ADMINISTRATOR_MINOR<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
   check_failed
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Administrator is present in version </span>$VERSION<span style="color:#e6db74">.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS Administrator is present in version </span>$VERSION<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Checking if users exist ...&#34;</span> &gt;&gt; $LOG
-USERCOUNT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>openvasad -c <span style="color:#e6db74">&#34;list_users&#34;</span> | sed -e <span style="color:#e6db74">&#34;/^</span>$<span style="color:#e6db74">/d&#34;</span> | wc -l<span style="color:#e6db74">`</span>
+USERCOUNT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>openvasad -c <span style="color:#e6db74">&#34;list_users&#34;</span> | sed -e <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">/^</span>$<span style="color:#e6db74">/d</span><span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $USERCOUNT -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: No users found. You need to create at least one user to log in.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;FIX: Create a user using &#39;openvasad -c &#39;add_user&#39; -n &lt;name&gt;&#39;&#34;</span>
@@ -823,7 +793,7 @@ USERCOUNT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 echo <span style="color:#e6db74">&#34;Checking if at least one admin user exists ...&#34;</span> &gt;&gt; $LOG
-ADMINEXISTS<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>ls $STATEDIR/users/*/isadmin <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+ADMINEXISTS<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>ls $STATEDIR/users/*/isadmin 2&gt; /dev/null<span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: No admin user found. You need to create at least one admin user to log in.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;FIX: Create a user using &#39;openvasad -c &#39;add_user&#39; -n &lt;name&gt; -r Admin&#39;&#34;</span>
@@ -835,7 +805,7 @@ ADMINEXISTS<span style="color:#f92672">=</span><span style="color:#e6db74">`</sp
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 echo <span style="color:#e6db74">&#34;Step 4: Checking Greenbone Security Assistant (GSA) ... &#34;</span>
 echo <span style="color:#e6db74">&#34;Checking presence of Greenbone Security Assistant ...&#34;</span> &gt;&gt; $LOG
-gsad --version &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+gsad --version &gt;&gt; $LOG 2&gt;&amp;<span style="color:#ae81ff">1</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;ERROR: No Greenbone Security Assistant (gsad) found.&#34;</span>
@@ -846,20 +816,20 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>gsad --version | head -1 | sed -e <span style="color:#e6db74">&#34;s/Greenbone Security Assistant //&#34;</span><span style="color:#e6db74">`</span>
 
-<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;^</span>$GSA_MAJOR<span style="color:#e6db74">\.</span>$GSA_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-  log_and_print <span style="color:#e6db74">&#34;ERROR: Greenbone Security Assistant too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
-  log_and_print <span style="color:#e6db74">&#34;FIX: Please install Greenbone Security Assistant </span>$GSA_MAJOR<span style="color:#e6db74">.</span>$GSA_MINOR<span style="color:#e6db74">.&#34;</span>
+<span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^</span>$GSA_MAJOR<span style="color:#e6db74">\.</span>$GSA_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ERROR: Greenbone Security Assistant too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Please install Greenbone Security Assistant </span>$GSA_MAJOR<span style="color:#e6db74">.</span>$GSA_MINOR<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
   check_failed
 <span style="color:#66d9ef">fi</span>
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-log_and_print <span style="color:#e6db74">&#34;OK: Greenbone Security Assistant is present in version </span>$VERSION<span style="color:#e6db74">.&#34;</span>
+log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: Greenbone Security Assistant is present in version </span>$VERSION<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 
 echo <span style="color:#e6db74">&#34;Step 5: Checking OpenVAS CLI ... &#34;</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$MODE<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;server&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   echo <span style="color:#e6db74">&#34;Checking presence of OpenVAS CLI ...&#34;</span> &gt;&gt; $LOG
-  omp --version &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+  omp --version &gt;&gt; $LOG 2&gt;&amp;<span style="color:#ae81ff">1</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     log_and_print <span style="color:#e6db74">&#34;ERROR: No OpenVAS CLI (omp) found.&#34;</span>
@@ -870,14 +840,14 @@ echo <span style="color:#e6db74">&#34;Step 5: Checking OpenVAS CLI ... &#34;</sp
 
   VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>omp --version | head -1 | sed -e <span style="color:#e6db74">&#34;s/OMP Command Line Interface //&#34;</span><span style="color:#e6db74">`</span>
 
-  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;^</span>$CLI_MAJOR<span style="color:#e6db74">\.</span>$CLI_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    log_and_print <span style="color:#e6db74">&#34;ERROR: OpenVAS CLI too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
-    log_and_print <span style="color:#e6db74">&#34;FIX: Please install OpenVAS CLI </span>$CLI_MAJOR<span style="color:#e6db74">.</span>$CLI_MINOR<span style="color:#e6db74">.&#34;</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^</span>$CLI_MAJOR<span style="color:#e6db74">\.</span>$CLI_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ERROR: OpenVAS CLI too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Please install OpenVAS CLI </span>$CLI_MAJOR<span style="color:#e6db74">.</span>$CLI_MINOR<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
     check_failed
   <span style="color:#66d9ef">fi</span>
   echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-  log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS CLI version </span>$VERSION<span style="color:#e6db74">.&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: OpenVAS CLI version </span>$VERSION<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 <span style="color:#66d9ef">else</span>
   log_and_print <span style="color:#e6db74">&#34;SKIP: Skipping check for OpenVAS CLI.&#34;</span>
 <span style="color:#66d9ef">fi</span>
@@ -886,7 +856,7 @@ echo <span style="color:#e6db74">&#34;Step 6: Checking Greenbone Security Deskto
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$MODE<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;server&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   echo <span style="color:#e6db74">&#34;Checking presence of Greenbone Security Desktop ...&#34;</span> &gt;&gt; $LOG
-  DISPLAY<span style="color:#f92672">=</span>fake gsd --version &gt;&gt; $LOG <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+  DISPLAY<span style="color:#f92672">=</span>fake gsd --version &gt;&gt; $LOG 2&gt;&amp;<span style="color:#ae81ff">1</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     log_and_print <span style="color:#e6db74">&#34;ERROR: No Greenbone Security Desktop (gsd) found or too old.&#34;</span>
@@ -897,17 +867,17 @@ echo <span style="color:#e6db74">&#34;Step 6: Checking Greenbone Security Deskto
 
   VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>gsd --version | head -1 | sed -e <span style="color:#e6db74">&#34;s/Greenbone Security Desktop //&#34;</span><span style="color:#e6db74">`</span>
 
-  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;^</span>$GSD_MAJOR<span style="color:#e6db74">\.</span>$GSD_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">^</span>$GSD_MAJOR<span style="color:#e6db74">\.</span>$GSD_MINOR<span style="color:#e6db74">&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     <span style="color:#75715e"># a special exception rule for v4 where also another release is OK</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $VER -eq <span style="color:#e6db74">&#34;4&#34;</span> -a <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;^1\.1&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-      log_and_print <span style="color:#e6db74">&#34;ERROR: Greenbone Security Desktop too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
-      log_and_print <span style="color:#e6db74">&#34;FIX: Please install Greenbone Security Desktop </span>$GSD_MAJOR<span style="color:#e6db74">.</span>$GSD_MINOR<span style="color:#e6db74">.&#34;</span>
+      log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ERROR: Greenbone Security Desktop too old or too new: </span>$VERSION<span style="color:#e6db74">&#34;</span>
+      log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">FIX: Please install Greenbone Security Desktop </span>$GSD_MAJOR<span style="color:#e6db74">.</span>$GSD_MINOR<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
       check_failed
     <span style="color:#66d9ef">fi</span>
   <span style="color:#66d9ef">fi</span>
   echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
-  log_and_print <span style="color:#e6db74">&#34;OK: Greenbone Security Desktop is present in Version </span>$VERSION<span style="color:#e6db74">.&#34;</span>
+  log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: Greenbone Security Desktop is present in Version </span>$VERSION<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
 <span style="color:#66d9ef">else</span>
   log_and_print <span style="color:#e6db74">&#34;SKIP: Skipping check for Greenbone Security Assistant.&#34;</span>
 <span style="color:#66d9ef">fi</span>
@@ -915,7 +885,7 @@ echo <span style="color:#e6db74">&#34;Step 6: Checking Greenbone Security Deskto
 echo <span style="color:#e6db74">&#34;Step 7: Checking if OpenVAS services are up and running ... &#34;</span>
 echo <span style="color:#e6db74">&#34;Checking netstat presence ...&#34;</span> &gt;&gt; $LOG
 
-NETSTAT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type netstat <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+NETSTAT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type netstat 2&gt; /dev/null<span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find netstat binary, checks of the OpenVAS services are disabled.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;SUGGEST: Install netstat.&#34;</span>
@@ -927,15 +897,15 @@ NETSTAT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>t
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $HAVE_NETSTAT -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-  netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null &gt;&gt; $LOG
-  OPENVASSD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep openvassd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
-  OPENVASSD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep openvassd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
-  OPENVASMD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep openvasmd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
-  OPENVASMD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep openvasmd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
-  OPENVASAD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep openvasad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
-  OPENVASAD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep openvasad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
-  GSAD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep gsad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
-  GSAD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp <span style="color:#ae81ff">2</span>&gt; /dev/null | grep gsad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
+  netstat -A inet -ntlp 2&gt; /dev/null &gt;&gt; $LOG
+  OPENVASSD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep openvassd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
+  OPENVASSD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep openvassd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
+  OPENVASMD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep openvasmd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
+  OPENVASMD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep openvasmd | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
+  OPENVASAD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep openvasad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
+  OPENVASAD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep openvasad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
+  GSAD_HOST<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep gsad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $1}&#39;</span><span style="color:#e6db74">`</span>
+  GSAD_PORT<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>netstat -A inet -ntlp 2&gt; /dev/null | grep gsad | awk -F<span style="color:#ae81ff">\ </span> <span style="color:#e6db74">&#39;{print $4}&#39;</span> | awk -F: <span style="color:#e6db74">&#39;{print $2}&#39;</span><span style="color:#e6db74">`</span>
 
   <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;</span>$OPENVASSD_HOST<span style="color:#e6db74">&#34;</span> in
     <span style="color:#e6db74">&#34;0.0.0.0&#34;</span><span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Scanner is running and listening on all interfaces.&#34;</span> ;;
@@ -945,8 +915,8 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
   <span style="color:#66d9ef">case</span> $OPENVASSD_PORT in
     -1<span style="color:#f92672">)</span> ;;
-    <span style="color:#ae81ff">9391</span><span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Scanner is listening on port 9391, which is the default port.&#34;</span> ;;
-    *<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;WARNING: OpenVAS Scanner is listening on port </span>$OPENVASSD_PORT<span style="color:#e6db74">, which is NOT the default port!&#34;</span>
+    9391<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Scanner is listening on port 9391, which is the default port.&#34;</span> ;;
+    *<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">WARNING: OpenVAS Scanner is listening on port </span>$OPENVASSD_PORT<span style="color:#e6db74">, which is NOT the default port!</span><span style="color:#e6db74">&#34;</span>
        log_and_print <span style="color:#e6db74">&#34;SUGGEST: Ensure OpenVAS Scanner is listening on port 9391.&#34;</span> ;;
   <span style="color:#66d9ef">esac</span>
 
@@ -960,11 +930,11 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
   <span style="color:#66d9ef">case</span> $OPENVASMD_PORT in
     -1<span style="color:#f92672">)</span>
       ;;
-    <span style="color:#ae81ff">9390</span><span style="color:#f92672">)</span>
+    9390<span style="color:#f92672">)</span>
       log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Manager is listening on port 9390, which is the default port.&#34;</span>
       ;;
     *<span style="color:#f92672">)</span>
-      log_and_print <span style="color:#e6db74">&#34;WARNING: OpenVAS Manager is listening on port </span>$OPENVASMD_PORT<span style="color:#e6db74">, which is NOT the default port!&#34;</span>
+      log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">WARNING: OpenVAS Manager is listening on port </span>$OPENVASMD_PORT<span style="color:#e6db74">, which is NOT the default port!</span><span style="color:#e6db74">&#34;</span>
       log_and_print <span style="color:#e6db74">&#34;SUGGEST: Ensure OpenVAS Manager is listening on port 9390.&#34;</span>
       ;;
   <span style="color:#66d9ef">esac</span>
@@ -977,8 +947,8 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
   <span style="color:#66d9ef">case</span> $OPENVASAD_PORT in
     -1<span style="color:#f92672">)</span> ;;
-    <span style="color:#ae81ff">9393</span><span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Administrator is listening on port 9393, which is the default port.&#34;</span> ;;
-    *<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;WARNING: OpenVAS Administrator is listening on port </span>$OPENVASAD_PORT<span style="color:#e6db74">, which is NOT the default port!&#34;</span>
+    9393<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;OK: OpenVAS Administrator is listening on port 9393, which is the default port.&#34;</span> ;;
+    *<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">WARNING: OpenVAS Administrator is listening on port </span>$OPENVASAD_PORT<span style="color:#e6db74">, which is NOT the default port!</span><span style="color:#e6db74">&#34;</span>
        log_and_print <span style="color:#e6db74">&#34;SUGGEST: Ensure OpenVAS Administrator is listening on port 9393.&#34;</span> ;;
   <span style="color:#66d9ef">esac</span>
 
@@ -991,8 +961,8 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
   <span style="color:#66d9ef">case</span> $GSAD_PORT in
     -1<span style="color:#f92672">)</span> ;;
-    <span style="color:#ae81ff">80</span>|<span style="color:#ae81ff">443</span>|<span style="color:#ae81ff">9392</span><span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;OK: Greenbone Security Assistant is listening on port </span>$GSAD_PORT<span style="color:#e6db74">, which is the default port.&#34;</span> ;;
-    *<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;WARNING: Greenbone Security Assistant is listening on port </span>$GSAD_PORT<span style="color:#e6db74">, which is NOT the default port!&#34;</span>
+    80|443|9392<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: Greenbone Security Assistant is listening on port </span>$GSAD_PORT<span style="color:#e6db74">, which is the default port.</span><span style="color:#e6db74">&#34;</span> ;;
+    *<span style="color:#f92672">)</span> log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">WARNING: Greenbone Security Assistant is listening on port </span>$GSAD_PORT<span style="color:#e6db74">, which is NOT the default port!</span><span style="color:#e6db74">&#34;</span>
        log_and_print <span style="color:#e6db74">&#34;SUGGEST: Ensure Greenbone Security Assistant is listening on one of the following ports: 80, 443, 9392.&#34;</span> ;;
   <span style="color:#66d9ef">esac</span>
 
@@ -1010,10 +980,10 @@ VERSION<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>n
   log_and_print <span style="color:#e6db74">&#34;SUGGEST: You should install nmap for comprehensive network scanning (see http://nmap.org)&#34;</span>
 <span style="color:#66d9ef">else</span>
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">`</span>echo $VERSION | grep <span style="color:#e6db74">&#34;5\.51&#34;</span> | wc -l<span style="color:#e6db74">`</span> -ne <span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    log_and_print <span style="color:#e6db74">&#34;WARNING: Your version of nmap is not fully supported: </span>$VERSION<span style="color:#e6db74">&#34;</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">WARNING: Your version of nmap is not fully supported: </span>$VERSION<span style="color:#e6db74">&#34;</span>
     log_and_print <span style="color:#e6db74">&#34;SUGGEST: You should install nmap 5.51.&#34;</span>
   <span style="color:#66d9ef">else</span>
-    log_and_print <span style="color:#e6db74">&#34;OK: nmap is present in version </span>$VERSION<span style="color:#e6db74">.&#34;</span>
+    log_and_print <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">OK: nmap is present in version </span>$VERSION<span style="color:#e6db74">.</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 <span style="color:#66d9ef">fi</span>
 
@@ -1021,7 +991,7 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 echo <span style="color:#e6db74">&#34;Step 9: Checking presence of optional tools ...&#34;</span>
 echo <span style="color:#e6db74">&#34;Checking presence of pdflatex ...&#34;</span> &gt;&gt; $LOG
-PDFLATEX<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type pdflatex <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+PDFLATEX<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type pdflatex 2&gt; /dev/null<span style="color:#e6db74">`</span>
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find pdflatex binary, the PDF report format will not work.&#34;</span>
@@ -1036,7 +1006,7 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $HAVE_PDFLATEX -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   echo <span style="color:#e6db74">&#34;Checking presence of LaTeX packages required for PDF report generation ...&#34;</span> &gt;&gt; $LOG
   PDFTMPDIR<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>mktemp -d -t openvas-check-setup-tmp.XXXXXXXXXX<span style="color:#e6db74">`</span>
-  TEXFILE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$PDFTMPDIR<span style="color:#e6db74">/test.tex&#34;</span>
+  TEXFILE<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$PDFTMPDIR<span style="color:#e6db74">/test.tex</span><span style="color:#e6db74">&#34;</span>
   cat <span style="color:#e6db74">&lt;&lt;EOT &gt; $TEXFILE
 </span><span style="color:#e6db74">\documentclass{article}
 </span><span style="color:#e6db74">\pagestyle{empty}
@@ -1087,22 +1057,22 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 </span><span style="color:#e6db74">\end{document}
 </span><span style="color:#e6db74">EOT</span>
 
-  pdflatex -interaction batchmode -output-directory $PDFTMPDIR $TEXFILE &gt; /dev/null <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
-  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -f <span style="color:#e6db74">&#34;</span>$PDFTMPDIR<span style="color:#e6db74">/test.pdf&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  pdflatex -interaction batchmode -output-directory $PDFTMPDIR $TEXFILE &gt; /dev/null 2&gt;&amp;<span style="color:#ae81ff">1</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -f <span style="color:#e6db74">&#34;</span>$PDFTMPDIR<span style="color:#e6db74">/test.pdf</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     log_and_print <span style="color:#e6db74">&#34;WARNING: PDF generation failed, most likely due to missing LaTeX packages. The PDF report format will not work.&#34;</span>
     log_and_print <span style="color:#e6db74">&#34;SUGGEST: Install required LaTeX packages.&#34;</span>
   <span style="color:#66d9ef">else</span>
     log_and_print <span style="color:#e6db74">&#34;OK: PDF generation successful. The PDF report format is likely to work.&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
-  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -f <span style="color:#e6db74">&#34;</span>$PDFTMPDIR<span style="color:#e6db74">/test.log&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
+  <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -f <span style="color:#e6db74">&#34;</span>$PDFTMPDIR<span style="color:#e6db74">/test.log</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     cat $PDFTMPDIR/test.log &gt;&gt; $LOG
   <span style="color:#66d9ef">fi</span>
   rm -rf $PDFTMPDIR
 <span style="color:#66d9ef">fi</span>
 
 echo <span style="color:#e6db74">&#34;Checking presence of ssh-keygen ...&#34;</span> &gt;&gt; $LOG
-SSHKEYGEN<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type ssh-keygen <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+SSHKEYGEN<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type ssh-keygen 2&gt; /dev/null<span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find ssh-keygen binary, LSC credential generation for GNU/Linux targets will not work.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;SUGGEST: Install ssh-keygen.&#34;</span>
@@ -1115,7 +1085,7 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $HAVE_SSHKEYGEN -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   echo <span style="color:#e6db74">&#34;Checking presence of rpm ...&#34;</span> &gt;&gt; $LOG
-  RPM<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type rpm <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+  RPM<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type rpm 2&gt; /dev/null<span style="color:#e6db74">`</span>
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find rpm binary, LSC credential package generation for RPM and DEB based targets will not work.&#34;</span>
     log_and_print <span style="color:#e6db74">&#34;SUGGEST: Install rpm.&#34;</span>
@@ -1128,7 +1098,7 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $HAVE_RPM -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     echo <span style="color:#e6db74">&#34;Checking presence of alien ...&#34;</span> &gt;&gt; $LOG
-    ALIEN<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type alien <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+    ALIEN<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type alien 2&gt; /dev/null<span style="color:#e6db74">`</span>
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
       log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find alien binary, LSC credential package generation for DEB based targets will not work.&#34;</span>
@@ -1143,7 +1113,7 @@ echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 <span style="color:#66d9ef">fi</span>
 
 echo <span style="color:#e6db74">&#34;Checking presence of nsis ...&#34;</span> &gt;&gt; $LOG
-NSIS<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type makensis <span style="color:#ae81ff">2</span>&gt; /dev/null<span style="color:#e6db74">`</span>
+NSIS<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type makensis 2&gt; /dev/null<span style="color:#e6db74">`</span>
 <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $? -ne <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
   log_and_print <span style="color:#e6db74">&#34;WARNING: Could not find makensis binary, LSC credential package generation for Microsoft Windows targets will not work.&#34;</span>
   log_and_print <span style="color:#e6db74">&#34;SUGGEST: Install nsis.&#34;</span>
@@ -1155,26 +1125,23 @@ NSIS<span style="color:#f92672">=</span><span style="color:#e6db74">`</span>type
 echo <span style="color:#e6db74">&#34;&#34;</span> &gt;&gt; $LOG
 
 echo <span style="color:#e6db74">&#34;&#34;</span>
-echo <span style="color:#e6db74">&#34;It seems like your OpenVAS-</span>$VER<span style="color:#e6db74"> installation is OK.&#34;</span>
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">It seems like your OpenVAS-</span>$VER<span style="color:#e6db74"> installation is OK.</span><span style="color:#e6db74">&#34;</span>
 echo <span style="color:#e6db74">&#34;&#34;</span>
 echo <span style="color:#e6db74">&#34;If you think it is not OK, please report your observation&#34;</span>
 echo <span style="color:#e6db74">&#34;and help us to improve this check routine:&#34;</span>
 echo <span style="color:#e6db74">&#34;http://lists.wald.intevation.org/mailman/listinfo/openvas-discuss&#34;</span>
-echo <span style="color:#e6db74">&#34;Please attach the log-file (</span>$LOG<span style="color:#e6db74">) to help us analyze the problem.&#34;</span>
-echo <span style="color:#e6db74">&#34;&#34;</span></code></pre></div>
-<p>Make the script executable and run it, it should find any errors with your
+echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Please attach the log-file (</span>$LOG<span style="color:#e6db74">) to help us analyze the problem.</span><span style="color:#e6db74">&#34;</span>
+echo <span style="color:#e6db74">&#34;&#34;</span>
+</code></pre></div><p>Make the script executable and run it, it should find any errors with your
 installation or steps you skipped.</p>
-
 <h2 id="scanning">Scanning</h2>
-
-<p>I&rsquo;m going to assume that you&rsquo;re using the openvas-client as the scanning
+<p>I'm going to assume that you're using the openvas-client as the scanning
 client. Here are a few quick notes for setting up a decent scan setup</p>
-
 <ul>
 <li>Global Settings
-
 <ul>
-<li>General</li>
+<li>General
+<ul>
 <li>Range: default</li>
 <li>20 concurrent hosts</li>
 <li>5 concurrent checks</li>
@@ -1182,38 +1149,46 @@ client. Here are a few quick notes for setting up a decent scan setup</p>
 <li>Optimize the test</li>
 <li>Safe checks</li>
 <li>Scanners
-
 <ul>
 <li>OpenVAS TCP Scanner</li>
 <li>Ping Host</li>
 <li>Nmap (NASL wrapper)</li>
-</ul></li>
-<li>Plugins</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Plugins
+<ul>
 <li>Enable All</li>
 <li>Enable at runtime</li>
 <li>Not Silent</li>
 <li>Automatically enable new plugins</li>
-<li>Credentials</li>
-<li>(Optional but a more thorough scan is done with them)</li>
-<li>SSH credentials need to be managed through the Extras-&gt;LSC Credentials Manager in the tool bar. It annoyingly does not support simple username/password SSH combos very well requiring you to generate a key pair, set a comment on the keypair (without spaces), and a password on the key pair EVEN IF YOU DON&rsquo;T INTEND TO USE IT.</li>
-<li>Leave target selection as localhost only, these are the global configuration options and you should be forced to set them for each set of scans</li>
-<li>KB</li>
-<li>Enable KB Saving</li>
-</ul></li>
 </ul>
-
-<p>When you&rsquo;re ready to create a scan create a new &ldquo;Task&rdquo; I usually create a Task
+</li>
+<li>Credentials
+<ul>
+<li>(Optional but a more thorough scan is done with them)</li>
+<li>SSH credentials need to be managed through the Extras-&gt;LSC Credentials Manager in the tool bar. It annoyingly does not support simple username/password SSH combos very well requiring you to generate a key pair, set a comment on the keypair (without spaces), and a password on the key pair EVEN IF YOU DON'T INTEND TO USE IT.</li>
+</ul>
+</li>
+<li>Leave target selection as localhost only, these are the global configuration options and you should be forced to set them for each set of scans</li>
+<li>KB
+<ul>
+<li>Enable KB Saving</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>When you're ready to create a scan create a new &ldquo;Task&rdquo; I usually create a Task
 per organization that I intend to scan and allows me to organize both different
 kinds of scans for that organization as well as multiple scanners.</p>
-
 <p>Create a &ldquo;Scope&rdquo; inside the Task, this will request logging into the server
-that you&rsquo;ll be running the scan from and will inherit all of the global
+that you'll be running the scan from and will inherit all of the global
 settings. Adjust the target selection and make scan specific adjustments then
 Launch!</p>
-
 <h2 id="configuration">Configuration</h2>
-
-<h3 id="etc-openvas-openvassd-conf">/etc/openvas/openvassd.conf</h3>
+<h3 id="etcopenvasopenvassdconf">/etc/openvas/openvassd.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># Configuration file of the OpenVAS Security Scanner</span>
 
 <span style="color:#75715e"># Every line starting with a &#39;#&#39; is a comment</span>
@@ -1329,7 +1304,8 @@ Launch!</p>
 <span style="color:#75715e"># If you want to force the use of a client certificate, uncomment next line</span>
 <span style="color:#75715e"># force_pubkey_auth = yes</span>
 
-<span style="color:#75715e">#end.</span></code></pre></div>
+<span style="color:#75715e">#end.</span>
+</code></pre></div>
 </div>
 
   
@@ -1353,8 +1329,8 @@ Launch!</p>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>OpenVPN</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/openstack-glance/'>
-        <span class='screen-reader-text'>Next post: </span>OpenStack Glance<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/openstack-keystone/'>
+        <span class='screen-reader-text'>Next post: </span>Openstack Keystone<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -1372,7 +1348,7 @@ Launch!</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

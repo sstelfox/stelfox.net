@@ -11,7 +11,7 @@
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='development'><meta property='article:tag' content='ruby'><meta property='article:published_time' content='2012-08-07T14:09:33Z'/><meta property='article:modified_time' content='2012-08-07T14:09:33Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Adding a Table Prefix to DataMapper Tables • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2012/08/adding-a-table-prefix-to-datamapper-tables/'>
@@ -114,26 +114,25 @@ of information about similar projects in Python, and PHP named DataMapper but
 nothing about the ruby &ldquo;data_mapper&rdquo;. The search continued eventually ending in
 my reading through the source of the data_mapper gem only to find that there
 was no feature for simply defining a prefix.</p>
-
 <p>Reading through the source though did allow me to find any easy way to
-implement such functionality. The following snippet is a minimalist data<em>mapper
-initialization and setup of one model with a table prefix of &ldquo;source</em>&rdquo; (chosen
+implement such functionality. The following snippet is a minimalist data_mapper
+initialization and setup of one model with a table prefix of &ldquo;source_&rdquo; (chosen
 at random and of no significance).</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># encoding: utf-8</span>
 
 <span style="color:#75715e"># (1)</span>
-require <span style="color:#e6db74">&#34;dm-core&#34;</span>
-require <span style="color:#e6db74">&#34;dm-migrations&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">dm-core</span><span style="color:#e6db74">&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">dm-migrations</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#75715e"># (2)</span>
 <span style="color:#66d9ef">module</span> PrefixNamingConvention
   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">call</span>(model_name)
     <span style="color:#75715e"># (3)</span>
-    prefix <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;source_&#34;</span>
+    prefix <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">source_</span><span style="color:#e6db74">&#34;</span>
     <span style="color:#75715e"># (4)</span>
     table_name <span style="color:#f92672">=</span> <span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">::</span><span style="color:#66d9ef">NamingConventions</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Resource</span><span style="color:#f92672">::</span><span style="color:#66d9ef">UnderscoredAndPluralized</span><span style="color:#f92672">.</span>call(model_name)
 
-    <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>prefix<span style="color:#e6db74">}#{</span>table_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+    <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">#{</span>prefix<span style="color:#e6db74">}</span><span style="color:#e6db74">#{</span>table_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">end</span>
 <span style="color:#66d9ef">end</span>
 
@@ -141,7 +140,7 @@ require <span style="color:#e6db74">&#34;dm-migrations&#34;</span>
 <span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Logger</span><span style="color:#f92672">.</span>new($stdout, <span style="color:#e6db74">:debug</span>)
 
 <span style="color:#75715e"># (6)</span>
-<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>setup(<span style="color:#e6db74">:default</span>, <span style="color:#e6db74">&#34;sqlite:example.db&#34;</span>)
+<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>setup(<span style="color:#e6db74">:default</span>, <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sqlite:example.db</span><span style="color:#e6db74">&#34;</span>)
 <span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>repository(<span style="color:#e6db74">:default</span>)<span style="color:#f92672">.</span>adapter<span style="color:#f92672">.</span>resource_naming_convention <span style="color:#f92672">=</span> <span style="color:#66d9ef">PrefixNamingConvention</span>
 
 <span style="color:#75715e"># (7)</span>
@@ -156,26 +155,25 @@ require <span style="color:#e6db74">&#34;dm-migrations&#34;</span>
 
 <span style="color:#75715e"># (8)</span>
 <span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>finalize
-<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>auto_upgrade!</code></pre></div>
-<p>So here are some notes on what&rsquo;s going on in this snippet. Each area that I
+<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>auto_upgrade!
+</code></pre></div><p>So here are some notes on what's going on in this snippet. Each area that I
 will be discussing has been annotated with a number like &ldquo;# (1)&rdquo; to make it
 easier to find a section you have questions about.</p>
-
 <ol>
-<li>Since this is an example I&rsquo;m only including the bare minimum data mapper
-gems to accomplish the task. If you&rsquo;re using bundler you may need to also
+<li>Since this is an example I'm only including the bare minimum data mapper
+gems to accomplish the task. If you're using bundler you may need to also
 require &ldquo;rubygems&rdquo; to get this too work.</li>
 <li>This is where the real work happens, DataMapper uses external modules that
 receive the &ldquo;call&rdquo; method to handle the conversion of class names to table
 names. By default DataMapper uses the module
 &ldquo;DataMapper::NamingConventions::Resource::UnderscoredAndPluralized&rdquo;, which
-I&rsquo;ll use later to maintain the same names.</li>
-<li>This is where I&rsquo;m defining the table prefix. This could be defined in a
+I'll use later to maintain the same names.</li>
+<li>This is where I'm defining the table prefix. This could be defined in a
 global, call another method or class, whatever your heart desires to get a
 string that will be used as a prefix.</li>
-<li>Here I&rsquo;m getting what DataMapper would have named the table if I wasn&rsquo;t
+<li>Here I'm getting what DataMapper would have named the table if I wasn't
 interferring</li>
-<li>I&rsquo;m logging to standard out so that I can see the queries called to verify
+<li>I'm logging to standard out so that I can see the queries called to verify
 that DataMapper is creating tables with the names that I want. This is used
 later on in this post to demonstrate this solution working, however, it
 could be left out without affecting anything.</li>
@@ -184,23 +182,18 @@ has been setup with a specific adapter you can change the naming convention
 DataMapper will use to generate table names. This is accomplished by passing
 the module constant name through the repositories adapter and too
 &ldquo;resource_naming_convention&rdquo; as demonstrated in the code.</li>
-<li>Here I&rsquo;m defining an example model of no importance. This is purely for
+<li>Here I'm defining an example model of no importance. This is purely for
 demonstration, normally DataMapper would name this model &ldquo;people&rdquo;.</li>
-<li>Inform DataMapper we&rsquo;re done setting it up and to run the migrations to
+<li>Inform DataMapper we're done setting it up and to run the migrations to
 create the model defined.</li>
 </ol>
-
 <p>When you run this ruby file (assuming you have the &ldquo;data_mapper&rdquo; and
-&ldquo;dm-sqlite-adapter&rdquo; gem installed) you&rsquo;ll see output very similar too this:</p>
-
+&ldquo;dm-sqlite-adapter&rdquo; gem installed) you'll see output very similar too this:</p>
 <pre><code>~ (0.001402) PRAGMA table_info(&quot;source_people&quot;)
 ~ (0.000089) SELECT sqlite_version(*)
 ~ (0.077840) CREATE TABLE &quot;source_people&quot; (&quot;id&quot; INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, &quot;first_name&quot; VARCHAR(50), &quot;last_name&quot; VARCHAR(50), &quot;email&quot; VARCHAR(50))
-</code></pre>
-
-<p>Notice the third line? Specifically the name of the table? It&rsquo;s named exactly
-as it would have been except now it has a prefix of &ldquo;source_&ldquo;.</p>
-
+</code></pre><p>Notice the third line? Specifically the name of the table? It's named exactly
+as it would have been except now it has a prefix of &ldquo;source_&quot;.</p>
 <p>Hope this saves someone else some trouble. Cheers!</p>
 
 </div>
@@ -252,7 +245,7 @@ as it would have been except now it has a prefix of &ldquo;source_&ldquo;.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

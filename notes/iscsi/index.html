@@ -5,19 +5,19 @@
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 This is the client configuration for iSCSI, please refer to iSCSId for the server portion.
 Configuration yum install iscsi-initiator-utils -y
-iscsid.startup = /etc/rc.d/init.d/iscsid force-start node.startup = automatic node.session.auth.authmethod = CHAP node.session.auth.username = client1 node.'>
+iscsid.startup = /etc/rc.d/init.d/iscsid force-start node.startup = automatic node.session.auth.authmethod = CHAP node.session.auth.username = client1 node.session.auth.password = XXXXXXXXXXXX discovery.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='iSCSI • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 This is the client configuration for iSCSI, please refer to iSCSId for the server portion.
 Configuration yum install iscsi-initiator-utils -y
-iscsid.startup = /etc/rc.d/init.d/iscsid force-start node.startup = automatic node.session.auth.authmethod = CHAP node.session.auth.username = client1 node.'>
+iscsid.startup = /etc/rc.d/init.d/iscsid force-start node.startup = automatic node.session.auth.authmethod = CHAP node.session.auth.username = client1 node.session.auth.password = XXXXXXXXXXXX discovery.'>
 <meta property='og:url' content='https://stelfox.net/notes/iscsi/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>iSCSI • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/iscsi/'>
@@ -114,19 +114,13 @@ One min read
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>This is the client configuration for iSCSI, please refer to <a href="https://stelfox.net/notes/iscsid/">iSCSId</a> for the
 server portion.</p>
-
 <h2 id="configuration">Configuration</h2>
-
 <p>yum install iscsi-initiator-utils -y</p>
-
 <pre><code>iscsid.startup = /etc/rc.d/init.d/iscsid force-start
 node.startup = automatic
 
@@ -168,15 +162,12 @@ discovery.sendtargets.iscsi.MaxRecvDataSegmentLength = 32768
 node.conn[0].iscsi.HeaderDigest = None
 
 node.session.iscsi.FastAbort = Yes
-</code></pre>
-
-<pre><code>[root@localhost ~]# chkconfig iscsi on
+</code></pre><pre><code>[root@localhost ~]# chkconfig iscsi on
 [root@localhost ~]# chkconfig iscsid on
 [root@localhost ~]# service iscsi start
 [root@localhost ~]# service iscsid start
 [root@localhost ~]# iscsiadm --mode discovery --type sendtargets --portal &lt;service_ip&gt;
 </code></pre>
-
 </div>
 
   
@@ -200,8 +191,8 @@ node.session.iscsi.FastAbort = Yes
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>iSCSId</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/fail2ban/'>
-        <span class='screen-reader-text'>Next post: </span>fail2ban<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/iodine/'>
+        <span class='screen-reader-text'>Next post: </span>Iodine<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -219,7 +210,7 @@ node.session.iscsi.FastAbort = Yes
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

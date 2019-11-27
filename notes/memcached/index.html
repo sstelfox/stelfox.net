@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install memcached -y  Configuration Memcached doesn&rsquo;t have a whole lot of configuration options. There is the user it&rsquo;s running under, what port it should listen on, what IP address it should bind too and how large it&rsquo;s cache is.'>
+Installation yum install memcached -y Configuration Memcached doesn&#39;t have a whole lot of configuration options. There is the user it&#39;s running under, what port it should listen on, what IP address it should bind too and how large it&#39;s cache is.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Memcached • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install memcached -y  Configuration Memcached doesn&rsquo;t have a whole lot of configuration options. There is the user it&rsquo;s running under, what port it should listen on, what IP address it should bind too and how large it&rsquo;s cache is.'>
+Installation yum install memcached -y Configuration Memcached doesn&#39;t have a whole lot of configuration options. There is the user it&#39;s running under, what port it should listen on, what IP address it should bind too and how large it&#39;s cache is.'>
 <meta property='og:url' content='https://stelfox.net/notes/memcached/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Memcached • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/memcached/'>
@@ -110,41 +110,28 @@ One min read
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="installation">Installation</h2>
-
 <pre><code>yum install memcached -y
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
-<p>Memcached doesn&rsquo;t have a whole lot of configuration options. There is the user
-it&rsquo;s running under, what port it should listen on, what IP address it should
-bind too and how large it&rsquo;s cache is.</p>
-
+</code></pre><h2 id="configuration">Configuration</h2>
+<p>Memcached doesn't have a whole lot of configuration options. There is the user
+it's running under, what port it should listen on, what IP address it should
+bind too and how large it's cache is.</p>
 <p>The default port is 11211 (TCP &amp; UDP), and by default it will bind to
 <code>INADDR_ANY</code> (0.0.0.0 and ::). Multiple addresses CAN be specified to bind too
 with the <code>-l</code> flag. By default memcached will use 64Mb of memory.</p>
-
 <p>These options can be set in <code>/etc/sysconfig/memcached</code>. Here is mine which
-restricts where it&rsquo;s bound too. For my general use 64Mb of storage is more than
+restricts where it's bound too. For my general use 64Mb of storage is more than
 enough (roughly the equivalent of 17.5k pages of plain text and these are
 simple key value text pairs).</p>
-
 <pre><code>PORT=&quot;11211&quot;
 USER=&quot;memcached&quot;
 MAXCONN=&quot;1024&quot;
 CACHESIZE=&quot;64&quot;
 OPTIONS=&quot;-l 10.100.0.14&quot;
-</code></pre>
-
-<h2 id="firewall">Firewall</h2>
-
+</code></pre><h2 id="firewall">Firewall</h2>
 <p>By default memcached listens on both UDP and TCP port <code>11211</code></p>
 
 </div>
@@ -189,7 +176,7 @@ OPTIONS=&quot;-l 10.100.0.14&quot;
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

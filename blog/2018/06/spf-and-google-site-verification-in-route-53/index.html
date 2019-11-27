@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Route53 doesn&rsquo;t allow multiple definitions of the same name/type pair of DNS entries which is quite a headache. This is the first time I&rsquo;ve had a conflict of a TXT record in Route53 at the base, specifically both Google&rsquo;s site verification, and SPF records both want to live at the root of the domain. The site verification record needs to stay around as Google periodically re-verifies the domain.
+<meta name='description' content='Route53 doesn&#39;t allow multiple definitions of the same name/type pair of DNS entries which is quite a headache. This is the first time I&#39;ve had a conflict of a TXT record in Route53 at the base, specifically both Google&#39;s site verification, and SPF records both want to live at the root of the domain. The site verification record needs to stay around as Google periodically re-verifies the domain.
 To get this to work you need to quote both the Google verification string and the SPF record, but you also have to ensure that there is a newline in the field.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='SPF and Google Site Verification in Route 53 • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Route53 doesn&rsquo;t allow multiple definitions of the same name/type pair of DNS entries which is quite a headache. This is the first time I&rsquo;ve had a conflict of a TXT record in Route53 at the base, specifically both Google&rsquo;s site verification, and SPF records both want to live at the root of the domain. The site verification record needs to stay around as Google periodically re-verifies the domain.
+<meta property='og:description' content='Route53 doesn&#39;t allow multiple definitions of the same name/type pair of DNS entries which is quite a headache. This is the first time I&#39;ve had a conflict of a TXT record in Route53 at the base, specifically both Google&#39;s site verification, and SPF records both want to live at the root of the domain. The site verification record needs to stay around as Google periodically re-verifies the domain.
 To get this to work you need to quote both the Google verification string and the SPF record, but you also have to ensure that there is a newline in the field.'>
 <meta property='og:url' content='https://stelfox.net/blog/2018/06/spf-and-google-site-verification-in-route-53/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='aws'><meta property='article:tag' content='dns'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-06-14T11:36:09-06:00'/><meta property='article:modified_time' content='2018-06-14T11:36:09-06:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>SPF and Google Site Verification in Route 53 • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2018/06/spf-and-google-site-verification-in-route-53/'>
@@ -110,22 +110,18 @@ One min read
   
 
   <div class='container entry-content'>
-  <p>Route53 doesn&rsquo;t allow multiple definitions of the same name/type pair of DNS
-entries which is quite a headache. This is the first time I&rsquo;ve had a conflict
-of a TXT record in Route53 at the base, specifically both Google&rsquo;s site
+  <p>Route53 doesn't allow multiple definitions of the same name/type pair of DNS
+entries which is quite a headache. This is the first time I've had a conflict
+of a TXT record in Route53 at the base, specifically both Google's site
 verification, and SPF records both want to live at the root of the domain. The
 site verification record needs to stay around as Google periodically
 re-verifies the domain.</p>
-
 <p>To get this to work you need to quote both the Google verification string and
 the SPF record, but you also have to ensure that there is a newline in the
 field. The contents of the entry should look something like this:</p>
-
 <pre><code>&quot;google-site-verification=&lt;auth string&gt;&quot;
 &quot;v=spf1 include:_spf.google.com ~all&quot;
-</code></pre>
-
-<p>You can use <a href="https://toolbox.googleapps.com/apps/checkmx/check">Google&rsquo;s MX Toolbox</a> to verify the SPF record.</p>
+</code></pre><p>You can use <a href="https://toolbox.googleapps.com/apps/checkmx/check">Google's MX Toolbox</a> to verify the SPF record.</p>
 
 </div>
 
@@ -176,7 +172,7 @@ field. The contents of the entry should look something like this:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

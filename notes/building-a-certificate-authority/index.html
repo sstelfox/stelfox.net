@@ -13,7 +13,7 @@ This page goes through how to create a local PKI infrastructure for use with all
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Building a Certificate Authority • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/building-a-certificate-authority/'>
@@ -110,28 +110,22 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>This page goes through how to create a local PKI infrastructure for use with
 all the other components listed in my notes and many may not mention it at all.
 It uses OpenSSL and provides scripts, information about choices made during the
 process and where to go next.</p>
-
 <h2 id="security-notes">Security Notes</h2>
-
 <p>There are varying levels of security that need to be taken into account
 throughout this process. The first and most important certificate is the &lsquo;root&rsquo;
-certificate authority&rsquo;s certificate. If the private key for this is compromised
+certificate authority's certificate. If the private key for this is compromised
 everything else will need to be done by scratch. Additionally the private key
 needs to be generated from a true random source. This is important as a little
 bit of predictability will impair all future operations done with this
 certificate and thus all encrypted operations done from certificates at the
 heart of this system.</p>
-
 <p>Second level certificate authorities should still be protected with utmost
 caution, but these are for secondary services such as one for the [Linux/389
 Directory Server] to hand out certificates, another for [Linux/OpenVPN]
@@ -139,27 +133,19 @@ certificates, one for websites and perhaps even another for personal
 certificates for email and code signing. If one of these gets compromised the
 root certificate can issue a CRL automatically invalidating all certificates
 from that authority and limits the damage done.</p>
-
 <h2 id="root-ca">Root CA</h2>
-
 <p>Caution needs to be taken when working with the root certificate from the get
 go. It should be generated on a clean machine disconnected from the network.</p>
-
 <h3 id="support-structure">Support Structure</h3>
-
 <p>The following set of commands builds a directory structure in the current
-user&rsquo;s home drive in a folder called pki. It adjusts the permissions on the
+user's home drive in a folder called pki. It adjusts the permissions on the
 folders to ensure that it is somewhat protected (though not protected from the
 root user). Once again this should be performed on a trusted machine.</p>
-
 <pre><code>mkdir -p ~/pki/root/{certs,crl,newcerts,private}
 chown -R `id -u`:`id -g` ~/pki
 chmod -R 700 ~/pki
-</code></pre>
-
-<h3 id="create-the-configuration-file">Create the Configuration File</h3>
-
-<p>Create a file in the root CA&rsquo;s directory named openssl.cnf with the following
+</code></pre><h3 id="create-the-configuration-file">Create the Configuration File</h3>
+<p>Create a file in the root CA's directory named openssl.cnf with the following
 contents:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#a6e22e">HOME</span>                    <span style="color:#f92672">=</span> <span style="color:#e6db74">.</span>
 <span style="color:#a6e22e">RANDFILE</span>                <span style="color:#f92672">=</span> <span style="color:#e6db74">$ENV::HOME/.rnd</span>
@@ -350,90 +336,54 @@ contents:</p>
 <span style="color:#a6e22e">nsCaPolicyUrl</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">http://bedroomprogrammers.net/ssl/policy/</span>
 
 <span style="color:#75715e"># This really needs to be in place for it to be a proxy certificate.</span>
-<span style="color:#a6e22e">proxyCertInfo</span><span style="color:#f92672">=</span><span style="color:#e6db74">critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo</span></code></pre></div>
-<h3 id="create-ca-key-certificate">Create CA Key &amp; Certificate</h3>
-
+<span style="color:#a6e22e">proxyCertInfo</span><span style="color:#f92672">=</span><span style="color:#e6db74">critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo</span>
+</code></pre></div><h3 id="create-ca-key--certificate">Create CA Key &amp; Certificate</h3>
 <p>This section creates the CA private key, public certificate, and serial file
 using the <code>openssl.cnf</code> file above.</p>
-
 <pre><code>openssl req -new -keyout private/ca.key -out ca.csr -config openssl.cnf
 openssl ca -create_serial -config ./openssl.cnf -out ca.crt -days 1095 -batch \
   -keyfile private/ca.key -selfsign -extensions v3_ca -infiles ca.csr
-</code></pre>
-
-<p>You will now want to distribute &ldquo;ca.crt&rdquo; to any client that will use a service
+</code></pre><p>You will now want to distribute &ldquo;ca.crt&rdquo; to any client that will use a service
 with your CA.</p>
-
 <h2 id="common-tasks">Common Tasks</h2>
-
 <h3 id="simple-client-certificate-creation">Simple Client Certificate Creation</h3>
-
-<p>First we&rsquo;ll need to create a key for client, this should be done on the client
+<p>First we'll need to create a key for client, this should be done on the client
 itself. It may be easier if the CA config (openssl.cnf) was distributed as well
 as there are some strict signing requirements in the above configuration where
 the country, state, and org name need to match exactly.</p>
-
 <pre><code>openssl genrsa 2048 &gt; host.example.org.key
 openssl req -new -key host.example.org.key -out host.example.org.csr \
   -extensions v3_req
-</code></pre>
-
-<p>Once the CSR has been generated transfer it to the host containing the CA, this
-assumes you have placed the file (and are currently within) the CA&rsquo;s directory.</p>
-
+</code></pre><p>Once the CSR has been generated transfer it to the host containing the CA, this
+assumes you have placed the file (and are currently within) the CA's directory.</p>
 <pre><code>openssl ca -config ./openssl.cnf -out host.example.org.crt -days 365 -batch \
   -keyfile private/ca.key -cert ca.crt -infiles host.example.org.csr
-</code></pre>
-
-<h3 id="advanced-client-certificate-creation">Advanced Client Certificate Creation</h3>
-
+</code></pre><h3 id="advanced-client-certificate-creation">Advanced Client Certificate Creation</h3>
 <p>Creating a certificate with multiple domains requires one extra step, create a
 key and certificate as normal but create an additional file
 <code>test.domain.net.cnf</code> that includes something along the following lines:</p>
-
 <pre><code>subjectAltName=DNS:www.test.domain.net,DNS:*.test.domain.net,DNS:other.domain.net
-</code></pre>
-
-<p>When you sign the key you&rsquo;ll need to add the flag <code>-extfile</code> and specify the
+</code></pre><p>When you sign the key you'll need to add the flag <code>-extfile</code> and specify the
 file with the above contents. This will append those domains to the
 certificate. An example way to sign the CSR:</p>
-
 <pre><code>openssl ca -config ./openssl.cnf -out test.domain.net.crt -days 365 -batch \
   -keyfile private/ca.key -cert ca.crt -infiles test.domain.net.csr \
   -extfile test.domain.net.cnf
-</code></pre>
-
-<h3 id="convert-a-certificate-for-microsoft-certificate-store">Convert a Certificate for Microsoft Certificate Store</h3>
-
+</code></pre><h3 id="convert-a-certificate-for-microsoft-certificate-store">Convert a Certificate for Microsoft Certificate Store</h3>
 <p>This will convert a standard OpenSSL certificate/key pair into a pfx for use by
 Microsoft products (fuck them for being different).</p>
-
 <pre><code>openssl pkcs12 -export -out keycert.pfx -inkey priv.key -in cert.crt
-</code></pre>
-
-<h3 id="view-the-contents-of-a-certificate">View the Contents of a Certificate</h3>
-
+</code></pre><h3 id="view-the-contents-of-a-certificate">View the Contents of a Certificate</h3>
 <p>To view the text content of a certificate you can use the following command:</p>
-
 <pre><code>openssl x509 -text -noout -in cert.crt
-</code></pre>
-
-<p>You can also view the contents of a signing request using:</p>
-
+</code></pre><p>You can also view the contents of a signing request using:</p>
 <pre><code>openssl req -text -noout -in cert.csr
-</code></pre>
-
-<h2 id="quick-self-signed-cert">Quick Self Signed Cert</h2>
-
+</code></pre><h2 id="quick-self-signed-cert">Quick Self Signed Cert</h2>
 <pre><code>openssl req -new -x509 -newkey rsa:4096 -keyout server.key -nodes -days 365 \
   -out server.crt
-</code></pre>
-
-<h2 id="add-change-a-password-on-a-keyfile">Add / Change a Password on a Keyfile</h2>
-
+</code></pre><h2 id="add--change-a-password-on-a-keyfile">Add / Change a Password on a Keyfile</h2>
 <pre><code>openssl rsa -des -in unprotected.key -out encrypted.key
 </code></pre>
-
 </div>
 
   
@@ -476,7 +426,7 @@ Microsoft products (fuck them for being different).</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

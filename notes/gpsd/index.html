@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation I&rsquo;ve been using a BU-353 which if I remember correctly was ~$20 and has been fairly reliable. It&rsquo;s also got a magnetic base allowing you to attach it to the roof of a car when war-driving.'>
+Installation I&#39;ve been using a BU-353 which if I remember correctly was ~$20 and has been fairly reliable. It&#39;s also got a magnetic base allowing you to attach it to the roof of a car when war-driving.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='GPSd • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation I&rsquo;ve been using a BU-353 which if I remember correctly was ~$20 and has been fairly reliable. It&rsquo;s also got a magnetic base allowing you to attach it to the roof of a car when war-driving.'>
+Installation I&#39;ve been using a BU-353 which if I remember correctly was ~$20 and has been fairly reliable. It&#39;s also got a magnetic base allowing you to attach it to the roof of a car when war-driving.'>
 <meta property='og:url' content='https://stelfox.net/notes/gpsd/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>GPSd • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/gpsd/'>
@@ -110,45 +110,30 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="installation">Installation</h2>
-
-<p>I&rsquo;ve been using a BU-353 which if I remember correctly was ~$20 and has been
-fairly reliable. It&rsquo;s also got a magnetic base allowing you to attach it to the
+<p>I've been using a BU-353 which if I remember correctly was ~$20 and has been
+fairly reliable. It's also got a magnetic base allowing you to attach it to the
 roof of a car when war-driving.</p>
-
 <pre><code>yum install gpsd gpsd-clients -y
-</code></pre>
-
-<p>If you want to use gpsd on a headless server you&rsquo;ll want to exclude the
+</code></pre><p>If you want to use gpsd on a headless server you'll want to exclude the
 <code>gpsd-clients</code> as they will install <code>xgps</code> and all of X as a dependency.</p>
-
 <h2 id="configuration">Configuration</h2>
-
 <p>My GPS device is identified by udev as a serial port, which is fairly common as
 NMEA specifies a serial connection with a baud rate of 4800. There is an issue,
 however, with a program running in the background called <code>modem-manager</code>.</p>
-
 <p>It will actively take control over any serial device that gets plugged in and
 send &ldquo;AT&rdquo; commands at it to try and determine whether or not the device is a
 modem.  It will release control if it fails after 10 seconds but that initial
 control breaks GPSd auto-device detection.</p>
-
 <p>To prevent this from happening we need to blacklist the device to
-modem-manager. If you use a modem (hah) then you&rsquo;ll want to make sure the
-device IDs don&rsquo;t conflict. To get your device ID run the following command:</p>
-
+modem-manager. If you use a modem (hah) then you'll want to make sure the
+device IDs don't conflict. To get your device ID run the following command:</p>
 <pre><code>udevadm monitor --env
-</code></pre>
-
-<p>Now plug in your GPS device and you should see something similar to the
+</code></pre><p>Now plug in your GPS device and you should see something similar to the
 following output:</p>
-
 <pre><code>**snip**
 
 UDEV  [10963.023977] add      /devices/pci0000:00/0000:00:1d.0/usb2/2-1/2-1.2/2-1.2:1.0/ttyUSB4/tty/ttyUSB4 (tty)
@@ -181,17 +166,13 @@ TAGS=:systemd:
 USEC_INITIALIZED=10963017963
 
 **snip**
-</code></pre>
-
-<p>You&rsquo;ll probably see this a couple time as udev announces all kinds of
+</code></pre><p>You'll probably see this a couple time as udev announces all kinds of
 crazyness. The important fields to look for are <code>ID_VENDOR_ID</code> and
 <code>ID_MODEL_ID</code>, these will become your <code>idVendor</code> and <code>idProduct</code> the udev rules
 to come. The values for mine are <code>067b</code> and <code>2303</code> respectively.</p>
-
 <p>Create the file <code>/etc/udev/rules.d/77-user-mm-usb-device-blacklist.rules</code> with
-the following contents, you&rsquo;ll want to replace the values of <code>idVendor</code> and
+the following contents, you'll want to replace the values of <code>idVendor</code> and
 <code>idProduct</code> if yours differ from mine:</p>
-
 <pre><code>ACTION!=&quot;add|change&quot;, GOTO=&quot;user_mm_usb_device_blacklist_end&quot;
 SUBSYSTEM!=&quot;usb&quot;, GOTO=&quot;user_mm_usb_device_blacklist_end&quot;
 ENV{DEVTYPE}!=&quot;usb_device&quot;, GOTO=&quot;user_mm_usb_device_blacklist_end&quot;
@@ -199,89 +180,61 @@ ENV{DEVTYPE}!=&quot;usb_device&quot;, GOTO=&quot;user_mm_usb_device_blacklist_en
 ATTRS{idVendor}==&quot;067b&quot;, ATTRS{idProduct}==&quot;2303&quot;, ENV{ID_MM_DEVICE_IGNORE}=&quot;1&quot;
 
 LABEL=&quot;user_mm_usb_device_blacklist_end&quot;
-</code></pre>
-
-<p>The changes should be picked up immediately so no need to restart or anything
+</code></pre><p>The changes should be picked up immediately so no need to restart or anything
 silly like that.</p>
-
-<p>Now you&rsquo;ll want to start up gpsd and ensure it starts up on boot as well:</p>
-
+<p>Now you'll want to start up gpsd and ensure it starts up on boot as well:</p>
 <pre><code>systemctl enable gpsd.service
 systemctl start gpsd.service
-</code></pre>
-
-<p>Thats the end of the configuration, whenever you plug in one or more GPS
+</code></pre><p>Thats the end of the configuration, whenever you plug in one or more GPS
 devices hotplug will take care of notifying gpsd of the devices, and will
-remove it when it&rsquo;s been removed. You can view information on your position as
+remove it when it's been removed. You can view information on your position as
 well as a fix of your location with <code>xgps</code> which is installed with the
 <code>gpsd-clients</code>.</p>
-
 <h2 id="using-as-a-time-source">Using as a Time Source</h2>
-
 <p>TODO</p>
-
-<h2 id="extending-accuracy-with-ntrip-rtcm-data">Extending Accuracy with NTRIP / RTCM data</h2>
-
+<h2 id="extending-accuracy-with-ntrip--rtcm-data">Extending Accuracy with NTRIP / RTCM data</h2>
 <p>TODO</p>
-
 <ul>
 <li><a href="http://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol">http://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol</a></li>
 <li><a href="http://igs.bkg.bund.de/ntrip/caster">http://igs.bkg.bund.de/ntrip/caster</a></li>
 <li><a href="http://www.linuxcertif.com/man/5/rtcm-104/173922/">http://www.linuxcertif.com/man/5/rtcm-104/173922/</a></li>
 <li><a href="http://software.rtcm-ntrip.org/">http://software.rtcm-ntrip.org/</a> (BNC is the relevant one)</li>
 </ul>
-
 <h2 id="profiling-accuracy-of-gps-receivers">Profiling Accuracy of GPS Receivers</h2>
-
 <p>Included with the gpsd-clients is a utility called <code>gpsprof</code> which can take
 samples from a GPS receiver and test the margin of error in x,y,z spaces. By
 default it collects 100 samples.</p>
-
 <p>Since NMEA specifies producing 1/sample/sec this will by default take 100
 seconds or 1 minute 40 seconds to complete. It outputs the information in
-gnuplot format so we&rsquo;ll need that to view the data:</p>
-
+gnuplot format so we'll need that to view the data:</p>
 <pre><code>yum install gnuplot -y
-</code></pre>
-
-<p>During the test you&rsquo;ll want to ensure that the GPS receiver is in a fixed
+</code></pre><p>During the test you'll want to ensure that the GPS receiver is in a fixed
 location. Personally I trust data more with a larger sample size so I opted to
 test my receiver over a period of two hours. Like so:</p>
-
 <pre><code>gpsprof -n 7200 | tee two-hour-gps-prof.gnuplot | gnuplot -persist
-</code></pre>
-
-<p>This also saves the data into a file so you can regenerate the graph without
+</code></pre><p>This also saves the data into a file so you can regenerate the graph without
 running the test for two hours again.</p>
-
-<p>What I found while running the test indoors is that my GPS receiver isn&rsquo;t that
+<p>What I found while running the test indoors is that my GPS receiver isn't that
 accurate (big surprise for $20).</p>
-
 <p>Over the course of two hours of testing is that 50% of the fixes were with 9.24
 meters of the average, 95% were within 27.32 meters of the average, and 99% of
 the fixes were within 37.5 meters (this is only for latitude and longitude).</p>
-
 <p>The latitude varied by as much as 60 meters and the logitude by as much as 40
-meters. The altitude varied by as much as 80 meters though I don&rsquo;t have a
+meters. The altitude varied by as much as 80 meters though I don't have a
 statistical breakdown for that. Of the 7200 data point there was also 45 where
 the receiver was unable to calculate altitude. The average location (at least
 for lat/long) was incredibly accurate as verified by Google Maps so at least
-that&rsquo;s something.</p>
-
+that's something.</p>
 <p>A second test run over the course of an hour with a clear view of the sky
 through the two separate windows provided an accuracy with 50% of fixes within
 6.23 meters of average, 95% of fixes within 25.01 meters, and 99% wihin 31.94
 meters.</p>
-
 <p>The latitude varied by as much as 40 meters and the longitude by as much as 25
 meters. The altitude varied by as much as 40 meters. All fixes had altitude
 fixes as well.</p>
-
 <p>I suspect some if not quite a bit of the error was because I was indoors and
 nowhere near a window (my office is in the heart of a building unfortunately).</p>
-
 <h2 id="misc-references">Misc References</h2>
-
 <ul>
 <li><a href="http://catb.org/gpsd/hacking.html">http://catb.org/gpsd/hacking.html</a></li>
 </ul>
@@ -299,7 +252,7 @@ nowhere near a window (my office is in the heart of a building unfortunately).</
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/gatekeeper-script-for-ssh/'>
+      <a href='/notes/grub/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -307,7 +260,7 @@ nowhere near a window (my office is in the heart of a building unfortunately).</
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Gatekeeper Script for SSH</a>
+        <span class='screen-reader-text'>Previous post: </span>Grub</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/gpio/'>
         <span class='screen-reader-text'>Next post: </span>GPIO<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -328,7 +281,7 @@ nowhere near a window (my office is in the heart of a building unfortunately).</
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

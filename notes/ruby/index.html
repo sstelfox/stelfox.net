@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-RVM If using Gnome terminal, you have to set the &lsquo;Run command as login shell&rsquo; check box on the Title and Command tab inside of gnome-terminal&rsquo;s Settings page to run the bashrc file upon opening the terminal.'>
+RVM If using Gnome terminal, you have to set the &lsquo;Run command as login shell&rsquo; check box on the Title and Command tab inside of gnome-terminal&#39;s Settings page to run the bashrc file upon opening the terminal.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-RVM If using Gnome terminal, you have to set the &lsquo;Run command as login shell&rsquo; check box on the Title and Command tab inside of gnome-terminal&rsquo;s Settings page to run the bashrc file upon opening the terminal.'>
+RVM If using Gnome terminal, you have to set the &lsquo;Run command as login shell&rsquo; check box on the Title and Command tab inside of gnome-terminal&#39;s Settings page to run the bashrc file upon opening the terminal.'>
 <meta property='og:url' content='https://stelfox.net/notes/ruby/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/ruby/'>
@@ -110,100 +110,62 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="rvm">RVM</h2>
-
 <p>If using Gnome terminal, you have to set the &lsquo;Run command as login shell&rsquo; check
-box on the Title and Command tab inside of gnome-terminal&rsquo;s Settings page to
-run the bashrc file upon opening the terminal. If you don&rsquo;t do this you&rsquo;ll
+box on the Title and Command tab inside of gnome-terminal's Settings page to
+run the bashrc file upon opening the terminal. If you don't do this you'll
 receive &ldquo;RVM is not a function&rdquo; error message.</p>
-
 <p>Install all the packages needed to compile ruby&hellip;</p>
-
 <pre><code>yum install gcc-c++ patch readline readline-devel zlib zlib-devel \
   libyaml-devel libffi-devel openssl-devel make bzip2 autoconf automake \
   libtool bison libxml2 libxml2-devel sqlite sqlite-devel libxslt \
   libxslt-devel -y
-</code></pre>
-
-<p>Install RVM&hellip;</p>
-
+</code></pre><p>Install RVM&hellip;</p>
 <pre><code>curl https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer | bash -s stable
-</code></pre>
-
-<pre><code>rvm install ruby-1.9.3
+</code></pre><pre><code>rvm install ruby-1.9.3
 rvm use 1.9.3 --default
-</code></pre>
-
-<p>Create a global gemset:</p>
-
+</code></pre><p>Create a global gemset:</p>
 <pre><code>rvm gemset create global
 rvm gemset use global
-</code></pre>
-
-<p>And install a few gems useful globally:</p>
-
+</code></pre><p>And install a few gems useful globally:</p>
 <pre><code>gem install bundler pry
-</code></pre>
-
-<p>To make sure these get installed automatically for any other ruby versions that
-get installed you can use some nifty information pulled from <a href="https://rvm.io/gemsets/initial/">RVM&rsquo;s
+</code></pre><p>To make sure these get installed automatically for any other ruby versions that
+get installed you can use some nifty information pulled from <a href="https://rvm.io/gemsets/initial/">RVM's
 Documentation</a>.</p>
-
 <pre><code>echo -e &quot;bundler\npry&quot; &gt; ~/.rvm/gemsets/global.gems
-</code></pre>
-
-<h3 id="ruby-optimization">Ruby Optimization</h3>
-
+</code></pre><h3 id="ruby-optimization">Ruby Optimization</h3>
 <p>By default RVM compiles ruby with no optimization flags. The flags will
 increase the time it takes to compile a specific instance of Ruby, however, it
 will also save running time with every execution of the code. For me this is a
 very useful trade off as I run various Ruby commands hundreds of times a day
-when I&rsquo;m working on various programs. You can add the compilization flags by
+when I'm working on various programs. You can add the compilization flags by
 creating an &ldquo;.rvmrc&rdquo; file in the root of your home directory and include the
 following:</p>
-
 <pre><code>rvm_configure_env=(CFLAGS=&quot;-march=native -O2 -pipe&quot;)
-</code></pre>
-
-<p>These are &ldquo;safe&rdquo; optimization flags and will make optimizations automatically
+</code></pre><p>These are &ldquo;safe&rdquo; optimization flags and will make optimizations automatically
 based on the processor of the system that compiled it. This has the downside of
 making the binaries non-portable (as in you can only move the compiled binaries
 to systems with the same or newer processors).</p>
-
 <p>As an additional level of optimizations rather than using the stock Ruby binary
 you can use the &ldquo;turbo&rdquo; branch with the falcon patch which has decreased rails
 load time by half or more. You install this version like so:</p>
-
 <pre><code>rvm install 1.9.3-turbo --patch falcon
-</code></pre>
-
-<p>If you encounter any errors about CFlags or compilation errors your RVM is
+</code></pre><p>If you encounter any errors about CFlags or compilation errors your RVM is
 probably out of date and needs to be updated. On one machine I received the
 following error:</p>
-
 <pre><code>Error running 'CFLAGS=-march=native -O2 ./configure
 --prefix=/home/user/.rvm/rubies/ruby-1.9.3-p194-turbo --enable-shared
 --disable-install-doc --with-libyaml --with-opt-dir=/home/user/.rvm/usr ',
 please read /home/user/.rvm/log/ruby-1.9.3-p194-turbo/configure.logThere has
 been an error while running configure. Halting the installation.
-</code></pre>
-
-<p>Which was quickly solved by running the following command and trying again:</p>
-
+</code></pre><p>Which was quickly solved by running the following command and trying again:</p>
 <pre><code>rvm get stable
-</code></pre>
-
-<p>I did also encounter an error when that ran for me, but it fixed the issue and
+</code></pre><p>I did also encounter an error when that ran for me, but it fixed the issue and
 I suspect the error was unrelated.</p>
-
 <h2 id="rbenv">RBEnv</h2>
-
 <p><a href="http://hmarr.com/2012/nov/08/rubies-and-bundles/">http://hmarr.com/2012/nov/08/rubies-and-bundles/</a></p>
 
 </div>
@@ -219,7 +181,7 @@ I suspect the error was unrelated.</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/sshd/'>
+      <a href='/notes/samba/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -227,10 +189,10 @@ I suspect the error was unrelated.</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>SSHd</a>
+        <span class='screen-reader-text'>Previous post: </span>Samba</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/router/'>
-        <span class='screen-reader-text'>Next post: </span>Router<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/rsyslog/'>
+        <span class='screen-reader-text'>Next post: </span>RSyslog<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -248,7 +210,7 @@ I suspect the error was unrelated.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

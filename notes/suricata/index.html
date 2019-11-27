@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install suricata -y  Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1.'>
+Installation yum install suricata -y Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Suricata • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install suricata -y  Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1.'>
+Installation yum install suricata -y Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1.'>
 <meta property='og:url' content='https://stelfox.net/notes/suricata/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Suricata • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/suricata/'>
@@ -110,30 +110,20 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="installation">Installation</h2>
-
 <pre><code>yum install suricata -y
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
+</code></pre><h2 id="configuration">Configuration</h2>
 <h3 id="network-configuration-for-ips">Network Configuration for IPS</h3>
-
 <p>I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode.
 When connected these interfaces were reported to me as devices p1p1 and p2p1. I
 want the IPS to show up transparently, at no point should the IPS be
-addressable on it&rsquo;s sniffing interfaces. The bridge interface that will handle
+addressable on it's sniffing interfaces. The bridge interface that will handle
 the filtering, sniffing etc will be br256. Here are the various configuration
 files:</p>
-
-<h4 id="etc-sysconfig-network-scripts-ifcfg-p1p1">/etc/sysconfig/network-scripts/ifcfg-p1p1</h4>
-
+<h4 id="etcsysconfignetworkscriptsifcfgp1p1">/etc/sysconfig/network-scripts/ifcfg-p1p1</h4>
 <pre><code>DEVICE=&quot;p1p1&quot;
 NM_CONTROLLED=&quot;no&quot;
 HWADDR=&quot;00:0A:CD:20:86:EC&quot;
@@ -146,10 +136,7 @@ IPV6INIT=no
 IPV6_AUTOCONF=no
 
 NAME=&quot;Transparent TAP&quot;
-</code></pre>
-
-<h4 id="etc-sysconfig-network-scripts-ifcfg-p2p1">/etc/sysconfig/network-scripts/ifcfg-p2p1</h4>
-
+</code></pre><h4 id="etcsysconfignetworkscriptsifcfgp2p1">/etc/sysconfig/network-scripts/ifcfg-p2p1</h4>
 <pre><code>DEVICE=&quot;p2p1&quot;
 NM_CONTROLLED=&quot;no&quot;
 HWADDR=&quot;00:0A:CD:20:86:ED&quot;
@@ -162,10 +149,7 @@ IPV6INIT=no
 IPV6_AUTOCONF=no
 
 NAME=&quot;Transparent TAP&quot;
-</code></pre>
-
-<h4 id="etc-sysconfig-network-scripts-ifcfg-br256">/etc/sysconfig/network-scripts/ifcfg-br256</h4>
-
+</code></pre><h4 id="etcsysconfignetworkscriptsifcfgbr256">/etc/sysconfig/network-scripts/ifcfg-br256</h4>
 <pre><code># br256 - No VLAN - Transparent Intercept Bridge
 DEVICE=br256
 NM_CONTROLLED=no
@@ -181,13 +165,9 @@ IPV6INIT=no
 IPV6_AUTOCONF=no
 
 NAME=&quot;Transparent Intercept Bridge&quot;
-</code></pre>
-
-<h3 id="sysctl-configuration-options">Sysctl Configuration Options</h3>
-
+</code></pre><h3 id="sysctl-configuration-options">Sysctl Configuration Options</h3>
 <p>The following changes will need to be made to sysctl settings to allow
 filtering of traffic across bridges:</p>
-
 <pre><code># Ensure all traffic is forwarded where appropriate
 net.ipv4.ip_forward = 1
 net.ipv6.conf.default.forwarding = 1
@@ -200,31 +180,19 @@ net.bridge.bridge-nf-call-arptables = 0
 net.bridge.bridge-nf-filter-pppoe-tagged = 0
 net.bridge.bridge-nf-filter-vlan-tagged = 0
 net.bridge.bridge-nf-pass-vlan-input-dev = 1
-</code></pre>
-
-<h3 id="initial-firewall-rules">Initial Firewall Rules</h3>
-
+</code></pre><h3 id="initial-firewall-rules">Initial Firewall Rules</h3>
 <p>Initially we want to allow all the traffic across the bridges.</p>
-
 <p>First iptables:</p>
-
 <pre><code># Traffic across the transparent bridge
 -A FORWARD -i br256 -o br256 -j ACCEPT
-</code></pre>
-
-<p>And then ip6tables:</p>
-
+</code></pre><p>And then ip6tables:</p>
 <pre><code># Traffic across the transparent bridge
 -A FORWARD -i br256 -o br256 -j ACCEPT
-</code></pre>
-
-<p>After restarting the network, applying the sysctl file, connecting the card&rsquo;s
+</code></pre><p>After restarting the network, applying the sysctl file, connecting the card's
 ports and bringing up the interfaces you can start watching traffic with
 tshark:</p>
-
 <pre><code>tshark -i br256
 </code></pre>
-
 </div>
 
   
@@ -248,8 +216,8 @@ tshark:</p>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>Swap</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/squid-guard/'>
-        <span class='screen-reader-text'>Next post: </span>Squid Guard<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/sshd/'>
+        <span class='screen-reader-text'>Next post: </span>SSHd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -267,7 +235,7 @@ tshark:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

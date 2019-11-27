@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Recently I&rsquo;ve been playing around with building a pure javascript full text search engine for static content sites like this one. One of the challenges with doing this has been working around the Markdown markup embedded in the written content.
-Most of the markdown syntax can be stripped out simply by removing all non-alphanumeric characters from the document and move on. This doesn&rsquo;t solve one of the bigger challenges I&rsquo;ve experienced&hellip; Code blocks.'>
+<meta name='description' content='Recently I&#39;ve been playing around with building a pure javascript full text search engine for static content sites like this one. One of the challenges with doing this has been working around the Markdown markup embedded in the written content.
+Most of the markdown syntax can be stripped out simply by removing all non-alphanumeric characters from the document and move on. This doesn&#39;t solve one of the bigger challenges I&#39;ve experienced&hellip; Code blocks.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Extracting Content From Markdown • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Recently I&rsquo;ve been playing around with building a pure javascript full text search engine for static content sites like this one. One of the challenges with doing this has been working around the Markdown markup embedded in the written content.
-Most of the markdown syntax can be stripped out simply by removing all non-alphanumeric characters from the document and move on. This doesn&rsquo;t solve one of the bigger challenges I&rsquo;ve experienced&hellip; Code blocks.'>
+<meta property='og:description' content='Recently I&#39;ve been playing around with building a pure javascript full text search engine for static content sites like this one. One of the challenges with doing this has been working around the Markdown markup embedded in the written content.
+Most of the markdown syntax can be stripped out simply by removing all non-alphanumeric characters from the document and move on. This doesn&#39;t solve one of the bigger challenges I&#39;ve experienced&hellip; Code blocks.'>
 <meta property='og:url' content='https://stelfox.net/blog/2014/05/extracting-content-from-markdown/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='development'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2014-05-30T18:34:29-04:00'/><meta property='article:modified_time' content='2014-05-30T18:34:29-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Extracting Content From Markdown • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2014/05/extracting-content-from-markdown/'>
@@ -110,23 +110,20 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>Recently I&rsquo;ve been playing around with building a pure javascript full text
+  <p>Recently I've been playing around with building a pure javascript full text
 search engine for static content sites like this one. One of the challenges
 with doing this has been working around the Markdown markup embedded in the
 written content.</p>
-
 <p>Most of the markdown syntax can be stripped out simply by removing all
-non-alphanumeric characters from the document and move on. This doesn&rsquo;t solve
-one of the bigger challenges I&rsquo;ve experienced&hellip; Code blocks. Code blocks have
+non-alphanumeric characters from the document and move on. This doesn't solve
+one of the bigger challenges I've experienced&hellip; Code blocks. Code blocks have
 plenty of regular English-ish words and can easily skew keyword detection
 within it.</p>
-
-<p>I didn&rsquo;t want to write my own Markdown parser, so I started with the one
-already in use by this site&rsquo;s renderer (<a href="https://github.com/vmg/redcarpet">redcarpet</a>). Another GitHub user,
+<p>I didn't want to write my own Markdown parser, so I started with the one
+already in use by this site's renderer (<a href="https://github.com/vmg/redcarpet">redcarpet</a>). Another GitHub user,
 <a href="https://github.com/toupeira">Markus Koller or toupeira on GitHub</a> provided <a href="https://github.com/vmg/redcarpet/issues/79">the basis</a> for the code
 that became the redcarpet &ldquo;StripDown&rdquo; formatter, which was designed to
 essentially render a Markdown document without the markup.</p>
-
 <p>It does almost exactly what I want, except it still outputs raw code inside the
 content. The following code sample includes a modified version that excludes
 any code blocks. My content is also formatted inside the markdown documents to
@@ -136,22 +133,22 @@ items into individual lines for paragraph detection.</p>
 require <span style="color:#e6db74">&#39;redcarpet/render_strip&#39;</span>
 
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ContentRenderer</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">Redcarpet</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Render</span><span style="color:#f92672">::</span><span style="color:#66d9ef">StripDown</span>
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">block_code</span>(<span style="color:#f92672">*</span>args)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">block_code</span>(<span style="color:#f92672">*</span>args)
     <span style="color:#66d9ef">nil</span>
   <span style="color:#66d9ef">end</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">list_item</span>(content, list_type)
-    content<span style="color:#f92672">.</span>gsub(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34; &#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#34;</span>
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">list_item</span>(content, list_type)
+    content<span style="color:#f92672">.</span>gsub(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34;</span><span style="color:#e6db74"> </span><span style="color:#e6db74">&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">end</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">paragraph</span>(text)
-    text<span style="color:#f92672">.</span>gsub(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34; &#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">&#34;</span>
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">paragraph</span>(text)
+    text<span style="color:#f92672">.</span>gsub(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34;</span><span style="color:#e6db74"> </span><span style="color:#e6db74">&#34;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">end</span>
 <span style="color:#66d9ef">end</span>
 
 markdown <span style="color:#f92672">=</span> <span style="color:#66d9ef">Redcarpet</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Markdown</span><span style="color:#f92672">.</span>new(<span style="color:#66d9ef">ContentRenderer</span>, <span style="color:#e6db74">fenced_code_blocks</span>: <span style="color:#66d9ef">true</span>)
-puts markdown<span style="color:#f92672">.</span>render(<span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>read(<span style="color:#e6db74">&#39;sample_markdown_article.md&#39;</span>))</code></pre></div>
-<p>The above code will print out just the content of the markdown formatted file
+puts markdown<span style="color:#f92672">.</span>render(<span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>read(<span style="color:#e6db74">&#39;sample_markdown_article.md&#39;</span>))
+</code></pre></div><p>The above code will print out just the content of the markdown formatted file
 &lsquo;sample_markdown_article.md&rsquo;.</p>
 
 </div>
@@ -203,7 +200,7 @@ puts markdown<span style="color:#f92672">.</span>render(<span style="color:#66d9
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

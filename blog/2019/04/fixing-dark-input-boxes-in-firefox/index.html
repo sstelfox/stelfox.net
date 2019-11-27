@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I recently began trying out Cinnamon as my desktop environment and I&rsquo;ve been thoroughly enjoying it. The only issue I was having was occasionally a page&rsquo;s form input fields would have a dark background while still having dark text making it impossible to read, and very difficult to write.
-It wasn&rsquo;t happening everywhere, and I couldn&rsquo;t track down what about a website would cause the issue. Most prominently for me was when this showed up in AWS&rsquo;s interface.'>
+<meta name='description' content='I recently began trying out Cinnamon as my desktop environment and I&#39;ve been thoroughly enjoying it. The only issue I was having was occasionally a page&#39;s form input fields would have a dark background while still having dark text making it impossible to read, and very difficult to write.
+It wasn&#39;t happening everywhere, and I couldn&#39;t track down what about a website would cause the issue. Most prominently for me was when this showed up in AWS&#39;s interface.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Fixing Dark Input Boxes in Firefox • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I recently began trying out Cinnamon as my desktop environment and I&rsquo;ve been thoroughly enjoying it. The only issue I was having was occasionally a page&rsquo;s form input fields would have a dark background while still having dark text making it impossible to read, and very difficult to write.
-It wasn&rsquo;t happening everywhere, and I couldn&rsquo;t track down what about a website would cause the issue. Most prominently for me was when this showed up in AWS&rsquo;s interface.'>
+<meta property='og:description' content='I recently began trying out Cinnamon as my desktop environment and I&#39;ve been thoroughly enjoying it. The only issue I was having was occasionally a page&#39;s form input fields would have a dark background while still having dark text making it impossible to read, and very difficult to write.
+It wasn&#39;t happening everywhere, and I couldn&#39;t track down what about a website would cause the issue. Most prominently for me was when this showed up in AWS&#39;s interface.'>
 <meta property='og:url' content='https://stelfox.net/blog/2019/04/fixing-dark-input-boxes-in-firefox/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='linux'><meta property='article:tag' content='firefox'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2019-04-13T11:53:22-04:00'/><meta property='article:modified_time' content='2019-04-13T11:53:22-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Fixing Dark Input Boxes in Firefox • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2019/04/fixing-dark-input-boxes-in-firefox/'>
@@ -110,53 +110,42 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>I recently began trying out <a href="https://github.com/linuxmint/Cinnamon">Cinnamon</a> as my desktop environment and I&rsquo;ve
+  <p>I recently began trying out <a href="https://github.com/linuxmint/Cinnamon">Cinnamon</a> as my desktop environment and I've
 been thoroughly enjoying it. The only issue I was having was occasionally a
-page&rsquo;s form input fields would have a dark background while still having dark
+page's form input fields would have a dark background while still having dark
 text making it impossible to read, and very difficult to write.</p>
-
-<p>It wasn&rsquo;t happening everywhere, and I couldn&rsquo;t track down what about a website
-would cause the issue. Most prominently for me was when this showed up in AWS&rsquo;s
+<p>It wasn't happening everywhere, and I couldn't track down what about a website
+would cause the issue. Most prominently for me was when this showed up in AWS's
 interface.</p>
-
-<p><img src="/images/dark_firefox_inputs.png" alt="Example of Dark Input in AWS Security Groups" /></p>
-
+<p><img src="/images/dark_firefox_inputs.png" alt="Example of Dark Input in AWS Security Groups"></p>
 <p>Searching around apparently this was an issue with dark GTK themes and has been
 a <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=70315">known issue for about 18 years</a> and was re-reported again <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1283086">about 3 years
 ago</a>. There have been a really bad workaround that people have suggested
 including <a href="https://github.com/DmitriK/darkContrast#text-contrast-for-dark-themes">extensions</a>, <a href="https://stackoverflow.com/questions/19911090/firefox-how-to-see-text-in-input-fields-with-black-background-set-in-preference">custom user CSS</a>, and <a href="https://medium.com/@lsm/fix-firefox-dark-text-input-on-ubuntu-18-when-using-gnome-dark-themes-98f253f8ed7f">using desktop shortcuts
 with environment variables</a>.</p>
-
 <p>None of these work well, will be inconsistent based on how you open Firefox, or
-might cause other issues with different websites. Generally I&rsquo;m not a fan of
+might cause other issues with different websites. Generally I'm not a fan of
 using random extensions for security, stability, and performance reasons.
-Ultimately Mozilla hasn&rsquo;t fixed this issue, but there is a workable override at
+Ultimately Mozilla hasn't fixed this issue, but there is a workable override at
 this point.</p>
-
 <p>To solve the issue we do need to override the GTK theme with a light one.
 Generally people recommend <code>Adwaita</code> for the light theme that fixes it and it
 seems to work well for me. You can check and make sure that the theme is
 available by checking the <code>/usr/share/themes</code> directory on your system.</p>
-
-<p>When you&rsquo;ve confirmed the presence of the theme, open up Firefox and go to the
-URL <code>about:config</code>. This override value doesn&rsquo;t exist by default so you&rsquo;ll need
+<p>When you've confirmed the presence of the theme, open up Firefox and go to the
+URL <code>about:config</code>. This override value doesn't exist by default so you'll need
 to right click anywhere in that page and go to <code>New -&gt; String</code> in that context
 menu. For the preference name enter <code>widget.content.gtk-theme-override</code> and for
 the value enter <code>Adwaita</code>. After refreshing the effected pages the background
 color issue should be resolved.</p>
-
-<p>If you&rsquo;re making use of a <code>user.js</code> to enforce configuration options you can
+<p>If you're making use of a <code>user.js</code> to enforce configuration options you can
 add the following line to it address the issue:</p>
-
 <pre><code>user_pref(&quot;widget.content.gtk-theme-override&quot;, &quot;Adwaita&quot;);
-</code></pre>
-
-<p>A little side note in case someone comes looking for other options. There was
+</code></pre><p>A little side note in case someone comes looking for other options. There was
 another <code>about:config</code> option that some Stack Overflow answers recommended
 changing, <code>widget.content.allow-gtk-dark-theme</code>. The default is <code>false</code> and
-they&rsquo;re recommending changing it to&hellip; <code>false</code>. It&rsquo;s not the answer to this
+they're recommending changing it to&hellip; <code>false</code>. It's not the answer to this
 problem.</p>
-
 <p>Hope this helps someone else out. Cheers!</p>
 
 </div>
@@ -208,7 +197,7 @@ problem.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

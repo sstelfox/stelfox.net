@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Over the years I&rsquo;ve found myself using many different naming schemes for servers under my control. I came across a naming convention that finally feels correct. That blog post is quite well written and will let it stand on its own. In the event it ever disappears the important bits (and those where I&rsquo;ve personalized it) are included here.
+<meta name='description' content='Over the years I&#39;ve found myself using many different naming schemes for servers under my control. I came across a naming convention that finally feels correct. That blog post is quite well written and will let it stand on its own. In the event it ever disappears the important bits (and those where I&#39;ve personalized it) are included here.
 There are ultimately two or three DNS names that each host receives.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Server Naming Convention • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Over the years I&rsquo;ve found myself using many different naming schemes for servers under my control. I came across a naming convention that finally feels correct. That blog post is quite well written and will let it stand on its own. In the event it ever disappears the important bits (and those where I&rsquo;ve personalized it) are included here.
+<meta property='og:description' content='Over the years I&#39;ve found myself using many different naming schemes for servers under my control. I came across a naming convention that finally feels correct. That blog post is quite well written and will let it stand on its own. In the event it ever disappears the important bits (and those where I&#39;ve personalized it) are included here.
 There are ultimately two or three DNS names that each host receives.'>
 <meta property='og:url' content='https://stelfox.net/notes/server-naming-convention/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta property='article:published_time' content='2017-10-20T19:59:02-04:00'/><meta property='article:modified_time' content='2017-10-20T19:59:02-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Server Naming Convention • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/server-naming-convention/'>
@@ -110,49 +110,37 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>Over the years I&rsquo;ve found myself using many different naming schemes for
+  <p>Over the years I've found myself using many different naming schemes for
 servers under my control. I came across a <a href="http://mnx.io/blog/a-proper-server-naming-scheme/">naming convention</a> that finally
 feels correct. That blog post is quite well written and will let it stand on
 its own. In the event it ever disappears the important bits (and those where
-I&rsquo;ve personalized it) are included here.</p>
-
+I've personalized it) are included here.</p>
 <p>There are ultimately two or three DNS names that each host receives. The first
 is a permanent unique identifier for the host. The blog post offers the
-<a href="http://web.archive.org/web/20090918202746/http://tothink.com/mnemonic/wordlist.html">mnemonic encoding</a> project as a way to generate the hostnames. I&rsquo;ve built
+<a href="http://web.archive.org/web/20090918202746/http://tothink.com/mnemonic/wordlist.html">mnemonic encoding</a> project as a way to generate the hostnames. I've built
 <a href="https://github.com/sstelfox/dotfiles/blob/master/bin/server_name_generator">my own generator</a> that accomplishes the same effect with a vastly larger
 potential space (not that I need it). It has the added bonus of generating
 interesting names that are easy to talk about. Some samples (none real):</p>
-
 <pre><code>brave-noon-funeral.stelfox.net
 obscured-dawn-bush.stelfox.net
 striking-evening-moss.stelfox.net
-</code></pre>
-
-<p>The second name is a CNAME intended to be redirectable to new instances or
+</code></pre><p>The second name is a CNAME intended to be redirectable to new instances or
 servers if an old one dies or otherwise needs to be decommissioned. This is
 tied directly to the function of the machine, while letting the machine behind
 the name be replaceable.</p>
-
 <p>This name is a combination of a short purpose code, a serial number (indicating
 the specific instances of the purpose), what environment it runs in
 (production, staging, etc), a location code, and your domain. The blog post
-also includes a country code but I&rsquo;ve chose to leave that out.</p>
-
+also includes a country code but I've chose to leave that out.</p>
 <p>The last name(s) are convenience names intended to expose services to users.
 These domains are along the lines of <code>webmail.stelfox.net</code> and can point at
 multiple instances of purpose names or unique instance names.</p>
-
 <p>Serials are unique to the purpose and site and are zero padded integers (01,
 02). Serials are only unique within their local location code. Environment
 should not be taken into account when calculating the serial.</p>
-
 <h2 id="list-of-purposes">List of Purposes</h2>
-
 <p>These three letter purpose codes are kind of arbitrary. For consistency this
-documents the purpose codes I&rsquo;ve generated for specific uses.</p>
-
+documents the purpose codes I've generated for specific uses.</p>
 <ul>
 <li>app - Application server (non-web)</li>
 <li>sql - Database server</li>
@@ -170,21 +158,16 @@ documents the purpose codes I&rsquo;ve generated for specific uses.</p>
 <li>cch - Cache server (Redis, Memcached, etc.)</li>
 <li>vpn - VPN server</li>
 </ul>
-
 <h2 id="list-of-environments">List of Environments</h2>
-
 <p>Similar to the purpose codes, these are the chosen three letter codes for
 different environments.</p>
-
 <ul>
 <li>dev - Development</li>
 <li>tst - Testing</li>
 <li>stg - Staging</li>
 <li>prd - Production</li>
 </ul>
-
 <h2 id="location-codes">Location Codes</h2>
-
 <p>Location codes in the original blog post are broken into two segments the local
 code based on the <a href="http://www.unece.org/cefact/locode/service/location.html">United Nations Code for Trade and Transport Locations</a>
 (UN/LOCODE) which is more specific than IATA airport codes and the country
@@ -232,7 +215,7 @@ code. For my uses I leave the country code out.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

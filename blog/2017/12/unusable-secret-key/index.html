@@ -2,16 +2,16 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I use a Yubikey NEO to store subkeys used for signing and authentication. I started experiencing a weird issue with it. It coincided with me rebuilding my system so diagnosing it ended up being harder than normal. The behavior I experienced allowed me to use the key to authenticate (SSH&rsquo;ing worked fine) but any attempt to sign new data resulted in an &lsquo;Unusuable secret key&rsquo; error. For git this resulted in the following message:'>
+<meta name='description' content='I use a Yubikey NEO to store subkeys used for signing and authentication. I started experiencing a weird issue with it. It coincided with me rebuilding my system so diagnosing it ended up being harder than normal. The behavior I experienced allowed me to use the key to authenticate (SSH&#39;ing worked fine) but any attempt to sign new data resulted in an &lsquo;Unusuable secret key&rsquo; error. For git this resulted in the following message:'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Unusable Secret Key • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I use a Yubikey NEO to store subkeys used for signing and authentication. I started experiencing a weird issue with it. It coincided with me rebuilding my system so diagnosing it ended up being harder than normal. The behavior I experienced allowed me to use the key to authenticate (SSH&rsquo;ing worked fine) but any attempt to sign new data resulted in an &lsquo;Unusuable secret key&rsquo; error. For git this resulted in the following message:'>
+<meta property='og:description' content='I use a Yubikey NEO to store subkeys used for signing and authentication. I started experiencing a weird issue with it. It coincided with me rebuilding my system so diagnosing it ended up being harder than normal. The behavior I experienced allowed me to use the key to authenticate (SSH&#39;ing worked fine) but any attempt to sign new data resulted in an &lsquo;Unusuable secret key&rsquo; error. For git this resulted in the following message:'>
 <meta property='og:url' content='https://stelfox.net/blog/2017/12/unusable-secret-key/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='gpg'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2017-12-04T11:38:01-05:00'/><meta property='article:modified_time' content='2017-12-04T11:38:01-05:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Unusable Secret Key • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2017/12/unusable-secret-key/'>
@@ -111,27 +111,22 @@ if (!doNotTrack) {
   <p>I use a Yubikey NEO to store subkeys used for signing and authentication. I
 started experiencing a weird issue with it. It coincided with me rebuilding my
 system so diagnosing it ended up being harder than normal. The behavior I
-experienced allowed me to use the key to authenticate (SSH&rsquo;ing worked fine) but
+experienced allowed me to use the key to authenticate (SSH'ing worked fine) but
 any attempt to sign new data resulted in an &lsquo;Unusuable secret key&rsquo; error. For
 git this resulted in the following message:</p>
-
 <pre><code>gpg: skipped &quot;Sam Stelfox &lt;sstelfox@bedroomprogrammers.net&gt;&quot;: Unusable secret
 key
 gpg: signing failed: Unusable secret key
 error: gpg failed to sign the data
 fatal: failed to write commit object
-</code></pre>
-
-<p>There is a second Yubikey I use on occasion that contains my companies software
+</code></pre><p>There is a second Yubikey I use on occasion that contains my companies software
 signing key. When reviewing my available secret keys, it seemed like GPG was
-listing those private keys as available when they weren&rsquo;t. That was a red
+listing those private keys as available when they weren't. That was a red
 herring and unrelated (though still likely a bug). After resetting my GPG
 config as well as the agent, and re-importing my key the private keys were not
 be listed at all.</p>
-
 <p>Ultimate the issue was that all of my subkeys were expired and only became
 visible when I used the following command:</p>
-
 <pre><code>$ gpg2 --list-options show-unusable-subkeys --list-keys
 /home/sstelfox/.gnupg/pubring.kbx
 ---------------------------------
@@ -145,7 +140,6 @@ sub   rsa2048/0x5E2FD479ABDD395A 2016-04-26 [S] [expired: 2017-12-01]
 sub   rsa2048/0xD87BD950C29A0FA2 2016-04-26 [E] [expired: 2017-12-01]
 sub   rsa2048/0x4B218A4FB733A150 2016-04-26 [A] [expired: 2017-12-01]
 </code></pre>
-
 </div>
 
   
@@ -195,7 +189,7 @@ sub   rsa2048/0x4B218A4FB733A150 2016-04-26 [A] [expired: 2017-12-01]
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

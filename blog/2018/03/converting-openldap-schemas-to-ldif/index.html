@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I&rsquo;ve been writing software to work against an OpenLDAP instance, with a highly customized schema. The operators of the existing system only had the schema files and searching around found several elaborate ways to convert the files which I tried with mixed success. After doing the research to figure this out, it became clear I could probably have used slapcat and have dumped the active schema directly to LDIF.
-As a sample of how I converted these, I&rsquo;ll use the rfc2307bis.'>
+<meta name='description' content='I&#39;ve been writing software to work against an OpenLDAP instance, with a highly customized schema. The operators of the existing system only had the schema files and searching around found several elaborate ways to convert the files which I tried with mixed success. After doing the research to figure this out, it became clear I could probably have used slapcat and have dumped the active schema directly to LDIF.
+As a sample of how I converted these, I&#39;ll use the rfc2307bis.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Converting OpenLDAP Schemas to LDIF • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I&rsquo;ve been writing software to work against an OpenLDAP instance, with a highly customized schema. The operators of the existing system only had the schema files and searching around found several elaborate ways to convert the files which I tried with mixed success. After doing the research to figure this out, it became clear I could probably have used slapcat and have dumped the active schema directly to LDIF.
-As a sample of how I converted these, I&rsquo;ll use the rfc2307bis.'>
+<meta property='og:description' content='I&#39;ve been writing software to work against an OpenLDAP instance, with a highly customized schema. The operators of the existing system only had the schema files and searching around found several elaborate ways to convert the files which I tried with mixed success. After doing the research to figure this out, it became clear I could probably have used slapcat and have dumped the active schema directly to LDIF.
+As a sample of how I converted these, I&#39;ll use the rfc2307bis.'>
 <meta property='og:url' content='https://stelfox.net/blog/2018/03/converting-openldap-schemas-to-ldif/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='openldap'><meta property='article:tag' content='linux'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-03-24T20:20:22-06:00'/><meta property='article:modified_time' content='2018-03-24T20:20:22-06:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Converting OpenLDAP Schemas to LDIF • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2018/03/converting-openldap-schemas-to-ldif/'>
@@ -110,27 +110,22 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>I&rsquo;ve been writing software to work against an OpenLDAP instance, with a highly
+  <p>I've been writing software to work against an OpenLDAP instance, with a highly
 customized schema. The operators of the existing system only had the schema
 files and searching around found several elaborate ways to convert the files
 which I tried with mixed success. After doing the research to figure this out,
 it became clear I could probably have used <code>slapcat</code> and have dumped the active
 schema directly to LDIF.</p>
-
-<p>As a sample of how I converted these, I&rsquo;ll use the <code>rfc2307bis.schema</code> file
-which didn&rsquo;t seem to come with a matching LDIF file in the source distribution.
-You&rsquo;ll need to identify the dependencies of the schema, which I&rsquo;ve tended to
-just do with trial and error. If a dependency is missing you&rsquo;ll receive an
+<p>As a sample of how I converted these, I'll use the <code>rfc2307bis.schema</code> file
+which didn't seem to come with a matching LDIF file in the source distribution.
+You'll need to identify the dependencies of the schema, which I've tended to
+just do with trial and error. If a dependency is missing you'll receive an
 error like the following:</p>
-
 <pre><code>5ab6f5a6 /etc/openldap/schema/cosine.schema: line 1084 objectclass: ObjectClass not found: &quot;person&quot;
-</code></pre>
-
-<p>You can identify the requisite schema file by grep&rsquo;ing for the missing object
+</code></pre><p>You can identify the requisite schema file by grep'ing for the missing object
 in the other schema files and adding it to the config. The <code>rfc2307.schema</code>
 file depends on the <code>core.schema</code> and <code>cosine.schema</code> files. With this in mind
 you can use the following script to convert the LDIF file:</p>
-
 <pre><code>SCHEMA_CONV_DIR=&quot;$(mktemp -d)&quot;
 
 cat &lt;&lt; EOF &gt; ${SCHEMA_CONV_DIR}/convert.conf
@@ -146,15 +141,12 @@ slapcat -f ${SCHEMA_CONV_DIR}/convert.conf -F ${SCHEMA_CONV_DIR} -n 0 \
   -e '/^modifyTimestamp: /d' -e '/^$/d' &gt; /etc/openldap/schema/rfc2307bis.ldif
 
 rm -rf ${SCHEMA_CONV_DIR}
-</code></pre>
-
-<p>One important thing to note is the schema identifier in the slapcat command
+</code></pre><p>One important thing to note is the schema identifier in the slapcat command
 <code>cn={2}rfc2307bis,cn=schema,cn=config</code>. The &lsquo;{2}&rsquo; there will be the line number
 from the <code>convert.conf</code> file counting from 0 and will likely be different for
-the schemas you&rsquo;re converting, and the name will be defined by the contents of
+the schemas you're converting, and the name will be defined by the contents of
 the schema file.</p>
-
-<p>You&rsquo;ll also want to pay attention to the file names and make sure the inputs
+<p>You'll also want to pay attention to the file names and make sure the inputs
 and outputs match your expectations.</p>
 
 </div>
@@ -206,7 +198,7 @@ and outputs match your expectations.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

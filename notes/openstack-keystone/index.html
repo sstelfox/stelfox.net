@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Installation/Configuration Install the required packages with the following command:
-yum install openstack-utils openstack-keystone python-keystoneclient -y  Generate a long, strong unique password for keystone&rsquo;s MySQL user (MySQL should already be setup at this point and bound to 10.100.0.11 if you&rsquo;re following along from the Openstack page. Open up a MySQL console as the root user and run the following commands:
-Important Note: Openstack has a convenient command openstack-db that does the following for you, however, when it creates the user it uses keystone for a password and doesn&rsquo;t restrict the hosts that can use that account (globally available).'>
+yum install openstack-utils openstack-keystone python-keystoneclient -y Generate a long, strong unique password for keystone&#39;s MySQL user (MySQL should already be setup at this point and bound to 10.100.0.11 if you&#39;re following along from the Openstack page. Open up a MySQL console as the root user and run the following commands:
+Important Note: Openstack has a convenient command openstack-db that does the following for you, however, when it creates the user it uses keystone for a password and doesn&#39;t restrict the hosts that can use that account (globally available).'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Openstack Keystone • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Installation/Configuration Install the required packages with the following command:
-yum install openstack-utils openstack-keystone python-keystoneclient -y  Generate a long, strong unique password for keystone&rsquo;s MySQL user (MySQL should already be setup at this point and bound to 10.100.0.11 if you&rsquo;re following along from the Openstack page. Open up a MySQL console as the root user and run the following commands:
-Important Note: Openstack has a convenient command openstack-db that does the following for you, however, when it creates the user it uses keystone for a password and doesn&rsquo;t restrict the hosts that can use that account (globally available).'>
+yum install openstack-utils openstack-keystone python-keystoneclient -y Generate a long, strong unique password for keystone&#39;s MySQL user (MySQL should already be setup at this point and bound to 10.100.0.11 if you&#39;re following along from the Openstack page. Open up a MySQL console as the root user and run the following commands:
+Important Note: Openstack has a convenient command openstack-db that does the following for you, however, when it creates the user it uses keystone for a password and doesn&#39;t restrict the hosts that can use that account (globally available).'>
 <meta property='og:url' content='https://stelfox.net/notes/openstack-keystone/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Openstack Keystone • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/openstack-keystone/'>
@@ -112,51 +112,34 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h2 id="installation-configuration">Installation/Configuration</h2>
-
+  <h2 id="installationconfiguration">Installation/Configuration</h2>
 <p>Install the required packages with the following command:</p>
-
 <pre><code>yum install openstack-utils openstack-keystone python-keystoneclient -y
-</code></pre>
-
-<p>Generate a long, strong unique password for keystone&rsquo;s <a href="https://stelfox.net/notes/mysql/">MySQL</a> user (MySQL
-should already be setup at this point and bound to <code>10.100.0.11</code> if you&rsquo;re
+</code></pre><p>Generate a long, strong unique password for keystone's <a href="https://stelfox.net/notes/mysql/">MySQL</a> user (MySQL
+should already be setup at this point and bound to <code>10.100.0.11</code> if you're
 following along from the <a href="https://stelfox.net/notes/openstack/">Openstack</a> page. Open up a MySQL console as the
 root user and run the following commands:</p>
-
 <p>Important Note: Openstack has a convenient command <code>openstack-db</code> that does the
 following for you, however, when it creates the user it uses <code>keystone</code> for a
-password and doesn&rsquo;t restrict the hosts that can use that account (globally
+password and doesn't restrict the hosts that can use that account (globally
 available). It seems a bit excessive to me to have a script for those three
 MySQL commands:</p>
-
 <pre><code>CREATE DATABASE keystone;
 GRANT ALL ON keystone.* TO 'keystone'@'10.100.0.%' IDENTIFIED BY
   'LongStrongUniquePasswordYouGenerated';
 FLUSH PRIVILEGES;
-</code></pre>
-
-<p>Generate a token to be used as the &lsquo;admin&rsquo; global token. When used this will
+</code></pre><p>Generate a token to be used as the &lsquo;admin&rsquo; global token. When used this will
 give you full admin credentials on the keystone service regardless of whether
 or not an admin exists.</p>
-
 <p>This is needed for the initial administration of the keystone service once we
-get it up and running. I save it directly to the root user&rsquo;s bashrc file as it
-it&rsquo;ll be useful to have later on:</p>
-
+get it up and running. I save it directly to the root user's bashrc file as it
+it'll be useful to have later on:</p>
 <pre><code>echo export ADMIN_TOKEN=$(openssl rand -hex 32) &gt; /root/.bashrc
-</code></pre>
-
-<p>After logging off and back on make sure you have the token and copy this for
+</code></pre><p>After logging off and back on make sure you have the token and copy this for
 use in the configuration file later on:</p>
-
 <pre><code>echo $ADMIN_TOKEN
 f35fb1205820907c2ddd1eb046f6ba2de1e5b729d6b7aedc5b0959156013f4a3
-</code></pre>
-
-<p>Open up the keystone configuration file at: <code>/etc/keystone/keystone.conf</code> and
+</code></pre><p>Open up the keystone configuration file at: <code>/etc/keystone/keystone.conf</code> and
 replace it with the following (changing appropriate variables for your
 installation such as <code>admin_token</code> and the MySQL password:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[DEFAULT]</span>
@@ -301,39 +284,27 @@ installation such as <code>admin_token</code> and the MySQL password:</p>
 <span style="color:#66d9ef">[composite:admin]</span>
 <span style="color:#a6e22e">use</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">egg:Paste#urlmap</span>
 <span style="color:#a6e22e">/v2.0</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">admin_api</span>
-<span style="color:#a6e22e">/</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">admin_version_api</span></code></pre></div>
-<p>Please note that I haven&rsquo;t yet delved into the Compositions, Filters, Apps or
-Pipelines and don&rsquo;t have a handle on what exactly they&rsquo;re doing. As far as
+<span style="color:#a6e22e">/</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">admin_version_api</span>
+</code></pre></div><p>Please note that I haven't yet delved into the Compositions, Filters, Apps or
+Pipelines and don't have a handle on what exactly they're doing. As far as
 configuration documentation goes there is much to be desired in Keystone&hellip;</p>
-
 <p>We need to create a full <a href="https://stelfox.net/notes/building-a-certificate-authority/">certificate authority</a> in
 <code>/etc/keystone/ssl/certs</code>. Ideally the CA itself would be signed by a higher CA
 of our control. A keystone SSL cert and key will also need to be created (and
 signed by the CA).</p>
-
 <p>The cert and key file should be placed at
 <code>/etc/keystone/ssl/certs/signing_cert.pem</code> and
-<code>/etc/keystone/ssl/private/signing_key.pem</code> respectively. You&rsquo;ll also want to
+<code>/etc/keystone/ssl/private/signing_key.pem</code> respectively. You'll also want to
 ensure the <code>[signing]</code> portion of the <code>keystone.conf</code> file reflects the actual
 size of the key.</p>
-
 <pre><code>keystone-manage db_sync
-</code></pre>
-
-<p>Now that we&rsquo;re configured let&rsquo;s get the service going&hellip;</p>
-
+</code></pre><p>Now that we're configured let's get the service going&hellip;</p>
 <pre><code>systemctl enable openstack-keystone.service
 systemctl start openstack-keystone.service
-</code></pre>
-
-<p>You should now have a running (though empty) keystone service. Let&rsquo;s test and
-make sure it&rsquo;s responding nicely:</p>
-
+</code></pre><p>You should now have a running (though empty) keystone service. Let's test and
+make sure it's responding nicely:</p>
 <pre><code>keystone --token $ADMIN_TOKEN --endpoint http://10.100.0.13:35357/v2.0/ tenant-list
-</code></pre>
-
-<h2 id="initial-setup">Initial Setup</h2>
-
+</code></pre><h2 id="initial-setup">Initial Setup</h2>
 <p>Now that we have the service up and running we need to add users, roles,
 tenants, services and endpoints. A quick note on a couple of things here.
 &lsquo;Tenant&rsquo; is used as a means of logically grouping a bunch of users. A user can
@@ -342,26 +313,20 @@ tenants that it has been granted access too unless that user is an admin of the
 special admin tenant which will automatically grant them full access to all
 tenants and their contents regardless of whether that user is in that tenant
 and as such care should be taken when granting that level of permissions.</p>
-
-<p>First since we&rsquo;ll be running a lot of commands and it can quickly become
-burdensome to repeatedly provide the endpoint and the token we&rsquo;re going to set
+<p>First since we'll be running a lot of commands and it can quickly become
+burdensome to repeatedly provide the endpoint and the token we're going to set
 two environment variables to make the access easier, then test to make sure we
 can still access the service:</p>
-
 <pre><code>export SERVICE_ENDPOINT=http://10.100.0.13:35357/v2.0/
 export SERVICE_TOKEN=$ADMIN_TOKEN
 keystone tenant-list
-</code></pre>
-
-<p>There is another slightly annoying thing that can be easily worked around in
+</code></pre><p>There is another slightly annoying thing that can be easily worked around in
 Openstack; Whenever you refer to a user, role, tenant, service, endpoint or
-other object you need to do so by it&rsquo;s ID and not it&rsquo;s friendly name. As such
-I&rsquo;ve adapted a few helper methods to easily grab an object ID based on it&rsquo;s
-friendly name. Add these too root&rsquo;s bash file and re-source it by either
+other object you need to do so by it's ID and not it's friendly name. As such
+I've adapted a few helper methods to easily grab an object ID based on it's
+friendly name. Add these too root's bash file and re-source it by either
 logging out and back in or by running &ldquo;. ~/.bashrc&rdquo;.</p>
-
 <p>We now need to create an admin user, role, tenant, and combine them all:</p>
-
 <pre><code>keystone user-create --name admin --pass secret --email admin@email.net
 +----------+-------------------------------------------------------------------------------------------------------------------------+
 | Property |                                                          Value                                                          |
@@ -390,10 +355,7 @@ keystone tenant-create --name admin
 |     name    |              admin               |
 +-------------+----------------------------------+
 keystone user-role-add --user-id 2e981959c1d54789a3ae6a88611cc0db --role-id df6b8c5b5a0847259e1c78a34aae09d1 --tenant-id adb579d87cc7438da8ddb6147ca69717
-</code></pre>
-
-<h2 id="potentially-old-information">Potentially Old Information</h2>
-
+</code></pre><h2 id="potentially-old-information">Potentially Old Information</h2>
 <pre><code>get_tenant_id() {
   echo `keystone tenant-list | grep $@ | awk '{ print $2 }'`
 }
@@ -409,43 +371,29 @@ get_role_id() {
 get_service_id() {
   echo `keystone service-list | grep $@ | awk '{ print $2 }'`
 }
-</code></pre>
-
-<h3 id="tenant-creation">Tenant Creation</h3>
-
+</code></pre><h3 id="tenant-creation">Tenant Creation</h3>
 <pre><code>keystone tenant-create --name=admin
 keystone tenant-create --name=service
-</code></pre>
-
-<h3 id="role-creation">Role Creation</h3>
-
+</code></pre><h3 id="role-creation">Role Creation</h3>
 <pre><code>keystone role-create --name admin
 keystone role-create --name KeystoneAdmin
 keystone role-create --name KeystoneServiceAdmin
 keystone role-create --name Member
-</code></pre>
-
-<h3 id="user-creation">User Creation</h3>
-
+</code></pre><h3 id="user-creation">User Creation</h3>
 <p>Generate a five long strong unique passwords for the admin user and each of the
-four service accounts here. For this example I&rsquo;m going to use password{1-5}. If
-you use the same ones&hellip; you probably shouldn&rsquo;t be playing at this level&hellip; You
+four service accounts here. For this example I'm going to use password{1-5}. If
+you use the same ones&hellip; you probably shouldn't be playing at this level&hellip; You
 will need these later when setting up each of the services so note them down
 somewhere secure.</p>
-
 <pre><code>keystone user-create --name=admin --pass=password1 --email=admin@your-admin.cn
 keystone user-create --name=nova --pass=password2 --tenant_id $(get_tenant_id service)
 keystone user-create --name=glance --pass=password3 --tenant_id $(get_tenant_id service)
 keystone user-create --name=quantum --pass=password4 --tenant_id $(get_tenant_id service)
 keystone user-create --name=cinder --pass=password5 --tenant_id $(get_tenant_id service)
-</code></pre>
-
-<h3 id="granting-roles">Granting Roles</h3>
-
+</code></pre><h3 id="granting-roles">Granting Roles</h3>
 <p>Grant the admin user the <code>admin</code>, <code>KeystoneAdmin</code>, and <code>KeystoneServiceAdmin</code>
 roles within the admin tenant and the service accounts the admin role within
 the service tenant.</p>
-
 <pre><code>keystone user-role-add --user $(get_user_id admin) --role $(get_role_id admin) --tenant_id $(get_tenant_id admin)
 keystone user-role-add --user $(get_user_id admin) --role $(get_role_id KeystoneAdmin) --tenant_id $(get_tenant_id admin)
 keystone user-role-add --user $(get_user_id admin) --role $(get_role_id KeystoneServiceAdmin) --tenant_id $(get_tenant_id admin)
@@ -454,29 +402,21 @@ keystone user-role-add --tenant_id $(get_tenant_id service) --user $(get_user_id
 keystone user-role-add --tenant_id $(get_tenant_id service) --user $(get_user_id glance) --role $(get_role_id admin)
 keystone user-role-add --tenant_id $(get_tenant_id service) --user $(get_user_id quantum) --role $(get_role_id admin)
 keystone user-role-add --tenant_id $(get_tenant_id service) --user $(get_user_id cinder) --role $(get_role_id admin)
-</code></pre>
-
-<h3 id="service-creation">Service Creation</h3>
-
+</code></pre><h3 id="service-creation">Service Creation</h3>
 <pre><code>keystone service-create --name nova --type compute --description 'OpenStack Compute Service'
 keystone service-create --name cinder --type volume --description 'OpenStack Volume Service'
 keystone service-create --name glance --type image --description 'OpenStack Image Service'
 keystone service-create --name keystone --type identity --description 'OpenStack Identity'
 keystone service-create --name ec2 --type ec2 --description 'OpenStack EC2 service'
 keystone service-create --name quantum --type network --description 'OpenStack Networking service'
-</code></pre>
-
-<h3 id="endpoint-creation">Endpoint Creation</h3>
-
+</code></pre><h3 id="endpoint-creation">Endpoint Creation</h3>
 <p>End points are the next thing to be defined, they require that a region be
 specified. This is an arbitrary string that can be used to delinieate between
 service regions that could be data centers, portions of a data-center or what
 have you.</p>
-
-<p>Since I&rsquo;m not working on an installation large enough to really need multiple
+<p>Since I'm not working on an installation large enough to really need multiple
 regions this name is more or less useless for me so I chose to just use Primary
 as the region name.</p>
-
 <pre><code>keystone endpoint-create --region Primary --service_id $(get_service_id compute) \
   --publicurl 'http://10.100.0.15:8774/v2/$(tenant_id)s' \
   --adminurl 'http://10.100.0.15:8774/v2/$(tenant_id)s' \
@@ -506,15 +446,11 @@ keystone endpoint-create --region Primary --service_id $(get_service_id network)
   --publicurl 'http://10.100.0.19:9696/' \
   --adminurl 'http://10.100.0.19:9696/' \
   --internalurl 'http://10.100.0.19:9696/'
-</code></pre>
-
-<h3 id="keystone-management">Keystone Management</h3>
-
+</code></pre><h3 id="keystone-management">Keystone Management</h3>
 <p>With keystone setup, the admin user in place, and endpoints defined you no
 longer need to use the admin token to authenticate and manage the service. As a
 regular user export the following information into your bash shell, unset the
 admin token and try to access the keystone user-list again:</p>
-
 <pre><code>export OS_TENANT_NAME=admin
 export OS_USERNAME=admin
 export OS_PASSWORD=password1
@@ -527,11 +463,8 @@ keystone tenant-list
 | bb9509fd9dea40f5b58d720aaaa15044 | service | True    |
 | cbabea52a4be417998b266e43280ef35 | admin   | True    |
 +----------------------------------+---------+---------+
-</code></pre>
-
-<p>You can also specify those options via the command line if you don&rsquo;t want to
+</code></pre><p>You can also specify those options via the command line if you don't want to
 set the  environment variables like so:</p>
-
 <pre><code>keystone --os_username admin --os_password password1 --os_tenant_name admin \
   --os_auth_url http://10.100.0.13:5000/v2.0/ tenant-list
 +----------------------------------+---------+---------+
@@ -540,27 +473,23 @@ set the  environment variables like so:</p>
 | bb9509fd9dea40f5b58d720aaaa15044 | service | True    |
 | cbabea52a4be417998b266e43280ef35 | admin   | True    |
 +----------------------------------+---------+---------+
-</code></pre>
-
-<h2 id="future-steps">Future Steps</h2>
-
-<p>There are some features that I&rsquo;d really like to take a look at getting as I
+</code></pre><h2 id="future-steps">Future Steps</h2>
+<p>There are some features that I'd really like to take a look at getting as I
 feel they will improve the quality, security or reliability of the service in
-general. These features that I haven&rsquo;t documented here yet are as follows:</p>
-
+general. These features that I haven't documented here yet are as follows:</p>
 <ul>
 <li>LDAP Authentication Backend
-
 <ul>
 <li>With Memcached queries</li>
-</ul></li>
+</ul>
+</li>
 <li>SSL</li>
 <li>Detailed policy.json evaluation
-
 <ul>
 <li>Breaking out permissions into more explicit roles</li>
 <li>What can I actually accomplish with this file?</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -576,7 +505,7 @@ general. These features that I haven&rsquo;t documented here yet are as follows:
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/pam/'>
+      <a href='/notes/openvas/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -584,10 +513,10 @@ general. These features that I haven&rsquo;t documented here yet are as follows:
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>PAM</a>
+        <span class='screen-reader-text'>Previous post: </span>OpenVAS</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/openstack/'>
-        <span class='screen-reader-text'>Next post: </span>Openstack<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/openstack-glance/'>
+        <span class='screen-reader-text'>Next post: </span>OpenStack Glance<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -605,7 +534,7 @@ general. These features that I haven&rsquo;t documented here yet are as follows:
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

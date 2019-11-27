@@ -13,7 +13,7 @@ Keepalived My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; n
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Linux Virtual Servers • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/linux-virtual-servers/'>
@@ -110,54 +110,36 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="keepalived">Keepalived</h2>
-
 <p>My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1
 is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This
 sample configuration will be making use of two directors and two &ldquo;real
 servers&rdquo;.</p>
-
 <p>The directors have hostnames &lsquo;director-01.i.0x378.net&rsquo; and
 &lsquo;director-02.i.0x378.net&rsquo;. &lsquo;director-01&rsquo; will have device/IP pairs of (eth0,
 192.168.122.141), (eth1, 10.10.10.10), and (eth2, 10.0.0.2). &lsquo;director-02&rsquo; will
 have device/IP pairs of (eth0, 192.168.122.142), (eth1, 10.10.10.11), and
 (eth2, 10.0.0.3).</p>
-
 <p>There are two virtual IP addresses that will need to be failed over,
 &lsquo;192.168.122.140&rsquo; on the &lsquo;public&rsquo; network and &lsquo;10.0.0.1&rsquo;  on the &lsquo;internal&rsquo;
 network.</p>
-
 <p>These need to be failed over simulatenously.</p>
-
 <p>First we need to install the packages:</p>
-
 <pre><code>yum install ipvsadm keepalived -y
-</code></pre>
-
-<p>If the directors are running within an LXC environment, keepalived won&rsquo;t be
+</code></pre><p>If the directors are running within an LXC environment, keepalived won't be
 able to load the kernel module it needs for the services. From the host machine
-you&rsquo;ll need to run the following command before attempting to start the
+you'll need to run the following command before attempting to start the
 keepalived services.</p>
-
 <pre><code>modprobe ip_vs
-</code></pre>
-
-<p>This can be done automatically by creating <code>/etc/rc.d/rc.local</code> and marking it
+</code></pre><p>This can be done automatically by creating <code>/etc/rc.d/rc.local</code> and marking it
 as executable with the following contents.</p>
-
 <pre><code>#!/bin/sh
 
 modprobe ip_vs
-</code></pre>
-
-<p>Edit the <code>/etc/keepalived/keepalived.conf</code>:</p>
-
+</code></pre><p>Edit the <code>/etc/keepalived/keepalived.conf</code>:</p>
 <pre><code>global_defs {
   notification_email_from failover@example.tld
   notification_email {
@@ -238,60 +220,41 @@ vrrp_instance internal_network_1 {
     #2001:db8:16:10::100/64 dev eth2
   }
 }
-</code></pre>
-
-<p>For &lsquo;director-02&rsquo; the <code>router_id</code> should be set to &lsquo;LVS_DIRECTOR_02&rsquo;. You&rsquo;ll
+</code></pre><p>For &lsquo;director-02&rsquo; the <code>router_id</code> should be set to &lsquo;LVS_DIRECTOR_02&rsquo;. You'll
 also want to update the unicast peer addresses for the individual interfaces as
-well. Since we&rsquo;ve disabled <code>preempt</code> failover and are starting the servers in
-the BACKUP state, adjusting the priority between the directors doesn&rsquo;t matter.</p>
-
+well. Since we've disabled <code>preempt</code> failover and are starting the servers in
+the BACKUP state, adjusting the priority between the directors doesn't matter.</p>
 <p>We now need to ensure we have the firewall rules in place to allow both LVS
 instances to communicate their keepalive messages to each other. Add the
 following firewall rules:</p>
-
 <pre><code>-A SERVICES -i eth0 -p vrrp -s 192.168.122.0/24 -j ACCEPT
 -A SERVICES -i eth2 -p vrrp -s 10.0.0.0/24 -j ACCEPT
 -A OUTPUT -o eth0 -p vrrp -d 192.168.122.0/24 -j ACCEPT
 -A OUTPUT -o eth2 -p vrrp -d 10.0.0.0/24 -j ACCEPT
-</code></pre>
-
-<p>At this point we can start up keepalived on both directors and test their
+</code></pre><p>At this point we can start up keepalived on both directors and test their
 failover. Run the following two commands on both directors.</p>
-
 <pre><code>systemctl enable keepalived.service
 systemctl start keepalived.service
-</code></pre>
-
-<p>You can check the IP addresses of each nodes using <code>ip addr</code>. One of them will
+</code></pre><p>You can check the IP addresses of each nodes using <code>ip addr</code>. One of them will
 have both of the virtual IP addresses. Shutdown the keepalive daemon on the
 other one and you should see it failover and grab the virtual IP addresses
 within a second.</p>
-
 <pre><code>systemctl stop keepalived.service
 sleep 2
 systemctl start keepalived.service
-</code></pre>
-
-<p>As much as I tried I couldn&rsquo;t get keepalived to make use of the synchronization
-interface to send it&rsquo;s VRRP packets. At the same time for my uses multicast
-isn&rsquo;t an option which I why I chose unicast synchronization. If you have more
+</code></pre><p>As much as I tried I couldn't get keepalived to make use of the synchronization
+interface to send it's VRRP packets. At the same time for my uses multicast
+isn't an option which I why I chose unicast synchronization. If you have more
 than two directors unicast will increase the amount of traffic required for the
 synchronization.</p>
-
 <h2 id="conntrackd-tools">Conntrackd Tools</h2>
-
-<p>To allow us to use state based rules we&rsquo;ll also need to synchronize the known
+<p>To allow us to use state based rules we'll also need to synchronize the known
 connection states between the two machines for the event of failover. There is
 a convenient system to do this. Enter <code>conntrackd</code>.</p>
-
-<p>First we&rsquo;ll need to install the package that has the synchronization daemon.</p>
-
+<p>First we'll need to install the package that has the synchronization daemon.</p>
 <pre><code>yum install conntrack-tools -y
-</code></pre>
-
-<p>We&rsquo;ll need to throw a configuration into place at
+</code></pre><p>We'll need to throw a configuration into place at
 <code>/etc/conntrackd/conntrackd.conf</code>. The following is for director-01:</p>
-
 <pre><code>Sync {
   Mode FTFW {
     DisableExternalCache Off
@@ -357,48 +320,30 @@ General {
     }
   }
 }
-</code></pre>
-
-<p>The only change for director-02 is to change the <code>IPv4_interface</code> to
+</code></pre><p>The only change for director-02 is to change the <code>IPv4_interface</code> to
 <code>10.10.10.11</code>.</p>
-
-<p>You&rsquo;ll notice that I am using multicast here. There is an option in conntrackd
-to use unicast as well, and I&rsquo;ll need to come back and reconfigure it to make
+<p>You'll notice that I am using multicast here. There is an option in conntrackd
+to use unicast as well, and I'll need to come back and reconfigure it to make
 use of it. For now though this should work in my environment.</p>
-
 <p>Add the firewall rules needed for the synchronization process on both machines:</p>
-
 <pre><code>-A INPUT -i eth1 -m udp -p udp -s 10.10.10.0/24 -d 225.0.0.50 --dport 3780 -j ACCEPT
 -A OUTPUT -o eth1 -m udp -p udp -d 225.0.0.50 --dport 3780 -j ACCEPT
-</code></pre>
-
-<p>For most services I would also include connection tracking state information,
+</code></pre><p>For most services I would also include connection tracking state information,
 but given the nature of this service I decided against it.</p>
-
 <p>Enable and start the service:</p>
-
 <pre><code>systemctl enable conntrackd.service
 systemctl start conntrackd.service
-</code></pre>
-
-<p>There is some work that conntrackd will need to do whenever keepalive changes
-it&rsquo;s cluster state. A script is provided with the <code>conntrack-tools</code> package, we
+</code></pre><p>There is some work that conntrackd will need to do whenever keepalive changes
+it's cluster state. A script is provided with the <code>conntrack-tools</code> package, we
 can just copy it into the appropriate place with the following command:</p>
-
 <pre><code>cp /usr/share/doc/conntrack-tools-1.4.2/doc/sync/primary-backup.sh /etc/conntrackd/
-</code></pre>
-
-<p>Now we need to tell keepalived to call the script when it&rsquo;s state changes, if
-you&rsquo;re following along with this page you&rsquo;ll need to add the following to the
+</code></pre><p>Now we need to tell keepalived to call the script when it's state changes, if
+you're following along with this page you'll need to add the following to the
 section named <code>vrrp_sync_group gateway_group_1</code>.</p>
-
 <pre><code>notify_backup &quot;/etc/conntrackd/primary-backup.sh backup&quot;
 notify_fault  &quot;/etc/conntrackd/primary-backup.sh fault&quot;
 notify_master &quot;/etc/conntrackd/primary-backup.sh primary&quot;
-</code></pre>
-
-<p>Make sure you restart keepalived on both machines.</p>
-
+</code></pre><p>Make sure you restart keepalived on both machines.</p>
 <p>At this point we have everything in place we need to perform our two target
 tasks. Having a gateway on the local network that can failover in the event the
 other machine dies, and provide highly availability to multiple services behind
@@ -417,7 +362,7 @@ them.</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/logrotate/'>
+      <a href='/notes/lm-sensors/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -425,7 +370,7 @@ them.</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Logrotate</a>
+        <span class='screen-reader-text'>Previous post: </span>LM Sensors</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/linux-hardening/'>
         <span class='screen-reader-text'>Next post: </span>Linux Hardening<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -446,7 +391,7 @@ them.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

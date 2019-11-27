@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-There are two different means of client configuration. Fedora has a package ntpdate that should be installed instead of ntpd. Whenever it is started it will synchronize the server&rsquo;s clock to any configured time servers.'>
+There are two different means of client configuration. Fedora has a package ntpdate that should be installed instead of ntpd. Whenever it is started it will synchronize the server&#39;s clock to any configured time servers.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='NTPDate • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-There are two different means of client configuration. Fedora has a package ntpdate that should be installed instead of ntpd. Whenever it is started it will synchronize the server&rsquo;s clock to any configured time servers.'>
+There are two different means of client configuration. Fedora has a package ntpdate that should be installed instead of ntpd. Whenever it is started it will synchronize the server&#39;s clock to any configured time servers.'>
 <meta property='og:url' content='https://stelfox.net/notes/ntpdate/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>NTPDate • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/ntpdate/'>
@@ -110,44 +110,31 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>There are two different means of client configuration. Fedora has a package
 <code>ntpdate</code> that should be installed instead of <a href="https://stelfox.net/notes/ntpd/">ntpd</a>. Whenever it is started
-it will synchronize the server&rsquo;s clock to any configured time servers.  It
+it will synchronize the server's clock to any configured time servers.  It
 needs to be told about time servers it should be synchronizing to in the
 <code>/etc/ntp/step-tickers</code>. It then needs to be turned on using the following
 command:</p>
-
 <pre><code>[root@localhost ~]# chkconfig --level 345 ntpdate on
-</code></pre>
-
-<p>If the server doesn&rsquo;t have the ntpdate service (ntpdate seems like it&rsquo;s being
-deprecated though I can&rsquo;t imagine why) than the same thing can be accomplished
+</code></pre><p>If the server doesn't have the ntpdate service (ntpdate seems like it's being
+deprecated though I can't imagine why) than the same thing can be accomplished
 by installing <a href="https://stelfox.net/notes/ntpd/">ntpd</a> and adding a cron job to synchronize the time.</p>
-
 <p>The following command will add a cron entry that will get run hourly and
 synchronize the time against the time server configured for the ntp daemon
-(You&rsquo;ll want to reference <a href="https://stelfox.net/notes/ntpd/">ntpd</a> for that configuration.</p>
-
+(You'll want to reference <a href="https://stelfox.net/notes/ntpd/">ntpd</a> for that configuration.</p>
 <pre><code>echo '0 * * * * root /usr/sbin/ntpd -q -u ntp:ntp' &gt; /etc/cron.d/ntpd
-</code></pre>
-
-<h2 id="etc-ntp-step-tickers">/etc/ntp/step-tickers</h2>
-
-<p>By default this file is empty and ntpdate will have no servers to get it&rsquo;s time
+</code></pre><h2 id="etcntpsteptickers">/etc/ntp/step-tickers</h2>
+<p>By default this file is empty and ntpdate will have no servers to get it's time
 from. This file should include one server per line that are either a FQDN or an
 IP address. If there is one or more local time servers they should be the only
-ones listed. If there aren&rsquo;t then use the following for the config file:</p>
-
+ones listed. If there aren't then use the following for the config file:</p>
 <pre><code>0.pool.ntp.org
 1.pool.ntp.org
 </code></pre>
-
 </div>
 
   
@@ -161,7 +148,7 @@ ones listed. If there aren&rsquo;t then use the following for the config file:</
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/ntpd/'>
+      <a href='/notes/openstack/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -169,10 +156,10 @@ ones listed. If there aren&rsquo;t then use the following for the config file:</
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>NTPd</a>
+        <span class='screen-reader-text'>Previous post: </span>Openstack</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/nginx/'>
-        <span class='screen-reader-text'>Next post: </span>NGinx<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/ntpd/'>
+        <span class='screen-reader-text'>Next post: </span>NTPd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -190,7 +177,7 @@ ones listed. If there aren&rsquo;t then use the following for the config file:</
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

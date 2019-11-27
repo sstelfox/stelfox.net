@@ -13,7 +13,7 @@ Secure Shell or SSH is a network protocol that allows data to be exchanged using
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>SSHd • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/sshd/'>
@@ -110,12 +110,9 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Secure Shell or SSH is a network protocol that allows data to be exchanged
 using a secure channel between two networked devices. Used primarily on
 GNU/Linux and Unix based systems to access shell accounts, SSH was designed as
@@ -123,24 +120,18 @@ a replacement for Telnet and other insecure remote shells, which send
 information, notably passwords, in plaintext, rendering them susceptible to
 packet analysis. The encryption used by SSH provides confidentiality and
 integrity of data over an insecure network, such as the Internet.</p>
-
 <h2 id="security-notes">Security Notes</h2>
-
 <p>SSH is a crux service. An improperly configured SSH could be equivalent to
 letting an attacker have physical access to the box.</p>
-
-<p>Generally it&rsquo;s recommended to run any instances of SSH exposed to the public
-internet on an alternate port. Alternate ports won&rsquo;t protect you against
+<p>Generally it's recommended to run any instances of SSH exposed to the public
+internet on an alternate port. Alternate ports won't protect you against
 vulnerabilities but it will drastrically reduce the number of automated and
 scripted attacks your server will be subjected to. If nothing else it will allow
 real attacks to stand out more clearly in your logs.</p>
-
 <h2 id="firewall-adjustments">Firewall Adjustments</h2>
-
 <p>My default <a href="https://stelfox.net/notes/iptables/">IPTables</a> firewall already has the following rules in place to
 allow access to SSH by default while still providing a modicum of protection
 from attackers.</p>
-
 <pre><code># Allow SSH, but no more than 5 new connections every minute Note: This has
 # extreme repercussions if I was to use sftp as each file transfer initiates a
 # new connection. Since it's rare for me to use sftp this isn't really an
@@ -151,16 +142,11 @@ from attackers.</p>
 -A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &quot;SSH Brute Force&quot;
 -A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
 -A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
-<h3 id="etc-ssh-sshd-config">/etc/ssh/sshd_config</h3>
-
+</code></pre><h2 id="configuration">Configuration</h2>
+<h3 id="etcsshsshdconfig">/etc/ssh/sshd_config</h3>
 <p>The following is a minimal SSHd config relying mostly on the defaults. It
 requires a group named <code>sshers</code> to be created before hand and any user that
 should have legitimate access via SSH should be added to the group.</p>
-
 <pre><code>Banner /etc/issue.net
 
 ClientAliveInterval 60
@@ -180,25 +166,17 @@ AllowGroups sshers
 AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
 AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
 AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
-</code></pre>
-
-<p>To create the group and add the user &lsquo;test&rsquo; to it you can run the following
+</code></pre><p>To create the group and add the user &lsquo;test&rsquo; to it you can run the following
 commands:</p>
-
 <pre><code>groupadd sshers
 usermod -a -G sshers test
-</code></pre>
-
-<h3 id="etc-issue-net">/etc/issue.net</h3>
-
-<p>The net issue file is what gets displayed before a user logs in. While I&rsquo;m
+</code></pre><h3 id="etcissuenet">/etc/issue.net</h3>
+<p>The net issue file is what gets displayed before a user logs in. While I'm
 under no false pretense that having a policy displayed to a potential attacker
 will prevent them from their malicious activity, it is generally recommended by
 law enforcement to ensure that notice of unauthorized access was given prior.</p>
-
 <p>At a minimum it will show the server has been professionally configured and
 that they are not dealing with a service that was left unconfigured.</p>
-
 <pre><code>************************************************************************
 This system is privately owned. If you are not authorized to access this
 system, exit immediately. Unauthorized access to this system is
@@ -211,10 +189,7 @@ access and have been granted the level of privileges you will
 subsequently execute on this system. You further acknowledge that by
 entry into this system you expect no privacy from monitoring.
 ************************************************************************
-</code></pre>
-
-<h3 id="default-ssh-client-configuration">Default SSH Client Configuration</h3>
-
+</code></pre><h3 id="default-ssh-client-configuration">Default SSH Client Configuration</h3>
 <pre><code># /etc/ssh/ssh_config
 Host *
   Compression yes
@@ -223,22 +198,16 @@ Host *
   SendEnv LC_ALL
   VerifyHostKeyDNS ask
   VisualHostKey yes
-</code></pre>
-
-<h3 id="ssh-authorized-keys">SSH Authorized Keys</h3>
-
+</code></pre><h3 id="ssh-authorized-keys">SSH Authorized Keys</h3>
 <p>SSH authorized keys provide a considerably stronger authentication method than
-a user&rsquo;s password as long as the key is protected by a pass-phrase. If the key
+a user's password as long as the key is protected by a pass-phrase. If the key
 is left without a pass-phrase, anyone who manages to get access to the system
 can immediately login as that user anywhere they have deployed the key. Ensure
 there is a strong pass-phrase on the key.</p>
-
 <p>The keys are normally created as <code>~/.ssh/id_rsa</code> and <code>~/.ssh/id_rsa.pub</code>,
-however I like to physically separate my keys from my computers so I&rsquo;ll give my
-keys a descriptive name of <code>username@host.key</code> and put them on a pendrive
-located at <code>/media/pendrive</code>. Personally I to use keys with 4096 bits. The
+however I like to physically separate my keys from my computers so I'll give my
+keys a descriptive name of <a href="mailto:%60username@host.key">`username@host.key</a><code>and put them on a pendrive located at</code>/media/pendrive`. Personally I to use keys with 4096 bits. The
 following command will create the public / private keys:</p>
-
 <pre><code>[user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
 Generating public/private rsa key pair.
 Enter passphrase (empty for no passphrase):
@@ -247,18 +216,14 @@ Your identification has been saved in /media/pendrive/username@host.key.
 Your public key has been saved in /media/pendrive/username@host.key.pub.
 The key fingerprint is:
 xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx user@localhost
-</code></pre>
-
-<p>Now that we have a strong key we just need to place it on the servers we want
+</code></pre><p>Now that we have a strong key we just need to place it on the servers we want
 to access. Conveniently enough there is a utility that makes this quick and
-simple, if for some reason you don&rsquo;t trust this utility or want to do it by
-hand just copy the contents of username@host.key.pub into
-<code>~/.ssh/authorized_keys</code> on the remote host and make sure the file&rsquo;s
+simple, if for some reason you don't trust this utility or want to do it by
+hand just copy the contents of <a href="mailto:username@host.key.pub">username@host.key.pub</a> into
+<code>~/.ssh/authorized_keys</code> on the remote host and make sure the file's
 permissions are set to 0400.</p>
-
 <p>You can use the utility by performing the following command, replacing
 <code>remoteuser@remotehost</code> with a valid username and hostname for the remote host.</p>
-
 <pre><code>[user@localhost ~]$ ssh-copy-id -i /media/pendrive/username@host.key.pub remoteuser@remotehost
 remoteuser@remotehost's password: 
 Now try logging into the machine, with &quot;ssh 'remoteuser@remotehost'&quot;, and check in:
@@ -270,66 +235,47 @@ to make sure we haven't added extra keys that you weren't expecting.
 [user@localhost ~]$ ssh -i /media/pendrive/username@host.key remoteuser@remotehost
 Enter passphrase for key '/media/pendrive/username@remotehost.key':
 [remoteuser@remotehost ~]$
-</code></pre>
-
-<p>Once your sure that the key based login is working you can safely disable
+</code></pre><p>Once your sure that the key based login is working you can safely disable
 password based logins through ssh to the system entirely by changing the
 following line in <code>/etc/ssh/sshd_config</code>:</p>
-
 <pre><code>PasswordAuthentication yes
 ---- Replace with ----
 PasswordAuthentication no
-</code></pre>
-
-<p>This replaces the &lsquo;something you know&rsquo; of a password based login, with
-&lsquo;something you have&rsquo; (the key, especially if it&rsquo;s on a pendrive) and &lsquo;something
-you know&rsquo; (the key&rsquo;s pass-phrase).</p>
-
+</code></pre><p>This replaces the &lsquo;something you know&rsquo; of a password based login, with
+&lsquo;something you have&rsquo; (the key, especially if it's on a pendrive) and &lsquo;something
+you know&rsquo; (the key's pass-phrase).</p>
 <h2 id="user-jails">User Jails</h2>
-
 <p>Jails can isolate users from sensitive parts of the system, creating a &lsquo;fake&rsquo;
-environment for them to execute their programs. In the event that a user&rsquo;s
+environment for them to execute their programs. In the event that a user's
 account becomes compromised, the jail can limit what an attacker has access too
 though it should be considered a delay rather than a security measure since a
 determined hacker might be able to break out of an otherwise secure jail.</p>
-
-<p>To start off we&rsquo;re going to need to setup an environment for our jail. The
+<p>To start off we're going to need to setup an environment for our jail. The
 following commands create the base directories and the /dev/null device within
 the jail.</p>
-
 <pre><code>mkdir -p /var/jail/{dev,etc,lib,lib64,usr/bin,bin,home}
 chown -R root:root /var/jail/
 mknod -m 666 /var/jail/dev/null c 1 3
-</code></pre>
-
-<p>There is something serious to note here. The <a href="https://stelfox.net/notes/partitioning/">partitioning</a> security
+</code></pre><p>There is something serious to note here. The <a href="https://stelfox.net/notes/partitioning/">partitioning</a> security
 guidelines add two flags to the mount options of the /var partition.  You will
 need to remove the &lsquo;nosuid&rsquo;, and &lsquo;noexec&rsquo; options from this partition to be
 able use a chroot jail.</p>
-
-<p>Next we need to copy a few minimum files into the jail&rsquo;s etc directory. Hard
+<p>Next we need to copy a few minimum files into the jail's etc directory. Hard
 links may work better for these as they will get properly updated with the rest
 of the system, however, I am unsure whether or not that would actually work.</p>
-
 <pre><code>cp /etc/ld.so.cache /etc/ld.so.conf /etc/nsswitch.conf /etc/hosts /var/jail/etc/
-</code></pre>
-
-<p>At this point you need to decide what commands you want you&rsquo;re user to have
+</code></pre><p>At this point you need to decide what commands you want you're user to have
 access too and copy the appropriate binaries into place. You can use the
 <code>which</code> command to locate a binary and then copy it into the same directory
 within the jail. The following is an example for moving <code>bash</code> over.</p>
-
 <pre><code>[root@localhost]# which bash
 /bin/bash
 [root@localhost]# cp /bin/bash /var/jail/bin/
-</code></pre>
-
-<p>The trickiest part of setting up a jail is the required libraries for the
+</code></pre><p>The trickiest part of setting up a jail is the required libraries for the
 allowed executables. Conveniently, all the Linux distributions that I have
-tried come with a tool too determine what libraries are required. <code>ldd</code>. Here&rsquo;s
+tried come with a tool too determine what libraries are required. <code>ldd</code>. Here's
 a little snippet that will give you a run down of the counts for the number of
 times each library is used by a system:</p>
-
 <pre><code>find /bin -type f -perm /a+x -exec ldd {} \; \
 | grep so \
 | sed -e '/^[^\t]/ d' \
@@ -339,42 +285,28 @@ times each library is used by a system:</p>
 | sort \
 | uniq -c \
 | sort -n
-</code></pre>
-
-<p>If for some reason ldd isn&rsquo;t reporting all of the libraries, while the app is
+</code></pre><p>If for some reason ldd isn't reporting all of the libraries, while the app is
 running you can use this command to track down what it has actually loaded:</p>
-
 <pre><code>lsof -P -T -p Application_PID
-</code></pre>
-
-<p>A few references:</p>
-
+</code></pre><p>A few references:</p>
 <ul>
 <li><a href="http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/">http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/</a></li>
 <li><a href="http://allanfeid.com/content/creating-chroot-jail-ssh-access">http://allanfeid.com/content/creating-chroot-jail-ssh-access</a></li>
 </ul>
-
-<h2 id="multiplex-sessions-signed-pubkeys">Multiplex-Sessions &amp; Signed PubKeys</h2>
-
+<h2 id="multiplexsessions--signed-pubkeys">Multiplex-Sessions &amp; Signed PubKeys</h2>
 <ul>
 <li><a href="http://comments.gmane.org/gmane.network.openssh.general/8269">http://comments.gmane.org/gmane.network.openssh.general/8269</a></li>
 </ul>
-
 <h2 id="published-ssh-host-keys">Published SSH Host Keys</h2>
-
 <ul>
 <li><a href="https://www.rfc-editor.org/rfc/rfc4255.txt">https://www.rfc-editor.org/rfc/rfc4255.txt</a></li>
 <li><a href="http://www.dnorth.net/2007/12/16/sshfp-howto/">http://www.dnorth.net/2007/12/16/sshfp-howto/</a></li>
 </ul>
-
 <h2 id="lxc-specific">LXC Specific</h2>
-
 <p>If you want to run sshd in a LXC container you will need to disable
 <code>pam_loginuid.so</code> in <code>/etc/pam.d/sshd</code> by commenting out the appropriate line.</p>
-
 <h2 id="misc">Misc</h2>
-
-<p>I&rsquo;ve play around with implementing a <a href="https://stelfox.net/notes/gatekeeper-script-for-ssh/">gatekeeper style script</a> to provide an
+<p>I've play around with implementing a <a href="https://stelfox.net/notes/gatekeeper-script-for-ssh/">gatekeeper style script</a> to provide an
 additional layer of security. In practice real multi-factor authentication is
 more reliable and should be used instead.</p>
 
@@ -391,7 +323,7 @@ more reliable and should be used instead.</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/samba/'>
+      <a href='/notes/suricata/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -399,10 +331,10 @@ more reliable and should be used instead.</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Samba</a>
+        <span class='screen-reader-text'>Previous post: </span>Suricata</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/ruby/'>
-        <span class='screen-reader-text'>Next post: </span>Ruby<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/squid-guard/'>
+        <span class='screen-reader-text'>Next post: </span>Squid Guard<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -420,7 +352,7 @@ more reliable and should be used instead.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

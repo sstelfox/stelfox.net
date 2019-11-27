@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Auditd collects any configured syscall execution with critical security metadata associated with the event. This can help enrich other security tools such as AIDE to determine what user and process are responsible for the change.
-For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&rsquo;s audit subsystem, may trigger a kernel panic.'>
+For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&#39;s audit subsystem, may trigger a kernel panic.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Auditd • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Auditd collects any configured syscall execution with critical security metadata associated with the event. This can help enrich other security tools such as AIDE to determine what user and process are responsible for the change.
-For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&rsquo;s audit subsystem, may trigger a kernel panic.'>
+For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&#39;s audit subsystem, may trigger a kernel panic.'>
 <meta property='og:url' content='https://stelfox.net/notes/auditd/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-12T15:33:21-04:00'/><meta property='article:modified_time' content='2017-10-12T15:33:21-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Auditd • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/auditd/'>
@@ -110,23 +110,17 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>Auditd collects any configured syscall execution with critical security
+  <p>Auditd collects any configured syscall execution with critical security
 metadata associated with the event. This can help enrich other security tools
 such as <a href="https://stelfox.net/notes/aide/">AIDE</a> to determine what user and process are responsible for the
 change.</p>
-
 <p>For reliable operation the rules should be carefully tuned to your system.
 Tracking every write to disk will generate an unreasonable amount of events and
-depending on the configuration of the kernel&rsquo;s audit subsystem, may trigger a
+depending on the configuration of the kernel's audit subsystem, may trigger a
 kernel panic.</p>
-
 <p>Auditd will also identify the IP address a remote user is connecting in allow
 cross system tracing of events.</p>
-
 <h2 id="recommended-events-to-audit">Recommended Events to Audit</h2>
-
 <ul>
 <li>All logins to the system</li>
 <li>Writes &amp; attribute changes on sensitive files that are largely static
@@ -150,19 +144,15 @@ cross system tracing of events.</p>
 <li>Executions out of temporary directories (Only important if this is possible,
 but never hurts)</li>
 </ul>
-
 <h2 id="log-integrity">Log Integrity</h2>
-
 <p>For these logs to be meaningful they need to be shipped off a system. Auditd
 itself can receive audit events over the network and comes with a utility for
 pushing them over the network. Without Kerberos though these events are sent
 without authentication or encryption and could be tampered with or spoofed by a
 crafty attacker.</p>
-
 <p>Some log aggregators are able to read (tail) files and consume the lines as
 events (such as <a href="https://stelfox.net/notes/rsyslog/">RSyslog</a>) and do so over a SSL or otherwise encrypted
 tunnel.</p>
-
 <p>The final option for getting logs off the system, is to specify a custom
 dispatcher using the <code>dispatcher</code> configuration option in
 <code>/etc/audit/auditd.conf</code>.  This needs to be an executable on the system that
@@ -170,66 +160,50 @@ will take audit records through STDIN. A custom dispatcher could POST
 individual events to an API, log the events directly to syslog, or anything
 else that can be coded. This will be run with root permissions, so the ability
 for it to drop permissions is highly desirable.</p>
-
 <h2 id="configuration">Configuration</h2>
-
 <p>I have a sample <a href="/note_files/auditd/auditd.conf">/etc/audit/auditd.conf</a> and <a href="/note_files/auditd/libaudit.conf">/etc/libaudit.conf</a>
 available as well as a matching set of <a href="/note_files/auditd/audit.rules">/etc/audit/audit.rules</a> that are
 tuned for my environments. I consider them a good starting point for other
 people wanting detailed auditing logs.</p>
-
 <h2 id="audit-dispatcher">Audit Dispatcher</h2>
-
 <p>By default auditd has two mechanisms for sending audit events to an
 administrator for review. The first and common one is to log directly to disk.
 The other is to pass the events to a dispatch program. This is a very powerful
 second option as the other program will receive a binary stream of all events
 from auditd and can do anything with them.</p>
-
 <p>Auditd comes with a dispatcher with the ability to send the messages directly
 to syslog, to a remote auditd instance, or to a unix socket. I normally use the
 log file option rather than the dispatcher, and use the ability to read in
 files as a log source inside my syslog daemon of choice to get those messages
 to a central log server. Sending them directly to syslog is significantly more
 efficient (push vs poll).</p>
-
 <p>If you use another dispatcher other than the one that comes with auditd, be
 aware that it will be started up with root privileges.</p>
-
 <p>Unfortunately it seems like the dispatcher that comes with auditd 2.6.4 is
 broken. With all plugins disabled (to eliminate them as a source of an issue),
 I was still receiving the following message in syslog:</p>
-
 <pre><code>Dispatcher protocol mismatch, exiting
-</code></pre>
-
-<p>Which of course, hasn&rsquo;t seemed to have been encountered by anyone else online.
-Digging through the source code, it seems <code>audispd</code> hasn&rsquo;t been updated for an
-update to the protocol built into auditd. I&rsquo;ll have to look into either fixing
+</code></pre><p>Which of course, hasn't seemed to have been encountered by anyone else online.
+Digging through the source code, it seems <code>audispd</code> hasn't been updated for an
+update to the protocol built into auditd. I'll have to look into either fixing
 the source or writing my own dispatcher&hellip;</p>
-
-<p>I wasn&rsquo;t able to find anything about fixes that may be related so I&rsquo;m unsure
+<p>I wasn't able to find anything about fixes that may be related so I'm unsure
 when it was fixed. I updated to 2.7.1 and it seemed to resolve that issue.</p>
-
 <p>To get the information going to syslog I made two relatively small changes to
 the existing configurations. You really only need to set &lsquo;active&rsquo; to yes in
 <code>/etc/audisp/plugins.d/syslog.conf</code>. I made minor tweaks to the configuration
 to better support my logging environment (I keep <code>local6</code> reserved for auditd
 records). These two files include my relevant changes:</p>
-
 <ul>
 <li><a href="/note_files/auditd/audispd.conf">/etc/audisp/audispd.conf</a></li>
 <li><a href="/note_files/auditd/audispd_syslog.conf">/etc/audisp/plugins.d/syslog.conf</a></li>
 </ul>
-
 <p>If you reliably have your audit records going to syslog, you may want to
 consider removing or reducing the amount of audit logs stored. For a system
 that generates significant numbers of logs, the syslog route can be quite a bit
 more efficient, and support significantly more messages (this will only work
 with disk queues removed).</p>
-
 <h2 id="more-references">More References</h2>
-
 <ul>
 <li><a href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html">https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html</a></li>
 <li><a href="http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf">http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf</a></li>
@@ -286,7 +260,7 @@ with disk queues removed).</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

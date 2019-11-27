@@ -15,7 +15,7 @@ Mounting Content I have a Samba share &ldquo;Media&rdquo; setup on the server &l
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>EZStream • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/ezstream/'>
@@ -112,82 +112,67 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>EZStream is a media streamer and re-encoder that can be used to feed
 <a href="https://stelfox.net/notes/icecast/">Icecast</a>.</p>
-
 <h2 id="mounting-content">Mounting Content</h2>
-
 <p>I have a <a href="https://stelfox.net/notes/samba/">Samba</a> share &ldquo;Media&rdquo; setup on the server &ldquo;samba-srv&rdquo; that holds
-all my media and allows anonymous read access to the content. You&rsquo;ll need to
+all my media and allows anonymous read access to the content. You'll need to
 install <code>cifs-utils</code> to mount the samba share. To make it available to my
-stream server I&rsquo;ve performed the following:</p>
-
+stream server I've performed the following:</p>
 <pre><code>mkdir /media/content
 mount -t cifs -o username=guest /samba-srv/Media /media/content
-</code></pre>
-
-<p>The above command could be added to an init script like an <code>rc.local</code> or
+</code></pre><p>The above command could be added to an init script like an <code>rc.local</code> or
 alternatively you can do it right and add it to the fstab file to be mounted
-automatically. You&rsquo;ll want to add the following to <code>/etc/fstab</code>:</p>
-
+automatically. You'll want to add the following to <code>/etc/fstab</code>:</p>
 <pre><code>/samba-srv/Media  /media/content  cifs  auto,guest,_netdev  0 0
-</code></pre>
-
-<p>Nice and easy.</p>
-
-<h2 id="installation-configuration">Installation &amp; Configuration</h2>
-
+</code></pre><p>Nice and easy.</p>
+<h2 id="installation--configuration">Installation &amp; Configuration</h2>
 <p>Quick and Easy:</p>
-
 <pre><code>yum install ezstream -y
-</code></pre>
+</code></pre><p>ezstream.xml</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;ezstream</span><span style="color:#f92672">&gt;</span>
+  <span style="color:#f92672">&lt;url</span><span style="color:#f92672">&gt;</span>http://127.0.0.1:8000/automation.ogg<span style="color:#f92672">&lt;/url&gt;</span>
 
-<p>ezstream.xml</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;ezstream&gt;</span>
-  <span style="color:#f92672">&lt;url&gt;</span>http://127.0.0.1:8000/automation.ogg<span style="color:#f92672">&lt;/url&gt;</span>
+  <span style="color:#f92672">&lt;sourceuser</span><span style="color:#f92672">&gt;</span>automation<span style="color:#f92672">&lt;/sourceuser&gt;</span>
+  <span style="color:#f92672">&lt;sourcepassword</span><span style="color:#f92672">&gt;</span>hackme<span style="color:#f92672">&lt;/sourcepassword&gt;</span>
 
-  <span style="color:#f92672">&lt;sourceuser&gt;</span>automation<span style="color:#f92672">&lt;/sourceuser&gt;</span>
-  <span style="color:#f92672">&lt;sourcepassword&gt;</span>hackme<span style="color:#f92672">&lt;/sourcepassword&gt;</span>
+  <span style="color:#f92672">&lt;format</span><span style="color:#f92672">&gt;</span>VORBIS<span style="color:#f92672">&lt;/format&gt;</span>
 
-  <span style="color:#f92672">&lt;format&gt;</span>VORBIS<span style="color:#f92672">&lt;/format&gt;</span>
+  <span style="color:#f92672">&lt;filename</span><span style="color:#f92672">&gt;</span>./song_request.rb<span style="color:#f92672">&lt;/filename&gt;</span>
+  <span style="color:#f92672">&lt;playlist_program</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/playlist_program&gt;</span>
 
-  <span style="color:#f92672">&lt;filename&gt;</span>./song_request.rb<span style="color:#f92672">&lt;/filename&gt;</span>
-  <span style="color:#f92672">&lt;playlist_program&gt;</span>1<span style="color:#f92672">&lt;/playlist_program&gt;</span>
+  <span style="color:#f92672">&lt;svrinfobitrate</span><span style="color:#f92672">&gt;</span>128<span style="color:#f92672">&lt;/svrinfobitrate&gt;</span>
+  <span style="color:#f92672">&lt;svrinfochannels</span><span style="color:#f92672">&gt;</span>2<span style="color:#f92672">&lt;/svrinfochannels&gt;</span>
+  <span style="color:#f92672">&lt;svrinfosamplerate</span><span style="color:#f92672">&gt;</span>44100<span style="color:#f92672">&lt;/svrinfosamplerate&gt;</span>
 
-  <span style="color:#f92672">&lt;svrinfobitrate&gt;</span>128<span style="color:#f92672">&lt;/svrinfobitrate&gt;</span>
-  <span style="color:#f92672">&lt;svrinfochannels&gt;</span>2<span style="color:#f92672">&lt;/svrinfochannels&gt;</span>
-  <span style="color:#f92672">&lt;svrinfosamplerate&gt;</span>44100<span style="color:#f92672">&lt;/svrinfosamplerate&gt;</span>
+  <span style="color:#f92672">&lt;metadata_format</span><span style="color:#f92672">&gt;</span>@a@ - @t@<span style="color:#f92672">&lt;/metadata_format&gt;</span>
 
-  <span style="color:#f92672">&lt;metadata_format&gt;</span>@a@ - @t@<span style="color:#f92672">&lt;/metadata_format&gt;</span>
-
-  <span style="color:#f92672">&lt;reencode&gt;</span>
-    <span style="color:#f92672">&lt;enable&gt;</span>1<span style="color:#f92672">&lt;/enable&gt;</span>
-    <span style="color:#f92672">&lt;encdec&gt;</span>
-      <span style="color:#f92672">&lt;format&gt;</span>FLAC<span style="color:#f92672">&lt;/format&gt;</span>
-      <span style="color:#f92672">&lt;match&gt;</span>.flac<span style="color:#f92672">&lt;/match&gt;</span>
-      <span style="color:#f92672">&lt;decode&gt;</span>flac -s -d --force-raw-format --sign=signed --endian=little -o - &#34;@T@&#34;<span style="color:#f92672">&lt;/decode&gt;</span>
-      <span style="color:#f92672">&lt;encode&gt;</span>Not supported Yet<span style="color:#f92672">&lt;/encode&gt;</span>
+  <span style="color:#f92672">&lt;reencode</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#f92672">&lt;enable</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/enable&gt;</span>
+    <span style="color:#f92672">&lt;encdec</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;format</span><span style="color:#f92672">&gt;</span>FLAC<span style="color:#f92672">&lt;/format&gt;</span>
+      <span style="color:#f92672">&lt;match</span><span style="color:#f92672">&gt;</span>.flac<span style="color:#f92672">&lt;/match&gt;</span>
+      <span style="color:#f92672">&lt;decode</span><span style="color:#f92672">&gt;</span>flac -s -d --force-raw-format --sign=signed --endian=little -o - &#34;@T@&#34;<span style="color:#f92672">&lt;/decode&gt;</span>
+      <span style="color:#f92672">&lt;encode</span><span style="color:#f92672">&gt;</span>Not supported Yet<span style="color:#f92672">&lt;/encode&gt;</span>
     <span style="color:#f92672">&lt;/encdec&gt;</span>
-    <span style="color:#f92672">&lt;encdec&gt;</span>
-      <span style="color:#f92672">&lt;format&gt;</span>MP3<span style="color:#f92672">&lt;/format&gt;</span>
-      <span style="color:#f92672">&lt;match&gt;</span>.mp3<span style="color:#f92672">&lt;/match&gt;</span>
-      <span style="color:#f92672">&lt;decode&gt;</span>madplay -b 16 -R 44100 -S -o raw:- &#34;@T@&#34;<span style="color:#f92672">&lt;/decode&gt;</span>
-      <span style="color:#f92672">&lt;encode&gt;</span>Not supported Yet<span style="color:#f92672">&lt;/encode&gt;</span>
+    <span style="color:#f92672">&lt;encdec</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;format</span><span style="color:#f92672">&gt;</span>MP3<span style="color:#f92672">&lt;/format&gt;</span>
+      <span style="color:#f92672">&lt;match</span><span style="color:#f92672">&gt;</span>.mp3<span style="color:#f92672">&lt;/match&gt;</span>
+      <span style="color:#f92672">&lt;decode</span><span style="color:#f92672">&gt;</span>madplay -b 16 -R 44100 -S -o raw:- &#34;@T@&#34;<span style="color:#f92672">&lt;/decode&gt;</span>
+      <span style="color:#f92672">&lt;encode</span><span style="color:#f92672">&gt;</span>Not supported Yet<span style="color:#f92672">&lt;/encode&gt;</span>
     <span style="color:#f92672">&lt;/encdec&gt;</span>
-    <span style="color:#f92672">&lt;encdec&gt;</span>
-      <span style="color:#f92672">&lt;format&gt;</span>VORBIS<span style="color:#f92672">&lt;/format&gt;</span>
-      <span style="color:#f92672">&lt;match&gt;</span>.ogg<span style="color:#f92672">&lt;/match&gt;</span>
-      <span style="color:#f92672">&lt;decode&gt;</span>oggdec -R -b 16 -e 0 -s 1 -o - &#34;@T@&#34;<span style="color:#f92672">&lt;/decode&gt;</span>
-      <span style="color:#f92672">&lt;encode&gt;</span>oggenc -r -B 16 -C 2 -R 44100 --raw-endianness 0 -q 1.5 -t &#34;@M@&#34; -<span style="color:#f92672">&lt;/encode&gt;</span>
+    <span style="color:#f92672">&lt;encdec</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;format</span><span style="color:#f92672">&gt;</span>VORBIS<span style="color:#f92672">&lt;/format&gt;</span>
+      <span style="color:#f92672">&lt;match</span><span style="color:#f92672">&gt;</span>.ogg<span style="color:#f92672">&lt;/match&gt;</span>
+      <span style="color:#f92672">&lt;decode</span><span style="color:#f92672">&gt;</span>oggdec -R -b 16 -e 0 -s 1 -o - &#34;@T@&#34;<span style="color:#f92672">&lt;/decode&gt;</span>
+      <span style="color:#f92672">&lt;encode</span><span style="color:#f92672">&gt;</span>oggenc -r -B 16 -C 2 -R 44100 --raw-endianness 0 -q 1.5 -t &#34;@M@&#34; -<span style="color:#f92672">&lt;/encode&gt;</span>
     <span style="color:#f92672">&lt;/encdec&gt;</span>
   <span style="color:#f92672">&lt;/reencode&gt;</span>
-<span style="color:#f92672">&lt;/ezstream&gt;</span></code></pre></div>
+<span style="color:#f92672">&lt;/ezstream&gt;</span>
+</code></pre></div>
 </div>
 
   
@@ -201,7 +186,7 @@ automatically. You&rsquo;ll want to add the following to <code>/etc/fstab</code>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/festival/'>
+      <a href='/notes/fail2ban/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -209,7 +194,7 @@ automatically. You&rsquo;ll want to add the following to <code>/etc/fstab</code>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Festival</a>
+        <span class='screen-reader-text'>Previous post: </span>fail2ban</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/duplicity/'>
         <span class='screen-reader-text'>Next post: </span>Duplicity<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -230,7 +215,7 @@ automatically. You&rsquo;ll want to add the following to <code>/etc/fstab</code>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

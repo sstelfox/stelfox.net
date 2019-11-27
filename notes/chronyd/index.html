@@ -4,20 +4,20 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Replacement for the ntpd daemon.
-Installation yum install chrony -y  After configuration enable the service like so
-systemctl enable chronyd.service  Server /etc/chrony.conf bindaddress &lt;Server IP&gt; bindcmdaddress 127.0.0.1 # IPv4/IPv6: server clock.nyc.he.net iburst server clock.'>
+Installation yum install chrony -y After configuration enable the service like so
+systemctl enable chronyd.service Server /etc/chrony.conf bindaddress &lt;Server IP&gt; bindcmdaddress 127.0.0.1 # IPv4/IPv6: server clock.nyc.he.net iburst server clock.sjc.he.net iburst # IPv4 only: server time.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Chronyd • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Replacement for the ntpd daemon.
-Installation yum install chrony -y  After configuration enable the service like so
-systemctl enable chronyd.service  Server /etc/chrony.conf bindaddress &lt;Server IP&gt; bindcmdaddress 127.0.0.1 # IPv4/IPv6: server clock.nyc.he.net iburst server clock.'>
+Installation yum install chrony -y After configuration enable the service like so
+systemctl enable chronyd.service Server /etc/chrony.conf bindaddress &lt;Server IP&gt; bindcmdaddress 127.0.0.1 # IPv4/IPv6: server clock.nyc.he.net iburst server clock.sjc.he.net iburst # IPv4 only: server time.'>
 <meta property='og:url' content='https://stelfox.net/notes/chronyd/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Chronyd • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/chronyd/'>
@@ -114,28 +114,16 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Replacement for the ntpd daemon.</p>
-
 <h2 id="installation">Installation</h2>
-
 <pre><code>yum install chrony -y
-</code></pre>
-
-<p>After configuration enable the service like so</p>
-
+</code></pre><p>After configuration enable the service like so</p>
 <pre><code>systemctl enable chronyd.service
-</code></pre>
-
-<h2 id="server">Server</h2>
-
-<h3 id="etc-chrony-conf">/etc/chrony.conf</h3>
-
+</code></pre><h2 id="server">Server</h2>
+<h3 id="etcchronyconf">/etc/chrony.conf</h3>
 <pre><code>bindaddress &lt;Server IP&gt;
 bindcmdaddress 127.0.0.1
 
@@ -175,20 +163,12 @@ logchange 0.5
 
 logdir /var/log/chrony
 log measurements statistics tracking
-</code></pre>
-
-<p>If you want to have multiple chrony servers on the local network it&rsquo;s a good
+</code></pre><p>If you want to have multiple chrony servers on the local network it's a good
 idea to mark them as peers with each other with the following directive:</p>
-
 <pre><code>peer &lt;Other Server IP&gt;
-</code></pre>
-
-<p>This will automatically generate a unique key in /etc/chrony.keys</p>
-
+</code></pre><p>This will automatically generate a unique key in /etc/chrony.keys</p>
 <h2 id="client-always-on">Client (always on)</h2>
-
-<h3 id="etc-chrony-conf-1">/etc/chrony.conf</h3>
-
+<h3 id="etcchronyconf1">/etc/chrony.conf</h3>
 <pre><code>server &lt;Server IP&gt;
 driftfile /var/lib/chrony/drift
 rtcsync
@@ -199,18 +179,12 @@ initstepslew 20 &lt;Server IP&gt;
 logchange 0.5
 logdir /var/log/chrony
 log measurements statistics tracking
-</code></pre>
-
-<p>This will automatically generate a unique key in /etc/chrony.keys</p>
-
+</code></pre><p>This will automatically generate a unique key in /etc/chrony.keys</p>
 <h2 id="client-intermittant-connection">Client (Intermittant Connection)</h2>
-
-<p>This section relies on NetworkManager&rsquo;s dispatcher to inform chronyd when we
-have and don&rsquo;t have a network connection to take the synchronization on and
+<p>This section relies on NetworkManager's dispatcher to inform chronyd when we
+have and don't have a network connection to take the synchronization on and
 offline.</p>
-
-<h3 id="etc-chrony-conf-2">/etc/chrony.conf</h3>
-
+<h3 id="etcchronyconf2">/etc/chrony.conf</h3>
 <pre><code>server &lt;Server IP&gt; offline
 driftfile /var/lib/chrony/drift
 rtcsync
@@ -221,14 +195,10 @@ initstepslew 20 &lt;Server IP&gt;
 logchange 0.5
 logdir /var/log/chrony
 log measurements statistics tracking
-</code></pre>
-
-<p>This will automatically generate a unique key in /etc/chrony.keys</p>
-
-<h3 id="etc-networkmanager-dispatcher-d-20-chrony">/etc/NetworkManager/dispatcher.d/20-chrony</h3>
-
+</code></pre><p>This will automatically generate a unique key in /etc/chrony.keys</p>
+<h3 id="etcnetworkmanagerdispatcherd20chrony">/etc/NetworkManager/dispatcher.d/20-chrony</h3>
 <p>This file needs to be executable and should be owned by root. A similar version
-of this script comes with Fedora, however, it isn&rsquo;t quite as friendly as mine
+of this script comes with Fedora, however, it isn't quite as friendly as mine
 :). Just replace it.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/sh
 </span><span style="color:#75715e"></span>
@@ -239,14 +209,15 @@ STATUS<span style="color:#f92672">=</span>$2       <span style="color:#75715e">#
   <span style="color:#e6db74">&#39;up&#39;</span><span style="color:#f92672">)</span>
     <span style="color:#75715e"># Check to see if the interface added a default route</span>
     /sbin/ip route list dev <span style="color:#e6db74">&#34;</span>$INTERFACE<span style="color:#e6db74">&#34;</span> | grep -q <span style="color:#e6db74">&#39;^default&#39;</span> <span style="color:#f92672">&amp;&amp;</span>
-      /usr/libexec/chrony-helper command online &gt; /dev/null <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+      /usr/libexec/chrony-helper command online &gt; /dev/null 2&gt;&amp;<span style="color:#ae81ff">1</span>
     ;;
   <span style="color:#e6db74">&#39;down&#39;</span><span style="color:#f92672">)</span>
     <span style="color:#75715e"># If we don&#39;t have a default route anymore mark chrony as offline</span>
     /sbin/ip route list | grep -q <span style="color:#e6db74">&#39;^default&#39;</span> <span style="color:#f92672">||</span>
-      /usr/libexec/chrony-helper command offline &gt; /dev/null <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span>
+      /usr/libexec/chrony-helper command offline &gt; /dev/null 2&gt;&amp;<span style="color:#ae81ff">1</span>
     ;;
-<span style="color:#66d9ef">esac</span></code></pre></div>
+<span style="color:#66d9ef">esac</span>
+</code></pre></div>
 </div>
 
   
@@ -260,7 +231,7 @@ STATUS<span style="color:#f92672">=</span>$2       <span style="color:#75715e">#
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/dhcpd/'>
+      <a href='/notes/data-recovery/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -268,7 +239,7 @@ STATUS<span style="color:#f92672">=</span>$2       <span style="color:#75715e">#
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>DHCPd</a>
+        <span class='screen-reader-text'>Previous post: </span>Data Recovery</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/building-a-certificate-authority/'>
         <span class='screen-reader-text'>Next post: </span>Building a Certificate Authority<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -289,7 +260,7 @@ STATUS<span style="color:#f92672">=</span>$2       <span style="color:#75715e">#
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

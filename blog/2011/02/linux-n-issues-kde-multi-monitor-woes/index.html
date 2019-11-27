@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE spin mind you) on my ThinkPad. I&rsquo;m pleasantly surprised with hows it&rsquo;s working everything seems to be working out the box very stably. I used it without issue for a solid month and a half without a single issue.
+<meta name='description' content='So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE spin mind you) on my ThinkPad. I&#39;m pleasantly surprised with hows it&#39;s working everything seems to be working out the box very stably. I used it without issue for a solid month and a half without a single issue.
 Earlier this week I started having issues with my wireless card on some networks, but not at all of them.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Linux N Issues &amp; KDE Multi-Monitor Woes • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE spin mind you) on my ThinkPad. I&rsquo;m pleasantly surprised with hows it&rsquo;s working everything seems to be working out the box very stably. I used it without issue for a solid month and a half without a single issue.
+<meta property='og:description' content='So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE spin mind you) on my ThinkPad. I&#39;m pleasantly surprised with hows it&#39;s working everything seems to be working out the box very stably. I used it without issue for a solid month and a half without a single issue.
 Earlier this week I started having issues with my wireless card on some networks, but not at all of them.'>
 <meta property='og:url' content='https://stelfox.net/blog/2011/02/linux-n-issues-kde-multi-monitor-woes/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='linux'><meta property='article:published_time' content='2011-02-25T14:37:39Z'/><meta property='article:modified_time' content='2011-02-25T14:37:39Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Linux N Issues &amp; KDE Multi-Monitor Woes • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2011/02/linux-n-issues-kde-multi-monitor-woes/'>
@@ -111,95 +111,77 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE
-spin mind you) on my ThinkPad. I&rsquo;m pleasantly surprised with hows it&rsquo;s working
+spin mind you) on my ThinkPad. I'm pleasantly surprised with hows it's working
 everything seems to be working out the box very stably. I used it without issue
 for a solid month and a half without a single issue.</p>
-
 <p>Earlier this week I started having issues with my wireless card on some
 networks, but not at all of them. The most prominent one being my home network.
-I&rsquo;ve had issues with my access point dropping connections before on a wide
+I've had issues with my access point dropping connections before on a wide
 array of machines and not actually dropping it (IE: my laptop would see it as
-connected but the AP wouldn&rsquo;t exchange traffic with it). So when I started
+connected but the AP wouldn't exchange traffic with it). So when I started
 seeing this behavior I expected that issue to have cropped up again.</p>
-
 <p>The actual behavior that I was witnessing was this:</p>
-
 <ol>
 <li>Connect to wireless network</li>
 <li>Use the connection for 5-10 seconds</li>
 <li>Pages would start timing out even though the connection was still &lsquo;active&rsquo;</li>
 </ol>
-
 <p>Disconnecting and reconnecting to the wireless would start the situation all
-over again, which quickly became frustrating but I didn&rsquo;t have time to mess
+over again, which quickly became frustrating but I didn't have time to mess
 with it so I just plugged into an ethernet port and went about my business.</p>
-
 <p>The next day I received my the <code>logwatch</code> from my laptop (Yes, my laptop sends
-it&rsquo;s logs to my email) and it mentioned more than 20,000 new entries of an
-error I&rsquo;ve never seen before:</p>
-
+it's logs to my email) and it mentioned more than 20,000 new entries of an
+error I've never seen before:</p>
 <pre><code>iwlagn 0000:03:00.0: BA scd_flow 0 does not match txq_id 10
-</code></pre>
-
-<p>After poking around a bit online I found that the issue is with a recent kernel
-update (I&rsquo;m currently running 2.6.35.11-83) changing the behavior of some
+</code></pre><p>After poking around a bit online I found that the issue is with a recent kernel
+update (I'm currently running 2.6.35.11-83) changing the behavior of some
 sanity checks to wireless connections that support &lsquo;N&rsquo;. Turns out my wireless
 card and all the networks I was having issues with support &lsquo;N&rsquo;. Good to know.</p>
-
 <p>It was easy enough to solve that issue, the kernel module just needed an option
 passed to it that I believe just disables &lsquo;N&rsquo;. This is all well and good but I
-haven&rsquo;t had to manually pass options to a kernel module for a couple of
+haven't had to manually pass options to a kernel module for a couple of
 releases now (I think the last was Fedora 10). Since then the file
 <code>/etc/modules.conf</code> has been deprecated in favor of placing files in
 <code>/etc/modules.d/</code>. There are some files that come stock in there but none are
-passing parameters to modules and the naming scheme doesn&rsquo;t seem to conform to
+passing parameters to modules and the naming scheme doesn't seem to conform to
 anything.</p>
-
 <p>I was unsure if there was something specific I had to name the file or if it
 needed to be in one of the existing files. I ended up creating the
 file <code>/etc/modprobe.d/iwlagn.conf</code> and putting the following in it:</p>
-
 <pre><code>options iwlagn 11n_disable=1
 # This one might be needed instead
 #options iwlagn 11n_disable50=1
-</code></pre>
-
-<p>After I rebooted the problem vanished like it was never there. If you notice
+</code></pre><p>After I rebooted the problem vanished like it was never there. If you notice
 there is a second option in there that is commented out. I found some people
-where the first option didn&rsquo;t work but replacing it with that second option
-did, so if one doesn&rsquo;t work for you try the second option.</p>
-
-<p>The second issue that I encountered was just this morning. I&rsquo;m working at a
-remote site today that I&rsquo;m not at very often, and am using my laptop as my
-desktop workhorse. Usually when I&rsquo;m at a remote site, I steal an office that
-isn&rsquo;t in use and claim it as my own, and today was no different. There was a
-screen in this office that had its power plugged it but it&rsquo;s VGA cable was just
+where the first option didn't work but replacing it with that second option
+did, so if one doesn't work for you try the second option.</p>
+<p>The second issue that I encountered was just this morning. I'm working at a
+remote site today that I'm not at very often, and am using my laptop as my
+desktop workhorse. Usually when I'm at a remote site, I steal an office that
+isn't in use and claim it as my own, and today was no different. There was a
+screen in this office that had its power plugged it but it's VGA cable was just
 sitting there. I figured &lsquo;why not?&rsquo; so I plugged it in and KDE happily
 announced that it detected a new display and offered to take me to the settings
 interface that would allow me to configure it.</p>
-
 <p>&ldquo;Awesome!&rdquo; I thought, multiple desktops has always been one of those things I
 had to tweak and search around for and it looks like KDE is making some serious
-strides in their support for it. When I turned it on I wasn&rsquo;t really paying
+strides in their support for it. When I turned it on I wasn't really paying
 attention to the settings and my laptop display ended up on the wrong side of
 the screen and my primary desktop on the LCD. Not exactly what I wanted but
-it&rsquo;s cool that it was that easy to setup.</p>
-
+it's cool that it was that easy to setup.</p>
 <p>I went back into the configuration options switched things around, but no
 matter what I did, the &lsquo;primary desktop&rsquo; was always on the external monitor.
-What&rsquo;s more is that there isn&rsquo;t any option for selecting the primary display!
+What's more is that there isn't any option for selecting the primary display!
 That <em>used to</em> be there&hellip;</p>
-
 <p>I hunted around before getting frustrated and searching around online. Sure
 enough other people were annoyed by this regression but the solution was very
 easy (though it appears you have to do it every time).</p>
-
 <p>To set the primary monitor to my laptop screen (LCDS1) I just opened a shell
 and put this in:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">xrandr --output LCDS1 --primary</code></pre></div>
-<p>Poof! Everything is all set and I&rsquo;m happy once again. I hope that the KDE
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">xrandr --output LCDS1 --primary
+</code></pre></div><p>Poof! Everything is all set and I'm happy once again. I hope that the KDE
 developers put back the primary display selection in the settings but for now
-it&rsquo;s easy enough. Hopefully this will help other people on the net.</p>
+it's easy enough. Hopefully this will help other people on the net.</p>
 
 </div>
 
@@ -250,7 +232,7 @@ it&rsquo;s easy enough. Hopefully this will help other people on the net.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

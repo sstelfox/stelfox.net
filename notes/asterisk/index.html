@@ -13,7 +13,7 @@ Asterisk is a software implementation of a telephone private branch exchange (PB
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Asterisk • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/asterisk/'>
@@ -110,51 +110,39 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Asterisk is a software implementation of a telephone private branch exchange
 (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it
 allows attached telephones to make calls to one another, and to connect to
 other telephone services including the public switched telephone network (PSTN)
 and Voice over Internet Protocol (VoIP) services. Its name comes from the
 asterisk symbol, “*”.</p>
-
 <p>NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for
 the Linksys SPA3000 as well as ZRTP and SRTP support. It might be wise to look
-into using kamailio as a front end SIP router though this doesn&rsquo;t seem to be
+into using kamailio as a front end SIP router though this doesn't seem to be
 necessary unless we want to start handling multi-thousands of calls
 concurrently.</p>
-
 <p>A few <a href="http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/">references</a> for help when building FreeSWITCH.</p>
-
 <h2 id="previous-reasoning">Previous Reasoning</h2>
-
 <p>This was setup on my private network to provide a land line phone to my office
 using our existing internet connection. I wanted to go about doing this without
-having to pay for the services as I don&rsquo;t expect this to get a lot of use.</p>
-
+having to pay for the services as I don't expect this to get a lot of use.</p>
 <p>This Asterisk setup involves the use of <a href="http://google.com/voice">Google Voice</a> and <a href="http://www.sipgate.com/">SIPGate</a>.
 SIPGate provides a single phone number, SIP connectivity and call forwarding.
-Google Voice doesn&rsquo;t provide services to receive phone calls, however, it can
+Google Voice doesn't provide services to receive phone calls, however, it can
 be setup as an intermediary that will call you and then connect to another
 number on your behalf, while also providing call forwarding.</p>
-
 <p>Combining the three will get free incoming and outgoing to anywhere in the US
 and Canada. Incoming calls will come from Google Voice, which will forward the
 call to the SIPGate phone number, which the Asterisk PBX will be tied to and
-we&rsquo;ll in turn be able to receive the call.</p>
-
+we'll in turn be able to receive the call.</p>
 <p>Outgoing calls are a bit more tricky. Implemented using <a href="http://code.google.com/p/pygooglevoice/">pygooglevoice</a>, the
-Asterisk box will actually connect to Google Voice&rsquo;s APIs to dial the number
+Asterisk box will actually connect to Google Voice's APIs to dial the number
 and call back (making it an incoming call and thus free) to make the outgoing
 call.</p>
-
 <h2 id="links">Links</h2>
-
 <ul>
 <li><a href="http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html">http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html</a></li>
 <li><a href="http://www.asteriskdocs.org/">http://www.asteriskdocs.org/</a></li>
@@ -163,28 +151,21 @@ call.</p>
 <li><a href="http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP">http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP</a></li>
 <li><a href="http://download.ag-projects.com/">http://download.ag-projects.com/</a></li>
 </ul>
-
 <h2 id="security-notes">Security Notes</h2>
-
 <p>Asterisk/SIP are going to be a significant security hole in the network if I
 allow outside access to the SIP services (In case I want to say be able to pick
 up the phone from my laptop while at a cafe or from my office). I intend to
 research making this considerably more secure before allowing this kind of
 setup and will document it here.</p>
-
 <p>One of the things for me to note ahead of time is to not put incoming calls
 into the same context as my dial plans. This alone will be a significant
 increase in any kind of security.</p>
-
 <h3 id="encryption">Encryption</h3>
-
-<p>The configurations provided have TLS enabled BUT it won&rsquo;t do any good until the
+<p>The configurations provided have TLS enabled BUT it won't do any good until the
 server has a certificate. A normal webserver certificate in PKCS12 format. FOR
-TESTING ONLY you can generate a self signed certificate. You&rsquo;ll need both the
-certificate authority&rsquo;s cert and the key/cert pair for the server.</p>
-
+TESTING ONLY you can generate a self signed certificate. You'll need both the
+certificate authority's cert and the key/cert pair for the server.</p>
 <p>You can use the following to create a self-signed one:</p>
-
 <pre><code>[root@localhost ~]# openssl genrsa -out ca.key 4096
 [root@localhost ~]# openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
 [root@localhost ~]# openssl genrsa -des3 -out pbx.key 4096
@@ -196,10 +177,7 @@ certificate authority&rsquo;s cert and the key/cert pair for the server.</p>
 [root@localhost ~]# mv pbx.pem ca.crt /var/lib/asterisk/
 [root@localhost ~]# restorecon -R /var/lib/asterisk/
 [root@localhost ~]# chown asterisk:asterisk /var/lib/asterisk
-</code></pre>
-
-<h3 id="firewall-adjustments">Firewall Adjustments</h3>
-
+</code></pre><h3 id="firewall-adjustments">Firewall Adjustments</h3>
 <pre><code># Allow incoming SIP calls from the local network
 -A PRIMARYSERVICES -s 10.13.37.0/24 -m udp -p udp --dport 5060 -j ACCEPT
 -A PRIMARYSERVICES -s 10.13.37.0/24 -m tcp -p tcp --dport 5060:5061 -j ACCEPT
@@ -216,24 +194,18 @@ certificate authority&rsquo;s cert and the key/cert pair for the server.</p>
 # Log and allow RTP traffic from other people
 -A PRIMARYSERVICES -m state --state NEW -m udp -p udp --dport 10000:10100 -j LOG --log-prefix &quot;RTP Traffic &quot;
 -A PRIMARYSERVICES -m udp -p udp --dport 10000:10100 -j ACCEPT
-</code></pre>
-
-<h3 id="fail2ban">Fail2Ban</h3>
-
+</code></pre><h3 id="fail2ban">Fail2Ban</h3>
 <p>Due to the overwhelmingly large number of attackers trying to exploit unsecured
 Asterisk boxes, configuring <a href="https://stelfox.net/notes/festival/">Fail2Ban</a> with Asterisk is HIGHLY recommended.
-I&rsquo;m updating the regular expressions in that template as I see attacks, and in
+I'm updating the regular expressions in that template as I see attacks, and in
 some cases where I intentionally generate the logs myself.</p>
-
 <h2 id="config-files">Config Files</h2>
-
 <p>There are a significant number of configuration files created when asterisk is
-installed, these all reside in <code>/etc/asterisk</code>. I&rsquo;ll go over the ones that I
+installed, these all reside in <code>/etc/asterisk</code>. I'll go over the ones that I
 made modifications too including full source (without the comments that come
 included, there are a lot of them). I copied the original files to *.conf.o and
 blew away most of the files I edited (including the stock comments).</p>
-
-<h3 id="etc-asterisk-asterisk-conf">/etc/asterisk/asterisk.conf</h3>
+<h3 id="etcasteriskasteriskconf">/etc/asterisk/asterisk.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- Asterisk&#39;s Primary Configuration ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -279,23 +251,23 @@ blew away most of the files I edited (including the stock comments).</p>
   <span style="color:#a6e22e">astctlpermissions</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">0660  ; Sets the permissions for the Asterisk control socket
 </span><span style="color:#e6db74">  astctlowner = root        ; Sets the owner for the Asterisk control socket
 </span><span style="color:#e6db74">  astctlgroup = asterisk    ; Sets the group for the Asterisk control socket
-</span><span style="color:#e6db74">  astctl = asterisk.ctl     ; Sets the filename for the Asterisk control socket</span></code></pre></div>
-<h3 id="etc-asterisk-ccss-conf">/etc/asterisk/ccss.conf</h3>
+</span><span style="color:#e6db74">  astctl = asterisk.ctl     ; Sets the filename for the Asterisk control socket</span>
+</code></pre></div><h3 id="etcasteriskccssconf">/etc/asterisk/ccss.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- Call Completion Supplementary Services ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
 <span style="color:#66d9ef">[general]</span>
   <span style="color:#a6e22e">cc_max_requests</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">20  ; Global limit on the number of CC requests that may be in the Asterisk
-</span><span style="color:#e6db74">                        ; system at any one time.</span></code></pre></div>
-<h3 id="etc-asterisk-cdr-adaptive-odbc-conf">/etc/asterisk/cdr_adaptive_odbc.conf</h3>
+</span><span style="color:#e6db74">                        ; system at any one time.</span>
+</code></pre></div><h3 id="etcasteriskcdradaptiveodbcconf">/etc/asterisk/cdr_adaptive_odbc.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- ODBC Database CDR storage ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
 <span style="color:#66d9ef">[default]</span>
   <span style="color:#a6e22e">connection</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">gentlemen  ; Name of the connections (references res_odbc.conf)
 </span><span style="color:#e6db74">  table = asterisk        ; Name of the table in the database
-</span><span style="color:#e6db74">  usegmtime = yes         ; Use Greenwich Mean Time in the database</span></code></pre></div>
-<h3 id="etc-asterisk-cdr-conf">/etc/asterisk/cdr.conf</h3>
+</span><span style="color:#e6db74">  usegmtime = yes         ; Use Greenwich Mean Time in the database</span>
+</code></pre></div><h3 id="etcasteriskcdrconf">/etc/asterisk/cdr.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- Asterisk Call Detail Record Engine Configuration ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -312,8 +284,8 @@ blew away most of the files I edited (including the stock comments).</p>
   <span style="color:#a6e22e">accountlogs</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">yes   ; Create separate log file for each account code
 </span><span style="color:#e6db74">  loguniqueid = yes   ; Log uniqueid for the call
 </span><span style="color:#e6db74">  loguserfield = yes  ; Log user field
-</span><span style="color:#e6db74">  usegmtime = yes     ; Log date and time in GMT</span></code></pre></div>
-<h3 id="etc-asterisk-cdr-syslog-conf">/etc/asterisk/cdr_syslog.conf</h3>
+</span><span style="color:#e6db74">  usegmtime = yes     ; Log date and time in GMT</span>
+</code></pre></div><h3 id="etcasteriskcdrsyslogconf">/etc/asterisk/cdr_syslog.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- Asterisk Call Detail Records (CDR) - Syslog Backend ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -325,9 +297,8 @@ blew away most of the files I edited (including the stock comments).</p>
 </span><span style="color:#e6db74">  priority=info</span>
 
   <span style="color:#75715e">; High Resolution Time for billsec and duration fields</span>
-  <span style="color:#a6e22e">template</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;${CDR(clid)}&#39;,&#39;${CDR(src)}&#39;,&#39;${CDR(dst)}&#39;,&#39;${CDR(dcontext)}&#39;,&#39;${CDR(channel)}&#39;,&#39;${CDR(dstchannel)}&#39;,&#39;${CDR(lastapp)}&#39;,&#39;${CDR(lastdata)}&#39;,&#39;${CDR(start)}&#39;,&#39;${CDR(answer)}&#39;,&#39;${CDR(end)}&#39;,&#39;${CDR(duration,f)}&#39;,&#39;${CDR(billsec,f)}&#39;,&#39;${CDR(disposition)}&#39;,&#39;${CDR(amaflags)}&#39;,&#39;${CDR(accountcode)}&#39;,&#39;${CDR(uniqueid)}&#39;,&#39;${CDR(userfield)}&#39;</span></code></pre></div>
-<h3 id="etc-asterisk-extensions-conf">/etc/asterisk/extensions.conf</h3>
-
+  <span style="color:#a6e22e">template</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;${CDR(clid)}&#39;,&#39;${CDR(src)}&#39;,&#39;${CDR(dst)}&#39;,&#39;${CDR(dcontext)}&#39;,&#39;${CDR(channel)}&#39;,&#39;${CDR(dstchannel)}&#39;,&#39;${CDR(lastapp)}&#39;,&#39;${CDR(lastdata)}&#39;,&#39;${CDR(start)}&#39;,&#39;${CDR(answer)}&#39;,&#39;${CDR(end)}&#39;,&#39;${CDR(duration,f)}&#39;,&#39;${CDR(billsec,f)}&#39;,&#39;${CDR(disposition)}&#39;,&#39;${CDR(amaflags)}&#39;,&#39;${CDR(accountcode)}&#39;,&#39;${CDR(uniqueid)}&#39;,&#39;${CDR(userfield)}&#39;</span>
+</code></pre></div><h3 id="etcasteriskextensionsconf">/etc/asterisk/extensions.conf</h3>
 <p>The only thing that I have changed in the below configuration is that where it
 says &lsquo;SPA3000&rsquo; in the variables I used the MAC address of the actual SPA3000
 device as it is defined in sip.conf (this has also been changed there). This
@@ -459,20 +430,18 @@ will allow it to remain unique even if another is added.</p>
 </span><span style="color:#e6db74">    same =&gt; n,GotoIf($[${ARG1} &lt;= ${DB(${KEY})}]?log)
 </span><span style="color:#e6db74">    same =&gt; n(return),Return()              ; Logging is not turned on return without doing anything
 </span><span style="color:#e6db74">    same =&gt; n(log),Verbose(0,${ARG2})       ; Log the message to the console
-</span><span style="color:#e6db74">    same =&gt; n,Return()</span></code></pre></div>
-<h3 id="etc-asterisk-features-conf">/etc/asterisk/features.conf</h3>
+</span><span style="color:#e6db74">    same =&gt; n,Return()</span>
+</code></pre></div><h3 id="etcasteriskfeaturesconf">/etc/asterisk/features.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; Asterisk Call Features (parking, transfer, etc) Configuration</span>
 <span style="color:#75715e">; Gentlemen</span>
 
 <span style="color:#66d9ef">[general]</span>
-  <span style="color:#75715e">; Nothing has been configured yet</span></code></pre></div>
-<h3 id="etc-asterisk-indications-conf">/etc/asterisk/indications.conf</h3>
-
+  <span style="color:#75715e">; Nothing has been configured yet</span>
+</code></pre></div><h3 id="etcasteriskindicationsconf">/etc/asterisk/indications.conf</h3>
 <p>I never got around to configuring this file, I left the section here as the
-default asterisk install adds this file in. For now you&rsquo;re on your own in
+default asterisk install adds this file in. For now you're on your own in
 configuring indications.</p>
-
-<h3 id="etc-asterisk-logger-conf">/etc/asterisk/logger.conf</h3>
+<h3 id="etcasteriskloggerconf">/etc/asterisk/logger.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- Logging Configuration ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -486,8 +455,8 @@ configuring indications.</p>
 </span><span style="color:#e6db74">  ;verbose =&gt; notice,warning,error,verbose
 </span><span style="color:#e6db74">  messages =&gt; notice,warning,error</span>
 
-  <span style="color:#a6e22e">syslog.local4</span> <span style="color:#f92672">=</span><span style="color:#e6db74">&gt; notice,warning,error</span></code></pre></div>
-<h3 id="etc-asterisk-manager-conf">/etc/asterisk/manager.conf</h3>
+  <span style="color:#a6e22e">syslog.local4</span> <span style="color:#f92672">=</span><span style="color:#e6db74">&gt; notice,warning,error</span>
+</code></pre></div><h3 id="etcasteriskmanagerconf">/etc/asterisk/manager.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- AMI - The Asterisk Manager Interface Configuration ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -495,8 +464,8 @@ configuring indications.</p>
   <span style="color:#75715e">;bindaddr = 10.13.37.17</span>
   <span style="color:#a6e22e">enabled</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">no
 </span><span style="color:#e6db74">  ;port = 5038
-</span><span style="color:#e6db74">  webenabled = no</span></code></pre></div>
-<h3 id="etc-asterisk-modules-conf">/etc/asterisk/modules.conf</h3>
+</span><span style="color:#e6db74">  webenabled = no</span>
+</code></pre></div><h3 id="etcasteriskmodulesconf">/etc/asterisk/modules.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- Module Loader configuration file ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -610,16 +579,16 @@ configuring indications.</p>
 
   <span style="color:#75715e">; For Caller ID information</span>
   <span style="color:#a6e22e">load</span> <span style="color:#f92672">=</span><span style="color:#e6db74">&gt; app_setcallerid.so
-</span><span style="color:#e6db74">  load =&gt; func_callerid.so</span></code></pre></div>
-<h3 id="etc-asterisk-musiconhold-conf">/etc/asterisk/musiconhold.conf</h3>
+</span><span style="color:#e6db74">  load =&gt; func_callerid.so</span>
+</code></pre></div><h3 id="etcasteriskmusiconholdconf">/etc/asterisk/musiconhold.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- Music on Hold Configuration ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
 <span style="color:#66d9ef">[default]</span>
   <span style="color:#a6e22e">directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">moh  ; Directory relative to the astdatadir that has the music on hold files
 </span><span style="color:#e6db74">  mode = files     ; Read files from the configured directory
-</span><span style="color:#e6db74">  sort = random    ; Sort the files in random order</span></code></pre></div>
-<h3 id="etc-asterisk-res-odbc-conf">/etc/asterisk/res_odbc.conf</h3>
+</span><span style="color:#e6db74">  sort = random    ; Sort the files in random order</span>
+</code></pre></div><h3 id="etcasteriskresodbcconf">/etc/asterisk/res_odbc.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- ODBC Configuration File ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -640,8 +609,8 @@ configuring indications.</p>
 </span><span style="color:#e6db74">  connect_timeout =&gt; 5              ; How long should we attempt to connect before considering the
 </span><span style="color:#e6db74">                                    ; connection dead?
 </span><span style="color:#e6db74">  negative_connection_cache =&gt; 300  ; When a connection fails, how long should we cache that information
-</span><span style="color:#e6db74">                                    ; before we attempt another connection?</span></code></pre></div>
-<h3 id="etc-asterisk-rtp-conf">/etc/asterisk/rtp.conf</h3>
+</span><span style="color:#e6db74">                                    ; before we attempt another connection?</span>
+</code></pre></div><h3 id="etcasteriskrtpconf">/etc/asterisk/rtp.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- RTP Configuration ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -657,8 +626,8 @@ configuring indications.</p>
   <span style="color:#75715e">; Enable strict RTP protection. This will drop RTP packets that</span>
   <span style="color:#75715e">; do not come from the source of the RTP stream. This option is</span>
   <span style="color:#75715e">; disabled by default.</span>
-  <span style="color:#75715e">;strictrtp=yes</span></code></pre></div>
-<h3 id="etc-asterisk-sip-conf">/etc/asterisk/sip.conf</h3>
+  <span style="color:#75715e">;strictrtp=yes</span>
+</code></pre></div><h3 id="etcasterisksipconf">/etc/asterisk/sip.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">; --- SIP Configuration ---</span>
 <span style="color:#75715e">; Gentlemen</span>
 
@@ -764,8 +733,8 @@ configuring indications.</p>
 
 <span style="color:#a6e22e">[user3](roadwarrior)</span>
   <span style="color:#a6e22e">callerid</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;User 3&#34;
-</span><span style="color:#e6db74">  secret = setyourownpassword</span></code></pre></div>
-<h3 id="etc-odbc-ini">/etc/odbc.ini</h3>
+</span><span style="color:#e6db74">  secret = setyourownpassword</span>
+</code></pre></div><h3 id="etcodbcini">/etc/odbc.ini</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[asterisk-gentlemen]</span>
 <span style="color:#a6e22e">Description</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Database driver for Asterisk call logs</span>
 <span style="color:#a6e22e">Trace</span>       <span style="color:#f92672">=</span> <span style="color:#e6db74">Off</span>
@@ -773,51 +742,48 @@ configuring indications.</p>
 <span style="color:#a6e22e">Driver</span>      <span style="color:#f92672">=</span> <span style="color:#e6db74">MySQL</span>
 <span style="color:#a6e22e">SERVER</span>      <span style="color:#f92672">=</span> <span style="color:#e6db74">mysqlserver.localhost</span>
 <span style="color:#a6e22e">PORT</span>        <span style="color:#f92672">=</span> <span style="color:#e6db74">3306</span>
-<span style="color:#a6e22e">DATABASE</span>    <span style="color:#f92672">=</span> <span style="color:#e6db74">gentlemen</span></code></pre></div>
-<p>Here is the schema for the table that I use:</p>
+<span style="color:#a6e22e">DATABASE</span>    <span style="color:#f92672">=</span> <span style="color:#e6db74">gentlemen</span>
+</code></pre></div><p>Here is the schema for the table that I use:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#75715e">--
-</span><span style="color:#75715e">-- Database: `gentlemen`
-</span><span style="color:#75715e">--
+</span><span style="color:#75715e"></span><span style="color:#75715e">-- Database: `gentlemen`
+</span><span style="color:#75715e"></span><span style="color:#75715e">--
 </span><span style="color:#75715e"></span>
 <span style="color:#75715e">-- --------------------------------------------------------
 </span><span style="color:#75715e"></span>
 <span style="color:#75715e">--
-</span><span style="color:#75715e">-- Table structure for table `asterisk`
-</span><span style="color:#75715e">--
+</span><span style="color:#75715e"></span><span style="color:#75715e">-- Table structure for table `asterisk`
+</span><span style="color:#75715e"></span><span style="color:#75715e">--
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">DROP</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#66d9ef">IF</span> <span style="color:#66d9ef">EXISTS</span> <span style="color:#f92672">`</span>asterisk<span style="color:#f92672">`</span>;
 <span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#f92672">`</span>asterisk<span style="color:#f92672">`</span> (
   <span style="color:#f92672">`</span>call_id<span style="color:#f92672">`</span> int(<span style="color:#ae81ff">10</span>) unsigned <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT,
-  <span style="color:#f92672">`</span>accountcode<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;An account ID. This field is user-defined and is empty by default.&#39;</span>,
-  <span style="color:#f92672">`</span>src<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The calling party’s caller ID number. It is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>dst<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The destination extension for the call. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>dcontext<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The destination context for the call. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>clid<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The full caller ID, including the name, of the calling party. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>channel<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The calling party’s channel. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>dstchannel<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The called party’s channel. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>lastapp<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The last dialplan application that was executed. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>lastdata<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The arguments passed to the lastapp. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span><span style="color:#66d9ef">start</span><span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The start time of the call. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>answer<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The answered time of the call. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span><span style="color:#66d9ef">end</span><span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The end time of the call. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>duration<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The number of seconds between the start and end times for the call. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>billsec<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The number of seconds between the answer and end times for the call. This field is set automatically and is read-only.&#39;</span>,
-  <span style="color:#f92672">`</span>disposition<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;An indication of what happened to the call. This may be NO ANSWER, FAILED, BUSY, ANSWERED, or UNKNOWN.&#39;</span>,
-  <span style="color:#f92672">`</span>amaflags<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The Automatic Message Accounting (AMA) flag associated with this call. This may be one of the following: OMIT, BILLING, DOCUMENTATION, or Unknown.&#39;</span>,
-  <span style="color:#f92672">`</span>userfield<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;A general-purpose user field. This field is empty by default and can be set to a user-defined string.&#39;</span>,
-  <span style="color:#f92672">`</span>uniqueid<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;The unique ID for the src channel. This field is set automatically and is read-only.&#39;</span>,
+  <span style="color:#f92672">`</span>accountcode<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">An account ID. This field is user-defined and is empty by default.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>src<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The calling party’s caller ID number. It is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>dst<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The destination extension for the call. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>dcontext<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The destination context for the call. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>clid<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The full caller ID, including the name, of the calling party. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>channel<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The calling party’s channel. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>dstchannel<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The called party’s channel. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>lastapp<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The last dialplan application that was executed. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>lastdata<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The arguments passed to the lastapp. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span><span style="color:#66d9ef">start</span><span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The start time of the call. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>answer<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The answered time of the call. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span><span style="color:#66d9ef">end</span><span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The end time of the call. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>duration<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The number of seconds between the start and end times for the call. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>billsec<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The number of seconds between the answer and end times for the call. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>disposition<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">An indication of what happened to the call. This may be NO ANSWER, FAILED, BUSY, ANSWERED, or UNKNOWN.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>amaflags<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The Automatic Message Accounting (AMA) flag associated with this call. This may be one of the following: OMIT, BILLING, DOCUMENTATION, or Unknown.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>userfield<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">DEFAULT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">A general-purpose user field. This field is empty by default and can be set to a user-defined string.</span><span style="color:#e6db74">&#39;</span>,
+  <span style="color:#f92672">`</span>uniqueid<span style="color:#f92672">`</span> varchar(<span style="color:#ae81ff">255</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">COMMENT</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">The unique ID for the src channel. This field is set automatically and is read-only.</span><span style="color:#e6db74">&#39;</span>,
   <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> (<span style="color:#f92672">`</span>call_id<span style="color:#f92672">`</span>)
-) ENGINE<span style="color:#f92672">=</span>MyISAM  <span style="color:#66d9ef">DEFAULT</span> CHARSET<span style="color:#f92672">=</span>latin1 ;</code></pre></div>
-<h2 id="music-on-hold">Music On Hold</h2>
-
+) ENGINE<span style="color:#f92672">=</span>MyISAM  <span style="color:#66d9ef">DEFAULT</span> CHARSET<span style="color:#f92672">=</span>latin1 ;
+</code></pre></div><h2 id="music-on-hold">Music On Hold</h2>
 <p>The way that music on hold is configured in the dial plan on this page it will
 look for files in the directory <code>/usr/share/asterisk/moh/</code>. Files will be
 chosen at random from this directory as long as asterisk can read them (that is
 it has a codec for the audio file loaded). I strongly suggest the music be in
 <code>ogg</code> format.</p>
-
 <h2 id="text-to-speech">Text to Speech</h2>
-
 <p>Please refer to my notes on <a href="https://stelfox.net/notes/festival/">Festival</a> for more information on text to
 speech with asterisk.</p>
 
@@ -863,7 +829,7 @@ speech with asterisk.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

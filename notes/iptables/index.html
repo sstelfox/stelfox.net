@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&rsquo;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
-It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&rsquo;ll find your rule set stored in different locations but the following list are where I&rsquo;ve seen them before:'>
+<meta name='description' content='iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&#39;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
+It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&#39;ll find your rule set stored in different locations but the following list are where I&#39;ve seen them before:'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='IPTables • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&rsquo;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
-It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&rsquo;ll find your rule set stored in different locations but the following list are where I&rsquo;ve seen them before:'>
+<meta property='og:description' content='iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&#39;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
+It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&#39;ll find your rule set stored in different locations but the following list are where I&#39;ve seen them before:'>
 <meta property='og:url' content='https://stelfox.net/notes/iptables/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-20T12:14:02-04:00'/><meta property='article:modified_time' content='2017-10-20T12:14:02-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>IPTables • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/iptables/'>
@@ -110,70 +110,52 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>iptables (and ip6tables) is a simple application for interacting directly with
-the Linux kernel&rsquo;s netfilter firewall. nftables is attempting to replace it.
+  <p>iptables (and ip6tables) is a simple application for interacting directly with
+the Linux kernel's netfilter firewall. nftables is attempting to replace it.
 nftables has better performance but is incredibly complex and difficult to use.
 Until the tooling and usability around nftables is addressed iptables will
 likely remain the reigning champion.</p>
-
 <p>It is important that your systems have effective ingress and egress rules.
-Depending on your host OS, you&rsquo;ll find your rule set stored in different
-locations but the following list are where I&rsquo;ve seen them before:</p>
-
+Depending on your host OS, you'll find your rule set stored in different
+locations but the following list are where I've seen them before:</p>
 <ul>
 <li>/etc/conf.d/iptables, /etc/conf.d/ip6tables</li>
 <li>/etc/sysconfig/iptables, /etc/conf.d/ip6tables</li>
 <li>/var/lib/iptables/rules-save, /var/lib/ip6tables/rules-save</li>
 </ul>
-
 <p>I have a base rule set that I riff off of for <a href="/note_files/iptables/iptables.rules">iptables</a>, and
 <a href="/note_files/iptables/ip6tables.rules">ip6tables</a>. It can generally be hardened a tad depending on the local
 services you have available (such as a DNS resolver, local NTP servers, or an
 HTTP(S) proxy).</p>
-
 <h2 id="logging-from-rules">Logging From Rules</h2>
-
-<p>If you&rsquo;re using my <a href="https://stelfox.net/notes/auditd/">auditd</a> rules, you&rsquo;ll already have a detailed log of any
-connection to or from the system so this may be of little use. Sometimes it&rsquo;s
-valuable to log attempts that don&rsquo;t successfully make it through the firewall
+<p>If you're using my <a href="https://stelfox.net/notes/auditd/">auditd</a> rules, you'll already have a detailed log of any
+connection to or from the system so this may be of little use. Sometimes it's
+valuable to log attempts that don't successfully make it through the firewall
 (such as failed outbound network attempts).  These are also valuable if your
-system has too many connections for the auditd rules to be effective, or you&rsquo;re
+system has too many connections for the auditd rules to be effective, or you're
 not using my rule set.</p>
-
 <p>The final step is actually making iptables log the information you want. This
 is as simple as appending <code>--log-prefix &quot;iptables: &quot;</code> to whatever LOG targets
 you have configured. Like so:</p>
-
 <p>The following rule will log any new SSH connection attempts on the default port
 for any traffic that successfully makes it to the rule:</p>
-
 <pre><code>-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j LOG --log-prefix &quot;sshConn: &quot;
-</code></pre>
-
-<h2 id="additional-gentoo-config">Additional Gentoo Config</h2>
-
-<p>Gentoo&rsquo;s defaults have an annoying habit to override the rules every time the
+</code></pre><h2 id="additional-gentoo-config">Additional Gentoo Config</h2>
+<p>Gentoo's defaults have an annoying habit to override the rules every time the
 service is shut down. Before enabling the services I additionally drop the
 configs around service control in place at <a href="/note_files/iptables/gentoo_iptables_conf">/etc/conf.d/iptables</a> and
 <a href="/note_files/iptables/gentoo_ip6tables_conf">/etc/conf.d/ip6tables</a>.</p>
-
 <p>This expects the iptables rules to be at <code>/var/lib/iptables/rules-save</code> and
 <code>/var/lib/ip6tables/rules-save</code>.</p>
-
-<h2 id="blocking-isps-as-numbers">Blocking ISPs/AS Numbers</h2>
-
-<p>I&rsquo;ve created <a href="/note_files/iptables/block_as.sh">a script</a> that generates rules to block the subnets associates
-with given AS numbers. AS numbers can be found on <a href="ftp://ftp.arin.net/info/asn.txt">Arin&rsquo;s website</a> and <a href="http://www.team-cymru.org/Services/ip-to-asn.html">Team
+<h2 id="blocking-ispsas-numbers">Blocking ISPs/AS Numbers</h2>
+<p>I've created <a href="/note_files/iptables/block_as.sh">a script</a> that generates rules to block the subnets associates
+with given AS numbers. AS numbers can be found on <a href="ftp://ftp.arin.net/info/asn.txt">Arin's website</a> and <a href="http://www.team-cymru.org/Services/ip-to-asn.html">Team
 Cymru</a> keeps a list of other places that keep this information.</p>
-
 <p>It fetches all network via whois and generates appropriate iptables rules.
 Maybe you have to adjust your whois-Query since I only ran tests against the
 ripe db.</p>
-
 <p>This script could be made significantly more efficient, and safer to update by
-switching to ipsets, but I haven&rsquo;t gotten around to it.</p>
+switching to ipsets, but I haven't gotten around to it.</p>
 
 </div>
 
@@ -224,7 +206,7 @@ switching to ipsets, but I haven&rsquo;t gotten around to it.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -15,7 +15,7 @@ My immediate issue is that it requires a few packages off the bat that I do not 
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>fail2ban • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/fail2ban/'>
@@ -112,53 +112,36 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>fail2ban provides a vital service of blocking troublesome IPs from attempting
 brute force logins.</p>
-
 <p>My immediate issue is that it requires a few packages off the bat that I do not
 want on my system. Specifically tcpwrappers and shorewall. My firewall scripts
 are stronger, easier to use, and IMHO more secure than what shorewall provides
-and I don&rsquo;t need it. Neither does the fail2ban package as indicated in <a href="https://bugzilla.redhat.com/show_bug.cgi?id=244275">this
+and I don't need it. Neither does the fail2ban package as indicated in <a href="https://bugzilla.redhat.com/show_bug.cgi?id=244275">this
 ticket</a> on the redhat bug tracker.</p>
-
 <p>TODO: <a href="https://stelfox.net/notes/mysql/">MySQL</a> logs now that the documented configuration logs authorization
 failures.</p>
-
 <h2 id="installation">Installation</h2>
-
-<p>So what&rsquo;s my solution? Fuck the man we&rsquo;re doing this my way. Regular install
+<p>So what's my solution? Fuck the man we're doing this my way. Regular install
 through yum, force the old packages out using rpm, and exclude fail2ban from
 updating (and preventing those damn packages from coming back). This is done
 using the following commands:</p>
-
 <pre><code>[root@localhost ~]# yum install fail2ban -y
 [root@localhost ~]# rpm -v --nodeps -e shorewall tcp_wrappers
-</code></pre>
-
-<p>Finally add this line to <code>/etc/yum.conf</code>.</p>
-
+</code></pre><p>Finally add this line to <code>/etc/yum.conf</code>.</p>
 <pre><code>exclude=fail2ban shorewall tcp_wrappers
-</code></pre>
-
-<p>There are of course security implication too not updating a package (in this
-case fail2ban won&rsquo;t ever get updated) however it&rsquo;s an exception that I&rsquo;m
+</code></pre><p>There are of course security implication too not updating a package (in this
+case fail2ban won't ever get updated) however it's an exception that I'm
 willing to make to get fail2ban and not have the shitty shittiness of shorewall
 and tcp_wrappers on my systems.</p>
-
 <h2 id="firewall-modifications">Firewall Modifications</h2>
-
 <p>There are some small changes that need to be made to the firewall script that
-should probably be merged with the default as they can&rsquo;t hurt and having
+should probably be merged with the default as they can't hurt and having
 fail2ban easily available to my default config would be a significant benefit.</p>
-
 <p>The changes are specifically:</p>
-
 <ul>
 <li>Add an &ldquo;OFFENDINGIPS&rdquo; chain</li>
 <li>Push all incoming traffic through the OFFENDINGIPS chain before continuing
@@ -166,39 +149,26 @@ through the INPUT chain</li>
 <li>Add a rule to the OFFENDINGIPS chain to prevent ongoing attacks from getting
 through for the duration of the attack</li>
 </ul>
-
 <p>The chain definition (near the top) should look like this:</p>
-
 <pre><code>:OFFENDINGIPS - [0:0]
-</code></pre>
-
-<p>Push all the traffic through the chain looks like this (this belongs above all other INPUT chain rules):</p>
-
+</code></pre><p>Push all the traffic through the chain looks like this (this belongs above all other INPUT chain rules):</p>
 <pre><code># [DEF-RULESET] Pass all traffic through the OFFENDINGIPS table to block
 # any hosts that have been caught being malicious in some way
 -A INPUT -j OFFENDINGIPS
-</code></pre>
-
-<p>Rule to prevent ongoing attacks:</p>
-
+</code></pre><p>Rule to prevent ongoing attacks:</p>
 <pre><code># [DEF-RULESET] If something keeps trying to connect after we have marked
 # them as an attacker, keep blocking them until they stop for a full hour.
 # When fail2ban is adding IPs to this table, it will initially mark them
 # as an ATTACKER and they will be banned for a minimum of the fail2ban time,
 # but it will be indefinite as long as they keep trying 
 -A OFFENDINGIPS -m recent --name ATTACKER --update --seconds 3600 -j DROP
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
-<p>I&rsquo;ve noticed that the documentation on the actual raw config files for fail2ban
-is really poor. Most of the documentation I&rsquo;ve found is drop in files for
+</code></pre><h2 id="configuration">Configuration</h2>
+<p>I've noticed that the documentation on the actual raw config files for fail2ban
+is really poor. Most of the documentation I've found is drop in files for
 specific services but completely unable to find coherent documentation on all
 the options in the actions files. Sure signs of amateur work which disheartens
 me. This package is still useful though&hellip;</p>
-
-<h3 id="etc-fail2ban-fail2ban-conf">/etc/fail2ban/fail2ban.conf</h3>
-
+<h3 id="etcfail2banfail2banconf">/etc/fail2ban/fail2ban.conf</h3>
 <pre><code>[Definition]
 # Log informational level messages
 loglevel = 3
@@ -207,9 +177,7 @@ loglevel = 3
 logtarget = SYSLOG
 
 socket = /var/run/fail2ban/fail2ban.sock
-</code></pre>
-
-<h3 id="etc-fail2ban-jail-conf">/etc/fail2ban/jail.conf</h3>
+</code></pre><h3 id="etcfail2banjailconf">/etc/fail2ban/jail.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[DEFAULT]</span>
 
 <span style="color:#75715e"># Never ban localhost or the internal network</span>
@@ -238,9 +206,8 @@ socket = /var/run/fail2ban/fail2ban.sock
 <span style="color:#a6e22e">enabled</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">false</span>
 <span style="color:#a6e22e">filter</span>   <span style="color:#f92672">=</span> <span style="color:#e6db74">asterisk</span>
 <span style="color:#a6e22e">action</span>   <span style="color:#f92672">=</span> <span style="color:#e6db74">iptables</span>
-<span style="color:#a6e22e">logpath</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/log/asterisk.log</span></code></pre></div>
-<h3 id="etc-fail2ban-filter-d-sshd-conf">/etc/fail2ban/filter.d/sshd.conf</h3>
-
+<span style="color:#a6e22e">logpath</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/log/asterisk.log</span>
+</code></pre></div><h3 id="etcfail2banfilterdsshdconf">/etc/fail2ban/filter.d/sshd.conf</h3>
 <pre><code>[INCLUDES]
 # Include common.conf before this file
 before = common.conf
@@ -260,13 +227,10 @@ failregex = ^%(__prefix_line)s(?:error: PAM: )?Authentication failure for .* fro
             ^%(__prefix_line)sUser \S+ from &lt;HOST&gt; not allowed because none of user's groups are listed in AllowGroups$
 
 ignoreregex =
-</code></pre>
-
-<h3 id="etc-fail2ban-filter-d-asterisk-conf">/etc/fail2ban/filter.d/asterisk.conf</h3>
-
+</code></pre><h3 id="etcfail2banfilterdasteriskconf">/etc/fail2ban/filter.d/asterisk.conf</h3>
 <p>This file required a bit of special attention, I noticed that the one set of
-regular expressions that have been copied and pasted everywhere DIDN&rsquo;T MATCH
-actual logs. They didn&rsquo;t take into account the port, and frankly I like
+regular expressions that have been copied and pasted everywhere DIDN'T MATCH
+actual logs. They didn't take into account the port, and frankly I like
 matching the whole line rather than just part of it. I modified the expressions
 which are now below. They are perfectly backwards compatible with older
 versions of asterisk that may not include the port and as a bonus will match
@@ -303,21 +267,18 @@ against syslog output if you are logging to syslog as well.</p>
 <span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: Host &lt;HOST&gt;(:[0-9]+)? failed MD5 authentication for &#39;.*&#39; (.*)\s*$</span>
 <span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: Failed to authenticate user .*@&lt;HOST&gt;(:[0-9]+)?.*\s*$</span>
 
-<span style="color:#a6e22e">ignoreregex</span> <span style="color:#f92672">=</span></code></pre></div>
-<p>Some notes on this specific file. I found &lsquo;pre-made&rsquo; asterisk configurations
+<span style="color:#a6e22e">ignoreregex</span> <span style="color:#f92672">=</span><span style="color:#e6db74"></span>
+</code></pre></div><p>Some notes on this specific file. I found &lsquo;pre-made&rsquo; asterisk configurations
 for fail2ban on the internet and found them to be very lacking. The did not
 deal with an attack log I saw actually hitting my server the &lsquo;Sending fake
 auth rejection&rsquo; log specifically.</p>
-
 <p>I was also greatly displeased by their performance. By making the regular
 expression more specific (without sacrificing positive matches) I was able to
 get a real world performance increase of 442%.</p>
-
-<p>This was measured using the unix &lsquo;time&rsquo; program and fail2ban&rsquo;s regular
+<p>This was measured using the unix &lsquo;time&rsquo; program and fail2ban's regular
 expression tester &lsquo;fail2ban-regex&rsquo;. As an example with one rule (the &lsquo;No
 matching peer found&rsquo; log) turned on in each test, first the old than my updated
 one gave the following results:</p>
-
 <pre><code>[root@localhost ~]# time fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/old-asterisk.conf &gt; /dev/null
 
 real    0m1.621s
@@ -328,9 +289,7 @@ sys     0m0.049s
 real    0m0.367s
 user    0m0.298s
 sys     0m0.047s
-</code></pre>
-
-<h3 id="etc-fail2ban-actions-d-iptables-conf">/etc/fail2ban/actions.d/iptables.conf</h3>
+</code></pre><h3 id="etcfail2banactionsdiptablesconf">/etc/fail2ban/actions.d/iptables.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[Init]</span>
 <span style="color:#75715e"># The following had defaults that I wasn&#39;t happy with, but now they&#39;re not being</span>
 <span style="color:#75715e"># used anyways as I don&#39;t want offending hosts talking to *any* service on this</span>
@@ -349,11 +308,11 @@ sys     0m0.047s
 
 <span style="color:#75715e"># The commands that get executed when fail2ban starts up</span>
 <span style="color:#75715e"># We don&#39;t need to do anything since I take care of this manually and permanently</span>
-<span style="color:#a6e22e">actionstart</span> <span style="color:#f92672">=</span>
+<span style="color:#a6e22e">actionstart</span> <span style="color:#f92672">=</span><span style="color:#e6db74"></span>
 
 <span style="color:#75715e"># The commands that get executed when fail2ban shuts down</span>
 <span style="color:#75715e"># We don&#39;t need to do anything since I take care of this manually and permanently</span>
-<span style="color:#a6e22e">actionstop</span> <span style="color:#f92672">=</span>
+<span style="color:#a6e22e">actionstop</span> <span style="color:#f92672">=</span><span style="color:#e6db74"></span>
 
 <span style="color:#75715e"># There doesn&#39;t really seem to be any documentation on what this actually does,</span>
 <span style="color:#75715e"># I&#39;ve modified it so it will look at the appropriate table and it appears that</span>
@@ -367,32 +326,23 @@ sys     0m0.047s
 
 <span style="color:#75715e"># This command removes an IP from the ban-list</span>
 <span style="color:#a6e22e">actionunban</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">iptables -D &lt;table&gt; -s &lt;ip&gt; -j LOG --log-prefix &#34;Attacker&#39;s Back &#34;
-</span><span style="color:#e6db74">              iptables -D &lt;table&gt; -s &lt;ip&gt; -j DROP</span></code></pre></div>
-<h2 id="testing-matches-regexes-bans-without-making-the-system-live">Testing Matches/Regexes/Bans Without Making the System Live</h2>
-
+</span><span style="color:#e6db74">              iptables -D &lt;table&gt; -s &lt;ip&gt; -j DROP</span>
+</code></pre></div><h2 id="testing-matchesregexesbans-without-making-the-system-live">Testing Matches/Regexes/Bans Without Making the System Live</h2>
 <h3 id="validation-configuration">Validation Configuration</h3>
-
 <p>Using the following command you can verify that the configuration is valid and
-that fail2ban will be happy with what you told it. It&rsquo;s output isn&rsquo;t very
-friendly but it&rsquo;ll do in a pinch.</p>
-
+that fail2ban will be happy with what you told it. It's output isn't very
+friendly but it'll do in a pinch.</p>
 <pre><code>[root@localhost ~]# fail2ban-client -d
-</code></pre>
-
-<h3 id="validation-regular-expressions">Validation Regular Expressions</h3>
-
-<p>First off you&rsquo;ll need a sample of the log that your going to be matching
+</code></pre><h3 id="validation-regular-expressions">Validation Regular Expressions</h3>
+<p>First off you'll need a sample of the log that your going to be matching
 against. If the message is already in your log more power to you, you can use
-that logfile as the input (and it&rsquo;s what I did).</p>
-
+that logfile as the input (and it's what I did).</p>
 <p>As for the regex, the tool supports passing the full thing on the command line
-HOWEVER it doesn&rsquo;t expand fail2ban REGEX variables beyond <HOST> (that is those
-defined in the common.conf file) which means you won&rsquo;t get an accurate
+HOWEVER it doesn't expand fail2ban REGEX variables beyond <!-- raw HTML omitted --> (that is those
+defined in the common.conf file) which means you won't get an accurate
 representation on a match.</p>
-
 <p>The best way is to define the regex in a filter file for fail2ban and run the
 tool like so (This is from me testing asterisk with the output from my test):</p>
-
 <pre><code>[root@localhost ~]# fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/asterisk.conf
 
 Running tests
@@ -473,9 +423,7 @@ Success, the total number of match is 75
 
 However, look at the above section 'Running tests' which could contain
 important information.
-</code></pre>
-
-<p>The above shows that I have 75 matches and the IPs (removed) that matched
+</code></pre><p>The above shows that I have 75 matches and the IPs (removed) that matched
 against which rule.</p>
 
 </div>
@@ -491,7 +439,7 @@ against which rule.</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/iscsi/'>
+      <a href='/notes/festival/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -499,10 +447,10 @@ against which rule.</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>iSCSI</a>
+        <span class='screen-reader-text'>Previous post: </span>Festival</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/wireless-troubleshouting/'>
-        <span class='screen-reader-text'>Next post: </span>Wireless Troubleshouting<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/ezstream/'>
+        <span class='screen-reader-text'>Next post: </span>EZStream<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -520,7 +468,7 @@ against which rule.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

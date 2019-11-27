@@ -2,22 +2,24 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
-NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like:
-https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh  The API can then return a token that for accessing additional functionality.
-Resetting This will wipe all keys, user, and admin pins on the card.'>
+<meta name='description' content='NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
+NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t= This will hit the API with a URL like:
+https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh The API can then return a token that for accessing additional functionality.
+Resetting This will wipe all keys, user, and admin pins on the card.
+This requires scdaemon and gpg-agent to be working and able to connect to the smartcard.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Yubikey • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='NEO dnf install ykpers -y ykpersonalize -m82  Unplug and replug it back in and it should be usable as a smartcard.
-NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=  This will hit the API with a URL like:
-https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh  The API can then return a token that for accessing additional functionality.
-Resetting This will wipe all keys, user, and admin pins on the card.'>
+<meta property='og:description' content='NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
+NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t= This will hit the API with a URL like:
+https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh The API can then return a token that for accessing additional functionality.
+Resetting This will wipe all keys, user, and admin pins on the card.
+This requires scdaemon and gpg-agent to be working and able to connect to the smartcard.'>
 <meta property='og:url' content='https://stelfox.net/notes/yubikey/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-10T00:28:32Z'/><meta property='article:modified_time' content='2017-10-10T00:28:32Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Yubikey • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/yubikey/'>
@@ -114,49 +116,27 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<h2 id="neo">NEO</h2>
-
+  <h2 id="neo">NEO</h2>
 <pre><code>dnf install ykpers -y
 ykpersonalize -m82
-</code></pre>
-
-<p>Unplug and replug it back in and it should be usable as a smartcard.</p>
-
-<h2 id="nfc-http-auth">NFC / HTTP Auth</h2>
-
+</code></pre><p>Unplug and replug it back in and it should be usable as a smartcard.</p>
+<h2 id="nfc--http-auth">NFC / HTTP Auth</h2>
 <pre><code>dnf install ykpers -y
 ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=
-</code></pre>
-
-<p>This will hit the API with a URL like:</p>
-
+</code></pre><p>This will hit the API with a URL like:</p>
 <pre><code>https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
-</code></pre>
-
-<p>The API can then return a token that for accessing additional functionality.</p>
-
+</code></pre><p>The API can then return a token that for accessing additional functionality.</p>
 <h2 id="resetting">Resetting</h2>
-
 <p>This will wipe all keys, user, and admin pins on the card.</p>
-
 <p>This requires scdaemon and gpg-agent to be working and able to connect to the
 smartcard. It needs to be plugged into the computer and requires GPG version
 2.0.22 or later. On yubikeys prior to the YubiKey4 check the version and
-confirm it&rsquo;s version 1.0.6 or later using the following command:</p>
-
+confirm it's version 1.0.6 or later using the following command:</p>
 <pre><code>gpg-connect-agent --hex &quot;scd apdu 00 f1 00 00&quot; /bye
-</code></pre>
-
-<p>You&rsquo;ll get back a line that looks like:</p>
-
+</code></pre><p>You'll get back a line that looks like:</p>
 <pre><code>D[0000]  01 00 06 90 00
-</code></pre>
-
-<p>Indicating version 1.0.6. To reset the applet create a file with the following
+</code></pre><p>Indicating version 1.0.6. To reset the applet create a file with the following
 contents:</p>
-
 <pre><code>/hex
 scd serialno
 scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
@@ -171,25 +151,16 @@ scd apdu 00 e6 00 00
 scd apdu 00 44 00 00
 /echo Card has been successfully reset.
 /bye
-</code></pre>
-
-<p>And cat it into <code>gpg-connect-agent</code> like so:</p>
-
+</code></pre><p>And cat it into <code>gpg-connect-agent</code> like so:</p>
 <pre><code>cat FILE | gpg-connect-agent
-</code></pre>
-
-<h2 id="using-as-a-rng-source">Using as a RNG source</h2>
-
-<p>This may allow me to use the yubikey&rsquo;s hardware RNG to generate entropy on my
+</code></pre><h2 id="using-as-a-rng-source">Using as a RNG source</h2>
+<p>This may allow me to use the yubikey's hardware RNG to generate entropy on my
 host:</p>
-
 <p><a href="https://github.com/infincia/TokenTools">https://github.com/infincia/TokenTools</a></p>
-
 <h2 id="vulnerability">Vulnerability</h2>
-
 <p>A vulnerability was published around YubiKey NEOs use as smartcards and
-<a href="https://developers.yubico.com/ykneo-openpgp/SecurityAdvisory%202015-04-14.html">Yubico&rsquo;s</a> response is top notch. I recommend following the steps in
-checking on your key to see if you&rsquo;re affected.</p>
+<a href="https://developers.yubico.com/ykneo-openpgp/SecurityAdvisory%202015-04-14.html">Yubico's</a> response is top notch. I recommend following the steps in
+checking on your key to see if you're affected.</p>
 
 </div>
 
@@ -240,7 +211,7 @@ checking on your key to see if you&rsquo;re affected.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -13,7 +13,7 @@ I let my crawler go and stopped it after a 24 hour period. I ran ls on the direc
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='linux'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2009-11-04T21:36:45Z'/><meta property='article:modified_time' content='2009-11-04T21:36:45Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Image Crawler Meets rm -f * • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2009/11/image-crawler-meets-rm-f/'>
@@ -113,47 +113,36 @@ if (!doNotTrack) {
   <p>I wrote a simple web crawler that archived any images it found from a site with
 a large number of backgrounds. I wanted to have rolling backgrounds that almost
 never repeated.</p>
-
 <p>I let my crawler go and stopped it after a 24 hour period. I ran <code>ls</code> on  the
 directory the images were being saved in to see the results and my ssh session
 locked up&hellip; Or so I thought. I hit Ctrl-C and nothing happened&hellip; So I closed
 my window and opened a new one.</p>
-
 <p>Maybe there was a file name that hit some weird glitch in <code>ls</code> causing it too
 lock up. Not a big deal I can start from scratch. I switched to the directory
 and ran an <code>rm -f *</code> and was greeted with this:</p>
-
 <pre><code>/bin/rm: Argument list too long.
-</code></pre>
-
-<p>Wait what? All I get was this irritating and slightly elusive error message. So
+</code></pre><p>Wait what? All I get was this irritating and slightly elusive error message. So
 the * was being expanded, and making the list too long? To be sure I started
-hunting in the man pages. <code>man rm</code> recommended me to <code>info coreutils 'rm
-invocation'</code>. I read through and couldn&rsquo;t find any limitations or warnings that
+hunting in the man pages. <code>man rm</code> recommended me to <code>info coreutils 'rm invocation'</code>. I read through and couldn't find any limitations or warnings that
 might relate to the problem. The only thing I could find in there was a line
 that said:</p>
-
 <blockquote>
 <p>GNU &lsquo;rm&rsquo;, like every program that uses the &lsquo;getopt&rsquo; function to parse its
 arguments&hellip;</p>
 </blockquote>
-
-<p>Moving on&hellip; getopt is parsing it&rsquo;s options&hellip; man and info pages on getopt
-don&rsquo;t really reveal anything&hellip;</p>
-
-<p>After some creative Googling I found the answer: getopt&rsquo;s argument limit is
+<p>Moving on&hellip; getopt is parsing it's options&hellip; man and info pages on getopt
+don't really reveal anything&hellip;</p>
+<p>After some creative Googling I found the answer: getopt's argument limit is
 1024. How many files did I have? I wanted to give ls one more try&hellip; I
 typed it in and sure enough console froze&hellip; Or did it? I walked away and
 did other things. When I came back I had a list of files longer than my
 console buffer. I was smarter the second time around: <code>ls | wc -l</code>. After
 about five minutes it came back again with just the number.</p>
-
 <blockquote>
 <p>177654</p>
 </blockquote>
-
-<p>I needed to clean up that directory and rm wasn&rsquo;t going to help me. `find . |
-xargs rm -f1 and&hellip;. Victory! The directory is clean and happy again. Now I&rsquo;ll
+<p>I needed to clean up that directory and rm wasn't going to help me. `find . |
+xargs rm -f1 and&hellip;. Victory! The directory is clean and happy again. Now I'll
 just have to figure out how to cut down the number of files, or at the very
 least organize them into more managable chunks&hellip;</p>
 
@@ -196,7 +185,7 @@ least organize them into more managable chunks&hellip;</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

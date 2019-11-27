@@ -13,7 +13,7 @@ This is a mostly (95%) script-less installation and setup of OpenStack from scra
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Openstack • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/openstack/'>
@@ -110,19 +110,14 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>This is a mostly (95%) script-less installation and setup of OpenStack from
 scratch on a single host, though done in a way that the services could each be
 very easily broken out on to their own machines or multiple machines.</p>
-
-<p>A few references that I&rsquo;ve used generally for assistance figuring out what I
+<p>A few references that I've used generally for assistance figuring out what I
 need:</p>
-
 <ul>
 <li><a href="http://fedoraproject.org/wiki/Getting_started_with_OpenStack_on_Fedora_17">http://fedoraproject.org/wiki/Getting_started_with_OpenStack_on_Fedora_17</a></li>
 <li><a href="http://wiki.openstack.org/QpidSupport">http://wiki.openstack.org/QpidSupport</a></li>
@@ -130,34 +125,26 @@ need:</p>
 <li><a href="https://github.com/openstack/keystone/blob/master/etc/keystone.conf.sample">https://github.com/openstack/keystone/blob/master/etc/keystone.conf.sample</a></li>
 <li><a href="http://docs.openstack.org/developer/keystone/configuration.html">http://docs.openstack.org/developer/keystone/configuration.html</a></li>
 </ul>
-
 <h2 id="installation">Installation</h2>
-
 <p>This guide and all the other OpenStack sections on this wiki were written using
 the pre-packaged version of OpenStack that comes with Fedora (version 2012.1.3
 Essex) any other version may have different configuration options, and
 different command line flags.</p>
-
 <p>The various services should be configured in the order of the sections listed
 here.</p>
-
 <h3 id="network-setup">Network Setup</h3>
-
 <p>For the sake of knowing exactly what is going, what connections are being made
-and between what services I&rsquo;ve elected to put every individual service on it&rsquo;s
+and between what services I've elected to put every individual service on it's
 own IP address. This separation also makes it easy to break individual services
 off on to other machines if they become a bottleneck and need a more
 distributed setup.</p>
-
 <p>Since this was initially done on a development machine I also created a bridge
 to act as a virtual ethernet adapter that was only available locally named
-<code>br-mgmt</code> which also hosts all of the service&rsquo;s. The address range chosen for
-this development test was <code>10.100.0.0/24</code> as it generally doesn&rsquo;t interfere
+<code>br-mgmt</code> which also hosts all of the service's. The address range chosen for
+this development test was <code>10.100.0.0/24</code> as it generally doesn't interfere
 with any networks I normally encounter.</p>
-
 <p>The main bridge was setup using the following configuration file which was
 written to <code>/etc/sysconfig/network-scripts/ifcfg-br-mgmt</code>.</p>
-
 <pre><code>NM_CONTROLLED=no
 ONBOOT=yes
 TYPE=Bridge
@@ -172,12 +159,9 @@ IPV6INIT=yes
 IPV6_PRIVACY=rfc3041
 
 NAME=ManagementNet
-</code></pre>
-
-<p>Subsequent IP addresses were added to the bridge by creating files at
+</code></pre><p>Subsequent IP addresses were added to the bridge by creating files at
 <code>/etc/sysconfig/network-scripts/ifcfg-br-mgmt:{id}</code> replacing {id} with 1
 through 9 with the following contents:</p>
-
 <pre><code>DEVICE={Interface Name}
 NM_CONTROLLED=no
 ONBOOT=yes
@@ -190,11 +174,8 @@ IPV6INIT=yes
 IPV6_PRIVACY=rfc3041
 
 NAME={Service}
-</code></pre>
-
-<p>The following table show the address allocations I used, and what I intend the
+</code></pre><p>The following table show the address allocations I used, and what I intend the
 address be used for:</p>
-
 <table>
 <thead>
 <tr>
@@ -203,56 +184,47 @@ address be used for:</p>
 <th>Service</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>br-mgmt:1</td>
 <td>10.100.0.11</td>
 <td>MySQLd</td>
 </tr>
-
 <tr>
 <td>br-mgmt:2</td>
 <td>10.100.0.12</td>
 <td>Qpidd</td>
 </tr>
-
 <tr>
 <td>br-mgmt:3</td>
 <td>10.100.0.13</td>
 <td>Keystone/Identity</td>
 </tr>
-
 <tr>
 <td>br-mgmt:4</td>
 <td>10.100.0.14</td>
 <td>Memcached</td>
 </tr>
-
 <tr>
 <td>br-mgmt:5</td>
 <td>10.100.0.15</td>
 <td>Nova/Compute</td>
 </tr>
-
 <tr>
 <td>br-mgmt:6</td>
 <td>10.100.0.16</td>
 <td>Cinder/Volume</td>
 </tr>
-
 <tr>
 <td>br-mgmt:7</td>
 <td>10.100.0.17</td>
 <td>Glance/Image</td>
 </tr>
-
 <tr>
 <td>br-mgmt:8</td>
 <td>10.100.0.18</td>
 <td>EC2</td>
 </tr>
-
 <tr>
 <td>br-mgmt:9</td>
 <td>10.100.0.19</td>
@@ -260,48 +232,33 @@ address be used for:</p>
 </tr>
 </tbody>
 </table>
-
-<h3 id="service-pre-requisites">Service Pre-Requisites</h3>
-
+<h3 id="service-prerequisites">Service Pre-Requisites</h3>
 <p>When configuring the following service be sure to bind them to the address
 listed in the table above in the Service/Management network section.</p>
-
 <ul>
 <li>Install <a href="https://stelfox.net/notes/mysql/">Mysql Server</a></li>
 <li>Install <a href="https://stelfox.net/notes/qpid/">Qpid Message Broker</a></li>
 <li>Install <a href="https://stelfox.net/notes/chronyd/">Chrony NTP Server</a></li>
 <li>Install <a href="https://stelfox.net/notes/memcached/">Memcache</a></li>
 </ul>
-
-<h3 id="keystone-identity">Keystone/Identity</h3>
-
-<p>Keystone is the OpenStack Identity service and it&rsquo;s configuration is documented
-on <a href="https://stelfox.net/notes/openstack-keystone/">it&rsquo;s wiki page</a>.</p>
-
-<h3 id="glance-image-service">Glance/Image Service</h3>
-
-<p>Glance is the OpenStack Image service and it&rsquo;s configuration is documented on
-<a href="https://stelfox.net/notes/openstack-glance/">it&rsquo;s wiki page</a></p>
-
-<h3 id="horizon-dashboard">Horizon/Dashboard</h3>
-
+<h3 id="keystoneidentity">Keystone/Identity</h3>
+<p>Keystone is the OpenStack Identity service and it's configuration is documented
+on <a href="https://stelfox.net/notes/openstack-keystone/">it's wiki page</a>.</p>
+<h3 id="glanceimage-service">Glance/Image Service</h3>
+<p>Glance is the OpenStack Image service and it's configuration is documented on
+<a href="https://stelfox.net/notes/openstack-glance/">it's wiki page</a></p>
+<h3 id="horizondashboard">Horizon/Dashboard</h3>
 <p>Notes for when I get to this:</p>
-
 <p>I should make use of the Cached Database session backend:</p>
-
 <ul>
 <li><a href="http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-cached-database.html">http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-cached-database.html</a></li>
 </ul>
-
 <p>It will need to have memcache configured as if it was going to be the session
 storage:</p>
-
 <ul>
 <li><a href="http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-memcache.html">http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-memcache.html</a></li>
 </ul>
-
 <p>Additional notes:</p>
-
 <ul>
 <li><code>http://docs.openstack.org/trunk/openstack-object-storage/admin/content/memcached-considerations.html</code> (Dead link)</li>
 <li><a href="http://www.cybera.ca/tech-radar/using-memcached-openstack-nova">http://www.cybera.ca/tech-radar/using-memcached-openstack-nova</a></li>
@@ -320,7 +277,7 @@ storage:</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/openstack-keystone/'>
+      <a href='/notes/openstack-glance/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -328,10 +285,10 @@ storage:</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Openstack Keystone</a>
+        <span class='screen-reader-text'>Previous post: </span>OpenStack Glance</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/openvpn/'>
-        <span class='screen-reader-text'>Next post: </span>OpenVPN<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/ntpdate/'>
+        <span class='screen-reader-text'>Next post: </span>NTPDate<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -349,7 +306,7 @@ storage:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

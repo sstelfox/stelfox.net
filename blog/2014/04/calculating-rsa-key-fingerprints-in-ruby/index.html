@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I regularly find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&rsquo;ve never had to worry about identification or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at most that I&rsquo;m manipulating (server, certificate authority, client).
-I&rsquo;ve not found myself working on a project that involves presenting the certificates to users for selection and comparison. The obvious way too do this is take a page out of other developer&rsquo;s books and present the key&rsquo;s fingerprint.'>
+<meta name='description' content='I regularly find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&#39;ve never had to worry about identification or presentation of these keys. Normally I&#39;ve only got one too three pairs at most that I&#39;m manipulating (server, certificate authority, client).
+I&#39;ve not found myself working on a project that involves presenting the certificates to users for selection and comparison. The obvious way too do this is take a page out of other developer&#39;s books and present the key&#39;s fingerprint.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Calculating RSA Key Fingerprints in Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I regularly find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&rsquo;ve never had to worry about identification or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at most that I&rsquo;m manipulating (server, certificate authority, client).
-I&rsquo;ve not found myself working on a project that involves presenting the certificates to users for selection and comparison. The obvious way too do this is take a page out of other developer&rsquo;s books and present the key&rsquo;s fingerprint.'>
+<meta property='og:description' content='I regularly find myself working on projects that involve the manipulation and storage of RSA keys. In the past I&#39;ve never had to worry about identification or presentation of these keys. Normally I&#39;ve only got one too three pairs at most that I&#39;m manipulating (server, certificate authority, client).
+I&#39;ve not found myself working on a project that involves presenting the certificates to users for selection and comparison. The obvious way too do this is take a page out of other developer&#39;s books and present the key&#39;s fingerprint.'>
 <meta property='og:url' content='https://stelfox.net/blog/2014/04/calculating-rsa-key-fingerprints-in-ruby/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='development'><meta property='article:tag' content='ruby'><meta property='article:tag' content='security'><meta property='article:published_time' content='2014-04-21T18:37:04-04:00'/><meta property='article:modified_time' content='2014-04-21T18:37:04-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Calculating RSA Key Fingerprints in Ruby • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2014/04/calculating-rsa-key-fingerprints-in-ruby/'>
@@ -111,72 +111,60 @@ if (!doNotTrack) {
 
   <div class='container entry-content'>
   <p>I regularly find myself working on projects that involve the manipulation and
-storage of RSA keys. In the past I&rsquo;ve never had to worry about identification
-or presentation of these keys. Normally I&rsquo;ve only got one too three pairs at
-most that I&rsquo;m manipulating (server, certificate authority, client).</p>
-
-<p>I&rsquo;ve not found myself working on a project that involves presenting the
+storage of RSA keys. In the past I've never had to worry about identification
+or presentation of these keys. Normally I've only got one too three pairs at
+most that I'm manipulating (server, certificate authority, client).</p>
+<p>I've not found myself working on a project that involves presenting the
 certificates to users for selection and comparison. The obvious way too do this
-is take a page out of other developer&rsquo;s books and present the key&rsquo;s
+is take a page out of other developer's books and present the key's
 fingerprint.</p>
-
 <p>For those unfamiliar with key fingerprints, they are a condensed way to compare
 differing RSA with a high probability that if the fingerprints match, so do the
 keys. These are generally based on a cryptographic digest function such as SHA1
-and MD5, and you&rsquo;ll see them most commonly when connecting to a new SSH host
+and MD5, and you'll see them most commonly when connecting to a new SSH host
 and will look like the following:.</p>
-
 <pre><code>The authenticity of host 'some.fakedomain.tld (127.0.0.1)' can't be established.
 RSA key fingerprint is 0c:6c:dd:32:b5:59:40:1d:ac:05:24:4f:04:bc:e0:f3.
 Are you sure you want to continue connecting (yes/no)?
-</code></pre>
-
-<p>The string of 32 hex characters presented there can be compared with another
-known value to make sure you&rsquo;re connecting to the correct SSH server and will
+</code></pre><p>The string of 32 hex characters presented there can be compared with another
+known value to make sure you're connecting to the correct SSH server and will
 always be the same length regardless of the bit-strength of the keys used.
 Without the fingerprint, users would have to compare 256 hex characters for a
 1024 bit key, which is a very low security key.</p>
-
 <p>You can calculate the SSH fingerprint for your SSH key or a SSH host key using
 the <code>ssh-keygen</code> command like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">ssh-keygen -lf ~/.ssh/id_rsa
-ssh-keygen -lf /etc/ssh/ssh_host_key.pub</code></pre></div>
-<p>It will work when the path is either a private RSA key or a public key
+ssh-keygen -lf /etc/ssh/ssh_host_key.pub
+</code></pre></div><p>It will work when the path is either a private RSA key or a public key
 formatted for SSH authorized key files.</p>
-
-<p>X509 certificates also use a key fingerprint to help identify a certificate&rsquo;s
+<p>X509 certificates also use a key fingerprint to help identify a certificate's
 signing authority. What I rapidly learned through this investigation was that
-they are calculated slightly differently from SSH fingerprints even if they&rsquo;re
+they are calculated slightly differently from SSH fingerprints even if they're
 in the same format.</p>
-
-<p>I couldn&rsquo;t find any good Ruby code that calculated either, and the alternatives
+<p>I couldn't find any good Ruby code that calculated either, and the alternatives
 were some dense C++. Luckily SSH fingerprints are pretty documented in
 <a href="http://www.ietf.org/rfc/rfc4253.txt">RFC4253</a> and <a href="http://www.ietf.org/rfc/rfc4716.txt">RFC4716</a>. Fingerprints on RSA keys for use with OpenSSL
 are less clear, and there is a different method for calculating the
 fingerprints of certificates.</p>
-
-<p>Slowly working through the undocumented bits of Ruby&rsquo;s OpenSSL wrapper, the
+<p>Slowly working through the undocumented bits of Ruby's OpenSSL wrapper, the
 RFCs and a couple of C++ implementations I finally got a set of working
 implementations that calculate the following fingerprints in Ruby:</p>
-
 <ul>
 <li>MD5 &amp; SHA1 fingerprints for RSA SSH keys</li>
 <li>Fingerprints of RSA keys for use with x509 certificates</li>
 <li>Fingerprints of x509 certificates</li>
 </ul>
-
 <p>The easiest being a regular x509 certificate:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;openssl&#39;</span>
 
 path_to_cert <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/tmp/sample.crt&#39;</span>
 cert <span style="color:#f92672">=</span> <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">X509</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Certificate</span><span style="color:#f92672">.</span>new(<span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>read(path_to_cert))
-puts <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Digest</span><span style="color:#f92672">::</span><span style="color:#66d9ef">SHA1</span><span style="color:#f92672">.</span>hexdigest(cert<span style="color:#f92672">.</span>to_der)<span style="color:#f92672">.</span>scan(<span style="color:#e6db74">/../</span>)<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;:&#39;</span>)</code></pre></div>
-<p>You can compare the output of the above code with OpenSSL&rsquo;s implementation with
+puts <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Digest</span><span style="color:#f92672">::</span><span style="color:#66d9ef">SHA1</span><span style="color:#f92672">.</span>hexdigest(cert<span style="color:#f92672">.</span>to_der)<span style="color:#f92672">.</span>scan(<span style="color:#e6db74">/</span><span style="color:#e6db74">..</span><span style="color:#e6db74">/</span>)<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;:&#39;</span>)
+</code></pre></div><p>You can compare the output of the above code with OpenSSL's implementation with
 the following command:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">openssl x509 -in /tmp/sample.crt -noout -fingerprint</code></pre></div>
-<p>Please note that case sensitivity doesn&rsquo;t matter here (OpenSSL will return
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">openssl x509 -in /tmp/sample.crt -noout -fingerprint
+</code></pre></div><p>Please note that case sensitivity doesn't matter here (OpenSSL will return
 upper case hex codes).</p>
-
 <p>The next one I got working was the SSH fingerprints thanks to the RFCs mentioned
 earlier.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;openssl&#39;</span>
@@ -184,13 +172,11 @@ earlier.</p>
 path_to_key <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/tmp/ssh_key&#39;</span>
 
 key <span style="color:#f92672">=</span> <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">PKey</span><span style="color:#f92672">::</span><span style="color:#66d9ef">RSA</span><span style="color:#f92672">.</span>new(<span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>read(path_to_key))
-data_string <span style="color:#f92672">=</span> <span style="color:#f92672">[</span><span style="color:#ae81ff">7</span><span style="color:#f92672">].</span>pack(<span style="color:#e6db74">&#39;N&#39;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;ssh-rsa&#39;</span> <span style="color:#f92672">+</span> key<span style="color:#f92672">.</span>public_key<span style="color:#f92672">.</span>e<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">0</span>) <span style="color:#f92672">+</span> key<span style="color:#f92672">.</span>public_key<span style="color:#f92672">.</span>n<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">0</span>)
-puts <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Digest</span><span style="color:#f92672">::</span><span style="color:#66d9ef">MD5</span><span style="color:#f92672">.</span>hexdigest(data_string)<span style="color:#f92672">.</span>scan(<span style="color:#e6db74">/../</span>)<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;:&#39;</span>)</code></pre></div>
-<p><em>Please note: The above only works for RSA SSH keys.</em></p>
-
+data_string <span style="color:#f92672">=</span> <span style="color:#f92672">[</span><span style="color:#ae81ff">7</span><span style="color:#f92672"></span><span style="color:#f92672">]</span><span style="color:#f92672">.</span>pack(<span style="color:#e6db74">&#39;N&#39;</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;ssh-rsa&#39;</span> <span style="color:#f92672">+</span> key<span style="color:#f92672">.</span>public_key<span style="color:#f92672">.</span>e<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">0</span><span style="color:#f92672"></span>) <span style="color:#f92672">+</span> key<span style="color:#f92672">.</span>public_key<span style="color:#f92672">.</span>n<span style="color:#f92672">.</span>to_s(<span style="color:#ae81ff">0</span><span style="color:#f92672"></span>)
+puts <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Digest</span><span style="color:#f92672">::</span><span style="color:#66d9ef">MD5</span><span style="color:#f92672">.</span>hexdigest(data_string)<span style="color:#f92672">.</span>scan(<span style="color:#e6db74">/</span><span style="color:#e6db74">..</span><span style="color:#e6db74">/</span>)<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;:&#39;</span>)
+</code></pre></div><p><em>Please note: The above only works for RSA SSH keys.</em></p>
 <p>Calculating a SHA1 fingerprint for SSH hosts is as simple as replacing the
 &lsquo;MD5&rsquo; class with &lsquo;SHA1&rsquo; or any of the other support digest algorithms.</p>
-
 <p>The last one was the hardest to track down and implement, eventually I found
 the answer in <a href="http://www.ietf.org/rfc/rfc3279.txt">RFC3279</a> under section 2.3.1 for the format of the public key
 I would need to generate before performing a digest calculation on it.</p>
@@ -203,7 +189,8 @@ data_string <span style="color:#f92672">=</span> <span style="color:#66d9ef">Ope
   <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">ASN1</span><span style="color:#f92672">::</span>Integer<span style="color:#f92672">.</span>new(key<span style="color:#f92672">.</span>public_key<span style="color:#f92672">.</span>n),
   <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">ASN1</span><span style="color:#f92672">::</span>Integer<span style="color:#f92672">.</span>new(key<span style="color:#f92672">.</span>public_key<span style="color:#f92672">.</span>e)
 <span style="color:#f92672">]</span>)
-puts <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Digest</span><span style="color:#f92672">::</span><span style="color:#66d9ef">SHA1</span><span style="color:#f92672">.</span>hexdigest(data_string<span style="color:#f92672">.</span>to_der)<span style="color:#f92672">.</span>scan(<span style="color:#e6db74">/../</span>)<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;:&#39;</span>)</code></pre></div>
+puts <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Digest</span><span style="color:#f92672">::</span><span style="color:#66d9ef">SHA1</span><span style="color:#f92672">.</span>hexdigest(data_string<span style="color:#f92672">.</span>to_der)<span style="color:#f92672">.</span>scan(<span style="color:#e6db74">/</span><span style="color:#e6db74">..</span><span style="color:#e6db74">/</span>)<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;:&#39;</span>)
+</code></pre></div>
 </div>
 
   
@@ -253,7 +240,7 @@ puts <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</s
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

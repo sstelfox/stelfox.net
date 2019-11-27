@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I just received my Dell PowerEdge C6100 and found it&rsquo;s software quite a bit outdated. After searching around quite a bit I found the resources lacking for explaining how to perform these updates. So in this post I&rsquo;m going to quickly cover updating the BMC firmware on each blade.
+<meta name='description' content='I just received my Dell PowerEdge C6100 and found it&#39;s software quite a bit outdated. After searching around quite a bit I found the resources lacking for explaining how to perform these updates. So in this post I&#39;m going to quickly cover updating the BMC firmware on each blade.
 The system I received had four different versions of the BMC software installed, additionally Two were branded as MegaRAC and the others branded as Dell.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Updating BMC on Dell PowerEdge C6100 • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I just received my Dell PowerEdge C6100 and found it&rsquo;s software quite a bit outdated. After searching around quite a bit I found the resources lacking for explaining how to perform these updates. So in this post I&rsquo;m going to quickly cover updating the BMC firmware on each blade.
+<meta property='og:description' content='I just received my Dell PowerEdge C6100 and found it&#39;s software quite a bit outdated. After searching around quite a bit I found the resources lacking for explaining how to perform these updates. So in this post I&#39;m going to quickly cover updating the BMC firmware on each blade.
 The system I received had four different versions of the BMC software installed, additionally Two were branded as MegaRAC and the others branded as Dell.'>
 <meta property='og:url' content='https://stelfox.net/blog/2013/12/updating-bmc-on-dell-poweredge-c6100/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='servers'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2013-12-16T21:26:13-05:00'/><meta property='article:modified_time' content='2013-12-16T21:26:13-05:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Updating BMC on Dell PowerEdge C6100 • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2013/12/updating-bmc-on-dell-poweredge-c6100/'>
@@ -110,55 +110,47 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>I just received my Dell PowerEdge C6100 and found it&rsquo;s software quite a bit
+  <p>I just received my Dell PowerEdge C6100 and found it's software quite a bit
 outdated. After searching around quite a bit I found the resources lacking for
-explaining how to perform these updates. So in this post I&rsquo;m going to quickly
+explaining how to perform these updates. So in this post I'm going to quickly
 cover updating the BMC firmware on each blade.</p>
-
 <p>The system I received had four different versions of the BMC software
 installed, additionally Two were branded as MegaRAC and the others branded as
-Dell. This update didn&rsquo;t fix the branding (and I&rsquo;d love to remove the Dell
-branding as it&rsquo;s kind of annoying) it did, however, fix a number of other
+Dell. This update didn't fix the branding (and I'd love to remove the Dell
+branding as it's kind of annoying) it did, however, fix a number of other
 issues that I was experiencing such as:</p>
-
 <ol>
 <li>Console Redirection failing to connect</li>
-<li>BMC losing it&rsquo;s network connection after a couple of minutes</li>
+<li>BMC losing it's network connection after a couple of minutes</li>
 <li>Slow responses, with occasional failures to load pages</li>
 <li>Remote IPMI tools being unable to read sensors status</li>
 </ol>
-
 <p>The first step is too download the latest version of of the BMC software from
-<a href="https://support.dell.com/">Dell&rsquo;s support site</a> (I&rsquo;ve also taken the liberty of <a href="http://static.stelfox.net/files/PEC6100BMC130.exe">hosting a copy
+<a href="https://support.dell.com/">Dell's support site</a> (I've also taken the liberty of <a href="http://static.stelfox.net/files/PEC6100BMC130.exe">hosting a copy
 myself</a>). I recommend you go through the process of entering the service tag
 of each of the blades and make sure that Dell recognizes them as existing even
-if they&rsquo;re out of support.</p>
-
+if they're out of support.</p>
 <p>There has been mention of versions of these blades that had custom
 modifications for DCS and any attempts to modify the BIOS or BMC will likely
 cause you to end up bricking the remote management board or the motherboard.</p>
-
 <p>Even with the regular board there is always a risk of bricking it, though
-firmware updates have gotten a lot more reliable and I haven&rsquo;t experienced an
-incorrectly flashed motherboard in years. You&rsquo;ve been warned.</p>
-
+firmware updates have gotten a lot more reliable and I haven't experienced an
+incorrectly flashed motherboard in years. You've been warned.</p>
 <p>The BMC was fairly straight forward. I installed the 64-bit version of Fedora
 19 on a thumb drive, downloaded version 1.30 of the BMC software (get the file
 named <code>PEC6100BMC130.exe</code>). The file itself is a self-extracting zip archive
 which can be extracted using the regular unzip utility.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">unzip PEC6100BMC130.exe</code></pre></div>
-<p>Inside you&rsquo;ll find two folders, KCSFlash and SOCFlash should both be put on the
-live drive within the KCSFlash. You&rsquo;ll need to set the execute bit on the
-contents of the linux directory and the linux.sh file. You&rsquo;ll also need to
-install the <code>glibc.i686</code> package. Afterwards it&rsquo;s as simple as booting each
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">unzip PEC6100BMC130.exe
+</code></pre></div><p>Inside you'll find two folders, KCSFlash and SOCFlash should both be put on the
+live drive within the KCSFlash. You'll need to set the execute bit on the
+contents of the linux directory and the linux.sh file. You'll also need to
+install the <code>glibc.i686</code> package. Afterwards it's as simple as booting each
 chassis off the drive and as root run the linux.sh script.</p>
-
 <p>If the KCSFlash fails, the SOCFlash will more likely than not work but it is
 slightly more dangerous. If you need it mark the <code>linux/flash8.sh</code>,
 <code>linux/socflash</code>, and <code>linux/socflash_x64</code> as executable in the SOCFlash folder
 and run the flash8.sh script.</p>
-
-<p>After that you&rsquo;re going to want to reboot into the BIOS and ensure the IPMI
+<p>After that you're going to want to reboot into the BIOS and ensure the IPMI
 ethernet port is set to dedicated, as this switched it back to &ldquo;Shared&rdquo; on me.</p>
 
 </div>
@@ -210,7 +202,7 @@ ethernet port is set to dedicated, as this switched it back to &ldquo;Shared&rdq
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

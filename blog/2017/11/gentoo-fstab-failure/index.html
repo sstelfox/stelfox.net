@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
+<meta name='description' content='I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&#39;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
 I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Gentoo Fstab Failure • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
+<meta property='og:description' content='I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&#39;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
 I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only.'>
 <meta property='og:url' content='https://stelfox.net/blog/2017/11/gentoo-fstab-failure/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='gentoo'><meta property='article:tag' content='linux'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2017-11-01T11:12:34-04:00'/><meta property='article:modified_time' content='2017-11-01T11:12:34-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Gentoo Fstab Failure • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2017/11/gentoo-fstab-failure/'>
@@ -112,36 +112,26 @@ if (!doNotTrack) {
   <div class='container entry-content'>
   <p>I use Gentoo with OpenRC quite a bit both for my personal servers and as a
 compilation test bed for new software since I can control the dependency
-versions very tightly.  I have a set of scripts I&rsquo;ve been using for quite some
+versions very tightly.  I have a set of scripts I've been using for quite some
 time that handle setting up a hardened, fairly minimal install.</p>
-
 <p>I recently encountered a weird issue with them that resulted in an esoteric
 error that prevented my host from fully booting and leaving the root filesystem
-read-only. There also didn&rsquo;t seem to be much reliable information on the
-problem so I&rsquo;m documenting it here in hopes it may help someone else.</p>
-
+read-only. There also didn't seem to be much reliable information on the
+problem so I'm documenting it here in hopes it may help someone else.</p>
 <p>In addition to the read-only filesystem, none of the system services would
-start up leaving me with the kernel&rsquo;s default hostname of <code>(none)</code>. This
+start up leaving me with the kernel's default hostname of <code>(none)</code>. This
 includes networking so I had to diagnose this directly via the console. I was
 able to login as a user but unable to use <code>sudo</code> to switch to a new user
 (though I could still use it to execute commands with elevated privileges).</p>
-
 <p>I was able to verify all the OpenRC services had not started with by executing:</p>
-
 <pre><code>sudo rc-status
-</code></pre>
-
-<p>I attempted to start the SSH daemon (though any networked service should behave
+</code></pre><p>I attempted to start the SSH daemon (though any networked service should behave
 the same) using the following command:</p>
-
 <pre><code>sudo service sshd start
-</code></pre>
-
-<p>This was the first time any error had directly presented itself to my screen
+</code></pre><p>This was the first time any error had directly presented itself to my screen
 (and since my filesystems were read-only, and my logger was stopped I had no on
 disk logs to go off from). The error that was repeated over my screen was the
 following:</p>
-
 <pre><code> * Checking local filesystems  .../sbin/fsck.xfs: XFS file system.
 fsck.fat 4.0 (2016-05-06)
 open: No such file or directory
@@ -150,23 +140,17 @@ open: No such file or directory
                                          [ !! ]
  * ERROR: fsck failed to start
  * ERROR: cannot start root as fsck would not start
-</code></pre>
-
-<p>This was quite confusing and more than a little concerning as XFS doesn&rsquo;t use
+</code></pre><p>This was quite confusing and more than a little concerning as XFS doesn't use
 <code>fsck</code>, instead it uses <code>xfs_repair</code>. There was also the &ldquo;No such file or
-directory&rdquo; error which also didn&rsquo;t seem to make sense.</p>
-
+directory&rdquo; error which also didn't seem to make sense.</p>
 <p>Ultimately, after reviewing the <code>fsck</code> init script I found the culprit. There
-was a bad line in my <code>/etc/fstab</code> file pointing at a device that didn&rsquo;t exist.
+was a bad line in my <code>/etc/fstab</code> file pointing at a device that didn't exist.
 I was able to remount my root filesystem read-write and edit my fstab to fix
 the device name in my fstab file:</p>
-
 <pre><code>sudo mount -o remount,rw /
 sudoedit /etc/fstab
-</code></pre>
-
-<p>Tracing things back, this was ultimately caused by the Gentoo installation
-medium detecting it&rsquo;s only disk as <code>/dev/sda</code> while the kernel I use exposed it
+</code></pre><p>Tracing things back, this was ultimately caused by the Gentoo installation
+medium detecting it's only disk as <code>/dev/sda</code> while the kernel I use exposed it
 as <code>/dev/vda</code>. Since I was already using a GPT filesystem I was able to adjust
 my scripts so they reference this particular partition by UUID instead of
 directly by device name.</p>
@@ -220,7 +204,7 @@ directly by device name.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

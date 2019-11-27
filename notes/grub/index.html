@@ -13,7 +13,7 @@ Security Password Protection If left unchecked a malicious user with console acc
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Grub • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/grub/'>
@@ -110,51 +110,35 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="security">Security</h2>
-
 <h3 id="password-protection">Password Protection</h3>
-
 <p>If left unchecked a malicious user with console access can add or remove kernel
 parameters or chain-boot onto another device when booting using grub. You can
 prevent this by requiring the user to enter a password to modify the run-time
 configuration of grub on boot.</p>
-
 <p>You can use the &lsquo;Bootloader Password&rsquo; option during a CentOS or Fedora install
-however it&rsquo;s uses md5 to hash the password which is a known broken scheme.
+however it's uses md5 to hash the password which is a known broken scheme.
 <code>grub-crypt</code> which comes installed by default on Fedora allows you to use
 sha512 to hash the password like so:</p>
-
 <pre><code>[root@localhost ~]# grub-crypt --sha-512
 Password:
 Retype password:
 $6$Um4l/Bido.ySrD.H$uuQjipx3uCu/XwGAfqOQsdIw1m1dphRbUbKOsoT5EpCt4LGi0kGdckDE3SPj2eS3pJ9DCJy3V/TqlqJOjjMvJ1
-</code></pre>
-
-<p>Note: Do not use the hash displayed it above, it is not secure (I used
+</code></pre><p>Note: Do not use the hash displayed it above, it is not secure (I used
 &ldquo;password&rdquo;)</p>
-
 <p>You would then add the following line (or replace an existing one) to
 <code>/etc/grub.conf</code></p>
-
 <pre><code>password --sha-512 $6$Um4l/Bido.ySrD.H$uuQjipx3uCu/XwGAfqOQsdIw1m1dphRbUbKOsoT5EpCt4LGi0kGdckDE3SPj2eS3pJ9DCJy3V/TqlqJOjjMvJ1
-</code></pre>
-
-<h3 id="protect-the-configuration">Protect the Configuration</h3>
-
+</code></pre><h3 id="protect-the-configuration">Protect the Configuration</h3>
 <p>Since the grub configuration file has a password hash in it (regardless of the
 current state of security of that hash type), as additional information about
 the server it should be restricted to only be readable and writeable by root
 like so:</p>
-
 <pre><code>[root@localhost ~]# chmod 600 /etc/grub.conf
 </code></pre>
-
 </div>
 
   
@@ -178,8 +162,8 @@ like so:</p>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>HAProxy</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/gatekeeper-script-for-ssh/'>
-        <span class='screen-reader-text'>Next post: </span>Gatekeeper Script for SSH<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/gpsd/'>
+        <span class='screen-reader-text'>Next post: </span>GPSd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -197,7 +181,7 @@ like so:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

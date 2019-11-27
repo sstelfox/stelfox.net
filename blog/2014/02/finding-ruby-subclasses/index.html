@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='While working through a problem I found it would be immensely useful to be able to enumerate all of the current subclasses of a particular class. After thinking about this for a while I settled on a good old friend of mine, ObjectSpace.
-For those not familiar with the ObjectSpace module, it is a means to inspect and access the items being tracked by Ruby&rsquo;s garbage collector. This means it has a hook into every living object, and more dangerously, every near-death object.'>
+For those not familiar with the ObjectSpace module, it is a means to inspect and access the items being tracked by Ruby&#39;s garbage collector. This means it has a hook into every living object, and more dangerously, every near-death object.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Finding Ruby Subclasses • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='While working through a problem I found it would be immensely useful to be able to enumerate all of the current subclasses of a particular class. After thinking about this for a while I settled on a good old friend of mine, ObjectSpace.
-For those not familiar with the ObjectSpace module, it is a means to inspect and access the items being tracked by Ruby&rsquo;s garbage collector. This means it has a hook into every living object, and more dangerously, every near-death object.'>
+For those not familiar with the ObjectSpace module, it is a means to inspect and access the items being tracked by Ruby&#39;s garbage collector. This means it has a hook into every living object, and more dangerously, every near-death object.'>
 <meta property='og:url' content='https://stelfox.net/blog/2014/02/finding-ruby-subclasses/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='ruby'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2014-02-20T07:48:24-05:00'/><meta property='article:modified_time' content='2014-02-20T07:48:24-05:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Finding Ruby Subclasses • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2014/02/finding-ruby-subclasses/'>
@@ -114,62 +114,51 @@ if (!doNotTrack) {
 to enumerate all of the current subclasses of a particular class. After
 thinking about this for a while I settled on a good old friend of mine,
 <code>ObjectSpace</code>.</p>
-
 <p>For those not familiar with the <code>ObjectSpace</code> module, it is a means to inspect
-and access the items being tracked by Ruby&rsquo;s garbage collector. This means it
+and access the items being tracked by Ruby's garbage collector. This means it
 has a hook into every living object, and more dangerously, every near-death
 object.</p>
-
 <p><code>ObjectSpace</code> provides a method for enumerating instances of a specific class,
 specifically named <code>each_object</code> which takes a class. With Ruby all classes are
 in fact instances of the <code>Class</code> class. This allows us to enumerate every
 available class by passing it to the enumerator like so:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">ObjectSpace</span><span style="color:#f92672">.</span>each_object(<span style="color:#66d9ef">Class</span>)<span style="color:#f92672">.</span>to_a</code></pre></div>
-<p>Alright so we now have an array of every single class that could possibly be
-instantiated, how do we narrow it down to just the ones we&rsquo;re interested in?
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">ObjectSpace</span><span style="color:#f92672">.</span>each_object(<span style="color:#66d9ef">Class</span>)<span style="color:#f92672">.</span>to_a
+</code></pre></div><p>Alright so we now have an array of every single class that could possibly be
+instantiated, how do we narrow it down to just the ones we're interested in?
 Once again Ruby provides with the <code>ancestors</code> method, combine that with a
 select and we can quickly narrow it down. You can see it in the following
 example:</p>
-
 <pre><code>[1] pry(main)&gt; TargetSubclass = Class.new(String)
 =&gt; TargetSubclass
 [2] pry(main)&gt; ObjectSpace.each_object(Class).select { |k| k.ancestors.include?(String) }
 =&gt; [String, TargetSubclass]
-</code></pre>
-
-<p>Hmm, that&rsquo;s not quite right though. We have found all the subclasses but we&rsquo;ve
+</code></pre><p>Hmm, that's not quite right though. We have found all the subclasses but we've
 also grabbed the parent class. With one small modification we eliminate that as
 well.</p>
-
 <pre><code>[1] pry(main)&gt; TargetSubclass = Class.new(String)
 =&gt; TargetSubclass
 [2] pry(main)&gt; ObjectSpace.each_object(Class).select { |k| k.ancestors.include?(String) &amp;&amp; k != String }
 =&gt; [TargetSubclass]
-</code></pre>
-
-<p>That line is rather long though, and I generally like to avoid multiple tests
+</code></pre><p>That line is rather long though, and I generally like to avoid multiple tests
 in a select block. There is a tad bit of syntactic sugar provided by Ruby
 allowing us to accomplish the same thing, our final example is ultimately the
 solution I went with:</p>
-
 <pre><code>[1] pry(main)&gt; TargetSubclass = Class.new(String)
 =&gt; TargetSubclass
 [2] pry(main)&gt; ObjectSpace.each_object(Class).select { |k| k &lt; String }
 =&gt; [TargetSubclass]
-</code></pre>
-
-<p>Putting this into a method:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">subclasses</span>(klass)
+</code></pre><p>Putting this into a method:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">subclasses</span>(klass)
   <span style="color:#66d9ef">ObjectSpace</span><span style="color:#f92672">.</span>each_object(<span style="color:#66d9ef">Class</span>)<span style="color:#f92672">.</span>select { <span style="color:#f92672">|</span>k<span style="color:#f92672">|</span> k <span style="color:#f92672">&lt;</span> klass }
-<span style="color:#66d9ef">end</span></code></pre></div>
-<p>If you were so inclined you could extend the <code>Class</code> class with a method to
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>If you were so inclined you could extend the <code>Class</code> class with a method to
 make this available anywhere like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Class</span>
   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">subclasses</span>
     <span style="color:#66d9ef">ObjectSpace</span><span style="color:#f92672">.</span>each_object(<span style="color:#66d9ef">Class</span>)<span style="color:#f92672">.</span>select { <span style="color:#f92672">|</span>k<span style="color:#f92672">|</span> k <span style="color:#f92672">&lt;</span> self }
   <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span></code></pre></div>
-<p>I&rsquo;m personally not a fan of extending any of the core classes unless absolutely
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>I'm personally not a fan of extending any of the core classes unless absolutely
 necessary, but too each there own.</p>
 
 </div>
@@ -221,7 +210,7 @@ necessary, but too each there own.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

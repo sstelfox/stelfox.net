@@ -15,7 +15,7 @@ Qpid is an open source AMQP broker, providing transaction management, queuing, d
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Qpid • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/qpid/'>
@@ -112,40 +112,28 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Qpid is an open source AMQP broker, providing transaction management, queuing,
 distribution, security, management, clustering, and federation.</p>
-
 <ul>
 <li><a href="http://wiki.openstack.org/QpidSupport">http://wiki.openstack.org/QpidSupport</a></li>
-<li><a href="http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1">http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1</a></li>
+<li><a href="http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0">http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0</a>,1</li>
 </ul>
-
 <h2 id="installation">Installation</h2>
-
 <p>Fedora provides a package for qpid called <code>qpid-cpp-server</code> which can be
 installed like so:</p>
-
 <pre><code>yum install qpid-cpp-server qpid-cpp-server-ssl qpid-cpp-server-store \
   qpid-cpp-server-ha -y
-</code></pre>
-
-<p>Additional packages that may be of use:</p>
-
+</code></pre><p>Additional packages that may be of use:</p>
 <ul>
 <li>qpid-tools</li>
 <li>qpid-qmf</li>
 </ul>
-
 <h2 id="configuration">Configuration</h2>
-
 <p>The following configuration file assumes the rest of the configuration on this
-page. You&rsquo;ll want to replace the existing configuration at <code>/etc/qpidd.conf</code>
+page. You'll want to replace the existing configuration at <code>/etc/qpidd.conf</code>
 with the following:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e">##### General Configuration #####</span>
 
@@ -267,75 +255,51 @@ with the following:</p>
 <span style="color:#75715e"># course overhead to encrypted connections and if the only services that will</span>
 <span style="color:#75715e"># be talking to it will be the localhost then there is no need to require it...</span>
 <span style="color:#75715e"># External connections should of course be encrypted wherever possible.</span>
-<span style="color:#a6e22e">require-encryption</span><span style="color:#f92672">=</span><span style="color:#e6db74">no</span></code></pre></div>
-<p>You&rsquo;ll want to enable and start the service once the configuration is complete.</p>
-
+<span style="color:#a6e22e">require-encryption</span><span style="color:#f92672">=</span><span style="color:#e6db74">no</span>
+</code></pre></div><p>You'll want to enable and start the service once the configuration is complete.</p>
 <pre><code>systemctl enable qpidd.service
 systemctl start qpidd.service
-</code></pre>
-
-<h3 id="enabling-user-pass-authentication">Enabling User/Pass Authentication</h3>
-
-<p>By default only ANONYMOUS authentication is enabled which isn&rsquo;t good for any
+</code></pre><h3 id="enabling-userpass-authentication">Enabling User/Pass Authentication</h3>
+<p>By default only ANONYMOUS authentication is enabled which isn't good for any
 production systems&hellip; Qpid uses SASL for user authentication and that is how we
 need to configure what system to make use of. Open up the file
-<code>/etc/sasl2/qpidd.conf</code> and replace it&rsquo;s contents with the following:</p>
-
+<code>/etc/sasl2/qpidd.conf</code> and replace it's contents with the following:</p>
 <pre><code>auxprop_plugin: sasldb
 mech_list: DIGEST-MD5 PLAIN+SSL
 pwcheck_method: auxprop
 sasldb_path: /var/lib/qpidd/qpidd.sasldb
 sql_select: dummy select
-</code></pre>
-
-<h3 id="creating-users">Creating Users</h3>
-
-<p>I&rsquo;ve named the SASL authentication realm after the service that uses it, in
-this case Qpid (makes sense no?). You&rsquo;ll need to create at least one user to
+</code></pre><h3 id="creating-users">Creating Users</h3>
+<p>I've named the SASL authentication realm after the service that uses it, in
+this case Qpid (makes sense no?). You'll need to create at least one user to
 make use of authentication, I chose to make one user for administration tasks
 (admin), and one per server named after the server (in this case the server is
 named openstack after the service I mainly use Qpid for).</p>
-
-<p>Create the user&rsquo;s as root:</p>
-
+<p>Create the user's as root:</p>
 <pre><code>saslpasswd2 -f /var/lib/qpidd/qpidd.sasldb -u QPID admin
 saslpasswd2 -f /var/lib/qpidd/qpidd.sasldb -u QPID openstack
-</code></pre>
-
-<p>Set STRONG passwords for both as arbitrary instructions can be provided to
+</code></pre><p>Set STRONG passwords for both as arbitrary instructions can be provided to
 various openstack services through this service.</p>
-
 <p>The saslpasswd2 command will additionally create the password file, but with
 incorrect permissions. Set the ownership and strengthen the permissions like
 so:</p>
-
 <pre><code>chown qpidd:qpidd /var/lib/qpidd/qpidd.sasldb
 chmod 0640 /var/lib/qpidd/qpidd.sasldb
-</code></pre>
-
-<p>If you have started Qpid with <code>auth=yes</code> configured before creating the account
+</code></pre><p>If you have started Qpid with <code>auth=yes</code> configured before creating the account
 it will automatically create this file and add a user with the username and
 password &lsquo;guest&rsquo;.</p>
-
 <h3 id="listing-users">Listing Users</h3>
-
 <p>You can list all the configured realm / username combinations with the
 following command:</p>
-
 <pre><code>sasldblistusers2 -f /var/lib/qpidd/qpidd.sasldb
-</code></pre>
-
-<h3 id="user-acls">User ACLs</h3>
-
+</code></pre><h3 id="user-acls">User ACLs</h3>
 <p>The ACL files are pretty straight-forward and plain text. The file lives at
-<code>/var/lib/qpidd/qpid.acl</code> which doesn&rsquo;t exist initially and will need to be
+<code>/var/lib/qpidd/qpid.acl</code> which doesn't exist initially and will need to be
 created. This is a solid initial ACL allowing the admin and openstack access to
 any permissions they need while preventing anything else.</p>
-
-<p>In the future I&rsquo;ll need to make this more fine-grained. This is more useful
-when using Kerberos as the back end which would have more users you wouldn&rsquo;t
+<p>In the future I'll need to make this more fine-grained. This is more useful
+when using Kerberos as the back end which would have more users you wouldn't
 want to have access.</p>
-
 <pre><code># Define the admins and let them do whatever they want
 group admins admin@Qpid
 acl allow admins all all
@@ -346,20 +310,13 @@ acl allow servers all all
 
 # Default deny with logging on any other attempts
 acl deny-log all all
-</code></pre>
-
-<p>Ensure the ownership and permissions on the file are appropriate:</p>
-
+</code></pre><p>Ensure the ownership and permissions on the file are appropriate:</p>
 <pre><code>chown qpidd:qpidd /var/lib/qpidd/qpid.acl
 chmod 0640 /var/lib/qpidd/qpid.acl
-</code></pre>
-
-<h4 id="acl-bml-syntax">ACL BML Syntax</h4>
-
+</code></pre><h4 id="acl-bml-syntax">ACL BML Syntax</h4>
 <p>ACLs are case-insensitve, all white space is essentially ignored except when
 delimiting between syntax types. Lines can be wrapped by ending the line with a
 backslash.</p>
-
 <pre><code>user = username[/domain[@realm]]
 user-list = user1 user2 user3 ...
 group-name-list = group1 group2 group3 ...
@@ -376,10 +333,7 @@ property = [name|durable|owner|routingkey|autodelete|exclusive|
 
 acl permission {&lt;group-name&gt;|&lt;user-name&gt;|&quot;all&quot;} {action|&quot;all&quot;} [object|&quot;all&quot; 
             [property=&lt;property-value&gt; ...]]
-</code></pre>
-
-<h4 id="action-listing">Action Listing</h4>
-
+</code></pre><h4 id="action-listing">Action Listing</h4>
 <table>
 <thead>
 <tr>
@@ -387,57 +341,46 @@ acl permission {&lt;group-name&gt;|&lt;user-name&gt;|&quot;all&quot;} {action|&q
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>consume</td>
 <td>Applied when subscriptions are created</td>
 </tr>
-
 <tr>
 <td>publish</td>
 <td>Applied on a per message basis on publish message transfers, this rule consumes the most resources</td>
 </tr>
-
 <tr>
 <td>create</td>
 <td>Applied when an object is created, such as bindings, queues, exchanges, links</td>
 </tr>
-
 <tr>
 <td>access</td>
 <td>Applied when an object is read or accessed</td>
 </tr>
-
 <tr>
 <td>bind</td>
 <td>Applied when objects are bound together</td>
 </tr>
-
 <tr>
 <td>unbind</td>
 <td>Applied when objects are unbound</td>
 </tr>
-
 <tr>
 <td>delete</td>
 <td>Applied when objects are deleted</td>
 </tr>
-
 <tr>
 <td>purge</td>
 <td>Similar to delete but the action is performed on more than one object</td>
 </tr>
-
 <tr>
 <td>update</td>
 <td>Applied when an object is updated</td>
 </tr>
 </tbody>
 </table>
-
 <h4 id="object-listing">Object Listing</h4>
-
 <table>
 <thead>
 <tr>
@@ -445,37 +388,30 @@ acl permission {&lt;group-name&gt;|&lt;user-name&gt;|&quot;all&quot;} {action|&q
 <th>Description</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>queue</td>
 <td>A queue</td>
 </tr>
-
 <tr>
 <td>exchange</td>
 <td>An exchange</td>
 </tr>
-
 <tr>
 <td>broker</td>
 <td>The broker</td>
 </tr>
-
 <tr>
 <td>link</td>
 <td>A federation or inter-broker link</td>
 </tr>
-
 <tr>
 <td>method</td>
 <td>Management or agent or broker method</td>
 </tr>
 </tbody>
 </table>
-
 <h4 id="property-listing">Property Listing</h4>
-
 <table>
 <thead>
 <tr>
@@ -485,7 +421,6 @@ acl permission {&lt;group-name&gt;|&lt;user-name&gt;|&quot;all&quot;} {action|&q
 <th>Usage</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>name</td>
@@ -493,91 +428,78 @@ acl permission {&lt;group-name&gt;|&lt;user-name&gt;|&quot;all&quot;} {action|&q
 <td>Object name, such as a queue name or exchange name.</td>
 <td></td>
 </tr>
-
 <tr>
 <td>durable</td>
 <td>Boolean</td>
 <td>Indicates the object is durable</td>
 <td>CREATE QUEUE, CREATE EXCHANGE</td>
 </tr>
-
 <tr>
 <td>routingkey</td>
 <td>String</td>
 <td>Specifies routing key</td>
 <td>BIND EXCHANGE, UNBIND EXCHANGE, ACCESS EXCHANGE</td>
 </tr>
-
 <tr>
 <td>autodelete</td>
 <td>Boolean</td>
 <td>Indicates whether or not the object gets deleted when the connection is closed</td>
 <td>CREATE QUEUE</td>
 </tr>
-
 <tr>
 <td>exclusive</td>
 <td>Boolean</td>
 <td>Indicates the presence of an exclusive flag</td>
 <td>CREATE QUEUE</td>
 </tr>
-
 <tr>
 <td>type</td>
 <td>String</td>
 <td>Type of exchange, such as topic, fanout, or xml</td>
 <td>CREATE EXCHANGE</td>
 </tr>
-
 <tr>
 <td>alternate</td>
 <td>String</td>
 <td>Name of the alternate exchange</td>
 <td>CREATE EXCHANGE, CREATE QUEUE</td>
 </tr>
-
 <tr>
 <td>queuename</td>
 <td>String</td>
 <td>Name of the queue</td>
 <td>ACCESS EXCHANGE</td>
 </tr>
-
 <tr>
 <td>schemapackage</td>
 <td>String</td>
 <td>QMF schema package name</td>
 <td>ACCESS METHOD</td>
 </tr>
-
 <tr>
 <td>schemaclass</td>
 <td>String</td>
 <td>QMF schema class name</td>
 <td>ACCESS METHOD</td>
 </tr>
-
 <tr>
 <td>queuemaxsizelowerlimit</td>
 <td>Integer</td>
 <td>Minimum value for queue.max_size</td>
 <td>CREATE QUEUE</td>
 </tr>
-
 <tr>
 <td>queuemaxsizeupperlimit</td>
 <td>Integer</td>
 <td>Maximum value for queue.max_size</td>
 <td>CREATE QUEUE</td>
 </tr>
-
 <tr>
 <td>queuemaxcountlowerlimit</td>
 <td>Integer</td>
 <td>Minimum value for queue.max_count</td>
 <td>CREATE QUEUE</td>
 </tr>
-
 <tr>
 <td>queuemaxcountupperlimit</td>
 <td>Integer</td>
@@ -586,61 +508,36 @@ acl permission {&lt;group-name&gt;|&lt;user-name&gt;|&quot;all&quot;} {action|&q
 </tr>
 </tbody>
 </table>
-
 <h3 id="ssl">SSL</h3>
-
-<p>Unfortunately SSL for Qpid isn&rsquo;t as easy as generating PEM certificates and
+<p>Unfortunately SSL for Qpid isn't as easy as generating PEM certificates and
 pointing the config at them. Qpid makes use of a Mozilla Network Security
 Services database. These databases can be created using certutil.</p>
-
-<p>First we&rsquo;ll need to initialize the database:</p>
-
+<p>First we'll need to initialize the database:</p>
 <pre><code>certutil -N -d /var/lib/qpidd/
-</code></pre>
-
-<p>Provide a strong password to the database and put a copy in the file
-<code>/var/lib/qpidd/ssl-db-pass</code> on it&rsquo;s own with no newline.</p>
-
+</code></pre><p>Provide a strong password to the database and put a copy in the file
+<code>/var/lib/qpidd/ssl-db-pass</code> on it's own with no newline.</p>
 <p>I already have PKI in place and a trusted <a href="https://stelfox.net/notes/building-a-certificate-authority/">Certificate Authority</a>, so I
 just have to import my trusted certificate authority chain. Generate a
-certificate for this server and import it&rsquo;s certificate and chain.</p>
-
+certificate for this server and import it's certificate and chain.</p>
 <p>Import the CA cert:</p>
-
 <pre><code>certutil -A -n cert-authority -t &quot;TC,,&quot; -i ca.crt -d /var/lib/qpidd
-</code></pre>
-
-<p>The server certificate is a bit trickier, before we can import an OpenSSL
-generated PEM format key set we&rsquo;ll need to convert it to a pkcs12 file, luckily
+</code></pre><p>The server certificate is a bit trickier, before we can import an OpenSSL
+generated PEM format key set we'll need to convert it to a pkcs12 file, luckily
 OpenSSL plays well with others:</p>
-
 <pre><code>openssl pkcs12 -export -out qpid.pfx -inkey qpid.key -in qpid.crt -certfile ca.crt
-</code></pre>
-
-<p>Import the newly generate pkcs12 file, it will firstly ask for the password for
+</code></pre><p>Import the newly generate pkcs12 file, it will firstly ask for the password for
 the database, and then the password for the pkcs12 file:</p>
-
 <pre><code>pk12util -d /var/lib/qpidd/ -i qpid.pfx
-</code></pre>
-
-<p>And be sure to clean up after yourself:</p>
-
+</code></pre><p>And be sure to clean up after yourself:</p>
 <pre><code>rm qpid.pfx
-</code></pre>
-
-<p>Set the permissions on all of the files we just created:</p>
-
+</code></pre><p>Set the permissions on all of the files we just created:</p>
 <pre><code>chown qpidd:qpidd /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
 chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
-</code></pre>
-
-<h3 id="firewall">Firewall</h3>
-
+</code></pre><h3 id="firewall">Firewall</h3>
 <pre><code># Encrypted Qpid connections (Unencrypted are 5672 but those shouldn't be
 # accessed remotely)
 -A SERVICE -m tcp -p tcp --dport 5671 -j ACCEPT
 </code></pre>
-
 </div>
 
   
@@ -654,7 +551,7 @@ chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/rpm-build/'>
+      <a href='/notes/redis/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -662,7 +559,7 @@ chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>RPM Build</a>
+        <span class='screen-reader-text'>Previous post: </span>Redis</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/puppet/'>
         <span class='screen-reader-text'>Next post: </span>Puppet<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -683,7 +580,7 @@ chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

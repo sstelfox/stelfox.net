@@ -13,7 +13,7 @@ Sadly Heroku does not seem to provide any web interface that I could find for ex
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='ruby'><meta property='article:tag' content='security'><meta property='article:published_time' content='2012-11-26T10:18:00-05:00'/><meta property='article:modified_time' content='2012-11-26T10:18:00-05:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Auditing Heroku SSH Keys • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2012/11/auditing-heroku-ssh-keys/'>
@@ -115,27 +115,22 @@ resetting our passwords and auditing credentials fell on me. Since we use
 <a href="https://www.heroku.com/">Heroku</a> for our development platform I needed to not only reset the
 credentials for the web portion (which conveniently also handles resetting the
 API key) but also revoke any SSH keys he may have added to access it.</p>
-
 <p>Sadly Heroku does not seem to provide any web interface that I could find for
 examining what keys were associated with the account. Searching for this
-information also didn&rsquo;t turn up very valuable results; most people were looking
+information also didn't turn up very valuable results; most people were looking
 to add keys or resolve issues with missing keys rather than revoking them. I
 suspect not many people think of SSH keys when it comes time to revoke access
 which is a dire mistake.</p>
-
 <p>I took to the command line to solve my issue as I knew you could list and add
 keys that way, so it was a minor leap of logic to assume they could revoke keys
 as well. I ran <code>heroku help keys</code> to get the syntax for the commands and was
 pleasantly surprised to see an additional option listed in there:</p>
-
 <pre><code>keys:clear       #  remove all authentication keys from the current user
-</code></pre>
-
-<p>As a now two person web-shop it&rsquo;s not a terrible amount of work to add our keys
+</code></pre><p>As a now two person web-shop it's not a terrible amount of work to add our keys
 back in and looking through there were already some keys in there that should
 have been revoked long ago. One command and our applications were safe from
-mischief, though I know my former associate wouldn&rsquo;t abuse that privilege
-beyond perhaps pointing out the security flaw I&rsquo;d allowed.</p>
+mischief, though I know my former associate wouldn't abuse that privilege
+beyond perhaps pointing out the security flaw I'd allowed.</p>
 
 </div>
 
@@ -186,7 +181,7 @@ beyond perhaps pointing out the security flaw I&rsquo;d allowed.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

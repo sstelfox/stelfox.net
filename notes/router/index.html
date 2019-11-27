@@ -5,19 +5,19 @@
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Resources:
  http://www.fclose.com/816/port-forwarding-using-iptables/  This was done as a quick and dirty iptables NAT/gateway for a private LXC network. Create the LXC container using our base templating trick:
-cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &quot;/var/lib/libvirt/lxc/gateway-01,/&quot; --network=&quot;network=br0&quot; \ --network=&quot;network=isolated&quot; --console &quot;pty&quot; --check-cpu  echo 1 &gt; /proc/sys/net/ipv4/ip_forward echo &#39;net.'>
+cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &quot;/var/lib/libvirt/lxc/gateway-01,/&quot; --network=&quot;network=br0&quot; \ --network=&quot;network=isolated&quot; --console &quot;pty&quot; --check-cpu echo 1 &gt; /proc/sys/net/ipv4/ip_forward echo &#39;net.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Router • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Resources:
  http://www.fclose.com/816/port-forwarding-using-iptables/  This was done as a quick and dirty iptables NAT/gateway for a private LXC network. Create the LXC container using our base templating trick:
-cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &quot;/var/lib/libvirt/lxc/gateway-01,/&quot; --network=&quot;network=br0&quot; \ --network=&quot;network=isolated&quot; --console &quot;pty&quot; --check-cpu  echo 1 &gt; /proc/sys/net/ipv4/ip_forward echo &#39;net.'>
+cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &quot;/var/lib/libvirt/lxc/gateway-01,/&quot; --network=&quot;network=br0&quot; \ --network=&quot;network=isolated&quot; --console &quot;pty&quot; --check-cpu echo 1 &gt; /proc/sys/net/ipv4/ip_forward echo &#39;net.'>
 <meta property='og:url' content='https://stelfox.net/notes/router/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Router • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/router/'>
@@ -114,56 +114,39 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Resources:</p>
-
 <ul>
 <li><a href="http://www.fclose.com/816/port-forwarding-using-iptables/">http://www.fclose.com/816/port-forwarding-using-iptables/</a></li>
 </ul>
-
 <p>This was done as a quick and dirty iptables NAT/gateway for a private LXC
 network. Create the LXC container using our base templating trick:</p>
-
 <pre><code>cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01
 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \
   --filesystem &quot;/var/lib/libvirt/lxc/gateway-01,/&quot; --network=&quot;network=br0&quot; \
   --network=&quot;network=isolated&quot; --console &quot;pty&quot; --check-cpu
-</code></pre>
-
-<pre><code>echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+</code></pre><pre><code>echo 1 &gt; /proc/sys/net/ipv4/ip_forward
 echo 'net.ipv4.ip_forward = 1' &gt; /etc/sysctl.d/70-routing.conf
-</code></pre>
-
-<p>cat &lt;&lt; EOF &gt; /etc/sysconfig/network-scripts/ifcfg-eth1
-DEVICE=&ldquo;eth1&rdquo;
-NM_CONTROLLED=&ldquo;no&rdquo;
-ONBOOT=&ldquo;yes&rdquo;
-TYPE=&ldquo;Ethernet&rdquo;
-BOOTPROTO=&ldquo;static&rdquo;</p>
-
-<p>IPADDR=&ldquo;10.0.0.1&rdquo;
-NETMASK=&ldquo;255.255.255.0&rdquo;
-DEFROUTE=&ldquo;no&rdquo;</p>
-
-<p>IPV4_FAILURE_FATAL=&ldquo;no&rdquo;
-IPV6INIT=&ldquo;yes&rdquo;</p>
-
-<p>NAME=&ldquo;LAN&rdquo;
+</code></pre><p>cat &laquo; EOF &gt; /etc/sysconfig/network-scripts/ifcfg-eth1
+DEVICE=&quot;eth1&rdquo;
+NM_CONTROLLED=&quot;no&rdquo;
+ONBOOT=&quot;yes&rdquo;
+TYPE=&quot;Ethernet&rdquo;
+BOOTPROTO=&quot;static&rdquo;</p>
+<p>IPADDR=&quot;10.0.0.1&rdquo;
+NETMASK=&quot;255.255.255.0&rdquo;
+DEFROUTE=&quot;no&rdquo;</p>
+<p>IPV4_FAILURE_FATAL=&quot;no&rdquo;
+IPV6INIT=&quot;yes&rdquo;</p>
+<p>NAME=&quot;LAN&rdquo;
 EOF</p>
-
 <p>Going to ignore IPv6 for now :(</p>
-
 <p>For this eth0 is the external network connection and eth1 is the internal
 network. These will have 192.168.122.10 as the external IP address and 10.0.0.1
 for the internal IP address.</p>
-
-<h2 id="etc-sysconfig-iptables">/etc/sysconfig/iptables</h2>
-
+<h2 id="etcsysconfigiptables">/etc/sysconfig/iptables</h2>
 <pre><code>*filter
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
@@ -220,10 +203,7 @@ COMMIT
 -A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
 
 COMMIT
-</code></pre>
-
-<p>LXC /proc/sys fix can be accomplished by:</p>
-
+</code></pre><p>LXC /proc/sys fix can be accomplished by:</p>
 <pre><code>cat &lt;&lt; EOF &gt; /etc/rc.d/rc.local
 #!/bin/sh
 umount /proc/sys
@@ -231,7 +211,6 @@ systemctl start systemd-sysctl.service
 EOF
 chmod +x /etc/rc.d/rc.local
 </code></pre>
-
 </div>
 
   
@@ -245,7 +224,7 @@ chmod +x /etc/rc.d/rc.local
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/ruby/'>
+      <a href='/notes/rpm-build/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -253,7 +232,7 @@ chmod +x /etc/rc.d/rc.local
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Ruby</a>
+        <span class='screen-reader-text'>Previous post: </span>RPM Build</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/redis/'>
         <span class='screen-reader-text'>Next post: </span>Redis<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -274,7 +253,7 @@ chmod +x /etc/rc.d/rc.local
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -4,20 +4,20 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Server Installation Install the package.
-yum install mysql-server -y  Set to start up auto-magically and get it going now.
-systemctl enable mysqld.service systemctl start mysqld.service  Run the quick and dirty secure installation script that comes with the server.'>
+yum install mysql-server -y Set to start up auto-magically and get it going now.
+systemctl enable mysqld.service systemctl start mysqld.service Run the quick and dirty secure installation script that comes with the server.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='MySQL • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Server Installation Install the package.
-yum install mysql-server -y  Set to start up auto-magically and get it going now.
-systemctl enable mysqld.service systemctl start mysqld.service  Run the quick and dirty secure installation script that comes with the server.'>
+yum install mysql-server -y Set to start up auto-magically and get it going now.
+systemctl enable mysqld.service systemctl start mysqld.service Run the quick and dirty secure installation script that comes with the server.'>
 <meta property='og:url' content='https://stelfox.net/notes/mysql/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>MySQL • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/mysql/'>
@@ -114,53 +114,34 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="server">Server</h2>
-
 <h3 id="installation">Installation</h3>
-
 <p>Install the package.</p>
-
 <pre><code>yum install mysql-server -y
-</code></pre>
-
-<p>Set to start up auto-magically and get it going now.</p>
-
+</code></pre><p>Set to start up auto-magically and get it going now.</p>
 <pre><code>systemctl enable mysqld.service
 systemctl start mysqld.service
-</code></pre>
-
-<p>Run the quick and dirty secure installation script that comes with the server.
+</code></pre><p>Run the quick and dirty secure installation script that comes with the server.
 The questions are pretty straight-forward just set a secure password when it
 asks for it.</p>
-
 <pre><code>mysql_secure_installation
-</code></pre>
-
-<h3 id="configuration">Configuration</h3>
-
+</code></pre><h3 id="configuration">Configuration</h3>
 <p>Before applying the following configuration file in <code>/etc/my.cnf</code>. Safely
 shutdown the server and delete the logfiles <code>/var/lib/mysql/ib_logfile*</code>. This
 configuration file will change the size of the log buffer and it will cause an
 error when starting the server backup that will look like:</p>
-
 <pre><code>InnoDB: Error: log file ./ib_logfile0 is of a different size 0 5242880 bytes
 InnoDB: than specified in the .cnf file 0 67108864 bytes!
-</code></pre>
-
-<p>There is still one major security feature that I haven&rsquo;t added to this
+</code></pre><p>There is still one major security feature that I haven't added to this
 configuration yet. Running the mysql daemon in a chroot environment. Details on
 setting up a chroot environment for mysql can be found, <a href="http://www.symantec.com/connect/articles/securing-mysql-step-step">here</a>, and
 <a href="http://www.webhostingskills.com/articles/mysql_in_a_chrooted_environment">here</a>.</p>
-
 <p>Detailed information on all of the configuration options can be found
 <a href="http://dev.mysql.com/doc/refman/5.5/en/dynamic-system-variables.html">here</a>.  There is a script that can assist in tuning larger production
-databases I&rsquo;ve stored <a href="https://stelfox.net/notes/mysql-tuning/">here</a>.</p>
+databases I've stored <a href="https://stelfox.net/notes/mysql-tuning/">here</a>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[mysqld]</span>
 <span style="color:#75715e"># Bind only to expected address. You can not bind to multiple addresses, it&#39;s</span>
 <span style="color:#75715e"># none, 1 or all (0.0.0.0)</span>
@@ -319,84 +300,54 @@ databases I&rsquo;ve stored <a href="https://stelfox.net/notes/mysql-tuning/">he
 <span style="color:#66d9ef">[mysql]</span>
 
 <span style="color:#75715e"># Adjust the prompt to be more useful/verbose.</span>
-<span style="color:#a6e22e">prompt</span><span style="color:#f92672">=</span><span style="color:#e6db74">(\\u@\\h) [\\d]&gt;\\_</span></code></pre></div>
-<p>There is some additional configuration in the systemd init script, specifically
+<span style="color:#a6e22e">prompt</span><span style="color:#f92672">=</span><span style="color:#e6db74">(\\u@\\h) [\\d]&gt;\\_</span>
+</code></pre></div><p>There is some additional configuration in the systemd init script, specifically
 which user/group the service will fork too (default is mysql/mysql). If you
-need to change this you&rsquo;ll need to make the adjustment in
+need to change this you'll need to make the adjustment in
 <code>/etc/systemd/system/multi-user.target.wants/mysqld.service</code>.</p>
-
 <h3 id="firewall">Firewall</h3>
-
 <pre><code>-A SERVICES -m tcp -p tcp --dport 3306 -j ACCEPT
-</code></pre>
-
-<h3 id="resetting-the-root-password">Resetting the Root Password</h3>
-
+</code></pre><h3 id="resetting-the-root-password">Resetting the Root Password</h3>
 <p>Stop the MySQL daemon, and disable remote access to the server (block in
 firewall etc). Start up MySQL with privilege checking disabled (In this mode
 any credential will be accepted for any username and that user will have full
 root database privileges (thus blocking remote access).</p>
-
 <pre><code>mysqld_safe --skip-grant-tables
-</code></pre>
-
-<p>In a separate terminal window connect to the database:</p>
-
+</code></pre><p>In a separate terminal window connect to the database:</p>
 <pre><code>mysql -u root
-</code></pre>
-
-<p>Refer to the section on changing a user&rsquo;s password at this point. When done be
+</code></pre><p>Refer to the section on changing a user's password at this point. When done be
 sure to kill the <code>mysqld_safe</code> instance, start up the daemon normally and
 restore access to the server.</p>
-
 <h3 id="quick-self-signed-ssl-cert-w-client">Quick Self Signed SSL Cert w/ Client</h3>
-
 <p>This should be used for testing and development only, it requires a bit more
-than a simple SSL cert as MySQL requires a CA cert as well so we&rsquo;ll generate a
+than a simple SSL cert as MySQL requires a CA cert as well so we'll generate a
 self signed CA, a server certificate, and then a client certificate that can be
 used for user authentication.</p>
-
 <p>First the CA:</p>
-
 <pre><code>openssl req -new -x509 -newkey rsa:4096 -keyout ca.key -nodes -days 365 \
   -out ca.crt
-</code></pre>
-
-<p>Then the server cert:</p>
-
+</code></pre><p>Then the server cert:</p>
 <pre><code>openssl req -newkey rsa:4096 -keyout server.key -nodes -days 365 \
   -out server.csr
 openssl x509 -req -in server.csr -days 365 -CA ca.crt -CAkey ca.key \
   -set_serial 01 -out server.crt
 rm server.csr
-</code></pre>
-
-<p>Then the client cert:</p>
-
+</code></pre><p>Then the client cert:</p>
 <pre><code>openssl req -newkey rsa:4096 -keyout client.key -nodes -days 365 \
   -out client.csr
 openssl x509 -req -in client.csr -days 365 -CA ca.crt -CAkey ca.key \
   -set_serial 02 -out client.crt
 rm client.csr
-</code></pre>
-
-<h2 id="client">Client</h2>
-
+</code></pre><h2 id="client">Client</h2>
 <h3 id="remotely-calculate-the-size-of-a-database">Remotely Calculate the Size of a Database</h3>
-
 <p>Paste the following query into an interactive console session to collect the
 sizes of all databases the current user has access to:</p>
-
 <pre><code>SELECT table_schema &quot;Database Name&quot;, SUM(data_length + index_length) / 1024
   / 1024 &quot;Size in Mb&quot; FROM information_schema.TABLES GROUP BY table_schema;
-</code></pre>
-
-<h3 id="drop-tables">Drop Tables</h3>
-
+</code></pre><h3 id="drop-tables">Drop Tables</h3>
 <p>Without being able to drop a database and create a new one it can be kind of
-frustrating to empty a database of all it&rsquo;s tables so I&rsquo;ve written a quick
+frustrating to empty a database of all it's tables so I've written a quick
 script to drop all the tables from a specified database.</p>
-
 <pre><code>#!/bin/bash
 
 DBUSER=&quot;$1&quot;
@@ -417,77 +368,46 @@ for t in $TABLES; do
   echo &quot;Deleting $t table from $MDB database...&quot;
   mysql -u $DBUSER -p$DBPASS -h$DBHOST $DBNAME -e &quot;drop table $t;&quot;
 done
-</code></pre>
-
-<h3 id="new-database-and-user">New Database and User</h3>
-
+</code></pre><h3 id="new-database-and-user">New Database and User</h3>
 <p>Note: For security reasons user creation should be performed over an encrypted
 channel. See the section on Using SSL.</p>
-
 <pre><code>CREATE DATABASE example;
 GRANT ALL ON example.* TO 'some-example-user'@'%.home-network.net' IDENTIFIED
   BY 'mYsUperSt0ngpassWordD0ntcoPyM3!';
 FLUSH PRIVILEGES;
-</code></pre>
-
-<h3 id="change-user-password">Change User Password</h3>
-
+</code></pre><h3 id="change-user-password">Change User Password</h3>
 <p>Note: For security reasons this password update should be performed over an
 encrypted channel. See the section on Using SSL.</p>
-
 <pre><code>UPDATE mysql.user SET password=PASSWORD(&quot;my-new-super-secure-password&quot;) WHERE
   user='some-user-name';
-</code></pre>
-
-<h3 id="configuration-1">Configuration</h3>
-
+</code></pre><h3 id="configuration1">Configuration</h3>
 <p>Quick and simple change I make to my client configuration to make the prompt a
 little more verbose. Create the following file in <code>~/.my.cnf</code>:</p>
-
 <pre><code>[mysql]prompt=(\\u@\\h) [\\d]&gt;\\_
-</code></pre>
-
-<p>This can also be set system wide in <code>/etc/my.cnf</code> for all users by appending
+</code></pre><p>This can also be set system wide in <code>/etc/my.cnf</code> for all users by appending
 the above (which I do in all my server configurations).</p>
-
 <h3 id="using-ssl">Using SSL</h3>
-
 <p>Pretty straight forward, one off can be done like the following:</p>
-
 <pre><code>mysql -u user -ppassword -h host --ssl-ca=./ca.crt database
-</code></pre>
-
-<p>Once connected you can verify the session is encrypted with the following
+</code></pre><p>Once connected you can verify the session is encrypted with the following
 query:</p>
-
 <pre><code>(root@127.0.0.1) [(none)]&gt; show status like 'ssl_cipher';
-</code></pre>
-
-<p>If the second column returned is non-empty then your session is encrypted.</p>
-
+</code></pre><p>If the second column returned is non-empty then your session is encrypted.</p>
 <h3 id="see-remote-version">See Remote Version</h3>
-
 <pre><code>(user@example-mysql) [(none)]&gt; SELECT VERSION();
-</code></pre>
-
-<h3 id="useful-diagnostic-testing-maintenance-scripts">Useful Diagnostic / Testing / Maintenance Scripts</h3>
-
+</code></pre><h3 id="useful-diagnostic--testing--maintenance-scripts">Useful Diagnostic / Testing / Maintenance Scripts</h3>
 <ul>
 <li><a href="http://www.percona.com/doc/percona-toolkit/2.1/">http://www.percona.com/doc/percona-toolkit/2.1/</a></li>
 </ul>
-
 <h3 id="tcmalloc">TCMalloc</h3>
-
 <p>Due to high thread contention in some versions of MySQL a huge performance
 boost can be gained by using a third party malloc, TCMalloc has been proven to
 reduce thread contention in MySQL and provide as much as a 30% boost in all
 query timing.</p>
-
 <ul>
 <li><a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">http://goog-perftools.sourceforge.net/doc/tcmalloc.html</a></li>
 <li><a href="https://code.google.com/p/gperftools/">https://code.google.com/p/gperftools/</a></li>
 </ul>
-
 <p>MORE TODO</p>
 
 </div>
@@ -532,7 +452,7 @@ query timing.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

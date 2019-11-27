@@ -2,20 +2,20 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately and kept encountering the error that is this post&rsquo;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
-It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the extension itself. I&rsquo;ve found two ways too solve this issue in wildly different ways.
+<meta name='description' content='I&#39;ve been using the PostgreSQL&#39;s hstore extension in a Rails application lately and kept encountering the error that is this post&#39;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
+It seems that while Rails 4 supports the HStore datatype, it doesn&#39;t enable the extension itself. I&#39;ve found two ways too solve this issue in wildly different ways.
 First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='PG::Error: ERROR: Type &#39;Hstore&#39; Does Not Exist • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately and kept encountering the error that is this post&rsquo;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
-It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the extension itself. I&rsquo;ve found two ways too solve this issue in wildly different ways.
+<meta property='og:description' content='I&#39;ve been using the PostgreSQL&#39;s hstore extension in a Rails application lately and kept encountering the error that is this post&#39;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
+It seems that while Rails 4 supports the HStore datatype, it doesn&#39;t enable the extension itself. I&#39;ve found two ways too solve this issue in wildly different ways.
 First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue.'>
 <meta property='og:url' content='https://stelfox.net/blog/2014/05/pg-error-error-type-hstore-does-not-exist/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='postgres'><meta property='article:tag' content='ruby'><meta property='article:published_time' content='2014-05-28T18:00:55-04:00'/><meta property='article:modified_time' content='2014-05-28T18:00:55-04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>PG::Error: ERROR: Type &#39;Hstore&#39; Does Not Exist • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2014/05/pg-error-error-type-hstore-does-not-exist/'>
@@ -112,69 +112,54 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately
-and kept encountering the error that is this post&rsquo;s namesake. It would
+  <p>I've been using the PostgreSQL's hstore extension in a Rails application lately
+and kept encountering the error that is this post's namesake. It would
 specifically happen when a database had been dropped, recreated and I freshly
 ran the migrations.</p>
-
-<p>It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the
-extension itself. I&rsquo;ve found two ways too solve this issue in wildly different
+<p>It seems that while Rails 4 supports the HStore datatype, it doesn't enable the
+extension itself. I've found two ways too solve this issue in wildly different
 ways.</p>
-
 <h2 id="first-solution-enable-hstore-by-default">First Solution: Enable HStore by Default</h2>
-
 <p>This is the common solution that is recommended too solve this issue. It
 enables the HStore extension by default on all newly created databases. Too
-understand this you need to know a bit about PostgreSQL&rsquo;s behavior.</p>
-
+understand this you need to know a bit about PostgreSQL's behavior.</p>
 <p>When a new database is created, PostgreSQL creates a copy of a special
 pre-existing database named <code>template1</code> by default. Anything done too this
 database will be reflected in all new databases, including enabling extensions.</p>
-
 <p>Too enable the HStore extension on the <code>template1</code> database you can execute the
 following command (generally as the <code>postgres</code> user or with your authentication
 of choice).</p>
-
 <pre><code>psql -d template1 -c 'CREATE EXTENSION hstore;'
-</code></pre>
-
-<h2 id="second-solution-rails-migration">Second Solution: Rails Migration</h2>
-
-<p>The above solution doesn&rsquo;t sit well with me. While it&rsquo;s uncommon for any
+</code></pre><h2 id="second-solution-rails-migration">Second Solution: Rails Migration</h2>
+<p>The above solution doesn't sit well with me. While it's uncommon for any
 individual PostgreSQL server to be shared among different applications with
 different databases, the possibility is there. Perhaps the application will get
 decommissioned and the DBA will simply drop the associated database and roles
 instead of setting up a new one.</p>
-
 <p>Disconnecting the requirements of the application from the application itself
 always seems to lead too trouble.</p>
-
 <p>Rails already has a mechanism too handle modifications too the database
-overtime, migrations. They&rsquo;re solid, well tested, and encapsulate not only how
+overtime, migrations. They're solid, well tested, and encapsulate not only how
 to get the database to a particular state but also how to return it back to
-it&rsquo;s prior state (generally).</p>
-
+it's prior state (generally).</p>
 <p>We can also do this without using raw SQL which now also seems a bit&hellip; Off to
 me. The following is a sample Rails migration that will both enable and disable
 the extension:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ManageHstore</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">ActiveRecord</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Migration</span>
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">change</span>
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">change</span>
     reversible <span style="color:#66d9ef">do</span> <span style="color:#f92672">|</span>op<span style="color:#f92672">|</span>
       op<span style="color:#f92672">.</span>up { enable_extension <span style="color:#e6db74">&#39;hstore&#39;</span> }
       op<span style="color:#f92672">.</span>down { disable_extension <span style="color:#e6db74">&#39;hstore&#39;</span> }
     <span style="color:#66d9ef">end</span>
   <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span></code></pre></div>
-<p>Now the biggest problem with this migration is that too use it, you need too
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>Now the biggest problem with this migration is that too use it, you need too
 plan ahead of time too use the extension or not worry about freshly running all
 the migrations (generally because you dropped and created the database). This
 migration needs to be named so it alphabetically comes before any migration in
 your application that makes use of the HStore datatype.</p>
-
 <p>ActiveRecord uses timestamps at the beginning of the migration names to handle
-this alphabetic sorting, and such you&rsquo;ll want to fake this in before you used
+this alphabetic sorting, and such you'll want to fake this in before you used
 the HStore datatype.</p>
 
 </div>
@@ -226,7 +211,7 @@ the HStore datatype.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

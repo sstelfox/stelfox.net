@@ -2,16 +2,16 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Jeremy Spilman recently proposed changes to how user&rsquo;s hashes are stored in website&rsquo;s and companies databases. This post was originally going to look at some of the issues involved in the scheme he envisioned, however, he rather quickly posted a followup article with a well thought out solution that countered all of the issues that other people and myself were able to come up with. I&rsquo;d strongly recommend reading both if you haven&rsquo;t done so.'>
+<meta name='description' content='Jeremy Spilman recently proposed changes to how user&#39;s hashes are stored in website&#39;s and companies databases. This post was originally going to look at some of the issues involved in the scheme he envisioned, however, he rather quickly posted a followup article with a well thought out solution that countered all of the issues that other people and myself were able to come up with. I&#39;d strongly recommend reading both if you haven&#39;t done so.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Security Through Obesity • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Jeremy Spilman recently proposed changes to how user&rsquo;s hashes are stored in website&rsquo;s and companies databases. This post was originally going to look at some of the issues involved in the scheme he envisioned, however, he rather quickly posted a followup article with a well thought out solution that countered all of the issues that other people and myself were able to come up with. I&rsquo;d strongly recommend reading both if you haven&rsquo;t done so.'>
+<meta property='og:description' content='Jeremy Spilman recently proposed changes to how user&#39;s hashes are stored in website&#39;s and companies databases. This post was originally going to look at some of the issues involved in the scheme he envisioned, however, he rather quickly posted a followup article with a well thought out solution that countered all of the issues that other people and myself were able to come up with. I&#39;d strongly recommend reading both if you haven&#39;t done so.'>
 <meta property='og:url' content='https://stelfox.net/blog/2012/08/security-through-obesity/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='development'><meta property='article:tag' content='ruby'><meta property='article:published_time' content='2012-08-08T15:06:56Z'/><meta property='article:modified_time' content='2012-08-08T15:06:56Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Security Through Obesity • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2012/08/security-through-obesity/'>
@@ -108,52 +108,50 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>Jeremy Spilman recently <a href="http://www.opine.me/a-better-way-to-store-password-hashes/">proposed changes</a> to how user&rsquo;s hashes are stored
-in website&rsquo;s and companies databases. This post was originally going to look at
+  <p>Jeremy Spilman recently <a href="http://www.opine.me/a-better-way-to-store-password-hashes/">proposed changes</a> to how user's hashes are stored
+in website's and companies databases. This post was originally going to look at
 some of the issues involved in the scheme he envisioned, however, he rather
 quickly posted a <a href="http://www.opine.me/all-your-hashes-arent-belong-to-us/">followup article</a> with a well thought out solution that
 countered all of the issues that other people and myself were able to come up
-with. I&rsquo;d strongly recommend reading both if you haven&rsquo;t done so. Instead of
-announcing flaws, I&rsquo;m turning this into a post with a simple functional
+with. I'd strongly recommend reading both if you haven't done so. Instead of
+announcing flaws, I'm turning this into a post with a simple functional
 implementation of the described scheme in Ruby using DataMapper.</p>
-
-<p>At first I&rsquo;d like to point out that this is one of those few examples where a
+<p>At first I'd like to point out that this is one of those few examples where a
 form of security through obscurity is actually increasing not only the
 perceived security but the cost to attack a system as well.</p>
-
 <p>Please note this code is a minimal, functional, example and should not be used
 in production. It is missing a lot of things that I personally would add before
 attempting to use this but that is an exercise for the reader. It is licensed
-under the MIT license. I&rsquo;ll walk through the code briefly afterwards going over
+under the MIT license. I'll walk through the code briefly afterwards going over
 some bits.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># encoding: utf-8</span>
 
-require <span style="color:#e6db74">&#34;rubygems&#34;</span>           <span style="color:#75715e"># You only need this if you use bundler</span>
-require <span style="color:#e6db74">&#34;dm-core&#34;</span>
-require <span style="color:#e6db74">&#34;dm-migrations&#34;</span>
-require <span style="color:#e6db74">&#34;dm-sqlite-adapter&#34;</span>
-require <span style="color:#e6db74">&#34;dm-validations&#34;</span>
-require <span style="color:#e6db74">&#34;scrypt&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">rubygems</span><span style="color:#e6db74">&#34;</span>           <span style="color:#75715e"># You only need this if you use bundler</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">dm-core</span><span style="color:#e6db74">&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">dm-migrations</span><span style="color:#e6db74">&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">dm-sqlite-adapter</span><span style="color:#e6db74">&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">dm-validations</span><span style="color:#e6db74">&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scrypt</span><span style="color:#e6db74">&#34;</span>
 
-<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>setup <span style="color:#e6db74">:default</span>, <span style="color:#e6db74">&#34;sqlite:hash.db&#34;</span>
+<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>setup <span style="color:#e6db74">:default</span>, <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sqlite:hash.db</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">User</span>
   <span style="color:#66d9ef">include</span> <span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Resource</span> 
 
   property <span style="color:#e6db74">:id</span>,             <span style="color:#66d9ef">Serial</span>
-  property <span style="color:#e6db74">:username</span>,       String, <span style="color:#e6db74">:required</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
-                                    <span style="color:#e6db74">:unique</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span> 
-  property <span style="color:#e6db74">:crypt_hash</span>,     String, <span style="color:#e6db74">:required</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
-                                    <span style="color:#e6db74">:length</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">64</span>
-  property <span style="color:#e6db74">:salt</span>,           String, <span style="color:#e6db74">:required</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
-                                    <span style="color:#e6db74">:length</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">25</span> 
+  property <span style="color:#e6db74">:username</span>,       String, <span style="color:#e6db74">:required</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span>,
+                                    <span style="color:#e6db74">:unique</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span> 
+  property <span style="color:#e6db74">:crypt_hash</span>,     String, <span style="color:#e6db74">:required</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span>,
+                                    <span style="color:#e6db74">:length</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">64</span>
+  <span style="color:#f92672"></span>property <span style="color:#e6db74">:salt</span>,           String, <span style="color:#e6db74">:required</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span>,
+                                    <span style="color:#e6db74">:length</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">25</span> 
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">check_password</span>(plaintext_password)
+  <span style="color:#f92672"></span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">check_password</span>(plaintext_password)
     encrypted_hash <span style="color:#f92672">=</span> scrypt_helper(plaintext_password, self<span style="color:#f92672">.</span>salt)
-    hash_obj <span style="color:#f92672">=</span> <span style="color:#66d9ef">SiteHash</span><span style="color:#f92672">.</span>first(<span style="color:#e6db74">:crypt_hash</span> <span style="color:#f92672">=&gt;</span> encrypted_hash)
+    hash_obj <span style="color:#f92672">=</span> <span style="color:#66d9ef">SiteHash</span><span style="color:#f92672">.</span>first(<span style="color:#e6db74">:crypt_hash</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> encrypted_hash)
 
     <span style="color:#66d9ef">if</span> hash_obj<span style="color:#f92672">.</span>nil?
-      puts <span style="color:#e6db74">&#34;Invalid password&#34;</span>
+      puts <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Invalid password</span><span style="color:#e6db74">&#34;</span>
       <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
     <span style="color:#66d9ef">end</span>
 
@@ -162,12 +160,12 @@ require <span style="color:#e6db74">&#34;scrypt&#34;</span>
     <span style="color:#66d9ef">if</span> self<span style="color:#f92672">.</span>crypt_hash <span style="color:#f92672">==</span> verification_hash
       <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
     <span style="color:#66d9ef">else</span>
-      puts <span style="color:#e6db74">&#34;WARNING: Found matching hash, but verification failed.&#34;</span>
+      puts <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">WARNING: Found matching hash, but verification failed.</span><span style="color:#e6db74">&#34;</span>
       <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>
     <span style="color:#66d9ef">end</span>
   <span style="color:#66d9ef">end</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">password</span><span style="color:#f92672">=</span>(plaintext_password)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">password</span><span style="color:#f92672">=</span>(plaintext_password)
     generate_salt
 
     encrypted_password <span style="color:#f92672">=</span> <span style="color:#66d9ef">SiteHash</span><span style="color:#f92672">.</span>new
@@ -181,14 +179,14 @@ require <span style="color:#e6db74">&#34;scrypt&#34;</span>
 
   <span style="color:#66d9ef">private</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_salt</span>
-    self<span style="color:#f92672">.</span>salt <span style="color:#f92672">=</span> <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>generate_salt(<span style="color:#e6db74">:max_time</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">generate_salt</span>
+    self<span style="color:#f92672">.</span>salt <span style="color:#f92672">=</span> <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>generate_salt(<span style="color:#e6db74">:max_time</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span><span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span><span style="color:#f92672"></span>)
   <span style="color:#66d9ef">end</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">scrypt_helper</span>(plaintext_password, salt)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">scrypt_helper</span>(plaintext_password, salt)
     <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>scrypt(plaintext_password, salt,
                           <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>autodetect_cost(salt),
-                          <span style="color:#ae81ff">32</span>)<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;H*&#39;</span>)<span style="color:#f92672">.</span>first
+                          <span style="color:#ae81ff">32</span><span style="color:#f92672"></span>)<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;H*&#39;</span>)<span style="color:#f92672">.</span>first
   <span style="color:#66d9ef">end</span>
 <span style="color:#66d9ef">end</span>
 
@@ -196,79 +194,75 @@ require <span style="color:#e6db74">&#34;scrypt&#34;</span>
   <span style="color:#66d9ef">include</span> <span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Resource</span>
 
   property <span style="color:#e6db74">:id</span>,             <span style="color:#66d9ef">Serial</span>
-  property <span style="color:#e6db74">:crypt_hash</span>,     String,   <span style="color:#e6db74">:required</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
-                                      <span style="color:#e6db74">:length</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">64</span>
-  property <span style="color:#e6db74">:salt</span>,           String,   <span style="color:#e6db74">:required</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
-                                      <span style="color:#e6db74">:length</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">25</span>
+  property <span style="color:#e6db74">:crypt_hash</span>,     String,   <span style="color:#e6db74">:required</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span>,
+                                      <span style="color:#e6db74">:length</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">64</span>
+  <span style="color:#f92672"></span>property <span style="color:#e6db74">:salt</span>,           String,   <span style="color:#e6db74">:required</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span>,
+                                      <span style="color:#e6db74">:length</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">25</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">initialize</span>(<span style="color:#f92672">*</span>args)
+  <span style="color:#f92672"></span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">initialize</span>(<span style="color:#f92672">*</span>args)
     <span style="color:#66d9ef">super</span>
     generate_salt
   <span style="color:#66d9ef">end</span>
 
   <span style="color:#66d9ef">private</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">generate_salt</span>
-    self<span style="color:#f92672">.</span>salt <span style="color:#f92672">=</span> <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>generate_salt(<span style="color:#e6db74">:max_time</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">generate_salt</span>
+    self<span style="color:#f92672">.</span>salt <span style="color:#f92672">=</span> <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>generate_salt(<span style="color:#e6db74">:max_time</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span><span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span><span style="color:#f92672"></span>)
   <span style="color:#66d9ef">end</span>
 <span style="color:#66d9ef">end</span>
 
 <span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>finalize
-<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>auto_upgrade!</code></pre></div>
-<p>I tried to keep this as a simple minimum implementation without playing golf.
-Strictly speaking the validations on the data_mapper models aren&rsquo;t necessary
+<span style="color:#66d9ef">DataMapper</span><span style="color:#f92672">.</span>auto_upgrade!
+</code></pre></div><p>I tried to keep this as a simple minimum implementation without playing golf.
+Strictly speaking the validations on the data_mapper models aren't necessary
 and could have been removed, in this case, however, the length fields do
 actually indicate a bit more of what you might expect to see in the database,
 while the requires are just good habits living on.</p>
-
 <p>Both of the two models are required to have both a salt and a hash, the name
-&lsquo;crypt_hash&rsquo; was chosen do too a conflict with one of data_mapper&rsquo;s reserved
+&lsquo;crypt_hash&rsquo; was chosen do too a conflict with one of data_mapper's reserved
 words &lsquo;hash&rsquo;, the same goes for the model name, however, that class comes from
-elsewhere. Raw scrypt&rsquo;d hashes are 256 bits long or 64 hex characters long,
+elsewhere. Raw scrypt'd hashes are 256 bits long or 64 hex characters long,
 while the salts are 64 bits (16 hex characters) plus some meta-data totaling 25
 hex characters in this example.</p>
-
-<p>Salts are hashes are computed by the &lsquo;scrypt&rsquo; gem. In this example I&rsquo;ve bumped
+<p>Salts are hashes are computed by the &lsquo;scrypt&rsquo; gem. In this example I've bumped
 up the max time option to create a hash from the default of 0.2 seconds up to 1
 second. This is one of those things that I could have left out as the default
-is fine for an example, but it also couldn&rsquo;t hurt slightly increasing it in
+is fine for an example, but it also couldn't hurt slightly increasing it in
 case someone did copy-paste this into production.</p>
-
-<p>The one thing that I&rsquo;d like to point out is a couple of &lsquo;puts&rsquo; statements I
+<p>The one thing that I'd like to point out is a couple of &lsquo;puts&rsquo; statements I
 dropped in the check_password method on the User model. The first one simply
 announces an invalid password. A lot of these could indicate a brute force
 attack. The second one is more serious, it indicates that there is either a bug
 in the code, a hash collision has occurred, or an attacker has been able to
-drop in hash of their choosing into the site_hashes table, but haven&rsquo;t updated
-the verification hash on the user model yet. I&rsquo;d strongly recommend reading
-through both of Jeremy&rsquo;s posts if you want to understand how this threat works
+drop in hash of their choosing into the site_hashes table, but haven't updated
+the verification hash on the user model yet. I'd strongly recommend reading
+through both of Jeremy's posts if you want to understand how this threat works
 and specifically the second post to see how the verification hash protects what
 it does.</p>
-
-<p>So how would you use this code? Well you&rsquo;d want to create a user with a
+<p>So how would you use this code? Well you'd want to create a user with a
 password and then check if their password is valid or not later on like so:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">User</span><span style="color:#f92672">.</span>create(<span style="color:#e6db74">:username</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;admin&#39;</span>, <span style="color:#e6db74">:password</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;admin&#39;</span>)
-<span style="color:#66d9ef">User</span><span style="color:#f92672">.</span>first(<span style="color:#e6db74">:username</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;admin&#39;</span>)<span style="color:#f92672">.</span>check_password(<span style="color:#e6db74">&#39;admin&#39;</span>)</code></pre></div>
-<p>One of the key ways this separation increases the security of real users hashes
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#66d9ef">User</span><span style="color:#f92672">.</span>create(<span style="color:#e6db74">:username</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#e6db74">&#39;admin&#39;</span>, <span style="color:#e6db74">:password</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#e6db74">&#39;admin&#39;</span>)
+<span style="color:#66d9ef">User</span><span style="color:#f92672">.</span>first(<span style="color:#e6db74">:username</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#e6db74">&#39;admin&#39;</span>)<span style="color:#f92672">.</span>check_password(<span style="color:#e6db74">&#39;admin&#39;</span>)
+</code></pre></div><p>One of the key ways this separation increases the security of real users hashes
 is by having a large number of fake hashes in the hash table that the attackers
-will have to crack at the same time. As a bonus I&rsquo;ve written a module to handle
-just that for the code I&rsquo;ve already provided. Once again this is licensed under
+will have to crack at the same time. As a bonus I've written a module to handle
+just that for the code I've already provided. Once again this is licensed under
 the MIT license and should not be considered production ready.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby"><span style="color:#75715e"># This is the code above, you can also include everything below</span>
 <span style="color:#75715e"># this in the same file if you&#39;re into that sort of thing</span>
-require <span style="color:#e6db74">&#34;user_hash_example&#34;</span>
+require <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">user_hash_example</span><span style="color:#e6db74">&#34;</span>
 
 <span style="color:#66d9ef">module</span> HashFaker
   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">fast_hash</span>
-    <span style="color:#66d9ef">SiteHash</span><span style="color:#f92672">.</span>create(<span style="color:#e6db74">:crypt_hash</span> <span style="color:#f92672">=&gt;</span> get_bytes(<span style="color:#ae81ff">32</span>))
+    <span style="color:#66d9ef">SiteHash</span><span style="color:#f92672">.</span>create(<span style="color:#e6db74">:crypt_hash</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> get_bytes(<span style="color:#ae81ff">32</span><span style="color:#f92672"></span>))
   <span style="color:#66d9ef">end</span>
 
   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">hash</span>
-    <span style="color:#66d9ef">SiteHash</span><span style="color:#f92672">.</span>create(<span style="color:#e6db74">:crypt_hash</span> <span style="color:#f92672">=&gt;</span> scrypt_helper(get_bytes(<span style="color:#ae81ff">24</span>),
+    <span style="color:#66d9ef">SiteHash</span><span style="color:#f92672">.</span>create(<span style="color:#e6db74">:crypt_hash</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> scrypt_helper(get_bytes(<span style="color:#ae81ff">24</span><span style="color:#f92672"></span>),
                                                  generate_salt))
   <span style="color:#66d9ef">end</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">generate_hashes</span>(count <span style="color:#f92672">=</span> <span style="color:#ae81ff">5000</span>, fast <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">generate_hashes</span>(count <span style="color:#f92672">=</span> <span style="color:#ae81ff">5000</span><span style="color:#f92672"></span>, fast <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>)
     count<span style="color:#f92672">.</span>times <span style="color:#66d9ef">do</span>
       fast ? fast_hash : hash
     <span style="color:#66d9ef">end</span>
@@ -277,7 +271,7 @@ require <span style="color:#e6db74">&#34;user_hash_example&#34;</span>
   <span style="color:#66d9ef">private</span>
 
   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">generate_salt</span>
-    <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>generate_salt(<span style="color:#e6db74">:max_time</span> <span style="color:#f92672">=&gt;</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span>)
+    <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>generate_salt(<span style="color:#e6db74">:max_time</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span><span style="color:#f92672"></span><span style="color:#f92672">.</span><span style="color:#ae81ff">0</span><span style="color:#f92672"></span>)
   <span style="color:#66d9ef">end</span>
 
   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get_bytes</span>(num)
@@ -287,9 +281,10 @@ require <span style="color:#e6db74">&#34;user_hash_example&#34;</span>
   <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">self</span><span style="color:#f92672">.</span><span style="color:#a6e22e">scrypt_helper</span>(plaintext_password, salt)
     <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>scrypt(plaintext_password, salt,
                           <span style="color:#66d9ef">SCrypt</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Engine</span><span style="color:#f92672">.</span>autodetect_cost(salt),
-                          <span style="color:#ae81ff">32</span>)<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;H*&#39;</span>)<span style="color:#f92672">.</span>first
+                          <span style="color:#ae81ff">32</span><span style="color:#f92672"></span>)<span style="color:#f92672">.</span>unpack(<span style="color:#e6db74">&#39;H*&#39;</span>)<span style="color:#f92672">.</span>first
   <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span></code></pre></div>
+<span style="color:#66d9ef">end</span>
+</code></pre></div>
 </div>
 
   
@@ -339,7 +334,7 @@ require <span style="color:#e6db74">&#34;user_hash_example&#34;</span>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

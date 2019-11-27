@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Red Hat Based Systems Simple Static IP Address You&rsquo;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&rsquo;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention).'>
+Red Hat Based Systems Simple Static IP Address You&#39;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&#39;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention).'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Network • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Red Hat Based Systems Simple Static IP Address You&rsquo;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&rsquo;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention).'>
+Red Hat Based Systems Simple Static IP Address You&#39;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&#39;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention).'>
 <meta property='og:url' content='https://stelfox.net/notes/network/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Network • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/network/'>
@@ -110,43 +110,33 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="red-hat-based-systems">Red Hat Based Systems</h2>
-
 <h3 id="simple-static-ip-address">Simple Static IP Address</h3>
-
-<p>You&rsquo;ll need to find the interface name of your primary ethernet card. Generally
+<p>You'll need to find the interface name of your primary ethernet card. Generally
 this can be done with the <code>ipaddr show</code> command. The device name will more
-likely than not be either <code>eth0</code> or <code>em1</code>, though occasionally I&rsquo;ve seen
+likely than not be either <code>eth0</code> or <code>em1</code>, though occasionally I've seen
 ethernet addresses along the lines of <code>p12p1</code> (which is a terrible naming
 convention that bothers the hell out of me but I understand why the linux
 developers switched to this naming convention).</p>
-
-<p>This is going to assume that you want to set a static address on <code>eth0</code>, it&rsquo;s
+<p>This is going to assume that you want to set a static address on <code>eth0</code>, it's
 going to be the primary interface (in that it will have the default gateway).
-You&rsquo;ll want to edit the file <code>/etc/sysconfig/network-scripts/ifcfg-eth0</code> in
+You'll want to edit the file <code>/etc/sysconfig/network-scripts/ifcfg-eth0</code> in
 this case. Make sure that the device name at the end of the file AND the one in
 the config match.</p>
-
-<p>You&rsquo;ll also need to make sure the mac address of the card matches the <code>HWADDR</code>
+<p>You'll also need to make sure the mac address of the card matches the <code>HWADDR</code>
 in the file otherwise the network script will throw a fit and will either fail
 to bring up the interface or just complain and use the real hardware address
 anyway. You can not use this script to &ldquo;spoof&rdquo; mac addresses.</p>
-
 <p>The contents of the following file set the static IP address <code>10.13.37.200</code> on
 the interface with <code>10.13.37.1</code> as the default gateway, and two nameservers
 <code>8.8.8.8</code> and <code>4.2.2.2</code>.</p>
-
-<p>This also tells the network that we&rsquo;re on a <code>/24</code> network the interface should
+<p>This also tells the network that we're on a <code>/24</code> network the interface should
 start up when the machine does and that if this fails to come up the rest of
-the boot scripts that rely on a network should be skipped (That&rsquo;s the
+the boot scripts that rely on a network should be skipped (That's the
 <code>IPV4_FAILURE_FATAL</code> command).</p>
-
 <pre><code># /etc/sysconfig/network-scripts/ifcfg-eth0
 DEVICE=&quot;eth0&quot;
 NM_CONTROLLED=&quot;yes&quot;
@@ -168,31 +158,20 @@ IPV4_FAILURE_FATAL=&quot;yes&quot;
 IPV6INIT=&quot;yes&quot;
 
 NAME=&quot;Standard LAN&quot;
-</code></pre>
-
-<p>You&rsquo;ll need to restart the NetworkManager for this to take effect like so:</p>
-
+</code></pre><p>You'll need to restart the NetworkManager for this to take effect like so:</p>
 <pre><code>systemctl restart NetworkManager.service
-</code></pre>
-
-<h3 id="additional-ip-addresses">Additional IP Addresses</h3>
-
+</code></pre><h3 id="additional-ip-addresses">Additional IP Addresses</h3>
 <p>Additional IP addresses are one of the simplest things to perform. In the
-following example I&rsquo;m going to be created an additional IP on the eth0
-interface assuming we&rsquo;re using the same eth0 described in the last section.</p>
-
+following example I'm going to be created an additional IP on the eth0
+interface assuming we're using the same eth0 described in the last section.</p>
 <p>Too add an IP address to the eth0 interface we simply create a new one by
 copying that file into a new one and adding a <code>:1</code> to the name additional
 addresses would need to increment this number. So like so:</p>
-
 <pre><code>cp /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth0:1
-</code></pre>
-
-<p>You&rsquo;ll need to open up the new file and change a few things. Specifically you
+</code></pre><p>You'll need to open up the new file and change a few things. Specifically you
 want to get rid of the &ldquo;HWADDR&rdquo; variable, change the IP to whatever the second
 IP will be and change the device name to reflect the <code>:1</code>. The new file will
 look like this:</p>
-
 <pre><code># /etc/sysconfig/network-scripts/ifcfg-eth0:1
 DEVICE=&quot;eth0:1&quot;
 NM_CONTROLLED=&quot;no&quot;
@@ -207,52 +186,32 @@ IPV4_FAILURE_FATAL=&quot;yes&quot;
 IPV6INIT=&quot;yes&quot;
 
 NAME=&quot;Standard LAN&quot;
-</code></pre>
-
-<p>Bring it up like so:</p>
-
+</code></pre><p>Bring it up like so:</p>
 <pre><code>ifup eth0:1
-</code></pre>
-
-<p>Bam. Done.</p>
-
+</code></pre><p>Bam. Done.</p>
 <pre><code>[root@localhost ~]# ifconfig eth0:1
 eth0:1    Link encap:Ethernet  HWaddr 12:34:56:78:90:AB  
           inet addr:10.13.37.201  Bcast:10.13.37.255  Mask:255.255.255.0
           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-</code></pre>
-
-<h3 id="bridges">Bridges</h3>
-
+</code></pre><h3 id="bridges">Bridges</h3>
 <p>TODO</p>
-
 <h4 id="spanning-tree">Spanning Tree</h4>
-
 <p>TODO</p>
-
 <h3 id="nic-bonding">NIC Bonding</h3>
-
 <p>TODO</p>
-
 <h3 id="routing">Routing</h3>
-
 <p>This section describes how to turn a linux system into a basic router. This
 assumes that the user is competent enough to know a few things about routing
 already including what needs to be routed.</p>
-
 <p>Note: I noticed that my port forwarding issue seemed to go away after
 installing the iptstate package. This may be because it installed
 <code>libnetfilter_conntrack</code> as a dependency. Based on the <code>yum info</code> description I
-don&rsquo;t believe this to be the case. Further testing may be required.</p>
-
+don't believe this to be the case. Further testing may be required.</p>
 <h4 id="configuration">Configuration</h4>
-
-<h5 id="etc-sysctl-conf">/etc/sysctl.conf</h5>
-
+<h5 id="etcsysctlconf">/etc/sysctl.conf</h5>
 <p>The following settings need to be changed/added to securely handle the routing.
 Detailed information about the individual options is <a href="http://www.frozentux.net/ipsysctl-tutorial/ipsysctl-tutorial.html">available</a> as well as
 <a href="http://www.faqs.org/rfcs/rfc1812.html">Routing RFC information</a>.</p>
-
 <pre><code># Controls IP packet forwarding
 net.ipv4.ip_forward = 1
 
@@ -279,10 +238,7 @@ net.ipv4.tcp_fin_timeout = 15
 
 # Decrease the time default value for tcp_keepalive_time connection
 net.ipv4.tcp_keepalive_time = 1800
-</code></pre>
-
-<p>Active One:</p>
-
+</code></pre><p>Active One:</p>
 <pre><code># Kernel sysctl configuration file for Red Hat Linux
 #
 # For binary values, 0 is disabled, 1 is enabled.  See sysctl(8) and
@@ -328,18 +284,12 @@ kernel.core_uses_pid = 1
 net.bridge.bridge-nf-call-ip6tables = 0
 net.bridge.bridge-nf-call-iptables = 0
 net.bridge.bridge-nf-call-arptables = 0
-</code></pre>
-
-<h5 id="etc-sysconfig-network">/etc/sysconfig/network</h5>
-
+</code></pre><h5 id="etcsysconfignetwork">/etc/sysconfig/network</h5>
 <pre><code>NETWORKING=yes
 HOSTNAME=talos.home.bedroomprogrammers.net
 FORWARD_IPV4=yes
 NETWORKING_IPV6=yes
-</code></pre>
-
-<h5 id="etc-sysconfig-network-scripts-ifcfg-eth1">/etc/sysconfig/network-scripts/ifcfg-eth1</h5>
-
+</code></pre><h5 id="etcsysconfignetworkscriptsifcfgeth1">/etc/sysconfig/network-scripts/ifcfg-eth1</h5>
 <pre><code># eth1 - br1 - vlan100 - WAN
 DEVICE=eth1
 NM_CONTROLLED=no
@@ -360,14 +310,10 @@ IPV6INIT=yes
 IPV6_PRIVACY=&quot;rfc3041&quot;
 
 NAME=&quot;WAN&quot;
-</code></pre>
-
-<h5 id="etc-sysconfig-network-scripts-ifcfg-eth-0-2-3-4-5">/etc/sysconfig/network-scripts/ifcfg-eth{0,2,3,4,5}</h5>
-
+</code></pre><h5 id="etcsysconfignetworkscriptsifcfgeth02345">/etc/sysconfig/network-scripts/ifcfg-eth{0,2,3,4,5}</h5>
 <p>The only thing that changes in this among the five interfaces are the IP
 address options, the comment at the top and the name at the bottom. All of that
 information is documented elsewhere on this wiki.</p>
-
 <pre><code># eth0 - br0 - vlan37 - Public
 DEVICE=&quot;eth0&quot;
 NM_CONTROLLED=&quot;no&quot;
@@ -386,10 +332,7 @@ IPV6INIT=yes
 IPV6_PRIVACY=&quot;rfc3041&quot;
 
 NAME=&quot;LAN/Trusted&quot;
-</code></pre>
-
-<h5 id="firewall">Firewall</h5>
-
+</code></pre><h5 id="firewall">Firewall</h5>
 <pre><code>####################### NAT Table ######################
 
 *nat
@@ -502,17 +445,13 @@ COMMIT
 -A FORWARD -i eth0 -o eth5 -d 192.168.100.0/24 -j FWUPNP
 
 COMMIT
-</code></pre>
-
-<h5 id="useful-tools">Useful Tools</h5>
-
+</code></pre><h5 id="useful-tools">Useful Tools</h5>
 <ul>
 <li>netstat-nat</li>
 <li>conntrack-tools</li>
 <li>iptstate</li>
 <li>dstat</li>
 </ul>
-
 <h3 id="vlans">VLANs</h3>
 
 </div>
@@ -528,7 +467,7 @@ COMMIT
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/openstack-glance/'>
+      <a href='/notes/nfs/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -536,7 +475,7 @@ COMMIT
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>OpenStack Glance</a>
+        <span class='screen-reader-text'>Previous post: </span>NFS</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/nagios/'>
         <span class='screen-reader-text'>Next post: </span>Nagios<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -557,7 +496,7 @@ COMMIT
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

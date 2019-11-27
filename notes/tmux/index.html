@@ -3,17 +3,17 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install tmux -y  Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&rsquo;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment.'>
+Installation yum install tmux -y Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&#39;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Tmux • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install tmux -y  Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&rsquo;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment.'>
+Installation yum install tmux -y Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&#39;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment.'>
 <meta property='og:url' content='https://stelfox.net/notes/tmux/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Tmux • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/tmux/'>
@@ -110,63 +110,39 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="installation">Installation</h2>
-
 <pre><code>yum install tmux -y
-</code></pre>
-
-<h2 id="shared-session-configuration">Shared Session Configuration</h2>
-
+</code></pre><h2 id="shared-session-configuration">Shared Session Configuration</h2>
 <p>The idea behind this was to allow easy pair programming in a fairly secure way
-using a separate unprivileged account to host the session. I&rsquo;ve used a
+using a separate unprivileged account to host the session. I've used a
 combination of tmux, some bash scripts, and sudo to accomplish this
-environment. Please note that I don&rsquo;t add the shared user to the &lsquo;sshers&rsquo; group
+environment. Please note that I don't add the shared user to the &lsquo;sshers&rsquo; group
 so there is only local access to the account.</p>
-
 <h3 id="user-setup">User Setup</h3>
-
 <p>Create a new user, I used &ldquo;shared&rdquo; for the user name as shown in the example
 below. This will also create the &ldquo;shared&rdquo; group.</p>
-
 <pre><code>useradd shared
 password shared
-</code></pre>
-
-<p>Set some rediculous password for the user as no one will be logging directly
+</code></pre><p>Set some rediculous password for the user as no one will be logging directly
 in.</p>
-
 <p>Add any users that you want to participate in the shared environment to the
 shared group like so:</p>
-
 <pre><code>usermod -a -G shared &lt;username&gt;
-</code></pre>
-
-<p>Add this line to the <code>/etc/sudoers</code> to allow any user added to the shared group
+</code></pre><p>Add this line to the <code>/etc/sudoers</code> to allow any user added to the shared group
 to be able to switch to it without a password:</p>
-
 <pre><code>%shared   ALL=(ALL) NOPASSWD: /bin/su shared -
-</code></pre>
-
-<h3 id="shared-session-setup">Shared Session Setup</h3>
-
-<p>Switch to the shared user&rsquo;s account from a user that is a member of the shared
+</code></pre><h3 id="shared-session-setup">Shared Session Setup</h3>
+<p>Switch to the shared user's account from a user that is a member of the shared
 group and create a .bin directory in their home.</p>
-
 <pre><code>mkdir /home/shared/.bin
-</code></pre>
-
-<p>Inside of that create a file &ldquo;shared-tmux&rdquo; with the following contents and make
+</code></pre><p>Inside of that create a file &ldquo;shared-tmux&rdquo; with the following contents and make
 it executable. This is a simplified version of a more flexible shared tmux
 session script I found on the <a href="https://wiki.archlinux.org/index.php/Tmux#Clients_simultaneously_interacting_with_various_windows_of_a_session">Arch Linux Wiki</a> which has a ridiculous
 amount of very good information that I strongly recommend people reference with
 any questions.</p>
-
 <pre><code>#!/bin/bash
 
 base_session=&quot;shared-session&quot;
@@ -200,12 +176,9 @@ else
     tmux kill-session -t $session_id
   fi
 fi
-</code></pre>
-
-<p>I added the following to the shared user&rsquo;s .bashrc file so the shared session
+</code></pre><p>I added the following to the shared user's .bashrc file so the shared session
 pops open automatically as soon as a user has opened a shell and it will drop
-them out of the user&rsquo;s account as soon as they leave tmux.</p>
-
+them out of the user's account as soon as they leave tmux.</p>
 <pre><code>if [[ -z &quot;$TMUX&quot; ]]; then
   export PS1=&quot;\W\$(__git_ps1)\$ &quot;
   shared-session
@@ -215,31 +188,23 @@ them out of the user&rsquo;s account as soon as they leave tmux.</p>
 else
   export PS1=&quot;[\u@\h \W]\$(__git_ps1)\$ &quot;
 fi
-</code></pre>
-
-<p>I also created a small shell script to make it easier for user&rsquo;s to make use of
+</code></pre><p>I also created a small shell script to make it easier for user's to make use of
 the shared session in <code>/bin/shared</code>. The contents are below, make sure to make
 it executable:</p>
-
 <pre><code>#!/bin/bash
 
 sudo su shared -
 clear
 echo &quot;Left shared environment&quot;
-</code></pre>
-
-<h4 id="vim-tmux">VIM &amp; Tmux</h4>
-
+</code></pre><h4 id="vim--tmux">VIM &amp; Tmux</h4>
 <p>I made a few compromises on my vim and tmux configuration to work with a
-co-worker and tried to keep it simple at the same time, so I&rsquo;m including their
+co-worker and tried to keep it simple at the same time, so I'm including their
 configuration.</p>
-
 <p>Here is the tmux configuration <code>/home/shared/.tmux.conf</code>, there are two
 configuration items that are relevant to the shared session configuration and
-should be included even if you don&rsquo;t use any of the rest of it. The two
+should be included even if you don't use any of the rest of it. The two
 relevant configuration lines are the &ldquo;setw -g aggressive-resize on&rdquo; and the
 &ldquo;set-option destroy-unattached on&rdquo;.</p>
-
 <pre><code>set-option -g prefix C-a
 set-option destroy-unattached on
 bind r source-file ~/.tmux.conf
@@ -263,11 +228,8 @@ set -g status-interval 30
 set -g status-left-length 40
 set -g status-left '#[fg=green](#S) #(whoami)@#H#[default]'
 set -g status-right '#[fg=yellow]#(cut -d &quot; &quot; -f 1-3 /proc/loadavg)#[default] #[fg=cyan]%H:%M#[default]'
-</code></pre>
-
-<p>Here is the vim configuration I use /home/shared/vimrc, nothing specifically
+</code></pre><p>Here is the vim configuration I use /home/shared/vimrc, nothing specifically
 related to the shared session in this one:</p>
-
 <pre><code>set history=500
 set nocompatible
 autocmd! bufwritepost vimrc source ~/.vimrc
@@ -304,7 +266,6 @@ set ffs=unix,dos,mac
 set lbr
 set laststatus=2
 </code></pre>
-
 </div>
 
   
@@ -347,7 +308,7 @@ set laststatus=2
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -4,20 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Dynamic Backend w/ Fallback Sources:
- http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/
-upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access.'>
+ http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/  upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='NGinx • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Dynamic Backend w/ Fallback Sources:
- http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/
-upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access.'>
+ http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/  upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access.'>
 <meta property='og:url' content='https://stelfox.net/notes/nginx/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>NGinx • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/nginx/'>
@@ -114,92 +112,76 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="dynamic-backend-w-fallback">Dynamic Backend w/ Fallback</h2>
-
 <p>Sources:</p>
-
 <ul>
 <li><a href="http://wiki.nginx.org/HttpRedis2Module">http://wiki.nginx.org/HttpRedis2Module</a></li>
-
-<li><p><a href="http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/">http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/</a></p>
-
+<li><a href="http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/">http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/</a></li>
+</ul>
 <pre><code>upstream redis {
-# TODO Properly configure this
-server redis-01.i.0x378.net:6379;
-keepalive 1024 single;
+  # TODO Properly configure this
+  server redis-01.i.0x378.net:6379;
+  keepalive 1024 single;
 
-redis2_connect_timeout 100ms;
-redis2_send_timeout 100ms;
-redis2_read_timeout 100ms;
-redis2_pass redis;
+  redis2_connect_timeout 100ms;
+  redis2_send_timeout 100ms;
+  redis2_read_timeout 100ms;
+  redis2_pass redis;
 }
 
 server {
-listen 443;
+  listen 443;
 
-# Include SSL stuff;
+  # Include SSL stuff;
 
-# Log stuff
-access_log /var/log/nginx/access.log;
+  # Log stuff
+  access_log /var/log/nginx/access.log;
 
-# Local/Internal DNS resolver
-resolver 192.168.122.1;
+  # Local/Internal DNS resolver
+  resolver 192.168.122.1;
 
-location / {
-# Don't do any magic to static files
-root '/var/www/assets.i.0x378.net';
-if (-f $request_filename) {
-  break;
-  # This probably needs some work
+  location / {
+    # Don't do any magic to static files
+    root '/var/www/assets.i.0x378.net';
+    if (-f $request_filename) {
+      break;
+      # This probably needs some work
+    }
+
+    # TODO: Get this from Redis
+    set $server 'app-01.i.0x378.net';
+    set $port '80';
+
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme; # Should always be https
+
+    # Intercept all errors, if one matches the error block sent the request to
+    # a different backend
+    proxy_intercept_errors on;
+    error_page 502 = @fallback;
+
+    proxy_pass http://$server:$port;
+  }
+
+  location @fallback {
+    # Look this up, but pretty sure it means don't allow clients / HTTP
+    # requests to access this.
+    internal;
+    proxy_pass http://fall-back-host.i.0x378.net:80/;
+  }
 }
-
-# TODO: Get this from Redis
-set $server 'app-01.i.0x378.net';
-set $port '80';
-
-proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header Host $http_host;
-proxy_set_header X-Real-IP $remote_addr;
-proxy_set_header X-Forwarded-Proto $scheme; # Should always be https
-
-# Intercept all errors, if one matches the error block sent the request to
-# a different backend
-proxy_intercept_errors on;
-error_page 502 = @fallback;
-
-proxy_pass http://$server:$port;
-}
-
-location @fallback {
-# Look this up, but pretty sure it means don't allow clients / HTTP
-# requests to access this.
-internal;
-proxy_pass http://fall-back-host.i.0x378.net:80/;
-}
-}
-</code></pre></li>
-</ul>
-
-<h2 id="cert">Cert</h2>
-
+</code></pre><h2 id="cert">Cert</h2>
 <pre><code>echo -e &quot;AC\n\n \n \n\n*.i.0x378.net\n\n&quot; | openssl req -new -x509 \
   -newkey rsa:2048 -keyout server.key -nodes -days 365 -out server.crt
-</code></pre>
-
-<p>And include some DH parameters.</p>
-
+</code></pre><p>And include some DH parameters.</p>
 <pre><code>openssl dhparam -rand - 2048 &gt; server_dh.pem
-</code></pre>
-
-<p>I just dropped <code>server.{key,cert}</code> into <code>/etc/nginx/</code>, and a quick SSL
+</code></pre><p>I just dropped <code>server.{key,cert}</code> into <code>/etc/nginx/</code>, and a quick SSL
 configuration to dump into the nginx configuration.</p>
-
 <pre><code>cat &lt;&lt; EOF &gt; /etc/nginx/conf.d/ssl.conf
 server {
   listen 443;
@@ -231,7 +213,6 @@ server {
 }
 EOF
 </code></pre>
-
 </div>
 
   
@@ -245,7 +226,7 @@ EOF
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/ntpdate/'>
+      <a href='/notes/ntpd/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -253,7 +234,7 @@ EOF
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>NTPDate</a>
+        <span class='screen-reader-text'>Previous post: </span>NTPd</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/nfs/'>
         <span class='screen-reader-text'>Next post: </span>NFS<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -274,7 +255,7 @@ EOF
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

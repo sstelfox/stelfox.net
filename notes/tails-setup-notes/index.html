@@ -17,7 +17,7 @@ curl -s https://tails.boum.org/tails-signing.key -o tails-signing-local.key for 
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Tails Setup Notes • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/tails-setup-notes/'>
@@ -116,43 +116,37 @@ if (!doNotTrack) {
   <div class='container entry-content'>
   <p>This is relevant for TAILS version 2.5 and basically follows their install
 guide.</p>
-
 <p>I needed 2 USB sticks each at least 4Gb in size, and a spare laptop to take
 these notes on and read the instructions.</p>
-
 <p>I downloaded a copy of the Tails GPG key from several machines located on
 wildly disparate internet connections like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -s https://tails.boum.org/tails-signing.key -o tails-signing-local.key
 <span style="color:#66d9ef">for</span> i in ircp io proc; <span style="color:#66d9ef">do</span>
   ssh $i <span style="color:#e6db74">&#39;curl -s https://tails.boum.org/tails-signing.key&#39;</span> &gt; tails-signing-$i.key
-<span style="color:#66d9ef">done</span></code></pre></div>
-<p>I pulled them all on to the machine I&rsquo;m installing from and ensured all their
+<span style="color:#66d9ef">done</span>
+</code></pre></div><p>I pulled them all on to the machine I'm installing from and ensured all their
 contents matched:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">diff -qs --from-file tails-signing-*.key</code></pre></div>
-<p>With the key validated I can relatively safely import it (the Key ID was this:
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">diff -qs --from-file tails-signing-*.key
+</code></pre></div><p>With the key validated I can relatively safely import it (the Key ID was this:
 0xDBB802B258ACD84F):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">gpg --import tails-signing-local.key
-gpg --refresh-keys</code></pre></div>
-<p>Now I need the ISO, the safest method is via torrent.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -s https://tails.boum.org/torrents/files/tails-i386-2.5.torrent -o tails-i386-2.5.torrent</code></pre></div>
-<p>After downloading the torrent file&rsquo;s content, it&rsquo;s signature needs to be
+gpg --refresh-keys
+</code></pre></div><p>Now I need the ISO, the safest method is via torrent.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -s https://tails.boum.org/torrents/files/tails-i386-2.5.torrent -o tails-i386-2.5.torrent
+</code></pre></div><p>After downloading the torrent file's content, it's signature needs to be
 verified then installed directly to the first USB stick (/dev/sdb) like so:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">gpg --keyid-format 0xlong --verify tails-i386-2.5.iso.sig tails-i386-2.5.iso
-dd <span style="color:#66d9ef">if</span><span style="color:#f92672">=</span>tails-i386-2.2.1.iso of<span style="color:#f92672">=</span>/dev/sdb bs<span style="color:#f92672">=</span>1M oflag<span style="color:#f92672">=</span>sync</code></pre></div>
-<p>With this setup, we need to boot into the TAILS usb drive. Start it up and
+dd <span style="color:#66d9ef">if</span><span style="color:#f92672">=</span>tails-i386-2.2.1.iso of<span style="color:#f92672">=</span>/dev/sdb bs<span style="color:#f92672">=</span>1M oflag<span style="color:#f92672">=</span>sync
+</code></pre></div><p>With this setup, we need to boot into the TAILS usb drive. Start it up and
 choose the &lsquo;Live&rsquo; boot menu option.</p>
-
 <p>Wait for the tails greeter appears and click Login.</p>
-
 <p>When the desktop appears plug in the second USB stick. Open up &lsquo;Applications&rsquo;
 -&gt; &lsquo;Tails&rsquo; -&gt; &lsquo;Tails Installer&rsquo;. Choose &lsquo;Install by cloning&rsquo;. Choose the other
 USB drive and begin the installation. Boot into the second TAILS usb drive.</p>
-
 <p>We want to create an encrypted persistent storage as well once booted back in.
 Choose &lsquo;Applications&rsquo; &gt; &lsquo;Tails&rsquo; &gt; &lsquo;Configure persistent volume&rsquo;. Specify a long
 strong passphrase and click &lsquo;Create&rsquo;. Active &lsquo;Personal Data&rsquo;, consider the
-other options but they&rsquo;re not officially recommended.</p>
-
+other options but they're not officially recommended.</p>
 <p>Restart into the USB drive again, but activate the &lsquo;Use persistence?&rsquo; flag and
 enter your passphrase before clicking on &lsquo;Login&rsquo;. Anything stored in the Places
 -&gt; Persistent location will be saved between environments.</p>
@@ -206,7 +200,7 @@ enter your passphrase before clicking on &lsquo;Login&rsquo;. Anything stored in
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Install packages nfs-utils and nfs4-acl-tools
-This installation sets rpcbind, rpcgssd, rpcidmapd and nfslock to all automatically start on boot&hellip; That pisses me off properly, so I set them all too disabled for testing&hellip; I&rsquo;ll turn them back on as needed (hopefully I won&rsquo;t have too).'>
+This installation sets rpcbind, rpcgssd, rpcidmapd and nfslock to all automatically start on boot&hellip; That pisses me off properly, so I set them all too disabled for testing&hellip; I&#39;ll turn them back on as needed (hopefully I won&#39;t have too).'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='NFS • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Install packages nfs-utils and nfs4-acl-tools
-This installation sets rpcbind, rpcgssd, rpcidmapd and nfslock to all automatically start on boot&hellip; That pisses me off properly, so I set them all too disabled for testing&hellip; I&rsquo;ll turn them back on as needed (hopefully I won&rsquo;t have too).'>
+This installation sets rpcbind, rpcgssd, rpcidmapd and nfslock to all automatically start on boot&hellip; That pisses me off properly, so I set them all too disabled for testing&hellip; I&#39;ll turn them back on as needed (hopefully I won&#39;t have too).'>
 <meta property='og:url' content='https://stelfox.net/notes/nfs/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>NFS • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/nfs/'>
@@ -112,43 +112,30 @@ One min read
   
 
   <div class='container entry-content'>
-  <p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Install packages <code>nfs-utils</code> and <code>nfs4-acl-tools</code></p>
-
 <p>This installation sets <code>rpcbind</code>, <code>rpcgssd</code>, <code>rpcidmapd</code> and <code>nfslock</code> to all
 automatically start on boot&hellip; That pisses me off properly, so I set them all
-too disabled for testing&hellip; I&rsquo;ll turn them back on as needed (hopefully I won&rsquo;t
+too disabled for testing&hellip; I'll turn them back on as needed (hopefully I won't
 have too).</p>
-
 <p>I started <code>nfs</code> and <code>rpcbind</code>&hellip; lets see if thats enough.</p>
-
 <p>/etc/exports on server:</p>
-
 <pre><code>/media/storage/Media           10.13.37.51(rw,sync)  
 /media/storage/HomeDrives      10.13.37.51(rw,sync)
 /media/storage/SharedDocuments 10.13.37.51(rw,sync)
-</code></pre>
-
-<p>Run the following</p>
-
+</code></pre><p>Run the following</p>
 <pre><code>exportfs -rv
-</code></pre>
-
-<p>Apparently the client needs the <code>nfs-utils</code> installed as well, if the client
-doesn&rsquo;t have it they&rsquo;ll receive this error:</p>
-
+</code></pre><p>Apparently the client needs the <code>nfs-utils</code> installed as well, if the client
+doesn't have it they'll receive this error:</p>
 <pre><code>mount: wrong fs type, bad option, bad superblock on 10.1.1.1:/home/nfs,
 missing codepage or helper program, or other error
 (for several filesystems (e.g. nfs, cifs) you might
 need a /sbin/mount. helper program)
 In some cases useful info is found in syslog - try
 dmesg | tail  or so
-</code></pre>
-
-<ul>
+</code></pre><ul>
 <li><a href="http://www.cyberciti.biz/faq/centos-fedora-rhel-nfs-v4-configuration/">http://www.cyberciti.biz/faq/centos-fedora-rhel-nfs-v4-configuration/</a></li>
 <li><a href="http://www.server-world.info/en/note?os=Fedora_15&amp;p=nfs">http://www.server-world.info/en/note?os=Fedora_15&amp;p=nfs</a></li>
 <li><a href="http://tldp.org/HOWTO/NFS-HOWTO/security.html">http://tldp.org/HOWTO/NFS-HOWTO/security.html</a></li>
@@ -179,8 +166,8 @@ dmesg | tail  or so
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>NGinx</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/mysql-tuning/'>
-        <span class='screen-reader-text'>Next post: </span>MySQL Tuning<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/network/'>
+        <span class='screen-reader-text'>Next post: </span>Network<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -198,7 +185,7 @@ dmesg | tail  or so
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

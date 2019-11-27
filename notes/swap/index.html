@@ -13,7 +13,7 @@ Security If at any point a decryption key is needed to access a file, it will be
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Swap • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/swap/'>
@@ -110,78 +110,58 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="security">Security</h2>
-
 <p>If at any point a decryption key is needed to access a file, it will be stored
 in RAM. If an otherwise encrypted file is edited it will get stored in RAM
 before being saved. Without warning at any time that RAM can be swapped out to
 disk, at which point there is now a recoverable copy of an encryption key or
 sections of an encrypted document plain text on disk that <a href="https://stelfox.net/notes/data-recovery/">can be
 recovered</a>.</p>
-
 <p>To prevent this I strongly recommend encrypting the swap. During a standard
 install of Fedora if you want to accomplish this you have to use dirty
 VolGroups and LVMs. I hate VolGroups and LVMs and on top of that it will be
-using a set static key that I&rsquo;m sure will eventually be open to static
-analysis. While most people won&rsquo;t care about the latter I like to avoid the
+using a set static key that I'm sure will eventually be open to static
+analysis. While most people won't care about the latter I like to avoid the
 whole thing if I can do it with a fast simple solution.</p>
-
 <p>My solution is to take swap out of the hands of fstab and mount it myself after
 generating a one-time key for that session. When the computer turns off the key
 will be completely lost and a new one will be generated the next time the
-computer boots. I don&rsquo;t want to do this by hand every time the computer boots
-so I&rsquo;ll make sure it does this automatically.</p>
-
-<p>The first step is to prevent Linux from mounting the swap on it&rsquo;s own. To do
+computer boots. I don't want to do this by hand every time the computer boots
+so I'll make sure it does this automatically.</p>
+<p>The first step is to prevent Linux from mounting the swap on it's own. To do
 this comment out all the lines in fstab that have to do with swap. They will
 look like the following:</p>
-
 <pre><code>/dev/sda3       swap                swap        defaults        0 0
-</code></pre>
-
-<p>Your going to need to know what partitions your swap lives on. In the above
-example swap lives on <code>/dev/sda3</code>, it is very likely that your&rsquo;s will live on a
+</code></pre><p>Your going to need to know what partitions your swap lives on. In the above
+example swap lives on <code>/dev/sda3</code>, it is very likely that your's will live on a
 different device/partition.</p>
-
-<p>First we&rsquo;re going to want to fill the swap space with junk to make sure that
-there isn&rsquo;t anything useful left on there to be recovered. Your going to want
-to make sure that your system isn&rsquo;t currently using the swap, so first turn it
+<p>First we're going to want to fill the swap space with junk to make sure that
+there isn't anything useful left on there to be recovered. Your going to want
+to make sure that your system isn't currently using the swap, so first turn it
 off before writing over the swap space. The latter command is very dangerous if
 you do it on the wrong partition! Double check before executing it!</p>
-
 <pre><code>[root@localhost ~]# swapoff -a
 [root@localhost ~]# dd if=/dev/urandom of=/dev/sda3
-</code></pre>
-
-<p>Next we&rsquo;ll want to make one of the boot scripts initialize encryption and mount
+</code></pre><p>Next we'll want to make one of the boot scripts initialize encryption and mount
 the swap, there is a specific boot script created explicitly for user
-modification that other packages won&rsquo;t touch. We&rsquo;re going to use that one which
-is <code>/etc/rc.d/rc.local</code>. You&rsquo;ll want to add the following lines to it.</p>
-
+modification that other packages won't touch. We're going to use that one which
+is <code>/etc/rc.d/rc.local</code>. You'll want to add the following lines to it.</p>
 <pre><code>cryptsetup -c blowfish -h sha256 -d /dev/urandom create swap /dev/sda3
 mkswap -f /dev/mapper/swap
 swapon /dev/mapper/swap
-</code></pre>
-
-<p>The cipher in the above command can be swapped around, blowfish is a strong
+</code></pre><p>The cipher in the above command can be swapped around, blowfish is a strong
 encryption with a fairly good throughput however it seems that 256bit
-aes-xts-plain is a bit faster without sacrificing too much security. If you&rsquo;d
+aes-xts-plain is a bit faster without sacrificing too much security. If you'd
 prefer to use that instead, replace the cryptsetup invocation with the
 following one:</p>
-
 <pre><code>cryptsetup -c aes-xts-plain -s 256 -h sha256 -d /dev/urandom create swap /dev/sda3
-</code></pre>
-
-<p>Fedora has device mapper support built into the kernel, however if your
-distribution doesn&rsquo;t have device mapper support active by default, in the line
+</code></pre><p>Fedora has device mapper support built into the kernel, however if your
+distribution doesn't have device mapper support active by default, in the line
 right before the cryptsetup invocation add the line &ldquo;modprobe dm-mod&rdquo; to load
-the kernel module. Otherwise you&rsquo;ll get a &ldquo;Command failed: Incompatible
+the kernel module. Otherwise you'll get a &ldquo;Command failed: Incompatible
 libdevmapper&rdquo; error.</p>
 
 </div>
@@ -226,7 +206,7 @@ libdevmapper&rdquo; error.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

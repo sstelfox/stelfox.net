@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='I have the privilege of working full remote. To stay connected with our other remote workers and the main office we keep a live video conference going all the time. It&rsquo;s pretty convenient and definitely allows me to continue to feel connected with the company.
-During one of our stand ups, a coworker mentioned that they&rsquo;d like to see how things looked over time. I have three 1440p monitors and largely leave the video conference on my right most window, which makes recording (an audio free) timelapse pretty easy with FFmpeg.'>
+<meta name='description' content='I have the privilege of working full remote. To stay connected with our other remote workers and the main office we keep a live video conference going all the time. It&#39;s pretty convenient and definitely allows me to continue to feel connected with the company.
+During one of our stand ups, a coworker mentioned that they&#39;d like to see how things looked over time. I have three 1440p monitors and largely leave the video conference on my right most window, which makes recording (an audio free) timelapse pretty easy with FFmpeg.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Timelapse of a Linux Desktop • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='I have the privilege of working full remote. To stay connected with our other remote workers and the main office we keep a live video conference going all the time. It&rsquo;s pretty convenient and definitely allows me to continue to feel connected with the company.
-During one of our stand ups, a coworker mentioned that they&rsquo;d like to see how things looked over time. I have three 1440p monitors and largely leave the video conference on my right most window, which makes recording (an audio free) timelapse pretty easy with FFmpeg.'>
+<meta property='og:description' content='I have the privilege of working full remote. To stay connected with our other remote workers and the main office we keep a live video conference going all the time. It&#39;s pretty convenient and definitely allows me to continue to feel connected with the company.
+During one of our stand ups, a coworker mentioned that they&#39;d like to see how things looked over time. I have three 1440p monitors and largely leave the video conference on my right most window, which makes recording (an audio free) timelapse pretty easy with FFmpeg.'>
 <meta property='og:url' content='https://stelfox.net/blog/2018/06/timelapse-of-a-linux-desktop/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='linux'><meta property='article:tag' content='tips'><meta property='article:published_time' content='2018-06-08T16:37:39-06:00'/><meta property='article:modified_time' content='2018-06-08T16:37:39-06:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Timelapse of a Linux Desktop • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2018/06/timelapse-of-a-linux-desktop/'>
@@ -112,55 +112,43 @@ if (!doNotTrack) {
   <div class='container entry-content'>
   <p>I have the privilege of working full remote. To stay connected with our other
 remote workers and the main office we keep a live video conference going all
-the time. It&rsquo;s pretty convenient and definitely allows me to continue to feel
+the time. It's pretty convenient and definitely allows me to continue to feel
 connected with the company.</p>
-
-<p>During one of our stand ups, a coworker mentioned that they&rsquo;d like to see how
+<p>During one of our stand ups, a coworker mentioned that they'd like to see how
 things looked over time. I have three 1440p monitors and largely leave the
 video conference on my right most window, which makes recording (an audio free)
 timelapse pretty easy with FFmpeg.</p>
-
 <p>There are a couple of stack overflow posts about this but I wanted to use VP9
-(really I wanted to use AV1, but it isn&rsquo;t well supported yet). This adds a bit
+(really I wanted to use AV1, but it isn't well supported yet). This adds a bit
 of a trick as VP9 wants to analyze a bit of the video and will break if there
-aren&rsquo;t enough frames so some additional options are needed to get it to work.</p>
-
+aren't enough frames so some additional options are needed to get it to work.</p>
 <p>These are the settings that worked well for me:</p>
-
 <pre><code>ffmpeg -f x11grab -framerate 1 \
   -thread_queue_size 2048 -probesize 10M -analyzeduration 10M \
   -s 2560,1440 -i :1.0+5120,0 \
   -vf settb=\(1/30\),setpts=N/TB/30 -r 30 \
   -s 1280,720 -vcodec vp9 -crf 24 video_conference_$(date +%Y-%m-%d).mkv
-</code></pre>
-
-<p>I organized the parameters so they could easily be explained on a line by line
+</code></pre><p>I organized the parameters so they could easily be explained on a line by line
 basis. The first line captures the X11 render output (sorry wayland users,
-you&rsquo;ll have to look elsewhere) with a framerate of 1/second.</p>
-
+you'll have to look elsewhere) with a framerate of 1/second.</p>
 <p>The second line holds the parameters that tune the analyze phase for the low
 bandwidth and low framerate, these values are byte size not duration (10M is
 10Mb not 10 minutes).</p>
-
 <p>That third line will likely need to be customized to your display setup. I
 wanted to capture the size of one of my monitors (-s 2560x1440) which is pretty
 straight forward. Unusually, my X display is &lsquo;:1&rsquo; (visible by printing the
 $DISPLAY environment variable) instead of the normal &lsquo;:0&rsquo;. Finally, x11grab
 treats multi-monitor displays as one buffer, so to get my right most monitor I
-have to add an X offset of the combined widths of my other two monitors (that&rsquo;s
+have to add an X offset of the combined widths of my other two monitors (that's
 the 5120,0).</p>
-
-<p>This fourth line is kind of black magic, but ultimately it&rsquo;s adding some
-metadata to the stream saying that the output will be 30fps, and don&rsquo;t complain
+<p>This fourth line is kind of black magic, but ultimately it's adding some
+metadata to the stream saying that the output will be 30fps, and don't complain
 that the original framerate was 1fps.</p>
-
 <p>The last line controls the output, I wanted to resize the video down to 720p
 with a reasonable encode quality, using the VP9 codec I mentioned before, and
 storing it with a date stamped file name.</p>
-
 <p>When your done recording just Ctrl-C out of it (and give it a few seconds, it
 may seem like it hung while writing out the data).</p>
-
 <p>If I was going to make a recommendation, you may want to speed this up to 60fps
 instead of 30 as a full workday will be a tediously long 8 minute video to
 watch.</p>
@@ -214,7 +202,7 @@ watch.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

@@ -3,19 +3,19 @@
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install redis -y  Configuration Default configuration:
+Installation yum install redis -y Configuration Default configuration:
 ############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Redis • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Installation yum install redis -y  Configuration Default configuration:
+Installation yum install redis -y Configuration Default configuration:
 ############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127.'>
 <meta property='og:url' content='https://stelfox.net/notes/redis/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Redis • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/redis/'>
@@ -112,21 +112,13 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="installation">Installation</h2>
-
 <pre><code>yum install redis -y
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
+</code></pre><h2 id="configuration">Configuration</h2>
 <p>Default configuration:</p>
-
 <pre><code>############### GENERAL ###############
 
 # Daemonize the Redis process and write out the specified PID file
@@ -627,28 +619,19 @@ activerehashing yes
 #
 # include /path/to/local.conf
 # include /path/to/other.conf
-</code></pre>
-
-<h2 id="master">Master</h2>
-
+</code></pre><h2 id="master">Master</h2>
 <p>Open up incoming connections from the app servers (or the app server network)
 to port 6379.</p>
-
 <p>Use the default &lsquo;redis.conf&rsquo; file in this repository, but change the
 requirepass to something random and difficult and set masterauth to match the
 value.</p>
-
 <h2 id="slaves">Slaves</h2>
-
 <p>Open up incoming connections from the app servers (or the app server network)
 to port tcp/6379. As well as outgoing connections to the master server on port
 tcp/6379.</p>
-
 <p>Use the identical config from the master but append the following line to it:</p>
-
 <pre><code>slaveof &lt;master-ip&gt; 6379
 </code></pre>
-
 </div>
 
   
@@ -672,8 +655,8 @@ tcp/6379.</p>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>Router</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/rsyslog/'>
-        <span class='screen-reader-text'>Next post: </span>RSyslog<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/qpid/'>
+        <span class='screen-reader-text'>Next post: </span>Qpid<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -691,7 +674,7 @@ tcp/6379.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

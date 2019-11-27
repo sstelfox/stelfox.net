@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Overview /etc/pam.d/ directory contains the PAM configuration files for each PAM-aware application. Each pam aware configuration file has lines in the format of:
-&lt;module interface&gt; &lt;control flag&gt; &lt;module&gt; &lt;module arguments&gt;  Module Interfaces There are only four module interfaces:'>
+&lt;module interface&gt; &lt;control flag&gt; &lt;module&gt; &lt;module arguments&gt; Module Interfaces There are only four module interfaces:'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='PAM • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Overview /etc/pam.d/ directory contains the PAM configuration files for each PAM-aware application. Each pam aware configuration file has lines in the format of:
-&lt;module interface&gt; &lt;control flag&gt; &lt;module&gt; &lt;module arguments&gt;  Module Interfaces There are only four module interfaces:'>
+&lt;module interface&gt; &lt;control flag&gt; &lt;module&gt; &lt;module arguments&gt; Module Interfaces There are only four module interfaces:'>
 <meta property='og:url' content='https://stelfox.net/notes/pam/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>PAM • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/pam/'>
@@ -112,24 +112,15 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <h2 id="overview">Overview</h2>
-
 <p><code>/etc/pam.d/</code> directory contains the PAM configuration files for each PAM-aware
 application. Each pam aware configuration file has lines in the format of:</p>
-
 <pre><code>&lt;module interface&gt; &lt;control flag&gt; &lt;module&gt; &lt;module arguments&gt;
-</code></pre>
-
-<h2 id="module-interfaces">Module Interfaces</h2>
-
+</code></pre><h2 id="module-interfaces">Module Interfaces</h2>
 <p>There are only four module interfaces:</p>
-
 <ul>
 <li>account - Verify access is allowed. Check if account has expired, time of day
 checks, etc</li>
@@ -139,15 +130,11 @@ checks, etc</li>
 <li>session - Additional tasks performed after access has been granted, stuff like
 mounting user directories and making users mailbox available.</li>
 </ul>
-
 <p>A module can provide any or all module interfaces.</p>
-
 <p>Module interface directives can be &lsquo;stacked&rsquo; so that multiple modules are used
 together for one purpose. The order of these directives. Commented out lines
-start with &lsquo;#&rsquo;.</p>
-
+start with &lsquo;#'.</p>
 <h2 id="control-flags">Control flags</h2>
-
 <ul>
 <li>include - The module name that is provided will not load a module, but rather
 include another pam configuration file at this point in the config.</li>
@@ -164,118 +151,69 @@ of a module flagged sufficient is successful and no previous modules flagged
 required have failed, then no other results are required and the request
 succeeds.</li>
 </ul>
-
 <h2 id="module">Module</h2>
-
 <p>Available modules can be found in <code>/lib/security</code> or <code>/lib64/security</code>
 depending on the system architecture.</p>
-
 <h3 id="module-arguments">Module Arguments</h3>
-
 <p>These are module dependent refer to the man page of the module.</p>
-
-<h3 id="confusing-lines-i-don-t-understand">Confusing Lines I Don&rsquo;t Understand</h3>
-
+<h3 id="confusing-lines-i-dont-understand">Confusing Lines I Don't Understand</h3>
 <pre><code>account [default=bad success=ok user_unknown=ignore] pam_krb5.so
-</code></pre>
-
-<h2 id="pam-cracklib">pam_cracklib</h2>
-
+</code></pre><h2 id="pamcracklib">pam_cracklib</h2>
 <p><code>pam_cracklib</code> allows for quick quality control settings of passwords. It
 allows minimum requirements of the number of different types of characters that
 need to be used in a password before it can be used. It also checks the
 password against a dictionary.</p>
-
-<p>By default it checks against a dictionary but that really isn&rsquo;t enough for good
+<p>By default it checks against a dictionary but that really isn't enough for good
 password security. Further password control can be accomplished using
 <code>pam_passwdqc</code>.</p>
-
 <p>Default:</p>
-
 <pre><code>password  requisite  pam_cracklib.so try_first_pass retry=3 type=
-</code></pre>
-
-<p>Recommended (require one of each type, minimum length 14):</p>
-
+</code></pre><p>Recommended (require one of each type, minimum length 14):</p>
 <pre><code>password  requisite  pam_cracklib.so try_first_pass retry=3 minlen=14 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1
-</code></pre>
-
-<p>Other (credit based):</p>
-
+</code></pre><p>Other (credit based):</p>
 <pre><code>password  requisite  pam_cracklib.so try_first_pass retry=3 minlen=22 dcredit=2 ocredit=4
-</code></pre>
-
-<p>The credit based system requires a bit of explaining, it requires a 22
+</code></pre><p>The credit based system requires a bit of explaining, it requires a 22
 character password and treats numbers as 2 characters and symbols as 4
 characters. This can be dangerous as you can have an 11 digit number as a
-password which isn&rsquo;t secure&hellip;</p>
-
-<h2 id="pam-passwdqc">pam_passwdqc</h2>
-
+password which isn't secure&hellip;</p>
+<h2 id="pampasswdqc">pam_passwdqc</h2>
 <p><code>pam_passwdqc</code> replaces <code>pam_cracklib</code> in checking the quality of the password.
 To use it you need to comment out <code>pam_cracklib</code> in <code>/etc/pam.d/system-auth</code>.</p>
-
-<p>You&rsquo;ll need to add this line to the <code>/etc/pam.d/system-auth</code>:</p>
-
+<p>You'll need to add this line to the <code>/etc/pam.d/system-auth</code>:</p>
 <pre><code>password  requisite  pam_passwdqc.so retry=3 min=disabled,disabled,22,16,12 passphrase=4 similar=deny enforce=users
-</code></pre>
-
-<p>What this does is it prevent any passwords with one or two character types.
+</code></pre><p>What this does is it prevent any passwords with one or two character types.
 Requires a password with three character types to be a minimum of 16 characters
 and one with four character types to be a minimum of 12 characters.</p>
-
 <p>The middle option (22) is the minimum length of a passphrase (grouping of words
 found in the dictionary file). The minimum number of words is controlled by the
 passphrase option.</p>
-
 <p>It denies similar passwords as previous ones and only enforces quality control
-for root passwords (since they&rsquo;re sha512 hashes they only have two character
-  classes and would thus be denied).</p>
-
+for root passwords (since they're sha512 hashes they only have two character
+classes and would thus be denied).</p>
 <p>This is untested but to the best of my knowledge passphrases still need to be
 at least three character classes (since one and two are disabled).</p>
-
-<h2 id="pam-tally2">pam_tally2</h2>
-
-<p><code>pam_tally2</code> comes with Fedora&rsquo;s pam package so it will be installed. It&rsquo;s very
+<h2 id="pamtally2">pam_tally2</h2>
+<p><code>pam_tally2</code> comes with Fedora's pam package so it will be installed. It's very
 useful to prevent bruteforce attempts BUT it can also used to lock access out
 to a legitimate user. It is recommended to not turn this on for the entire
 system but just remote login services that use pam (for example SSH).</p>
-
 <p>To use it you need to add the following line to the services pam file. So for
 SSH the file would be <code>/etc/pam.d/sshd</code>. The following is what needs to be
 added:</p>
-
 <pre><code>auth    required     pam_tally2.so deny=5 onerr=fail audit silent
 account     required     pam_tally2.so
-</code></pre>
-
-<p>You&rsquo;ll also need to change:</p>
-
+</code></pre><p>You'll also need to change:</p>
 <pre><code>auth     sufficient     pam_unix.so nullok try_first_pass
-</code></pre>
-
-<p>To:</p>
-
+</code></pre><p>To:</p>
 <pre><code>auth     required     pam_unix.so nullok try_first_pass
-</code></pre>
-
-<p>And get rid of the following two lines as they will interfere with the rest of
+</code></pre><p>And get rid of the following two lines as they will interfere with the rest of
 the changes:</p>
-
 <pre><code>auth     requisite    pam_succeed_if.so uid &gt;= 500 quiet
 auth     required     pam_deny.so
-</code></pre>
-
-<h3 id="resetting-a-user-s-account">Resetting a User&rsquo;s Account</h3>
-
+</code></pre><h3 id="resetting-a-users-account">Resetting a User's Account</h3>
 <p>Information about users password tally can be found in <code>/var/log/tallylog</code>.</p>
-
 <pre><code>[root@localhost ~]# /sbin/pam_tally2 --user username --reset
-</code></pre>
-
-<h3 id="automatic-unlocking">Automatic Unlocking</h3>
-
+</code></pre><h3 id="automatic-unlocking">Automatic Unlocking</h3>
 <p>Additionally adding <code>unlock_time=1800</code>. This allows the user to log back in
 half an hour after the account has been locked.</p>
 
@@ -302,8 +240,8 @@ half an hour after the account has been locked.</p>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>Partitioning</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/openstack-keystone/'>
-        <span class='screen-reader-text'>Next post: </span>Openstack Keystone<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/openvpn/'>
+        <span class='screen-reader-text'>Next post: </span>OpenVPN<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -321,7 +259,7 @@ half an hour after the account has been locked.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

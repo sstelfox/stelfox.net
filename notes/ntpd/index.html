@@ -13,7 +13,7 @@ The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of co
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>NTPd • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/ntpd/'>
@@ -110,68 +110,49 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of
 computer systems over packet-switched, variable-latency data networks. NTP uses
 UDP on port 123 as its transport layer. It is designed particularly to resist
 the effects of variable latency by using a jitter buffer.</p>
-
 <p>NTP also refers to a reference software implementation that is distributed by
 the NTP Public Services Project.</p>
-
 <h2 id="security-notes">Security Notes</h2>
-
 <p>Several authentication schemes and miscellaneous programs running on the
 servers rely heavily on closely synced clocks. NTP provides a clock
 synchronized to within 10 milliseconds of the other clocks over the internet
 and as close as 200 microseconds.</p>
-
 <p>This runs as an unprivileged user with no shell when run as a server as such
-it&rsquo;s compromise could at the very worst make it hand out incorrect time. While
-this would mean the authentication schemes and programs wouldn&rsquo;t function
+it's compromise could at the very worst make it hand out incorrect time. While
+this would mean the authentication schemes and programs wouldn't function
 correctly this is something that would be noticed when day to day activity
 ceased to function.</p>
-
-<p>When run as a client, it has to be run as root to update the system&rsquo;s clock. If
+<p>When run as a client, it has to be run as root to update the system's clock. If
 an attacker was to compromise the data stream and was able to execute arbitrary
 commands in a response packet there would be issues. This is a highly unlikely
 scenario. None-the-less I prefer to have them synchronize against a trusted
 locally run server.</p>
-
 <h2 id="firewall-adjustments">Firewall Adjustments</h2>
-
 <p>NTP synchronizations are allowed through my default <a href="https://stelfox.net/notes/iptables/">IPTables</a> firewall
 script. By default it is unrestricted and should be configured to be more
 restrictive by replacing it with the one below. You should replace the address
-with your time server&rsquo;s address.</p>
-
+with your time server's address.</p>
 <pre><code># Allow time sync updates, once an ntp server is setup this can be further
 # restricted to only update from there.
 -A OUTPUT -m udp -p udp --dport 123 -j ACCEPT
-</code></pre>
-
-<p>For the server the opposite should be true. The service should only accept
+</code></pre><p>For the server the opposite should be true. The service should only accept
 connections on the local subnets. The following firewall rules should be added
 to the firewall.</p>
-
 <pre><code># Allow other servers and clients on the local subnet to synchronize their
 # clocks to this server using ntp
 -A SERVICES -m udp -p udp -s 10.13.37.0/24 --dport 123 -j ACCEPT
 -A SERVICES -m udp -p udp -s 10.13.38.0/24 --dport 123 -j ACCEPT
-</code></pre>
-
-<h2 id="configuration">Configuration</h2>
-
-<h3 id="etc-ntp-conf">/etc/ntp.conf</h3>
-
-<p>A standard configuration of ntp is shown below, there isn&rsquo;t a whole lot to
-explain so I&rsquo;ll leave it at that.</p>
-
+</code></pre><h2 id="configuration">Configuration</h2>
+<h3 id="etcntpconf">/etc/ntp.conf</h3>
+<p>A standard configuration of ntp is shown below, there isn't a whole lot to
+explain so I'll leave it at that.</p>
 <pre><code># For more information about this file, see the man pages
 # ntp.conf(5), ntp_acc(5), ntp_auth(5), ntp_clock(5), ntp_misc(5), ntp_mon(5).
 
@@ -213,31 +194,19 @@ controlkey 1
 
 # Enable writing of statistics records.
 statistics clockstats cryptostats loopstats peerstats
-</code></pre>
-
-<p>The server will need to be set to start automatically on boot. Use the
+</code></pre><p>The server will need to be set to start automatically on boot. Use the
 following command to do this:</p>
-
 <pre><code>chkconfig --level 345 ntpd on
-</code></pre>
-
-<h3 id="etc-ntp-keys">/etc/ntp/keys</h3>
-
+</code></pre><h3 id="etcntpkeys">/etc/ntp/keys</h3>
 <p>A keyfile needs to be created for local and remote administration of the
 service. To do this generate a random 8 character alphanumeric password and
 replace the &lsquo;xxxxxxxx&rsquo; in the file <code>/etc/ntp/keys</code>.</p>
-
 <p>This file should also be protected from read / write from unauthorized users
 <code>600</code> with chmod. The contents are below:</p>
-
 <pre><code>1      M       xxxxxxxx
-</code></pre>
-
-<h2 id="checking-server-status">Checking Server Status</h2>
-
+</code></pre><h2 id="checking-server-status">Checking Server Status</h2>
 <p>On the server running <code>ntpd</code> you can use the <code>ntpq</code> utility to check the
 current status of the ntpd service like so:</p>
-
 <pre><code>[root@localhost ~]# ntpq -p 127.0.0.1
      remote           refid      st t when poll reach   delay   offset  jitter
 ==============================================================================
@@ -247,7 +216,6 @@ current status of the ntpd service like so:</p>
  bonehed.lcs.mit .PPS.            1 u    2   64    1   16.254   -1.620   1.396
  gnomon.cc.colum .USNO.           1 u    1   64    1   51.110  -15.607   2.697
 </code></pre>
-
 </div>
 
   
@@ -261,7 +229,7 @@ current status of the ntpd service like so:</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/nagios/'>
+      <a href='/notes/ntpdate/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -269,10 +237,10 @@ current status of the ntpd service like so:</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Nagios</a>
+        <span class='screen-reader-text'>Previous post: </span>NTPDate</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/ntpdate/'>
-        <span class='screen-reader-text'>Next post: </span>NTPDate<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/nginx/'>
+        <span class='screen-reader-text'>Next post: </span>NGinx<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -290,7 +258,7 @@ current status of the ntpd service like so:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

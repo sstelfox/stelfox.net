@@ -4,18 +4,18 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <meta name='description' content='GRE encapsulates all layer 2 traffic, but does so through an unencrypted tunnel. Sensitive traffic should exclusively go through a lower level encrypted tunnel like IPSec.
 Firewall The following iptables need to be enabled to allow the GRE traffic to and from the system. This should be restricted to / from IP addresses as well.
--A INPUT -p 47 -j ACCEPT -A OUTPUT -p 47 -j ACCEPT  Manual Setup I&rsquo;ve seen several setups on the internet that make some&hellip; Odd choices.'>
+-A INPUT -p 47 -j ACCEPT -A OUTPUT -p 47 -j ACCEPT Manual Setup I&#39;ve seen several setups on the internet that make some&hellip; Odd choices.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='GRE Tunnel • Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:description' content='GRE encapsulates all layer 2 traffic, but does so through an unencrypted tunnel. Sensitive traffic should exclusively go through a lower level encrypted tunnel like IPSec.
 Firewall The following iptables need to be enabled to allow the GRE traffic to and from the system. This should be restricted to / from IP addresses as well.
--A INPUT -p 47 -j ACCEPT -A OUTPUT -p 47 -j ACCEPT  Manual Setup I&rsquo;ve seen several setups on the internet that make some&hellip; Odd choices.'>
+-A INPUT -p 47 -j ACCEPT -A OUTPUT -p 47 -j ACCEPT Manual Setup I&#39;ve seen several setups on the internet that make some&hellip; Odd choices.'>
 <meta property='og:url' content='https://stelfox.net/notes/gre-tunnel/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='networking'><meta property='article:published_time' content='2017-10-09T22:14:23Z'/><meta property='article:modified_time' content='2017-10-09T22:14:23Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>GRE Tunnel • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/gre-tunnel/'>
@@ -112,72 +112,50 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p>GRE encapsulates all layer 2 traffic, but does so through an unencrypted
+  <p>GRE encapsulates all layer 2 traffic, but does so through an unencrypted
 tunnel. Sensitive traffic should exclusively go through a lower level encrypted
 tunnel like IPSec.</p>
-
 <h2 id="firewall">Firewall</h2>
-
 <p>The following iptables need to be enabled to allow the GRE traffic to and from
 the system. This should be restricted to / from IP addresses as well.</p>
-
 <pre><code>-A INPUT  -p 47 -j ACCEPT
 -A OUTPUT -p 47 -j ACCEPT
-</code></pre>
-
-<h2 id="manual-setup">Manual Setup</h2>
-
-<p>I&rsquo;ve seen several setups on the internet that make some&hellip; Odd choices. When
+</code></pre><h2 id="manual-setup">Manual Setup</h2>
+<p>I've seen several setups on the internet that make some&hellip; Odd choices. When
 making one of these tunnels, the inner IP addresses should be an independent
 network from any other on the router. Other setups recommend re-using an
 already existing IP, or another IP on an existing network which will likely
 leak traffic between the tunnel and the local network.</p>
-
-<p>Tunnel keys don&rsquo;t provide very much security, but it is a small layer of
+<p>Tunnel keys don't provide very much security, but it is a small layer of
 protection that is trivial to add.</p>
-
 <p>This setup is between two hosts. The first host has a private network of
 10.0.0.0/24, a public IP of 1.2.3.4 and will use an inner tunnel IP of
 172.16.10.1. The second host has a private network of 10.16.0.0/24, a public IP
 of 4.3.2.1, and an inner tunnel IP of 172.16.10.2.</p>
-
-<p>I have a suspicion that the local value isn&rsquo;t required but it does restrict
+<p>I have a suspicion that the local value isn't required but it does restrict
 where the tunnel can come from to be valid.</p>
-
 <pre><code># Host 1
 ip tunnel add gre0 mode gre key 0x12345678 csum remote 4.3.2.1 local 1.2.3.4
 ip addr add dev gre0 172.16.10.1 peer 172.16.10.2/30
 ip link set gre0 up
 ip route add 10.16.0.0/24 dev gre0
-</code></pre>
-
-<pre><code># Host 2
+</code></pre><pre><code># Host 2
 ip tunnel add gre0 mode gre key 0x12345678 csum remote 1.2.3.4 local 4.3.2.1
 ip addr add dev gre0 172.16.10.2 peer 172.16.10.1/30
 ip link set gre0 up
 ip route add 10.0.0.0/24 dev gre0
-</code></pre>
-
-<p>To remove the tunnels you can run this on both machines:</p>
-
+</code></pre><p>To remove the tunnels you can run this on both machines:</p>
 <pre><code>ip link set gre0 down
 ip tunnel del gre0
-</code></pre>
-
-<h2 id="centos-fedora-rhel-config">CentOS / Fedora / RHEL Config</h2>
-
+</code></pre><h2 id="centos--fedora--rhel-config">CentOS / Fedora / RHEL Config</h2>
 <p>A simple point to point tunnel can be established using the standard CentOS
 network config pretty straight forward. I believe the <code>MY_OUTER_IPADDR</code> is
 optional (just like the &lsquo;local&rsquo; field in the manual setup).</p>
-
-<p>For a single host to host connection it seems like it&rsquo;s pretty straight
-forward. You&rsquo;ll need to pick IPs for the inside of the tunnel for both the
+<p>For a single host to host connection it seems like it's pretty straight
+forward. You'll need to pick IPs for the inside of the tunnel for both the
 local and remote side and place a file on both hosts with a file at
 <code>/etc/sysconfig/network-scripts/ifcfg-gre0</code> with contents like the following
 (replacing the addresses with appropriate ones).</p>
-
 <pre><code># /etc/sysconfig/network-scripts/ifcfg-gre0
 
 DEVICE=gre0
@@ -190,21 +168,15 @@ MY_INNER_IPADDR=10.98.0.1
 
 PEER_INNER_IPADDR=10.98.0.2
 PEER_OUTER_IPADDR=192.168.56.72
-</code></pre>
-
-<h2 id="other-notes">Other Notes</h2>
-
+</code></pre><h2 id="other-notes">Other Notes</h2>
 <p>There are at least two forms of GRE tunneling, point to point and point to
-multipoint. I believe there is a multipoint to multipoint as well but haven&rsquo;t
+multipoint. I believe there is a multipoint to multipoint as well but haven't
 been able to find much about either multipoint anything other than a reference
 that it appears to use a shared key for tunnel authentication.</p>
-
 <p>You can specify any remote can connect as long as they have the correct tunnel
 key using the following command:</p>
-
 <pre><code>ip tunnel add gre0 mode gre key 0x12345678 csum remote any
 </code></pre>
-
 </div>
 
   
@@ -254,7 +226,7 @@ key using the following command:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

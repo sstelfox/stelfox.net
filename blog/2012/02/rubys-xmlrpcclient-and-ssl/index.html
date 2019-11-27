@@ -2,18 +2,18 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='For the past few days I&rsquo;ve been working on a Ruby project that needed to interact with a remote XMLRPC API. This isn&rsquo;t particularly unusual but it was the first time from within a Ruby application. Luckily enough Ruby has a built in XMLRPC client that handles a lot of the messy bits.
+<meta name='description' content='For the past few days I&#39;ve been working on a Ruby project that needed to interact with a remote XMLRPC API. This isn&#39;t particularly unusual but it was the first time from within a Ruby application. Luckily enough Ruby has a built in XMLRPC client that handles a lot of the messy bits.
 The XMLRPC::Client class itself seems fairly simple. There are only a handful of methods, five of which are for opening a new connection in a few different ways, and at least two ways to open each type of connection.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Ruby&#39;s XMLRPC::Client and SSL • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='For the past few days I&rsquo;ve been working on a Ruby project that needed to interact with a remote XMLRPC API. This isn&rsquo;t particularly unusual but it was the first time from within a Ruby application. Luckily enough Ruby has a built in XMLRPC client that handles a lot of the messy bits.
+<meta property='og:description' content='For the past few days I&#39;ve been working on a Ruby project that needed to interact with a remote XMLRPC API. This isn&#39;t particularly unusual but it was the first time from within a Ruby application. Luckily enough Ruby has a built in XMLRPC client that handles a lot of the messy bits.
 The XMLRPC::Client class itself seems fairly simple. There are only a handful of methods, five of which are for opening a new connection in a few different ways, and at least two ways to open each type of connection.'>
 <meta property='og:url' content='https://stelfox.net/blog/2012/02/rubys-xmlrpcclient-and-ssl/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='blog'><meta property='article:tag' content='development'><meta property='article:tag' content='ruby'><meta property='article:published_time' content='2012-02-14T18:08:51Z'/><meta property='article:modified_time' content='2012-02-14T18:08:51Z'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Ruby&#39;s XMLRPC::Client and SSL • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/blog/2012/02/rubys-xmlrpcclient-and-ssl/'>
@@ -110,54 +110,47 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p>For the past few days I&rsquo;ve been working on a Ruby project that needed to
-interact with a remote XMLRPC API. This isn&rsquo;t particularly unusual but it was
+  <p>For the past few days I've been working on a Ruby project that needed to
+interact with a remote XMLRPC API. This isn't particularly unusual but it was
 the first time from within a Ruby application. Luckily enough Ruby has a built
 in XMLRPC client that handles a lot of the messy bits.</p>
-
 <p>The XMLRPC::Client class itself seems fairly simple. There are only a handful
 of methods, five of which are for opening a new connection in a few different
 ways, and at least two ways to open each type of connection.</p>
-
 <p>As a starting point this was a simplified chunk of code that I was using to
 connect to the remote API:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;xmlrpc/client&#39;</span>
 
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">APIConnection</span>
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">initialize</span>(username, password, host)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">initialize</span>(username, password, host)
     <span style="color:#75715e"># Build the arguments for the XMLRPC::Client object</span>
     conn_args <span style="color:#f92672">=</span> {
-      <span style="color:#e6db74">:user</span> <span style="color:#f92672">=&gt;</span> username,
-      <span style="color:#e6db74">:password</span> <span style="color:#f92672">=&gt;</span> password,
-      <span style="color:#e6db74">:host</span> <span style="color:#f92672">=&gt;</span> host,
-      <span style="color:#e6db74">:use_ssl</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
-      <span style="color:#e6db74">:path</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;/api&#34;</span>
+      <span style="color:#e6db74">:user</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> username,
+      <span style="color:#e6db74">:password</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> password,
+      <span style="color:#e6db74">:host</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> host,
+      <span style="color:#e6db74">:use_ssl</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span>,
+      <span style="color:#e6db74">:path</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">/api</span><span style="color:#e6db74">&#34;</span>
     }
 
     @connection <span style="color:#f92672">=</span> <span style="color:#66d9ef">XMLRPC</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Client</span><span style="color:#f92672">.</span>new_from_hash(conn_args)
   <span style="color:#66d9ef">end</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">version</span>
-    @connection<span style="color:#f92672">.</span>call(<span style="color:#e6db74">&#34;version&#34;</span>)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">version</span>
+    @connection<span style="color:#f92672">.</span>call(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">version</span><span style="color:#e6db74">&#34;</span>)
   <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span></code></pre></div>
-<p>The problem I ran into was when connecting to a server using HTTPS. I knew that
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>The problem I ran into was when connecting to a server using HTTPS. I knew that
 this certificate was good however I continued to get the message:</p>
-
 <pre><code>warning: peer certificate won't be verified in this SSL session
-</code></pre>
-
-<p>Ruby has taken the approach of by default not including any trusted certificate
+</code></pre><p>Ruby has taken the approach of by default not including any trusted certificate
 authorities which I greatly appreciate especially considering that in 2010 and
 2011 12 certificate authorities were known to have been hacked including major
 ones such as VeriSign, and <a href="http://www.symantec.com/connect/blogs/diginotar-ssl-breach-update">DigiNotar</a>. Some of which were <a href="http://nakedsecurity.sophos.com/2011/08/29/falsely-issued-google-ssl-certificate-in-the-wild-for-more-than-5-weeks/">proven</a> to
 have issued false certificates.</p>
-
-<p>Since XMLRPC::Client doesn&rsquo;t expose it&rsquo;s SSL trust settings through it&rsquo;s
+<p>Since XMLRPC::Client doesn't expose it's SSL trust settings through it's
 methods I went on a bit of a journey through Google to find an answer. What I
-found was overly disturbing, a lot of people don&rsquo;t seem to understand what SSL
+found was overly disturbing, a lot of people don't seem to understand what SSL
 is actually for. The solutions I found from the most egregious to least:</p>
-
 <ul>
 <li>Disabling OpenSSL certificate checking globally with
  OpenSSL::SSL::VERIFY_NONE</li>
@@ -166,63 +159,58 @@ is actually for. The solutions I found from the most egregious to least:</p>
 and over-riding how it was establishing connections</li>
 <li>Using an SSL stripping proxy</li>
 </ul>
-
-<p>I couldn&rsquo;t find a solution out there that didn&rsquo;t the security conscious voice
+<p>I couldn't find a solution out there that didn't the security conscious voice
 in my head scream in despair. I asked on <a href="http://stackoverflow.com/questions/9199660/why-is-ruby-unable-to-verify-an-ssl-certificate">StackOverflow</a> for a good
-solution. When I asked I didn&rsquo;t have a good grasp on how Ruby was handling SSL
-certificates at all. The thorough answer from <a href="http://stackoverflow.com/a/9238221/95114">emboss</a> didn&rsquo;t quite answer
+solution. When I asked I didn't have a good grasp on how Ruby was handling SSL
+certificates at all. The thorough answer from <a href="http://stackoverflow.com/a/9238221/95114">emboss</a> didn't quite answer
 my question but it gave me more than enough to really hunt down what I wanted.</p>
-
-<p>First stop, I needed the certificates that I&rsquo;ll be using to verify the
+<p>First stop, I needed the certificates that I'll be using to verify the
 connection. Every single certificate authority that issues certificates for
 public websites makes the public portion of their certificates available and
 this is what we need to verify the connection. To find out which ones you
-specifically need you can go to the API server&rsquo;s address and look at it&rsquo;s
-certificate information by clicking on the site&rsquo;s lock icon. Every browser is a
-little different so you&rsquo;ll have to find this out on your own. With Chrome (and
+specifically need you can go to the API server's address and look at it's
+certificate information by clicking on the site's lock icon. Every browser is a
+little different so you'll have to find this out on your own. With Chrome (and
 perhaps others) you can download each of the certificates in the chain that
-you&rsquo;ll need to verify the server&rsquo;s certificate.</p>
-
+you'll need to verify the server's certificate.</p>
 <p>The server I was connecting to was using a <a href="http://www.rapidssl.com/">RapidSSL</a> certificate, who has
 been verified by <a href="http://www.geotrust.com/">GeoTrust</a>. You want to grab their certificates base64
 encoded in PEM format. Stick them all in a <code>ca.crt</code> file.</p>
-
 <p>How do we get XMLRPC::Client to actually use that information without hacking
 it all to pieces? Net::HTTP has a few methods that allow you to set the
 appropriate connection settings and XMLRPC::Client uses Net::HTTP. If
-XMLRPC::Client allowed to you specify this directly somehow I would&rsquo;ve been a
+XMLRPC::Client allowed to you specify this directly somehow I would've been a
 lot happier.</p>
-
-<p>Here&rsquo;s that code snippet again, this time forcing certificate verification with
+<p>Here's that code snippet again, this time forcing certificate verification with
 the <code>ca.crt</code> file. This code assumes that the <code>ca.crt</code> file lives in the same
 directory as the connection script:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ruby" data-lang="ruby">require <span style="color:#e6db74">&#39;xmlrpc/client&#39;</span>
 
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">APIConnection</span>
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">initialize</span>(username, password, host)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">initialize</span>(username, password, host)
     <span style="color:#75715e"># Build the arguments for the XMLRPC::Client object</span>
     conn_args <span style="color:#f92672">=</span> {
-      <span style="color:#e6db74">:user</span> <span style="color:#f92672">=&gt;</span> username,
-      <span style="color:#e6db74">:password</span> <span style="color:#f92672">=&gt;</span> password,
-      <span style="color:#e6db74">:host</span> <span style="color:#f92672">=&gt;</span> host,
-      <span style="color:#e6db74">:use_ssl</span> <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">true</span>,
-      <span style="color:#e6db74">:path</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#34;/api&#34;</span>
+      <span style="color:#e6db74">:user</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> username,
+      <span style="color:#e6db74">:password</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> password,
+      <span style="color:#e6db74">:host</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> host,
+      <span style="color:#e6db74">:use_ssl</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">true</span>,
+      <span style="color:#e6db74">:path</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">/api</span><span style="color:#e6db74">&#34;</span>
     }
 
     @connection <span style="color:#f92672">=</span> <span style="color:#66d9ef">XMLRPC</span><span style="color:#f92672">::</span><span style="color:#66d9ef">Client</span><span style="color:#f92672">.</span>new_from_hash(conn_args)
 
-    @connection<span style="color:#f92672">.</span>instance_variable_get(<span style="color:#e6db74">&#34;@http&#34;</span>)<span style="color:#f92672">.</span>verify_mode <span style="color:#f92672">=</span> <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">SSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">VERIFY_PEER</span>
-    @connection<span style="color:#f92672">.</span>instance_variable_get(<span style="color:#e6db74">&#34;@http&#34;</span>)<span style="color:#f92672">.</span>ca_file <span style="color:#f92672">=</span> <span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>join(<span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>dirname(__FILE__), <span style="color:#e6db74">&#34;ca.crt&#34;</span>)
+    @connection<span style="color:#f92672">.</span>instance_variable_get(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">@http</span><span style="color:#e6db74">&#34;</span>)<span style="color:#f92672">.</span>verify_mode <span style="color:#f92672">=</span> <span style="color:#66d9ef">OpenSSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">SSL</span><span style="color:#f92672">::</span><span style="color:#66d9ef">VERIFY_PEER</span>
+    @connection<span style="color:#f92672">.</span>instance_variable_get(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">@http</span><span style="color:#e6db74">&#34;</span>)<span style="color:#f92672">.</span>ca_file <span style="color:#f92672">=</span> <span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>join(<span style="color:#66d9ef">File</span><span style="color:#f92672">.</span>dirname(__FILE__), <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">ca.crt</span><span style="color:#e6db74">&#34;</span>)
   <span style="color:#66d9ef">end</span>
 
-  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">version</span>
-    @connection<span style="color:#f92672">.</span>call(<span style="color:#e6db74">&#34;version&#34;</span>)
+  <span style="color:#66d9ef">def</span> <span style="color:#a6e22e"></span><span style="color:#f92672"></span><span style="color:#a6e22e">version</span>
+    @connection<span style="color:#f92672">.</span>call(<span style="color:#e6db74">&#34;</span><span style="color:#e6db74">version</span><span style="color:#e6db74">&#34;</span>)
   <span style="color:#66d9ef">end</span>
-<span style="color:#66d9ef">end</span></code></pre></div>
-<p>Those last two lines in the initialize method first dive into the connection
-we&rsquo;ve already setup (but before it&rsquo;s been called), grab the of Net::HTTP and
+<span style="color:#66d9ef">end</span>
+</code></pre></div><p>Those last two lines in the initialize method first dive into the connection
+we've already setup (but before it's been called), grab the of Net::HTTP and
 tells it to force peer verification and to use the certificate file we created
-before. No more warning, and we&rsquo;re actually safe.</p>
+before. No more warning, and we're actually safe.</p>
 
 </div>
 
@@ -273,7 +261,7 @@ before. No more warning, and we&rsquo;re actually safe.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

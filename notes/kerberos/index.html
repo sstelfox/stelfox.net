@@ -15,7 +15,7 @@ It is very important that system times are all very close for successful authent
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>Kerberos • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/kerberos/'>
@@ -112,91 +112,55 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
-
+until I get around to updating it.</strong></em></p>
 <p>Kerberos is a secure network authentication system.</p>
-
 <p>It is very important that system times are all very close for successful
 authentication. You should configure <a href="https://stelfox.net/notes/ntpd/">NTPd</a> or <a href="https://stelfox.net/notes/chronyd/">Chronyd</a> to ensure the
 systems stay in sync.</p>
-
 <h2 id="master-configuration">Master Configuration</h2>
-
 <p>Edit the configuration files (provided at the bottom).</p>
-
 <p>Create the initial database for the realm, it will ask for a master password
 for the database. DO NOT FORGET THIS!!</p>
-
 <pre><code>kdb5_util create -s
-</code></pre>
-
-<p>Create an administrator user, it will ask for the password ensure that it is
-strong as this account will be able to create, delete, and see principal&rsquo;s
+</code></pre><p>Create an administrator user, it will ask for the password ensure that it is
+strong as this account will be able to create, delete, and see principal's
 keys.</p>
-
 <pre><code>kadmin.local -q &quot;addprinc &lt;&lt;username&gt;&gt;/admin&quot;
-</code></pre>
-
-<p>Set the services to startup automatically and start them up:</p>
-
+</code></pre><p>Set the services to startup automatically and start them up:</p>
 <pre><code>chkconfig krb5kdc on
 chkconfig kadmin on
 /etc/init.d/krb5kdc start
 /etc/init.d/kadmin start
-</code></pre>
-
-<p>After the database has been started you&rsquo;ll need to create at least one normal
+</code></pre><p>After the database has been started you'll need to create at least one normal
 user, it will ask for a password for the account.</p>
-
 <pre><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
 kadmin:  addprinc &lt;&lt;username&gt;&gt;
-</code></pre>
-
-<h3 id="slave">Slave</h3>
-
+</code></pre><h3 id="slave">Slave</h3>
 <p>Please note these instructions are untested but they are believed to be
 correct.</p>
-
-<p>First we&rsquo;ll need to create an ACL file for the replication utility <code>kprop</code>. It
+<p>First we'll need to create an ACL file for the replication utility <code>kprop</code>. It
 should live <code>/var/Kerberos/krb5kdc/kpropd.acl</code> and have the contents:</p>
-
 <pre><code>host/kdc1.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET
 host/kdc2.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET
-</code></pre>
-
-<p>You&rsquo;ll need to create host keys for each of the kerberos servers if they
-haven&rsquo;t been created already.</p>
-
+</code></pre><p>You'll need to create host keys for each of the kerberos servers if they
+haven't been created already.</p>
 <pre><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
 kadmin:  addprinc -rand host/kdc1.home.bedroomprogrammers.net
 kadmin:  addprinc -rand host/kdc2.home.bedroomprogrammers.net
-</code></pre>
-
-<p>You&rsquo;ll need to add the keys to the local keytab file on the primary KDC.</p>
-
+</code></pre><p>You'll need to add the keys to the local keytab file on the primary KDC.</p>
 <pre><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
 kadmin:  ktadd host/kdc1.home.bedroomprogrammers.net
 kadmin:  ktadd host/kdc2.home.bedroomprogrammers.net
-</code></pre>
-
-<p>Copy the keytab file from the primary KDC to the secondary server using an
+</code></pre><p>Copy the keytab file from the primary KDC to the secondary server using an
 encrypted transfer mechanism such as SCP.</p>
-
 <pre><code>[root@localhost ~]# scp /etc/krb5.keytab root@krb2.home.bedroomprogrammers.net:/etc/krb5.keytab
-</code></pre>
-
-<p>At this point you&rsquo;ll want to restart the master&rsquo;s service and then start up the
+</code></pre><p>At this point you'll want to restart the master's service and then start up the
 kdc on the slave server:</p>
-
 <pre><code>[root@slave ~]# chkconfig krb5kdc start
 [root@slave ~]# /etc/init.d/krb5kdc start
-</code></pre>
-
-<p>Once the Slave is setup you&rsquo;ll need to modify the <code>/etc/krb5.conf</code> on the
+</code></pre><p>Once the Slave is setup you'll need to modify the <code>/etc/krb5.conf</code> on the
 client machines and the master machine to include the FQDN of the slave in the
 <code>[realms]</code> section for the appropriate domain. The <code>[realms]</code> section would
 then look like:</p>
@@ -205,49 +169,32 @@ then look like:</p>
 </span><span style="color:#e6db74">    kdc = kdc1.home.bedroomprogrammers.net
 </span><span style="color:#e6db74">    kdc = kdc2.home.bedroomprogrammers.net
 </span><span style="color:#e6db74">    admin_server = kdc1.home.bedroomprogrammers.net
-</span><span style="color:#e6db74">  }</span></code></pre></div>
-<h2 id="adding-a-new-host-to-the-domain">Adding a New Host to the Domain</h2>
-
+</span><span style="color:#e6db74">  }</span>
+</code></pre></div><h2 id="adding-a-new-host-to-the-domain">Adding a New Host to the Domain</h2>
 <p>Hosts need <code>krb5-workstation</code> and <code>krb5-libs</code> installed. Make sure the client
 firewall rules have been applied.</p>
-
 <p>Be sure to copy the config file <code>/etc/krb5.conf</code> mentioned on this page to each
 client machine.</p>
-
 <pre><code>[root@kerb-client ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
 kadmin:  addprinc -randkey host/&lt;&lt;FQDN&gt;&gt;
 kadmin:  ktadd -k /etc/krb5.keytab host/&lt;&lt;FQDN&gt;&gt;
-</code></pre>
-
-<p>You&rsquo;ll need to replace &lt;<FQDN>&gt; with the domain name of the host you&rsquo;re adding.
+</code></pre><p>You'll need to replace &laquo;FQDN&raquo; with the domain name of the host you're adding.
 It will need a DNS entry matching this hostname.</p>
-
 <h2 id="firewall-configuration">Firewall Configuration</h2>
-
 <h3 id="server-adjustments">Server Adjustments</h3>
-
 <pre><code># Allow authentication to the KDC
 -A INPUT -m tcp -p tcp --dport 88 -j ACCEPT
 # Allow remote kerberos administration. This should probably be restricted more
 -A INPUT -m tcp -p tcp --dport 749 -j ACCEPT
-</code></pre>
-
-<h3 id="client-adjustments">Client Adjustments</h3>
-
+</code></pre><h3 id="client-adjustments">Client Adjustments</h3>
 <pre><code># Allow authentication to the KDC
 -A OUTPUT -m tcp -p tcp --dport 88 -j ACCEPT
-</code></pre>
-
-<p>Setting up a client machine to talk to the KDC will initially require this rule
+</code></pre><p>Setting up a client machine to talk to the KDC will initially require this rule
 as well:</p>
-
 <pre><code># Temporarily need this to setup the connection with the KDC
 -A OUTPUT -m tcp -p tcp --dport 749 -j ACCEPT
-</code></pre>
-
-<h2 id="configuration-files">Configuration Files</h2>
-
-<h3 id="etc-krb5-conf">/etc/krb5.conf</h3>
+</code></pre><h2 id="configuration-files">Configuration Files</h2>
+<h3 id="etckrb5conf">/etc/krb5.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[logging]</span>
   <span style="color:#a6e22e">default</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">FILE:/var/log/krb5libs.log
 </span><span style="color:#e6db74">  kdc = FILE:/var/log/krb5kdc.log
@@ -271,13 +218,10 @@ as well:</p>
   <span style="color:#a6e22e">.bedroomprogrammers.net</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">BEDROOMPROGRAMMERS.NET
 </span><span style="color:#e6db74">  bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
 </span><span style="color:#e6db74">  .home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-</span><span style="color:#e6db74">  home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET</span></code></pre></div>
-<h3 id="var-kerberos-krb5kdc-kadm5-acl">/var/kerberos/krb5kdc/kadm5.acl</h3>
-
+</span><span style="color:#e6db74">  home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET</span>
+</code></pre></div><h3 id="varkerberoskrb5kdckadm5acl">/var/kerberos/krb5kdc/kadm5.acl</h3>
 <pre><code>*/admin@BEDROOMPROGRAMMERS.NET  *
-</code></pre>
-
-<h3 id="var-kerberos-krb5kdc-kdc-conf">/var/kerberos/krb5kdc/kdc.conf</h3>
+</code></pre><h3 id="varkerberoskrb5kdckdcconf">/var/kerberos/krb5kdc/kdc.conf</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[kdcdefaults]</span>
   <span style="color:#a6e22e">kdc_ports</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">88
 </span><span style="color:#e6db74">  kdc_tcp_ports = 88</span>
@@ -289,9 +233,8 @@ as well:</p>
 </span><span style="color:#e6db74">    dict_file = /usr/share/dict/words
 </span><span style="color:#e6db74">    admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
 </span><span style="color:#e6db74">    supported_enctypes = aes256-cts:normal aes128-cts:normal 
-</span><span style="color:#e6db74">  }</span></code></pre></div>
-<h2 id="notes-on-cached-client-login">Notes on Cached Client Login</h2>
-
+</span><span style="color:#e6db74">  }</span>
+</code></pre></div><h2 id="notes-on-cached-client-login">Notes on Cached Client Login</h2>
 <ul>
 <li><a href="http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html">http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html</a></li>
 <li><a href="http://ubuntuforums.org/showthread.php?t=1205604">http://ubuntuforums.org/showthread.php?t=1205604</a></li>
@@ -312,7 +255,7 @@ as well:</p>
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/lm-sensors/'>
+      <a href='/notes/libvirtd/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -320,10 +263,10 @@ as well:</p>
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>LM Sensors</a>
+        <span class='screen-reader-text'>Previous post: </span>libvirtd</a>
     </div><div class='next-entry sep-before'>
-      <a href='/notes/iodine/'>
-        <span class='screen-reader-text'>Next post: </span>Iodine<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+      <a href='/notes/iscsid/'>
+        <span class='screen-reader-text'>Next post: </span>iSCSId<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="4" y1="12" x2="20" y2="12"/>
   <polyline points="14 6 20 12 14 18"/>
@@ -341,7 +284,7 @@ as well:</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>

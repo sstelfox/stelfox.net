@@ -13,7 +13,7 @@
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
 <meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.56.0-DEV" />
+<meta name="generator" content="Hugo 0.61.0-DEV" />
 
   <title>MySQL Tuning • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
   <link rel='canonical' href='https://stelfox.net/notes/mysql-tuning/'>
@@ -110,9 +110,9 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  <p><strong><em>Note: This page is quite old and is likely out of date. My opinions may have
+  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</em></strong></p>
+until I get around to updating it.</strong></em></p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/sh
 </span><span style="color:#75715e"></span>
 <span style="color:#75715e"># MySQL performance tuning primer script</span>
@@ -165,7 +165,7 @@ export boldwhite<span style="color:#f92672">=</span><span style="color:#e6db74">
 <span style="color:#75715e"># Function to easliy print colored text</span>
 <span style="color:#75715e">#   Argument $1 = message</span>
 <span style="color:#75715e">#   Argument $2 = color</span>
-cecho<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+cecho<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   local default_msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;No message passed.&#34;</span>
   message<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>1<span style="color:#66d9ef">:-</span>$default_msg<span style="color:#e6db74">}</span>
 
@@ -217,7 +217,7 @@ cecho<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 <span style="color:#75715e"># Function to easliy print colored text without a newline</span>
 <span style="color:#75715e">#   Argument $1 = message</span>
 <span style="color:#75715e">#   Argument $2 = color</span>
-cechon<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+cechon<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   local default_msg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;No message passed.&#34;</span>
   message<span style="color:#f92672">=</span><span style="color:#e6db74">${</span>1<span style="color:#66d9ef">:-</span>$default_msg<span style="color:#e6db74">}</span>
 
@@ -266,14 +266,14 @@ cechon<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Banner</span>
-print_banner<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+print_banner<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34; -- MYSQL PERFORMANCE TUNING PRIMER --&#34;</span> boldblue
   cecho <span style="color:#e6db74">&#34;      - By: Matthew Montgomery -&#34;</span> black
   cecho <span style="color:#e6db74">&#34;   - Modifications By: Sam Stelfox -&#34;</span> black
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Find the location of the mysql.sock file</span>
-check_for_socket<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_for_socket<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span>$socket<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     <span style="color:#75715e"># Use ~/my.cnf version</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -f ~/.my.cnf <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -307,10 +307,10 @@ check_for_socket<span style="color:#f92672">()</span> <span style="color:#f92672
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Check for the existance of plesk and login using it&#39;s credentials</span>
-check_for_plesk_passwords<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_for_plesk_passwords<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -f /etc/psa/.psa.shadow <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    mysql<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysql -S </span>$socket<span style="color:#e6db74"> -u admin -p</span><span style="color:#66d9ef">$(</span>cat /etc/psa/.psa.shadow<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
-    mysqladmin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysqladmin -S </span>$socket<span style="color:#e6db74"> -u admin -p</span><span style="color:#66d9ef">$(</span>cat /etc/psa/.psa.shadow<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+    mysql<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">mysql -S </span>$socket<span style="color:#e6db74"> -u admin -p</span><span style="color:#66d9ef">$(</span>cat /etc/psa/.psa.shadow<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
+    mysqladmin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">mysqladmin -S </span>$socket<span style="color:#e6db74"> -u admin -p</span><span style="color:#66d9ef">$(</span>cat /etc/psa/.psa.shadow<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">else</span>
     mysql<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysql&#34;</span>
     mysqladmin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysqladmin&#34;</span>
@@ -318,8 +318,8 @@ check_for_plesk_passwords<span style="color:#f92672">()</span> <span style="colo
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Test for running mysql</span>
-check_mysql_login<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  is_up<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysqladmin ping <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span><span style="color:#66d9ef">)</span>
+check_mysql_login<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  is_up<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysqladmin ping 2&gt;&amp;1<span style="color:#66d9ef">)</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$is_up<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mysqld is alive&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     echo UP &gt; /dev/null
@@ -339,24 +339,24 @@ check_mysql_login<span style="color:#f92672">()</span> <span style="color:#f9267
   <span style="color:#66d9ef">fi</span>
 <span style="color:#f92672">}</span>
 
-final_login_attempt<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  is_up<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysqladmin ping <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span><span style="color:#66d9ef">)</span>
+final_login_attempt<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  is_up<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysqladmin ping 2&gt;&amp;1<span style="color:#66d9ef">)</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$is_up<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mysqld is alive&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     echo UP &gt; /dev/null
   <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$is_up<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mysqld is alive&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     cecho <span style="color:#e6db74">&#34;- FINAL LOGIN ATTEMPT FAILED -&#34;</span> boldred
-    cecho <span style="color:#e6db74">&#34;Unable to log into socket: </span>$socket<span style="color:#e6db74">&#34;</span> boldred
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Unable to log into socket: </span>$socket<span style="color:#e6db74">&#34;</span> boldred
 
     exit <span style="color:#ae81ff">1</span>
   <span style="color:#66d9ef">fi</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Create a ~/.my.cnf and exit when all else fails</span>
-second_login_failed<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+second_login_failed<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;Could not auto detect login info!&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Found potential sockets: </span>$found_socks<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Using: </span>$socket<span style="color:#e6db74">&#34;</span> red
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Found potential sockets: </span>$found_socks<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Using: </span>$socket<span style="color:#e6db74">&#34;</span> red
 
   read -p <span style="color:#e6db74">&#34;Would you like to provide a different socket?: [y/N] &#34;</span> REPLY
 
@@ -396,7 +396,7 @@ second_login_failed<span style="color:#f92672">()</span> <span style="color:#f92
 
       <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -f ~/.my.cnf <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
         umask <span style="color:#ae81ff">077</span>
-        printf <span style="color:#e6db74">&#34;[client]\nuser=</span>$user<span style="color:#e6db74">\npassword=</span>$pass<span style="color:#e6db74">\nsocket=</span>$socket<span style="color:#e6db74">&#34;</span> &gt; ~/.my.cnf
+        printf <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[client]\nuser=</span>$user<span style="color:#e6db74">\npassword=</span>$pass<span style="color:#e6db74">\nsocket=</span>$socket<span style="color:#e6db74">&#34;</span> &gt; ~/.my.cnf
 
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$answer1<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;yes&#39;</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
           exit <span style="color:#ae81ff">1</span>
@@ -411,7 +411,7 @@ second_login_failed<span style="color:#f92672">()</span> <span style="color:#f92
         read -p <span style="color:#e6db74">&#34;Replace?: [y/N] &#34;</span> REPLY
 
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$REPLY<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;y&#39;</span> <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$REPLY<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Y&#39;</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
-          printf <span style="color:#e6db74">&#34;[client]\nuser=</span>$user<span style="color:#e6db74">\npassword=</span>$pass<span style="color:#e6db74">\socket=</span>$socket<span style="color:#e6db74">&#34;</span> &gt; ~/.my.cnf
+          printf <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[client]\nuser=</span>$user<span style="color:#e6db74">\npassword=</span>$pass<span style="color:#e6db74">\socket=</span>$socket<span style="color:#e6db74">&#34;</span> &gt; ~/.my.cnf
 
           <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$answer1<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;yes&#39;</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
             exit <span style="color:#ae81ff">1</span>
@@ -437,21 +437,21 @@ second_login_failed<span style="color:#f92672">()</span> <span style="color:#f92
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Populate the .my.cnf file using values harvested from Webmin</span>
-find_webmin_passwords<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+find_webmin_passwords<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;Testing for stored webmin passwords:&#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -f /etc/webmin/mysql/config <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    user<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep ^login<span style="color:#f92672">=</span> /etc/webmin/mysql/config | cut -d <span style="color:#e6db74">&#34;=&#34;</span> -f <span style="color:#ae81ff">2</span><span style="color:#66d9ef">)</span>
-    pass<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep ^pass<span style="color:#f92672">=</span> /etc/webmin/mysql/config | cut -d <span style="color:#e6db74">&#34;=&#34;</span> -f <span style="color:#ae81ff">2</span><span style="color:#66d9ef">)</span>
+    user<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep ^login<span style="color:#f92672">=</span> /etc/webmin/mysql/config | cut -d <span style="color:#e6db74">&#34;=&#34;</span> -f 2<span style="color:#66d9ef">)</span>
+    pass<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>grep ^pass<span style="color:#f92672">=</span> /etc/webmin/mysql/config | cut -d <span style="color:#e6db74">&#34;=&#34;</span> -f 2<span style="color:#66d9ef">)</span>
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span>  $user <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> $pass <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> ! -f ~/.my.cnf  <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-      cecho <span style="color:#e6db74">&#34;Setting login info as User: </span>$user<span style="color:#e6db74"> Password: </span>$pass<span style="color:#e6db74">&#34;</span>
+      cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Setting login info as User: </span>$user<span style="color:#e6db74"> Password: </span>$pass<span style="color:#e6db74">&#34;</span>
       touch ~/.my.cnf
       chmod <span style="color:#ae81ff">600</span> ~/.my.cnf
 
-      printf <span style="color:#e6db74">&#34;[client]\nuser=</span>$user<span style="color:#e6db74">\npassword=</span>$pass<span style="color:#e6db74">&#34;</span> &gt; ~/.my.cnf 
+      printf <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">[client]\nuser=</span>$user<span style="color:#e6db74">\npassword=</span>$pass<span style="color:#e6db74">&#34;</span> &gt; ~/.my.cnf 
       cecho <span style="color:#e6db74">&#34;Retrying login&#34;</span>
-      is_up<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysqladmin ping <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span><span style="color:#66d9ef">)</span>
+      is_up<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysqladmin ping 2&gt;&amp;1<span style="color:#66d9ef">)</span>
 
       <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$is_up<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mysqld is alive&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
         echo UP &gt; /dev/null
@@ -474,8 +474,8 @@ find_webmin_passwords<span style="color:#f92672">()</span> <span style="color:#f
 #
 <span style="color:#75715e"># Ex:</span>
 <span style="color:#75715e">#     mysql_status &#39;Mysql_status_variable&#39; bash_dest_variable</span>
-mysql_status<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  local status<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;show /*!50000 global */ status like </span>$1<span style="color:#e6db74">&#34;</span> | awk <span style="color:#e6db74">&#39;{ print $2 }&#39;</span><span style="color:#66d9ef">)</span>
+mysql_status<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  local status<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">show /*!50000 global */ status like </span>$1<span style="color:#e6db74">&#34;</span> | awk <span style="color:#e6db74">&#39;{ print $2 }&#39;</span><span style="color:#66d9ef">)</span>
   export <span style="color:#e6db74">&#34;</span>$2<span style="color:#e6db74">&#34;</span><span style="color:#f92672">=</span>$status
 <span style="color:#f92672">}</span>
 
@@ -484,24 +484,24 @@ mysql_status<span style="color:#f92672">()</span> <span style="color:#f92672">{<
 <span style="color:#75715e"># Ex:</span>
 <span style="color:#75715e">#     mysql_variable &#39;Mysql_server_variable&#39; bash_dest_variable</span>
 <span style="color:#75715e">#     mysql_variableTSV &#39;Mysql_server_variable&#39; bash_dest_variable</span>
-mysql_variable<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  local variable<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;show /*!50000 global */ variables like </span>$1<span style="color:#e6db74">&#34;</span> | awk <span style="color:#e6db74">&#39;{ print $2 }&#39;</span><span style="color:#66d9ef">)</span>
+mysql_variable<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  local variable<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">show /*!50000 global */ variables like </span>$1<span style="color:#e6db74">&#34;</span> | awk <span style="color:#e6db74">&#39;{ print $2 }&#39;</span><span style="color:#66d9ef">)</span>
   export <span style="color:#e6db74">&#34;</span>$2<span style="color:#e6db74">&#34;</span><span style="color:#f92672">=</span>$variable
 <span style="color:#f92672">}</span>
 
-mysql_variableTSV<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  local variable<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;show /*!50000 global */ variables like </span>$1<span style="color:#e6db74">&#34;</span> | awk -F <span style="color:#ae81ff">\t</span> <span style="color:#e6db74">&#39;{ print $2 }&#39;</span><span style="color:#66d9ef">)</span>
+mysql_variableTSV<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  local variable<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">show /*!50000 global */ variables like </span>$1<span style="color:#e6db74">&#34;</span> | awk -F <span style="color:#ae81ff">\t</span> <span style="color:#e6db74">&#39;{ print $2 }&#39;</span><span style="color:#66d9ef">)</span>
   export <span style="color:#e6db74">&#34;</span>$2<span style="color:#e6db74">&#34;</span><span style="color:#f92672">=</span>$variable
 <span style="color:#f92672">}</span>
 
-float2int<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  local variable<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74"> / 1&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+float2int<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  local variable<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$1<span style="color:#e6db74"> / 1</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
   export <span style="color:#e6db74">&#34;</span>$2<span style="color:#e6db74">&#34;</span><span style="color:#f92672">=</span>$variable
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Divide two integers</span>
-divide<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  usage<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$0<span style="color:#e6db74"> dividend divisor &#39;</span>$variable<span style="color:#e6db74">&#39; scale&#34;</span>
+divide<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  usage<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$0<span style="color:#e6db74"> dividend divisor &#39;</span>$variable<span style="color:#e6db74">&#39; scale</span><span style="color:#e6db74">&#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $1 -ge <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     dividend<span style="color:#f92672">=</span>$1
@@ -535,7 +535,7 @@ divide<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
     exit <span style="color:#ae81ff">1</span>
   <span style="color:#66d9ef">fi</span>
 
-  export $3<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=</span>$scale<span style="color:#e6db74">; </span>$dividend<span style="color:#e6db74"> / </span>$divisor<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  export $3<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=</span>$scale<span style="color:#e6db74">; </span>$dividend<span style="color:#e6db74"> / </span>$divisor<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Convert a value in to human readable size and populate a variable with the</span>
@@ -546,7 +546,7 @@ divide<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
 #
 <span style="color:#75715e"># Ex:</span>
 <span style="color:#75715e">#     human_readable $value &#39;variable name&#39; [places of precision]</span>
-human_readable<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+human_readable<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   scale<span style="color:#f92672">=</span>$3
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $1 -ge <span style="color:#ae81ff">1073741824</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -577,49 +577,49 @@ human_readable<span style="color:#f92672">()</span> <span style="color:#f92672">
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Function to produce human readable time</span>
-human_readable_time<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-  usage<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$0<span style="color:#e6db74"> seconds &#39;variable&#39;&#34;</span>
+human_readable_time<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+  usage<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$0<span style="color:#e6db74"> seconds &#39;variable&#39;</span><span style="color:#e6db74">&#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z $1 <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> <span style="color:#f92672">[</span> -z $2 <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
     cecho $usage red
     exit <span style="color:#ae81ff">1</span>
   <span style="color:#66d9ef">fi</span>
 
-  days<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0 ; </span>$1<span style="color:#e6db74"> / 86400&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-  remainder<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0 ; </span>$1<span style="color:#e6db74"> % 86400&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-  hours<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0 ; </span>$remainder<span style="color:#e6db74"> / 3600&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-  remainder<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0 ; </span>$remainder<span style="color:#e6db74"> % 3600&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-  minutes<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0 ; </span>$remainder<span style="color:#e6db74"> / 60&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-  seconds<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0 ; </span>$remainder<span style="color:#e6db74"> % 60&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  days<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0 ; </span>$1<span style="color:#e6db74"> / 86400</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  remainder<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0 ; </span>$1<span style="color:#e6db74"> % 86400</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  hours<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0 ; </span>$remainder<span style="color:#e6db74"> / 3600</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  remainder<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0 ; </span>$remainder<span style="color:#e6db74"> % 3600</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  minutes<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0 ; </span>$remainder<span style="color:#e6db74"> / 60</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  seconds<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0 ; </span>$remainder<span style="color:#e6db74"> % 60</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
 
-  export $2<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$days<span style="color:#e6db74"> days </span>$hours<span style="color:#e6db74"> hrs </span>$minutes<span style="color:#e6db74"> min </span>$seconds<span style="color:#e6db74"> sec&#34;</span>
+  export $2<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span>$days<span style="color:#e6db74"> days </span>$hours<span style="color:#e6db74"> hrs </span>$minutes<span style="color:#e6db74"> min </span>$seconds<span style="color:#e6db74"> sec</span><span style="color:#e6db74">&#34;</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Print version info</span>
-check_mysql_version<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_mysql_version<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   mysql_variable <span style="color:#ae81ff">\&#39;</span>version<span style="color:#ae81ff">\&#39;</span> mysql_version
   mysql_variable <span style="color:#ae81ff">\&#39;</span>version_compile_machine<span style="color:#ae81ff">\&#39;</span> mysql_version_compile_machine
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$mysql_version_num<span style="color:#e6db74">&#34;</span> -lt <span style="color:#ae81ff">050000</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;MySQL Version </span>$mysql_version<span style="color:#e6db74"> </span>$mysql_version_compile_machine<span style="color:#e6db74"> is EOL please upgrade to MySQL 4.1 or later&#34;</span> boldred
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">MySQL Version </span>$mysql_version<span style="color:#e6db74"> </span>$mysql_version_compile_machine<span style="color:#e6db74"> is EOL please upgrade to MySQL 4.1 or later</span><span style="color:#e6db74">&#34;</span> boldred
   <span style="color:#66d9ef">else</span>
-    cecho <span style="color:#e6db74">&#34;MySQL Version </span>$mysql_version<span style="color:#e6db74"> </span>$mysql_version_compile_machine<span style="color:#e6db74">&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">MySQL Version </span>$mysql_version<span style="color:#e6db74"> </span>$mysql_version_compile_machine<span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Present a reminder that mysql must run for a couple of days to build up good</span>
 <span style="color:#75715e"># numbers in server status variables before these tuning suggestions should be</span>
 <span style="color:#75715e"># used.</span>
-post_uptime_warning<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+post_uptime_warning<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   mysql_status <span style="color:#ae81ff">\&#39;</span>Uptime<span style="color:#ae81ff">\&#39;</span> uptime
   mysql_status <span style="color:#ae81ff">\&#39;</span>Threads_connected<span style="color:#ae81ff">\&#39;</span> threads
   queries_per_sec<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$questions<span style="color:#f92672">/</span>$uptime<span style="color:#66d9ef">))</span>
   human_readable_time $uptime uptimeHR
 
-  cecho <span style="color:#e6db74">&#34;Uptime = </span>$uptimeHR<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Avg. qps = </span>$queries_per_sec<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Total Questions = </span>$questions<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Threads Connected = </span>$threads<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Uptime = </span>$uptimeHR<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Avg. qps = </span>$queries_per_sec<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Total Questions = </span>$questions<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Threads Connected = </span>$threads<span style="color:#e6db74">&#34;</span>
   echo
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $uptime -gt <span style="color:#ae81ff">172800</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
@@ -638,7 +638,7 @@ post_uptime_warning<span style="color:#f92672">()</span> <span style="color:#f92
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$major_version<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;3.23&#39;</span> <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$major_version<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;4.0&#39;</span> <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$major_version<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;4.1&#39;</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
     cecho <span style="color:#e6db74">&#34;http://dev.mysql.com/doc/refman/4.1/en/server-system-variables.html&#34;</span> boldblue
   <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$major_version<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;5.0&#39;</span> <span style="color:#f92672">]</span> <span style="color:#f92672">||</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$mysql_version_num<span style="color:#e6db74">&#34;</span> -gt <span style="color:#e6db74">&#39;050100&#39;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;http://dev.mysql.com/doc/refman/</span>$major_version<span style="color:#e6db74">/en/server-system-variables.html&#34;</span> boldblue
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">http://dev.mysql.com/doc/refman/</span>$major_version<span style="color:#e6db74">/en/server-system-variables.html</span><span style="color:#e6db74">&#34;</span> boldblue
   <span style="color:#66d9ef">else</span>
     cecho <span style="color:#e6db74">&#34;UNSUPPORTED MYSQL VERSION&#34;</span> boldred
     exit <span style="color:#ae81ff">1</span>
@@ -649,7 +649,7 @@ post_uptime_warning<span style="color:#f92672">()</span> <span style="color:#f92
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Slow Queries</span>
-check_slow_queries <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_slow_queries <span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;SLOW QUERIES&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Slow_queries<span style="color:#ae81ff">\&#39;</span> slow_queries
@@ -675,27 +675,27 @@ check_slow_queries <span style="color:#f92672">()</span> <span style="color:#f92
     cechon <span style="color:#e6db74">&#34;NOT&#34;</span> boldred
     cecho <span style="color:#e6db74">&#34; enabled.&#34;</span>
   <span style="color:#66d9ef">else</span>
-    cecho <span style="color:#e6db74">&#34;Error: </span>$log_slow_queries<span style="color:#e6db74">&#34;</span> boldred
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Error: </span>$log_slow_queries<span style="color:#e6db74">&#34;</span> boldred
   <span style="color:#66d9ef">fi</span>
 
-  cecho <span style="color:#e6db74">&#34;Current long_query_time = </span>$long_query_time<span style="color:#e6db74"> sec.&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current long_query_time = </span>$long_query_time<span style="color:#e6db74"> sec.</span><span style="color:#e6db74">&#34;</span>
   cechon <span style="color:#e6db74">&#34;You have &#34;</span>
   cechon <span style="color:#e6db74">&#34;</span>$slow_queries<span style="color:#e6db74">&#34;</span> boldred 
   cechon <span style="color:#e6db74">&#34; out of &#34;</span>
   cechon <span style="color:#e6db74">&#34;</span>$questions<span style="color:#e6db74">&#34;</span> boldred
-  cecho <span style="color:#e6db74">&#34; that take longer than </span>$long_query_time<span style="color:#e6db74"> sec. to complete&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74"> that take longer than </span>$long_query_time<span style="color:#e6db74"> sec. to complete</span><span style="color:#e6db74">&#34;</span>
 
   float2int long_query_time long_query_timeInt
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $long_query_timeInt -gt $prefered_query_time <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;Your long_query_time may be too high, I typically set this under </span>$prefered_query_time<span style="color:#e6db74"> sec.&#34;</span> red
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Your long_query_time may be too high, I typically set this under </span>$prefered_query_time<span style="color:#e6db74"> sec.</span><span style="color:#e6db74">&#34;</span> red
   <span style="color:#66d9ef">else</span>
     cecho <span style="color:#e6db74">&#34;Your long_query_time seems to be fine&#34;</span> green
   <span style="color:#66d9ef">fi</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Binary Log</span>
-check_binary_log<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_binary_log<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;BINARY UPDATE LOG&#34;</span> boldblue
 
   mysql_variable <span style="color:#ae81ff">\&#39;</span>log_bin<span style="color:#ae81ff">\&#39;</span> log_bin
@@ -716,7 +716,7 @@ check_binary_log<span style="color:#f92672">()</span> <span style="color:#f92672
       cechon <span style="color:#e6db74">&#34;The mysqld will retain the entire binary log until &#34;</span> red
       cecho <span style="color:#e6db74">&#34;RESET MASTER or PURGE MASTER LOGS commands are run manually&#34;</span> red
       cecho <span style="color:#e6db74">&#34;Setting expire_logs_days will allow you to remove old binary logs automatically&#34;</span>  yellow
-      cecho <span style="color:#e6db74">&#34;See http://dev.mysql.com/doc/refman/</span>$major_version<span style="color:#e6db74">/en/purge-master-logs.html&#34;</span> yellow
+      cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">See http://dev.mysql.com/doc/refman/</span>$major_version<span style="color:#e6db74">/en/purge-master-logs.html</span><span style="color:#e6db74">&#34;</span> yellow
     <span style="color:#66d9ef">fi</span>
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$sync_binlog<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
@@ -727,12 +727,12 @@ check_binary_log<span style="color:#f92672">()</span> <span style="color:#f92672
     cechon <span style="color:#e6db74">&#34;NOT &#34;</span> boldred
     cecho <span style="color:#e6db74">&#34;enabled.&#34;</span>
     cecho <span style="color:#e6db74">&#34;You will not be able to do point in time recovery&#34;</span> red
-    cecho <span style="color:#e6db74">&#34;See http://dev.mysql.com/doc/refman/</span>$major_version<span style="color:#e6db74">/en/point-in-time-recovery.html&#34;</span> yellow
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">See http://dev.mysql.com/doc/refman/</span>$major_version<span style="color:#e6db74">/en/point-in-time-recovery.html</span><span style="color:#e6db74">&#34;</span> yellow
   <span style="color:#66d9ef">fi</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Used Connections</span>
-check_used_connections<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_used_connections<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   mysql_variable <span style="color:#ae81ff">\&#39;</span>max_connections<span style="color:#ae81ff">\&#39;</span> max_connections
   mysql_status <span style="color:#ae81ff">\&#39;</span>Max_used_connections<span style="color:#ae81ff">\&#39;</span> max_used_connections
   mysql_status <span style="color:#ae81ff">\&#39;</span>Threads_connected<span style="color:#ae81ff">\&#39;</span> threads_connected
@@ -740,9 +740,9 @@ check_used_connections<span style="color:#f92672">()</span> <span style="color:#
   connections_ratio<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$max_used_connections<span style="color:#f92672">*</span><span style="color:#ae81ff">100</span><span style="color:#f92672">/</span>$max_connections<span style="color:#66d9ef">))</span>
 
   cecho <span style="color:#e6db74">&#34;MAX CONNECTIONS&#34;</span> boldblue
-  cecho <span style="color:#e6db74">&#34;Current max_connections = </span>$max_connections<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Current threads_connected = </span>$threads_connected<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Historic max_used_connections = </span>$max_used_connections<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current max_connections = </span>$max_connections<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current threads_connected = </span>$threads_connected<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Historic max_used_connections = </span>$max_used_connections<span style="color:#e6db74">&#34;</span>
   cechon <span style="color:#e6db74">&#34;The number of used connections is &#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $connections_ratio -ge <span style="color:#ae81ff">85</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -756,7 +756,7 @@ check_used_connections<span style="color:#f92672">()</span> <span style="color:#
     error<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
   <span style="color:#66d9ef">fi</span>
 
-  cechon <span style="color:#e6db74">&#34;</span>$connections_ratio<span style="color:#e6db74">% &#34;</span> $txt_color
+  cechon <span style="color:#e6db74">&#34;</span>$connections_ratio<span style="color:#e6db74">% </span><span style="color:#e6db74">&#34;</span> $txt_color
   cecho <span style="color:#e6db74">&#34;of the configured maximum.&#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $error -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -773,7 +773,7 @@ check_used_connections<span style="color:#f92672">()</span> <span style="color:#
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Worker Threads</span>
-check_threads<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_threads<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;WORKER THREADS&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Threads_created<span style="color:#ae81ff">\&#39;</span> threads_created1
@@ -787,10 +787,10 @@ check_threads<span style="color:#f92672">()</span> <span style="color:#f92672">{
   historic_threads_per_sec<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$threads_created1<span style="color:#f92672">/</span>$uptime<span style="color:#66d9ef">))</span>
   current_threads_per_sec<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$threads_created2<span style="color:#f92672">-</span>$threads_created1<span style="color:#66d9ef">))</span>
 
-  cecho <span style="color:#e6db74">&#34;Current thread_cache_size = </span>$thread_cache_size<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Current threads_cached = </span>$threads_cached<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Current threads_per_sec = </span>$current_threads_per_sec<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Historic threads_per_sec = </span>$historic_threads_per_sec<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current thread_cache_size = </span>$thread_cache_size<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current threads_cached = </span>$threads_cached<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current threads_per_sec = </span>$current_threads_per_sec<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Historic threads_per_sec = </span>$historic_threads_per_sec<span style="color:#e6db74">&#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $historic_threads_per_sec -ge <span style="color:#ae81ff">2</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> $threads_cached -le <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
     cecho <span style="color:#e6db74">&#34;Threads created per/sec are overrunning threads cached&#34;</span> red
@@ -804,7 +804,7 @@ check_threads<span style="color:#f92672">()</span> <span style="color:#f92672">{
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Key buffer Size</span>
-check_key_buffer_size<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_key_buffer_size<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;KEY BUFFER&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Key_read_requests<span style="color:#ae81ff">\&#39;</span> key_read_requests
@@ -819,7 +819,7 @@ check_key_buffer_size<span style="color:#f92672">()</span> <span style="color:#f
   myisam_indexes<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;/*!50000 SELECT IFNULL(SUM(INDEX_LENGTH),0) from information_schema.TABLES where ENGINE=&#39;MyISAM&#39; */&#34;</span><span style="color:#66d9ef">)</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z $myisam_indexes <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    myisam_indexes<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>find $datadir -name <span style="color:#e6db74">&#39;*.MYI&#39;</span> -exec du $duflags <span style="color:#e6db74">&#39;{}&#39;</span> <span style="color:#ae81ff">\;</span> <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span> | awk <span style="color:#e6db74">&#39;{ s += $1 } END { printf(&#34;%.0f\n&#34;, s )}&#39;</span><span style="color:#66d9ef">)</span>
+    myisam_indexes<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>find $datadir -name <span style="color:#e6db74">&#39;*.MYI&#39;</span> -exec du $duflags <span style="color:#e6db74">&#39;{}&#39;</span> <span style="color:#ae81ff">\;</span> 2&gt;&amp;<span style="color:#ae81ff">1</span> | awk <span style="color:#e6db74">&#39;{ s += $1 } END { printf(&#34;%.0f\n&#34;, s )}&#39;</span><span style="color:#66d9ef">)</span>
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $key_reads -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -827,14 +827,14 @@ check_key_buffer_size<span style="color:#f92672">()</span> <span style="color:#f
     cecho <span style="color:#e6db74">&#34;Seriously look into using some indexes&#34;</span> red
 
     key_cache_miss_rate<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
-    key_buffer_free<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$key_blocks_unused<span style="color:#e6db74"> * </span>$key_cache_block_size<span style="color:#e6db74"> / </span>$key_buffer_size<span style="color:#e6db74"> * 100&#34;</span> | bc -l <span style="color:#66d9ef">)</span>
-    key_buffer_freeRND<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0; </span>$key_buffer_free<span style="color:#e6db74"> / 1&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+    key_buffer_free<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$key_blocks_unused<span style="color:#e6db74"> * </span>$key_cache_block_size<span style="color:#e6db74"> / </span>$key_buffer_size<span style="color:#e6db74"> * 100</span><span style="color:#e6db74">&#34;</span> | bc -l <span style="color:#66d9ef">)</span>
+    key_buffer_freeRND<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0; </span>$key_buffer_free<span style="color:#e6db74"> / 1</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
   <span style="color:#66d9ef">else</span>
     key_cache_miss_rate<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$key_read_requests<span style="color:#f92672">/</span>$key_reads<span style="color:#66d9ef">))</span>
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> ! -z $key_blocks_unused <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
-      key_buffer_free<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$key_blocks_unused<span style="color:#e6db74"> * </span>$key_cache_block_size<span style="color:#e6db74"> / </span>$key_buffer_size<span style="color:#e6db74"> * 100&#34;</span> | bc -l <span style="color:#66d9ef">)</span>
-      key_buffer_freeRND<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0; </span>$key_buffer_free<span style="color:#e6db74"> / 1&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+      key_buffer_free<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$key_blocks_unused<span style="color:#e6db74"> * </span>$key_cache_block_size<span style="color:#e6db74"> / </span>$key_buffer_size<span style="color:#e6db74"> * 100</span><span style="color:#e6db74">&#34;</span> | bc -l <span style="color:#66d9ef">)</span>
+      key_buffer_freeRND<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0; </span>$key_buffer_free<span style="color:#e6db74"> / 1</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
     <span style="color:#66d9ef">else</span>
       key_buffer_free<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Unknown&#39;</span>
       key_buffer_freeRND<span style="color:#f92672">=</span><span style="color:#ae81ff">75</span>
@@ -842,12 +842,12 @@ check_key_buffer_size<span style="color:#f92672">()</span> <span style="color:#f
   <span style="color:#66d9ef">fi</span>
 
   human_readable $myisam_indexes myisam_indexesHR
-  cecho <span style="color:#e6db74">&#34;Current MyISAM index space = </span>$myisam_indexesHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> 
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current MyISAM index space = </span>$myisam_indexesHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> 
 
   human_readable  $key_buffer_size key_buffer_sizeHR
-  cecho <span style="color:#e6db74">&#34;Current key_buffer_size = </span>$key_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Key cache miss rate is 1 : </span>$key_cache_miss_rate<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;Key buffer free ratio = </span>$key_buffer_freeRND<span style="color:#e6db74"> %&#34;</span> 
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current key_buffer_size = </span>$key_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Key cache miss rate is 1 : </span>$key_cache_miss_rate<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Key buffer free ratio = </span>$key_buffer_freeRND<span style="color:#e6db74"> %</span><span style="color:#e6db74">&#34;</span> 
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$major_version<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;5.1&#39;</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> $mysql_version_num -lt <span style="color:#ae81ff">050123</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $key_buffer_size -ge <span style="color:#ae81ff">4294967296</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span> echo <span style="color:#e6db74">&#34;x86_64 ppc64 ia64 sparc64 i686&#34;</span> | grep -q $mysql_version_compile_machine <span style="color:#f92672">)</span> ; <span style="color:#66d9ef">then</span>
@@ -886,7 +886,7 @@ check_key_buffer_size<span style="color:#f92672">()</span> <span style="color:#f
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Query Cache</span>
-check_query_cache<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_query_cache<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;QUERY CACHE&#34;</span> boldblue
 
   mysql_variable <span style="color:#ae81ff">\&#39;</span>version<span style="color:#ae81ff">\&#39;</span> mysql_version
@@ -899,38 +899,38 @@ check_query_cache<span style="color:#f92672">()</span> <span style="color:#f9267
   mysql_status <span style="color:#ae81ff">\&#39;</span>Qcache_lowmem_prunes<span style="color:#ae81ff">\&#39;</span> qcache_lowmem_prunes
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z $query_cache_size <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;You are using MySQL </span>$mysql_version<span style="color:#e6db74">, no query cache is supported.&#34;</span> red
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">You are using MySQL </span>$mysql_version<span style="color:#e6db74">, no query cache is supported.</span><span style="color:#e6db74">&#34;</span> red
     cecho <span style="color:#e6db74">&#34;I recommend an upgrade to MySQL 4.1 or better&#34;</span> red
   <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[</span> $query_cache_size -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
     cecho <span style="color:#e6db74">&#34;Query cache is supported but not enabled&#34;</span> red
     cecho <span style="color:#e6db74">&#34;Perhaps you should set the query_cache_size&#34;</span> red
   <span style="color:#66d9ef">else</span>
     qcache_used_memory<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$query_cache_size<span style="color:#f92672">-</span>$qcache_free_memory<span style="color:#66d9ef">))</span>
-    qcache_mem_fill_ratio<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=2; </span>$qcache_used_memory<span style="color:#e6db74"> * 100 / </span>$query_cache_size<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-    qcache_mem_fill_ratioHR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0; </span>$qcache_mem_fill_ratio<span style="color:#e6db74"> / 1&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+    qcache_mem_fill_ratio<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=2; </span>$qcache_used_memory<span style="color:#e6db74"> * 100 / </span>$query_cache_size<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+    qcache_mem_fill_ratioHR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0; </span>$qcache_mem_fill_ratio<span style="color:#e6db74"> / 1</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
 
     cecho <span style="color:#e6db74">&#34;Query cache is enabled&#34;</span> green
     human_readable $query_cache_size query_cache_sizeHR
-    cecho <span style="color:#e6db74">&#34;Current query_cache_size = </span>$query_cache_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current query_cache_size = </span>$query_cache_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
     human_readable $qcache_used_memory qcache_used_memoryHR
-    cecho <span style="color:#e6db74">&#34;Current query_cache_used = </span>$qcache_used_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current query_cache_used = </span>$qcache_used_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
     human_readable $query_cache_limit query_cache_limitHR
-    cecho <span style="color:#e6db74">&#34;Current query_cache_limit = </span>$query_cache_limitHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
-    cecho <span style="color:#e6db74">&#34;Current Query cache Memory fill ratio = </span>$qcache_mem_fill_ratio<span style="color:#e6db74"> %&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current query_cache_limit = </span>$query_cache_limitHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current Query cache Memory fill ratio = </span>$qcache_mem_fill_ratio<span style="color:#e6db74"> %</span><span style="color:#e6db74">&#34;</span>
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z $query_cache_min_res_unit <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
       cecho <span style="color:#e6db74">&#34;No query_cache_min_res_unit is defined.  Using MySQL &lt; 4.1 cache fragmentation can be inpredictable&#34;</span> %yellow
     <span style="color:#66d9ef">else</span>
       human_readable $query_cache_min_res_unit query_cache_min_res_unitHR 
-      cecho <span style="color:#e6db74">&#34;Current query_cache_min_res_unit = </span>$query_cache_min_res_unitHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+      cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current query_cache_min_res_unit = </span>$query_cache_min_res_unitHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
     <span style="color:#66d9ef">fi</span>
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $qcache_free_blocks -gt <span style="color:#ae81ff">2</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> $qcache_total_blocks -gt <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-      qcache_percent_fragmented<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=2; </span>$qcache_free_blocks<span style="color:#e6db74"> * 100 / </span>$qcache_total_blocks<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-      qcache_percent_fragmentedHR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0; </span>$qcache_percent_fragmented<span style="color:#e6db74"> / 1&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+      qcache_percent_fragmented<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=2; </span>$qcache_free_blocks<span style="color:#e6db74"> * 100 / </span>$qcache_total_blocks<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+      qcache_percent_fragmentedHR<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0; </span>$qcache_percent_fragmented<span style="color:#e6db74"> / 1</span><span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
 
       <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $qcache_percent_fragmentedHR -gt <span style="color:#ae81ff">20</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
-        cecho <span style="color:#e6db74">&#34;Query Cache is </span>$qcache_percent_fragmentedHR<span style="color:#e6db74"> % fragmented&#34;</span> red
+        cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Query Cache is </span>$qcache_percent_fragmentedHR<span style="color:#e6db74"> % fragmented</span><span style="color:#e6db74">&#34;</span> red
         cecho <span style="color:#e6db74">&#34;Run \&#34;FLUSH QUERY CACHE\&#34; periodically to defragment the query cache memory&#34;</span> red 
         cecho <span style="color:#e6db74">&#34;If you have many small queries lower &#39;query_cache_min_res_unit&#39; to reduce fragmentation.&#34;</span> red
       <span style="color:#66d9ef">fi</span>
@@ -943,7 +943,7 @@ check_query_cache<span style="color:#f92672">()</span> <span style="color:#f9267
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $qcache_lowmem_prunes -ge <span style="color:#ae81ff">50</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> $qcache_mem_fill_ratioHR -ge <span style="color:#ae81ff">80</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
       cechon <span style="color:#e6db74">&#34;However, &#34;</span>
-      cechon <span style="color:#e6db74">&#34;</span>$qcache_lowmem_prunes<span style="color:#e6db74"> &#34;</span> boldred
+      cechon <span style="color:#e6db74">&#34;</span>$qcache_lowmem_prunes<span style="color:#e6db74"> </span><span style="color:#e6db74">&#34;</span> boldred
       cecho <span style="color:#e6db74">&#34;queries have been removed from the query cache due to lack of memory&#34;</span>
       cecho <span style="color:#e6db74">&#34;Perhaps you should raise query_cache_size&#34;</span> boldred
     <span style="color:#66d9ef">fi</span>
@@ -953,7 +953,7 @@ check_query_cache<span style="color:#f92672">()</span> <span style="color:#f9267
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Sort Operations</span>
-check_sort_operations<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_sort_operations<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;SORT OPERATIONS&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Sort_merge_passes<span style="color:#ae81ff">\&#39;</span> sort_merge_passes
@@ -972,7 +972,7 @@ check_sort_operations<span style="color:#f92672">()</span> <span style="color:#f
   read_rnd_buffer_size<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$read_rnd_buffer_size<span style="color:#f92672">+</span><span style="color:#ae81ff">8</span><span style="color:#66d9ef">))</span>
 
   human_readable $sort_buffer_size sort_buffer_sizeHR
-  cecho <span style="color:#e6db74">&#34;Current sort_buffer_size = </span>$sort_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current sort_buffer_size = </span>$sort_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
 
   human_readable $read_rnd_buffer_size read_rnd_buffer_sizeHR
   cechon <span style="color:#e6db74">&#34;Current &#34;</span>
@@ -983,7 +983,7 @@ check_sort_operations<span style="color:#f92672">()</span> <span style="color:#f
     cechon <span style="color:#e6db74">&#34;read_rnd_buffer_size &#34;</span>
   <span style="color:#66d9ef">fi</span>
 
-  cecho <span style="color:#e6db74">&#34;= </span>$read_rnd_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">= </span>$read_rnd_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $total_sorts -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
     cecho <span style="color:#e6db74">&#34;No sort operations have been performed&#34;</span>
     passes_per_sort<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
@@ -997,7 +997,7 @@ check_sort_operations<span style="color:#f92672">()</span> <span style="color:#f
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $passes_per_sort -ge <span style="color:#ae81ff">2</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     cechon <span style="color:#e6db74">&#34;On average &#34;</span>
-    cechon <span style="color:#e6db74">&#34;</span>$passes_per_sort<span style="color:#e6db74"> &#34;</span> boldred
+    cechon <span style="color:#e6db74">&#34;</span>$passes_per_sort<span style="color:#e6db74"> </span><span style="color:#e6db74">&#34;</span> boldred
     cecho <span style="color:#e6db74">&#34;sort merge passes are made per sort operation&#34;</span>
     cecho <span style="color:#e6db74">&#34;You should raise your sort_buffer_size&#34;</span>
     cechon <span style="color:#e6db74">&#34;You should also raise your &#34;</span>
@@ -1013,7 +1013,7 @@ check_sort_operations<span style="color:#f92672">()</span> <span style="color:#f
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Joins</span>
-check_join_operations<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_join_operations<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;JOINS&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Select_full_join<span style="color:#ae81ff">\&#39;</span> select_full_join
@@ -1026,8 +1026,8 @@ check_join_operations<span style="color:#f92672">()</span> <span style="color:#f
   join_buffer_size<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$join_buffer_size<span style="color:#f92672">+</span><span style="color:#ae81ff">4096</span><span style="color:#66d9ef">))</span>
   human_readable $join_buffer_size join_buffer_sizeHR <span style="color:#ae81ff">2</span>
 
-  cecho <span style="color:#e6db74">&#34;Current join_buffer_size = </span>$join_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
-  cecho <span style="color:#e6db74">&#34;You have had </span>$select_full_join<span style="color:#e6db74"> queries where a join could not use an index properly&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current join_buffer_size = </span>$join_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">You have had </span>$select_full_join<span style="color:#e6db74"> queries where a join could not use an index properly</span><span style="color:#e6db74">&#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $select_range_check -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> $select_full_join -eq <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     cecho <span style="color:#e6db74">&#34;Your joins seem to be using indexes properly&#34;</span> green
@@ -1039,7 +1039,7 @@ check_join_operations<span style="color:#f92672">()</span> <span style="color:#f
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $select_range_check -gt <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;You have had </span>$select_range_check<span style="color:#e6db74"> joins without keys that check for key usage after each row&#34;</span> red
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">You have had </span>$select_range_check<span style="color:#e6db74"> joins without keys that check for key usage after each row</span><span style="color:#e6db74">&#34;</span> red
     print_error<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;true&#39;</span>
     raise_buffer<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;true&#39;</span>
   <span style="color:#66d9ef">fi</span>
@@ -1069,7 +1069,7 @@ check_join_operations<span style="color:#f92672">()</span> <span style="color:#f
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Temp Tables</span>
-check_tmp_tables<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_tmp_tables<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;TEMP TABLES&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Created_tmp_tables<span style="color:#ae81ff">\&#39;</span> created_tmp_tables 
@@ -1084,12 +1084,12 @@ check_tmp_tables<span style="color:#f92672">()</span> <span style="color:#f92672
   <span style="color:#66d9ef">fi</span>
 
   human_readable $max_heap_table_size max_heap_table_sizeHR
-  cecho <span style="color:#e6db74">&#34;Current max_heap_table_size = </span>$max_heap_table_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current max_heap_table_size = </span>$max_heap_table_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
 
   human_readable $tmp_table_size tmp_table_sizeHR 
-  cecho <span style="color:#e6db74">&#34;Current tmp_table_size = </span>$tmp_table_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current tmp_table_size = </span>$tmp_table_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
 
-  cecho <span style="color:#e6db74">&#34;Of </span>$created_tmp_tables<span style="color:#e6db74"> temp tables, </span>$tmp_disk_tables<span style="color:#e6db74">% were created on disk&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Of </span>$created_tmp_tables<span style="color:#e6db74"> temp tables, </span>$tmp_disk_tables<span style="color:#e6db74">% were created on disk</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $tmp_table_size -gt $max_heap_table_size <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     cecho <span style="color:#e6db74">&#34;Effective in-memory tmp_table_size is limited to max_heap_table_size.&#34;</span> yellow
   <span style="color:#66d9ef">fi</span>
@@ -1106,7 +1106,7 @@ check_tmp_tables<span style="color:#f92672">()</span> <span style="color:#f92672
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Open Files Limit</span>
-check_open_files<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_open_files<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;OPEN FILES LIMIT&#34;</span> boldblue
 
   mysql_variable <span style="color:#ae81ff">\&#39;</span>open_files_limit<span style="color:#ae81ff">\&#39;</span> open_files_limit
@@ -1119,7 +1119,7 @@ check_open_files<span style="color:#f92672">()</span> <span style="color:#f92672
     cant_override<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
   <span style="color:#66d9ef">fi</span>
 
-  cecho <span style="color:#e6db74">&#34;Current open_files_limit = </span>$open_files_limit<span style="color:#e6db74"> files&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current open_files_limit = </span>$open_files_limit<span style="color:#e6db74"> files</span><span style="color:#e6db74">&#34;</span>
 
   open_files_ratio<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$open_files<span style="color:#f92672">*</span><span style="color:#ae81ff">100</span><span style="color:#f92672">/</span>$open_files_limit<span style="color:#66d9ef">))</span>
 
@@ -1143,7 +1143,7 @@ check_open_files<span style="color:#f92672">()</span> <span style="color:#f92672
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Table Cache</span>
-check_table_cache<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_table_cache<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;TABLE CACHE&#34;</span> boldblue
 
   mysql_variable <span style="color:#ae81ff">\&#39;</span>datadir<span style="color:#ae81ff">\&#39;</span> datadir
@@ -1161,10 +1161,10 @@ check_table_cache<span style="color:#f92672">()</span> <span style="color:#f9267
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z <span style="color:#e6db74">&#34;</span>$table_count<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$UID<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;</span>$socket_owner<span style="color:#e6db74">&#34;</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$UID<span style="color:#e6db74">&#34;</span> !<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#f92672">]</span> ; <span style="color:#66d9ef">then</span>
-      cecho <span style="color:#e6db74">&#34;You are not &#39;</span>$socket_owner<span style="color:#e6db74">&#39; or &#39;root&#39;&#34;</span> red
+      cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">You are not &#39;</span>$socket_owner<span style="color:#e6db74">&#39; or &#39;root&#39;</span><span style="color:#e6db74">&#34;</span> red
       cecho <span style="color:#e6db74">&#34;I am unable to determine the table_count!&#34;</span> red
     <span style="color:#66d9ef">else</span>
-      table_count<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>find $datadir <span style="color:#ae81ff">2</span>&gt;&amp;<span style="color:#ae81ff">1</span> | grep -c .frm$<span style="color:#66d9ef">)</span>
+      table_count<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>find $datadir 2&gt;&amp;<span style="color:#ae81ff">1</span> | grep -c .frm$<span style="color:#66d9ef">)</span>
     <span style="color:#66d9ef">fi</span>
   <span style="color:#66d9ef">fi</span>
 
@@ -1184,38 +1184,38 @@ check_table_cache<span style="color:#f92672">()</span> <span style="color:#f9267
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $table_cache <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> ! $table_open_cache <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;Current table_cache value = </span>$table_cache<span style="color:#e6db74"> tables&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current table_cache value = </span>$table_cache<span style="color:#e6db74"> tables</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $table_open_cache <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;Current table_open_cache = </span>$table_open_cache<span style="color:#e6db74"> tables&#34;</span>
-    cecho <span style="color:#e6db74">&#34;Current table_definition_cache = </span>$table_definition_cache<span style="color:#e6db74"> tables&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current table_open_cache = </span>$table_open_cache<span style="color:#e6db74"> tables</span><span style="color:#e6db74">&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current table_definition_cache = </span>$table_definition_cache<span style="color:#e6db74"> tables</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $table_count <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    cecho <span style="color:#e6db74">&#34;You have a total of </span>$table_count<span style="color:#e6db74"> tables&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">You have a total of </span>$table_count<span style="color:#e6db74"> tables</span><span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span>  <span style="color:#f92672">[</span> $table_cache_fill -lt <span style="color:#ae81ff">95</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     cechon <span style="color:#e6db74">&#34;You have &#34;</span>
-    cechon <span style="color:#e6db74">&#34;</span>$open_tables<span style="color:#e6db74"> &#34;</span> green
+    cechon <span style="color:#e6db74">&#34;</span>$open_tables<span style="color:#e6db74"> </span><span style="color:#e6db74">&#34;</span> green
     cecho <span style="color:#e6db74">&#34;open tables.&#34;</span> 
     cecho <span style="color:#e6db74">&#34;The table_cache value seems to be fine&#34;</span> green
   <span style="color:#66d9ef">elif</span> <span style="color:#f92672">[</span> $table_cache_hit_rate -le <span style="color:#ae81ff">85</span> -o  $table_cache_fill -ge <span style="color:#ae81ff">95</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     cechon <span style="color:#e6db74">&#34;You have &#34;</span>
-    cechon <span style="color:#e6db74">&#34;</span>$open_tables<span style="color:#e6db74"> &#34;</span> boldred
+    cechon <span style="color:#e6db74">&#34;</span>$open_tables<span style="color:#e6db74"> </span><span style="color:#e6db74">&#34;</span> boldred
     cecho <span style="color:#e6db74">&#34;open tables.&#34;</span>
     cechon <span style="color:#e6db74">&#34;Current table_cache hit rate is &#34;</span> 
-    cecho <span style="color:#e6db74">&#34;</span>$table_cache_hit_rate<span style="color:#e6db74">%&#34;</span> boldred
+    cecho <span style="color:#e6db74">&#34;</span>$table_cache_hit_rate<span style="color:#e6db74">%</span><span style="color:#e6db74">&#34;</span> boldred
     cechon <span style="color:#e6db74">&#34;, while &#34;</span>
-    cechon <span style="color:#e6db74">&#34;</span>$table_cache_fill<span style="color:#e6db74">% &#34;</span> boldred
+    cechon <span style="color:#e6db74">&#34;</span>$table_cache_fill<span style="color:#e6db74">% </span><span style="color:#e6db74">&#34;</span> boldred
     cecho <span style="color:#e6db74">&#34;of your table cache is in use&#34;</span>
     cecho <span style="color:#e6db74">&#34;You should probably increase your table_cache&#34;</span> red
   <span style="color:#66d9ef">else</span>
     cechon <span style="color:#e6db74">&#34;Current table_cache hit rate is &#34;</span>
-    cechon <span style="color:#e6db74">&#34;</span>$table_cache_hit_rate<span style="color:#e6db74">%&#34;</span> green
+    cechon <span style="color:#e6db74">&#34;</span>$table_cache_hit_rate<span style="color:#e6db74">%</span><span style="color:#e6db74">&#34;</span> green
     cechon <span style="color:#e6db74">&#34;, while &#34;</span>
-    cechon <span style="color:#e6db74">&#34;</span>$table_cache_fill<span style="color:#e6db74">% &#34;</span> green
+    cechon <span style="color:#e6db74">&#34;</span>$table_cache_fill<span style="color:#e6db74">% </span><span style="color:#e6db74">&#34;</span> green
     cecho <span style="color:#e6db74">&#34;of your table cache is in use&#34;</span>
     cecho <span style="color:#e6db74">&#34;The table cache value seems to be fine&#34;</span> green
   <span style="color:#66d9ef">fi</span>
@@ -1226,7 +1226,7 @@ check_table_cache<span style="color:#f92672">()</span> <span style="color:#f9267
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Table Locking</span>
-check_table_locking<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_table_locking<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;TABLE LOCKING&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Table_locks_waited<span style="color:#ae81ff">\&#39;</span> table_locks_waited
@@ -1243,10 +1243,10 @@ check_table_locking<span style="color:#f92672">()</span> <span style="color:#f92
   cechon <span style="color:#e6db74">&#34;Current Lock Wait ratio = &#34;</span>
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $table_locks_waited -gt <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     immediate_locks_miss_rate<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$table_locks_immediate<span style="color:#f92672">/</span>$table_locks_waited<span style="color:#66d9ef">))</span>
-    cecho <span style="color:#e6db74">&#34;1 : </span>$immediate_locks_miss_rate<span style="color:#e6db74">&#34;</span> red
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">1 : </span>$immediate_locks_miss_rate<span style="color:#e6db74">&#34;</span> red
   <span style="color:#66d9ef">else</span>
     immediate_locks_miss_rate<span style="color:#f92672">=</span><span style="color:#ae81ff">99999</span> <span style="color:#75715e"># perfect</span>
-    cecho <span style="color:#e6db74">&#34;0 : </span>$questions<span style="color:#e6db74">&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">0 : </span>$questions<span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $immediate_locks_miss_rate -lt <span style="color:#ae81ff">5000</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -1274,7 +1274,7 @@ check_table_locking<span style="color:#f92672">()</span> <span style="color:#f92
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Table Scans</span>
-check_table_scans<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_table_scans<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;TABLE SCANS&#34;</span> boldblue
 
   mysql_status <span style="color:#ae81ff">\&#39;</span>Com_select<span style="color:#ae81ff">\&#39;</span> com_select
@@ -1286,12 +1286,12 @@ check_table_scans<span style="color:#f92672">()</span> <span style="color:#f9267
   <span style="color:#66d9ef">fi</span>
 
   human_readable $read_buffer_size read_buffer_sizeHR
-  cecho <span style="color:#e6db74">&#34;Current read_buffer_size = </span>$read_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current read_buffer_size = </span>$read_buffer_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $com_select -gt <span style="color:#ae81ff">0</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     full_table_scans<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$read_rnd_next<span style="color:#f92672">/</span>$com_select<span style="color:#66d9ef">))</span>
 
-    cecho <span style="color:#e6db74">&#34;Current table scan ratio = </span>$full_table_scans<span style="color:#e6db74"> : 1&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current table scan ratio = </span>$full_table_scans<span style="color:#e6db74"> : 1</span><span style="color:#e6db74">&#34;</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $full_table_scans -ge <span style="color:#ae81ff">4000</span> <span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">[</span> $read_buffer_size -le <span style="color:#ae81ff">2097152</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
       cecho <span style="color:#e6db74">&#34;You have a high ratio of sequential access requests to SELECTs&#34;</span> red
       cechon <span style="color:#e6db74">&#34;You may benefit from raising &#34;</span> red
@@ -1315,7 +1315,7 @@ check_table_scans<span style="color:#f92672">()</span> <span style="color:#f9267
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># InnoDB</span>
-check_innodb_status <span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+check_innodb_status <span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   <span style="color:#75715e">## See http://bugs.mysql.com/59393</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> <span style="color:#e6db74">&#34;</span>$mysql_version_num<span style="color:#e6db74">&#34;</span> -lt <span style="color:#ae81ff">050603</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -1391,9 +1391,9 @@ check_innodb_status <span style="color:#f92672">()</span> <span style="color:#f9
       mysql_status <span style="color:#ae81ff">\&#39;</span>Innodb_row_lock_waits<span style="color:#ae81ff">\&#39;</span> innodb_row_lock_waits
 
       human_readable $innodb_indexes innodb_indexesHR
-      cecho <span style="color:#e6db74">&#34;Current InnoDB index space = </span>$innodb_indexesHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+      cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current InnoDB index space = </span>$innodb_indexesHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
       human_readable $innodb_data innodb_dataHR
-      cecho <span style="color:#e6db74">&#34;Current InnoDB data space = </span>$innodb_dataHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+      cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current InnoDB data space = </span>$innodb_dataHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
       percent_innodb_buffer_pool_free<span style="color:#f92672">=</span><span style="color:#66d9ef">$((</span>$innodb_buffer_pool_pages_free<span style="color:#f92672">*</span><span style="color:#ae81ff">100</span><span style="color:#f92672">/</span>$innodb_buffer_pool_pages_total<span style="color:#66d9ef">))</span>
       cecho <span style="color:#e6db74">&#34;Current InnoDB buffer pool free = &#34;</span>$percent_innodb_buffer_pool_free<span style="color:#e6db74">&#34; %&#34;</span>
     <span style="color:#66d9ef">else</span>
@@ -1402,7 +1402,7 @@ check_innodb_status <span style="color:#f92672">()</span> <span style="color:#f9
     <span style="color:#66d9ef">fi</span>
 
     human_readable $innodb_buffer_pool_size innodb_buffer_pool_sizeHR
-    cecho <span style="color:#e6db74">&#34;Current innodb_buffer_pool_size = </span>$innodb_buffer_pool_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Current innodb_buffer_pool_size = </span>$innodb_buffer_pool_sizeHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span>
     cecho <span style="color:#e6db74">&#34;Depending on how much space your innodb indexes take up it may be safe&#34;</span>
     cecho <span style="color:#e6db74">&#34;to increase this value to up to 2 / 3 of total system memory&#34;</span>
   <span style="color:#66d9ef">else</span>
@@ -1411,7 +1411,7 @@ check_innodb_status <span style="color:#f92672">()</span> <span style="color:#f9
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Total Memory Usage</span>
-total_memory_used<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+total_memory_used<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   cecho <span style="color:#e6db74">&#34;MEMORY USAGE&#34;</span> boldblue
 
   mysql_variable <span style="color:#ae81ff">\&#39;</span>read_buffer_size<span style="color:#ae81ff">\&#39;</span> read_buffer_size
@@ -1443,8 +1443,8 @@ total_memory_used<span style="color:#f92672">()</span> <span style="color:#f9267
     effective_tmp_table_size<span style="color:#f92672">=</span>$tmp_table_size
   <span style="color:#66d9ef">fi</span>
 
-  per_thread_buffers<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;(</span>$read_buffer_size<span style="color:#e6db74">+</span>$read_rnd_buffer_size<span style="color:#e6db74">+</span>$sort_buffer_size<span style="color:#e6db74">+</span>$thread_stack<span style="color:#e6db74">+</span>$join_buffer_size<span style="color:#e6db74">+</span>$binlog_cache_size<span style="color:#e6db74">)*</span>$max_connections<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
-  per_thread_max_buffers<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;(</span>$read_buffer_size<span style="color:#e6db74">+</span>$read_rnd_buffer_size<span style="color:#e6db74">+</span>$sort_buffer_size<span style="color:#e6db74">+</span>$thread_stack<span style="color:#e6db74">+</span>$join_buffer_size<span style="color:#e6db74">+</span>$binlog_cache_size<span style="color:#e6db74">)*</span>$max_used_connections<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  per_thread_buffers<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">(</span>$read_buffer_size<span style="color:#e6db74">+</span>$read_rnd_buffer_size<span style="color:#e6db74">+</span>$sort_buffer_size<span style="color:#e6db74">+</span>$thread_stack<span style="color:#e6db74">+</span>$join_buffer_size<span style="color:#e6db74">+</span>$binlog_cache_size<span style="color:#e6db74">)*</span>$max_connections<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  per_thread_max_buffers<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">(</span>$read_buffer_size<span style="color:#e6db74">+</span>$read_rnd_buffer_size<span style="color:#e6db74">+</span>$sort_buffer_size<span style="color:#e6db74">+</span>$thread_stack<span style="color:#e6db74">+</span>$join_buffer_size<span style="color:#e6db74">+</span>$binlog_cache_size<span style="color:#e6db74">)*</span>$max_used_connections<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
 
   mysql_variable <span style="color:#ae81ff">\&#39;</span>innodb_buffer_pool_size<span style="color:#ae81ff">\&#39;</span> innodb_buffer_pool_size
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z $innodb_buffer_pool_size <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
@@ -1472,7 +1472,7 @@ total_memory_used<span style="color:#f92672">()</span> <span style="color:#f9267
   max_memory<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$global_buffers<span style="color:#e6db74">+</span>$per_thread_max_buffers<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
   total_memory<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span>$global_buffers<span style="color:#e6db74">+</span>$per_thread_buffers<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
 
-  pct_of_sys_mem<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;scale=0; </span>$total_memory<span style="color:#e6db74">*100/</span>$physical_memory<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
+  pct_of_sys_mem<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">scale=0; </span>$total_memory<span style="color:#e6db74">*100/</span>$physical_memory<span style="color:#e6db74">&#34;</span> | bc -l<span style="color:#66d9ef">)</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $pct_of_sys_mem -gt <span style="color:#ae81ff">90</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     txt_color<span style="color:#f92672">=</span>boldred
@@ -1483,19 +1483,19 @@ total_memory_used<span style="color:#f92672">()</span> <span style="color:#f9267
   <span style="color:#66d9ef">fi</span>
 
   human_readable $max_memory max_memoryHR
-  cecho <span style="color:#e6db74">&#34;Max Memory Ever Allocated : </span>$max_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Max Memory Ever Allocated : </span>$max_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
 
   human_readable $per_thread_buffers per_thread_buffersHR
-  cecho <span style="color:#e6db74">&#34;Configured Max Per-thread Buffers : </span>$per_thread_buffersHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Configured Max Per-thread Buffers : </span>$per_thread_buffersHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
 
   human_readable $global_buffers global_buffersHR
-  cecho <span style="color:#e6db74">&#34;Configured Max Global Buffers : </span>$global_buffersHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Configured Max Global Buffers : </span>$global_buffersHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
 
   human_readable $total_memory total_memoryHR
-  cecho <span style="color:#e6db74">&#34;Configured Max Memory Limit : </span>$total_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Configured Max Memory Limit : </span>$total_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
 
   human_readable $physical_memory physical_memoryHR
-  cecho <span style="color:#e6db74">&#34;Physical Memory : </span>$physical_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
+  cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Physical Memory : </span>$physical_memoryHR<span style="color:#e6db74"> </span>$unit<span style="color:#e6db74">&#34;</span> $txt_color
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> $error -eq <span style="color:#ae81ff">1</span> <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
     printf <span style="color:#e6db74">&#34;\n&#34;</span>
@@ -1507,7 +1507,7 @@ total_memory_used<span style="color:#f92672">()</span> <span style="color:#f9267
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e"># Required Functions</span>
-login_validation<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+login_validation<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   check_for_socket          <span style="color:#75715e"># determine the socket location -- 1st login</span>
   check_for_plesk_passwords <span style="color:#75715e"># determine the login method -- 2nd login</span>
   check_mysql_login         <span style="color:#75715e"># determine if mysql is accepting login -- 3rd login</span>
@@ -1516,7 +1516,7 @@ login_validation<span style="color:#f92672">()</span> <span style="color:#f92672
     awk -F <span style="color:#ae81ff">\.</span> <span style="color:#e6db74">&#39;{ printf &#34;%02d&#34;, $1; printf &#34;%02d&#34;, $2; printf &#34;%02d&#34;, $3 }&#39;</span><span style="color:#66d9ef">)</span>
 <span style="color:#f92672">}</span>
 
-shared_info<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+shared_info<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   export major_version<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;SELECT SUBSTRING_INDEX(VERSION(), &#39;.&#39;, +2)&#34;</span><span style="color:#66d9ef">)</span>
   export mysql_version_num<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>$mysql -Bse <span style="color:#e6db74">&#34;SELECT VERSION()&#34;</span> |
     awk -F <span style="color:#ae81ff">\.</span> <span style="color:#e6db74">&#39;{ printf &#34;%02d&#34;, $1; printf &#34;%02d&#34;, $2; printf &#34;%02d&#34;, $3 }&#39;</span><span style="color:#66d9ef">)</span>
@@ -1524,7 +1524,7 @@ shared_info<span style="color:#f92672">()</span> <span style="color:#f92672">{</
   socket_owner<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>ls -nH $socket | awk <span style="color:#e6db74">&#39;{ print $3 }&#39;</span><span style="color:#66d9ef">)</span>
 <span style="color:#f92672">}</span>
 
-get_system_info<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+get_system_info<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   export OS<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>uname<span style="color:#66d9ef">)</span>
 
   <span style="color:#75715e"># Get information for various UNIXes</span>
@@ -1559,14 +1559,14 @@ get_system_info<span style="color:#f92672">()</span> <span style="color:#f92672"
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">## Optional Components Groups</span>
-banner_info<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+banner_info<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   shared_info
   print_banner; echo
   check_mysql_version; echo
   post_uptime_warning; echo
 <span style="color:#f92672">}</span>
 
-misc<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+misc<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   shared_info
   check_slow_queries; echo
   check_binary_log; echo
@@ -1575,7 +1575,7 @@ misc<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
   check_innodb_status; echo
 <span style="color:#f92672">}</span>
 
-memory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+memory<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   shared_info
   total_memory_used; echo
   check_key_buffer_size; echo
@@ -1584,7 +1584,7 @@ memory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
   check_join_operations; echo
 <span style="color:#f92672">}</span>
 
-file<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+file<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   shared_info
   check_open_files; echo
   check_table_cache; echo
@@ -1593,14 +1593,14 @@ file<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
   check_table_locking; echo
 <span style="color:#f92672">}</span>
 
-all<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+all<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   banner_info
   misc
   memory
   file
 <span style="color:#f92672">}</span>
 
-prompt<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+prompt<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
   prompted<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;true&#39;</span>
   read -p <span style="color:#e6db74">&#34;Username [anonymous] : &#34;</span> user
   read -rp <span style="color:#e6db74">&#34;Password [&lt;none&gt;] : &#34;</span> pass
@@ -1612,11 +1612,11 @@ prompt<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
   <span style="color:#66d9ef">fi</span>
 
   <span style="color:#66d9ef">if</span> <span style="color:#f92672">[</span> -z $pass <span style="color:#f92672">]</span>; <span style="color:#66d9ef">then</span>
-    export mysql<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysql -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74">&#34;</span>
-    export mysqladmin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysqladmin -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74">&#34;</span>
+    export mysql<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">mysql -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74">&#34;</span>
+    export mysqladmin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">mysqladmin -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">else</span>
-    export mysql<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysql -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74"> -p</span>$pass<span style="color:#e6db74">&#34;</span>
-    export mysqladmin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;mysqladmin -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74"> -p</span>$pass<span style="color:#e6db74">&#34;</span>
+    export mysql<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">mysql -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74"> -p</span>$pass<span style="color:#e6db74">&#34;</span>
+    export mysqladmin<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">mysqladmin -S </span>$socket<span style="color:#e6db74"> -u</span>$user<span style="color:#e6db74"> -p</span>$pass<span style="color:#e6db74">&#34;</span>
   <span style="color:#66d9ef">fi</span>
 
   check_for_socket
@@ -1700,10 +1700,11 @@ get_system_info
     prompt
     ;;
   *<span style="color:#f92672">)</span>
-    cecho <span style="color:#e6db74">&#34;usage: </span>$0<span style="color:#e6db74"> [ all | banner | file | innodb | memory | misc | prompt ]&#34;</span> boldred
+    cecho <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">usage: </span>$0<span style="color:#e6db74"> [ all | banner | file | innodb | memory | misc | prompt ]</span><span style="color:#e6db74">&#34;</span> boldred
     exit <span style="color:#ae81ff">1</span>
     ;;
-<span style="color:#66d9ef">esac</span></code></pre></div>
+<span style="color:#66d9ef">esac</span>
+</code></pre></div>
 </div>
 
   
@@ -1717,7 +1718,7 @@ get_system_info
 
 <nav class='entry-nav'>
   <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/nfs/'>
+      <a href='/notes/nagios/'>
         <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <line x1="20" y1="12" x2="4" y2="12"/>
@@ -1725,7 +1726,7 @@ get_system_info
   
 </svg>
  Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>NFS</a>
+        <span class='screen-reader-text'>Previous post: </span>Nagios</a>
     </div><div class='next-entry sep-before'>
       <a href='/notes/mysql/'>
         <span class='screen-reader-text'>Next post: </span>MySQL<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
@@ -1746,7 +1747,7 @@ get_system_info
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox | <a rel='license' href='/licenses/'>Licensing</a></p>
+  <p> &copy; 2011-2019 Sam Stelfox </p>
 </div>
 
         </div>
