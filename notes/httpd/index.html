@@ -584,7 +584,7 @@ AddType text/html .php
 AddType application/x-httpd-php-source .phps
 
 DirectoryIndex index.php
-</code></pre><h3 id="etchttpdconfdmodevasiveconf">/etc/httpd/conf.d/mod_evasive.conf</h3>
+</code></pre><h3 id="etchttpdconfdmod-evasiveconf">/etc/httpd/conf.d/mod_evasive.conf</h3>
 <p><code>mod_evasive</code> is a crafty little module designed to limit the impact of DoS and
 DDoS attacks. This won't stop them but it will help defend against them. It
 will also send notices to an admin if desired (it's an optional feature which
@@ -608,7 +608,7 @@ understand what happened and to react accordingly.</p>
   DOSLogDir   &quot;/var/lock/mod_evasive&quot;
   #DOSWhitelist   192.168.0.*
 &lt;/IfModule&gt;
-</code></pre><h3 id="etchttpdconfdmodgnutlsconf">/etc/httpd/conf.d/mod_gnutls.conf</h3>
+</code></pre><h3 id="etchttpdconfdmod-gnutlsconf">/etc/httpd/conf.d/mod_gnutls.conf</h3>
 <p>The GnuTLS module provides SSL encryption for web requests. It's quite a bit
 more flexible than <code>mod_ssl</code> though it hasn't been audited as thoroughly. It is
 also considered an &lsquo;experimental&rsquo; module for apache even though it's been in
@@ -619,7 +619,7 @@ GnuTLSCache dbm &quot;/var/cache/mod_gnutls&quot;
 GnuTLSCacheTimeout 300
 
 Listen 443
-</code></pre><h3 id="etchttpdconfdmodsecurityconf">/etc/httpd/conf.d/mod_security.conf</h3>
+</code></pre><h3 id="etchttpdconfdmod-securityconf">/etc/httpd/conf.d/mod_security.conf</h3>
 <p>WARNING: While this is a good module to have loaded it sextuples the amount of
 memory used by child processes. You will need to tune the server's performance
 settings accordingly. This may have a huge impact on high-traffic sites.</p>
@@ -650,7 +650,7 @@ characters</li>
 </ul>
 <p>After keeping an eye on the logs for a few weeks and ensuring that there aren't
 any false positives, you should change the line <code>SecDefaultAction &quot;phase:2,pass</code> to <code>SecDefaultAction &quot;phase:2,deny,log,status:403&quot;</code>.</p>
-<h3 id="etchttpdconfdmodselinuxconf">/etc/httpd/conf.d/mod_selinux.conf</h3>
+<h3 id="etchttpdconfdmod-selinuxconf">/etc/httpd/conf.d/mod_selinux.conf</h3>
 <p>The <code>mod_selinux</code> module allows us to extend SELinux contexts into individual
 web applications or virtual hosts without impacting the memory usage of
 individual child processes (The parent process seems to use about 100Kb of
@@ -681,7 +681,7 @@ c2).</p>
 <p>You can set contexts based on the IP address being connected from by adding the
 following line within a Directory definition:</p>
 <pre><code>SetEnvIf Remote_Addr &quot;10.13.37.(25[0-5]|2[0-4][0-9]|[1-9]?[0-9])$&quot; SELINUX_DOMAIN=*:s0:c1
-</code></pre><h3 id="etchttpdconfdvirtualhostsconf">/etc/httpd/conf.d/virtual_hosts.conf</h3>
+</code></pre><h3 id="etchttpdconfdvirtual-hostsconf">/etc/httpd/conf.d/virtual_hosts.conf</h3>
 <p>This does not exist upon the default installation and will need to be created.
 No certificates are automatically generated when you install the GnuTLS module,
 if you need them you will need to generate them yourself.</p>
@@ -996,7 +996,7 @@ passenger 3.0.12 that prevents it from being compiled with GCC 4.6.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox </p>
+  <p> &copy; 2011-2019 Sam Stelfox | <!-- raw HTML omitted -->Licensing<!-- raw HTML omitted --></p>
 </div>
 
         </div>

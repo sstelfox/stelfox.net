@@ -2,12 +2,12 @@
 <html lang='en'><head>
   <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='While cleaning up some tech debt, a curious issue cropped up. Nginx was running in an alpine container as a front end load balancer. It had a dynamic config that got periodically updated by a sidecar, and had filebeat shipping logs out to a central collector but otherwise was just a very simple nginx config.
+<meta name='description' content='While cleaning up some tech debt, a curious issue cropped up. Nginx was running in an alpine container as a front end load balancer. It had a dynamic config that got periodically updated by a sidecar, and had filebeat shipping logs out to a central collector but otherwise was just a very simple Nginx config.
 Every now and then the container would crash, it would automatically recover fast enough no alarms were lost and the clients would just resend their requests.'>
 <meta name='theme-color' content='#ffcd00'>
 
 <meta property='og:title' content='Fixing Hung Nginx Workers • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='While cleaning up some tech debt, a curious issue cropped up. Nginx was running in an alpine container as a front end load balancer. It had a dynamic config that got periodically updated by a sidecar, and had filebeat shipping logs out to a central collector but otherwise was just a very simple nginx config.
+<meta property='og:description' content='While cleaning up some tech debt, a curious issue cropped up. Nginx was running in an alpine container as a front end load balancer. It had a dynamic config that got periodically updated by a sidecar, and had filebeat shipping logs out to a central collector but otherwise was just a very simple Nginx config.
 Every now and then the container would crash, it would automatically recover fast enough no alarms were lost and the clients would just resend their requests.'>
 <meta property='og:url' content='https://stelfox.net/blog/2019/10/fixing-hung-nginx-workers/'>
 <meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
@@ -113,7 +113,7 @@ if (!doNotTrack) {
   <p>While cleaning up some tech debt, a curious issue cropped up. Nginx was running
 in an alpine container as a front end load balancer. It had a dynamic config
 that got periodically updated by a sidecar, and had filebeat shipping logs out
-to a central collector but otherwise was just a very simple nginx config.</p>
+to a central collector but otherwise was just a very simple Nginx config.</p>
 <p>Every now and then the container would crash, it would automatically recover
 fast enough no alarms were lost and the clients would just resend their
 requests. No data was losts, everything failed gracefully, but it's still a
@@ -125,22 +125,24 @@ pretty steady trend upwards indicative of some kind of a memory leak. The graph
 below illustrates this. Each of those drops is either the container crashing or
 me manually restarting it to test behavior. Can you figure out when I fixed the
 issue?</p>
-<p><img src="/images/nginx_memory_consumption.png" alt="Graph showing nginx memory usage. The graph goes from chaotic tosteady"></p>
+<p><img src="/images/nginx_memory_consumption.png" alt="Graph showing Nginx memory usage. The graph goes from chaotic tosteady"></p>
 <p>To figure out what was going on I had to get an invitation that container's
 party.</p>
 <p>I don't think there is great tooling for inspecting individual processes inside
 of containers. As much as we'd like to think of containers as isolated
 applications, its not uncommon for them to run <a href="https://github.com/krallin/tini">a minimal init container</a>,
 or be composed of separate different processes themselves that handle different
-things (nginx has a master process and spawns off many worker processes). We
+things (Nginx has a master process and spawns off many worker processes). We
 still need the data on those processes.</p>
 <p>The common solution to getting this data seems to be to &ldquo;just exec into the
 container&rdquo;. In general <code>exec</code> should be restricted. If you find yourself
 running exec in a container, you're missing tooling or metrics that should
-avoid that (which is the case here). This is a longer discussion but in short:
-If you can <code>exec</code> into the container, you can extract its secrets,
-configuration, and access any services that its allowed to (likely escalating
-your personal privileges in the process for a properly secured cluster).</p>
+avoid that (which is the case here).</p>
+<p>Denying <code>exec</code> is probably a longer discussion but the short of it is: If you
+can <code>exec</code> into the container, you can extract its secrets, configuration, and
+access any services that it's allowed to (likely escalating your personal
+privileges within the cluster). This is without considering the ramifications
+of <code>exec</code>'ing into a privileged container.</p>
 <p>In any event, not all container clusters solution allow external execution
 (looking at you AWS ECS, its the one good thing I have to say about you).</p>
 <p>I chose to modify the container to log the data I needed instead. I setup a
@@ -161,10 +163,10 @@ wrapper that started and backgrounded the following script:</p>
 <p>Each message has a prefix of <code>memstat:</code> so I can easily filter and extract that
 data from the live log stream. After a couple of hours (the time it generally
 took for the party to get going) the issue was pretty obvious. Inside the
-container there was a growing number of processes with the name <code>nginx: worker process is shutting down</code>. Some Googling turned up <a href="https://forum.nginx.org/read.php?2,262403,262403">a post in the nginx mailing
+container there was a growing number of processes with the name <code>nginx: worker process is shutting down</code>. Some Googling turned up <a href="https://forum.nginx.org/read.php?2,262403,262403">a post in the Nginx mailing
 list</a> from a while ago.</p>
 <p>The responses claimed that it was the result of a third party module, but this
-is stock nginx (version 1.15.8 at the time) which was at least three years
+is stock Nginx (version 1.15.8 at the time) which was at least three years
 older than the post. It did indicate a clue though: config reloading.</p>
 <p>I don't know why Nginx believed connections were still open, we have request
 and connect timeouts both in this config and upstream. Some of these processes
@@ -178,7 +180,7 @@ There is a newer version of Nginx (1.17.5 at the time of the writing) that
 could very well have fixed this issue.</p>
 <p>Adding <code>worker_shutdown_timeout 60s;</code> to the main Nginx config solved the issue
 (60 seconds matches our request and connect timeouts so nothing valid should
-last longer than that). Sure enough nginx went back to stable, and predictably
+last longer than that). Sure enough Nginx went back to stable, and predictably
 low memory usage.</p>
 
 </div>
@@ -210,16 +212,6 @@ low memory usage.</p>
 </svg>
  Previous</span>
         <span class='screen-reader-text'>Previous post: </span>Fixing Dark Input Boxes in Firefox</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/blog/2019/11/blender-loop-select-in-cinnamon/'>
-        <span class='screen-reader-text'>Next post: </span>Blender Loop Select in Cinnamon<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
     </div></div>
 </nav>
 
@@ -230,7 +222,7 @@ low memory usage.</p>
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2019 Sam Stelfox </p>
+  <p> &copy; 2011-2019 Sam Stelfox | <!-- raw HTML omitted -->Licensing<!-- raw HTML omitted --></p>
 </div>
 
         </div>
