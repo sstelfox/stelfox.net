@@ -158,7 +158,7 @@ depending on the system architecture.</p>
 <p>These are module dependent refer to the man page of the module.</p>
 <h3 id="confusing-lines-i-dont-understand">Confusing Lines I Don't Understand</h3>
 <pre><code>account [default=bad success=ok user_unknown=ignore] pam_krb5.so
-</code></pre><h2 id="pam-cracklib">pam_cracklib</h2>
+</code></pre><h2 id="pamcracklib">pam_cracklib</h2>
 <p><code>pam_cracklib</code> allows for quick quality control settings of passwords. It
 allows minimum requirements of the number of different types of characters that
 need to be used in a password before it can be used. It also checks the
@@ -176,7 +176,7 @@ password security. Further password control can be accomplished using
 character password and treats numbers as 2 characters and symbols as 4
 characters. This can be dangerous as you can have an 11 digit number as a
 password which isn't secure&hellip;</p>
-<h2 id="pam-passwdqc">pam_passwdqc</h2>
+<h2 id="pampasswdqc">pam_passwdqc</h2>
 <p><code>pam_passwdqc</code> replaces <code>pam_cracklib</code> in checking the quality of the password.
 To use it you need to comment out <code>pam_cracklib</code> in <code>/etc/pam.d/system-auth</code>.</p>
 <p>You'll need to add this line to the <code>/etc/pam.d/system-auth</code>:</p>
@@ -192,7 +192,7 @@ for root passwords (since they're sha512 hashes they only have two character
 classes and would thus be denied).</p>
 <p>This is untested but to the best of my knowledge passphrases still need to be
 at least three character classes (since one and two are disabled).</p>
-<h2 id="pam-tally2">pam_tally2</h2>
+<h2 id="pamtally2">pam_tally2</h2>
 <p><code>pam_tally2</code> comes with Fedora's pam package so it will be installed. It's very
 useful to prevent bruteforce attempts BUT it can also used to lock access out
 to a legitimate user. It is recommended to not turn this on for the entire
