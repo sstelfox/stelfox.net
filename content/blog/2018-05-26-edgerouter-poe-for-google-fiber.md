@@ -1,6 +1,5 @@
 ---
 date: 2018-05-26T18:41:09-06:00
-draft: true
 tags:
 - network
 - ubiquiti
@@ -177,13 +176,8 @@ commit
 Now you'll have to wait a while for everything to come up, which can be [up to
 five minutes][8] but your IPv4 connectivity should be all set.
 
-## IPv6 Connectivity
-
-TODO
-
-## Custom DNS Configuration
-
-TODO
+I also setup IPv6 separately using DHCPv6-PD, giving a separate /64 network to
+each of my internal networks. I'm going to leave that for another post though.
 
 ## Changing the egress-qos Value
 
