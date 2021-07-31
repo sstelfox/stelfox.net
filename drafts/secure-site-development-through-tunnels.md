@@ -1,10 +1,13 @@
 ---
-date: 2019-02-12 18:42:49+05:00
-tags:
-- development
-- linux
-- nginx
 title: Secure Site Development Using Tunnels
+date: ???
+draft: true
+
+taxonomies:
+  tags:
+  - development
+  - linux
+  - nginx
 ---
 
 I find myself regularly writing and testing small HTTP based APIs that need to
@@ -49,9 +52,5 @@ reverse proxy like Nginx. Using it as our front end will likely get you closer
 to how it will be running production.
 
 Setting up an Nginx server 
-
-<small>
-1. This was tested on Nginx version 1.12.1 on Fedora 28
-</small>
 
 [1]: https://ngrok.com/

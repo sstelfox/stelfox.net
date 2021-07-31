@@ -1,11 +1,13 @@
 ---
+title: IP Route Blackholing in Linux
 date: ???
 draft: true
-tags:
-- linux
-- routing
-- security
-title: IP Route Blackholing in Linux
+
+taxonomies:
+  tags:
+  - linux
+  - routing
+  - security
 ---
 
 Uses:
@@ -32,5 +34,3 @@ ip route del 192.168.10.0/24
 # Likely:
 ip -6 route del 2001:db9:9::/64
 ```
-
-
