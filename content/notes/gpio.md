@@ -1,5 +1,10 @@
 ---
 title: GPIO
+weight: 46
+taxonomies:
+  tags:
+  - embedded
+  - linux
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

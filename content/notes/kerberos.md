@@ -1,5 +1,10 @@
 ---
 title: Kerberos
+weight: 83
+taxonomies:
+  tags:
+  - linux
+  - security
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

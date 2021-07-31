@@ -1,5 +1,10 @@
 ---
 title: Gatekeeper Script for SSH
+weight: 70
+taxonomies:
+  tags:
+  - linux
+  - security
 ---
 
 If you've already implemented the SSH keys for authentication and have a

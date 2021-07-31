@@ -1,5 +1,10 @@
 ---
 title: Duplicity
+weight: 58
+taxonomies:
+  tags:
+  - backups
+  - linux
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

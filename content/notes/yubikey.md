@@ -1,9 +1,10 @@
 ---
-date: 2017-10-10 00:28:32+00:00
-tags:
-- linux
-- security
 title: Yubikey
+weight: 36
+taxonomies:
+  tags:
+  - linux
+  - security
 ---
 
 ## NEO

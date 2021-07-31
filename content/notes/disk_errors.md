@@ -1,9 +1,10 @@
 ---
-date: 2017-10-09 23:05:43+00:00
-tags:
-- linux
-- tips
 title: Disk Errors
+weight: 17
+taxonomies:
+  tags:
+  - linux
+  - tips
 ---
 
 This is a weird file... But while installing gentoo on a disk I started getting

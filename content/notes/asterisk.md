@@ -1,17 +1,22 @@
 ---
 title: Asterisk
----
+weight: 75
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+taxonomies:
+  tags:
+  - linux
+
+extra:
+  show_toc: true
+  outdated: true
+---
 
 Asterisk is a software implementation of a telephone private branch exchange
 (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it
 allows attached telephones to make calls to one another, and to connect to
 other telephone services including the public switched telephone network (PSTN)
 and Voice over Internet Protocol (VoIP) services. Its name comes from the
-asterisk symbol, “*”.
+asterisk symbol, "*".
 
 NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for
 the Linksys SPA3000 as well as ZRTP and SRTP support. It might be wise to look
@@ -19,40 +24,29 @@ into using kamailio as a front end SIP router though this doesn't seem to be
 necessary unless we want to start handling multi-thousands of calls
 concurrently.
 
-A few [references][2] for help when building FreeSWITCH.
-
 ## Previous Reasoning
 
 This was setup on my private network to provide a land line phone to my office
 using our existing internet connection. I wanted to go about doing this without
 having to pay for the services as I don't expect this to get a lot of use.
 
-This Asterisk setup involves the use of [Google Voice][3] and [SIPGate][4].
-SIPGate provides a single phone number, SIP connectivity and call forwarding.
-Google Voice doesn't provide services to receive phone calls, however, it can
-be setup as an intermediary that will call you and then connect to another
-number on your behalf, while also providing call forwarding.
+This Asterisk setup involves the use of Google Voice and SIPGate. SIPGate
+provides a single phone number, SIP connectivity and call forwarding. Google
+Voice doesn't provide services to receive phone calls, however, it can be setup
+as an intermediary that will call you and then connect to another number on
+your behalf, while also providing call forwarding.
 
 Combining the three will get free incoming and outgoing to anywhere in the US
 and Canada. Incoming calls will come from Google Voice, which will forward the
 call to the SIPGate phone number, which the Asterisk PBX will be tied to and
 we'll in turn be able to receive the call.
 
-Outgoing calls are a bit more tricky. Implemented using [pygooglevoice][5], the
+Outgoing calls are a bit more tricky. Implemented using [pygooglevoice][1], the
 Asterisk box will actually connect to Google Voice's APIs to dial the number
 and call back (making it an incoming call and thus free) to make the outgoing
 call.
 
-## Links ##
-
-* http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html
-* http://www.asteriskdocs.org/
-* http://www.voip-info.org/
-* http://nerdvittles.com/index.php?p=65
-* http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP
-* http://download.ag-projects.com/
-
-## Security Notes ##
+## Security Notes
 
 Asterisk/SIP are going to be a significant security hole in the network if I
 allow outside access to the SIP services (In case I want to say be able to pick
@@ -111,7 +105,7 @@ You can use the following to create a self-signed one:
 ### Fail2Ban
 
 Due to the overwhelmingly large number of attackers trying to exploit unsecured
-Asterisk boxes, configuring [Fail2Ban][7] with Asterisk is HIGHLY recommended.
+Asterisk boxes, configuring [Fail2Ban][2] with Asterisk is HIGHLY recommended.
 I'm updating the regular expressions in that template as I see attacks, and in
 some cases where I intentionally generate the logs myself.
 
@@ -772,12 +766,16 @@ it has a codec for the audio file loaded). I strongly suggest the music be in
 
 ## Text to Speech
 
-Please refer to my notes on [Festival][7] for more information on text to
+Please refer to my notes on [Festival][3] for more information on text to
 speech with asterisk.
 
-[2]: http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/
-[3]: http://google.com/voice
-[4]: http://www.sipgate.com/
-[5]: http://code.google.com/p/pygooglevoice/
-[6]: {{< ref "./fail2ban.md" >}}
-[7]: {{< ref "./festival.md" >}}
+## Additional Links
+
+* [Asterisk Definitive Guide](http://www.asteriskdocs.org/)
+* [VoIP Reference Guide](http://www.voip-info.org/)
+* [Turbocharging Your Asterisk@Home PBX](https://nerdvittles.com/turbocharging-your-asteriskhome-pbx/)
+* [LDAP Integration for Asterisk](https://www.voip-info.org/asterisk-ldap/)
+
+[1]: https://code.google.com/archive/p/pygooglevoice/
+[2]: @/notes/fail2ban.md
+[3]: @/notes/festival.md

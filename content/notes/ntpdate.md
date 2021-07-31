@@ -1,5 +1,9 @@
 ---
 title: NTPDate
+weight: 35
+taxonomies:
+  tags:
+  - linux
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

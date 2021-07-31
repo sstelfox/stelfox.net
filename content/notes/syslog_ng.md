@@ -1,9 +1,10 @@
 ---
-date: 2017-10-25 01:56:02-04:00
-tags:
-- linux
-- security
 title: Syslog-NG
+weight: 84
+taxonomies:
+  tags:
+  - linux
+  - security
 ---
 
 Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced

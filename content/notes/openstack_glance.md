@@ -1,5 +1,9 @@
 ---
 title: OpenStack Glance
+weight: 30
+taxonomies:
+  tags:
+  - linux
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

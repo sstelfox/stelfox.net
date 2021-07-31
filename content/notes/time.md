@@ -1,8 +1,9 @@
 ---
-date: 2017-10-13 12:30:23-04:00
-tags:
-- linux
 title: Time
+weight: 42
+taxonomies:
+  tags:
+  - linux
 ---
 
 This is a very basic operation on a Linux system, but I have to interact with

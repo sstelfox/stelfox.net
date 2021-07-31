@@ -1,9 +1,15 @@
 ---
-date: 2017-10-11 02:19:45+00:00
-tags:
-- linux
-- security
 title: AIDE
+weight: 70
+
+taxonomies:
+  tags:
+  - linux
+  - security
+
+extra:
+  done: true
+  show_toc: true
 ---
 
 AIDE (Advanced Intrusion Detection Environment) is a file and directory
@@ -70,11 +76,11 @@ things it will miss. Arch Linux's default doesn't catch:
 * /lib64 (though if it's a symlink it's likely covered)
 * /srv (though it's not commonly used)
 
-I have one [that avoids][3] these issues. I recommend reviewing it,
+I have one [that avoids][2] these issues. I recommend reviewing it,
 understanding it, and adjusting it for your environment before installing it to
 `/etc/aide/aide.conf`. Be sure to restrict access to the file appropriately:
 
-```sh
+```
 chmod 0600 /etc/aide/aide.conf
 chown root:root /etc/aide/aide.conf
 ```
@@ -82,7 +88,7 @@ chown root:root /etc/aide/aide.conf
 You need to initialize the database as a baseline for the system, which can be
 done with the following command:
 
-```sh
+```
 aide --init
 ```
 
@@ -90,23 +96,23 @@ Depending on the amount of packages installed on your system and the speed of
 your disks this can take quite some time (on a fairly minimal production system
 for me this took about two minutes). You then need to copy the created database
 into the reference location (these locations are dependent on [my
-  configuration][3]):
+  configuration][2]):
 
-```sh
+```
 mkdir -p /var/lib/aide/reference
 cp /var/lib/aide/aide-$(hostname -f).db.new.gz /var/lib/aide/reference/aide-$(hostname -f).db.gz
 ```
 
 You can confirm the system is working with:
 
-```sh
+```
 aide --check
 ```
 
 If any monitored file or directory's attributes changed they will be reported
 to both STDOUT and written to `/var/log/aide/aide.log`. This file is always
 completely rewritten after every run, if you want to keep historical reports,
-[logrotate][2] can be used to move these files aside.
+[logrotate][3] can be used to move these files aside.
 
 I do recommend reviewing the configuration file both to ensure all critical
 system directories are covered on your systems and to be aware of what is
@@ -116,7 +122,7 @@ files of your system as they may not be included in the default configuration.
 If you make any changes it is wise to validate the configuration afterwards by
 running:
 
-```sh
+```
 aide --config-check
 ```
 
@@ -124,14 +130,13 @@ It will produce no output and exit with a zero status if the configuration is
 valid.
 
 I have a modified configuration file covering my general use case
-[available][3], a slightly tweaked [cron job][4] ([original here][5]), and
-slightly [modified script][6] to check AIDE integrity remotely using SSH
-(original in the `contrib` directory of the AIDE source). If you use any of
-these you will likely need to adjust paths to match the configuration.
+[available][2], a slightly tweaked [cron job][4], and slightly [modified
+script][5] to check AIDE integrity remotely using SSH (original in the
+`contrib` directory of the AIDE source). If you use any of these you will
+likely need to adjust paths to match the configuration.
 
-[1]: {{< ref "./puppet.md" >}}
-[2]: {{< ref "./logrotate.md" >}}
-[3]: /note_files/aide/aide.conf
-[4]: /note_files/aide/aide.cron
-[5]: http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-forensics/aide/files/aide.cron
-[6]: /note_files/aide/sshaide.sh
+[1]: @/notes/puppet.md
+[2]: aide.conf
+[3]: @/notes/logrotate.md
+[4]: aide.cron
+[5]: sshaide.sh

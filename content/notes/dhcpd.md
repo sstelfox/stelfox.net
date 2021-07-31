@@ -1,5 +1,10 @@
 ---
 title: DHCPd
+weight: 30
+taxonomies:
+  tags:
+  - linux
+  - networking
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

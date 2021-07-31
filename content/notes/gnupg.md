@@ -1,10 +1,11 @@
 ---
-date: 2017-10-09 23:35:34+00:00
-tags:
-- gpg
-- linux
-- security
 title: GPG Process Notes
+weight: 80
+taxonomies:
+  tags:
+  - gpg
+  - linux
+  - security
 ---
 
 I followed the TAILS setup guide to get a secure offline environment running to

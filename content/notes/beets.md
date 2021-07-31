@@ -1,12 +1,17 @@
 ---
 title: Beets
+weight: 20
+taxonomies:
+  tags:
+  - linux
+  - music
+
+extra:
+  done: true
+  outdated: true
 ---
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
-
-[Documentation][1]
+[Beets Official Documentation][1]
 
 ## Installation
 
@@ -18,7 +23,7 @@ sudo pip-python install rgain
 sudo pip-python install pylast
 ```
 
-Configure ~/.beetsconfig like so:
+Configure `~/.beetsconfig` like so:
 
 ```ini
 [beets]
@@ -70,4 +75,4 @@ The `-A` flag will import the music without checking the tags. And finally the
 `-q` will suppress the prompts and only import the files that have a 95% chance
 of matching.
 
-[1]: http://readthedocs.org/docs/beets/en/1.0b12/index.html
+[1]: https://beets.readthedocs.io/en/1.0b12/index.html

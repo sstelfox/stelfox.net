@@ -1,6 +1,14 @@
 ---
-menu: main
 title: Various Notes
+sort_by: weight
+
+generate_feed: false
+in_search_index: false
+
+page_template: note_page_template.html
+
+paginate_by: 10
+paginate_reversed: true
 ---
 
 This section contains notes on various services and systems I've explored or

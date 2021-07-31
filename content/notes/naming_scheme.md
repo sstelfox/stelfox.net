@@ -1,6 +1,9 @@
 ---
-date: 2017-10-20 19:59:02-04:00
 title: Server Naming Convention
+weight: 80
+taxonomies:
+  tags:
+  - linux
 ---
 
 Over the years I've found myself using many different naming schemes for

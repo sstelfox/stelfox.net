@@ -1,9 +1,10 @@
 ---
-date: 2017-10-20 12:14:02-04:00
-tags:
-- linux
-- security
 title: IPTables
+weight: 40
+taxonomies:
+  tags:
+  - linux
+  - security
 ---
 
 iptables (and ip6tables) is a simple application for interacting directly with

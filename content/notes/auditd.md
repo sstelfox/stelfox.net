@@ -1,9 +1,14 @@
 ---
-date: 2017-10-12 15:33:21-04:00
-tags:
-- linux
-- security
 title: Auditd
+weight: 60
+
+taxonomies:
+  tags:
+  - linux
+  - security
+
+extra:
+  show_toc: true
 ---
 
 Auditd collects any configured syscall execution with critical security
@@ -22,8 +27,7 @@ cross system tracing of events.
 ## Recommended Events to Audit
 
 * All logins to the system
-* Writes & attribute changes on sensitive files that are largely static
-  (think /etc)
+* Writes & attribute changes on sensitive files that are largely static (think /etc)
 * Writes & attribute changes to critical system binaries
 * Write to the kernel / initramfs
 * Any program executed with root privileges
@@ -121,15 +125,15 @@ with disk queues removed).
 
 ## More References
 
-* https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html
-* http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf
-* https://security.stackexchange.com/questions/4629/simple-example-auditd-configuration
-* https://linux-audit.com/tuning-auditd-high-performance-linux-auditing/
+* [RedHat System Auditing Guide](https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html)
+* [NIST Guide to General Server Security](https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf)
+* [StackOverflow Simple Example Auditd Configuration](https://security.stackexchange.com/questions/4629/simple-example-auditd-configuration)
+* [Tuning Auditd](https://linux-audit.com/tuning-auditd-high-performance-linux-auditing/)
 
-[1]: {{< ref "./aide.md" >}}
-[2]: {{< ref "./rsyslog.md" >}}
-[3]: /note_files/auditd/auditd.conf
-[4]: /note_files/auditd/libaudit.conf
-[5]: /note_files/auditd/audit.rules
-[6]: /note_files/auditd/audispd.conf
-[7]: /note_files/auditd/audispd_syslog.conf
+[1]: @/notes/aide.md
+[2]: @/notes/rsyslog.md
+[3]: auditd.conf
+[4]: libaudit.conf
+[5]: audit.rules
+[6]: audispd.conf
+[7]: audispd_syslog.conf

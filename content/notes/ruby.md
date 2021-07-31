@@ -1,5 +1,10 @@
 ---
 title: Ruby
+weight: 31
+taxonomies:
+  tags:
+  - linux
+  - programming
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

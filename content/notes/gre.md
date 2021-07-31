@@ -1,9 +1,10 @@
 ---
-date: 2017-10-09 22:14:23+00:00
-tags:
-- linux
-- networking
 title: GRE Tunnel
+weight: 83
+taxonomies:
+  tags:
+  - linux
+  - networking
 ---
 
 GRE encapsulates all layer 2 traffic, but does so through an unencrypted

@@ -1,8 +1,9 @@
 ---
-date: 2017-10-26T17:35:42-04:00
-tags:
-- linux
 title: Cron Daemon
+weight: 42
+taxonomies:
+  tags:
+  - linux
 ---
 
 Cron is a pretty standard utility and there isn't much to it. I generally use

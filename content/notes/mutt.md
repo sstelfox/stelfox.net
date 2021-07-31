@@ -1,9 +1,10 @@
 ---
-date: 2017-10-20 12:51:00-04:00
-tags:
-- cli
-- linux
 title: Mutt
+weight: 33
+taxonomies:
+  tags:
+  - cli
+  - linux
 ---
 
 I keep a copy of my mutt config both [here on the site][1] as well as in my

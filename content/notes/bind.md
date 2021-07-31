@@ -1,10 +1,16 @@
 ---
 title: Bind
----
+weight: 25
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+taxonomies:
+  tags:
+  - dns
+  - linux
+
+extra:
+  done: true
+  outdated: true
+---
 
 ## Firewall Adjustments
 

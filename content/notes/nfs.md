@@ -1,5 +1,9 @@
 ---
 title: NFS
+weight: 52
+taxonomies:
+  tags:
+  - linux
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have
@@ -18,7 +22,7 @@ I started `nfs` and `rpcbind`... lets see if thats enough.
 /etc/exports on server:
 
 ```
-/media/storage/Media           10.13.37.51(rw,sync)  
+/media/storage/Media           10.13.37.51(rw,sync)
 /media/storage/HomeDrives      10.13.37.51(rw,sync)
 /media/storage/SharedDocuments 10.13.37.51(rw,sync)
 ```

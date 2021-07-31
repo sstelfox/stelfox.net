@@ -1,9 +1,14 @@
 ---
-date: 2017-10-09 14:50:23+00:00
-tags:
-- backups
-- linux
 title: Amanda
+weight: 15
+
+taxonomies:
+  tags:
+  - backups
+  - linux
+
+extra:
+  done: true
 ---
 
 Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open
@@ -22,11 +27,11 @@ I either do or did find useful:
 
 > Any LTO cleaning tape may be used in any LTO drive
 
-* http://arstechnica.com/civis/viewtopic.php?t=1206963
-* http://www.tandbergdata.com/knowledge-base/index.cfm/are-there-any-guidelines-for-cleaning-the-lto-tape-drive/
+* [Tape Drives - How often do yours need cleaning?](https://arstechnica.com/civis/viewtopic.php?t=1206963)
+* [Guidelines for Cleaning LTO Tape Drives](https://www.tandbergdata.com/knowledge-base/index.cfm/are-there-any-guidelines-for-cleaning-the-lto-tape-drive/)
 
 ## Encryption
 
-* http://linux.die.net/man/8/amcheck
-* https://wiki.zmanda.com/index.php/How_To:Set_up_data_encryption
-* https://serverfault.com/questions/68487/tape-encryption-management-best-practices
+* [amcheck manpage](https://linux.die.net/man/8/amcheck)
+* [How To:Set up data encryption](https://wiki.zmanda.com/index.php/How_To:Set_up_data_encryption)
+* [Tape encryption management & best practices](https://serverfault.com/questions/68487/tape-encryption-management-best-practices)

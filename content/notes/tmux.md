@@ -1,5 +1,9 @@
 ---
 title: Tmux
+weight: 64
+taxonomies:
+  tags:
+  - linux
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have
@@ -88,7 +92,7 @@ else
     # Create a new session (without attaching it) and link to base session 
     # to share windows
     tmux new-session -d -t $base_session -s $session_id
-    
+
     # Attach to the new session
     tmux attach-session -t $session_id
 

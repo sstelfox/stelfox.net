@@ -1,5 +1,10 @@
 ---
 title: Snort
+weight: 59
+taxonomies:
+  tags:
+  - linux
+  - security
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

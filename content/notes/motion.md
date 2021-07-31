@@ -1,5 +1,10 @@
 ---
 title: Motion
+weight: 37
+taxonomies:
+  tags:
+  - linux
+  - media
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have

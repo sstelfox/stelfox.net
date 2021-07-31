@@ -1,5 +1,9 @@
 ---
 title: Openstack Keystone
+weight: 30
+taxonomies:
+  tags:
+  - linux
 ---
 
 ## Installation/Configuration
