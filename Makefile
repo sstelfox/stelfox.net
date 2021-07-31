@@ -27,5 +27,5 @@ static/apple-touch-icon.png: logo_src/stelfox_favicon.svg Makefile
 static/logo.png: logo_src/stelfox_clean_icon.svg Makefile
 	convert -alpha on -quality 85 -scale 192x192 -transparent white logo_src/stelfox_clean_icon.svg static/logo.png
 
-.PHONY: build logo server setup
+.PHONY: build check logo serve setup
 .DEFAULT_GOAL := build
