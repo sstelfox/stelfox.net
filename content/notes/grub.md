@@ -1,14 +1,15 @@
 ---
 title: Grub
 weight: 30
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  oudated: true
+---
 
 ## Security
 
