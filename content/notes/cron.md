@@ -98,7 +98,7 @@ touch /etc/cron.allow
 You can confirm the restriction from any user account by running the following
 command (you'll see the same error):
 
-```sh
+```
 $ crontab -l
 You (testuser) are not allowed to use this program (crontab)
 See crontab(1) for more information
@@ -149,7 +149,7 @@ code. Be sure to use a unique lock file for each task.
 An example of how to do this would look in a user's crontab would look like the
 following:
 
-```cron
+```
 0 0 * * * /usr/bin/flock --nonblock /tmp/backup.lock $HOME/scripts/full_backup.sh
 ```
 

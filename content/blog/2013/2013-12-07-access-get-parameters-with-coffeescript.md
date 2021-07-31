@@ -19,7 +19,7 @@ in coffeescript. A few others would only extract an individual named parameter
 at a time. The following will return all of them in Javascript's equivalent of
 a hash (or dictionary if you prefer) in the form of an object.
 
-```coffeescript
+```
 getParams = ->
   query = window.location.search.substring(1)
   raw_vars = query.split("&")

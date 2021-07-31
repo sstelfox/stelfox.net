@@ -39,7 +39,7 @@ You can find where your copy of this library lives with the following command.
 This should be run inside the docker container that you want to modify the
 /etc/hosts file in.
 
-```bash
+```
 find / -name libnss_files.so.2 -print 2> /dev/null
 ```
 
@@ -47,12 +47,12 @@ Pay attention to the path, multiple files may show up and you want the one that
 matches your system's running kernel (generally x86_64 systems will have their
 libraries in a lib64 directory).
 
-Once you've found this add the following lines to your Dockerfile. Make sure
+Once you've found this add the following lines to your `Dockerfile`. Make sure
 you modify the path in the copy in the first line to the path of your copy of
 the library. Once done you'll use the /var/hosts file to modify your hosts file
 instead.
 
-```docker
+```
 RUN mkdir -p /override_lib && cp /etc/hosts /var/ && cp /usr/lib64/libnss_files.so.2 /override_lib
 RUN sed -ie 's:/etc/hosts:/var/hosts:g' /override_lib/libnss_files.so.2
 ENV LD_LIBRARY_PATH /override_lib
