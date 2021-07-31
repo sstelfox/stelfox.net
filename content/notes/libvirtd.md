@@ -1,14 +1,14 @@
 ---
 title: libvirtd
 weight: 47
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  outdated: true
+---
 
 libvirt is an open source API and management tool for managing platform
 virtualization. It is used to manage Linux KVM and Xen virtual machines through
@@ -83,9 +83,9 @@ The provided controllers are:
   processes with a ‘tc’ network class 
 
 Under KVM all of these are not supported, however cpu, devices and memory are.
-Which are in my humble opinion the most important for our task. 
+Which are in my humble opinion the most important for our task.
 
-http://berrange.com/posts/2009/12/03/using-cgroups-with-libvirt-and-lxckvm-guests-in-fedora-12/
+* [Using CGroups with libvirt and LXC/KVM guests in Fedora 12](http://berrange.com/posts/2009/12/03/using-cgroups-with-libvirt-and-lxckvm-guests-in-fedora-12/)
 
 ## Initial Setup
 
@@ -284,18 +284,6 @@ for this bridge below:
 </network>
 ```
 
-### IPv6 Pass Through
-
-https://www.berrange.com/posts/2011/06/16/providing-ipv6-connectivity-to-virtual-guests-with-libvirt-and-kvm/
-
-## Devices
-
-### USB Devices
-
-http://david.wragg.org/blog/2009/03/using-usb-pass-through-under-libvirt.html
-
-### PCI Devices
-
 ## Creating New Guests
 
 Things you'll need to determine before creating a new native KVM guest:
@@ -388,8 +376,10 @@ virt-install --connect qemu:///system \
     --network=network:LANBridge
 ```
 
-## LXC
+## Additional Links
 
-* https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/
+* [Getting started with LXC using libvirt](https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/)
+* [Providing IPv6 connectivity to virtual guests with libvirt and KVM](https://www.berrange.com/posts/2011/06/16/providing-ipv6-connectivity-to-virtual-guests-with-libvirt-and-kvm/)
+* [Using USB pass-through under libvirt and KVM](https://david.wragg.org/blog/2009/03/using-usb-pass-through-under-libvirt.html)
 
-[1]: {{< ref "./iptables.md" >}}
+[1]: @/notes/iptables.md

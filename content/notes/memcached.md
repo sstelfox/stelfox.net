@@ -1,14 +1,14 @@
 ---
 title: Memcached
 weight: 17
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  outdated: true
+---
 
 ## Installation
 

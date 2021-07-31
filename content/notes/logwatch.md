@@ -10,6 +10,7 @@ taxonomies:
   - security
 
 extra:
+  done: true
   oudated: true
 ---
 
