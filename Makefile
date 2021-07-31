@@ -1,8 +1,8 @@
 build: logo
-	@podman run --rm --security-opt label=disable -e NO_COLOR=true -v $(pwd):/app -w /app docker.io/balthek/zola:0.14.0 build
+	@podman run --rm --security-opt label=disable -e NO_COLOR=true -v $$(pwd):/app -w /app docker.io/balthek/zola:0.14.0 build
 
 check:
-	@podman run --rm --security-opt label=disable -e NO_COLOR=true -v $(pwd):/app -w /app docker.io/balthek/zola:0.14.0 check
+	@podman run --rm --security-opt label=disable -e NO_COLOR=true -v $$(pwd):/app -w /app docker.io/balthek/zola:0.14.0 check
 
 clean:
 	@rm -rf public/
@@ -11,7 +11,7 @@ clean:
 logo: static/favicon.ico static/apple-touch-icon.png static/logo.png
 
 server:
-	@podman run --rm --security-opt label=disable -e NO_COLOR=true -p 8080:8080 -p 1024:1024 -v $(pwd):/app -w /app docker.io/balthek/zola:0.14.0 serve --interface 0.0.0.0 --port 8080 --base-url 127.0.0.1
+	@podman run --rm --security-opt label=disable -e NO_COLOR=true -p 8080:8080 -p 1024:1024 -v $$(pwd):/app -w /app docker.io/balthek/zola:0.14.0 serve --interface 0.0.0.0 --port 8080 --base-url 127.0.0.1
 
 static/favicon.ico: logo_src/stelfox_favicon.svg Makefile
 	convert -scale 16x16 logo_src/stelfox_favicon.svg static/favicon.ico
