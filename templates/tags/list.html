@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div>
+  <div>{{ terms | length }} tags in total</div>
+  <ul>
+    {% for tag in terms %}
+    <li><a href="{{ tag.permalink }}">{{ tag.name }} <span class="count">{{ tag.pages | length }}</span></a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock content %}
