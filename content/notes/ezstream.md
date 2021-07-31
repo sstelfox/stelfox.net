@@ -1,15 +1,16 @@
 ---
 title: EZStream
 weight: 45
+
 taxonomies:
   tags:
   - linux
   - media
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  oudated: true
+---
 
 EZStream is a media streamer and re-encoder that can be used to feed
 [Icecast][1].
@@ -88,5 +89,5 @@ ezstream.xml
 </ezstream>
 ```
 
-[1]: {{< ref "./icecast.md" >}}
-[2]: {{< ref "./samba.md" >}}
+[1]: @/notes/icecast.md
+[2]: @/notes/samba.md

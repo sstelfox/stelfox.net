@@ -1,21 +1,21 @@
 ---
 title: GPIO
 weight: 46
+
 taxonomies:
   tags:
   - embedded
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+---
 
 I came across this python script that accesses GPIO pins in linux. It's
 potentially very useful so I'm including it here, in it's entirety. I can later
 on reference this for use in my own programs.
 
-```
+```python
 """Arduino-like library for Python on BeagleBone"""
 import time
 

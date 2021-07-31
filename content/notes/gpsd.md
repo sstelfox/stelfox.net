@@ -1,14 +1,15 @@
 ---
 title: GPSd
 weight: 62
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 ## Installation
 
@@ -123,10 +124,9 @@ TODO
 
 TODO
 
-* http://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol
-* http://igs.bkg.bund.de/ntrip/caster
-* http://www.linuxcertif.com/man/5/rtcm-104/173922/
-* http://software.rtcm-ntrip.org/ (BNC is the relevant one)
+* [Networked Transport of RTCM via Internet Protocol](https://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol)
+* [RTCM-104 dump format emitted by GPSD tools](https://www.linuxcertif.com/man/5/rtcm-104/173922/)
+* [Welcome to Open Source Software development for Ntrip](https://software.rtcm-ntrip.org/) (BNC is the relevant one)
 
 ## Profiling Accuracy of GPS Receivers
 
@@ -181,4 +181,4 @@ nowhere near a window (my office is in the heart of a building unfortunately).
 
 ## Misc References
 
-* http://catb.org/gpsd/hacking.html
+* [Hacker's Guide to GPSD](https://gpsd.gitlab.io/gpsd/hacking.html)

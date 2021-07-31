@@ -1,15 +1,16 @@
 ---
 title: Duplicity
 weight: 58
+
 taxonomies:
   tags:
   - backups
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  oudated: true
+---
 
 Duplicity is a command line backup utility that makes use of the rsync
 libraries to perform incremental backups. It also can use GPG public/private

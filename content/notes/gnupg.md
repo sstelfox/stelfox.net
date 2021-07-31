@@ -1,11 +1,15 @@
 ---
 title: GPG Process Notes
 weight: 80
+
 taxonomies:
   tags:
   - gpg
   - linux
   - security
+
+extra:
+  done: true
 ---
 
 I followed the TAILS setup guide to get a secure offline environment running to
@@ -306,7 +310,7 @@ ssh-add -L
 For use on other linux systems the scdaemon binary is required which may be in
 a different package...
 
-* Additional notes: https://wiki.fsfe.org/TechDocs/CardHowtos/CardWithSubkeysUsingBackups
+* [Additional notes](https://wiki.fsfe.org/TechDocs/CardHowtos/CardWithSubkeysUsingBackups)
 
 We need to check the GPG configuration (gpg.conf) against that link as we may
 need to sign and encrypt with an additional alternate key (hidden-encrypt-to
@@ -385,7 +389,7 @@ gpg --list-sigs <your-id>
 
 More note URLs:
 
-* https://help.ubuntu.com/community/GnuPrivacyGuardHowto
+* [GnuPrivacyGuardHowto](https://help.ubuntu.com/community/GnuPrivacyGuardHowto)
 
 ## Git Notes
 
@@ -534,7 +538,6 @@ distribute key refreshes.
 
 A project has been built up to handle this issue. The following are relevant:
 
-* https://code.openhub.net/file?fid=BbMaEKchr9cDAOVs8ozX5mJ40g8&cid=RfbvTf3fwdw&fp=405976&mp&projSelected=true#L0
 * https://github.com/EtiennePerot/parcimonie.sh/blob/master/parcimonie.sh
 
 ## Diagnostics
@@ -703,4 +706,4 @@ Verify the signatures are still good:
 gpg2 --verify content.combo.asc
 ```
 
-[1]: /note_files/gnupg/key_transition_template.txt
+[1]: key_transition_template.txt
