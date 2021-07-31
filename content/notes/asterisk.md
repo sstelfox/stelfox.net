@@ -7,6 +7,7 @@ taxonomies:
   - linux
 
 extra:
+  done: true
   show_toc: true
   outdated: true
 ---

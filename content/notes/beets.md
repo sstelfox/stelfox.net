@@ -1,6 +1,7 @@
 ---
 title: Beets
 weight: 20
+
 taxonomies:
   tags:
   - linux
