@@ -1,9 +1,13 @@
 ---
 title: Cron Daemon
 weight: 42
+
 taxonomies:
   tags:
   - linux
+
+extra:
+  done: true
 ---
 
 Cron is a pretty standard utility and there isn't much to it. I generally use

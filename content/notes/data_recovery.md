@@ -1,10 +1,14 @@
 ---
 title: Data Recovery
 weight: 18
+
 taxonomies:
   tags:
   - linux
   - tips
+
+extra:
+  done: true
 ---
 
 ## Recovering Data from Swap

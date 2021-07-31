@@ -1,10 +1,14 @@
 ---
 title: Disk Errors
 weight: 17
+
 taxonomies:
   tags:
   - linux
   - tips
+
+extra:
+  done: true
 ---
 
 This is a weird file... But while installing gentoo on a disk I started getting
