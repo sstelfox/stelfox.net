@@ -1,15 +1,16 @@
 ---
 title: High Availability
 weight: 13
+
 taxonomies:
   tags:
   - linux
   - networking
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  oudated: true
+---
 
 Packages of interest:
 
@@ -61,12 +62,7 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 It seems that `net.ipv4.ip_nonlocal_bind` isn't available within an LXC
 container: `cat /proc/sys/net/ipv4/ip_nonlocal_bind`.
 
-Valuable sites:
-
-* http://mojobojo.com/blog/2011/01/14/lvs-nginx-nodejs-mongodb-cluster-setup-on-rackspace/
-* https://www.rackspace.com/blog/installing-and-configuring-lvs-tun/
-
 Interesting use for this as a firewall:
 
-* http://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html
-* http://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/
+* [Running a Proxy-Arp LVS-NAT Director/Firewall with Keepalived](https://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html)
+* [Firewall HA with conntrackd and keepalived](https://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/)
