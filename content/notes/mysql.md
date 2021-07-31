@@ -1,14 +1,18 @@
 ---
 title: MySQL
 weight: 45
+
+aliases:
+  - /notes/mysql_tuning/
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 ## Server
 
@@ -37,7 +41,7 @@ mysql_secure_installation
 
 ### Configuration
 
-Before applying the following configuration file in `/etc/my.cnf`. Safely
+Before applying the [configuration file](my.cnf) in `/etc/my.cnf`. Safely
 shutdown the server and delete the logfiles `/var/lib/mysql/ib_logfile*`. This
 configuration file will change the size of the log buffer and it will cause an
 error when starting the server backup that will look like:
@@ -49,174 +53,11 @@ InnoDB: than specified in the .cnf file 0 67108864 bytes!
 
 There is still one major security feature that I haven't added to this
 configuration yet. Running the mysql daemon in a chroot environment. Details on
-setting up a chroot environment for mysql can be found, [here][1], and
-[here][2].
+setting up a chroot environment for mysql can be found, [here][1].
 
 Detailed information on all of the configuration options can be found
-[here][3].  There is a script that can assist in tuning larger production
-databases I've stored [here][4].
-
-```ini
-[mysqld]
-# Bind only to expected address. You can not bind to multiple addresses, it's
-# none, 1 or all (0.0.0.0)
-bind-address = 127.0.0.1
-
-# Always use UTF-8
-character-set-server = utf8
-
-# Root path used to store MySQL's data
-datadir = /var/lib/mysql
-
-# Use innodb by default (true anyways but I like to be explicit)
-default-storage-engine = innodb
-
-# 0 = Don't log warnings, 1 = log warnings, 2 = log warnings and access denied
-# errors.
-log-warnings = 2
-
-# How many real world seconds pass before we consider a query to be long
-# running. Default is 10.
-long_query_time = 5
-
-# Which port to listen on, default is 3306
-port = 3306
-
-# A user needs to have the INSERT privilege on the mysql.user table to use the
-# GRANT statement. This can be provided to non-root users with the following
-# command:
-# GRANT INSERT(user) ON mysql.user TO 'user_name'@'host_name';
-safe_user_create
-
-# Prevent client connections from clients attempting to use insecure password
-# authentication
-secure_auth
-
-# Only allow load data and outfile to be to/from the given directory. This
-# ensures that whatever user is trying to load or dump data from this server
-# instance already needs to be able to write to that directory. If an
-# unauthorized person can write to the mysql data directory anyways the data
-# can't be trusted anyway.
-secure-file-priv = /var/lib/mysql
-
-# Require privileges to actually list/enumerate the databases
-skip-show-database
-
-# Prevent symbolic links as a security measureskip-symbolic-links
-# Log any "slow" queries from hosts, useful as a diagnostic measure for both
-# application development and production diagnostics. A slow query is defined by
-# the long_query_time variable.
-#
-# These logs will live in /var/lib/mysql/ and will be pre-pended with the
-# hostname that caused the slow query itself.
-slow_query_log
-
-# Path to the socket file used to access the server locally
-socket = /var/lib/mysql/mysql.sock
-
-##### SSL Settings #####
-
-# All three options are required to enable SSL for the server. To force a user
-# to use an SSL connection when they are connecting to the server, while granting
-# them privileges add "REQUIRE SSL" to the end of the grant statement. "REQUIRE
-# X509" will require the user to present a valid certificate (it's unclear whether
-# this needs to be signed by a certificate in the server's CA file), "REQUIRE
-# ISSUER" and "REQUIRE SUBJECT" specify details required in the provided
-# certificate. The last three imply "REQUIRE SSL".
-
-# Define the certificate authority file, it should have been used to sign the
-# server's certificate, and will be used to validate client certificates that
-# have been presented.
-#ssl_ca = ca.crt
-
-# The name of the SSL certficate file in PEM format to use for establishing a
-# secure connection.
-#ssl_cert = mysql.crt
-
-# The name of the SSL key file in PEM format to use for establishing a secure
-# connection
-#ssl_key = mysql.key
-
-##### InnoDB specific settings #####
-
-# If there are lots of tables in the database you may need to increase this
-# value from it's default of 8Mb. MySQLd will log warning messages if this is
-# the case.
-innodb_additional_mem_pool_size = 8M
-
-# Amount of data to cache, default is 8Mb, shouldn't ever be more than 80% of
-# server's physical memory size even on a dedicated box. Even that high may
-# cause other issues on the server such as competition from the OS, and the
-# space must be contiguous which isn't always available. This is only the table
-# and data cache, MySQLd may allocate additional memory for buffers and control
-# structures. On dedicated MySQL boxes it is recommended that this be between
-# 75% and 80%
-innodb_buffer_pool_size = 32M
-
-# Validate the checksums of all pages read from disk to ensure fault tolerance
-# against broken hardware or data files. Enabled by default but I like to be
-# explicit...
-innodb_checksums = 1
-
-# Breaks the database into smaller more managable pieces, and if careful can
-# allow for individual table backups and restoration while the server is
-# running. There is a special process to handle this and it should looked up
-# before attempting. The main benefit of using this option is the prevention
-# of main tablespace growth.
-innodb_file_per_table
-
-# 0 = A most one second of transactions are lost in the event of an application
-# crash, 1 = ACID compliant and most reliable storage of data, 2 is somewhere in
-# between 0 and 1 losing at most 1 second of data only in the case of power
-# outage or server failure. 1 is the default. If you're not worried about losing
-# transactions for the last second or two a value of 2 can have a dramatic increase
-# especially when there are a lot of short write transactions.
-innodb_flush_log_at_trx_commit = 2
-
-# An upper limit on the IO activity performed by InnoDB background tasks.
-# Default value is 200 with a minimum value of 100. This parameter should be set
-# approximately what the IOPS of the system disk the tables are stored on is
-# able to provide (100 for 5.2k & 7.2k drives, 150 for 10k, 200 for 15k and
-# 250 for SSDs). It is recommended to 'keep this setting as low as practical, but
-# not so low that these background activities fall behind.' Too high and data will
-# be removed from the buffer pool too quickly to benefit from the caching.
-innodb_io_capacity = 100
-
-# This will prevent too much log switching on write heavy databases (default is
-# 8Mb). Larger buffers all larger transactions to run without the need to write
-# the log to disk before the transactions commit. On larger databases this should
-# be set higher to something like 256Mb, there isn't a large benefit above 512Mb
-innodb_log_file_size = 64M
-
-# The size of the buffer that InnoDB uses to write to the log files on disk.
-# Default is 8Mb. A larger log buffer allows larger transactions to run without
-# a need to write the log to disk before the transactions commit.
-innodb_log_buffer_size = 8M
-
-# The size of each transaction log (default is 5Mb). The larger the value the
-# less checkpoint flush activity is needed in the buffer pool saving disk IO at
-# the expense of crash recovery time. Recommended is 1/nth of the
-# innodb_buffer_pool_size where N is the value of innodb_log_files_in_group. In
-# this file that's 1/2 of 32Mb.
-innodb_log_file_size = 16M
-
-# The number of transaction logs to make use of, the default, recommended and
-# minimum is 2. These will written to in a circular fashion.
-innodb_log_files_in_group = 2
-
-[mysqld_safe]
-
-# Where to store the MySQLd process ID
-pid-file = /var/run/mysqld/mysqld.pid
-
-# Enable logging to syslog
-syslog
-
-[mysql]
-
-# Adjust the prompt to be more useful/verbose.
-prompt=(\\u@\\h) [\\d]>\\_
-```
+[here][2]. There is a script that can assist in tuning larger production
+databases I've stored [here][3].
 
 There is some additional configuration in the systemd init script, specifically
 which user/group the service will fork too (default is mysql/mysql). If you
@@ -384,7 +225,7 @@ If the second column returned is non-empty then your session is encrypted.
 
 ### Useful Diagnostic / Testing / Maintenance Scripts
 
-* http://www.percona.com/doc/percona-toolkit/2.1/
+* [Percona Toolkit](https://www.percona.com/doc/percona-toolkit/2.1/index.html)
 
 ### TCMalloc
 
@@ -393,12 +234,11 @@ boost can be gained by using a third party malloc, TCMalloc has been proven to
 reduce thread contention in MySQL and provide as much as a 30% boost in all
 query timing.
 
-* http://goog-perftools.sourceforge.net/doc/tcmalloc.html
-* https://code.google.com/p/gperftools/
+* [TCMalloc : Thread-Caching Malloc](http://goog-perftools.sourceforge.net/doc/tcmalloc.html)
+* [gperftools](https://github.com/gperftools/gperftools)
 
 MORE TODO
 
-[1]: http://www.symantec.com/connect/articles/securing-mysql-step-step
-[2]: http://www.webhostingskills.com/articles/mysql_in_a_chrooted_environment
-[3]: http://dev.mysql.com/doc/refman/5.5/en/dynamic-system-variables.html
-[4]: {{< ref "./mysql_tuning.md" >}}
+[1]: https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=e424fa89-758d-42ec-a272-a0c285d887ac&CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&tab=librarydocuments
+[2]: https://dev.mysql.com/doc/refman/8.0/en/dynamic-system-variables.html
+[3]: mysql_tuning.sh

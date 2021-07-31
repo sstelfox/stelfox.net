@@ -1,9 +1,13 @@
 ---
 title: Server Naming Convention
 weight: 80
+
 taxonomies:
   tags:
   - linux
+
+extra:
+  done: true
 ---
 
 Over the years I've found myself using many different naming schemes for
@@ -81,7 +85,7 @@ code based on the [United Nations Code for Trade and Transport Locations][4]
 (UN/LOCODE) which is more specific than IATA airport codes and the country
 code. For my uses I leave the country code out.
 
-[1]: http://mnx.io/blog/a-proper-server-naming-scheme/
-[2]: http://web.archive.org/web/20090918202746/http://tothink.com/mnemonic/wordlist.html
+[1]: https://mnx.io/blog/a-proper-server-naming-scheme/
+[2]: https://web.archive.org/web/20090918202746/http://tothink.com/mnemonic/wordlist.html
 [3]: https://github.com/sstelfox/dotfiles/blob/master/bin/server_name_generator
-[4]: http://www.unece.org/cefact/locode/service/location.html
+[4]: https://unece.org/trade/cefact/unlocode-code-list-country-and-territory

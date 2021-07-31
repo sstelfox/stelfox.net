@@ -1,10 +1,14 @@
 ---
 title: Mutt
 weight: 33
+
 taxonomies:
   tags:
   - cli
   - linux
+
+extra:
+  done: true
 ---
 
 I keep a copy of my mutt config both [here on the site][1] as well as in my
@@ -22,5 +26,5 @@ composed messsages.
 au BufRead /tmp/mutt-* set tw=72
 ```
 
-[1]: /note_files/mutt/muttrc
+[1]: muttrc
 [2]: https://github.com/sstelfox/dotfiles

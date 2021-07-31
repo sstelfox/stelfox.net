@@ -1,14 +1,15 @@
 ---
 title: NFS
 weight: 52
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 Install packages `nfs-utils` and `nfs4-acl-tools`
 
@@ -45,8 +46,7 @@ In some cases useful info is found in syslog - try
 dmesg | tail  or so
 ```
 
-* http://www.cyberciti.biz/faq/centos-fedora-rhel-nfs-v4-configuration/
-* http://www.server-world.info/en/note?os=Fedora_15&p=nfs
-* http://tldp.org/HOWTO/NFS-HOWTO/security.html
-* http://www.linuxjournal.com/article/4880
-* `http://www.copiouscom.com/2010/05/open-directory-kerberos-single-sign-on-sso-and-centos-with-ssh-and-kerberized-nfs-home-directories/` (Dead link)
+* [CentOS / Redhat: Setup NFS v4.0 File Server](https://www.cyberciti.biz/faq/centos-fedora-rhel-nfs-v4-configuration/)
+* [NFS Server Configuration](https://www.server-world.info/en/note?os=Fedora_15&p=nfs)
+* [Security and NFS](https://tldp.org/HOWTO/NFS-HOWTO/security.html)
+* [Starting Share Files with NFS](https://www.linuxjournal.com/article/4880)

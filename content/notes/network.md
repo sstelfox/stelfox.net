@@ -1,14 +1,15 @@
 ---
 title: Network
 weight: 32
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 ## Red Hat Based Systems
 
@@ -419,5 +420,5 @@ COMMIT
 
 ### VLANs
 
-[1]: http://www.frozentux.net/ipsysctl-tutorial/ipsysctl-tutorial.html
-[2]: http://www.faqs.org/rfcs/rfc1812.html
+[1]: https://www.frozentux.net/ipsysctl-tutorial/ipsysctl-tutorial.html
+[2]: https://www.rfc-editor.org/rfc/rfc1812.txt
