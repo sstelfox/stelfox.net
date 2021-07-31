@@ -1,19 +1,19 @@
 ---
 title: Logwatch
 weight: 11
+
 taxonomies:
   tags:
+  - email
   - linux
+  - reporting
   - security
+
+extra:
+  oudated: true
 ---
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
-
 ## Configuration
-
-### /etc/logwatch/conf/logwatch.conf
 
 ```
 LogDir = /var/log
