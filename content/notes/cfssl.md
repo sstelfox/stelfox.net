@@ -1,10 +1,15 @@
 ---
 title: CFSSL
 weight: 55
+
 taxonomies:
   tags:
   - certificates
   - security
+
+extra:
+  done: true
+  outdated: true
 ---
 
 [CFSSL][1] is a toolkit of utilities for TLS PKI infrastructures and supports
@@ -194,5 +199,5 @@ whole. This is especially true for this program as without a HSM there is no
 protection over any of the private keys.
 
 [1]: https://github.com/cloudflare/cfssl
-[2]: {{< ref "./yubikey.md" >}}
+[2]: @/notes/yubikey.md
 [3]: https://golang.org/
