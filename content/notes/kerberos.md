@@ -8,7 +8,7 @@ taxonomies:
   - security
 
 extra:
-  outdated: true
+  done: true
 ---
 
 Kerberos is a secure network authentication system.
@@ -17,7 +17,7 @@ It is very important that system times are all very close for successful
 authentication. You should configure [NTPd][1] or [Chronyd][2] to ensure the
 systems stay in sync.
 
-## Master Configuration
+## Root KDC Configuration
 
 Edit the configuration files (provided at the bottom).
 
@@ -53,7 +53,7 @@ user, it will ask for a password for the account.
 kadmin:  addprinc <<username>>
 ```
 
-### Slave
+## Peer KDC Configuration
 
 Please note these instructions are untested but they are believed to be
 correct.
@@ -131,7 +131,7 @@ adding. It will need a DNS entry matching this hostname.
 
 ## Firewall Configuration
 
-### Server Adjustments
+Server Adjustments:
 
 ```
 # Allow authentication to the KDC
@@ -140,7 +140,7 @@ adding. It will need a DNS entry matching this hostname.
 -A INPUT -m tcp -p tcp --dport 749 -j ACCEPT
 ```
 
-### Client Adjustments
+Client Adjustments:
 
 ```
 # Allow authentication to the KDC
@@ -155,66 +155,18 @@ as well:
 -A OUTPUT -m tcp -p tcp --dport 749 -j ACCEPT
 ```
 
-## Configuration Files
+## Sample Configuration Files
 
-### /etc/krb5.conf
-
-```ini
-[logging]
-  default = FILE:/var/log/krb5libs.log
-  kdc = FILE:/var/log/krb5kdc.log
-  admin_server = FILE:/var/log/kadmind.log
-
-[libdefaults]
-  default_realm = BEDROOMPROGRAMMERS.NET
-  dns_lookup_realm = false
-  dns_lookup_kdc = false
-  ticket_lifetime = 24h
-  renew_lifetime = 3d
-  forwardable = true
-
-[realms]
-  BEDROOMPROGRAMMERS.NET = {
-    kdc = kdc1.home.bedroomprogrammers.net
-    admin_server = kdc1.home.bedroomprogrammers.net
-  }
-
-[domain_realm]
-  .bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-  bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-  .home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-  home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-```
-
-### /var/kerberos/krb5kdc/kadm5.acl
-
-```
-*/admin@BEDROOMPROGRAMMERS.NET  *
-```
-
-### /var/kerberos/krb5kdc/kdc.conf
-
-```ini
-[kdcdefaults]
-  kdc_ports = 88
-  kdc_tcp_ports = 88
-
-[realms]
-  BEDROOMPROGRAMMERS.NET = {
-    master_key_type = aes256-cts
-    acl_file = /var/kerberos/krb5kdc/kadm5.acl
-    dict_file = /usr/share/dict/words
-    admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
-    supported_enctypes = aes256-cts:normal aes128-cts:normal 
-  }
-```
+* [/etc/krb5.conf](krb5.conf)
+* [/var/kerberos/krb5kdc/kadm5.acl](kadm5.acl)
+* [/var/kerberos/krb5kdc/kdc.conf](kdc.conf)
 
 ## Notes on Cached Client Login
 
-* http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html
-* http://ubuntuforums.org/showthread.php?t=1205604
-* http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127
-* http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html
+* [Caching Kerberos credentials for offline logins](https://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html)
+* [Offline auth. with Kerberos and timeouts (pam_krb5.so, pam_ccreds.so)](https://ubuntuforums.org/showthread.php?t=1205604)
+* [Authentication caching with nscd](https://www.techrepublic.com/blog/linux-and-open-source/authentication-caching-with-nscd/)
+* [LDAP/Kerberos + nscd + libpam-ccreds + libpam-mklocaluser/pam_mkhomedir](http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html)
 
 [1]: @/notes/ntpd.md
 [2]: @/notes/chronyd.md
