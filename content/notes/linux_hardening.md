@@ -1,14 +1,15 @@
 ---
 title: Linux Hardening
 weight: 23
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 PLEASE NOTE: This guide was developed for Red Had Based architectures,
 specifically CentOS 5, and Fedora 16+. A lot of the information here is
@@ -26,17 +27,17 @@ link was.
 This section of my documentation provides a quick overview of procedures to
 harden a system to make sure I never miss a step.
 
-This hardening guide started out as a summary and a few updates to the [NSA
-RedHat 5 Operating System Security Guidelings][2]. Since then it has grown to
+This hardening guide started out as a summary and a few updates to the NSA
+RedHat 5 Operating System Security Guidelines. Since then it has grown to
 include a lot of services that were not mentioned anywhere in there, and a few
 best practices that I've developed myself over the years of managing Linux
 boxes.
 
 I've started including information from [National Vulnerability Database (NVD)
-National Checklist Program Repository][3] hosted by NIST. They aggregate some
+National Checklist Program Repository][2] hosted by NIST. They aggregate some
 useful information from a few sites including the [Center for Internet Security
-(CIS) Security Benchmarks][4]. One more site I've got some information from is
-the [SANS Information Security Reading Room][5].
+(CIS) Security Benchmarks][3]. One more site I've got some information from is
+the [SANS Information Security White Papers][4].
 
 These have all been listed here to give them some credit towards the following
 security guidelines. If you doubt anything I've mentioned here I'd recommend
@@ -71,15 +72,12 @@ physical security should be assessed.
 
 ## Installation Notes
 
-* Follow the [Partitioning][8] guidelines.
-* Ensure you set the date correctly so that the remote certificates can have
-  their expiration properly checked
+* Follow the [Partitioning][5] guidelines.
+* Ensure you set the date correctly so that the remote certificates can have their expiration properly checked
 * Set a sufficiently strong boot loader password
 * Set a sufficiently strong root password
-* Install the absolute minimum required packages (Service specific packages can
-  be installed afterwards)
-* Include the updates repository, so there is never any initial out of date
-  packages
+* Install the absolute minimum required packages (Service specific packages can be installed afterwards)
+* Include the updates repository, so there is never any initial out of date packages
 
 ## Firewall
 
@@ -90,11 +88,11 @@ from using the machine as a springboard to launch further attacks on the
 internal networks.
 
 IPv4 and IPv6 traffic have separate firewalls. I have examples and a decent
-base config on the [IPTables][9] page.
+base config on the [IPTables][6] page.
 
 ## Networking
 
-Follow the [Network][11] guide to configure a static address and gateway.
+Follow the [Network][7] guide to configure a static address and gateway.
 
 Update /etc/resolv.conf to include the proper domain and nameserver. It will
 look something like this:
@@ -126,9 +124,9 @@ necessary.
 
 ## Logging
 
-You'll want to make sure you configure [RSyslog][12], [Logrotate][13], and
-[Logwatch][14] according to their appropriate guides. Logwatch is not installed
-in the minimum install and should be installed.
+You'll want to make sure you configure [RSyslog][8] or [syslog-ng][9],
+[Logrotate][10], and [Logwatch][11] according to their appropriate guides.
+Logwatch is not installed in the minimum install and should be installed.
 
 ### Configure Root's Mail Recipient
 
@@ -198,10 +196,10 @@ you'll need to fix this by hand in the debug shell.
 
 On all of my servers I configure:
 
-* [SSHd][15] (If you follow this guide, you won't be able to SSH into the box
+* [SSHd][12] (If you follow this guide, you won't be able to SSH into the box
   until users and groups have been configured)
-* [NTPd][16] or [Chronyd][17] (pick your preference)
-* [RSyslog][12]
+* [NTPd][13] or [Chronyd][14] (pick your preference)
+* [RSyslog][8]
 
 ## Updates
 
@@ -313,7 +311,7 @@ Review `/etc/passwd` to ensure all non-user accounts have their account shells
 set to `/sbin/nologin` with the exception of `halt`, `shutdown`, `sync` which
 should be `/sbin/halt`, `/sbin/shutdown`, and `/bin/sync` respectively.
 
-[Mysql][20] creates it's user with `/bin/bash` as the shell which shouldn't be
+[Mysql][15] creates it's user with `/bin/bash` as the shell which shouldn't be
 (this is just an example).
 
 ### System Wide Settings
@@ -402,34 +400,43 @@ settings can be found in `/etc/security/limits.conf`
 
 ### Checklist
 
-* Network
-  * If DHCP is used, minimize accepted options `/etc/dhclient.conf`
-    * Accept only IP, Router, DNS
-    * Override domain name
-* Package updating
-  * Install additional packages
-    * aide
-* Disable USB Support
-  * Disable usb-storage kernel module in `/etc/modules.d/blacklist.conf`
-  * If USB devices are completely unecessary, disable USB completely with the
+Network:
+
+[ ] If DHCP is used, minimize accepted options `/etc/dhclient.conf`
+[ ] Accept only IP, Router, DNS
+[ ] Override domain name
+
+Package Updating:
+
+[ ] Install additional required packages
+
+Disable USB Support:
+
+[ ] Disable usb-storage kernel module in `/etc/modules.d/blacklist.conf`
+[ ] If USB devices are completely unecessary, disable USB completely with the
     `nousb` option in kernel boot options
-* Set `kernel.randomize_va_space` to 2, 1 if that's not possible
-* Disable Rebooting When 'ctrl-alt-del' is Pressed
-  * `/etc/init/control-alt-delete.conf`: -exec /sbin/shutdown -r now
-    "Control-Alt-Delete pressed"
+
+Additional Changes:
+
+[ ] Set `kernel.randomize_va_space` to 2, 1 if that's not possible
+[ ] Disable Rebooting When 'ctrl-alt-del' is pressed
 
 ### Updating Software
 
-* Repository Configuration
-  * yum install yum-plugin-fastestmirror yum-plugin-security yum-presto \
-    yum-plugin-changelog yum-plugin-protectbase -y
-  * Configure local repository if available
-  * If using the btrfs filesystem install yum-plugin-fs-snapshot
-* Manual Software Update
-  * Manual verification of installed GPG key with remote resource
-  * Verify gpgcheck is enabled in all yum configuration files
-* Configuring Automatic Updates
-  * Fedora Update & Security Check Script
+Repository Configuration:
+
+[ ] yum install yum-plugin-fastestmirror yum-plugin-security yum-presto yum-plugin-changelog yum-plugin-protectbase -y
+[ ] Configure local repository if available
+[ ] If using the btrfs filesystem install yum-plugin-fs-snapshot
+
+Manual Software Update:
+
+[ ] Manual verification of installed GPG key with remote resource
+[ ] Verify gpgcheck is enabled in all yum configuration files
+
+Configuring Automatic Updates:
+
+[ ] Fedora Update & Security Check Script
 
 ### Permission Verification
 
@@ -444,48 +451,44 @@ settings can be found in `/etc/security/limits.conf`
 
 ### Restrict Dangerous Execution Patterns
 
-* Set Daemon umask to `027`
-  * `/etc/init.d/functions`: `umask 022` -> `umask 027`
-* Disable Core Dumps
-  * `/etc/security/limits.conf`: `+*                hard    core            0`
-  * `/etc/sysctl.conf`: `+fs.suid_dumpable = 0`
-* Disable Prelink (if turned on)
-  * `/etc/sysconfig/prelink`: `PRELINKING=yes` -> `PRELINKING=no`
-  * `/usr/sbin/prelink -ua`
-  * `yum remove prelink -y`
+Set Daemon umask to `027`:
+
+[ ] `/etc/init.d/functions`: `umask 022` -> `umask 027`
+
+Disable Core Dumps:
+
+[ ] `/etc/security/limits.conf`: `+*                hard    core            0`
+[ ] `/etc/sysctl.conf`: `+fs.suid_dumpable = 0`
+
+Disable Prelink (if turned on):
+
+[ ] `/etc/sysconfig/prelink`: `PRELINKING=yes` -> `PRELINKING=no`
+[ ] `/usr/sbin/prelink -ua`
+[ ] `yum remove prelink -y`
 
 ### Restrict Password Based Login
 
-* Limit `su` Access to `root` and the `wheel` Group
-  * `chgrp wheel /bin/su && chmod o-rx /bin/su`
-* Configure sudo to Improve Auditing of Root Access
-  * Create `sudoers` Group and Allow it to Use sudo
-* Verify Proper Storage and Existence of Password Hashes
-* Verify No Non-root Accounts Have UID 0
+[ ] Limit `su` Access to `root` and the `wheel` Group: `chgrp wheel /bin/su && chmod o-rx /bin/su`
+[ ] Configure sudo to Improve Auditing of Root Access
+[ ] Verify Proper Storage and Existence of Password Hashes
+[ ] Verify No Non-root Accounts Have UID 0
 
 ### Account Security
 
 * Create a Unique Default Group for Each User
 * Create and Maintain a Group Containing All Human Users
-  * `users` Group
-* Set Password Quality Requirements
-  * Either pam_cracklib or pam_passwdqc
-* Set Lockouts for Failed Password Attempts
-  * pam_tally2
-* Set Password Hashing Algorithm to SHA-512
-  * `/etc/pam.d/system-auth`: Ensure: `password     sufficient    pam_unix.so
-    {sha512}`
-  * `/etc/login.defs`: Ensure: `ENCRYPT_METHOD SHA512`
-  * `/etc/libuser.conf`: Ensure: `crypt_style = sha512`
-* Limit Password Reuse
-  * `/etc/pam.d/system-auth`: `password    sufficient    pam_unix.so` + `<existing options> remember=5`
+* Set Password Quality Requirements: Either pam_cracklib or pam_passwdqc
+* Set Lockouts for Failed Password Attempts (pam_tally2)
+* Set Password Hashing Algorithm to SHA-512:
+* `/etc/pam.d/system-auth`: Ensure: `password     sufficient    pam_unix.so {sha512}`
+* `/etc/login.defs`: Ensure: `ENCRYPT_METHOD SHA512`
+* `/etc/libuser.conf`: Ensure: `crypt_style = sha512`
+* Limit Password Reuse: `/etc/pam.d/system-auth`: `password    sufficient    pam_unix.so` + `<existing options> remember=5`
 * Ensure User Home Directories Are Not Group-Writable or World-Readable
 * Ensure User's Hidden Files Are Not World-Writeable
-* Configure User umask Values
-  * `/etc/profile`: `umask 022` -> `umask 027`
+* Configure User umask Values: `/etc/profile`: `umask 022` -> `umask 027`
 * Use a Centralized Authentication Service
-* Ensure there are no dangerous directories in root's path (realtive or
-  world-writable)
+* Ensure there are no dangerous directories in root's path (realtive or world-writable)
 
 ### SELinux
 
@@ -513,7 +516,7 @@ settings can be found in `/etc/security/limits.conf`
 
 ### Misc
 
-* Add Local [Certificate Authority][25]'s Public Key to the Trusted Store
+* Add Local [Certificate Authority][16]'s Public Key to the Trusted Store
 * Harden sysctl.conf Values
 
 ### Services
@@ -523,18 +526,18 @@ settings can be found in `/etc/security/limits.conf`
 * Configure an MTA if necessary
 
 [1]: https://en.wikipedia.org/wiki/Defence_in_depth
-[2]: http://www.nsa.gov/ia/_files/os/redhat/NSA_RHEL_5_GUIDE_v4.2.pdf
-[3]: http://web.nvd.nist.gov/view/ncp/repository
-[4]: http://benchmarks.cisecurity.org/en-us/
-[5]: http://www.sans.org/reading_room/
-[8]: {{< ref "./partitioning.md" >}}
-[9]: {{< ref "./iptables.md" >}}
-[11]: {{< ref "./network.md" >}}
-[12]: {{< ref "./rsyslog.md" >}}
-[13]: {{< ref "./logrotate.md" >}}
-[14]: {{< ref "./logwatch.md" >}}
-[15]: {{< ref "./sshd.md" >}}
-[16]: {{< ref "./ntpd.md" >}}
-[17]: {{< ref "./chronyd.md" >}}
-[20]: {{< ref "./mysql.md" >}}
-[25]: {{< ref "./certificate_authority.md" >}}
+[2]: https://ncp.nist.gov/repository
+[3]: https://www.cisecurity.org/cis-benchmarks/
+[4]: https://www.sans.org/white-papers/
+[5]: @/notes/partitioning.md
+[6]: @/notes/iptables.md
+[7]: @/notes/network.md
+[8]: @/notes/rsyslog.md
+[9]: @/notes/syslog_ng.md
+[10]: @/notes/logrotate.md
+[11]: @/notes/logwatch.md
+[12]: @/notes/sshd.md
+[13]: @/notes/ntpd.md
+[14]: @/notes/chronyd.md
+[15]: @/notes/mysql.md
+[16]: @/notes/certificates.md
