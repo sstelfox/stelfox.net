@@ -67,8 +67,8 @@ file descriptor issues.
 
 First you'll want to identify the main process of the application that is
 having issues. Make sure you note the user that the application is running as.
-Identify the current configured limits for that process (replace <PID> with the
-pid you just found):
+Identify the current configured limits for that process (replace `<PID>` with
+the pid you just found):
 
 ```
 [user@sample-host] ~ $ grep 'open files' /proc/<PID>/limits

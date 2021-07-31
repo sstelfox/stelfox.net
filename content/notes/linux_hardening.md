@@ -478,8 +478,7 @@ settings can be found in `/etc/security/limits.conf`
   * `/etc/login.defs`: Ensure: `ENCRYPT_METHOD SHA512`
   * `/etc/libuser.conf`: Ensure: `crypt_style = sha512`
 * Limit Password Reuse
-  * `/etc/pam.d/system-auth`: `password    sufficient    pam_unix.so` +
-    <existing options> remember=5
+  * `/etc/pam.d/system-auth`: `password    sufficient    pam_unix.so` + `<existing options> remember=5`
 * Ensure User Home Directories Are Not Group-Writable or World-Readable
 * Ensure User's Hidden Files Are Not World-Writeable
 * Configure User umask Values

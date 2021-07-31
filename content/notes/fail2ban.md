@@ -298,8 +298,8 @@ against. If the message is already in your log more power to you, you can use
 that logfile as the input (and it's what I did).
 
 As for the regex, the tool supports passing the full thing on the command line
-HOWEVER it doesn't expand fail2ban REGEX variables beyond <HOST> (that is those
-defined in the common.conf file) which means you won't get an accurate
+HOWEVER it doesn't expand fail2ban REGEX variables beyond `<HOST>` (that is
+those defined in the common.conf file) which means you won't get an accurate
 representation on a match.
 
 The best way is to define the regex in a filter file for fail2ban and run the

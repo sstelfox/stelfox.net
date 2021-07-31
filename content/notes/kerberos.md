@@ -1,15 +1,15 @@
 ---
 title: Kerberos
 weight: 83
+
 taxonomies:
   tags:
   - linux
   - security
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  outdated: true
+---
 
 Kerberos is a secure network authentication system.
 
@@ -126,8 +126,8 @@ kadmin:  addprinc -randkey host/<<FQDN>>
 kadmin:  ktadd -k /etc/krb5.keytab host/<<FQDN>>
 ```
 
-You'll need to replace <<FQDN>> with the domain name of the host you're adding.
-It will need a DNS entry matching this hostname.
+You'll need to replace `<<FQDN>>` with the domain name of the host you're
+adding. It will need a DNS entry matching this hostname.
 
 ## Firewall Configuration
 
@@ -216,5 +216,5 @@ as well:
 * http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127
 * http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html
 
-[1]: {{< ref "./ntpd.md" >}}
-[2]: {{< ref "./chronyd.md" >}}
+[1]: @/notes/ntpd.md
+[2]: @/notes/chronyd.md

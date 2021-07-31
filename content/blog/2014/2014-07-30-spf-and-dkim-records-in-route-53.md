@@ -85,7 +85,9 @@ Combining the DKIM key into one string like so:
 
 And attempting to save results in the following error message:
 
-> Invalid Resource Record: FATAL problem: TXTRDATATooLong encountered at ...<snip>
+```
+Invalid Resource Record: FATAL problem: TXTRDATATooLong encountered at ...`<snip>`
+```
 
 Now we're left in a tricky spot. After some research the reason behind this is
 clear, and makes sense. Though it is another poor usability bug in the way
