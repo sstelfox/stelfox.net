@@ -9,7 +9,7 @@ taxonomies:
 
 extra:
   done: true
-  oudated: true
+  outdated: true
 ---
 
 EZStream is a media streamer and re-encoder that can be used to feed

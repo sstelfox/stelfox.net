@@ -9,7 +9,7 @@ taxonomies:
 
 extra:
   done: true
-  oudated: true
+  outdated: true
 ---
 
 [GNU Mailman][1] is a computer software application from the GNU project for

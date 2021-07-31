@@ -8,7 +8,7 @@ taxonomies:
 
 extra:
   done: true
-  oudated: true
+  outdated: true
 ---
 
 Replacement for the ntpd daemon.

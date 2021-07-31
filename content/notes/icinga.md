@@ -1,14 +1,15 @@
 ---
 title: Icinga
 weight: 27
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 Icinga is a serious and awesome port of nagios. It properly modernizes it and
 gives it all the stuff the nagios developers made into an "Enterprise only"
@@ -61,7 +62,7 @@ I edited this value in the /etc/icinga/icinga.cfg file:
 icinga_group=apache
 ```
 
-* http://docs.icinga.org/latest/en/icinga-web-scratch.html
-* http://docs.icinga.org/latest/en/quickstart-idoutils.html
+* [Installation of the Icinga Web Frontend](https://icinga.com/docs/icinga1/latest/en/icinga-web-scratch.html)
+* [Icinga with IDOUtils Quickstart](https://icinga.com/docs/icinga1/latest/en/quickstart-idoutils.html)
 
 [1]: https://bugzilla.redhat.com/show_bug.cgi?id=693608

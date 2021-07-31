@@ -9,7 +9,7 @@ taxonomies:
 
 extra:
   done: true
-  oudated: true
+  outdated: true
 ---
 
 Duplicity is a command line backup utility that makes use of the rsync

@@ -1,14 +1,15 @@
 ---
 title: iSCSId
 weight: 23
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 This is the server configuration for iSCSI, please refer to [iSCSI][1] for the
 client portion.
@@ -42,7 +43,6 @@ initiator-address 10.0.0.100
 
 ## References
 
-* http://fedoraproject.org/wiki/Scsi-target-utils_Quickstart_Guide - High Quality
-* `http://www.ryanuber.com/a-quick-introduction-to-gfs2-over-iscsi.html` (dead link) - Transition from iSCSI to GFS2
+* [Scsi-target-utils Quickstart Guide](https://fedoraproject.org/wiki/Scsi-target-utils_Quickstart_Guide)
 
-[1]: {{< ref "./iscsi.md" >}}
+[1]: @/notes/iscsi.md

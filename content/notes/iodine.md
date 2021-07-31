@@ -1,15 +1,16 @@
 ---
 title: Iodine
 weight: 27
+
 taxonomies:
   tags:
   - linux
   - networking
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 On the server side:
 

@@ -1,10 +1,14 @@
 ---
 title: IPTables
 weight: 40
+
 taxonomies:
   tags:
   - linux
   - security
+
+extra:
+  done: true
 ---
 
 iptables (and ip6tables) is a simple application for interacting directly with
@@ -69,11 +73,11 @@ ripe db.
 This script could be made significantly more efficient, and safer to update by
 switching to ipsets, but I haven't gotten around to it.
 
-[1]: /note_files/iptables/iptables.rules
-[2]: /note_files/iptables/ip6tables.rules
-[3]: {{< ref "./auditd.md" >}}
-[4]: /note_files/iptables/gentoo_iptables_conf
-[5]: /note_files/iptables/gentoo_ip6tables_conf
-[6]: /note_files/iptables/block_as.sh
+[1]: iptables.rules
+[2]: ip6tables.rules
+[3]: @/notes/auditd.md
+[4]: gentoo_iptables_conf
+[5]: gentoo_ip6tables_conf
+[6]: block_as.sh
 [7]: ftp://ftp.arin.net/info/asn.txt
-[8]: http://www.team-cymru.org/Services/ip-to-asn.html
+[8]: https://team-cymru.com/community-services/ip-asn-mapping/

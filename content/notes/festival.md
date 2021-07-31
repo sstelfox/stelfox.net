@@ -8,7 +8,7 @@ taxonomies:
 
 extra:
   done: true
-  oudated: true
+  outdated: true
 ---
 
 Festival is packaged in a way on Fedora in a standalone mode, it does not come

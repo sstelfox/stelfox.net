@@ -8,7 +8,7 @@ taxonomies:
 
 extra:
   done: true
-  oudated: true
+  outdated: true
 ---
 
 Installing and setting up hipache. To actually install this I had to open up

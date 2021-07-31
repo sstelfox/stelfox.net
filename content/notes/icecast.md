@@ -9,7 +9,7 @@ taxonomies:
 
 extra:
   done: true
-  oudated: true
+  outdated: true
 ---
 
 While it's described and primarily used as an audio streaming server, it would
