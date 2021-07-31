@@ -1,0 +1,62 @@
+{% import "macros/article.html" as article_macros %}
+<!DOCTYPE html>
+<html lang="{% if lang %}{{ lang }}{% else %}en{% endif %}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+
+    {% if config.generate_feed %}
+    <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
+    {% endif %}
+
+    <link rel="canonical" href="{{ current_url | safe }}" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}">
+
+    {% block extra_head %}
+    {% endblock extra_head %}
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1 class="site-header"><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
+      </header>
+
+      <nav class="site-nav">
+        <ul>
+          {% for item in config.extra.top_menu %}
+          {% set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
+          <li><a {% if current_url and current_url == link_url %}class="active" {% endif %}href="{{ link_url | safe }}">{{ item.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </nav>
+
+      <main>
+        {% block content %}
+
+        {{ section.content | safe }}
+
+        {% if paginator.pages %}
+        {% for page in paginator.pages %}
+          {{ article_macros::article_listing(page=page) }}
+        {% endfor %}
+        {{ article_macros::article_pagination(page=section) }}
+        {% endif %}
+
+        {% endblock content %}
+      </main>
+
+      <footer class="site-footer">
+        <p>&copy; {{ config.title }} 2011 - {{ now() | date(format="%Y") }}</p>
+        {% block footer %}
+        {% endblock footer %}
+      </footer>
+    </div>
+
+    {% block js_body %}
+    {% endblock js_body %}
+  </body>
+</html>

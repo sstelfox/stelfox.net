@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+{% import "macros/article.html" as article_macros %}
+
+{% block content %}
+
+{{ section.content | safe }}
+
+{#
+  TODO: This gets my most recent post on to the home page but I definitely want
+  to tweak the structure it builds and probably turn printing an individual post
+  into a macro.
+#}
+
+{% for subsection_path in section.subsections %}
+  {% set current_subsection = get_section(path=subsection_path) %}
+
+  {% if current_subsection.components[0] == "blog" %}
+    {% set most_recent_post = current_subsection.pages | sort(attribute="date") | last %}
+
+    {% if most_recent_post %}
+      <h2>{{ most_recent_post.title }}</h2>
+      {{ article_macros::article_info(page=most_recent_post) }}
+      {{ most_recent_post.content | safe }}
+    {% endif %}
+  {% endif %}
+{% endfor %}
+
+{% endblock content %}
