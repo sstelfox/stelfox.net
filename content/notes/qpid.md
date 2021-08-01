@@ -1,20 +1,20 @@
 ---
 title: Qpid
 weight: 74
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  outdated: true
+---
 
 Qpid is an open source AMQP broker, providing transaction management, queuing,
 distribution, security, management, clustering, and federation.
 
-* http://wiki.openstack.org/QpidSupport
-* http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1
+* [QpidSupport](https://wiki.openstack.org/wiki/QpidSupport)
+* [Advanced Message Queuing Protocol (AMQP)](https://www.linuxjournal.com/article/10379?page=0%2C1)
 
 ## Installation
 
@@ -383,4 +383,4 @@ chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
 -A SERVICE -m tcp -p tcp --dport 5671 -j ACCEPT
 ```
 
-[1]: {{< ref "./certificate_authority.md" >}}
+[1]: @/notes/certificates.md

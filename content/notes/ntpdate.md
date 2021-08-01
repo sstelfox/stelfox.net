@@ -1,14 +1,15 @@
 ---
 title: NTPDate
 weight: 35
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 There are two different means of client configuration. Fedora has a package
 `ntpdate` that should be installed instead of [ntpd][1]. Whenever it is started
@@ -45,4 +46,4 @@ ones listed. If there aren't then use the following for the config file:
 1.pool.ntp.org
 ```
 
-[1]: {{< ref "./ntpd.md" >}}
+[1]: @/notes/ntpd.md

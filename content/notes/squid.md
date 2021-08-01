@@ -1,21 +1,21 @@
 ---
 title: Squid
 weight: 57
+
 taxonomies:
   tags:
   - linux
+
+extra:
+  done: true
+  outdated: true
 ---
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
-
-* http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/
-* http://gofedora.com/how-to-configure-squid-proxy-server/
-* http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html
-* http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos
-* http://wiki.squid-cache.org/Features/NegotiateAuthentication
-* http://www.squid-cache.org/Versions/v3/3.2/cfgman/
+* [Squid kerberos authentication and ldap authorization in Active Directory](https://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/)
+* [How To: Configure Squid Proxy Server](https://gofedora.com/how-to-configure-squid-proxy-server/)
+* [DansGuardian Content Filtering with AD Integration](https://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html)
+* [Feature: Negotiate Authentication](https://wiki.squid-cache.org/Features/NegotiateAuthentication)
+* [Squid Configuration File](http://www.squid-cache.org/Versions/v3/3.2/cfgman/)
 
 For URL filtering please refer to the [SquidGuard][1] page.
 
@@ -402,4 +402,4 @@ export NO_PROXY=.i.0x378.net
 You can include credentials by prepending the `user:pass@` to the hosts of the
 protocols above.
 
-[1]: {{< ref "./squid_guard.md" >}}
+[1]: @/notes/squid_guard.md

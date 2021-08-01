@@ -1,21 +1,22 @@
 ---
 title: NGinx
 weight: 37
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 ## Dynamic Backend w/ Fallback
 
 Sources:
 
-* http://wiki.nginx.org/HttpRedis2Module
-* http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/
+* [Nginx Redis2](https://www.nginx.com/resources/wiki/modules/redis2/)
+* [Load Balancing and Reverse Proxying with Nginx, Updated](https://spin.atomicobject.com/2013/07/08/nginx-load-balancing-reverse-proxy-updated/)
 
 ```
 upstream redis {

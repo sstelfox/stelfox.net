@@ -1,14 +1,14 @@
 ---
 title: OpenStack Glance
 weight: 30
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+---
 
 ## Installation/Configuration
 
@@ -29,5 +29,5 @@ GRANT ALL ON glance.* TO 'glance'@'10.100.0.%' IDENTIFIED BY 'LongStrongUniquePa
 FLUSH PRIVILEGES;
 ```
 
-[1]: {{< ref "./mysql.md" >}}
-[2]: {{< ref "./openstack.md" >}}
+[1]: @/notes/mysql.md
+[2]: @/notes/openstack.md

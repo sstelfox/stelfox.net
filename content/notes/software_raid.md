@@ -1,14 +1,15 @@
 ---
 title: Software RAID
 weight: 35
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 ## Installation
 
@@ -51,7 +52,7 @@ As long as the state is clean you're golden.
 
 ### Configuration File
 
-During initial setup the /etc/mdadm.conf is created automatically. All this
+During initial setup the `/etc/mdadm.conf` is created automatically. All this
 data exists in the metadata on the disks and can be rebuilt with the mdadm tool
 like so:
 

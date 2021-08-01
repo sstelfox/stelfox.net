@@ -1,14 +1,15 @@
 ---
 title: Postfix
 weight: 38
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
 written with security in mind.
@@ -546,14 +547,14 @@ transport_maps = hash:/etc/postfix/transport
 Reload your postfix configuration and your script should now be handling all
 mail sent too 'bounce@example.tld'.
 
-[1]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email
-[2]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2
-[3]: https://grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks
-[4]: http://library.linode.com/email/postfix/dovecot-mysql-centos-5
-[5]: http://library.linode.com/email/fetchmail
-[6]: http://rimuhosting.com/support/settingupemail.jsp?mta=postfix
-[7]: http://wiki.dovecot.org/MailLocation/
-[8]: http://wiki2.dovecot.org/MailboxFormat/dbox
-[9]: http://wiki.dovecot.org/MailboxFormat/Maildir
-[10]: http://cr.yp.to/proto/verp.txt
-[11]: http://stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/
+[1]: https://www.grepular.com/Automatically_Encrypting_all_Incoming_Email
+[2]: https://www.grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2
+[3]: https://www.grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks
+[4]: https://www.linode.com/docs/guides/email-with-postfix-dovecot-and-mysql-on-centos-5/
+[5]: https://www.linode.com/docs/guides/using-fetchmail-to-retrieve-email/
+[6]: https://rimuhosting.com/support/settingupemail.jsp?mta=postfix
+[7]: https://doc.dovecot.org/configuration_manual/mail_location/
+[8]: https://doc.dovecot.org/admin_manual/mailbox_formats/dbox/
+[9]: https://doc.dovecot.org/admin_manual/mailbox_formats/maildir/
+[10]: https://cr.yp.to/proto/verp.txt
+[11]: https://www.stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/

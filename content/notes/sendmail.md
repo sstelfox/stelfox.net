@@ -1,20 +1,20 @@
 ---
 title: Sendmail
 weight: 22
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 Consider [Postfix][1] instead. It was written with security in mind.
 
-* http://www.sendmail.com/sm/open_source/docs/m4/tweaking_config.html
-* http://etutorials.org/Linux+systems/red+hat+linux+bible+fedora+enterprise+edition/Part+IV+Red+Hat+Linux+Network+and+Server+Setup/Chapter+19+Setting+Up+a+Mail+Server/Configuring+sendmail/
-* http://www.fredshack.com/docs/sendmail.html
+* [Configuring Sendmail](https://etutorials.org/Linux+systems/red+hat+linux+bible+fedora+enterprise+edition/Part+IV+Red+Hat+Linux+Network+and+Server+Setup/Chapter+19+Setting+Up+a+Mail+Server/Configuring+sendmail/)
+* [Quick & Dirty Guide to Sendmail](http://www.fredshack.com/docs/sendmail.html)
 
 ## Installation
 
@@ -32,4 +32,4 @@ command:
 yum install sendmail-cf -y
 ```
 
-[1]: {{< ref "./postfix.md" >}}
+[1]: @/notes/postfix.md

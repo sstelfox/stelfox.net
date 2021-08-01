@@ -1,15 +1,16 @@
 ---
 title: Snort
 weight: 59
+
 taxonomies:
   tags:
   - linux
   - security
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 Suricata might be a better option and has packages for Fedora 15.
 

@@ -1,14 +1,15 @@
 ---
 title: NTPd
 weight: 61
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of
 computer systems over packet-switched, variable-latency data networks. NTP uses
@@ -148,4 +149,4 @@ current status of the ntpd service like so:
  gnomon.cc.colum .USNO.           1 u    1   64    1   51.110  -15.607   2.697
 ```
 
-[1]: {{< ref "./iptables.md" >}}
+[1]: @/notes/iptables.md

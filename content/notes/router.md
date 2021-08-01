@@ -1,19 +1,20 @@
 ---
 title: Router
+
 weight: 36
 taxonomies:
   tags:
   - linux
   - networking
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 Resources:
 
-* http://www.fclose.com/816/port-forwarding-using-iptables/
+* [Linux Port Forwarding Using iptables](https://www.systutorials.com/port-forwarding-using-iptables/)
 
 This was done as a quick and dirty iptables NAT/gateway for a private LXC
 network. Create the LXC container using our base templating trick:

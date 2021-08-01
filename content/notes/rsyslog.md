@@ -1,14 +1,17 @@
 ---
 title: RSyslog
 weight: 53
+
 taxonomies:
   tags:
   - linux
----
+  - logging
+  - security
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 # RSyslog
 
@@ -44,7 +47,7 @@ logging situations and can probably be safely ignored in most cases.
 
 RSyslog also provides a mechanism to encrypt syslog messages over TCP using
 TLS. This however requires there to be a trusted [Certificate_Authority][1] to
-create and sign certificates. You could potentially use [StartSSL][5]
+create and sign certificates. You could potentially use [StartSSL][2]
 certificates but using others could do the same thing and correctly
 authenticate to your log server. There would be an audit trail linking someone
 to the offending certificate, getting access to that information would require
@@ -81,7 +84,7 @@ attackers from flooding / overloading your log server.
 
 There is a handy service that can forward syslog events from the Windows Event
 subsystem built into windows to a syslog server. It's called
-[eventlog-to-syslog][2] and seems to be under active development (good thing).
+[eventlog-to-syslog][3] and seems to be under active development (good thing).
 
 ## Modular Configuration
 
@@ -245,7 +248,7 @@ rotate my logs weekly and keep a years worth for each machine.
 
 I stick the following configuration file at
 `/etc/logrotate.d/rsyslog_server.conf`. This assumes you already have
-[logrotate][6] configured.
+[logrotate][4] configured.
 
 ```
 /var/log/remote/*/audit.log
@@ -294,8 +297,8 @@ used.
 
 ## Signature Providers
 
-RSyslog has integrated [signature provider support][3] through a third party
-service called [GuardTime][4]. The Rsyslog developers have claimed other
+RSyslog has integrated [signature provider support][5] through a third party
+service called [GuardTime][6]. The Rsyslog developers have claimed other
 signature provider modules will be provided in the future but give no
 indications on possible timelines or how they might be implemented.
 
@@ -332,9 +335,9 @@ well as RSyslog. The developers are continuing to develop in a security
 concious way (such as integrating encryption, and third party message
 signatures) and stability (such as log queues).
 
-[1]: {{< ref "./certificate_authority.md" >}}
-[2]: http://code.google.com/p/eventlog-to-syslog/
-[3]: http://www.rsyslog.com/doc/sigprov_gt.html
-[4]: http://guardtime.com/
-[5]: https://www.startssl.com/
-[6]: {{< ref "./logrotate.md" >}}
+[1]: @/notes/certificates.md
+[2]: https://www.startssl.com/
+[3]: https://code.google.com/archive/p/eventlog-to-syslog/
+[4]: @/notes/logrotate.md
+[5]: https://www.rsyslog.com/doc/v8-stable/configuration/modules/sigprov_gt.html
+[6]: https://guardtime.com/

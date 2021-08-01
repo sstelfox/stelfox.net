@@ -1,9 +1,14 @@
 ---
 title: Openstack Keystone
 weight: 30
+
 taxonomies:
   tags:
   - linux
+
+extra:
+  done: true
+  outdated: true
 ---
 
 ## Installation/Configuration
@@ -469,6 +474,6 @@ general. These features that I haven't documented here yet are as follows:
   * Breaking out permissions into more explicit roles
   * What can I actually accomplish with this file?
 
-[1]: {{< ref "./mysql.md" >}}
-[2]: {{< ref "./openstack.md" >}}
-[3]: {{< ref "./certificate_authority.md" >}}
+[1]: @/notes/mysql.md
+[2]: @/notes/openstack.md
+[3]: @/notes/certificates.md

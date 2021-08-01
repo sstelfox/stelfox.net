@@ -1,19 +1,20 @@
 ---
 title: RPM Build
 weight: 42
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 Sources:
 
-* https://fedoraproject.org/wiki/How_to_create_an_RPM_package
-* https://fedoraproject.org/wiki/Packaging:Guidelines
+* [Creating RPM packages](https://docs.fedoraproject.org/en-US/quick-docs/creating-rpm-packages/)
+* [Fedora Packaging Guidelines](https://docs.fedoraproject.org/en-US/packaging-guidelines/)
 
 Create a build user whose sole purpose is to handle building packages. Do not
 use root under any circumstances.
@@ -141,4 +142,4 @@ yum install lua lua-socket lua-devel -y
 
 Source:
 
-* http://www.question-defense.com/2010/03/04/generate-a-gpg-key-to-sign-rpm-packages-created-using-rpmbuild-on-centos-linux
+* [Generate A GPG Key To Sign RPM Packages Created Using rpmbuild On CentOS Linux](https://www.question-defense.com/2010/03/04/generate-a-gpg-key-to-sign-rpm-packages-created-using-rpmbuild-on-centos-linux)

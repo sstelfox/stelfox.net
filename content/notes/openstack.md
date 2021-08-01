@@ -1,14 +1,15 @@
 ---
 title: Openstack
 weight: 30
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  outdated: true
+  done: true
+---
 
 This is a mostly (95%) script-less installation and setup of OpenStack from
 scratch on a single host, though done in a way that the services could each be
@@ -17,11 +18,10 @@ very easily broken out on to their own machines or multiple machines.
 A few references that I've used generally for assistance figuring out what I
 need:
 
-* http://fedoraproject.org/wiki/Getting_started_with_OpenStack_on_Fedora_17
-* http://wiki.openstack.org/QpidSupport
-* https://github.com/mseknibilel/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst
-* https://github.com/openstack/keystone/blob/master/etc/keystone.conf.sample
-* http://docs.openstack.org/developer/keystone/configuration.html
+* [Getting started with OpenStack on Fedora 17](https://fedoraproject.org/wiki/Getting_started_with_OpenStack_on_Fedora_17)
+* [QpidSupport](https://wiki.openstack.org/wiki/QpidSupport)
+* [OpenStack Folsom Install Guide](https://github.com/bilelmsekni/OpenStack-Folsom-Install-guide/blob/master/OpenStack_Folsom_Install_Guide_WebVersion.rst)
+* [Keystone, the OpenStack Identity Service](https://docs.openstack.org/keystone/latest/)
 
 ## Installation
 
@@ -121,27 +121,9 @@ on [it's wiki page][5].
 Glance is the OpenStack Image service and it's configuration is documented on
 [it's wiki page][6]
 
-### Horizon/Dashboard
-
-Notes for when I get to this:
-
-I should make use of the Cached Database session backend:
-
-* http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-cached-database.html
-
-It will need to have memcache configured as if it was going to be the session
-storage:
-
-* http://docs.openstack.org/trunk/openstack-compute/install/apt/content/dashboard-session-memcache.html
-
-Additional notes:
-
-* `http://docs.openstack.org/trunk/openstack-object-storage/admin/content/memcached-considerations.html` (Dead link)
-* http://www.cybera.ca/tech-radar/using-memcached-openstack-nova
-
-[1]: {{< ref "./mysql.md" >}}
-[2]: {{< ref "./qpid.md" >}}
-[3]: {{< ref "./chronyd.md" >}}
-[4]: {{< ref "./memcached.md" >}}
-[5]: {{< ref "./openstack_keystone.md" >}}
-[6]: {{< ref "./openstack_glance.md" >}}
+[1]: @/notes/mysql.md
+[2]: @/notes/qpid.md
+[3]: @/notes/chronyd.md
+[4]: @/notes/memcached.md
+[5]: @/notes/openstack_keystone.md
+[6]: @/notes/openstack_glance.md

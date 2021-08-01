@@ -1,15 +1,16 @@
 ---
 title: OpenVPN
 weight: 38
+
 taxonomies:
   tags:
   - linux
   - networking
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 If doing this from within an LXC container you'll need to perform the following
 two steps (this didnt work):

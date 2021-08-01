@@ -1,14 +1,15 @@
 ---
 title: Squid Guard
 weight: 57
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 Squid Guard is officially a "URL Rewrite Program". It takes information about
 the requested page coming in and checks it against a series of ACLs,
@@ -933,5 +934,5 @@ want to access directly in my whitelist file.
 </html>
 ```
 
-[1]: {{< ref "./squid.md" >}}
-[2]: http://www.shallalist.de/
+[1]: @/notes/squid.md
+[2]: https://www.shallalist.de/
