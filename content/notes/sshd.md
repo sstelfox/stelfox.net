@@ -1,14 +1,14 @@
 ---
 title: SSHd
 weight: 61
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  outdated: true
+---
 
 Secure Shell or SSH is a network protocol that allows data to be exchanged
 using a secure channel between two networked devices. Used primarily on
@@ -279,6 +279,6 @@ I've play around with implementing a [gatekeeper style script][3] to provide an
 additional layer of security. In practice real multi-factor authentication is
 more reliable and should be used instead.
 
-[1]: {{< ref "./iptables.md" >}}
-[2]: {{< ref "./partitioning.md" >}}
-[3]: {{< ref "./sshd_gatekeeper.md" >}}
+[1]: @/notes/iptables.md
+[2]: @/notes/partitioning.md
+[3]: @/notes/sshd_gatekeeper.md
