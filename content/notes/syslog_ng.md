@@ -1,16 +1,21 @@
 ---
 title: Syslog-NG
 weight: 84
+
 taxonomies:
   tags:
   - linux
   - security
+
+extra:
+  done: true
+  show_toc: true
 ---
 
 Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced
 processing and log centralization while maintaining a sane configuration file
 syntax. I've recently come to vastly prefer it over my previous long term
-favorite [Rsyslog][3].
+favorite [Rsyslog][1].
 
 It's important to note that when modifying the logs statements, they will be
 processed in order. This means log statements that finalize a message will
@@ -71,7 +76,7 @@ log { source(local); filter(spool); destination(spoolFile); };
 log { source(local); filter(syslog); destination(syslogFile); };
 ```
 
-The base config can also be downloaded [from me][4].
+The base config can also be downloaded [from me][2].
 
 ## Using a Log File as a Source
 
@@ -110,7 +115,7 @@ accidentally contain additional sensitive information. Whenever possible, log
 senders should be authenticated and should be using an encrypted transport
 mechanism. This is very easy to setup and tune with Syslog-ng.
 
-You should create a [certificate authority][1] dedicated to authenticating
+You should create a [certificate authority][3] dedicated to authenticating
 clients to your logging infrastructure. The server cert does not have to be
 signed by the same certificate as your clients, but your clients must be able
 to verify the validity of the server using their CA. Clients should not use a
@@ -501,10 +506,10 @@ log { source(local); destination(fallback); flags(fallback); };
 
 ## Audit Log Filter
 
-If you have [auditd][2] configured to send it's messages to syslog via it's
+If you have [auditd][4] configured to send it's messages to syslog via it's
 dispatcher it is useful to filter those out into their own file so the audit
 reporting tools can still operate on them. The following example is intended to
-be used with the configuration documented on my [auditd][2] page as well as the
+be used with the configuration documented on my [auditd][4] page as well as the
 listener defined in the secure log reception section in on this page.
 
 Pay attention to the location of where these blocks are placed as they include
@@ -590,8 +595,8 @@ certificate's CN by modifying that destinations template to include
 `${.TLS.X509_CN}`. I'm not sure if that is worth while but could add extra
 validity information.
 
-[1]: @/notes/certificates.md
-[2]: @/notes/auditd.md
-[3]: @/notes/rsyslog.md
-[4]: syslog-ng.conf
+[1]: @/notes/rsyslog.md
+[2]: syslog-ng.conf
+[3]: @/notes/certificates.md
+[4]: @/notes/auditd.md
 [5]: @/notes/logrotate.md

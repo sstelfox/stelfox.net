@@ -1,10 +1,14 @@
 ---
 title: Yubikey
 weight: 36
+
 taxonomies:
   tags:
   - linux
   - security
+
+extra:
+  done: true
 ---
 
 ## NEO
@@ -81,7 +85,7 @@ cat FILE | gpg-connect-agent
 This may allow me to use the yubikey's hardware RNG to generate entropy on my
 host:
 
-https://github.com/infincia/TokenTools
+* [TokenTools](https://github.com/infincia/TokenTools)
 
 ## Vulnerability
 

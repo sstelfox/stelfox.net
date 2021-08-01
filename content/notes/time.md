@@ -1,9 +1,13 @@
 ---
 title: Time
 weight: 42
+
 taxonomies:
   tags:
   - linux
+
+extra:
+  done: true
 ---
 
 This is a very basic operation on a Linux system, but I have to interact with
@@ -32,5 +36,5 @@ date
 hwclock --show
 ```
 
-[1]: {{< ref "./chronyd.md" >}}
-[2]: {{< ref "./ntpd.md" >}}
+[1]: @/notes/chronyd.md
+[2]: @/notes/ntpd.md

@@ -1,10 +1,14 @@
 ---
 title: Tails Setup Notes
 weight: 37
+
 taxonomies:
   tags:
   - linux
   - security
+
+extra:
+  done: true
 ---
 
 This is relevant for TAILS version 2.5 and basically follows their install
