@@ -590,8 +590,8 @@ certificate's CN by modifying that destinations template to include
 `${.TLS.X509_CN}`. I'm not sure if that is worth while but could add extra
 validity information.
 
-[1]: {{< ref "./certificate_authority.md" >}}
-[2]: {{< ref "./auditd.md" >}}
-[3]: {{< ref "./rsyslog.md" >}}
-[4]: /note_files/syslog-ng/syslog-ng.conf
-[5]: {{< ref "./logrotate.md" >}}
+[1]: @/notes/certificates.md
+[2]: @/notes/auditd.md
+[3]: @/notes/rsyslog.md
+[4]: syslog-ng.conf
+[5]: @/notes/logrotate.md

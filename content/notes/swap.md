@@ -1,14 +1,15 @@
 ---
 title: Swap
 weight: 47
+
 taxonomies:
   tags:
   - linux
----
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+extra:
+  done: true
+  outdated: true
+---
 
 ## Security
 
@@ -82,4 +83,4 @@ right before the cryptsetup invocation add the line "modprobe dm-mod" to load
 the kernel module. Otherwise you'll get a "Command failed: Incompatible
 libdevmapper" error.
 
-[1]: {{< ref "./data_recovery.md" >}}
+[1]: @/notes/data_recovery.md
