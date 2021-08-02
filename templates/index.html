@@ -22,7 +22,7 @@
       <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
     {% endif %}
 
-    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}" media="all" />
 
     {% block extra_head %}
     {% endblock extra_head %}
@@ -70,7 +70,10 @@
     </main>
 
     <footer>
-      <p>&copy; {{ config.title }} 2011 - {{ now() | date(format="%Y") }}</p>
+      <div class="copyright">
+        <p>&copy; 2011 &ndash; {{ now() | date(format="%Y") }} Sam Stelfox. Blog posts, notes, code, and config samples are available for redistribution under my <a href="{{ get_url(path="@/licenses.md") }}">site licenses</a> unless otherwise specified.</p>
+      </div>
+
       {% block footer %}
       {% endblock footer %}
     </footer>
