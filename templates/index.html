@@ -1,4 +1,5 @@
 {% import "macros/article.html" as article_macros %}
+
 <!DOCTYPE html>
 <html lang="{% if lang %}{{ lang }}{% else %}en{% endif %}">
   <head>
@@ -8,11 +9,18 @@
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
 
     {% if config.generate_feed %}
-    <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
+      <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
     {% endif %}
 
     <link rel="canonical" href="{{ current_url | safe }}" />
     <link rel="shortcut icon" href="/favicon.ico" />
+
+    {% if page and page.earlier %}
+      <link rel="prev" title="{{ page.earlier.title }}" href="{{ page.earlier.permalink | safe }}" />
+    {% endif %}
+    {% if page and page.later %}
+      <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
+    {% endif %}
 
     <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}">
 
@@ -20,21 +28,33 @@
     {% endblock extra_head %}
   </head>
   <body>
-    <div class="container">
-      <header>
-        <h1 class="site-header"><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
-      </header>
+    <header>
+      <div>
+        <div class="title">
+          <h1><img class="logo" src="/logo.png" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
+          <h2>{{ config.description }}</h2>
+        </div>
 
-      <nav class="site-nav">
-        <ul>
-          {% for item in config.extra.top_menu %}
-          {% set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
-          <li><a {% if current_url and current_url == link_url %}class="active" {% endif %}href="{{ link_url | safe }}">{{ item.name }}</a></li>
-          {% endfor %}
-        </ul>
-      </nav>
+        <nav>
+          <ul>
+            {% for item in config.extra.top_menu %}
+              {% set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
+              <li><a {% if current_url and current_url == link_url %}class="active" {% endif %}href="{{ link_url | safe }}">{{ item.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
 
-      <main>
+        <form method="get" action="#">
+          <fieldset>
+            <label class="hidden" for="s">Site Search</label>
+            <input type="text" id="d" name="s" value="" placeholder="Search site..." />
+            <button type="submit">Search</button>
+          </fieldset>
+        </form>
+      </div>
+    </header>
+
+    <main>
         {% block content %}
 
         {{ section.content | safe }}
@@ -47,14 +67,13 @@
         {% endif %}
 
         {% endblock content %}
-      </main>
+    </main>
 
-      <footer class="site-footer">
-        <p>&copy; {{ config.title }} 2011 - {{ now() | date(format="%Y") }}</p>
-        {% block footer %}
-        {% endblock footer %}
-      </footer>
-    </div>
+    <footer>
+      <p>&copy; {{ config.title }} 2011 - {{ now() | date(format="%Y") }}</p>
+      {% block footer %}
+      {% endblock footer %}
+    </footer>
 
     {% block js_body %}
     {% endblock js_body %}
