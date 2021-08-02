@@ -1,10 +1,12 @@
 ---
-date: 2020-05-22 18:00:05-04:00
-tags:
-- linux
-- nginx
-- tips
 title: Conditional Upstream Nginx Headers
+date: 2020-05-22T18:00:05-04:00
+
+taxonomies:
+  tags:
+  - linux
+  - nginx
+  - tips
 ---
 
 The way one of the development environments work that I'm apart of allow
