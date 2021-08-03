@@ -1,11 +1,17 @@
+{% macro pager_url(pager, offset) %}
+  {% set target_idx = pager.current_index + offset %}
+  {% if target_idx <= 1 %}
+  {% endif %}
+{% endmacro pager_url %}
+
 {% macro next_pager_arrow(pager) %}
-<a class="page-link next" href="{{ pager.permalink }}">
-  <span class="screen-reader-text">Next page</span>
-  <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
-    <line x1="4" y1="12" x2="20" y2="12"></line>
-    <polyline points="14 6 20 12 14 18"></polyline>
-  </svg>
-</a>
+  <a class="page-link next" href="{{ pager.permalink }}">
+    <span class="screen-reader-text">Next page</span>
+    <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
+      <line x1="4" y1="12" x2="20" y2="12"></line>
+      <polyline points="14 6 20 12 14 18"></polyline>
+    </svg>
+  </a>
 {% endmacro next_pager_arrow %}
 
 {% macro pager_number_link(pager) %}
@@ -31,6 +37,7 @@
 {% endmacro prev_page_arrow %}
 
 {% macro section(pager) %}
+{#
 <nav class="section-pagination">
   {% if pager.previous %}
     {{ self::previous_page_arrow(pager=pager) }}
@@ -40,4 +47,5 @@
     {{ self::next_page_arrow(pager=pager) }}
   {% endif %}
 </nav>
+#}
 {% endmacro render_section %}
