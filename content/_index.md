@@ -1,5 +1,5 @@
 ---
-template: home.html
+template: special/home.html
 ---
 
 This is the digital home of Sam Stelfox, a systems specialist with a focus on

@@ -14,13 +14,13 @@
     <link rel="shortcut icon" href="/favicon.ico" />
 
     {% if paginator and paginator.previous %}
-    <link rel="prev" title="{{ section.title }} Archive &mdash; Page {{ paginator.current_index - 1 }}" href="{{ paginator.previous | safe }}" />
+      <link rel="prev" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index - 1 }}" href="{{ paginator.previous | safe }}" />
     {% elif page.earlier %}
       <link rel="prev" title="{{ page.earlier.title }}" href="{{ page.earlier.permalink | safe }}" />
     {% endif %}
 
     {% if paginator and paginator.next %}
-      <link rel="next" title="{{ section.title }} Archive &mdash; Page {{ paginator.current_index + 1 }}" href="{{ paginator.next | safe }}" />
+      <link rel="next" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index + 1 }}" href="{{ paginator.next | safe }}" />
     {% elif page.later %}
       <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
     {% endif %}
@@ -44,7 +44,7 @@
           </ul>
         </nav>
 
-        <form method="get" action="#">
+        <form method="get" action="{{ get_url(path="search", trailing_slash=true) }}">
           <fieldset>
             <label class="hidden" for="s">Site Search</label>
             <input type="text" id="d" name="s" value="" placeholder="Search site..." />
@@ -56,7 +56,6 @@
 
     <main>
       {% block content %}
-        {{ section.content | safe }}
       {% endblock content %}
     </main>
 
