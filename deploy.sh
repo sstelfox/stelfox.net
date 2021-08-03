@@ -19,15 +19,16 @@ if [ "${DEBUG:-}" = "true" ]; then
 fi
 
 # Blow away anything that doesn't belong
-pushd public/ &> /dev/null
+pushd published/ &> /dev/null
 git add -A
 git reset --hard
 popd &> /dev/null
 
-# Ensure public matches upstream
+# Ensure published matches the repository
 git submodule sync
 git submodule update --remote
 
+# Git doesn't track the branch head very well, set it explicitly
 pushd public/ &> /dev/null
 git pull origin gh-pages
 popd &> /dev/null
@@ -35,15 +36,14 @@ popd &> /dev/null
 # Build the site
 make build
 
-# Deploy the new changes
-rsync -rczi --delete --cvs-exclude public/ singing-evening-road.stelfox.net:/var/www/stelfox.net/root/
+rsync -rczi --delete --cvs-exclude public/ published/
 
 # Sometimes I want to make a minor change without syncing it back to github
 # (little games and things with friends, changes would give away clues). In
 # these situations I don't commit and deploy the changes.
 if [ "${STEALTH:-}" != "true" ]; then
   # gh-page branch update
-  pushd public/ &> /dev/null
+  pushd published/ &> /dev/null
   if ! git diff --quiet --exit-code; then
     git add -A
     git commit -m '' --allow-empty-message
@@ -59,3 +59,6 @@ if [ "${STEALTH:-}" != "true" ]; then
     git push
   fi
 fi
+
+# Deploy the new changes
+rsync -rczi --delete --cvs-exclude published/ singing-evening-road.stelfox.net:/var/www/stelfox.net/root/

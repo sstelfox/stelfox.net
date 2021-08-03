@@ -1,4 +1,4 @@
-build: logo setup generate
+build: logo generate
 
 check:
 	@podman run --rm --security-opt label=disable -e NO_COLOR=true \
