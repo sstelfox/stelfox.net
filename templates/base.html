@@ -1,5 +1,3 @@
-{% import "macros/article.html" as article_macros %}
-
 <!DOCTYPE html>
 <html lang="{% if lang %}{{ lang }}{% else %}en{% endif %}">
   <head>
@@ -15,17 +13,19 @@
     <link rel="canonical" href="{{ current_url | safe }}" />
     <link rel="shortcut icon" href="/favicon.ico" />
 
-    {% if page.earlier %}
+    {% if paginator and paginator.previous %}
+    <link rel="prev" title="{{ section.title }} Archive &mdash; Page {{ paginator.current_index - 1 }}" href="{{ paginator.previous | safe }}" />
+    {% elif page.earlier %}
       <link rel="prev" title="{{ page.earlier.title }}" href="{{ page.earlier.permalink | safe }}" />
     {% endif %}
-    {% if page.later %}
+
+    {% if paginator and paginator.next %}
+      <link rel="next" title="{{ section.title }} Archive &mdash; Page {{ paginator.current_index + 1 }}" href="{{ paginator.next | safe }}" />
+    {% elif page.later %}
       <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
     {% endif %}
 
-    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}" media="all" />
-
-    {% block extra_head %}
-    {% endblock extra_head %}
+    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}" />
   </head>
   <body>
     <header>
@@ -55,30 +55,15 @@
     </header>
 
     <main>
-        {% block content %}
-
+      {% block content %}
         {{ section.content | safe }}
-
-        {% if paginator.pages %}
-        {% for page in paginator.pages %}
-          {{ article_macros::article_listing(page=page) }}
-        {% endfor %}
-        {{ article_macros::article_pagination(page=section) }}
-        {% endif %}
-
-        {% endblock content %}
+      {% endblock content %}
     </main>
 
     <footer>
       <div class="copyright">
-        <p>&copy; 2011 &ndash; {{ now() | date(format="%Y") }} Sam Stelfox. Blog posts, notes, code, and config samples are available for redistribution under my <a href="{{ get_url(path="@/licenses.md") }}">site licenses</a> unless otherwise specified.</p>
+        <p>&copy; 2011 &ndash; {{ now() | date(format="%Y") }} Sam Stelfox.</p>
       </div>
-
-      {% block footer %}
-      {% endblock footer %}
     </footer>
-
-    {% block js_body %}
-    {% endblock js_body %}
   </body>
 </html>
