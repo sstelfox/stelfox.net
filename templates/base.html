@@ -31,7 +31,7 @@
     <header>
       <div>
         <div class="title">
-          <h1><img class="logo" src="/logo.png" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
+          <h1><img class="logo" src="{{ get_url(path="static/logo.png") }}" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
           <h2>{{ config.description }}</h2>
         </div>
 
@@ -39,15 +39,24 @@
           <ul>
             {% for item in config.extra.top_menu %}
               {% set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
-              <li><a {% if current_url and current_url == link_url %}class="active" {% endif %}href="{{ link_url | safe }}">{{ item.name }}</a></li>
+              {% set root_url = config.base_url ~ '/' %}
+
+              {% if current_url == link_url %}
+                {% set is_active = true %}
+              {% elif link_url != root_url and current_url is starting_with(link_url) %}
+                {% set is_active = true %}
+              {% else %}
+                {% set is_active = false %}
+              {% endif %}
+              <li><a {% if is_active %}class="active" {% endif %}href="{{ link_url | safe }}">{{ item.name }}</a></li>
             {% endfor %}
           </ul>
         </nav>
 
-        <form method="get" action="{{ get_url(path="search", trailing_slash=true) }}">
+        <form method="get" action="{{ get_url(path="@/search.md") }}">
           <fieldset>
             <label class="hidden" for="s">Site Search</label>
-            <input type="text" id="d" name="s" value="" placeholder="Search site..." />
+            <input type="text" id="d" name="s" value="" placeholder="Search..." />
             <button type="submit">Search</button>
           </fieldset>
         </form>
@@ -64,5 +73,8 @@
         <p>&copy; 2011 &ndash; {{ now() | date(format="%Y") }} Sam Stelfox.</p>
       </div>
     </footer>
+
+    {% block extra_javascript %}
+    {% endblock extra_javascript %}
   </body>
 </html>
