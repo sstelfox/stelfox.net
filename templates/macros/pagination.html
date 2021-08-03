@@ -16,7 +16,7 @@
   {% set safe_index = self::safe_pager_index(pager=pager, index=index) | int %}
   {% set pager_url = self::pager_url(pager=pager, index=safe_index) | trim %}
 
-  {% if current_url == pager_url %}
+  {% if pager.current_index == safe_index %}
     <span class="page-link current" aria-current="page">
       <span class="screen-reader-text">Current page:</span>{{ safe_index }}
     </span>
