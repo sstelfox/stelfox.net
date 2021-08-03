@@ -3,12 +3,10 @@
 
   <a class="page-link next" href="{{ pager_url | safe }}">
     <span class="screen-reader-text">Next page</span>
-    <!--
     <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
       <line x1="4" y1="12" x2="20" y2="12"></line>
       <polyline points="14 6 20 12 14 18"></polyline>
     </svg>
-    -->
   </a>
 {% endmacro next_pager_arrow %}
 
@@ -17,13 +15,9 @@
   {% set pager_url = self::pager_url(pager=pager, index=safe_index) | trim %}
 
   {% if pager.current_index == safe_index %}
-    <span class="page-link current" aria-current="page">
-      <span class="screen-reader-text">Current page:</span>{{ safe_index }}
-    </span>
+    <span class="page-link current" aria-current="page"><span class="screen-reader-text">Current page:</span>{{ safe_index }}</span>
   {% else %}
-    <a class="page-link" href="{{ pager_url | safe }}">
-      <span class="screen-reader-text">Page:</span>{{ safe_index }}
-    </a>
+    <a class="page-link" href="{{ pager_url | safe }}"><span class="screen-reader-text">Page:</span>{{ safe_index }}</a>
   {% endif %}
 {% endmacro pager_number_link %}
 
@@ -36,12 +30,10 @@
   {% set pager_url = self::pager_url(pager=pager, index=pager.current_index - 1) | trim %}
 
   <a class="page-link prev" href="{{ pager_url | safe }}">
-    <!--
     <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
       <line x1="20" y1="12" x2="4" y2="12"></line>
       <polyline points="10 18 4 12 10 6"></polyline>
     </svg>
-    -->
     <span class="screen-reader-text">Previous page</span>
   </a>
 {% endmacro prev_page_arrow %}
@@ -55,36 +47,20 @@
 
 {% macro section(pager) %}
   <nav class="section-pagination">
-    {% if pager.previous %}
-      <div>
-        {{ self::previous_pager_arrow(pager=pager) }}
-      </div>
-    {% endif %}
+    {% if pager.previous %}{{ self::previous_pager_arrow(pager=pager) }}{% endif %}
+    {{ self::pager_number_link(pager=pager, index=1) }}
 
-    <div>
-      {{ self::pager_number_link(pager=pager, index=1) }}
-    </div>
-
-    {% if pager.current_index > 2 %}
-      <div>...</div>
-    {% endif %}
+    {% if pager.current_index > 2 %}<span class="page-link dots">…</span>{% endif %}
 
     {% for index in range(start=pager.current_index - 1, end=pager.current_index + 2) %}
       {% if index > 1 and index < pager.number_pagers %}
-        <div>{{ self::pager_number_link(pager=pager, index=index) }}</div>
+        {{ self::pager_number_link(pager=pager, index=index) }}
       {% endif %}
     {% endfor %}
 
-    {% if pager.current_index < pager.number_pagers - 2 %}
-      <div>...</div>
-    {% endif %}
+    {% if pager.current_index < pager.number_pagers - 2 %}<span class="page-link dots">…</span>{% endif %}
 
-    <div>
-      {{ self::pager_number_link(pager=pager, index=pager.number_pagers) }}
-    </div>
-
-    {% if pager.next %}
-      {{ self::next_pager_arrow(pager=pager) }}
-    {% endif %}
+    {{ self::pager_number_link(pager=pager, index=pager.number_pagers) }}
+    {% if pager.next %}{{ self::next_pager_arrow(pager=pager) }}{% endif %}
   </nav>
 {% endmacro render_section %}
