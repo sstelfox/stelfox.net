@@ -1,8 +1,10 @@
 ---
 title: Blog Posts
-sort_by: date
+
+#template: blog/list.html
 
 paginate_by: 5
+sort_by: date
 ---
 
 Here I've collected my thoughts over time. If you find anything particularly

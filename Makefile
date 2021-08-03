@@ -1,10 +1,12 @@
-build: logo setup
-	@podman run --rm --security-opt label=disable -e NO_COLOR=true \
-		-v $$(pwd):/app -w /app docker.io/balthek/zola:0.14.0 build
+build: logo setup generate
 
 check:
 	@podman run --rm --security-opt label=disable -e NO_COLOR=true \
 		-v $$(pwd):/app -w /app docker.io/balthek/zola:0.14.0 check
+
+generate:
+	@podman run --rm --security-opt label=disable -e NO_COLOR=true \
+		-v $$(pwd):/app -w /app docker.io/balthek/zola:0.14.0 build
 
 logo: static/apple-touch-icon.png static/favicon.ico static/logo.png
 
@@ -27,5 +29,5 @@ static/favicon.ico: logo_src/stelfox_favicon.svg Makefile
 static/logo.png: logo_src/stelfox_clean_icon.svg Makefile
 	convert -alpha on -quality 85 -scale 192x192 -transparent white logo_src/stelfox_clean_icon.svg static/logo.png
 
-.PHONY: build check logo serve setup
+.PHONY: build check generate logo serve setup
 .DEFAULT_GOAL := build
