@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 
+{% import "macros/article.html" as article_macros %}
+
 {% block content %}
   {{ section.content | safe }}
+
+  {% if paginator %}
+    {% set pages = paginator.pages %}
+  {% else %}
+    {% set pages = section.pages %}
+  {% endif %}
+
+  {% for page in pages %}
+    {{ article_macros::article_listing(page=page) }}
+  {% endfor %}
 {% endblock content %}
