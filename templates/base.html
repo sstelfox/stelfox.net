@@ -25,7 +25,7 @@
       <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
     {% endif %}
 
-    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}" />
+    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
   </head>
   <body>
     <header>
@@ -73,6 +73,8 @@
         <p>&copy; 2011 &ndash; {{ now() | date(format="%Y") }} Sam Stelfox.</p>
       </div>
     </footer>
+
+    <script src="{{ get_url(path="static/js/site.js") }}" integrity="sha384-{{ get_file_hash(path="static/site.js", sha_type=384, base64=true) | safe }}"></script>
 
     {% block extra_javascript %}
     {% endblock extra_javascript %}
