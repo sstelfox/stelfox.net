@@ -2,8 +2,8 @@
 title: Blender
 weight: 83
 
-date: 2020-11-07T15:08:47-0600
-updated: 2020-11-27T15:05:05-0600
+date: 2020-11-07T15:08:47-06:00
+updated: 2020-11-27T15:05:05-06:00
 
 taxonomies:
   tags:
