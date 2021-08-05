@@ -75,6 +75,8 @@ available as well as a matching set of [/etc/audit/audit.rules][5] that are
 tuned for my environments. I consider them a good starting point for other
 people wanting detailed auditing logs.
 
+A configuration file can be tested to be valid by running `auditd -f`.
+
 ## Audit Dispatcher
 
 By default auditd has two mechanisms for sending audit events to an
@@ -123,6 +125,24 @@ consider removing or reducing the amount of audit logs stored. For a system
 that generates significant numbers of logs, the syslog route can be quite a bit
 more efficient, and support significantly more messages (this will only work
 with disk queues removed).
+
+## Random Tips
+
+Extracting messages from `syslog-ng` and processing them with `audit2allow`:
+
+```
+awk '{ split($0,f,"audispd[[0-9]+]: "); print f[2] }' /var/log/audit.log | audit2allow
+```
+
+## SELinux Issue
+
+Was getting this error in Gentoo when I have SELinux in enforcing mode:
+
+```
+[    0.982323] audit: type=1400 audit(1554179721.176:4): avc:  denied  { mounton } for  pid=1 comm="init" path="/proc" dev="proc" ino=1 scontext=system_u:system_r:init_t tcontext=system_u:object_r:proc_t tclass=dir permissive=0
+Mount failed for selinuxfs on /sys/fs/selinux:  No such file or directory
+Unable to load SELinux Policy. Machine is in enforcing mode. Halting now.
+```
 
 ## More References
 
