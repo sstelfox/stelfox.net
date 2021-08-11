@@ -13,8 +13,6 @@
     <meta name="theme-color" dark)" content="{{ config.extra.light_theme_color }}" />
     {%- endif %}
 
-    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
-
     {%- if section.title %}
     <meta property="og:title" content="{% block og_title %}{{ section.title }}{% endblock og_title %}" />
     {%- elif page.title %}
@@ -28,20 +26,22 @@
     {%- endif %}
 
     {#- 404 page does not have current URL #}
-    {%- if current_url %}
-    <meta property="og:url" content="{{- current_url | safe -}}" />
-    {%- endif %}
+    {% if current_url -%}
+      <meta property="og:url" content="{{- current_url | safe -}}" />
+    {% endif -%}
     <meta property="og:site_name" content="{{- config.title -}}" />
-
-    {%- if page %}
-    <meta property="og:type" content="article" />
-    {%- else %}
-    <meta property="og:type" content="website" />
+    {% if page -%}
+      <meta property="og:type" content="article" />
+    {% else -%}
+      <meta property="og:type" content="website" />
     {%- endif %}
 
-    {%- if current_url %}
-    <link rel="canonical" href="{{ current_url | safe }}" />
-    {%- endif %}
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+
+    {% if current_url -%}
+      <link rel="canonical" href="{{ current_url | safe }}" />
+    {% endif -%}
+
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
 
@@ -62,7 +62,7 @@
   <body>
     <header>
       <div class="title">
-        <h1><img class="logo" src="{{ get_url(path="logo.png") }}" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
+        <h1><img class="logo" src="{{ get_url(path="logo.png") }}" alt="" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
         {%- if config.description %}
         <h2>{{ config.description }}</h2>
         {%- endif %}
