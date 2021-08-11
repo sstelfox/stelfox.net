@@ -4,35 +4,47 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    {%- if config.description %}
+    <meta name="description" content="{{ config.description }}" />
+    {%- endif %}
 
-    {% if config.generate_feed %}
-      <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
-    {% endif %}
+    {%- if config.extra.dark_theme_color and config.extra.light_theme_color %}
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ config.extra.dark_theme_color }}" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ config.extra.light_theme_color }}" />
+    {%- elif config.extra.dark_theme_color %}
+    <meta name="theme-color" dark)" content="{{ config.extra.dark_theme_color }}" />
+    {%- elif config.extra.light_theme_color %}
+    <meta name="theme-color" dark)" content="{{ config.extra.light_theme_color }}" />
+    {%- endif %}
+
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
 
     <link rel="canonical" href="{{ current_url | safe }}" />
     <link rel="shortcut icon" href="/favicon.ico" />
-
-    {% if paginator and paginator.previous %}
-      <link rel="prev" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index - 1 }}" href="{{ paginator.previous | safe }}" />
-    {% elif page.earlier %}
-      <link rel="prev" title="{{ page.earlier.title }}" href="{{ page.earlier.permalink | safe }}" />
-    {% endif %}
-
-    {% if paginator and paginator.next %}
-      <link rel="next" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index + 1 }}" href="{{ paginator.next | safe }}" />
-    {% elif page.later %}
-      <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
-    {% endif %}
-
     <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
+
+    {%- if config.generate_feed %}
+    <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
+    {%- endif %}
+    {%- if paginator and paginator.previous %}
+    <link rel="prev" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index - 1 }}" href="{{ paginator.previous | safe }}" />
+    {%- elif page.earlier %}
+    <link rel="prev" title="{{ page.earlier.title }}" href="{{ page.earlier.permalink | safe }}" />
+    {%- endif %}
+    {%- if paginator and paginator.next %}
+    <link rel="next" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index + 1 }}" href="{{ paginator.next | safe }}" />
+    {%- elif page.later %}
+    <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
+    {%- endif %}
   </head>
   <body>
     <header>
       <div>
         <div class="title">
           <h1><img class="logo" src="{{ get_url(path="static/logo.png") }}" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
+          {%- if config.description %}
           <h2>{{ config.description }}</h2>
+          {%- endif %}
         </div>
 
         <nav>
