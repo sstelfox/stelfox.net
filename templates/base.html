@@ -27,6 +27,15 @@
     <meta name="description" content="{{ page.description }}" />
     {%- endif %}
 
+    <meta property="og:url" content="{{- current_url | safe -}}" />
+    <meta property="og:site_name" content="{{- config.title -}}" />
+
+    {%- if page %}
+    <meta property="og:type" content="article" />
+    {%- else %}
+    <meta property="og:type" content="website" />
+    {%- endif %}
+
     <link rel="canonical" href="{{ current_url | safe }}" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
