@@ -2,9 +2,14 @@
 
 {% import "macros/article.html" as article_macros %}
 
-{% block content %}
+{%- block title -%}
+  {{ section.title }} &mdash; {{ config.title }}
+{%- endblock title -%}
+
+{%- block content %}
   {{ section.content | safe }}
 
+  {# TODO: I don't know if I need both of these here... #}
   {% if paginator %}
     {% set pages = paginator.pages %}
   {% else %}
@@ -14,4 +19,4 @@
   {% for page in pages %}
     {{ article_macros::article_listing(page=page) }}
   {% endfor %}
-{% endblock content %}
+{%- endblock content %}

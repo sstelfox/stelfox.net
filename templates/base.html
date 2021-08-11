@@ -27,7 +27,10 @@
     <meta name="description" content="{{ page.description }}" />
     {%- endif %}
 
+    {#- 404 page does not have current URL #}
+    {%- if current_url %}
     <meta property="og:url" content="{{- current_url | safe -}}" />
+    {%- endif %}
     <meta property="og:site_name" content="{{- config.title -}}" />
 
     {%- if page %}
@@ -36,7 +39,9 @@
     <meta property="og:type" content="website" />
     {%- endif %}
 
+    {%- if current_url %}
     <link rel="canonical" href="{{ current_url | safe }}" />
+    {%- endif %}
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
 
@@ -56,44 +61,43 @@
   </head>
   <body>
     <header>
-      <div>
-        <div class="title">
-          <h1><img class="logo" src="{{ get_url(path="logo.png") }}" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
-          {%- if config.description %}
-          <h2>{{ config.description }}</h2>
-          {%- endif %}
-        </div>
-
-        <nav>
-          <ul>
-            {%- for item in config.extra.top_menu %}
-              {%- set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
-              {%- set root_url = config.base_url ~ '/' %}
-
-              {%- if current_url == link_url %}
-                {%- set is_active = true %}
-              {%- elif link_url != root_url and current_url is starting_with(link_url) %}
-                {%- set is_active = true %}
-              {%- else %}
-                {%- set is_active = false %}
-              {%- endif %}
-              <li><a {% if is_active %}class="active" {% endif %}href="{{- link_url | safe -}}">{{- item.name -}}</a></li>
-            {%- endfor %}
-          </ul>
-        </nav>
-
-        <form method="get" action="{{ get_url(path="@/search.md") }}">
-          <fieldset>
-            <label class="hidden" for="s">Site Search</label>
-            <input type="text" id="d" name="s" value="" placeholder="Search..." />
-            <button type="submit">Search</button>
-          </fieldset>
-        </form>
+      <div class="title">
+        <h1><img class="logo" src="{{ get_url(path="logo.png") }}" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
+        {%- if config.description %}
+        <h2>{{ config.description }}</h2>
+        {%- endif %}
       </div>
+
+      <nav>
+        <ul>
+          {%- for item in config.extra.top_menu %}
+            {%- set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
+            {%- set root_url = config.base_url ~ '/' %}
+
+            {%- if current_url and current_url == link_url %}
+              {%- set is_active = true %}
+            {%- elif link_url != root_url and current_url and current_url is starting_with(link_url) %}
+              {%- set is_active = true %}
+            {%- else %}
+              {%- set is_active = false %}
+            {%- endif %}
+            <li><a {% if is_active %}class="active" {% endif %}href="{{- link_url | safe -}}">{{- item.name -}}</a></li>
+          {%- endfor %}
+        </ul>
+      </nav>
+
+      <form method="get" action="{{ get_url(path="@/search.md") }}">
+        <fieldset>
+          <label class="hidden" for="s">Site Search</label>
+          <input type="text" id="d" name="s" value="" placeholder="Search..." />
+          <button type="submit">Search</button>
+        </fieldset>
+      </form>
     </header>
 
     <main>
-      {% block content %}{% endblock content %}
+      {%- block content %}
+      {%- endblock content %}
     </main>
 
     <footer>

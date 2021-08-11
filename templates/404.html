@@ -1,57 +1,9 @@
-<!DOCTYPE html>
-<html lang="{% if lang %}{{ lang }}{% else %}en{% endif %}">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+{% extends "base.html" %}
 
-    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+{%- block title -%}
+  Page Not Found &mdash; {{ config.title }}
+{%- endblock title -%}
 
-    {% if config.generate_feed %}
-      <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
-    {% endif %}
-
-    <link rel="shortcut icon" href="/favicon.ico" />
-
-    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}" />
-  </head>
-  <body>
-    <header>
-      <div>
-        <div class="title">
-          <h1><img class="logo" src="{{ get_url(path="static/logo.png") }}" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
-          <h2>{{ config.description }}</h2>
-        </div>
-
-        <nav>
-          <ul>
-            {% for item in config.extra.top_menu %}
-              {% set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
-              <li><a href="{{ link_url | safe }}">{{ item.name }}</a></li>
-            {% endfor %}
-          </ul>
-        </nav>
-
-        <form method="get" action="{{ get_url(path="@/search.md") }}">
-          <fieldset>
-            <label class="hidden" for="s">Site Search</label>
-            <input type="text" id="d" name="s" value="" placeholder="Search..." />
-            <button type="submit">Search</button>
-          </fieldset>
-        </form>
-      </div>
-    </header>
-
-    <main>
-      <section class="not-found">
-        <h1>404 Page Not Found</h1>
-      </section>
-    </main>
-
-    <footer>
-      <div class="copyright">
-        <p>&copy; 2011 &ndash; {{ now() | date(format="%Y") }} Sam Stelfox.</p>
-      </div>
-    </footer>
-  </body>
-</html>
-
+{%- block content %}
+  <h1>404 Page Not Found</h1>
+{%- endblock content %}
