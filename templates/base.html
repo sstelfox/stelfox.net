@@ -31,7 +31,18 @@
     {%- endif -%}
 
     {%- if page -%}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ page.title }}" />
+      {%- if page.extra.author_twitter %}
+    <meta name="twitter:site" content="{{ page.extra.author_twitter }}" />
+      {%- elif config.extra.author_twitter %}
+    <meta name="twitter:site" content="{{ config.extra.author_twitter }}" />
+      {%- endif %}
+      {%- if page.description %}
+    <meta name="twitter:description" content="{{ page.description }}" />
+      {%- endif %}
       {%- if page.extra.image %}
+    <meta property="twitter:image" content="{{ page.extra.image | safe }}" />
     <meta property="og:image" content="{{ page.extra.image | safe }}" />
       {%- endif %}
       {%- if page.extra.audio %}
