@@ -1,66 +1,86 @@
-{% macro next_pager_arrow(pager) %}
-  {% set pager_url = self::pager_url(pager=pager, index=pager.current_index + 1) | trim %}
+{% macro next_paginator_arrow(paginator) %}
+  {%- set paginator_url = pagination_macros::paginator_url(paginator=paginator, index=paginator.current_index + 1) | trim -%}
 
-  <a class="page-link next" href="{{ pager_url | safe }}">
+  <a class="page-link next" href="{{ paginator_url | safe }}">
     <span class="screen-reader-text">Next page</span>
     <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
       <line x1="4" y1="12" x2="20" y2="12"></line>
       <polyline points="14 6 20 12 14 18"></polyline>
     </svg>
   </a>
-{% endmacro next_pager_arrow %}
+{% endmacro next_paginator_arrow %}
 
-{% macro pager_number_link(pager, index=0) %}
-  {% set safe_index = self::safe_pager_index(pager=pager, index=index) | int %}
-  {% set pager_url = self::pager_url(pager=pager, index=safe_index) | trim %}
+{% macro paginator_number_link(paginator, index=0) %}
+  {%- set safe_index = pagination_macros::safe_paginator_index(paginator=paginator, index=index) | int %}
+  {%- set paginator_url = pagination_macros::paginator_url(paginator=paginator, index=safe_index) | trim %}
 
-  {% if pager.current_index == safe_index %}
+  {%- if paginator.current_index == safe_index %}
     <span class="page-link current" aria-current="page"><span class="screen-reader-text">Current page:</span>{{ safe_index }}</span>
-  {% else %}
-    <a class="page-link" href="{{ pager_url | safe }}"><span class="screen-reader-text">Page:</span>{{ safe_index }}</a>
-  {% endif %}
-{% endmacro pager_number_link %}
+  {%- else %}
+    <a class="page-link" href="{{ paginator_url | safe }}"><span class="screen-reader-text">Page:</span>{{ safe_index }}</a>
+  {%- endif %}
+{% endmacro paginator_number_link %}
 
-{% macro pager_url(pager, index=0) %}
-  {% set index = self::safe_pager_index(pager=pager, index=index) | trim %}
-  {{ pager.base_url ~ index }}
-{% endmacro pager_url %}
+{% macro paginator_url(paginator, index=0) %}
+  {%- set index = pagination_macros::safe_paginator_index(paginator=paginator, index=index) | trim %}
 
-{% macro previous_pager_arrow(pager) %}
-  {% set pager_url = self::pager_url(pager=pager, index=pager.current_index - 1) | trim %}
+  {{- paginator.base_url ~ index -}}
+{% endmacro paginator_url %}
 
-  <a class="page-link prev" href="{{ pager_url | safe }}">
+{% macro previous_paginator_arrow(paginator) %}
+  {%- set paginator_url = pagination_macros::paginator_url(paginator=paginator, index=paginator.current_index - 1) | trim -%}
+
+  <a class="page-link prev" href="{{ paginator_url | safe }}">
     <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
       <line x1="20" y1="12" x2="4" y2="12"></line>
       <polyline points="10 18 4 12 10 6"></polyline>
     </svg>
     <span class="screen-reader-text">Previous page</span>
   </a>
-{% endmacro prev_page_arrow %}
+{% endmacro previous_paginator_arrow %}
 
-{% macro safe_pager_index(pager, index) %}
-  {% set max_idx = pager.number_pagers + 1 %}
-  {% if index < 1 %}{% set index = 1 %}{% endif %}
-  {% if index > max_idx %}{% set index = max_idx %}{% endif %}
-  {{ index }}
-{% endmacro safe_pager_index %}
+{% macro safe_paginator_index(paginator, index) %}
+  {%- set max_idx = paginator.number_pagers + 1 %}
 
-{% macro section(pager) %}
-  <nav class="section-pagination">
-    {% if pager.previous %}{{ self::previous_pager_arrow(pager=pager) }}{% endif %}
-    {{ self::pager_number_link(pager=pager, index=1) }}
+  {%- if index < 1 %}
+    {%- set index = 1 %}
+  {%- endif %}
 
-    {% if pager.current_index > 2 %}<span class="page-link dots">…</span>{% endif %}
+  {%- if index > max_idx %}
+    {%- set index = max_idx %}
+  {%- endif %}
 
-    {% for index in range(start=pager.current_index - 1, end=pager.current_index + 2) %}
-      {% if index > 1 and index < pager.number_pagers %}
-        {{ self::pager_number_link(pager=pager, index=index) }}
-      {% endif %}
-    {% endfor %}
+  {{- index -}}
+{% endmacro safe_paginator_index %}
 
-    {% if pager.current_index < pager.number_pagers - 2 %}<span class="page-link dots">…</span>{% endif %}
+{% macro section(paginator) %}
+  {%- if paginator %}
+  <nav>
+    {%- if paginator.previous %}
+      {{- pagination_macros::previous_paginator_arrow(paginator=paginator) }}
+    {%- endif %}
 
-    {{ self::pager_number_link(pager=pager, index=pager.number_pagers) }}
-    {% if pager.next %}{{ self::next_pager_arrow(pager=pager) }}{% endif %}
+    {{- pagination_macros::paginator_number_link(paginator=paginator, index=1) }}
+
+    {%- if paginator.current_index > 2 -%}
+    <span class="page-link dots">…</span>
+    {%- endif %}
+
+    {%- for index in range(start=paginator.current_index - 1, end=paginator.current_index + 2) %}
+      {%- if index > 1 and index < paginator.number_pagers %}
+        {{- pagination_macros::paginator_number_link(paginator=paginator, index=index) }}
+      {%- endif %}
+    {%- endfor %}
+
+    {%- if paginator.current_index < paginator.number_pagers - 2 %}
+    <span class="page-link dots">…</span>
+    {%- endif %}
+
+    {{- pagination_macros::paginator_number_link(paginator=paginator, index=paginator.number_pagers) }}
+
+    {%- if paginator.next %}
+      {{- pagination_macros::next_paginator_arrow(paginator=paginator) }}
+    {%- endif %}
   </nav>
+  {%- endif %}
 {% endmacro render_section %}

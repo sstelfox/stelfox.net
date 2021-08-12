@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
-{% import "macros/pagination.html" as pagination %}
+{% import "macros/article.html" as article_macros %}
+{% import "macros/pagination.html" as pagination_macros %}
 
 {%- block content %}
-  {%- if paginator %}
-    {{- pagination::section(pager=paginator) }}
-  {%- endif %}
+  {{- section.content | safe }}
+
+  {%- for page in paginator.pages %}
+    {{ article_macros::article_listing(page=page) }}
+  {%- endfor %}
+
+  {{- pagination_macros::section(paginator=paginator) }}
 {%- endblock content %}
