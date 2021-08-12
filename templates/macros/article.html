@@ -23,11 +23,9 @@
       {{- self::article_info(page=page) -}}
     </header>
 
-  {%- if page.summary %}
-    <div class="content article-summary">{{ page.summary | safe }}</div>
+  {%- if page.description %}
+    <div class="content article-description">{{ page.description }}</div>
   {% endif -%}
-
-    <div><a href="{{ page.permalink | safe }}">Read more...</a></div>
   </article>
 {% endmacro article_listing %}
 
@@ -83,7 +81,7 @@
         {%- endif %}
       </li>
     {%- endfor %}
-      </ul>
-    </nav>
+    </ul>
+  </nav>
   {%- endif %}
 {% endmacro article_toc %}

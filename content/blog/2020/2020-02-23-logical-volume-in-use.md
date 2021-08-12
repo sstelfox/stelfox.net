@@ -2,6 +2,10 @@
 title: Logical Volume in Use
 date: 2020-02-23T20:09:02-04:00
 
+description: |-
+  A quick trick to identify and disable a process that is preventing the
+  unmounting of an LVM volume.
+
 aliases:
   - /blog/2020/02/logical-volume-in-use/
 slug: logical-volume-in-use
