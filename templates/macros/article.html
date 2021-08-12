@@ -1,63 +1,62 @@
 {% macro article_info(page) %}
-  <header class="article-info">
-    {% if page.date %}
-      <span class="article-date">{{ page.date | date(format="%F") }}</span>
-    {% endif %}
+  <div class="article-info">
+  {%- if page.date %}
+    <span class="article-date">{{ page.date | date(format="%F") }}</span>
+  {%- endif %}
 
-    {% if page.word_count %}
-      <span class="article-word-count">{{ page.word_count }} words</span>
-    {% endif %}
+  {%- if page.word_count %}
+    <span class="article-word-count">{{ page.word_count }} words</span>
+  {%- endif %}
 
-    {% if page.reading_time %}
-      <span class="article-reading-time">{{ page.reading_time }} minutes</span>
-    {% endif %}
+  {%- if page.reading_time %}
+    <span class="article-reading-time">{{ page.reading_time }} minutes</span>
+  {%- endif %}
 
-    {% if page.taxonomies.tags %}
+  {%- if page.taxonomies.tags %}
     <ul>
-      {% for tag in page.taxonomies.tags %}
+    {%- for tag in page.taxonomies.tags %}
       <li><a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">#{{ tag }}</a></li>
-      {% endfor %}
+    {%- endfor %}
     </ul>
-    {% endif %}
-  </header>
+  {%- endif %}
+  </div>
 {% endmacro article_info %}
 
 {% macro article_listing(page) %}
   <article class="article-list">
     <header>
       <h1><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h1>
-
-      {{ self::article_info(page=page) }}
+      {{- self::article_info(page=page) -}}
     </header>
 
-    {% if page.summary %}
-      <div class="content article-summary">{{ page.summary | safe }}</div>
-    {% endif %}
+  {%- if page.summary %}
+    <div class="content article-summary">{{ page.summary | safe }}</div>
+  {% endif -%}
 
-    <div><a href="{{ page.permalink }}">Read more...</a></div>
+    <div><a href="{{ page.permalink | safe }}">Read more...</a></div>
   </article>
 {% endmacro article_listing %}
 
 {% macro article_pagination(page) %}
-  {% if page.earlier or page.later %}
-    <nav class="article-pagination">
-      {% if page.earlier %}
-        <a class="previous" href="{{ page.earlier.permalink }}">&lt; {{ page.earlier.title }}</a>
-      {% endif %}
+  {%- if page.earlier or page.later %}
+  <nav class="article-pagination">
+    {%- if page.earlier %}
+    <a class="previous" href="{{ page.earlier.permalink | safe }}">&lt; {{ page.earlier.title }}</a>
+    {%- endif %}
 
-      {% if page.later %}
-        <a class="next" href="{{ page.later.permalink }}">{{ page.later.title }} &gt;</a>
-      {% endif %}
-    </nav>
-  {% elif page.lighter or page.heavier %}
-    <nav class="section-pagination">
-      {% if page.lighter %}
-        <a class="previous" href="{{ page.lighter.permalink }}">&lt; {{ page.lighter.title }}</a>
-      {% endif %}
+    {%- if page.later %}
+    <a class="next" href="{{ page.later.permalink | safe }}">{{ page.later.title }} &gt;</a>
+    {%- endif %}
+  </nav>
+  {%- elif page.lighter or page.heavier %}
+  <nav class="section-pagination">
+    {%- if page.lighter %}
+    <a class="previous" href="{{ page.lighter.permalink | safe }}">&lt; {{ page.lighter.title }}</a>
+    {%- endif %}
 
-      {% if page.heavier %}
-        <a class="next" href="{{ page.heavier.permalink }}">{{ page.heavier.title }} &gt;</a>
-      {% endif %}
-    </nav>
-  {% endif %}
+    {%- if page.heavier %}
+    <a class="next" href="{{ page.heavier.permalink | safe }}">{{ page.heavier.title }} &gt;</a>
+    {%- endif %}
+  </nav>
+  {%- endif %}
 {% endmacro article_pagination %}

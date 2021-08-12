@@ -34,9 +34,9 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="{{ page.title }}" />
       {%- if page.extra.author_twitter %}
-    <meta name="twitter:site" content="{{ page.extra.author_twitter }}" />
+    <meta name="twitter:creator" content="{{ page.extra.author_twitter }}" />
       {%- elif config.extra.author_twitter %}
-    <meta name="twitter:site" content="{{ config.extra.author_twitter }}" />
+    <meta name="twitter:creator" content="{{ config.extra.author_twitter }}" />
       {%- endif %}
       {%- if page.description %}
     <meta name="twitter:description" content="{{ page.description }}" />
@@ -123,19 +123,19 @@
 
       <nav>
         <ul>
-          {%- for item in config.extra.top_menu %}
-            {%- set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
-            {%- set root_url = config.base_url ~ '/' %}
+        {%- for item in config.extra.top_menu %}
+          {%- set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
+          {%- set root_url = config.base_url ~ '/' %}
 
-            {%- if current_url and current_url == link_url %}
-              {%- set is_active = true %}
-            {%- elif link_url != root_url and current_url and current_url is starting_with(link_url) %}
-              {%- set is_active = true %}
-            {%- else %}
-              {%- set is_active = false %}
-            {%- endif %}
-            <li><a {% if is_active %}class="active" {% endif %}href="{{- link_url | safe -}}">{{- item.name -}}</a></li>
-          {%- endfor %}
+          {%- if current_url and current_url == link_url %}
+            {%- set is_active = true %}
+          {%- elif link_url != root_url and current_url and current_url is starting_with(link_url) %}
+            {%- set is_active = true %}
+          {%- else %}
+            {%- set is_active = false %}
+          {%- endif %}
+          <li><a {% if is_active %}class="active" {% endif %}href="{{- link_url | safe -}}">{{- item.name -}}</a></li>
+        {%- endfor %}
         </ul>
       </nav>
 
