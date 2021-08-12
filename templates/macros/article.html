@@ -12,13 +12,7 @@
     <span class="article-reading-time">{{ page.reading_time }} minutes</span>
   {%- endif %}
 
-  {%- if page.taxonomies.tags %}
-    <ul>
-    {%- for tag in page.taxonomies.tags %}
-      <li><a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">#{{ tag }}</a></li>
-    {%- endfor %}
-    </ul>
-  {%- endif %}
+    {{- self::article_tag_list(page=page) }}
   </div>
 {% endmacro article_info %}
 
@@ -60,3 +54,36 @@
   </nav>
   {%- endif %}
 {% endmacro article_pagination %}
+
+{% macro article_tag_list(page) %}
+  {% if page.taxonomies.tags -%}
+  <ul>
+  {%- for tag in page.taxonomies.tags %}
+    <li><a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">#{{ tag }}</a></li>
+  {%- endfor %}
+  </ul>
+  {% endif -%}
+{% endmacro article_tag_list %}
+
+{% macro article_toc(page) %}
+  {%- if page.toc and page.extra.show_toc %}
+  <h2>Contents</h2>
+  <nav>
+    <ul>
+    {%- for h1 in page.toc %}
+      <li>
+        <a href="{{ h1.permalink | safe }}">{{ h1.title }}</a>
+
+        {%- if h1.children %}
+        <ul>
+          {%- for h2 in h1.children -%}
+          <li><a href="{{ h2.permalink | safe }}">{{ h2.title }}</a></li>
+          {%- endfor -%}
+        </ul>
+        {%- endif %}
+      </li>
+    {%- endfor %}
+      </ul>
+    </nav>
+  {%- endif %}
+{% endmacro article_toc %}
