@@ -7,8 +7,8 @@ taxonomies:
   - linux
 
 extra:
-  show_toc: true
   outdated: true
+  show_toc: true
 ---
 
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
