@@ -20,51 +20,60 @@
     {%- endif %}
 
     {%- if section.description %}
-    <meta name="description" content="{{ section.description }}" />
+    <meta name="og:description" content="{{ section.description }}" />
     {%- elif page.description %}
-    <meta name="description" content="{{ page.description }}" />
+    <meta name="og:description" content="{{ page.description }}" />
     {%- endif %}
 
     {#- 404 page does not have current URL #}
     {% if current_url -%}
-      <meta property="og:url" content="{{- current_url | safe -}}" />
+    <meta property="og:url" content="{{- current_url | safe -}}" />
     {% endif -%}
-    <meta property="og:site_name" content="{{- config.title -}}" />
+
     {% if page -%}
-      <meta property="og:type" content="article" />
+    <meta property="og:type" content="article" />
     {% else -%}
-      <meta property="og:type" content="website" />
-    {%- endif %}
+    <meta property="og:type" content="website" />
+    {%- endif -%}
+    <meta property="og:site_name" content="{{- config.title -}}" />
 
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
 
     {% if current_url -%}
-      <link rel="canonical" href="{{ current_url | safe }}" />
-    {% endif -%}
+    <link rel="canonical" href="{{ current_url | safe }}" />
+    {%- endif -%}
 
-    <link rel="shortcut icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
-
-    {%- if config.generate_feed %}
+    {# whitespace placeholder #}
+    {% if config.generate_feed -%}
     <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
-    {%- endif %}
-    {%- if paginator and paginator.previous %}
+    {%- endif -%}
+
+    {% if paginator and paginator.previous -%}
     <link rel="prev" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index - 1 }}" href="{{ paginator.previous | safe }}" />
     {%- elif page.earlier %}
     <link rel="prev" title="{{ page.earlier.title }}" href="{{ page.earlier.permalink | safe }}" />
-    {%- endif %}
-    {%- if paginator and paginator.next %}
+    {%- elif page.lighter %}
+    <link rel="prev" title="{{ page.lighter.title }}" href="{{ page.lighter.permalink | safe }}" />
+    {%- endif -%}
+
+    {% if paginator and paginator.next -%}
     <link rel="next" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index + 1 }}" href="{{ paginator.next | safe }}" />
     {%- elif page.later %}
     <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
-    {%- endif %}
+    {%- elif page.heavier %}
+    <link rel="next" title="{{ page.heavier.title }}" href="{{ page.heavier.permalink | safe }}" />
+    {%- endif -%}
+
+    {# whitespace placeholder #}
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
   </head>
   <body>
     <header>
       <div class="title">
         <h1><img class="logo" src="{{ get_url(path="logo.png") }}" alt="" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
-        {%- if config.description %}
-        <h2>{{ config.description }}</h2>
+        {% if config.description -%}
+          <h2>{{ config.description }}</h2>
         {%- endif %}
       </div>
 
