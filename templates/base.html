@@ -5,104 +5,42 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {{ header_macros::theme_color_tags() }}
-
-    {%- if section.title %}
-    <meta property="og:title" content="{{ section.title }}" />
-    {%- elif page.title %}
-    <meta property="og:title" content="{{ page.title }}" />
-    {%- endif %}
-
-    {%- if section.description %}
-    <meta name="og:description" content="{{ section.description }}" />
-    {%- elif page.description %}
-    <meta name="og:description" content="{{ page.description }}" />
-    {%- endif %}
-
-    {#- 404 page does not have current URL #}
-    {% if current_url -%}
-    <meta property="og:url" content="{{- current_url | safe -}}" />
-    {%- endif -%}
-
-    {%- if page -%}
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{{ page.title }}" />
-      {%- if page.extra.author_twitter %}
-    <meta name="twitter:creator" content="{{ page.extra.author_twitter }}" />
-      {%- elif config.extra.author_twitter %}
-    <meta name="twitter:creator" content="{{ config.extra.author_twitter }}" />
-      {%- endif %}
-      {%- if page.description %}
-    <meta name="twitter:description" content="{{ page.description }}" />
-      {%- endif %}
-      {%- if page.extra.image %}
-    <meta property="twitter:image" content="{{ page.extra.image | safe }}" />
-    <meta property="og:image" content="{{ page.extra.image | safe }}" />
-      {%- endif %}
-      {%- if page.extra.audio %}
-    <meta property="og:audio" content="{{ page.extra.audio | safe }}" />
-      {%- endif %}
-      {%- if page.extra.video %}
-    <meta property="og:video" content="{{ page.extra.video | safe }}" />
-      {%- endif %}
-    <meta property="og:type" content="article" />
-      {%- if page.extra.author %}
-    <meta property="article:author" content="{{ page.extra.author }}" />
-      {%- elif config.extra.author %}
-    <meta property="article:author" content="{{ config.extra.author }}" />
-      {%- endif %}
-      {%- if page.ancestors %}
-      {%- set parent_path = page.ancestors | last %}
-      {%- set parent_section = get_section(path=parent_path) %}
-    <meta property="article:section" content="{{ parent_section.title }}" />
-      {%- endif -%}
-      {%- if page.date %}
-    <meta property="article:published_time" content="{{ page.date | date(format="%+") }}" />
-      {%- endif -%}
-      {%- if page.updated %}
-    <meta property="article:modified_time" content="{{ page.updated | date(format="%+") }}" />
-      {%- endif -%}
-      {%- if page.extra.expired %}
-    <meta property="article:expiration_time" content="{{ page.extra.expired | date(format="%+") }}" />
-      {%- endif -%}
-      {%- if page.taxonomies.tags %}
-        {%- for tag in page.taxonomies.tags %}
-    <meta property="article:tag" content="{{ tag }}" />
-        {%- endfor -%}
-      {%- endif -%}
-    {%- else -%}
-    <meta property="og:type" content="website" />
-    {%- endif %}
-    <meta property="og:site_name" content="{{- config.title -}}" />
 
     <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    {% if page %}
+      {{- header_macros::twitter_card(page=page) }}
+      {{- header_macros::opengraph_tags(page=page, article=true) }}
+    {%- elif section %}
+      {{- header_macros::twitter_card(page=section) }}
+      {{- header_macros::opengraph_tags(page=section, article=false) }}
+    {%- endif %}
 
-    {% if current_url -%}
+    {{- header_macros::theme_color_tags() }}
+
+    {%- if current_url %}
     <link rel="canonical" href="{{ current_url | safe }}" />
-    {%- endif -%}
+    {%- endif %}
 
-    {# whitespace placeholder #}
-    {% if config.generate_feed -%}
+    {%- if config.generate_feed %}
     <link rel="alternate" type={% if config.feed_filename == "atom.xml" %}"application/atom+xml"{% else %}"application/rss+xml"{% endif %} title="{{ config.title }}" href="{{ get_url(path=config.feed_filename) | safe }}" />
-    {%- endif -%}
+    {%- endif %}
 
-    {% if paginator and paginator.previous -%}
+    {%- if paginator and paginator.previous %}
     <link rel="prev" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index - 1 }}" href="{{ paginator.previous | safe }}" />
     {%- elif page.earlier %}
     <link rel="prev" title="{{ page.earlier.title }}" href="{{ page.earlier.permalink | safe }}" />
     {%- elif page.lighter %}
     <link rel="prev" title="{{ page.lighter.title }}" href="{{ page.lighter.permalink | safe }}" />
-    {%- endif -%}
+    {%- endif %}
 
-    {% if paginator and paginator.next -%}
+    {%- if paginator and paginator.next %}
     <link rel="next" title="{{ section.title }} &mdash; Archive Page {{ paginator.current_index + 1 }}" href="{{ paginator.next | safe }}" />
     {%- elif page.later %}
     <link rel="next" title="{{ page.later.title }}" href="{{ page.later.permalink | safe }}" />
     {%- elif page.heavier %}
     <link rel="next" title="{{ page.heavier.title }}" href="{{ page.heavier.permalink | safe }}" />
-    {%- endif -%}
+    {%- endif %}
 
-    {# whitespace placeholder #}
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="stylesheet" href="{{ get_url(path="site.css", trailing_slash=false) | safe }}"  {# integrity="sha384-{{ get_file_hash(path="site.css", sha_type=384, base64=true) | safe }}" #}/>
   </head>
@@ -110,10 +48,7 @@
     <header>
       <div>
         <div class="title">
-          <h1><img class="logo" src="{{ get_url(path="logo.png") }}" alt="" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
-        {% if config.description -%}
-          <h2>{{ config.description }}</h2>
-        {%- endif %}
+          <h1><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
         </div>
 
         <nav>
