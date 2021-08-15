@@ -1,22 +1,16 @@
+{% import "macros/header.html" as header_macros %}
+
 <!DOCTYPE html>
 <html lang="{% if lang %}{{ lang }}{% else %}en{% endif %}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    {%- if config.extra.dark_theme_color and config.extra.light_theme_color %}
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ config.extra.dark_theme_color }}" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ config.extra.light_theme_color }}" />
-    {%- elif config.extra.dark_theme_color %}
-    <meta name="theme-color" dark)" content="{{ config.extra.dark_theme_color }}" />
-    {%- elif config.extra.light_theme_color %}
-    <meta name="theme-color" dark)" content="{{ config.extra.light_theme_color }}" />
-    {%- endif %}
+    {{ header_macros::theme_color_tags() }}
 
     {%- if section.title %}
-    <meta property="og:title" content="{% block og_title %}{{ section.title }}{% endblock og_title %}" />
+    <meta property="og:title" content="{{ section.title }}" />
     {%- elif page.title %}
-    <meta property="og:title" content="{% block og_title %}{{ page.title }}{% endblock og_title %}" />
+    <meta property="og:title" content="{{ page.title }}" />
     {%- endif %}
 
     {%- if section.description %}

@@ -1,0 +1,10 @@
+{% macro theme_color_tags() %}
+  {%- if config.extra.dark_theme_color and config.extra.light_theme_color %}
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="{{ config.extra.dark_theme_color }}" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="{{ config.extra.light_theme_color }}" />
+  {%- elif config.extra.dark_theme_color %}
+    <meta name="theme-color" dark)" content="{{ config.extra.dark_theme_color }}" />
+  {%- elif config.extra.light_theme_color %}
+    <meta name="theme-color" dark)" content="{{ config.extra.light_theme_color }}" />
+  {%- endif %}
+{% endmacro %}
