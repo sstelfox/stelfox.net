@@ -114,38 +114,40 @@
   </head>
   <body>
     <header>
-      <div class="title">
-        <h1><img class="logo" src="{{ get_url(path="logo.png") }}" alt="" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
+      <div>
+        <div class="title">
+          <h1><img class="logo" src="{{ get_url(path="logo.png") }}" alt="" /><a href="{{ config.base_url | safe }}">{{ config.title }}</a></h1>
         {% if config.description -%}
           <h2>{{ config.description }}</h2>
         {%- endif %}
+        </div>
+
+        <nav>
+          <ul>
+          {%- for item in config.extra.top_menu %}
+            {%- set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
+            {%- set root_url = config.base_url ~ '/' %}
+
+            {%- if current_url and current_url == link_url %}
+              {%- set is_active = true %}
+            {%- elif link_url != root_url and current_url and current_url is starting_with(link_url) %}
+              {%- set is_active = true %}
+            {%- else %}
+              {%- set is_active = false %}
+            {%- endif %}
+            <li><a {% if is_active %}class="active" {% endif %}href="{{- link_url | safe -}}">{{- item.name -}}</a></li>
+          {%- endfor %}
+          </ul>
+        </nav>
+
+        <form method="get" action="{{ get_url(path="@/search.md") }}">
+          <fieldset>
+            <label class="hidden" for="s">Site Search</label>
+            <input type="text" id="d" name="s" value="" placeholder="Search..." />
+            <button type="submit">Search</button>
+          </fieldset>
+        </form>
       </div>
-
-      <nav>
-        <ul>
-        {%- for item in config.extra.top_menu %}
-          {%- set link_url = item.url | replace(from="$BASE_URL", to=config.base_url) %}
-          {%- set root_url = config.base_url ~ '/' %}
-
-          {%- if current_url and current_url == link_url %}
-            {%- set is_active = true %}
-          {%- elif link_url != root_url and current_url and current_url is starting_with(link_url) %}
-            {%- set is_active = true %}
-          {%- else %}
-            {%- set is_active = false %}
-          {%- endif %}
-          <li><a {% if is_active %}class="active" {% endif %}href="{{- link_url | safe -}}">{{- item.name -}}</a></li>
-        {%- endfor %}
-        </ul>
-      </nav>
-
-      <form method="get" action="{{ get_url(path="@/search.md") }}">
-        <fieldset>
-          <label class="hidden" for="s">Site Search</label>
-          <input type="text" id="d" name="s" value="" placeholder="Search..." />
-          <button type="submit">Search</button>
-        </fieldset>
-      </form>
     </header>
 
     {%- block content %}
