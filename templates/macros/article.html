@@ -1,7 +1,7 @@
 {% macro article_info(page) %}
   <div class="article-info">
   {%- if page.date %}
-    <span class="article-date">{{ page.date | date(format="%F") }}</span>
+    <span class="article-date">{{ page.date | date(format="%A, %B %-d, %Y") }}</span>
   {%- endif %}
 
   {%- if page.word_count %}
@@ -32,30 +32,38 @@
 {% macro article_pagination(page) %}
   {%- if page.earlier or page.later %}
   <nav class="article-pagination">
-    {%- if page.earlier %}
-    <a class="previous" href="{{ page.earlier.permalink | safe }}">&lt; {{ page.earlier.title }}</a>
-    {%- endif %}
+    <div class="previous">
+      {%- if page.earlier %}
+      <a href="{{ page.earlier.permalink | safe }}">&lt; {{ page.earlier.title }}</a>
+      {%- endif %}
+    </div>
 
-    {%- if page.later %}
-    <a class="next" href="{{ page.later.permalink | safe }}">{{ page.later.title }} &gt;</a>
-    {%- endif %}
+    <div class="next">
+      {%- if page.later %}
+      <a href="{{ page.later.permalink | safe }}">{{ page.later.title }} &gt;</a>
+      {%- endif %}
+    </div>
   </nav>
   {%- elif page.lighter or page.heavier %}
-  <nav class="section-pagination">
-    {%- if page.lighter %}
-    <a class="previous" href="{{ page.lighter.permalink | safe }}">&lt; {{ page.lighter.title }}</a>
-    {%- endif %}
+  <nav class="article-pagination">
+    <div class="previous">
+      {%- if page.lighter %}
+      <a href="{{ page.lighter.permalink | safe }}">&lt; {{ page.lighter.title }}</a>
+      {%- endif %}
+    </div>
 
-    {%- if page.heavier %}
-    <a class="next" href="{{ page.heavier.permalink | safe }}">{{ page.heavier.title }} &gt;</a>
-    {%- endif %}
+    <div class="next">
+      {%- if page.heavier %}
+      <a href="{{ page.heavier.permalink | safe }}">{{ page.heavier.title }} &gt;</a>
+      {%- endif %}
+    </div>
   </nav>
   {%- endif %}
 {% endmacro article_pagination %}
 
 {% macro article_tag_list(page) %}
   {% if page.taxonomies.tags -%}
-  <ul>
+  <ul class="article-tags">
   {%- for tag in page.taxonomies.tags %}
     <li><a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">#{{ tag }}</a></li>
   {%- endfor %}
