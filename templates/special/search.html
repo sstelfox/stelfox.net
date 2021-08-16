@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 
+{%- block content %}
+<div class="search-results">
+  <div class="search-results-items"></div>
+</div>
+{%- endblock content %}
+
 {%- block extra_javascript %}
-<script src="{{ get_url(path="search.js") }}" integrity="sha384-{{ get_file_hash(path="search.js", sha_type=384, base64=true) | safe }}"></script>
+<script src="{{ get_url(path="elasticlunr.min.js") }}"></script>
+<script src="{{ get_url(path="search_index.en.js") }}"></script>
+<script src="{{ get_url(path="search.js") }}" ></script>
 {%- endblock extra_javascript %}

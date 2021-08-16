@@ -17,16 +17,10 @@
 {% endmacro article_info %}
 
 {% macro article_listing(page) %}
-  <article class="article-list">
-    <header>
-      <h1><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h1>
-      {{- self::article_info(page=page) -}}
-    </header>
-
-  {%- if page.description %}
-    <div class="content article-description">{{ page.description }}</div>
-  {% endif -%}
-  </article>
+  <div class="article-listing">
+    <h4><a href="{{ page.permalink | safe }}">{{ page.title }}</a></h4>
+    {{- self::article_info(page=page) -}}
+  </div>
 {% endmacro article_listing %}
 
 {% macro article_pagination(page) %}

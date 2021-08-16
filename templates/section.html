@@ -8,10 +8,12 @@
 {%- endblock title -%}
 
 {%- block content %}
-  {{- section.content | safe }}
+  <div>
+    {{- section.content | safe }}
+  </div>
 
   {%- for page in paginator.pages %}
-    {{ article_macros::article_listing(page=page) }}
+  {{ article_macros::article_listing(page=page) }}
   {%- endfor %}
 
   {{- pagination_macros::navigation_links(paginator=paginator) }}
