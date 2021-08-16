@@ -1,7 +1,7 @@
 {% macro next_paginator_arrow(paginator) %}
   {%- set paginator_url = pagination_macros::paginator_url(paginator=paginator, index=paginator.current_index + 1) | trim -%}
 
-  <a class="page-link next" href="{{ paginator_url | safe }}">
+  <a class="pagination-link next" href="{{ paginator_url | safe }}">
     <span class="screen-reader-text">Next page</span>
     <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
       <line x1="4" y1="12" x2="20" y2="12"></line>
@@ -15,9 +15,9 @@
   {%- set paginator_url = pagination_macros::paginator_url(paginator=paginator, index=safe_index) | trim %}
 
   {%- if paginator.current_index == safe_index %}
-    <span class="page-link current" aria-current="page"><span class="screen-reader-text">Current page:</span>{{ safe_index }}</span>
+    <span class="pagination-link current" aria-current="page"><span class="screen-reader-text">Current page:</span>{{ safe_index }}</span>
   {%- else %}
-    <a class="page-link" href="{{ paginator_url | safe }}"><span class="screen-reader-text">Page:</span>{{ safe_index }}</a>
+    <a class="pagination-link" href="{{ paginator_url | safe }}"><span class="screen-reader-text">Page:</span>{{ safe_index }}</a>
   {%- endif %}
 {% endmacro paginator_number_link %}
 
@@ -30,7 +30,7 @@
 {% macro previous_paginator_arrow(paginator) %}
   {%- set paginator_url = pagination_macros::paginator_url(paginator=paginator, index=paginator.current_index - 1) | trim -%}
 
-  <a class="page-link prev" href="{{ paginator_url | safe }}">
+  <a class="pagination-link prev" href="{{ paginator_url | safe }}">
     <svg class="icon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="true">
       <line x1="20" y1="12" x2="4" y2="12"></line>
       <polyline points="10 18 4 12 10 6"></polyline>
@@ -63,7 +63,7 @@
     {{- pagination_macros::paginator_number_link(paginator=paginator, index=1) }}
 
     {%- if paginator.current_index > 2 -%}
-    <span class="page-link dots">…</span>
+    <span class="pagination-link dots">…</span>
     {%- endif %}
 
     {%- for index in range(start=paginator.current_index - 1, end=paginator.current_index + 2) %}
@@ -73,7 +73,7 @@
     {%- endfor %}
 
     {%- if paginator.current_index < paginator.number_pagers - 2 %}
-    <span class="page-link dots">…</span>
+    <span class="pagination-link dots">…</span>
     {%- endif %}
 
     {{- pagination_macros::paginator_number_link(paginator=paginator, index=paginator.number_pagers) }}
