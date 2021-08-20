@@ -24,31 +24,37 @@ badge life badge.
 
 ## Riding the Badge Life
 
-Badge life badges (hereafter referred to just as badges), may not have started
-at the DEF CON conference but they certainly sprung off and became popular
-there. Glowing puzzles, artfully created to draw attention, designed and built
-to be worn.
+Before I can go further I need to give a little bit of background. I don't know
+where Badge Life badges originated but I know DEF CON was a major influencer.
+Pieces of silicon and other substrates hanging off of lanyards, on wristbands,
+as belt buckles or hats these badges show off your affiliations, puzzle solving
+or other skills.
 
-Some versions of badges exist as singlets, there is only ever one, but they're
-a unique creative piece being shown off to the world. More commonly, badges are
-produced at under 100 and given out to specific people. These people are
-usually pre-determined, a member of a group, backers of a kick starter, first
-people to solve a puzzle, etc. In some cases (I really just know about DEF CON
-here), they're produced in the thousands as an attendee badge.
+Some versions of badges exist as singlets as a unique creative piece being
+shown off to the world. More commonly, badges are produced at volumes under 100
+and given out to specific people. These people are frequently pre-determined, a
+member of a group, backers of a kick starter, first people to solve a puzzle,
+etc. In some cases (I really just know about DEF CON here), they're produced in
+the thousands as an attendee badge.
 
-These badges are designed to be worn, frequently on a lanyard around a person's
-neck, and their primary purpose is to be noticed.
+You've probably guessed by now, but this project is at least partially going to
+be a Badge Life badge, which is going to give us our initial project
+requirements:
 
-I've given you a bit of background but from that paragraph we already have some
-initial primary requirements for this project:
-
-* Capable of being worn
+* Designed to be worn / displayed
 * Flashy
 * Unique
 
-These are very broad but they are a starting point and do put a surprising
-amount of constraints on what we're trying for. Weight will be restricted if
-you expect people to want to wear it. A lot of cool ideas have already been
-done.
+When starting a project I don't think at this level... And for this one I
+didn't even start at a badge but I'll get there. I've wanted to make a Badge
+Life badge for years and have either never got it done for the target, or never
+got around to it. But I took notes. Attempts, ideas, failures, what others have
+done... I've kept a running document tracking things. When I'm starved for
+ideas (even on other projects), going through these notes can get me back into
+that missing excitement that frequently is the source of my mental block.
 
 ## The Birth of an Idea
+
+I was asked if I was interested in participating in a larger project and if I
+could come up with some ideas to help make it pop. On the spot I had nothing
+but I let it mull in my mind.
