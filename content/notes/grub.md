@@ -10,6 +10,9 @@ extra:
   done: true
   outdated: true
 ---
+Common Linux bootloader.
+
+<!-- more -->
 
 ## Security
 

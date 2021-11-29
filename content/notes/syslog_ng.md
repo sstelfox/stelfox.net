@@ -17,6 +17,8 @@ processing and log centralization while maintaining a sane configuration file
 syntax. I've recently come to vastly prefer it over my previous long term
 favorite [Rsyslog][1].
 
+<!-- more -->
+
 It's important to note that when modifying the logs statements, they will be
 processed in order. This means log statements that finalize a message will
 never make it past that statement. This finalization behavior can be a great

@@ -17,6 +17,8 @@ blacklists, and whitelists in an order specified by the administrator. The
 administrator can redirect offending pages to a block page (which has to be a
 hosted site outside of squid).
 
+<!-- more -->
+
 ## Installation
 
 Don't use the "squidGuard" service, it is incorrectly defined, looking

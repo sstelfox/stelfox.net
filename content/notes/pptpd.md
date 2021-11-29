@@ -15,6 +15,8 @@ I never got this working there was some kind of authentication issue between
 the client and server but there are almost not diagnostic messages here. Old
 software doesn't feel good.
 
+<!-- more -->
+
 ## Server
 
 Was done on Gentoo.

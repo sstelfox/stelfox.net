@@ -14,6 +14,8 @@ extra:
 This is relevant for TAILS version 2.5 and basically follows their install
 guide.
 
+<!-- more -->
+
 I needed 2 USB sticks each at least 4Gb in size, and a spare laptop to take
 these notes on and read the instructions.
 

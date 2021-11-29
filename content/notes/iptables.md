@@ -17,6 +17,8 @@ nftables has better performance but is incredibly complex and difficult to use.
 Until the tooling and usability around nftables is addressed iptables will
 likely remain the reigning champion.
 
+<!-- more -->
+
 It is important that your systems have effective ingress and egress rules.
 Depending on your host OS, you'll find your rule set stored in different
 locations but the following list are where I've seen them before:

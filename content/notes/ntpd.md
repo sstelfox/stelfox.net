@@ -16,6 +16,8 @@ computer systems over packet-switched, variable-latency data networks. NTP uses
 UDP on port 123 as its transport layer. It is designed particularly to resist
 the effects of variable latency by using a jitter buffer.
 
+<!-- more -->
+
 NTP also refers to a reference software implementation that is distributed by
 the NTP Public Services Project.
 

@@ -14,6 +14,8 @@ extra:
 Qpid is an open source AMQP broker, providing transaction management, queuing,
 distribution, security, management, clustering, and federation.
 
+<!-- more -->
+
 * [QpidSupport](https://wiki.openstack.org/wiki/QpidSupport)
 * [Advanced Message Queuing Protocol (AMQP)](https://www.linuxjournal.com/article/10379?page=0%2C1)
 

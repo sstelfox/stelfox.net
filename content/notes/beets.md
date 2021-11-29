@@ -14,6 +14,8 @@ extra:
 
 [Beets Official Documentation][1]
 
+<!-- more -->
+
 ## Installation
 
 ```

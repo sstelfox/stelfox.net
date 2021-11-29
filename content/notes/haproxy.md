@@ -10,6 +10,9 @@ extra:
   done: true
   outdated: true
 ---
+Specialized network proxy daemon.
+
+<!-- more -->
 
 ## Notes on Setup
 

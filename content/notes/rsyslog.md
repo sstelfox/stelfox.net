@@ -13,11 +13,11 @@ extra:
   outdated: true
 ---
 
-# RSyslog
-
 RSyslog is a more advanced replacement for the aging klogd and syslogd. It
 supports useful features such as attribute filtering, multiple protocol
 support, and logging to databases.
+
+<!-- more -->
 
 ## Security Notes
 

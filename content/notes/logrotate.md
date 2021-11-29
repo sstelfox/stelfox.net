@@ -15,6 +15,8 @@ Logrotate is a pretty simple and straight forward program. It's generally run
 as a nightly cron job testing the various configured file to see if they match
 their respective criteria for rotation.
 
+<!-- more -->
+
 After installing logrotate defaults are configured that are generally 'good
 enough' for most systems and generally include the default system logs in
 `/var/log`.

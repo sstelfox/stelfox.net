@@ -15,6 +15,8 @@ GRE encapsulates all layer 2 traffic, but does so through an unencrypted
 tunnel. Sensitive traffic should exclusively go through a lower level encrypted
 tunnel like IPSec.
 
+<!-- more -->
+
 ## Firewall
 
 The following iptables need to be enabled to allow the GRE traffic to and from

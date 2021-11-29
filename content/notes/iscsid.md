@@ -14,6 +14,8 @@ extra:
 This is the server configuration for iSCSI, please refer to [iSCSI][1] for the
 client portion.
 
+<!-- more -->
+
 ## Configuration
 
 Install the package `scsi-target-utils`.

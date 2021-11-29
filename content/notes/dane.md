@@ -18,6 +18,8 @@ fingerprints, reducing the overall reliance on the public CA infrastructure. It
 does this by creating a new DNS record type 'TLSA' for storing the raw value or
 hash of either the complete certificate or the public key.
 
+<!-- more -->
+
 [RFC 6698][1] defines four usages of DANE:
 
 * Usage 0: Used to specify a CA certificate, or public key of a certificate,

@@ -16,6 +16,8 @@ with an init script to startup it's server on boot so the following is an
 adaptation of another one custom written to handle this. It's primarily used in
 Fedora for Gnome's usability support which doesn't run the server as a daemon.
 
+<!-- more -->
+
 Listening to the samples of the stock voices, I've found that `ked` sounds the
 best in my opinion and at least until we here try and make our own diphone
 database this is the voice that I'm going to use.

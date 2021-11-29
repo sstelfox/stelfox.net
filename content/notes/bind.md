@@ -11,6 +11,9 @@ extra:
   done: true
   outdated: true
 ---
+Bind is a stable and well tested authoritative and recursive DNS server.
+
+<!-- more -->
 
 ## Firewall Adjustments
 

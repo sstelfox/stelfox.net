@@ -16,6 +16,8 @@ While it's described and primarily used as an audio streaming server, it would
 be more accurate to describe it as a media streaming server as it's perfectly
 capable of rebroadcasting video streams with or without audio.
 
+<!-- more -->
+
 ## Setup Process
 
 As of this writing Fedora 16 comes with Icecast version 2.3.2, the associated

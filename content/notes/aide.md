@@ -16,6 +16,8 @@ AIDE (Advanced Intrusion Detection Environment) is a file and directory
 integrity checker that compares the current hashes, permissions, and attributes
 of files directories against a known database built from the system.
 
+<!-- more -->
+
 This can be run periodically to detect manipulation of critical system files,
 though a motivated attacker with an appropriate level of permissions could
 modify this database or disable the check as long as the system is able to

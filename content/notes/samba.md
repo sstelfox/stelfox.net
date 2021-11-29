@@ -13,6 +13,8 @@ extra:
 
 FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
 
+<!-- more -->
+
 ## SELinux Adjustments
 
 SELinux hates Samba and with good reason. To allow authenticated clients to

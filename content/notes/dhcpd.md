@@ -12,6 +12,10 @@ extra:
   outdated: true
 ---
 
+Heavy but full featured open source DHCP server.
+
+<!-- more -->
+
 ## Firewall Adjustments
 
 ```

@@ -15,6 +15,8 @@ This is a mostly (95%) script-less installation and setup of OpenStack from
 scratch on a single host, though done in a way that the services could each be
 very easily broken out on to their own machines or multiple machines.
 
+<!-- more -->
+
 A few references that I've used generally for assistance figuring out what I
 need:
 

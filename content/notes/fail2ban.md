@@ -15,6 +15,8 @@ extra:
 fail2ban provides a vital service of blocking troublesome IPs from attempting
 brute force logins.
 
+<!-- more -->
+
 My immediate issue is that it requires a few packages off the bat that I do not
 want on my system. Specifically tcpwrappers and shorewall. My firewall scripts
 are stronger, easier to use, and IMHO more secure than what shorewall provides

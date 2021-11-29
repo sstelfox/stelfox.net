@@ -10,6 +10,9 @@ extra:
   done: true
   outdated: true
 ---
+Daemon for parsing and handling messages from USB and serial GPS adapters.
+
+<!-- more -->
 
 ## Installation
 

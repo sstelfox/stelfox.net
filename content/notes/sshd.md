@@ -19,6 +19,8 @@ information, notably passwords, in plaintext, rendering them susceptible to
 packet analysis. The encryption used by SSH provides confidentiality and
 integrity of data over an insecure network, such as the Internet.
 
+<!-- more -->
+
 ## Security Notes
 
 SSH is a crux service. An improperly configured SSH could be equivalent to

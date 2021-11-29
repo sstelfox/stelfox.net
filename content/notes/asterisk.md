@@ -19,6 +19,8 @@ other telephone services including the public switched telephone network (PSTN)
 and Voice over Internet Protocol (VoIP) services. Its name comes from the
 asterisk symbol, "*".
 
+<!-- more -->
+
 NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for
 the Linksys SPA3000 as well as ZRTP and SRTP support. It might be wise to look
 into using kamailio as a front end SIP router though this doesn't seem to be

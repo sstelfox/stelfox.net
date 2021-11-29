@@ -17,6 +17,8 @@ extra:
 
 Apache or httpd is a strong and well tested webserver.
 
+<!-- more -->
+
 ## Installation
 
 To install the Apache web server for this hardening guide on fedora run the

@@ -11,6 +11,9 @@ extra:
   done: true
   outdated: true
 ---
+Notes on making or refining systems to be highly available.
+
+<!-- more -->
 
 Packages of interest:
 

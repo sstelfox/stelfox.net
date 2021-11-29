@@ -16,6 +16,8 @@ extra:
 more functionality than I've personally needed. It is a fast and convenient way
 to setup and manage a multi-layer internal certificate authority.
 
+<!-- more -->
+
 I've used it to generate an internal root CA, with sub-CAs for internal only
 server certificates, and separate CAs for each domain of client certificates
 (such as VPN, log, mail, and LDAP servers). This allows the root CA to be

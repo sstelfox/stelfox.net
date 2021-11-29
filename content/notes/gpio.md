@@ -15,6 +15,8 @@ I came across this python script that accesses GPIO pins in linux. It's
 potentially very useful so I'm including it here, in it's entirety. I can later
 on reference this for use in my own programs.
 
+<!-- more -->
+
 ```python
 """Arduino-like library for Python on BeagleBone"""
 import time

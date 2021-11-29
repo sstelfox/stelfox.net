@@ -15,6 +15,8 @@ PLEASE NOTE: This guide was developed for Red Had Based architectures,
 specifically CentOS 5, and Fedora 16+. A lot of the information here is
 generally solid principles but you may need to adapt it to your distribution.
 
+<!-- more -->
+
 Hardening of all my servers is the largest piece IMHO to the [defence in
 depth][1]. It brings to them each a strength to stand on their own. I want to
 be able to plug each and everyone on a raw internet connection and feel safe

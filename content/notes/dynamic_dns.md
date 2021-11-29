@@ -15,6 +15,8 @@ This guide intends to help you setup DDNS updates between an ISC DHCP server
 and an authoritative NSD name server. We assume you have a DHCP server with the
 following config:
 
+<!-- more -->
+
 ```
 # /etc/dhcp/dhcpd.conf
 

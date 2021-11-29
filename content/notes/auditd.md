@@ -17,6 +17,8 @@ metadata associated with the event. This can help enrich other security tools
 such as [AIDE][1] to determine what user and process are responsible for the
 change.
 
+<!-- more -->
+
 For reliable operation the rules should be carefully tuned to your system.
 Tracking every write to disk will generate an unreasonable amount of events and
 depending on the configuration of the kernel's audit subsystem, may trigger a

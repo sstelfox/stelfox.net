@@ -19,6 +19,8 @@ The gatekeeper script is something that I haven't come across on any other
 systems that other people administer. Perhaps it's too much trouble for them
 without much gain. I had the idea for this while watching a James Bond movie.
 
+<!-- more -->
+
 A Russian systems engineer put riddles on one of his machines that you had to
 go through in order to access the system, while this alone isn't secure, asking
 the user random questions after authentication couldn't hurt security. I highly

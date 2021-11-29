@@ -15,6 +15,8 @@ Cron is a pretty standard utility and there isn't much to it. I generally use
 periodically, and anacron helps ensure that a missed task will get run if it
 was off or powercycled when it would have otherwise run.
 
+<!-- more -->
+
 ## File Format
 
 The config format differs slightly between crontabs, regular cron files, and

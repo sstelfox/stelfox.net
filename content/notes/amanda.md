@@ -15,6 +15,8 @@ Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open
 source computer archiving tool that is able to back up data residing on
 multiple computers on a network.
 
+<!-- more -->
+
 I am not a huge fan of having xinetd or perl on my system and this is reliant
 on both, however, there does not currently seem to be any reasonable open
 source alternatives that support managing a tape library.

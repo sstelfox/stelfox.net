@@ -16,6 +16,8 @@ Duplicity is a command line backup utility that makes use of the rsync
 libraries to perform incremental backups. It also can use GPG public/private
 keypairs to handle backing up and restoring files.
 
+<!-- more -->
+
 I personally want to use public / private key pairs for my backups and contrary
 with what I do most of the time I share a single public / private key pair for
 my backups, with a strong pass string on the private key.

@@ -10,6 +10,10 @@ taxonomies:
   - art
 ---
 
+Open source best in class 3D Art and modelling program.
+
+<!-- more -->
+
 ## Low Poly Color Palette
 
 * Grab a palette from https://lospec.com/palette-list

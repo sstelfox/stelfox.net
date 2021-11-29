@@ -20,6 +20,8 @@ all the other components listed in my notes and many may not mention it at all.
 It uses OpenSSL and provides scripts, information about choices made during the
 process and where to go next.
 
+<!-- more -->
+
 ## Security Notes
 
 There are varying levels of security that need to be taken into account

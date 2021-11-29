@@ -14,6 +14,8 @@ This is a very basic operation on a Linux system, but I have to interact with
 it so rarely since I run either [chronyd][1] or [ntpd][2] on all of machines.
 Occasionally, I find a device that needs a helping hand.
 
+<!-- more -->
+
 On a device with a known good time (or approximate enough):
 
 ```sh

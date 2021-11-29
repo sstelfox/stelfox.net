@@ -16,6 +16,8 @@ gives it all the stuff the nagios developers made into an "Enterprise only"
 release just to be tool bags. Unfortunately at this time there aren't any handy
 Fedora packages, but this should be [coming soon][1] with any luck.
 
+<!-- more -->
+
 However I seem to be lucky and found that the RHEL6 packages seem to work
 perfectly on Fedora 15. There is a doc, gui, idoutils, api and plain icinga
 packages, they should all be installed.  (Tested with 1.5.1-1).

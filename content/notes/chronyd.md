@@ -13,6 +13,8 @@ extra:
 
 Replacement for the ntpd daemon.
 
+<!-- more -->
+
 ## Installation
 
 ```

@@ -13,6 +13,8 @@ extra:
 
 Kerberos is a secure network authentication system.
 
+<!-- more -->
+
 It is very important that system times are all very close for successful
 authentication. You should configure [NTPd][1] or [Chronyd][2] to ensure the
 systems stay in sync.

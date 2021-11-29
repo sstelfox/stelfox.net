@@ -15,6 +15,8 @@ extra:
 [GNU Mailman][1] is a computer software application from the GNU project for
 managing electronic mailing lists.
 
+<!-- more -->
+
 Mailman is coded primarily in Python and currently maintained by Barry Warsaw.
 Mailman is free software, distributed under the GNU General Public License.
 

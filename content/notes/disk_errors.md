@@ -14,6 +14,8 @@ extra:
 This is a weird file... But while installing gentoo on a disk I started getting
 a weird error when printing the current partitions on the drive:
 
+<!-- more -->
+
 ```
 Warning: The driver descriptor says the physical block size is 2048 bytes, but Linux says it is 512 bytes.
 ```

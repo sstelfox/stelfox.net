@@ -15,6 +15,8 @@ extra:
 EZStream is a media streamer and re-encoder that can be used to feed
 [Icecast][1].
 
+<!-- more -->
+
 ## Mounting Content
 
 I have a [Samba][2] share "Media" setup on the server "samba-srv" that holds

@@ -11,6 +11,8 @@ taxonomies:
 
 A tool for resisting arp spoofing on networks.
 
+<!-- more -->
+
 ```
 emerge net-analyzer/arpon
 ```

@@ -16,6 +16,8 @@ feels correct. That blog post is quite well written and will let it stand on
 its own. In the event it ever disappears the important bits (and those where
 I've personalized it) are included here.
 
+<!-- more -->
+
 There are ultimately two or three DNS names that each host receives. The first
 is a permanent unique identifier for the host. The blog post offers the
 [mnemonic encoding][2] project as a way to generate the hostnames. I've built

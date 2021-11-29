@@ -16,6 +16,8 @@ virtualization. It is used to manage Linux KVM and Xen virtual machines through
 graphical interfaces such as Virtual Machine Manager and higher level tools
 such as oVirt. In this case the backend is KVM.
 
+<!-- more -->
+
 ## Security Notes
 
 Since libvirtd distributes resources to guest machines a tight control needs to
