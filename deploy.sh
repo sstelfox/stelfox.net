@@ -29,7 +29,7 @@ git submodule sync
 git submodule update --remote
 
 # Git doesn't track the branch head very well, set it explicitly
-pushd public/ &> /dev/null
+pushd published/ &> /dev/null
 git pull origin gh-pages
 popd &> /dev/null
 
