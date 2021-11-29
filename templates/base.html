@@ -53,15 +53,15 @@
           {% for page in pages | reverse %}
             <article class="post">
               <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+              {%- if page.date -%}
+              <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%A, %B %-d, %Y") }}</span></p>
+              {%- endif -%}
               {% if page.summary %}
                 <div class="post-content">
                   {{ page.summary | safe }}
                   <nav class="readmore"><a itemprop="url" href="{{ page.permalink | safe }}">Read More&nbsp;&raquo;</a></nav>
                 </div>
               {% endif %}
-              {%- if page.date -%}
-              <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%Y-%m-%d") }}</span></p>
-              {%- endif -%}
             </article>
           {% endfor %}
           {% block pagination %}
@@ -82,8 +82,6 @@
       <footer id="footer">
         <p class="copyright">
           {% block copyright %}
-            Powered by <a href="https://www.getzola.org/">Zola</a> and the
-            <a href="https://github.com/hulufei/solar-theme-zola">Solar</a>-theme.
           {% endblock copyright %}
         </p>
       </footer>

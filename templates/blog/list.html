@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 
 {% block content %}
   {% if paginator.pages %}
@@ -16,7 +16,7 @@
         </div>
       {% endif %}
       {%- if page.date -%}
-      <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%Y-%m-%d") }}</span></p>
+      <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%A, %B %-d, %Y") }}</span></p>
       {%- endif -%}
     </article>
   {% endfor %}

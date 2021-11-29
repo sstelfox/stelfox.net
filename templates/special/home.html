@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{%- block content %}
+  {{ section.content | safe }}
+
+  {%- for subsection_path in section.subsections %}
+    {%- set current_subsection = get_section(path=subsection_path) %}
+
+    {%- if current_subsection.components[0] == "blog" %}
+      {%- set most_recent_post = current_subsection.pages | sort(attribute="date") | last %}
+
+      {%- if most_recent_post -%}
+        <article class="post">
+          <h1>{{ most_recent_post.title }}</h1>
+          {%- if most_recent_post.date -%}
+          <p class="meta">Posted on <span class="postdate">{{ most_recent_post.date | date(format="%A, %B %-d, %Y") }}</span></p>
+          {%- endif -%}
+
+          <div class="post-content">{{ most_recent_post.content | safe }}</div>
+        </article>
+      {%- endif %}
+    {%- endif %}
+  {%- endfor %}
+{%- endblock content -%}
