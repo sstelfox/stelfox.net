@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% import "macros/article.html" as article_macros %}
+
+{%- block title -%}
+  {{ page.title }} &mdash; {{ config.title }}
+{%- endblock title -%}
+
+{%- block content %}
+<article>
+  <header>
+    <h1>{{ page.title }}</h1>
+
+    {{- article_macros::article_info(page=page) }}
+    {{- article_macros::article_toc(page=page) }}
+  </header>
+
+  <main>
+    {{- page.content | safe -}}
+  </main>
+
+  <footer>
+    {{- article_macros::article_pagination(page=page) }}
+  </footer>
+</article>
+{%- endblock content %}

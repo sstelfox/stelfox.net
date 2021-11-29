@@ -1,15 +1,4 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
 {% block content %}
-<div>
-  <ul>
-    {% for tag in terms %}
-      {% set tag_count = tag.pages | length %}
-
-      {% if tag_count >= config.extra.tag_threshold %}
-        <li><a href="{{ tag.permalink }}">{{ tag.name }} <span class="tag-count">({{ tag_count }})</span></a></li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-</div>
 {% endblock content %}

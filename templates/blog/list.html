@@ -1,9 +1,36 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
-{% import "macros/pagination.html" as pagination %}
-
-{%- block content %}
-  {%- if paginator %}
-    {{- pagination::section(pager=paginator) }}
-  {%- endif %}
-{%- endblock content %}
+{% block content %}
+  {% if paginator.pages %}
+    {% set pages = paginator.pages %}
+  {% else %}
+    {% set pages = section.pages %}
+  {% endif %}
+  {% for page in pages | reverse %}
+    <article class="post">
+      <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+      {% if page.summary %}
+        <div class="post-content">
+          {{ page.summary | safe }}
+          <nav class="readmore"><a itemprop="url" href="{{ page.permalink | safe }}">Read More&nbsp;&raquo;</a></nav>
+        </div>
+      {% endif %}
+      {%- if page.date -%}
+      <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%Y-%m-%d") }}</span></p>
+      {%- endif -%}
+    </article>
+  {% endfor %}
+  {% block pagination %}
+    {% if paginator.previous or paginator.next %}
+      <nav class="pagination" role="pagination">
+        {% if paginator.previous %}
+          <a class="newer-posts" href="{{ paginator.previous }}"><span aria-hidden="true">&larr;</span> Newer Posts</a>
+        {% endif %}
+        <span class="page-number">Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
+        {% if paginator.next %}
+          <a class="older-posts" href="{{ paginator.next }}">Older Posts <span aria-hidden="true">&rarr;</span></a>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% endblock pagination %}
+{% endblock content %}

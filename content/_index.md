@@ -1,5 +1,6 @@
 ---
-template: special/home.html
+dummy: 100
+#template: special/home.html
 ---
 
 This is the digital home of Sam Stelfox, a systems specialist with a focus on

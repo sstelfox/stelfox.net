@@ -1,29 +1,13 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
-{% import "macros/article.html" as article_macros %}
+{% block content %}
+<article class="post">
+  <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
 
-{%- block title -%}
-  {{ page.title }} &mdash; {{ config.title }}
-{%- endblock title -%}
+  <div class="post-content">{{ page.content | safe }}</div>
 
-{%- block content %}
-<article>
-  <header>
-    <h1>{{ page.title }}</h1>
-
-  {%- if page.extra.outdated %}
-    <div class="note-outdated">This page has been marked as outdated. It may contain some useful nuggets of information but you should verify them against current documentation.</div>
-  {%- endif %}
-
-    {{- article_macros::article_toc(page=page) }}
-  </header>
-
-  <main>
-    {{- page.content | safe -}}
-  </main>
-
-  <footer>
-    {{- article_macros::article_tag_list(page=page) -}}
-  </footer>
+  {%- if page.date -%}
+  <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%Y-%m-%d") }}</span></p>
+  {%- endif -%}
 </article>
-{%- endblock content %}
+{% endblock content %}

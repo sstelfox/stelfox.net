@@ -1,5 +1,5 @@
 ---
 title: Search
 
-template: special/search.html
+#template: special/search.html
 ---
