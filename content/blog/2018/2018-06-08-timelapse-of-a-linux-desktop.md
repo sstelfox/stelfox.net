@@ -17,6 +17,8 @@ remote workers and the main office we keep a live video conference going all
 the time. It's pretty convenient and definitely allows me to continue to feel
 connected with the company.
 
+<!-- more -->
+
 During one of our stand ups, a coworker mentioned that they'd like to see how
 things looked over time. I have three 1440p monitors and largely leave the
 video conference on my right most window, which makes recording (an audio free)

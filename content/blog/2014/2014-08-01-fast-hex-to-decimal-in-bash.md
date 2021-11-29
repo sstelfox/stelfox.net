@@ -17,6 +17,8 @@ found a real easy way too do it. The following is a very short bash script
 demonstrating how too turn the hexadecimal string "deadbeefcafe" into it's
 equivalent decimal value of "244837814094590".
 
+<!-- more -->
+
 ```bash
 #!/bin/bash
 

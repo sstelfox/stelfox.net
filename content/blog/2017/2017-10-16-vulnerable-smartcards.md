@@ -15,6 +15,8 @@ In addition to the [WiFi vulnerability][1] a much more limited vulnerability
 was [announced][2] around private GPG keys that were generated using
 [Infineon's RSA Library version v1.02.013][3].
 
+<!-- more -->
+
 The vulnerability lies in shortcuts taken to speed up the key generation using
 the library. The performance increase makes the private key vulnerable to
 factorization attacks using an extension to [Coppersmith's attack][4].

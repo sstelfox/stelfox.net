@@ -19,6 +19,8 @@ Linux most of the documented ways involve switching between multiple utilities
 and can be tricky. I wanted to documented how I did this and possibly help
 other in the same situation.
 
+<!-- more -->
+
 I'm doing this on Fedora, but the only thing specific to Fedora is installing
 the packages which can be done with the following command (and are pretty
 standard names):

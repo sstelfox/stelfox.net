@@ -19,6 +19,8 @@ several regions but a single VPC. To make sure expansions into other regions
 was possible this VPC chose to use the largest private subnet which just so
 happened to also be the default (`10.0.0.0/8`).
 
+<!-- more -->
+
 Another AWS account enter the picture and while they were single they came to
 the same conclusion and followed the best practices and defaults to their
 heart's content. Normally this wouldn't be a problem for either of them, but

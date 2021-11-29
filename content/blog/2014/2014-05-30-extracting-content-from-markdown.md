@@ -17,6 +17,8 @@ search engine for static content sites like this one. One of the challenges
 with doing this has been working around the Markdown markup embedded in the
 written content.
 
+<!-- more -->
+
 Most of the markdown syntax can be stripped out simply by removing all
 non-alphanumeric characters from the document and move on. This doesn't solve
 one of the bigger challenges I've experienced... Code blocks. Code blocks have

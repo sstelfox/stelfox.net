@@ -17,6 +17,8 @@ outdated legislated requirements, I came across one of the best descriptions of
 basic security principles. You can find it in the [NIST Guide to General Server
 Security][1] (published in 2008).
 
+<!-- more -->
+
 I've replicated section 2.4 from the linked document (I have removed the
 footnotes, but it is otherwise unchanged) in its entirety here for safe keeping
 and to hopefully help expose this to more people.

@@ -17,6 +17,8 @@ to enumerate all of the current subclasses of a particular class. After
 thinking about this for a while I settled on a good old friend of mine,
 `ObjectSpace`.
 
+<!-- more -->
+
 For those not familiar with the `ObjectSpace` module, it is a means to inspect
 and access the items being tracked by Ruby's garbage collector. This means it
 has a hook into every living object, and more dangerously, every near-death

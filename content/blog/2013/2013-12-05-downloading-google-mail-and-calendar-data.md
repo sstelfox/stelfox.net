@@ -17,6 +17,8 @@ a hot enough topic that the Google Gmail team are [releasing an official backup
 method][2].  It's not completely in the wild yet but I definitely look forward
 to poking around in it.
 
+<!-- more -->
+
 Now if only Google let you download everything they know about you as well...
 Would definitely make for an interesting read.
 

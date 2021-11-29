@@ -17,6 +17,8 @@ you may have experienced the dreaded lockup. That horrible realization seconds
 after you hit the command where signals just stop working and you just have to
 sit there and wait for your terminal to catch up.
 
+<!-- more -->
+
 There is a piece of remote connection software called Mosh that I've been told
 handles this pretty well, but I don't yet trust its security model and it
 doesn't prevent the same thing from happening locally.

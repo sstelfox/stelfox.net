@@ -17,6 +17,8 @@ issue that I wasn't expecting. The `grep` in my pipe chain was waiting until it
 received all the output from the prior command before it began to attempt to
 filter it.
 
+<!-- more -->
+
 Reading through the grep man page I came across the `--line-buffered` flag
 which provides exactly what I needed. I wasn't using the `tail` command but it
 serves really well in this situation to demonstrate the use:

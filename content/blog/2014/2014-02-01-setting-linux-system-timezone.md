@@ -15,6 +15,8 @@ I change the timezone on the linux systems so rarely that I almost always have
 to look it up. I'm writing it up here for my own personal reference. With any
 luck it'll also help others.
 
+<!-- more -->
+
 The system timezone is controlled by the `/etc/localtime` file and is generally
 symlinked to locale files stored in `/usr/share/zoneinfo`. Generally I like to
 keep my systems on UTC as I my machines are in several timezones and it makes

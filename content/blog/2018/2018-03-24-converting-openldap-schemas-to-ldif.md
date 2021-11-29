@@ -20,6 +20,8 @@ which I tried with mixed success. After doing the research to figure this out,
 it became clear I could probably have used `slapcat` and have dumped the active
 schema directly to LDIF.
 
+<!-- more -->
+
 As a sample of how I converted these, I'll use the `rfc2307bis.schema` file
 which didn't seem to come with a matching LDIF file in the source distribution.
 You'll need to identify the dependencies of the schema, which I've tended to

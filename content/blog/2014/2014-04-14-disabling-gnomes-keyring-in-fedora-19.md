@@ -15,6 +15,8 @@ An update too Fedora a while ago started causing some unexpected behavior with
 my dotfiles. Specifically the way I was handling my SSH agent. My SSH keys when
 added to my agent automatically expire after a couple of hours.
 
+<!-- more -->
+
 After the update, when that expiration came I started receiving errors in my
 shell that looked similar to the following (Since I fixed it I am not able to
 get the exact working again):

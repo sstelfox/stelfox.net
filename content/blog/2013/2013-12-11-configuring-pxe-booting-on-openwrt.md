@@ -17,6 +17,8 @@ BOOTP next server to redirect local clients to my Arch TFTP/NFS server for
 booting, so I'm placing the configuration here to help others who might be
 looking to do the same thing.
 
+<!-- more -->
+
 It's worth noting that this isn't a guide on setting up PXE booting completely
 on an OpenWRT, you'll need another system that is running a configured TFTP
 server. I'll write up how I setup my Arch box as a TFTP server at a later date.

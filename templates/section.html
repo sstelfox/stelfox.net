@@ -2,11 +2,37 @@
 
 {% block content %}
 <article class="post">
-  <h1>{{ section.title }}</h1>
-  {%- if section.date -%}
-  <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%A, %B %-d, %Y") }}</span></p>
-  {%- endif -%}
-
   <div class="post-content">{{ section.content | safe }}</div>
+
+  {%- for page in paginator.pages %}
+    <article class="post">
+      <h1><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+
+      {%- if page.date -%}
+      <p class="meta">Posted on <span class="postdate">{{ page.date | date(format="%A, %B %-d, %Y") }}</span></p>
+      {%- endif -%}
+
+      {% if page.summary %}
+        <div class="post-content">
+          {{ page.summary | safe }}
+          <nav class="readmore"><a itemprop="url" href="{{ page.permalink | safe }}">Read More&nbsp;&raquo;</a></nav>
+        </div>
+      {% endif %}
+    </article>
+  {%- endfor %}
+
+  {% block pagination %}
+    {% if paginator.previous or paginator.next %}
+      {% if paginator.previous %}
+      <a class="newer-posts" href="{{ paginator.previous }}"><span aria-hidden="true">&larr;</span> Earlier</a>
+      {% endif %}
+
+      <span class="page-number">Page {{ paginator.current_index }} of {{ paginator.number_pagers }}</span>
+
+      {% if paginator.next %}
+      <a class="older-posts" href="{{ paginator.next }}">Later <span aria-hidden="true">&rarr;</span></a>
+      {% endif %}
+    {% endif %}
+  {% endblock pagination %}
 </article>
 {% endblock content %}

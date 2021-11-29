@@ -20,6 +20,8 @@ and may bite you even without them. The problems specifically crop up when a
 hosted piece of software does NAT traversal detection and changes it's behavior
 based on the result.
 
+<!-- more -->
+
 Amazon attaches public IP address to EC2 instances (and likely other of their
 hosted services) through 1:1 NAT mapping of external to internal addresses. All
 traffic will reach your instance without issue, but your system's native

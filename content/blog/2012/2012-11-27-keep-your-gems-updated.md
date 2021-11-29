@@ -18,6 +18,8 @@ with, but the majority of the code I wouldn't write today. That's not to say
 the code is bad, or doesn't function. It did exactly what I wanted to
 accomplish at the time, just not necessarily in the most efficient way.
 
+<!-- more -->
+
 This archive of old code made me start wondering how much old code I'm using in
 the projects that I'm currently writing. Not code that I've written but code
 that I'm depending on, specifically gems. As of this writing I have 26 active

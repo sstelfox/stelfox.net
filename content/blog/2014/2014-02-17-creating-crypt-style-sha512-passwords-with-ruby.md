@@ -18,6 +18,8 @@ I needed to generate crypt-style SHA512 passwords in ruby for an `/etc/shadow`
 file. After a bunch of Googling and messing around with the OpenSSL library I
 finally found a very simple built-in way to handle this.
 
+<!-- more -->
+
 ```ruby
 require 'securerandom'
 

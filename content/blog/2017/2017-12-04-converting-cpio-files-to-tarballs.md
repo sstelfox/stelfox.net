@@ -17,6 +17,8 @@ script did the trick for me but didn't preserve the user / group. Running it as
 root will preserve the ownership information but that wasn't important for my
 immediate use case.
 
+<!-- more -->
+
 ```
 #!/bin/bash
 

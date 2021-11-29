@@ -19,6 +19,8 @@ experienced allowed me to use the key to authenticate (SSH'ing worked fine) but
 any attempt to sign new data resulted in an 'Unusuable secret key' error. For
 git this resulted in the following message:
 
+<!-- more -->
+
 ```
 gpg: skipped "Sam Stelfox <sstelfox@bedroomprogrammers.net>": Unusable secret
 key

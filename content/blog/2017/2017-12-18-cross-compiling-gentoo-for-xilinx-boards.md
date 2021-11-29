@@ -25,6 +25,8 @@ style microcontrollers like Atmel's SAMD10 and Atmega lines, I've never played
 with FPGA development before so I considered this an interesting learning
 opportunity.
 
+<!-- more -->
+
 To do development of the FPGA and generally use the board at all you have to
 shell out $2,995 for a non-transferable license of a proprietary piece of
 software called Vivado to develop on the FPGA. For a hobby project just

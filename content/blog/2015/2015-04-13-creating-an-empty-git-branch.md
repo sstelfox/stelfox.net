@@ -18,6 +18,8 @@ output in the `gh-pages` branch. I've also used it for testing a complete
 rewrite of a code base without the overhead of creating a new repo and copying
 access permissions.
 
+<!-- more -->
+
 This is a pretty straight forward trick to do. You create the branch by
 indicating you want the new branch to be an orphan by passing the '--orphan'
 flag like so:

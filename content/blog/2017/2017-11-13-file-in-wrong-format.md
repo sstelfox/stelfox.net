@@ -18,6 +18,8 @@ targetting a Xilinx board as I found their distribution to be unmanageable
 the default profile (embedded) conflicting with other critical packages. I'll
 do a detailed post later on for building that entire root filesystem.
 
+<!-- more -->
+
 I came across one issue which didn't seem to have a well-documented solution.
 While compiling several packages (most notably [GMP][1] which is required for a
 native GCC) I kept coming across a linker issue late in the compilation:

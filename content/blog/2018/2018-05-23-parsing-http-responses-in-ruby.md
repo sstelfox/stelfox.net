@@ -19,6 +19,8 @@ work on stored HTTP responses outside of a connection though? This was the
 situation I found myself in and thanks to a series of unusual decisions in the
 Ruby core library I found myself left out in the cold.
 
+<!-- more -->
+
 For reference this is in the latest stable Ruby as of this writing (2.5.1).
 
 Let's start with a very small HTTP response stored in a variable for us to test

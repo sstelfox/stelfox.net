@@ -16,6 +16,8 @@ I wrote a simple web crawler that archived any images it found from a site with
 a large number of backgrounds. I wanted to have rolling backgrounds that almost
 never repeated.
 
+<!-- more -->
+
 I let my crawler go and stopped it after a 24 hour period. I ran `ls` on  the
 directory the images were being saved in to see the results and my ssh session
 locked up... Or so I thought. I hit Ctrl-C and nothing happened... So I closed

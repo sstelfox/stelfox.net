@@ -16,6 +16,8 @@ I like getting unopinionated feedback on the quality of the code I write.
 Sometimes I can get this from other developers but they tend to get annoyed
 being asked after every commit whether they consider it an improvement.
 
+<!-- more -->
+
 There are a few utilities for Ruby codebases such as [flay][1], [flog][2], and
 [rubocop][3] as well as hosted services such as [Code Climate][4] that can help
 you identify chunks of code that can use some work.

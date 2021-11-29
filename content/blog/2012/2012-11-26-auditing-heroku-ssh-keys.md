@@ -18,6 +18,8 @@ Heroku for our development platform I needed to not only reset the credentials
 for the web portion (which conveniently also handles resetting the API key) but
 also revoke any SSH keys he may have added to access it.
 
+<!-- more -->
+
 Sadly Heroku does not seem to provide any web interface that I could find for
 examining what keys were associated with the account. Searching for this
 information also didn't turn up very valuable results; most people were looking

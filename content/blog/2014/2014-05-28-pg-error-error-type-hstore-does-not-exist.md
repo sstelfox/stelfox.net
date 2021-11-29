@@ -17,6 +17,8 @@ and kept encountering the error that is this post's namesake. It would
 specifically happen when a database had been dropped, recreated and I freshly
 ran the migrations.
 
+<!-- more -->
+
 It seems that while Rails 4 supports the HStore datatype, it doesn't enable the
 extension itself. I've found two ways too solve this issue in wildly different
 ways.

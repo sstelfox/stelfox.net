@@ -20,6 +20,8 @@ computer to access in addition to sharing the file around, or required you to
 remember multiple account details before you could get access to any individual
 password.
 
+<!-- more -->
+
 Due too the various complexities and lack of matching use cases a couple years
 ago I set out to develop my own open-source version of PassPack. In the interim
 though I needed a solution for keeping track of my hundreds of various accounts

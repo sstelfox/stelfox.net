@@ -14,6 +14,8 @@ taxonomies:
 An advisory from US CERT has been circulating for the last week about a
 protocol level flaw in WPA & WPA2. The advisory itself was:
 
+<!-- more -->
+
 > US-CERT has become aware of several key management vulnerabilities in the
 > 4-way handshake of the Wi-Fi Protected Access II (WPA2) security protocol.
 > The impact of exploiting these vulnerabilities includes decryption, packet

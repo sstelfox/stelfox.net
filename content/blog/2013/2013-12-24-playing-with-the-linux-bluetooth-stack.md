@@ -17,6 +17,8 @@ List all available bluetooth interfaces:
 hciconfig -a
 ```
 
+<!-- more -->
+
 If you get an error like the following:
 
 ```

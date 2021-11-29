@@ -20,6 +20,8 @@ about loop selects which very simply is holding down Alt while clicking on a
 vertex. The issue wasn't working for me though I found quite a few other users
 experiencing the issue.
 
+<!-- more -->
+
 The most common fix was when people had three button mouse emulation enabled (a
 common setting people turn on when using laptops or Macs). I checked this and
 it wasn't my issue.

@@ -20,6 +20,8 @@ verification, and SPF records both want to live at the root of the domain. The
 site verification record needs to stay around as Google periodically
 re-verifies the domain.
 
+<!-- more -->
+
 To get this to work you need to quote both the Google verification string and
 the SPF record, but you also have to ensure that there is a newline in the
 field. The contents of the entry should look something like this:

@@ -20,6 +20,8 @@ While attempting to automate some filesytem creation that involved LVM I kept
 running into an issue occasionally with some holding open the logical volumes.
 I would attempt to disable the volume using the following command:
 
+<!-- more -->
+
 ```
 $ lvchange -an system/storage
 Logical volume system/storage contains a filesystem in use.

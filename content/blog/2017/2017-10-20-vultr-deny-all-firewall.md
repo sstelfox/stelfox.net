@@ -18,6 +18,8 @@ matching rule for SSH to my IPv4 address, a default rule shows up that drops
 any unspecified traffic. Switching to the IPv6 I wanted to add a drop all rule
 (as I wouldn't be using IPv6 until the system was up).
 
+<!-- more -->
+
 The interface only allows `accept` rules to be created and additionally you'll
 be greeted with this message while trying to figure out what to do:
 

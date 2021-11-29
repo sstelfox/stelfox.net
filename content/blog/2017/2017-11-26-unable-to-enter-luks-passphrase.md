@@ -17,6 +17,8 @@ got to a point where the passphrase would show up on boot but I was unable to
 enter the passphrase. The behavior of the keyboard was also odd, it would
 toggle it's numlock light every couple of button presses.
 
+<!-- more -->
+
 Once again this was an issue that was hard to search for, and most other people
 asking it seemed to only get snarky non-answers which seem so prevalent in
 forums.

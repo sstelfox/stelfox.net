@@ -19,6 +19,8 @@ nothing about the ruby "data_mapper". The search continued eventually ending in
 my reading through the source of the data_mapper gem only to find that there
 was no feature for simply defining a prefix.
 
+<!-- more -->
+
 Reading through the source though did allow me to find any easy way to
 implement such functionality. The following snippet is a minimalist data_mapper
 initialization and setup of one model with a table prefix of `source_` (chosen

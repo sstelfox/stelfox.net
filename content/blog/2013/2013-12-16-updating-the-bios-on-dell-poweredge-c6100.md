@@ -17,6 +17,8 @@ had available to try, all of which require either Windows or DOS environments.
 I don't have any legal copies of Windows to put on my server and didn't want to
 go through all that effort.
 
+<!-- more -->
+
 It really needs to be done within a DOS environment. I downloaded the file
 `PEC6100BIOS017000.exe` from Dell's support website ([locally hosted copy][1])
 as well as the 2.88Mb version of FreeDOS ([locally hosted copy][2]).

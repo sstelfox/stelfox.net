@@ -19,6 +19,8 @@ the stable version I hit a solid protection mechanism built into the portage
 scripts that prevents downgrading glibc. Attempts will give you the following
 error message:
 
+<!-- more -->
+
 ```
  * Sanity check to keep you from breaking your system:
  *  Downgrading glibc is not supported and a sure way to destruction

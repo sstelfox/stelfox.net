@@ -17,6 +17,8 @@ the BMC's web interface. Additionally the blade would randomly power on when
 off, and the front light would consistently blink as if a hardware fault was
 detected.
 
+<!-- more -->
+
 This has been bothering me for a while, but it was my spare blade and wasn't
 affecting my lab in anyway so I've ignored it. I finally needed it for a
 project and looked into what may be causing the issue.

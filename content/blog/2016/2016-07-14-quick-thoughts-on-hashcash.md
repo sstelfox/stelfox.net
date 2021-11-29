@@ -15,6 +15,8 @@ This is an interesting proof of work concept. The first example I have found of
 this in the wild is to prevent abuse for anonymous account registration on an
 IRC network.
 
+<!-- more -->
+
 I reviewed it's source and found that it requests a seed, and payload from a
 backend PHP script. It assumes that a target collision will happen within
 1,000,000 iterations.

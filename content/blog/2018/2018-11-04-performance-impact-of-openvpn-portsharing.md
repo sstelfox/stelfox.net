@@ -19,6 +19,8 @@ traffic. This was done as a compromise with administrators who didn't want to
 change their egress filtering, but wanted to allow me to continue doing my
 normal work.
 
+<!-- more -->
+
 I already run several webservers, including this one, and didn't want to give
 up exclusive access to the precious TCP port 443. The recommended way to deal
 with this is to make use of the `port-share` option built into OpenVPN. This

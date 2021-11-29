@@ -18,6 +18,8 @@ been thoroughly enjoying it. The only issue I was having was occasionally a
 page's form input fields would have a dark background while still having dark
 text making it impossible to read, and very difficult to write.
 
+<!-- more -->
+
 It wasn't happening everywhere, and I couldn't track down what about a website
 would cause the issue. Most prominently for me was when this showed up in AWS's
 interface.

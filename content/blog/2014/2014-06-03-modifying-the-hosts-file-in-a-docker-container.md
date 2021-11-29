@@ -18,6 +18,8 @@ environments*. This won't affect your host system, only the docker container so
 the most damage you'll do is prevent hostname and possibly user/group lookups
 within the container itself.
 
+<!-- more -->
+
 Alright with that out of the way, I was actively working on a codebase that
 uses subdomains as part of the identifier. Rather than setup a full DNS server,
 point my local system at it and load in the domains I wanted to simply modify

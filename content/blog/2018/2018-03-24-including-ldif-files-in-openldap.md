@@ -17,6 +17,8 @@ While setting up and OpenLDAP server I found my distribution shipped with a
 couple of schema files, but no equivalent LDIF files. I found ways to convert
 the file using `slapcat` and `slaptest` and the files were valid on their own.
 
+<!-- more -->
+
 I was specifically trying to bootstrap an OpenLDAP server, with it's schema,
 from scratch for a CI/CD system to test against. To accomplish this I was
 making use of the `include` directive in a configuration LDIF file and saw some

@@ -17,6 +17,8 @@ options. Helpfully Ruby provides a module named `OptionParser` to make this
 easy. I found a few parts of the documentation ambiguous and a few others down
 right confusing.
 
+<!-- more -->
+
 The catch I hit was the required field. In my mind the definition of a required
 argument is something that needs to be passed on the command line to continue.
 What`OptionParser` actually means is that a value isn't required when the

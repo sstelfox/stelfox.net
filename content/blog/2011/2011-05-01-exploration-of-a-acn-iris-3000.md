@@ -17,6 +17,8 @@ specific service with an iron grip and had gone out of business. I guess I
 should expect that kind of anti-competitive behavior from a business that
 Donald Trump has a vested interest in.
 
+<!-- more -->
+
 I've come across one post on a forum that seems to have been crawled and copied
 out every where. The poster had cracked it and got it working with an Asterisk
 server which is what my ultimate goal for this phone is, however they claim to

@@ -18,6 +18,8 @@ setup and going... Most of the time. While setting up an IPSec tunnel to an AWS
 host I came across a new and unique experience that didn't seem to have an
 easily searchable solution.
 
+<!-- more -->
+
 I had two CentOS 7 EC2 instances, each set up with their own Elastic IP in a
 default VPC. I installed and configured libreswan with the following config:
 

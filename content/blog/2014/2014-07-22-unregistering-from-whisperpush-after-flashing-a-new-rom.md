@@ -18,6 +18,8 @@ first stop was the CyanogenMod. Since I'd last used CyanogenMod they added a
 built-in framework that provides [transparent text][1] message encryption
 called WhisperPush.
 
+<!-- more -->
+
 WhisperPush is an implementation of [Moxie Marlinspike's][2] highly respected
 TextSecure and I was very excited at the possibility of using it. I immediately
 signed up for the service.

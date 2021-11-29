@@ -16,6 +16,8 @@ I regularly find myself in need of generating a quick SSL key and certificate
 pair. I've been using a one-liner for a while to generate these certificates.
 No annoying user prompts just a quick fast certificate pair.
 
+<!-- more -->
+
 ```sh
 echo -e "XX\n\n \n \n\n$(hostname)\n\n" | openssl req -new -x509 -newkey \
   rsa:2048 -keyout service.key -nodes -days 90 -out service.crt &> /dev/null

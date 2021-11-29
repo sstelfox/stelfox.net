@@ -18,6 +18,8 @@ into an error every time I logged into XFCE from lightdm (I didn't try starting
 up XFCE any other way). There are tons of blog posts that relate to systemd,
 ubuntu, or crouton but none related to Gentoo.
 
+<!-- more -->
+
 The first error message that pops up is:
 
 ```

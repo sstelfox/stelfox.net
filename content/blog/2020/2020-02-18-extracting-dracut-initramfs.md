@@ -18,6 +18,8 @@ things in tech and usually has a good reason. The simple way that used to work
 wonders (and is still required) to start with, was to identify if the file is
 compressed:
 
+<!-- more -->
+
 ```
 $ file /boot/initramfs-current.img
 /boot/initramfs-current.img: ASCII cpio archive (SVR4 with no CRC)

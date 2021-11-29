@@ -24,6 +24,8 @@ post on everything that I went through in the talk (I have been lax on writing
 content for this blog), this post is more to answer the outstanding questions
 and of course [to make my slides available][1].
 
+<!-- more -->
+
 As far as I remember the only question I wasn't able to answer was about file
 descriptors related to TCP connections. It isn't exactly a firewall issue but
 exhaustion of file descriptors is one of the issues I've seen blamed on the

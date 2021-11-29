@@ -21,6 +21,8 @@ when connected to these access points which provides at least as good
 protection as DNS-over-TLS which has caused me to largely overlook this
 development.
 
+<!-- more -->
+
 When I found out that Android 9 natively supports this through the 'Private
 DNS' feature I got significantly more interested. I've always wanted to dictate
 what DNS server my phone used, not for privacy reasons but rather to provide

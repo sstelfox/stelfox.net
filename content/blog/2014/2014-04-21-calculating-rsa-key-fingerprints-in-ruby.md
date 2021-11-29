@@ -18,6 +18,8 @@ storage of RSA keys. In the past I've never had to worry about identification
 or presentation of these keys. Normally I've only got one too three pairs at
 most that I'm manipulating (server, certificate authority, client).
 
+<!-- more -->
+
 I've not found myself working on a project that involves presenting the
 certificates to users for selection and comparison. The obvious way too do this
 is take a page out of other developer's books and present the key's

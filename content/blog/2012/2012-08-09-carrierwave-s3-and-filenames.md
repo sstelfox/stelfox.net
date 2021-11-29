@@ -17,6 +17,8 @@ This is going to be a real quick post. I'm using the `carrier_wave` gem with
 `identifier`, and `filename` methods return nil. I got around this issue in two
 separate ways neither of which I'm particularly happy about.
 
+<!-- more -->
+
 Outside of the uploader, you can use the File utility and the URL of the object
 to get the base filename like so:
 

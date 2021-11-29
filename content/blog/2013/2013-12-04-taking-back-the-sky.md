@@ -17,6 +17,8 @@ more and more popular, and more accessible. They've been getting used by the
 military, law enforcement, [recently Amazon][1] (though they've abandoned that
 for now), you can even purchase one for your iPhone at airports.
 
+<!-- more -->
+
 The security of these systems hasn't been thoroughly tested publicly, though
 [there is at least][2] one report of a military drone being stolen already.
 With the beginnings of [various commercial uses][3] of drones, expanding beyond

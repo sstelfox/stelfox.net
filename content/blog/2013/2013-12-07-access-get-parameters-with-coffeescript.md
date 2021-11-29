@@ -14,6 +14,8 @@ taxonomies:
 I've been working on a pure javascript based search engine for this static
 website and needed to access a get parameter within the URL.
 
+<!-- more -->
+
 I found a few solutions online but they usually made use of jQuery or weren't
 in coffeescript. A few others would only extract an individual named parameter
 at a time. The following will return all of them in Javascript's equivalent of

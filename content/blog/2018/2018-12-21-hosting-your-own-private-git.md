@@ -17,6 +17,8 @@ control system. Most people now use it with one or another central repository
 even when working on large teams which is perfectly fine if that model works
 for you and your team.
 
+<!-- more -->
+
 It can be useful to quickly work with others on private repositories without
 requiring them to get on your platform of choice, or for sensitive repositories
 keep the repository entirely under your control. Occasionally platforms like

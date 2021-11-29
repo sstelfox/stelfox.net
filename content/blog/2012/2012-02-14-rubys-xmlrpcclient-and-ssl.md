@@ -17,6 +17,8 @@ interact with a remote XMLRPC API. This isn't particularly unusual but it was
 the first time from within a Ruby application. Luckily enough Ruby has a built
 in XMLRPC client that handles a lot of the messy bits.
 
+<!-- more -->
+
 The XMLRPC::Client class itself seems fairly simple. There are only a handful
 of methods, five of which are for opening a new connection in a few different
 ways, and at least two ways to open each type of connection.

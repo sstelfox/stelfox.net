@@ -14,6 +14,8 @@ taxonomies:
 While running an aide check on one of my servers after updating it, I started
 seeing a large number of very concerning warning messages:
 
+<!-- more -->
+
 ```
 /usr/sbin/prelink: /bin/mailx: at least one of file's dependencies has changed since prelinking
 Error on exit of prelink child process

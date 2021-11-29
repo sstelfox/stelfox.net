@@ -17,6 +17,8 @@ outdated. After searching around quite a bit I found the resources lacking for
 explaining how to perform these updates. So in this post I'm going to quickly
 cover updating the BMC firmware on each blade.
 
+<!-- more -->
+
 The system I received had four different versions of the BMC software
 installed, additionally Two were branded as MegaRAC and the others branded as
 Dell. This update didn't fix the branding (and I'd love to remove the Dell

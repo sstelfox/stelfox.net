@@ -18,6 +18,8 @@ compilation test bed for new software since I can control the dependency
 versions very tightly.  I have a set of scripts I've been using for quite some
 time that handle setting up a hardened, fairly minimal install.
 
+<!-- more -->
+
 I recently encountered a weird issue with them that resulted in an esoteric
 error that prevented my host from fully booting and leaving the root filesystem
 read-only. There also didn't seem to be much reliable information on the

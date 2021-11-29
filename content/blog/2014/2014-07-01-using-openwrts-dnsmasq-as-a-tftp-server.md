@@ -16,6 +16,8 @@ attempted to follow [my own directions][1] written in an earlier blog post to
 add PXE booting to my local network using the dnsmasq service built in. After
 following my advice I found that the dnsmasq service wasn't starting.
 
+<!-- more -->
+
 Looking into the `logread` output I finally saw that this was due too a
 permission issue. Combining this with the output of `ps` too identify the user
 that dnsmasq was running on I was able to both modify my instructions and use

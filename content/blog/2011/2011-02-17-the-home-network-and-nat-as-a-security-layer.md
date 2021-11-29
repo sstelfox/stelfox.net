@@ -18,6 +18,8 @@ people in my field but for the sake of this post I will. NAT or Network Address
 Translation, is a way for a large number of computers to share a single public
 IP address.
 
+<!-- more -->
+
 The router that is handling the NAT will keep track of connections coming in
 and out of it and re-write the destination IP to an internal address to keep
 the traffic flowing.

@@ -16,6 +16,8 @@ exists in their systemd service file. After installing `puppet` and
 `puppet-server`, whenever I tried to start the server with the following
 command:
 
+<!-- more -->
+
 ```sh
 systemctl start puppetmaster.service
 ```

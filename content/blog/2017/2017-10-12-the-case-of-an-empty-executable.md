@@ -20,6 +20,8 @@ part that caught my eye was this:
 > This can be done with an empty file that's marked executable, and that's what
 > it was in the earliest unix system libraries.
 
+<!-- more -->
+
 Being a curious sort, and presented with an old mystery, I had to try out this
 little tidbit of information:
 

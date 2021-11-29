@@ -18,6 +18,8 @@ after each command, and isolating the sections into bash functions I figured
 there had to be a better way. After a little Googling and a trip through the
 bash man pages sure enough:
 
+<!-- more -->
+
 ```sh
 #!/bin/bash
 

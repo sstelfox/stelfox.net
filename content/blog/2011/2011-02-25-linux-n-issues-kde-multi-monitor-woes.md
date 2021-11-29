@@ -16,6 +16,8 @@ spin mind you) on my ThinkPad. I'm pleasantly surprised with hows it's working
 everything seems to be working out the box very stably. I used it without issue
 for a solid month and a half without a single issue.
 
+<!-- more -->
+
 Earlier this week I started having issues with my wireless card on some
 networks, but not at all of them. The most prominent one being my home network.
 I've had issues with my access point dropping connections before on a wide

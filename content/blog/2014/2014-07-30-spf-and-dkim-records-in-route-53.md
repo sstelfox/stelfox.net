@@ -17,6 +17,8 @@ soon, but in the meantime I wanted to quickly throw out solutions too a couple
 of problems I encountered. These are all specific too Amazon's Route 53, and
 most are user error (myself).
 
+<!-- more -->
+
 ## SPF Invalid Characters or Format
 
 After generating my SPF record, I jumped into Route 53, created a new record

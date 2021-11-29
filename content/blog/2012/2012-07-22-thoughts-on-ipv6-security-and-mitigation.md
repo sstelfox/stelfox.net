@@ -21,6 +21,8 @@ to do so is very scattered and disjointed. It does appear to be very well
 documented on the OpenWRT wiki but I found that they leave out some very
 important steps, so stay tuned for that.
 
+<!-- more -->
+
 Lets start with the loss of NAT. NAT was never intended to be a security
 measure and lots of people will argue with me for saying that it was. However,
 the truth of the matter is that any machine that is behind a NAT is not

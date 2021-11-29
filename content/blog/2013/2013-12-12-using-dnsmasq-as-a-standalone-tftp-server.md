@@ -21,6 +21,8 @@ xinet.d packages and services on my system (even if they were disabled). While
 looking for alternatives I found out that `dnsmasq` has a built-in read-only
 TFTP server.
 
+<!-- more -->
+
 I already have a DNS and DHCP server on my network and didn't want dnsmasq to
 take on either of those roles so my first challenge was finding a way to
 prevent dnsmasq from running those bits of it's code, or failing that I would

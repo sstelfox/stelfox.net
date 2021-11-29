@@ -17,6 +17,8 @@ While working on a replacement webserver, I encountered some odd behavior which
 took a bit to track down to CloudFlare. This isn't a bug or an issue with
 CloudFlare, it was just unexpected.
 
+<!-- more -->
+
 The server was configured to respond to `www.example.tld` as well as
 `example.tld`, to both encrypted and unencrypted connections. Any requests to
 the `www.` domain get redirected to `https://example.tld`. The config was

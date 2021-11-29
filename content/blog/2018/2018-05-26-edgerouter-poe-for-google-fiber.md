@@ -17,6 +17,8 @@ a cheap and fast connection, and I didn't need to sell my soul to certain other
 companies. I already owned a Ubiquiti EdgeRouter PoE 5 which has been battle
 tested at easily routing a gigabit worth of small packets.
 
+<!-- more -->
+
 When setting up my service, the representative I talked to told me I was able
 to use my own router, but I would still need to get a Google Fiber Network Box.
 I confirmed this with the staff who handed me the network box, informing me I

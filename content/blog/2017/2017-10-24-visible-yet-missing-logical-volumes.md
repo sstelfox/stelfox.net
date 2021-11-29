@@ -18,6 +18,8 @@ issue with the logical volumes never showing up in `/dev/mapper`, and in turn
 unable to be mounted. This left me in the dracut emergency shell (after about
 three minutes), with little to go on beyond the following error:
 
+<!-- more -->
+
 ```
 [187.508531] dracut Warning: Could not boot.
 [187.510560] dracut Warning: /dev/disk/by-uuid/5681-902D does not exist

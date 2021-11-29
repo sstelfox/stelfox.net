@@ -18,6 +18,8 @@ digestible pieces, and it was strictly for my own personal testing so I wasn't
 concerned with using my own live data for this test (There will probably be
 another post on this project later on).
 
+<!-- more -->
+
 Having used `fetchmail` with good results in the past I decided it was a good
 idea to take this opportunity to also backup my Gmail account into the common
 `Maildir` format (which essentially breaks out emails into individual files

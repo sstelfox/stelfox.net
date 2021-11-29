@@ -21,6 +21,8 @@ with. I'd strongly recommend reading both if you haven't done so. Instead of
 announcing flaws, I'm turning this into a post with a simple functional
 implementation of the described scheme in Ruby using DataMapper.
 
+<!-- more -->
+
 At first I'd like to point out that this is one of those few examples where a
 form of security through obscurity is actually increasing not only the
 perceived security but the cost to attack a system as well.

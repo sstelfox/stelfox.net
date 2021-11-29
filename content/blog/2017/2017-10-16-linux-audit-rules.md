@@ -15,6 +15,8 @@ taxonomies:
 I encountered a little bit of confusion while rewriting my [auditd rules][1]
 which some Googling did not help me solve.
 
+<!-- more -->
+
 When monitoring a file or directory there are two forms the rules can take.
 They are effectively equivalent in their functionality. The simpler form is the
 following format:

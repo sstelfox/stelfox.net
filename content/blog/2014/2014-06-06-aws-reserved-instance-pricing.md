@@ -16,6 +16,8 @@ requested to do a cost estimate. Looking into it, it quickly became clear that
 reserved instances could potentially save quite a bit of cash but there was a
 catch (isn't there always?).
 
+<!-- more -->
+
 There is an upfront cost for reserving the instance and in exchange you get a
 reduced hourly rate. After running the numbers one thing wasn't clear too me,
 is the upfront cost credit towards running machines or a fee you never see

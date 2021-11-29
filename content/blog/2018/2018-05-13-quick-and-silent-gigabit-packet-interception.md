@@ -17,6 +17,8 @@ already on the client or server when doing this (such as when diagnosing weird
 low level app behavior, or unknown, or unusual traffic). It has been a while
 since I've needed to silently be the wire between two black boxes.
 
+<!-- more -->
+
 While verifying link level information about bypassing my Google Fiber Network
 Box I needed to be that wire again. Before I connected any wires to anything I
 needed to be sure I wouldn't accidentally leak traffic as I wasn't sure what

@@ -22,6 +22,8 @@ email while evaluating various data stores. To get the emails into the various
 data stores, I used the ruby script to parse, process and store the emails as
 they came in.
 
+<!-- more -->
+
 If you're going to be doing any form of mail manipulation or statistics I
 highly recommend the [mail][2] gem. It did almost everything I needed out of
 the box, though it didn't correctly enumerate any of the additional headers.
