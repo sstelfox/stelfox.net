@@ -13,10 +13,10 @@ function error_handler() {
 # will effect the value of '$?'
 trap 'error_handler ${LINENO} $? $(basename ${BASH_SOURCE[0]})' ERR
 
-# Diagnostic logging when necessary
-if [ "${DEBUG:-}" = "true" ]; then
-  set -o xtrace
-fi
+# Ensure published matches the repository
+git submodule init
+git submodule sync
+git submodule update --remote
 
 # Blow away anything that doesn't belong
 pushd published/ &> /dev/null
@@ -24,19 +24,16 @@ git add -A
 git reset --hard
 popd &> /dev/null
 
-# Ensure published matches the repository
-git submodule sync
-git submodule update --remote
-
 # Git doesn't track the branch head very well, set it explicitly
 pushd published/ &> /dev/null
+git checkout gh-pages
 git pull origin gh-pages
 popd &> /dev/null
 
 # Build the site
 make build
 
-rsync -rczi --delete --cvs-exclude public/ published/
+rsync -rczi --delete --exclude .git public/ published/
 
 # Sometimes I want to make a minor change without syncing it back to github
 # (little games and things with friends, changes would give away clues). In
