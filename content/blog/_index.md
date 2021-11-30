@@ -1,9 +1,9 @@
 ---
 title: Blog Posts
 
-#template: blog/list.html
+generate_feed: true
 page_template: blog/single.html
 
-paginate_by: 10
+paginate_by: 5
 sort_by: date
 ---

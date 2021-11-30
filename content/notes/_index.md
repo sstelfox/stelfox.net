@@ -8,7 +8,7 @@ in_search_index: false
 page_template: notes/single.html
 template: notes/list.html
 
-paginate_by: 10
+paginate_by: 5
 paginate_reversed: true
 ---
 
