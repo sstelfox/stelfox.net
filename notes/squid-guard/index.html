@@ -1,137 +1,80 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Squid Guard • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator.'>
-<meta property='og:url' content='https://stelfox.net/notes/squid-guard/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Squid Guard • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/squid-guard/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Squid Guard</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-18 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about
+      <div id="content">
+        
+<article class="post">
+  <h1>Squid Guard</h1><div class="post-content"><p>Squid Guard is officially a &quot;URL Rewrite Program&quot;. It takes information about
 the requested page coming in and checks it against a series of ACLs,
 blacklists, and whitelists in an order specified by the administrator. The
 administrator can redirect offending pages to a block page (which has to be a
 hosted site outside of squid).</p>
-<h2 id="installation">Installation</h2>
-<p>Don't use the &ldquo;squidGuard&rdquo; service, it is incorrectly defined, looking
+<span id="continue-reading"></span><h2 id="installation">Installation</h2>
+<p>Don't use the &quot;squidGuard&quot; service, it is incorrectly defined, looking
 for non-existant files, and is poorly implemented. Call squidGuard directly
 from the squid config (see <a href="https://stelfox.net/notes/squid/">Squid</a>).</p>
 <p>NOTICE: To use squid guard at all you need to have a web server setup to
 redirect sites that are denied. For this purpose I decided to install apache,
-create a folder &ldquo;guard&rdquo; and within it a file named blocked.php that simply
+create a folder &quot;guard&quot; and within it a file named blocked.php that simply
 prints out the contents of the $_GET variable. With the config provided this
 will show the client's address, name, username, group, category of the
 offending URL and the URL itself. This can be used to properly display an error
-message. I am quite annoyed by how this works&hellip; I'd much prefer to just deny
-the requests&hellip;</p>
+message. I am quite annoyed by how this works... I'd much prefer to just deny
+the requests...</p>
 <pre><code>yum install squidGuard -y
-</code></pre><h3 id="black--white-lists">Black &amp; White Lists</h3>
+</code></pre>
+<h3 id="black-white-lists">Black &amp; White Lists</h3>
 <p>Remove the default blacklist file as we're going to use another one. This is a
 necessary step to continue using the rest of these instructions. If you don't
 wan to use the Shalla Lists, you'll have to adapt to the instructions given
@@ -141,19 +84,22 @@ however they shouldn't differ much between different lists.</p>
 [root@localhost ~]# mkdir -p /var/squidGuard/whitelists/custom/
 [root@localhost ~]# touch /var/squidGuard/whitelists/custom/domains
 [root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls
-</code></pre><p>Download a blacklist file, <a href="http://www.shallalist.de/">Shalla List</a> seems to be the defacto/good one.</p>
-<pre><code>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2&gt;/dev/null
-[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz.md5 -o /var/squidGuard/blacklists/shallalist.tar.gz.md5 2&gt; /dev/null
-[root@localhost ~]# cat /var/squidGuard/blacklists/shallalist.tar.gz.md5 &amp;&amp; md5sum /var/squidGuard/blacklists/shallalist.tar.gz
+</code></pre>
+<p>Download a blacklist file, <a href="https://www.shallalist.de/">Shalla List</a> seems to be the defacto/good one.</p>
+<pre><code>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2>/dev/null
+[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz.md5 -o /var/squidGuard/blacklists/shallalist.tar.gz.md5 2> /dev/null
+[root@localhost ~]# cat /var/squidGuard/blacklists/shallalist.tar.gz.md5 && md5sum /var/squidGuard/blacklists/shallalist.tar.gz
 c50fdc59593bc3e5c5863e2b120f6fed  shallalist.tar.gz
 c50fdc59593bc3e5c5863e2b120f6fed  /var/squidGuard/blacklists/shallalist.tar.gz
-</code></pre><p>Note: the md5sums are the same (we received an intact download, the sums will
+</code></pre>
+<p>Note: the md5sums are the same (we received an intact download, the sums will
 be different everytime it updates).</p>
 <p>Now that we've verified the blacklists lets extract them.</p>
 <pre><code>[root@localhost ~]# cd /var/squidGuard
 [root@localhost squidGuard]# tar -xzvf shallalist.tar.gz --strip-components 1
 [root@localhost squidGuard]# chown -R squid:squid /var/squidGuard/
-</code></pre><h2 id="configuration">Configuration</h2>
+</code></pre>
+<h2 id="configuration">Configuration</h2>
 <p>By default, squidGuard tries to store it's logfiles in <code>/var/log/squidGuard</code>,
 however, since squid starts up squidGuard, squidGuard will be running under the
 squid user. This is important as the squid user won't have permission to
@@ -247,7 +193,7 @@ dest automobile_planes {
 }
 
 # Sites for realtime chatting and instant messaging. Everything that
-# is not realtime is included in -&gt; forum.
+# is not realtime is included in -> forum.
 dest chat {
   domainlist  blacklists/chat/domains
   urllist   blacklists/chat/urls
@@ -357,7 +303,7 @@ dest forum {
 
 # Sites offering the possibility to win money. Poker, Casino,
 # Bingo and other chance games as well as betting sites. Differs
-# from -&gt; hobby/games in the aspect of winning or loosing money
+# from -> hobby/games in the aspect of winning or loosing money
 # or being lured to do so.
 dest gamble {
   domainlist  blacklists/gamble/domains
@@ -527,7 +473,7 @@ dest recreation_humor {
 # Sites dedicated to martial arts such karate, kung fu, taek won do as
 # well as fighting sports sites like ufc. All site listed in this
 # category are also part of sports. This category is meant for users
-# who wish to allow sports but no &quot;aggressive&quot; kind of sports.
+# who wish to allow sports but no "aggressive" kind of sports.
 dest recreation_martialarts {
   domainlist  blacklists/recreation/humor/domains
   urllist   blacklists/recreation/humor/urls
@@ -651,7 +597,7 @@ dest spyware {
 # interfere with the local computer yet collecting information about the
 # surfing person for later analysis. Sites actively spying out the surfer
 # by installing software or calling home sites are not covered with tracker
-# but with -&gt; spyware.
+# but with -> spyware.
 dest trackers {
   domainlist  blacklists/tracker/domains
   urllist   blacklists/tracker/urls
@@ -725,19 +671,20 @@ dest webtv {
 acl {
   localnets within workhours {
     pass whitelists_custom !adv !aggressive !alchohol !anonvpn !automobile_bikes !automobile_boats !automobile_cars !automobile_planes !chat !costtraps !dating !downloads !drugs !dynamic !fortunetelling !gamble !hobby_games-misc !hobby_games-online !hobby_gardening !hobby_pets !homestyle !hospitals !in-addr !imagehosting !isp !models !movies !music !podcasts !politics !porn !radiotv !recreation_humor !recreation_martialarts !recreation_restaurants !recreation_sports !recreation_travel !recreation_wellness !redirector !religion !remotecontrol !ringtones !sex_education !sex_lingerie !socialnet !spyware !trackers !violence !warez !weapons !webphone !webtv all
-    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
+    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&clientdomain=%n&clientuser=%i&clientgroup=%s&targetgroup=%t&url=%u&uri=%p
   } else {
     pass whitelists_custom !adv !costtraps !in-addr !redirector !ringtones !spyware !trackers all
-    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
+    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&clientdomain=%n&clientuser=%i&clientgroup=%s&targetgroup=%t&url=%u&uri=%p
   }
 
   default {
     pass updatesites none
-    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
+    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&clientdomain=%n&clientuser=%i&clientgroup=%s&targetgroup=%t&url=%u&uri=%p
   }
 }
-</code></pre><h2 id="live-config-changes">Live Config Changes</h2>
-<p>The squid command &ldquo;squid -k reconfigure&rdquo; DOES re-evaluate squidGuard config
+</code></pre>
+<h2 id="live-config-changes">Live Config Changes</h2>
+<p>The squid command &quot;squid -k reconfigure&quot; DOES re-evaluate squidGuard config
 changes as well. This make it very easy to quickly adjust things all over the
 server without a significant service interruption.</p>
 <h2 id="testing-and-diagnostics">Testing and Diagnostics</h2>
@@ -748,24 +695,29 @@ an ideal situation. To test and make sure that your configuration is good (or
 possibly see the errors that may be preventing the filtering from working) run
 the following command:</p>
 <pre><code>[root@localhost ~]# squidGuard -c /etc/squid/squidGuard.conf -C all
-</code></pre><p>It will go through and build the database files for every category defined in
+</code></pre>
+<p>It will go through and build the database files for every category defined in
 the configuration then verify that everything is in order. If an error does
 occur you'll see the message:</p>
 <pre><code>2011-09-20 12:15:50 [7140] Going into emergency mode
-</code></pre><p>Look on the line above it and it you'll have to figure out the issue based on
+</code></pre>
+<p>Look on the line above it and it you'll have to figure out the issue based on
 that message.</p>
 <p>NOTE: After performing this command all of the database files will be owned by
 root! This won't work, fix the issue running the following command:</p>
 <pre><code>[root@localhost ~]# chown -R squid:squid /var/squidGuard/*
-</code></pre><p>Additional permission issues can (usually) be resolved with the following
+</code></pre>
+<p>Additional permission issues can (usually) be resolved with the following
 commands:</p>
 <pre><code>[root@localhost ~]# chown -R root:squid /etc/squid
 [root@localhost ~]# chmod 640 /etc/squid/*
-</code></pre><p>To test individual rules to make sure things are being redirected or blocked
+</code></pre>
+<p>To test individual rules to make sure things are being redirected or blocked
 correctly you can test squidGuard with something along the following lines:</p>
 <pre><code>[root@localhost ~]# su squid -s /bin/bash -
-bash-4.2$ echo &quot;http://porn.com 10.0.0.1/ - - GET&quot; | squidGuard -d -c /etc/squid/squidGuard.conf
-</code></pre><p>It will either return nothing (passes the check) or return a URL to redirect
+bash-4.2$ echo "http://porn.com 10.0.0.1/ - - GET" | squidGuard -d -c /etc/squid/squidGuard.conf
+</code></pre>
+<p>It will either return nothing (passes the check) or return a URL to redirect
 the user too (failed the check). You can replace the 10.0.0.1 with an IP of a
 machine you'd like to test the rules with.</p>
 <h2 id="security-notes">Security Notes</h2>
@@ -783,257 +735,214 @@ safe browsing.</p>
 <li>spyware</li>
 <li>trackers</li>
 </ul>
-<p>The only one that may cause issues is the &ldquo;in-addr&rdquo; one which blocks going to
+<p>The only one that may cause issues is the &quot;in-addr&quot; one which blocks going to
 IP addresses directly. I personally get around this by including the sites I
 want to access directly in my whitelist file.</p>
 <h2 id="sample-error-page">Sample Error Page</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
-  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">uuid</span>() {
-    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sprintf</span>( <span style="color:#e6db74">&#39;%04x%04x-%04x-%04x-%04x-%04x%04x%04x&#39;</span>,
-      <span style="color:#75715e">// 32 bits for &#34;time_low&#34;
-</span><span style="color:#75715e"></span>      <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> ), <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> ),
+<pre data-lang="php" class="language-php "><code class="language-php" data-lang="php"><?php
+  function uuid() {
+    return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+      // 32 bits for "time_low"
+      mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
 
-      <span style="color:#75715e">// 16 bits for &#34;time_mid&#34;
-</span><span style="color:#75715e"></span>      <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> ),
+      // 16 bits for "time_mid"
+      mt_rand( 0, 0xffff ),
 
-      <span style="color:#75715e">// 16 bits for &#34;time_hi_and_version&#34;,
-</span><span style="color:#75715e"></span>      <span style="color:#75715e">// four most significant bits holds version number 4
-</span><span style="color:#75715e"></span>      <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x0fff</span> ) <span style="color:#f92672">|</span> <span style="color:#ae81ff">0x4000</span>,
+      // 16 bits for "time_hi_and_version",
+      // four most significant bits holds version number 4
+      mt_rand( 0, 0x0fff ) | 0x4000,
 
-      <span style="color:#75715e">// 16 bits, 8 bits for &#34;clk_seq_hi_res&#34;,
-</span><span style="color:#75715e"></span>      <span style="color:#75715e">// 8 bits for &#34;clk_seq_low&#34;,
-</span><span style="color:#75715e"></span>      <span style="color:#75715e">// two most significant bits holds zero and one for variant DCE1.1
-</span><span style="color:#75715e"></span>      <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0x3fff</span> ) <span style="color:#f92672">|</span> <span style="color:#ae81ff">0x8000</span>,
+      // 16 bits, 8 bits for "clk_seq_hi_res",
+      // 8 bits for "clk_seq_low",
+      // two most significant bits holds zero and one for variant DCE1.1
+      mt_rand( 0, 0x3fff ) | 0x8000,
 
-      <span style="color:#75715e">// 48 bits for &#34;node&#34;
-</span><span style="color:#75715e"></span>      <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> ), <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> ), <span style="color:#a6e22e">mt_rand</span>( <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0xffff</span> )
+      // 48 bits for "node"
+      mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
     );
   }
-<span style="color:#75715e">?&gt;</span>
-<span style="color:#75715e">&lt;!DOCTYPE&gt;</span>
-&lt;<span style="color:#f92672">html</span>&gt;
-  &lt;<span style="color:#f92672">head</span>&gt;
-    &lt;<span style="color:#f92672">title</span>&gt;This Site Has Been Blocked&lt;/<span style="color:#f92672">title</span>&gt;
-    &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=&#34;</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;icon&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;image/x-icon&#34;</span> /&gt;
-    &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34;</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;icon&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;image/x-icon&#34;</span> /&gt;
-    &lt;<span style="color:#f92672">style</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;text/css&#34;</span>&gt;
-      @<span style="color:#66d9ef">font-face</span> {
-        <span style="color:#f92672">font-family</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Tangerine&#39;</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">src</span><span style="color:#f92672">:</span> <span style="color:#f92672">local</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;Tangerine&#39;</span><span style="color:#f92672">),</span> <span style="color:#f92672">url</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">format</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;truetype&#39;</span><span style="color:#f92672">);</span>
+?>
+<!DOCTYPE>
+<html>
+  <head>
+    <title>This Site Has Been Blocked</title>
+    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=" rel="icon" type="image/x-icon" />
+    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" rel="icon" type="image/x-icon" />
+    <style type="text/css">
+      @font-face {
+        font-family: 'Tangerine';
+        src: local('Tangerine'), url('http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf') format('truetype');
       }
-      <span style="color:#f92672">body</span> {
-        <span style="color:#66d9ef">font-family</span>: <span style="color:#66d9ef">serif</span>;
-        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#FFF8DC</span>;
+      body {
+        font-family: serif;
+        padding: 0;
+        margin: 0;
+        background: #FFF8DC;
       }
       #page {
-        <span style="color:#66d9ef">border</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#66d9ef">solid</span> <span style="color:#ae81ff">#CC9</span>;
-        <span style="color:#66d9ef">border-top</span>: <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span>;
-        <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
-        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">960</span><span style="color:#66d9ef">px</span>;
-        <span style="color:#66d9ef">margin</span>: <span style="color:#66d9ef">auto</span>;
-        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#FFF</span>;
-        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">95</span><span style="color:#66d9ef">%</span>;
-        <span style="color:#66d9ef">box-shadow</span>: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">#CC9</span>;
-        <span style="color:#66d9ef">overflow</span>: <span style="color:#66d9ef">hidden</span>;
-        <span style="color:#66d9ef">border-bottom-left-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">border-bottom-right-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+        border: 1px solid #CC9;
+        border-top: 0px;
+        position: relative;
+        width: 960px;
+        margin: auto;
+        background: #FFF;
+        height: 95%;
+        box-shadow: 0 0 2em #CC9;
+        overflow: hidden;
+        border-bottom-left-radius: 1em;
+        border-bottom-right-radius: 1em;
       }
       #main {
-        <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;
-        <span style="color:#66d9ef">overflow</span>: <span style="color:#66d9ef">hidden</span>;
+        position: relative;
+        overflow: hidden;
       }
       #content {
-        <span style="color:#66d9ef">overflow</span>: <span style="color:#66d9ef">auto</span>;
-        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">2</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">box-shadow</span>: <span style="color:#66d9ef">inset</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0.5</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">#CC9</span>;
-        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        overflow: auto;
+        padding: 1em 2em;
+        box-shadow: inset 0 0 0.5em #CC9;
+        height: 100%;
       }
-      <span style="color:#f92672">header</span> {
-        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#CFC</span>;
-        <span style="color:#66d9ef">font-family</span>: <span style="color:#e6db74">&#39;Tangerine&#39;</span>, <span style="color:#66d9ef">serif</span>;
-        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">2</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">max-height</span>: <span style="color:#ae81ff">80</span><span style="color:#66d9ef">px</span>;
-        <span style="color:#66d9ef">padding-top</span>: <span style="color:#ae81ff">0.25</span><span style="color:#66d9ef">em</span>;
+      header {
+        background: #CFC;
+        font-family: 'Tangerine', serif;
+        font-size: 2em;
+        max-height: 80px;
+        padding-top: 0.25em;
       }
-      <span style="color:#f92672">header</span> <span style="color:#f92672">h1</span><span style="color:#f92672">,</span><span style="color:#f92672">h4</span> {
-        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">margin-left</span>: <span style="color:#ae81ff">1.0</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">inline</span><span style="color:#f92672">-</span><span style="color:#66d9ef">block</span>;
-        <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">underline</span>;
+      header h1,h4 {
+        padding: 0;
+        margin: 0;
+        margin-left: 1.0em;
+        display: inline-block;
+        text-decoration: underline;
       }
-      <span style="color:#f92672">footer</span> {
-        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#CFC</span>;
-        <span style="color:#66d9ef">border-bottom-left-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">border-bottom-right-radius</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0.3</span><span style="color:#66d9ef">em</span> <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.7</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">absolute</span>;
-        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
-        <span style="color:#66d9ef">bottom</span>: <span style="color:#ae81ff">0</span><span style="color:#66d9ef">px</span>;
-        <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">center</span>;
+      footer {
+        background: #CFC;
+        border-bottom-left-radius: 1em;
+        border-bottom-right-radius: 1em;
+        padding: 0.3em 0;
+        font-size: 0.7em;
+        position: absolute;
+        width: 100%;
+        bottom: 0px;
+        text-align: center;
       }
-      <span style="color:#f92672">nav</span> <span style="color:#f92672">p</span> {
-        <span style="color:#66d9ef">margin-bottom</span>: <span style="color:#ae81ff">0</span>;
+      nav p {
+        margin-bottom: 0;
       }
-      <span style="color:#f92672">nav</span> {
-        <span style="color:#66d9ef">background</span>: <span style="color:#ae81ff">#CFC</span>;
-        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.8</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">16</span><span style="color:#66d9ef">%</span>;
-        <span style="color:#66d9ef">height</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
-        <span style="color:#66d9ef">float</span>: <span style="color:#66d9ef">left</span>;
-        <span style="color:#66d9ef">box-shadow</span>: <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">4</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">6</span><span style="color:#66d9ef">px</span> <span style="color:#ae81ff">0</span> <span style="color:#ae81ff">#CC9</span>;
+      nav {
+        background: #CFC;
+        margin: 0;
+        padding: 0 0 0 1em;
+        font-size: 0.8em;
+        width: 16%;
+        height: 100%;
+        float: left;
+        box-shadow: 0 4px 6px 0 #CC9;
       }
-      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> {
-        <span style="color:#66d9ef">list-style</span>: <span style="color:#66d9ef">none</span>;
-        <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
-        <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span>;
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
       }
-      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> <span style="color:#f92672">li</span> {
-        <span style="color:#66d9ef">padding-left</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">em</span>;
+      nav ul li {
+        padding-left: 1em;
       }
-      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> <span style="color:#f92672">li</span> <span style="color:#f92672">a</span> {
-        <span style="color:#66d9ef">color</span>: <span style="color:#ae81ff">#552</span>;
-        <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">none</span>;
+      nav ul li a {
+        color: #552;
+        text-decoration: none;
       }
-      <span style="color:#f92672">nav</span> <span style="color:#f92672">ul</span> <span style="color:#f92672">li</span> <span style="color:#f92672">a</span>:<span style="color:#a6e22e">hover</span> {
-        <span style="color:#66d9ef">text-decoration</span>: <span style="color:#66d9ef">underline</span>;
+      nav ul li a:hover {
+        text-decoration: underline;
       }
-      <span style="color:#f92672">table</span> {
-        <span style="color:#66d9ef">margin</span>: <span style="color:#66d9ef">auto</span>;
-        <span style="color:#66d9ef">font-size</span>: <span style="color:#ae81ff">0.8</span><span style="color:#66d9ef">em</span>;
-        <span style="color:#66d9ef">font-family</span>: <span style="color:#66d9ef">sans-serif</span>;
+      table {
+        margin: auto;
+        font-size: 0.8em;
+        font-family: sans-serif;
       }
-      <span style="color:#f92672">th</span> {
-        <span style="color:#66d9ef">text-align</span>: <span style="color:#66d9ef">left</span>;
-        <span style="color:#66d9ef">vertical-align</span>: <span style="color:#66d9ef">top</span>;
-        <span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">px</span>;
-        <span style="color:#66d9ef">font-weight</span>: <span style="color:#66d9ef">normal</span>;
+      th {
+        text-align: left;
+        vertical-align: top;
+        width: 100px;
+        font-weight: normal;
       }
-    &lt;/<span style="color:#f92672">style</span>&gt;
-  &lt;/<span style="color:#f92672">head</span>&gt;
-  &lt;<span style="color:#f92672">body</span>&gt;
-    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;page&#39;</span>&gt;
-      &lt;<span style="color:#f92672">header</span>&gt;
-        &lt;<span style="color:#f92672">h1</span>&gt;BedroomProgrammers.net&lt;/<span style="color:#f92672">h1</span>&gt;
-        &lt;<span style="color:#f92672">h4</span>&gt;Intricacy requires well rested minds&lt;/<span style="color:#f92672">h4</span>&gt;
-      &lt;/<span style="color:#f92672">header</span>&gt;
-      &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;main&#34;</span>&gt;
-        &lt;<span style="color:#f92672">nav</span>&gt;
-          &lt;<span style="color:#f92672">p</span>&gt;Informative Links:&lt;/<span style="color:#f92672">p</span>&gt;
-          &lt;<span style="color:#f92672">ul</span>&gt;
-            &lt;<span style="color:#f92672">li</span>&gt;- &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span>&gt;Acceptable Use Policy&lt;/<span style="color:#f92672">a</span>&gt;&lt;/<span style="color:#f92672">li</span>&gt;
-          &lt;/<span style="color:#f92672">ul</span>&gt;
-        &lt;/<span style="color:#f92672">nav</span>&gt;
-        &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;content&#34;</span>&gt;
-          &lt;<span style="color:#f92672">section</span>&gt;
-            &lt;<span style="color:#f92672">h2</span>&gt;This Page Has Been Blocked&lt;/<span style="color:#f92672">h2</span>&gt;
-            &lt;<span style="color:#f92672">p</span>&gt;This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.&lt;/<span style="color:#f92672">p</span>&gt;
-            &lt;<span style="color:#f92672">p</span>&gt;If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.&lt;/<span style="color:#f92672">p</span>&gt;
-            &lt;<span style="color:#f92672">p</span>&gt;Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn&#39;t take holidays... neither does this system.&lt;/<span style="color:#f92672">p</span>&gt;
-          &lt;/<span style="color:#f92672">section</span>&gt;
-          &lt;<span style="color:#f92672">hr</span> /&gt;
-          &lt;<span style="color:#f92672">section</span>&gt;
-            &lt;<span style="color:#f92672">table</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;Timestamp&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">date</span>(<span style="color:#a6e22e">DATE_W3C</span>); <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
-              &lt;/<span style="color:#f92672">tr</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;Request ID&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> <span style="color:#a6e22e">uuid</span>(); <span style="color:#75715e">?&gt;</span>
-              &lt;/<span style="color:#f92672">tr</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;IP Address&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientaddr&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
-              &lt;/<span style="color:#f92672">tr</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;Hostname&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientname&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
-              &lt;/<span style="color:#f92672">tr</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;User&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientuser&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
-                &lt;/<span style="color:#f92672">tr</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;Client Group&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;clientgroup&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
-              &lt;/<span style="color:#f92672">tr</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;URL Group&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;targetgroup&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
-              &lt;/<span style="color:#f92672">tr</span>&gt;
-              &lt;<span style="color:#f92672">tr</span>&gt;
-                &lt;<span style="color:#f92672">th</span>&gt;Blacklisted URL&lt;/<span style="color:#f92672">th</span>&gt;
-                &lt;<span style="color:#f92672">td</span>&gt;<span style="color:#75715e">&lt;?php</span> <span style="color:#66d9ef">echo</span> $_GET[<span style="color:#e6db74">&#39;url&#39;</span>] <span style="color:#f92672">.</span> $_GET[<span style="color:#e6db74">&#39;uri&#39;</span>]; <span style="color:#75715e">?&gt;</span>&lt;/<span style="color:#f92672">td</span>&gt;
-              &lt;/<span style="color:#f92672">tr</span>&gt;
-            &lt;/<span style="color:#f92672">table</span>&gt;
-          &lt;/<span style="color:#f92672">section</span>&gt;
-        &lt;/<span style="color:#f92672">div</span>&gt;
-      &lt;/<span style="color:#f92672">div</span>&gt;
-      &lt;<span style="color:#f92672">footer</span>&gt;<span style="color:#960050;background-color:#1e0010">&amp;</span>copy 2011 Me!&lt;/<span style="color:#f92672">footer</span>&gt;
-    &lt;/<span style="color:#f92672">div</span>&gt;
-  &lt;/<span style="color:#f92672">body</span>&gt;
-&lt;/<span style="color:#f92672">html</span>&gt;
-</code></pre></div>
+    </style>
+  </head>
+  <body>
+    <div id='page'>
+      <header>
+        <h1>BedroomProgrammers.net</h1>
+        <h4>Intricacy requires well rested minds</h4>
+      </header>
+      <div id="main">
+        <nav>
+          <p>Informative Links:</p>
+          <ul>
+            <li>- <a href="#">Acceptable Use Policy</a></li>
+          </ul>
+        </nav>
+        <div id="content">
+          <section>
+            <h2>This Page Has Been Blocked</h2>
+            <p>This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.</p>
+            <p>If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.</p>
+            <p>Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn't take holidays... neither does this system.</p>
+          </section>
+          <hr />
+          <section>
+            <table>
+              <tr>
+                <th>Timestamp</th>
+                <td><?php echo date(DATE_W3C); ?></td>
+              </tr>
+              <tr>
+                <th>Request ID</th>
+                <td><?php echo uuid(); ?>
+              </tr>
+              <tr>
+                <th>IP Address</th>
+                <td><?php echo $_GET['clientaddr']; ?></td>
+              </tr>
+              <tr>
+                <th>Hostname</th>
+                <td><?php echo $_GET['clientname']; ?></td>
+              </tr>
+              <tr>
+                <th>User</th>
+                <td><?php echo $_GET['clientuser']; ?></td>
+                </tr>
+              <tr>
+                <th>Client Group</th>
+                <td><?php echo $_GET['clientgroup']; ?></td>
+              </tr>
+              <tr>
+                <th>URL Group</th>
+                <td><?php echo $_GET['targetgroup']; ?></td>
+              </tr>
+              <tr>
+                <th>Blacklisted URL</th>
+                <td><?php echo $_GET['url'] . $_GET['uri']; ?></td>
+              </tr>
+            </table>
+          </section>
+        </div>
+      </div>
+      <footer>&copy 2011 Me!</footer>
+    </div>
+  </body>
+</html>
+</code></pre>
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/sshd/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>SSHd</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/squid/'>
-        <span class='screen-reader-text'>Next post: </span>Squid<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

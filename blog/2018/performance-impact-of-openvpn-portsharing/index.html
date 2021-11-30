@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2018&#x2F;performance-impact-of-openvpn-portsharing&#x2F;">Performance Impact of OpenVPN Port Sharing</a></h1>
+
+  <div class="post-content"><p>I recently had cause to use OpenVPN on the standard HTTPS port to protect my
+traffic. This was done as a compromise with administrators who didn't want to
+change their egress filtering, but wanted to allow me to continue doing my
+normal work.</p>
+<span id="continue-reading"></span>
+<p>I already run several webservers, including this one, and didn't want to give
+up exclusive access to the precious TCP port 443. The recommended way to deal
+with this is to make use of the <code>port-share</code> option built into OpenVPN. This
+left me with two choices, run this on an existing server sharing the port with
+existing websites, or setup a dedicated server just for this instance of
+OpenVPN.</p>
+<p>I couldn't find any other posts that took a look at how this port sharing
+effects the performance of the HTTPS server so I felt like doing a quick
+analysis for other curious parties.</p>
+<p>I setup a fresh Nginx server with Let's Encrypt certificates that mimics my
+production setup and used <code>ab</code> to bench the service for 30 seconds. The mean
+measured rate was 288.70 +/- 14.39 requests per second. Mean request
+fullfillment took 3.47 +/- 0.17 ms.</p>
+<p>After enabling <code>port-share</code> on OpenVPN I reran the exact same test. The result
+was 139.76 +/- 67.68 requests per second. Mean measured request fullfillment
+7.44 +/- 4.16 ms.</p>
+<p>That is a 51% peak request handling reduction, each request has an additional
+4-8ms of latency, and an almost 40x increase of jitter. That is a massive
+relative impact but the vast majority of the websites I run need won't be
+terribly impacted by that additional latency.</p>
+<p>I ultimately ended up setting up a seperate server for OpenVPN as I didn't want
+to mess with known working systems.</p>
+</div><p class="meta">Posted on <span class="postdate">2018-11-04</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

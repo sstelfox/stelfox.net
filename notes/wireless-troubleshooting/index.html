@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1>Wireless Troubleshouting</h1><div class="post-content"><h2 id="bcm4311">BCM4311</h2>
+<p>There is a known issue with Fedora 15+ and BCM4311 wireless cards where the
+wireless will connect, stay connected for a few minutes, then disconnect until
+either the machine is rebooted or wpa_supplicant and NetworkManager are
+rebooted. The latter does not always solve the problem. I've personally
+observed this issue being more prominent when large file transfers are taking
+place.</p>
+<p>Before taking these steps you should verify that you do indeed have a Broadcom
+BCM4311 wireless card. This can be done with the following command:</p>
+<pre><code>lspci | grep -i bcm4311
+</code></pre>
+<p>You should see something along the following if you have the card:</p>
+<pre><code>0c:00.0 Network controller: Broadcom Corporation BCM4311 802.11b/g WLAN (rev 01)
+</code></pre>
+<p>Ensure you have a wired connection as you will lose access to the wireless card
+during this process. You have been warned :). Please also note that the
+following commands (with the exception of the reboots) won't do anything unless
+you have the RPMFusion repository installed.</p>
+<p>As root install the akmod-wl package and reboot like so:</p>
+<pre><code>yum install akmod-wl -y
+reboot
+</code></pre>
+<p>Once the system has finished rebooting, perform a system update which will grab
+a few additional packages, and reboot once again:</p>
+<pre><code>yum update -y
+reboot
+</code></pre>
+<p>If you are unable to see the wireless card then this solution probably hasn't
+worked for you. You can bring the card back online by running the following as
+root:</p>
+<pre><code>modprobe b43
+</code></pre>
+</div>
+</article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

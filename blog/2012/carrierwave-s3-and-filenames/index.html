@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2012&#x2F;carrierwave-s3-and-filenames&#x2F;">CarrierWave, S3 and Filenames</a></h1>
+
+  <div class="post-content"><p>This is going to be a real quick post. I'm using the <code>carrier_wave</code> gem with
+<code>fog</code> for one of my projects and found that when a file is stored on S3 the
+<code>identifier</code>, and <code>filename</code> methods return nil. I got around this issue in two
+separate ways neither of which I'm particularly happy about.</p>
+<span id="continue-reading"></span>
+<p>Outside of the uploader, you can use the File utility and the URL of the object
+to get the base filename like so:</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">File.basename(Model.asset.url)
+</code></pre>
+<p>If you try and do this within the uploader itself like this:</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">File.basename(self.url)
+</code></pre>
+<p>It will work, but not when creating additional versions such as thumbnails as
+the file hasn't actually been created yet so a URL can't be built and you'll
+get an error trying to perform <code>File.basename(nil)</code>. You'd need to go back up
+to the model and get the normal version's URL like so:</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">File.basename(self.model.asset.url)
+</code></pre>
+<p>Now if you're trying to get the file name to build part of the store_dir,
+you've just created an infinite loop! Ruby will be happy to tell you that the
+stack level too deep (<code>SystemStackError</code>). So ultimately how did I end up
+getting it into my store_dir?</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">self.model.attributes["asset"]
+</code></pre>
+<p>The file name gets stored raw directly in the database, and thus you can pull
+it out by accessing the value directly without going through the accessor that
+get overridden by CarrierWave. I'm pretty sure this is a bug, and will report
+it with example code and a test (as is appropriate for any bug report <em>hint</em>)
+as soon as my dead line has passed.</p>
+</div><p class="meta">Posted on <span class="postdate">2012-08-09</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

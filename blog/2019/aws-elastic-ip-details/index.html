@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2019&#x2F;aws-elastic-ip-details&#x2F;">AWS Elastic IP Details</a></h1>
+
+  <div class="post-content"><p>Sometimes it becomes important to understand how your cloud provider implements
+certain networking details. While working through an issue in AWS I needed to
+understand how they handle public IP addressing. While this issue for me was
+specific to an Elastic IP all of their public addresses are handled this way
+and may bite you even without them. The problems specifically crop up when a
+hosted piece of software does NAT traversal detection and changes it's behavior
+based on the result.</p>
+<span id="continue-reading"></span>
+<p>Amazon attaches public IP address to EC2 instances (and likely other of their
+hosted services) through 1:1 NAT mapping of external to internal addresses. All
+traffic will reach your instance without issue, but your system's native
+networking stack will (by default) not become aware of what that public IP is.</p>
+<p>In most cases this isn't an issue, the traffic ends up at your instance and is
+properly changed to the internal address so your system responds without any
+additional configuration work.</p>
+<p>The first issue is tunneled traffic. I <a href="https://stelfox.net/blog/2019/fighting-ipsec-on-aws/">experienced this</a> in my last post
+with IPSec. The tunneled traffic is not modified by going through a 1:1 NAT and
+your host will not recognize the external address inside the tunnel, which in
+most cases will result in silently dropped packets (the &quot;oh this isn't for me&quot;
+syndrome).</p>
+<p>There are ways to get your system to respond to tunneled packets with other IP
+addresses such as treating it like a high-availability shared virtual server IP
+address but I have yet to find a clean way to deal with responding to the
+address. IPSec had a way to deal with this built in directly and I'd refer you
+back to <a href="https://stelfox.net/blog/2019/fighting-ipsec-on-aws/">my other post</a> to read about that.</p>
+<p>Usually sniffing the tunneled traffic is enough to diagnose these issues.
+What is a bit more pernicious, is when a server changes its behavior when it
+detects a NAT in place. This requires deeper understanding of the protocol in
+use and in some cases the specific server implementation. Once again this post
+is ultimately about IPSec (and specifically libreswan).</p>
+<p>While you don't have to make any changes to get IPSec working with AWS public
+IPs it will detect the NAT and start encapsulating the traffic. The
+encapsulation will require an additional port being opened on your security
+group firewall but more importantly, it will add variable latency and
+additional processing overhead to each packet. Not everything is sensitive to
+this but you'll be needlessly adding overhead to your network traffic is you
+don't address it. In my case (AWS VPC to AWS VPC) there aren't any meaningful
+NATs in place that require this encapsulation to function appropriately.</p>
+<p>If you encounter this and are using libreswan on AWS you only need to add the
+following two lines to your tunnel's config disable this behavior:</p>
+<pre><code>encapsulation=no
+nat-keepalive=no
+</code></pre>
+<p>I hope this helps someone else diagnose weird behavior when working with public
+IP addresses on AWS.</p>
+</div><p class="meta">Posted on <span class="postdate">2019-03-17</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

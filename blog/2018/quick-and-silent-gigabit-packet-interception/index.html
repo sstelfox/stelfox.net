@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2018&#x2F;quick-and-silent-gigabit-packet-interception&#x2F;">Quick and Silent Gigabit Packet Interception</a></h1>
+
+  <div class="post-content"><p>I regularly find myself inspecting traffic on Linux systems. Usually I'm
+already on the client or server when doing this (such as when diagnosing weird
+low level app behavior, or unknown, or unusual traffic). It has been a while
+since I've needed to silently be the wire between two black boxes.</p>
+<span id="continue-reading"></span>
+<p>While verifying link level information about bypassing my Google Fiber Network
+Box I needed to be that wire again. Before I connected any wires to anything I
+needed to be sure I wouldn't accidentally leak traffic as I wasn't sure what
+would impact the link.</p>
+<p>You'll need a Linux computer with two gigabit ethernet ports. My last two
+laptops haven't had any built in ethernet ports, but USB gigabit adapters are
+cheap and I already had a bunch.</p>
+<p>I went through and disabled the services that would configure network
+interfaces (NetworkManager and ModemManager) as well as all of the networking
+services on my system, and confirming your firewalls are all going to allow the
+traffic through.</p>
+<p>I double checked no packets were sent out up on link up by listening on each
+respective interface, plugging in to a powered but otherwise disconnected
+switch, and bringing the interface up.</p>
+<p>Once I'd verified everything in one root terminal I ran:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">ip link set eth0 promisc on multicast off arp off
+ip link set eth1 promisc on multicast off arp off
+
+ip link add name intercept0 type bridge
+ip link set intercept0 promisc on multicast off arp off up
+
+ip link set eth0 master intercept0
+ip link set eth1 master intercept0
+</code></pre>
+<p>In another terminal either as root, or as a user in the <code>wireshark</code> group begin
+recording the traffic of interest:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">tshark -i intercept0 -w recording.pcap
+</code></pre>
+<p>At this point, connect the cables between the two boxes of interest. When ready
+bring the links up:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">ip link set eth0 up
+ip link set eth1 up
+</code></pre>
+<p>Welcome to being the wire.</p>
+</div><p class="meta">Posted on <span class="postdate">2018-05-13</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

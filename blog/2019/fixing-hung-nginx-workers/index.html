@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2019&#x2F;fixing-hung-nginx-workers&#x2F;">Fixing Hung Nginx Workers</a></h1>
+
+  <div class="post-content"><p>While cleaning up some tech debt, a curious issue cropped up. Nginx was running
+in an alpine container as a front end load balancer. It had a dynamic config
+that got periodically updated by a sidecar, and had filebeat shipping logs out
+to a central collector but otherwise was just a very simple Nginx config.</p>
+<span id="continue-reading"></span>
+<p>Every now and then the container would crash, it would automatically recover
+fast enough no alarms were lost and the clients would just resend their
+requests. No data was losts, everything failed gracefully, but it's still a
+pretty crazy thing to leave happening.</p>
+<p>There was nothing in the log besides some client errors and configuration
+reloading notifications. The external metrics showed the container throwing
+some kind of memory party before finally burning out and crashing. It was a
+pretty steady trend upwards indicative of some kind of a memory leak. The graph
+below illustrates this. Each of those drops is either the container crashing or
+me manually restarting it to test behavior. Can you figure out when I fixed the
+issue?</p>
+<p><img src="https://stelfox.net/blog/2019/fixing-hung-nginx-workers/nginx_memory_consumption.png" alt="Graph showing Nginx memory usage. The graph goes from chaotic to steady" /></p>
+<p>To figure out what was going on I had to get an invitation that container's
+party.</p>
+<p>I don't think there is great tooling for inspecting individual processes inside
+of containers. As much as we'd like to think of containers as isolated
+applications, its not uncommon for them to run <a href="https://github.com/krallin/tini">a minimal init container</a>,
+or be composed of separate different processes themselves that handle different
+things (Nginx has a master process and spawns off many worker processes). We
+still need the data on those processes.</p>
+<p>The common solution to getting this data seems to be to &quot;just exec into the
+container&quot;. In general <code>exec</code> should be restricted. If you find yourself
+running exec in a container, you're missing tooling or metrics that should
+avoid that (which is the case here).</p>
+<p>Denying <code>exec</code> is probably a longer discussion but the short of it is: If you
+can <code>exec</code> into the container, you can extract its secrets, configuration, and
+access any services that it's allowed to (likely escalating your personal
+privileges within the cluster). This is without considering the ramifications
+of <code>exec</code>'ing into a privileged container.</p>
+<p>In any event, not all container clusters solution allow external execution
+(looking at you AWS ECS, its the one good thing I have to say about you).</p>
+<p>I chose to modify the container to log the data I needed instead. I setup a
+wrapper that started and backgrounded the following script:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">#!/bin/sh
+
+while [ 1 ]; do
+  # This generates a JSON output that can be pulled via the ECS logs of the top
+  # memory consuming processes using what we have available in alpine.
+  ps -o pid,time,rss,vsz,args |
+    tail -n +2 |
+    awk 'memstat: { print "{\"pid\":" $1 ",\"time\":\"" $2 "\",\"rss\":" $3 ",\"vsz\":" $4 ",\"cmd\":\"" substr($0, index($0,$5)) "\"}" }'
+
+  sleep 300
+done
+</code></pre>
+<p>Yes, I'm abusing <code>awk</code> to generate JSON I can parse later.</p>
+<p>Each message has a prefix of <code>memstat:</code> so I can easily filter and extract that
+data from the live log stream. After a couple of hours (the time it generally
+took for the party to get going) the issue was pretty obvious. Inside the
+container there was a growing number of processes with the name <code>nginx: worker process is shutting down</code>. Some Googling turned up <a href="https://forum.nginx.org/read.php?2,262403,262403">a post in the Nginx mailing
+list</a> from a while ago.</p>
+<p>The responses claimed that it was the result of a third party module, but this
+is stock Nginx (version 1.15.8 at the time) which was at least three years
+older than the post. It did indicate a clue though: config reloading.</p>
+<p>I don't know why Nginx believed connections were still open, we have request
+and connect timeouts both in this config and upstream. Some of these processes
+were sticking around for hours (I never actually saw one exit after getting
+into this hung state). Every config reload was dropping a zombie worker or two
+into the container, permanently consuming ~30Mb of RAM. When it hit the
+configured threshold, the party gets stopped.</p>
+<p>An option was added in the <a href="http://nginx.org/en/docs/ngx_core_module.html#worker_shutdown_timeout">Nginx core module</a> to handle situations where
+the worker wouldn't close, but this definitely seems like a bug of some kind.
+There is a newer version of Nginx (1.17.5 at the time of the writing) that
+could very well have fixed this issue.</p>
+<p>Adding <code>worker_shutdown_timeout 60s;</code> to the main Nginx config solved the issue
+(60 seconds matches our request and connect timeouts so nothing valid should
+last longer than that). Sure enough Nginx went back to stable, and predictably
+low memory usage.</p>
+</div><p class="meta">Posted on <span class="postdate">2019-10-25</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

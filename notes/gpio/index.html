@@ -1,271 +1,213 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-I came across this python script that accesses GPIO pins in linux. It&#39;s potentially very useful so I&#39;m including it here, in it&#39;s entirety. I can later on reference this for use in my own programs.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='GPIO • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-I came across this python script that accesses GPIO pins in linux. It&#39;s potentially very useful so I&#39;m including it here, in it&#39;s entirety. I can later on reference this for use in my own programs.'>
-<meta property='og:url' content='https://stelfox.net/notes/gpio/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>GPIO • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/gpio/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>GPIO</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-4 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>I came across this python script that accesses GPIO pins in linux. It's
+      <div id="content">
+        
+<article class="post">
+  <h1>GPIO</h1><div class="post-content"><p>I came across this python script that accesses GPIO pins in linux. It's
 potentially very useful so I'm including it here, in it's entirety. I can later
 on reference this for use in my own programs.</p>
-<pre><code>&quot;&quot;&quot;Arduino-like library for Python on BeagleBone&quot;&quot;&quot;
+<span id="continue-reading"></span><pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">"""Arduino-like library for Python on BeagleBone"""
 import time
 
-HIGH = &quot;HIGH&quot;
-LOW = &quot;LOW&quot;
-OUTPUT = &quot;OUTPUT&quot;
-INPUT = &quot;INPUT&quot;
+HIGH = "HIGH"
+LOW = "LOW"
+OUTPUT = "OUTPUT"
+INPUT = "INPUT"
 pinList = [] # needed for unexport()
 startTime = time.time() # needed for millis()
 digitalPinDef = {
-  &quot;P8.3&quot;:   38,
-  &quot;P8.4&quot;:   39,
-  &quot;P8.5&quot;:   34,
-  &quot;P8.6&quot;:   35,
-  &quot;P8.11&quot;:  45,
-  &quot;P8.12&quot;:  44,
-  &quot;P8.14&quot;:  26,
-  &quot;P8.15&quot;:  47,
-  &quot;P8.16&quot;:  46,
-  &quot;P8.17&quot;:  27,
-  &quot;P8.18&quot;:  65,
-  &quot;P8.20&quot;:  63,
-  &quot;P8.21&quot;:  62,
-  &quot;P8.22&quot;:  37,
-  &quot;P8.23&quot;:  36,
-  &quot;P8.24&quot;:  33,
-  &quot;P8.25&quot;:  32,
-  &quot;P8.26&quot;:  61,
-  &quot;P8.27&quot;:  86,
-  &quot;P8.28&quot;:  88,
-  &quot;P8.29&quot;:  87,
-  &quot;P8.30&quot;:  89,
-  &quot;P8.39&quot;:  76,
-  &quot;P8.40&quot;:  77,
-  &quot;P8.41&quot;:  74,
-  &quot;P8.42&quot;:  75,
-  &quot;P8.43&quot;:  72,
-  &quot;P8.44&quot;:  73,
-  &quot;P8.45&quot;:  70,
-  &quot;P8.46&quot;:  71,
-  &quot;P9.12&quot;:  60,
-  &quot;P9.15&quot;:  48,
-  &quot;P9.23&quot;:  49,
-  &quot;P9.25&quot;:  117,
-  &quot;P9.27&quot;:  115,
-  &quot;P9.42&quot;:  7
+  "P8.3":   38,
+  "P8.4":   39,
+  "P8.5":   34,
+  "P8.6":   35,
+  "P8.11":  45,
+  "P8.12":  44,
+  "P8.14":  26,
+  "P8.15":  47,
+  "P8.16":  46,
+  "P8.17":  27,
+  "P8.18":  65,
+  "P8.20":  63,
+  "P8.21":  62,
+  "P8.22":  37,
+  "P8.23":  36,
+  "P8.24":  33,
+  "P8.25":  32,
+  "P8.26":  61,
+  "P8.27":  86,
+  "P8.28":  88,
+  "P8.29":  87,
+  "P8.30":  89,
+  "P8.39":  76,
+  "P8.40":  77,
+  "P8.41":  74,
+  "P8.42":  75,
+  "P8.43":  72,
+  "P8.44":  73,
+  "P8.45":  70,
+  "P8.46":  71,
+  "P9.12":  60,
+  "P9.15":  48,
+  "P9.23":  49,
+  "P9.25":  117,
+  "P9.27":  115,
+  "P9.42":  7
 }
 
 analogPinDef = {
-  &quot;P9.33&quot;:  &quot;ain4&quot;,
-  &quot;P9.35&quot;:  &quot;ain6&quot;,
-  &quot;P9.36&quot;:  &quot;ain5&quot;,
-  &quot;P9.37&quot;:  &quot;ain2&quot;,
-  &quot;P9.38&quot;:  &quot;ain3&quot;,
-  &quot;P9.39&quot;:  &quot;ain0&quot;,
-  &quot;P9.40&quot;:  &quot;ain1&quot;
+  "P9.33":  "ain4",
+  "P9.35":  "ain6",
+  "P9.36":  "ain5",
+  "P9.37":  "ain2",
+  "P9.38":  "ain3",
+  "P9.39":  "ain0",
+  "P9.40":  "ain1"
 }
 
 def pinMode(pin, direction):
-  &quot;&quot;&quot;pinMode(pin, direction) opens (exports)  a pin for use and 
-  sets the direction&quot;&quot;&quot;
+  """pinMode(pin, direction) opens (exports)  a pin for use and 
+  sets the direction"""
   if pin in digitalPinDef:
-    fw = file(&quot;/sys/class/gpio/export&quot;, &quot;w&quot;)
-    fw.write(&quot;%d&quot; % (digitalPinDef[pin]))
+    fw = file("/sys/class/gpio/export", "w")
+    fw.write("%d" % (digitalPinDef[pin]))
     fw.close()
-    fileName = &quot;/sys/class/gpio/gpio%d/direction&quot; % (digitalPinDef[pin])
-    fw = file(fileName, &quot;w&quot;)
+    fileName = "/sys/class/gpio/gpio%d/direction" % (digitalPinDef[pin])
+    fw = file(fileName, "w")
     if direction == INPUT:
-      fw.write(&quot;in&quot;)
+      fw.write("in")
     else:
-      fw.write(&quot;out&quot;)
+      fw.write("out")
     fw.close()
     pinList.append(digitalPinDef[pin])
   else:
-    print &quot;pinMode error: Pin &quot; + pin + &quot; is not defined as a digital I/O pin in the pin definition.&quot;
+    print "pinMode error: Pin " + pin + " is not defined as a digital I/O pin in the pin definition."
 
 
 def digitalWrite(pin, status):
-  &quot;&quot;&quot;digitalWrite(pin, status) sets a pin HIGH or LOW&quot;&quot;&quot;
+  """digitalWrite(pin, status) sets a pin HIGH or LOW"""
   if pin in digitalPinDef:
-    fileName = &quot;/sys/class/gpio/gpio%d/value&quot; % (digitalPinDef[pin])
-    fw = file(fileName, &quot;w&quot;)
+    fileName = "/sys/class/gpio/gpio%d/value" % (digitalPinDef[pin])
+    fw = file(fileName, "w")
     if status == HIGH:
-      fw.write(&quot;1&quot;)
+      fw.write("1")
     if status == LOW:
-      fw.write(&quot;0&quot;)
+      fw.write("0")
     fw.close()
   else:
-    print &quot;digitalWrite error: Pin &quot; + pin + &quot; is not defined as a digital I/O pin in the pin definition.&quot;
+    print "digitalWrite error: Pin " + pin + " is not defined as a digital I/O pin in the pin definition."
 
 def digitalRead(pin):
-  &quot;&quot;&quot;digitalRead(pin) returns HIGH or LOW for a given pin.&quot;&quot;&quot;
+  """digitalRead(pin) returns HIGH or LOW for a given pin."""
   if pin in digitalPinDef:
-    fileName = &quot;/sys/class/gpio/gpio%d/value&quot; % (digitalPinDef[pin])
-    fw = file(fileName, &quot;r&quot;)
+    fileName = "/sys/class/gpio/gpio%d/value" % (digitalPinDef[pin])
+    fw = file(fileName, "r")
     inData = fw.read()
     fw.close()
-    if inData == &quot;0\n&quot;:
+    if inData == "0\n":
       return LOW
-    if inData == &quot;1\n&quot;:
+    if inData == "1\n":
       return HIGH
   else:
-    print &quot;digitalRead error: Pin &quot; + pin + &quot; is not defined as a digital I/O pin in the pin definition.&quot;
+    print "digitalRead error: Pin " + pin + " is not defined as a digital I/O pin in the pin definition."
     return -1;
 
 def analogRead(pin):
-  &quot;&quot;&quot;analogRead(pin) returns analog value for a given pin.&quot;&quot;&quot;
+  """analogRead(pin) returns analog value for a given pin."""
   if pin in analogPinDef:
-    fileName = &quot;/sys/devices/platform/tsc/&quot; + (analogPinDef[pin])
-    fw = file(fileName, &quot;r&quot;)
+    fileName = "/sys/devices/platform/tsc/" + (analogPinDef[pin])
+    fw = file(fileName, "r")
     return fw.read()
   fw.close()
 else:
-  print &quot;analogRead error: Pin &quot; + pin + &quot; is not defined as an analog in pin in the pin definition.&quot;
+  print "analogRead error: Pin " + pin + " is not defined as an analog in pin in the pin definition."
     return -1;
 
 def pinUnexport(pin):
-  &quot;&quot;&quot;pinUnexport(pin) closes a pin in sysfs. This is susally 
-  called by cleanup() when a script is exiting.&quot;&quot;&quot;
-  fw = file(&quot;/sys/class/gpio/unexport&quot;, &quot;w&quot;)
-  fw.write(&quot;%d&quot; % (pin))
+  """pinUnexport(pin) closes a pin in sysfs. This is susally 
+  called by cleanup() when a script is exiting."""
+  fw = file("/sys/class/gpio/unexport", "w")
+  fw.write("%d" % (pin))
   fw.close()
 
 def cleanup():
-  &quot;&quot;&quot; takes care of stepping through pins that were set with
-  pinMode and unExports them. Prints result&quot;&quot;&quot;
+  """ takes care of stepping through pins that were set with
+  pinMode and unExports them. Prints result"""
   def find_key(dic, val):
     return [k for k, v in dic.iteritems() if v == val][0]
-  print &quot;&quot;
-  print &quot;Cleaning up. Unexporting the following pins:&quot;,
+  print ""
+  print "Cleaning up. Unexporting the following pins:",
   for pin in pinList:
     pinUnexport(pin)
     print find_key(digitalPinDef, pin),
 
 def delay(millis):
-  &quot;&quot;&quot;delay(millis) sleeps the script for a given number of 
-  milliseconds&quot;&quot;&quot;
+  """delay(millis) sleeps the script for a given number of 
+  milliseconds"""
   time.sleep(millis/1000.0)
 
 def millis():
-  &quot;&quot;&quot;millis() returns an int for the number of milliseconds since 
-  the script started.&quot;&quot;&quot;
+  """millis() returns an int for the number of milliseconds since 
+  the script started."""
   return int((time.time() - startTime) * 1000)
 
 def run(setup, main): # from PyBBIO by Alexander Hiam - ahiam@marlboro.edu - www.alexanderhiam.com https://github.com/alexanderhiam/PyBBIO
-  &quot;&quot;&quot; The main loop; must be passed a setup and a main function.
+  """ The main loop; must be passed a setup and a main function.
   First the setup function will be called once, then the main
   function wil be continuously until a stop signal is raised, 
   e.g. CTRL-C or a call to the stop() function from within the
-  main function. &quot;&quot;&quot;
+  main function. """
   try:
     setup()
     while (True):
@@ -279,59 +221,16 @@ def run(setup, main): # from PyBBIO by Alexander Hiam - ahiam@marlboro.edu - www
     print e
 </code></pre>
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/gpsd/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>GPSd</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/gatekeeper-script-for-ssh/'>
-        <span class='screen-reader-text'>Next post: </span>Gatekeeper Script for SSH<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

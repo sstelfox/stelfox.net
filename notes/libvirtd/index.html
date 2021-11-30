@@ -1,123 +1,65 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-libvirt is an open source API and management tool for managing platform virtualization. It is used to manage Linux KVM and Xen virtual machines through graphical interfaces such as Virtual Machine Manager and higher level tools such as oVirt.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='libvirtd • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-libvirt is an open source API and management tool for managing platform virtualization. It is used to manage Linux KVM and Xen virtual machines through graphical interfaces such as Virtual Machine Manager and higher level tools such as oVirt.'>
-<meta property='og:url' content='https://stelfox.net/notes/libvirtd/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>libvirtd • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/libvirtd/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>libvirtd</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-11 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>libvirt is an open source API and management tool for managing platform
+      <div id="content">
+        
+<article class="post">
+  <h1>libvirtd</h1><div class="post-content"><p>libvirt is an open source API and management tool for managing platform
 virtualization. It is used to manage Linux KVM and Xen virtual machines through
 graphical interfaces such as Virtual Machine Manager and higher level tools
 such as oVirt. In this case the backend is KVM.</p>
-<h2 id="security-notes">Security Notes</h2>
+<span id="continue-reading"></span><h2 id="security-notes">Security Notes</h2>
 <p>Since libvirtd distributes resources to guest machines a tight control needs to
 be placed on the guests to prevent the host from becoming unmanageable. Luckily
 through the use of CGroups this can be accomplished.</p>
@@ -144,10 +86,11 @@ the network make the following change to the default <a href="https://stelfox.ne
 <pre><code>:FORWARD DROP [0:0]
 --- Replace with ---
 :FORWARD ACCEPT [0:0]
-</code></pre><h2 id="cgroup-configuration">CGroup Configuration</h2>
+</code></pre>
+<h2 id="cgroup-configuration">CGroup Configuration</h2>
 <p>At a high level, CGroups are a generic mechanism the kernel provides for
 grouping of processes and applying controls to those groups. Tunables within a
-cgroup are provided by what the kernel calls &lsquo;controllers&rsquo;, with each
+cgroup are provided by what the kernel calls 'controllers', with each
 controller able to expose one or more tunable or control.</p>
 <p>When mounting the cgroups filesystem it is possible to indicate what
 controllers are to be activated. This makes it possible to mount the filesystem
@@ -168,11 +111,13 @@ devices</li>
 <li>freezer: Freezer controller - Pause and resume execution of processes in the
 group. Think of it as SIGSTOP for the whole group</li>
 <li>net_cls: Network class controller - Control network utilization by associating
-processes with a ‘tc’ network class</li>
+processes with a ‘tc’ network class </li>
 </ul>
 <p>Under KVM all of these are not supported, however cpu, devices and memory are.
 Which are in my humble opinion the most important for our task.</p>
-<p><a href="http://berrange.com/posts/2009/12/03/using-cgroups-with-libvirt-and-lxckvm-guests-in-fedora-12/">http://berrange.com/posts/2009/12/03/using-cgroups-with-libvirt-and-lxckvm-guests-in-fedora-12/</a></p>
+<ul>
+<li><a href="http://berrange.com/posts/2009/12/03/using-cgroups-with-libvirt-and-lxckvm-guests-in-fedora-12/">Using CGroups with libvirt and LXC/KVM guests in Fedora 12</a></li>
+</ul>
 <h2 id="initial-setup">Initial Setup</h2>
 <p>Before creating your first guest there are a few things that I like to do.
 These include setting up additional storage pools and configuring networking.
@@ -196,33 +141,35 @@ Network default destroyed
 
 virsh # net-undefine default
 Network default has been undefined
-</code></pre><p>Now that our networking problem is taken care of, on to additional storage
+</code></pre>
+<p>Now that our networking problem is taken care of, on to additional storage
 pools. By default one storage pool (a directory) exists. This can be found at
-&ldquo;/var/lib/libvirt/images&rdquo;. There is nothing wrong with just using the default
+&quot;/var/lib/libvirt/images&quot;. There is nothing wrong with just using the default
 for disk images. The only reason I keep a second for disk images is that I like
 to keep all of my VMs on an encrypted partition all to themselves.</p>
 <p>Since I need one of my VMs at boot and won't be able to remotely provide a key
 until after that VM has booted it needs to be on an unencrypted partition which
 I still use the default for.</p>
-<p>The rest of the VMs will live in a storage pool named &ldquo;secure&rdquo; mounted at
-&ldquo;/var/lib/libvirt/images/secure&rdquo;. I'm using the the subdirectory of
-&ldquo;/var/lib/libvirt/images&rdquo; so that I won't have to add additional SELinux
+<p>The rest of the VMs will live in a storage pool named &quot;secure&quot; mounted at
+&quot;/var/lib/libvirt/images/secure&quot;. I'm using the the subdirectory of
+&quot;/var/lib/libvirt/images&quot; so that I won't have to add additional SELinux
 policies which is potentially very messy and could present additional security
 risks.</p>
 <p>First we need to create an XML file to define the storage pool. Create the
-following in a file named &ldquo;secure.xml&rdquo;:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;pool</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#39;dir&#39;</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;name</span><span style="color:#f92672">&gt;</span>secure<span style="color:#f92672">&lt;/name&gt;</span>
-  <span style="color:#f92672">&lt;target</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;path</span><span style="color:#f92672">&gt;</span>/var/lib/libvirt/images/secure<span style="color:#f92672">&lt;/path&gt;</span>
-    <span style="color:#f92672">&lt;permissions</span><span style="color:#f92672">&gt;</span>
-      <span style="color:#f92672">&lt;mode</span><span style="color:#f92672">&gt;</span>0700<span style="color:#f92672">&lt;/mode&gt;</span>
-      <span style="color:#f92672">&lt;owner</span><span style="color:#f92672">&gt;</span>0<span style="color:#f92672">&lt;/owner&gt;</span>
-      <span style="color:#f92672">&lt;group</span><span style="color:#f92672">&gt;</span>0<span style="color:#f92672">&lt;/group&gt;</span>
-    <span style="color:#f92672">&lt;/permissions&gt;</span>
-  <span style="color:#f92672">&lt;/target&gt;</span>
-<span style="color:#f92672">&lt;/pool&gt;</span>
-</code></pre></div><p>Next you need to tell libvirt about the pool. You can do this with the
+following in a file named &quot;secure.xml&quot;:</p>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml"><pool type='dir'>
+  <name>secure</name>
+  <target>
+    <path>/var/lib/libvirt/images/secure</path>
+    <permissions>
+      <mode>0700</mode>
+      <owner>0</owner>
+      <group>0</group>
+    </permissions>
+  </target>
+</pool>
+</code></pre>
+<p>Next you need to tell libvirt about the pool. You can do this with the
 following series of commands:</p>
 <pre><code>[root@legba ~]# virsh
 Welcome to virsh, the virtualization interactive terminal.
@@ -241,7 +188,8 @@ Pool secure marked as autostarted
 
 virsh # pool-refresh secure
 Pool secure refreshed
-</code></pre><h2 id="guest-networking">Guest Networking</h2>
+</code></pre>
+<h2 id="guest-networking">Guest Networking</h2>
 <p>My network is a tad unusual in that I have VMs on the same box that need to be
 on different network segments. Each of these network segments comes back to my
 virtualization host through VLANs.</p>
@@ -264,7 +212,8 @@ the files contents should be replaced with the following:</p>
 BOOTPROTO=none
 HWADDR=XX:XX:XX:XX:XX:XX
 ONBOOT=yes
-</code></pre><p>Next we need to tell the server about the VLAN. Create the file
+</code></pre>
+<p>Next we need to tell the server about the VLAN. Create the file
 <code>/etc/sysconfig/network-scripts/ifcfg-vlan20</code> if it doesn't exist already, and
 populate it with the following:</p>
 <pre><code>VLAN=yes
@@ -275,7 +224,8 @@ BOOTPROTO=none
 ONBOOT=yes
 TYPE=Ethernet
 BRIDGE=br20
-</code></pre><p>Note above that I've specified which bridge the vlan device is going to be
+</code></pre>
+<p>Note above that I've specified which bridge the vlan device is going to be
 connected to. The 20 in br20 can be changed to any other number you'd like,
 however for simplicity sake I like to have the bridge reflect what VLAN it is
 connected to.</p>
@@ -290,21 +240,22 @@ ONBOOT=yes
 TYPE=Bridge
 BOOTPROTO=static
 
-IPADDR=&quot;10.13.37.30&quot;
-NETMASK=&quot;255.255.255.0&quot;
-GATEWAY=&quot;10.13.37.1&quot;
+IPADDR="10.13.37.30"
+NETMASK="255.255.255.0"
+GATEWAY="10.13.37.1"
 
 DEFROUTE=yes
 
-DNS1=&quot;10.13.37.1&quot;
-DNS2=&quot;10.13.37.2&quot;
+DNS1="10.13.37.1"
+DNS2="10.13.37.2"
 
 IPV4_FAILURE_FATAL=yes
 IPV6INIT=no
 
-NAME=&quot;Some Bridged Network&quot;
-</code></pre><p>Careful with this one, the value for TYPE is case sensitive. Putting &lsquo;bridge&rsquo;
-or &lsquo;BRIDGE&rsquo; will cause the scripts to ignore that this is a bridge and the
+NAME="Some Bridged Network"
+</code></pre>
+<p>Careful with this one, the value for TYPE is case sensitive. Putting 'bridge'
+or 'BRIDGE' will cause the scripts to ignore that this is a bridge and the
 interface will not come up.</p>
 <p>In my experience adding a VLAN (and it's the same for each one after) adds a
 couple seconds to the boot process each time the server boots up. If
@@ -313,21 +264,17 @@ they can a large number of VLANs can significantly delay the process.</p>
 <p>When creating a guest you'll want to add the following line to the command to
 give the guest an interface on the appropriate VLAN:</p>
 <pre><code>--network=bridge:br20
-</code></pre><p>You can also define a network in virsh so that it'll show up to utilities like
+</code></pre>
+<p>You can also define a network in virsh so that it'll show up to utilities like
 virt-manager by putting the following in an xml file and running <code>virsh net-define bridge20.xml</code> assuming you name the file <code>bridge20.xml</code>, and <code>virsh net-autostart LANBridge</code> which assumes you use the same name that I've chosen
 for this bridge below:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;network</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;name</span><span style="color:#f92672">&gt;</span>LANBridge<span style="color:#f92672">&lt;/name&gt;</span>
-  <span style="color:#f92672">&lt;uuid</span><span style="color:#f92672">&gt;</span>5ba71de3-c507-4512-93c3-65fd3a38e112<span style="color:#f92672">&lt;/uuid&gt;</span>
-  <span style="color:#f92672">&lt;forward</span> <span style="color:#a6e22e">mode=</span><span style="color:#e6db74">&#34;bridge&#34;</span> <span style="color:#f92672">/&gt;</span>
-  <span style="color:#f92672">&lt;bridge</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;br20&#34;</span> <span style="color:#f92672">/&gt;</span>
-<span style="color:#f92672">&lt;/network&gt;</span>
-</code></pre></div><h3 id="ipv6-pass-through">IPv6 Pass Through</h3>
-<p><a href="https://www.berrange.com/posts/2011/06/16/providing-ipv6-connectivity-to-virtual-guests-with-libvirt-and-kvm/">https://www.berrange.com/posts/2011/06/16/providing-ipv6-connectivity-to-virtual-guests-with-libvirt-and-kvm/</a></p>
-<h2 id="devices">Devices</h2>
-<h3 id="usb-devices">USB Devices</h3>
-<p><a href="http://david.wragg.org/blog/2009/03/using-usb-pass-through-under-libvirt.html">http://david.wragg.org/blog/2009/03/using-usb-pass-through-under-libvirt.html</a></p>
-<h3 id="pci-devices">PCI Devices</h3>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml"><network>
+  <name>LANBridge</name>
+  <uuid>5ba71de3-c507-4512-93c3-65fd3a38e112</uuid>
+  <forward mode="bridge" />
+  <bridge name="br20" />
+</network>
+</code></pre>
 <h2 id="creating-new-guests">Creating New Guests</h2>
 <p>Things you'll need to determine before creating a new native KVM guest:</p>
 <ul>
@@ -370,22 +317,24 @@ what type of OS is going to be run in the guest during the initial creation.</p>
 administer from the command line as it is more powerful and less resource
 hungry. In some cases it is unavoidable. You'll notice in the example I give
 that the creation commands has the following in it:</p>
-<pre><code>--graphics none --serial pty --extra-args=&quot;console=ttyS0 serial&quot;
-</code></pre><p>If your going to be using graphics you will want to omit those two options and
+<pre><code>--graphics none --serial pty --extra-args="console=ttyS0 serial"
+</code></pre>
+<p>If your going to be using graphics you will want to omit those two options and
 replace them with:</p>
 <pre><code>--graphics vnc
-</code></pre><p>This will allow you to VNC into the guest (there is no authentication or
+</code></pre>
+<p>This will allow you to VNC into the guest (there is no authentication or
 encryption although these can be configured. These are not documented here.)</p>
 <p>Finally the name of the guest, this can not contain spaces and should not
 contain any special characters as they may interfere with issuing commands. I
 like the names to be short and descriptive referring to either the name of the
 server or the primary purpose.</p>
-<p>The following command creates a Fedora 16 guest with the name &lsquo;example&rsquo;, with 1
+<p>The following command creates a Fedora 16 guest with the name 'example', with 1
 CPU, 512Mb of RAM, no graphics, a network card on the LANBridge network, and a
 20Gb raw sparse hard disk image.</p>
 <pre><code>virt-install --connect qemu:///system \
     --name example \
-    --description=&quot;This is an example VM intended for the wiki&quot; \
+    --description="This is an example VM intended for the wiki" \
     --ram 512 \
     --arch=x86_64 \
     --vcpus=1,maxvcpus=2 \
@@ -395,69 +344,28 @@ CPU, 512Mb of RAM, no graphics, a network card on the LANBridge network, and a
     --hvm \
     --graphics none \
     --serial pty \
-    --location=&quot;http://mirror.chpc.utah.edu/pub/fedora/linux/releases/17/Fedora/x86_64/os&quot; \
-    --extra-args=&quot;console=ttyS0 serial ks=http://example.org/kickstarts/ks.cfg&quot; \
+    --location="http://mirror.chpc.utah.edu/pub/fedora/linux/releases/17/Fedora/x86_64/os" \
+    --extra-args="console=ttyS0 serial ks=http://example.org/kickstarts/ks.cfg" \
     --disk path=/var/lib/libvirt/images/example.img,format=raw,size=20,sparse=true \
     --network=network:LANBridge
-</code></pre><h2 id="lxc">LXC</h2>
+</code></pre>
+<h2 id="additional-links">Additional Links</h2>
 <ul>
-<li><a href="https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/">https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/</a></li>
+<li><a href="https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/">Getting started with LXC using libvirt</a></li>
+<li><a href="https://www.berrange.com/posts/2011/06/16/providing-ipv6-connectivity-to-virtual-guests-with-libvirt-and-kvm/">Providing IPv6 connectivity to virtual guests with libvirt and KVM</a></li>
+<li><a href="https://david.wragg.org/blog/2009/03/using-usb-pass-through-under-libvirt.html">Using USB pass-through under libvirt and KVM</a></li>
 </ul>
-
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/linux-hardening/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Linux Hardening</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/kerberos/'>
-        <span class='screen-reader-text'>Next post: </span>Kerberos<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

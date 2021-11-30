@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2013&#x2F;using-vim-as-your-password-manager&#x2F;">Using VIM as Your Password Manager</a></h1>
+
+  <div class="post-content"><p>There are all kinds of password managers out there. Everything from web
+services that are quite solid and respectable, to native desktop apps.</p>
+<p>A lot of these are simply too heavy for me, involve installing software on a
+computer to access in addition to sharing the file around, or required you to
+remember multiple account details before you could get access to any individual
+password.</p>
+<span id="continue-reading"></span>
+<p>Due too the various complexities and lack of matching use cases a couple years
+ago I set out to develop my own open-source version of PassPack. In the interim
+though I needed a solution for keeping track of my hundreds of various accounts
+and their passwords.</p>
+<p>Around this time I was ramping up my usage of vim and happened to come across a
+very fortunate command entirely by accident. Enter <em>vimcrypt</em>.</p>
+<p>For any plaintext file you, while in command mode you can type the command <code>:X</code>
+and it will ask you for a password to encrypt your file with. By default this
+uses a remarkably weak algorithm called <a href="https://en.wikipedia.org/wiki/PKZIP">pkzip</a> which isn't secure enough
+for me to trust it with my keys.</p>
+<p>Since vim 7.3 and later, <code>:X</code> has also supported an additional cipher; The much
+stronger blowfish algorithm. You can enable this by running the command <code>:set cryptmethod=blowfish</code>. I chose to add the following lines to my <code>~/.vimrc</code>
+file:</p>
+<pre><code>" When encrypting any file, use the much stronger blowfish algorithm
+set cryptmethod=blowfish
+</code></pre>
+<p>This was a fantastic interim solution as I have yet to find a development or
+production linux system that hasn't been excessively locked down (and probably
+not somewhere I'd put my password file anyway) that didn't already have vim
+installed.</p>
+<p>Using this personally required me coming up with a pseudo-file format that
+would allow me to quickly and easily find the credentials I needed. I settled
+on the simple format shown off below:</p>
+<pre><code>Oneline Account Description
+  Site: <URL of Site's login page>
+  Username: <username for the site>
+  Password: <password for the site>
+  Email: <email I used to register>
+
+  Login with: <email|username> # Only necessary when I have both
+
+  ** Address on file **
+  ** Phone on file **
+</code></pre>
+<p>You'll notice I also used this to keep track of whether an account had physical
+information tied to it. When I moved this made it very quick for me to search
+for accounts that I needed to update with my new mailing address.</p>
+<p>As with many solutions this &quot;temporary&quot; one became more and more permanent as
+my motivation to build the Passpack competitor dwindled. My problem had been
+solved and I was no longer compelled to put any effort into a solution.</p>
+<p>If this still isn't strong enough for your tastes, the <a href="http://vim.wikia.com/wiki/Encryption">vim wiki</a> has some
+additional ways you can encrypt your files. These all require additional setup
+and failed my requirements in that they generally require additional files or
+setup before I can access my passwords.</p>
+<p>Hope this helps some other weary CLI warrior some trouble. Cheers!</p>
+<p><em><strong>Update</strong></em>: I received a recommendation from a user named <a href="http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdn20o8">sigzero</a> over
+on Reddit. For additional security they added the following line to their
+<code>~/.vimrc</code> file.</p>
+<pre><code>autocmd BufReadPost * if &key != "" | set noswapfile nowritebackup viminfo= nobackup noshelltemp history=0 secure | endif
+</code></pre>
+<p>It disables additional files that vim may write copies to such as swap files
+and backups, prevents dangerous shell commands, and prevents vim from storing a
+history of commands.</p>
+<p><em><strong>Update 2</strong></em>: I received another recommendation from another reddit user,
+this time from <a href="http://www.reddit.com/r/vim/comments/1rg3ji/wrote_up_my_thoughts_on_using_vim_as_a_password/cdnn94z">NinlyOne</a>.  At their recommendation, I've prepended the
+following modeline to my password.  It automatically folds each password entry
+to prevent potential shoulder surfing. You can open up an entry using the
+command <code>zo</code> and close it back up with <code>zc</code>. It's worth noting that this is
+tied to my indented file format.</p>
+<pre><code># vim: fdm=indent fdn=1 sw=2:
+</code></pre>
+</div><p class="meta">Posted on <span class="postdate">2013-11-25</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

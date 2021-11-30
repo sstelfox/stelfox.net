@@ -1,122 +1,62 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Packages of interest:
- keepalived ipvsadm pacemaker  IPVS IPVS (IP Virtual Server) is used to present a single address in a high availability scenario for one more services.
-Installation / Setup yum install ipvsadm -y A note about LXC containers: In order to make use of ipvsadm within an LXC container, you will also need to install the ipvsadm package on the LXC host and reboot it (optionally just load the kernel module though I don&#39;t know it by name).'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='High Availability • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Packages of interest:
- keepalived ipvsadm pacemaker  IPVS IPVS (IP Virtual Server) is used to present a single address in a high availability scenario for one more services.
-Installation / Setup yum install ipvsadm -y A note about LXC containers: In order to make use of ipvsadm within an LXC container, you will also need to install the ipvsadm package on the LXC host and reboot it (optionally just load the kernel module though I don&#39;t know it by name).'>
-<meta property='og:url' content='https://stelfox.net/notes/high-availability/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>High Availability • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/high-availability/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>High Availability</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-2 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
+      <div id="content">
+        
+<article class="post">
+  <h1>High Availability</h1><div class="post-content"><p>Notes on making or refining systems to be highly available.</p>
+<span id="continue-reading"></span>
 <p>Packages of interest:</p>
 <ul>
 <li>keepalived</li>
@@ -126,9 +66,10 @@ until I get around to updating it.</strong></em></p>
 <h2 id="ipvs">IPVS</h2>
 <p>IPVS (IP Virtual Server) is used to present a single address in a high
 availability scenario for one more services.</p>
-<h2 id="installation--setup">Installation / Setup</h2>
+<h2 id="installation-setup">Installation / Setup</h2>
 <pre><code>yum install ipvsadm -y
-</code></pre><p>A note about LXC containers: In order to make use of ipvsadm within an LXC
+</code></pre>
+<p>A note about LXC containers: In order to make use of ipvsadm within an LXC
 container, you will also need to install the ipvsadm package on the LXC host
 and reboot it (optionally just load the kernel module though I don't know it by
 name). Additionally the simplest version, VS/NAT, requires enabling IPv4 packet
@@ -139,79 +80,33 @@ it may effect the other forms but they haven't been tested yet.</p>
 <pre><code>ipvsadm -A -t 192.168.122.30:443 -s wlc
 ipvsadm -a -t 192.168.122.30:443 -r 192.168.122.61:443 -g -w 1
 ipvsadm -a -t 192.168.122.30:443 -r 192.168.122.62:443 -g -w 1
-</code></pre><p>That didn't work so I rebooted to clear it all out.</p>
+</code></pre>
+<p>That didn't work so I rebooted to clear it all out.</p>
 <pre><code>yum install keepalived -y
-</code></pre><p>Ah ha, Eureka moment. Inside the LXC container I can unmount the <code>/proc/sys</code>
-overlay as long as I'm root&hellip;</p>
+</code></pre>
+<p>Ah ha, Eureka moment. Inside the LXC container I can unmount the <code>/proc/sys</code>
+overlay as long as I'm root...</p>
 <pre><code>umount /proc/sys
-echo 1 &gt; /proc/sys/net/ipv4/ip_forward
-</code></pre><p>It seems that <code>net.ipv4.ip_nonlocal_bind</code> isn't available within an LXC
+echo 1 > /proc/sys/net/ipv4/ip_forward
+</code></pre>
+<p>It seems that <code>net.ipv4.ip_nonlocal_bind</code> isn't available within an LXC
 container: <code>cat /proc/sys/net/ipv4/ip_nonlocal_bind</code>.</p>
-<p>Valuable sites:</p>
-<ul>
-<li><a href="http://mojobojo.com/blog/2011/01/14/lvs-nginx-nodejs-mongodb-cluster-setup-on-rackspace/">http://mojobojo.com/blog/2011/01/14/lvs-nginx-nodejs-mongodb-cluster-setup-on-rackspace/</a></li>
-<li><a href="https://www.rackspace.com/blog/installing-and-configuring-lvs-tun/">https://www.rackspace.com/blog/installing-and-configuring-lvs-tun/</a></li>
-</ul>
 <p>Interesting use for this as a firewall:</p>
 <ul>
-<li><a href="http://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html">http://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html</a></li>
-<li><a href="http://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/">http://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/</a></li>
+<li><a href="https://keepalived.org/Keepalived-LVS-NAT-Director-ProxyArp-Firewall-HOWTO.html">Running a Proxy-Arp LVS-NAT Director/Firewall with Keepalived</a></li>
+<li><a href="https://backreference.org/2013/04/03/firewall-ha-with-conntrackd-and-keepalived/">Firewall HA with conntrackd and keepalived</a></li>
 </ul>
-
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/hipache/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Hipache</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/haproxy/'>
-        <span class='screen-reader-text'>Next post: </span>HAProxy<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

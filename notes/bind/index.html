@@ -1,142 +1,85 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall Adjustments A DNS server isn&#39;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
--A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT If you&#39;re running named in a chroot you&#39;ll also need to add the following line to rsyslog&#39;s configuration file so that the chroot doesn&#39;t break named&#39;s logging.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Bind • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall Adjustments A DNS server isn&#39;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
--A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT If you&#39;re running named in a chroot you&#39;ll also need to add the following line to rsyslog&#39;s configuration file so that the chroot doesn&#39;t break named&#39;s logging.'>
-<meta property='og:url' content='https://stelfox.net/notes/bind/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Bind • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/bind/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Bind</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-6 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<h2 id="firewall-adjustments">Firewall Adjustments</h2>
+      <div id="content">
+        
+<article class="post">
+  <h1>Bind</h1><div class="post-content"><p>Bind is a stable and well tested authoritative and recursive DNS server.</p>
+<span id="continue-reading"></span><h2 id="firewall-adjustments">Firewall Adjustments</h2>
 <p>A DNS server isn't very good unless other machines are able to query it. The
 following allows incoming DNS queries universally.</p>
 <pre><code>-A INPUT -p udp -m udp --dport 53 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT
-</code></pre><p>If you're running named in a chroot you'll also need to add the following line
+</code></pre>
+<p>If you're running named in a chroot you'll also need to add the following line
 to rsyslog's configuration file so that the chroot doesn't break named's
 logging.</p>
 <pre><code>$AddUnixListenSocket /var/named/chroot/dev/log
-</code></pre><h2 id="config-files">Config Files</h2>
-<h3 id="etcnamedconf">/etc/named.conf</h3>
-<pre><code>include &quot;/etc/named.root.key&quot;;
+</code></pre>
+<h2 id="config-files">Config Files</h2>
+<h3 id="etc-named-conf">/etc/named.conf</h3>
+<pre><code>include "/etc/named.root.key";
 
 // Allow no zone transfers. Any slaves should be added here.
-acl &quot;xfer&quot; {
+acl "xfer" {
   none;
 };
 
 // This should include any internal and DMZ subnets so intranet and servers
 // can query our internal zones. This also prevents outside hosts from using
 // our name server as a resolver for other domains.
-acl &quot;trusted&quot; {
+acl "trusted" {
   10.87.19.0/24;
   2001:abcd:ef::/64;
   fc00::/7;
@@ -145,13 +88,13 @@ acl &quot;trusted&quot; {
   ::1;
 };
 
-key &quot;control-key&quot; {
+key "control-key" {
   algorithm hmac-md5;
-  secret &quot;##!!pulled-from-rndc.conf-generation!!##&quot;;
+  secret "##!!pulled-from-rndc.conf-generation!!##";
 };
 
 controls {
-  inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { &quot;control-key&quot;; };
+  inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { "control-key"; };
 };
 
 logging {
@@ -186,14 +129,14 @@ options {
   listen-on port 53     { any; };
   listen-on-v6 port 53  { any; };
 
-  directory           &quot;/var/named&quot;;
-  dump-file           &quot;/var/named/data/cache_dump.db&quot;;
-  statistics-file     &quot;/var/named/data/named_stats.txt&quot;;
-  memstatistics-file  &quot;/var/named/data/named_mem_stats.txt&quot;;
+  directory           "/var/named";
+  dump-file           "/var/named/data/cache_dump.db";
+  statistics-file     "/var/named/data/named_stats.txt";
+  memstatistics-file  "/var/named/data/named_mem_stats.txt";
   zone-statistics     yes;
 
   // Override the version information to reduce enumeration options
-  version &quot;It's over 9000&quot;;
+  version "It's over 9000";
 
   // More efficient zone transfers
   transfer-format many-answers;
@@ -211,8 +154,8 @@ options {
   dnssec-lookaside  auto;
 
   // ISC DLV key
-  bindkeys-file           &quot;/etc/named.iscdlv.key&quot;;
-  managed-keys-directory  &quot;/var/named/dynamic&quot;;
+  bindkeys-file           "/etc/named.iscdlv.key";
+  managed-keys-directory  "/var/named/dynamic";
 
   // Only accept queries and cached queries from the trusted ACL
   allow-query       { trusted; };
@@ -221,64 +164,64 @@ options {
 
 // Trusted portion of the split-horizon DNS containing internal domains,
 // private records, as well as allow recursive lookups.
-view &quot;internal-in&quot; in {
+view "internal-in" in {
   match-clients { trusted; };
   recursion yes;
 
   additional-from-auth yes;
   additional-from-cache yes;
 
-  // Zone transfers limited to members of the &quot;xfer&quot; ACL
+  // Zone transfers limited to members of the "xfer" ACL
   allow-transfer { xfer; };
-  zone &quot;.&quot; IN {
+  zone "." IN {
     type hint;
-    file &quot;named.ca&quot;;
+    file "named.ca";
   };
 
-  zone &quot;1057.name&quot; IN {
+  zone "1057.name" IN {
     type master;
-    file &quot;data/internal/1057.name.zone.db&quot;;
+    file "data/internal/1057.name.zone.db";
     allow-update { none; };
   };
 
-  zone &quot;19.87.10.in-addr.arpa&quot; IN {
+  zone "19.87.10.in-addr.arpa" IN {
     type master;
-    file &quot;data/internal/19.87.10.in-addr.arpa.zone.db&quot;;
+    file "data/internal/19.87.10.in-addr.arpa.zone.db";
     allow-update { none; };
   };
 
-  zone &quot;0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa&quot; IN {
+  zone "0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa" IN {
     type master;
-    file &quot;data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db&quot;;
+    file "data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db";
     allow-update { none; };
   };
 
-  include &quot;/etc/named.rfc1912.zones&quot;;
+  include "/etc/named.rfc1912.zones";
 };
 
 // Untrusted/External portion of the split-horizon DNS, only allow internal
-view &quot;external-in&quot; in {
+view "external-in" in {
   match-clients { any; };
   recursion no;
 
   additional-from-auth no;
   additional-from-cache no;
 
-  zone &quot;.&quot; IN {
+  zone "." IN {
     type hint;
-    file &quot;named.ca&quot;;
+    file "named.ca";
   };
 
-  zone &quot;1057.name&quot; IN {
+  zone "1057.name" IN {
     type master;
-    file &quot;data/public/1057.name.zone.db&quot;;
+    file "data/public/1057.name.zone.db";
     allow-query   { any; };
     allow-update  { none; };
   };
 
-  zone &quot;0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa&quot; IN {
+  zone "0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa" IN {
     type master;
-    file &quot;data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db&quot;;
+    file "data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db";
     allow-query   { any; };
     allow-update  { none; };
   };
@@ -286,30 +229,33 @@ view &quot;external-in&quot; in {
 
 // View for users attempting to query the server using the CHAOS class. Trusted
 // users can still use this to query for the servers version number.
-view &quot;bind-chaos&quot; chaos {
+view "bind-chaos" chaos {
   match-clients { any; };
   recursion no;
 
-  zone &quot;bind&quot; {
+  zone "bind" {
     type master;
-    file &quot;db.bind&quot;;
+    file "db.bind";
 
     allow-query     { trusted; };
     allow-transfer  { none; };
   };
 };
-</code></pre><h3 id="etcrndcconf">/etc/rndc.conf</h3>
+</code></pre>
+<h3 id="etc-rndc-conf">/etc/rndc.conf</h3>
 <p>This needs to be generated on your own which can be done using the following
 command:</p>
-<pre><code>rndc-confgen -b 512 &gt; /etc/rndc.conf
-</code></pre><p>The commented out code belongs in <code>/etc/named.conf</code>, just replace the following
+<pre><code>rndc-confgen -b 512 > /etc/rndc.conf
+</code></pre>
+<p>The commented out code belongs in <code>/etc/named.conf</code>, just replace the following
 comment with the code:</p>
 <pre><code>## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##
-</code></pre><p>512 is unfortunately the strongest bit size available for authentication so it
+</code></pre>
+<p>512 is unfortunately the strongest bit size available for authentication so it
 is strongly recommended to firewall off and limit the IP addresses the control
 channel is running on. By default this is exclusively the IPv4 loopback
 address.</p>
-<h3 id="varnameddbbind">/var/named/db.bind</h3>
+<h3 id="var-named-db-bind">/var/named/db.bind</h3>
 <pre><code>$TTL 86400
 @   CHAOS    SOA   @   rname.invalid.  (
     0   ; serial
@@ -321,9 +267,10 @@ address.</p>
 
     NS    @
 
-version.bind.   CHAOS TXT &quot;It's over 9000&quot;
-authors.bind.   CHAOS TXT &quot;Nom de plume&quot;
-</code></pre><h3 id="varnameddatainternal1057namezonedb">/var/named/data/internal/1057.name.zone.db</h3>
+version.bind.   CHAOS TXT "It's over 9000"
+authors.bind.   CHAOS TXT "Nom de plume"
+</code></pre>
+<h3 id="var-named-data-internal-1057-name-zone-db">/var/named/data/internal/1057.name.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2012080801  ; Serial number YYYYMMDDNN
@@ -337,7 +284,8 @@ authors.bind.   CHAOS TXT &quot;Nom de plume&quot;
 
 ns1   IN    A         10.87.19.15
 ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
-</code></pre><h3 id="varnameddatainternal198710inaddrarpazonedb">/var/named/data/internal/19.87.10.in-addr.arpa.zone.db</h3>
+</code></pre>
+<h3 id="var-named-data-internal-19-87-10-in-addr-arpa-zone-db">/var/named/data/internal/19.87.10.in-addr.arpa.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -350,7 +298,8 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
       NS          ns1.1057.name.
 
 15     IN    PTR       ns1.1057.name.
-</code></pre><h3 id="varnameddatainternal0000fe00dcba1002arpazonedb">/var/named/data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
+</code></pre>
+<h3 id="var-named-data-internal-0-0-0-0-f-e-0-0-d-c-b-a-1-0-0-2-arpa-zone-db">/var/named/data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -363,7 +312,8 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
       NS          ns1.1057.name.
 
 2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.
-</code></pre><h3 id="varnameddatapublic1057namezonedb">/var/named/data/public/1057.name.zone.db</h3>
+</code></pre>
+<h3 id="var-named-data-public-1057-name-zone-db">/var/named/data/public/1057.name.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2012080801  ; Serial number YYYYMMDDNN
@@ -377,7 +327,8 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
 
 ns1   IN    A         4.2.2.2
 ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
-</code></pre><h3 id="varnameddatapublic0000fe00dcba1002arpazonedb">/var/named/data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
+</code></pre>
+<h3 id="var-named-data-public-0-0-0-0-f-e-0-0-d-c-b-a-1-0-0-2-arpa-zone-db">/var/named/data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3>
 <pre><code>$TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -390,19 +341,21 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
       NS          ns1.1057.name.
 
 2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.
-</code></pre><h2 id="ldap-backend">LDAP Backend</h2>
+</code></pre>
+<h2 id="ldap-backend">LDAP Backend</h2>
 <p>Using the package <code>bind-dyndb-ldap</code>, an ldap backend can be used either
 exclusively or in addition to other zones. Configuring a simple authenticated
 ldap lookup can be done with something along the line of the following
 configuration:</p>
-<pre><code>dynamic-db &quot;my_db_name&quot; {
-  library &quot;ldap.so&quot;;
-  arg &quot;uri ldap://ldap.example.com&quot;;
-  arg &quot;base cn=dns, dc=example, dc=com&quot;;
-  arg &quot;auth_method none&quot;;
-  arg &quot;cache_ttl 300&quot;;
+<pre><code>dynamic-db "my_db_name" {
+  library "ldap.so";
+  arg "uri ldap://ldap.example.com";
+  arg "base cn=dns, dc=example, dc=com";
+  arg "auth_method none";
+  arg "cache_ttl 300";
 };
-</code></pre><p>With this configuration, the LDAP back-end will try to connect to server
+</code></pre>
+<p>With this configuration, the LDAP back-end will try to connect to server
 ldap.example.com with simple authentication, without any password. It will then
 do an LDAP subtree search in the <code>cn=dns,dc=example,dc=com</code> base for entries
 with object class idnsZone, for which the idnsZoneActive attribute is set to
@@ -420,63 +373,20 @@ name. To prevent this there are really only two options, the first is to make
 the IPv6 network routeable, and the second is to put bind in IPv4 only mode.
 Neither solution is good, but the latter is the only feasible one (This does
 mean it won't even listen on an IPv6 port).</p>
-<pre><code>echo 'OPTIONS=&quot;-4&quot;' &gt;&gt; /etc/sysconfig/named
+<pre><code>echo 'OPTIONS="-4"' >> /etc/sysconfig/named
 service named restart
 </code></pre>
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/building-a-certificate-authority/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Building a Certificate Authority</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/beets/'>
-        <span class='screen-reader-text'>Next post: </span>Beets<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

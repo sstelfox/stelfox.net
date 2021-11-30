@@ -1,145 +1,90 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Keepalived My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1 is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This sample configuration will be making use of two directors and two &ldquo;real servers&rdquo;.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Linux Virtual Servers • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Keepalived My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1 is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This sample configuration will be making use of two directors and two &ldquo;real servers&rdquo;.'>
-<meta property='og:url' content='https://stelfox.net/notes/linux-virtual-servers/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Linux Virtual Servers • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/linux-virtual-servers/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Linux Virtual Servers</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-5 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<h2 id="keepalived">Keepalived</h2>
-<p>My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1
-is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This
-sample configuration will be making use of two directors and two &ldquo;real
-servers&rdquo;.</p>
-<p>The directors have hostnames &lsquo;director-01.i.0x378.net&rsquo; and
-&lsquo;director-02.i.0x378.net&rsquo;. &lsquo;director-01&rsquo; will have device/IP pairs of (eth0,
-192.168.122.141), (eth1, 10.10.10.10), and (eth2, 10.0.0.2). &lsquo;director-02&rsquo; will
+      <div id="content">
+        
+<article class="post">
+  <h1>Linux Virtual Servers</h1><div class="post-content"><h2 id="keepalived">Keepalived</h2>
+<p>My VMs each have three interfaces, eth0 is the 'public' network network, eth1
+is the 'synchronization' network, and eth2 is the 'internal' network. This
+sample configuration will be making use of two directors and two &quot;real
+servers&quot;.</p>
+<p>The directors have hostnames 'director-01.i.0x378.net' and
+'director-02.i.0x378.net'. 'director-01' will have device/IP pairs of (eth0,
+192.168.122.141), (eth1, 10.10.10.10), and (eth2, 10.0.0.2). 'director-02' will
 have device/IP pairs of (eth0, 192.168.122.142), (eth1, 10.10.10.11), and
 (eth2, 10.0.0.3).</p>
 <p>There are two virtual IP addresses that will need to be failed over,
-&lsquo;192.168.122.140&rsquo; on the &lsquo;public&rsquo; network and &lsquo;10.0.0.1&rsquo;  on the &lsquo;internal&rsquo;
+'192.168.122.140' on the 'public' network and '10.0.0.1'  on the 'internal'
 network.</p>
 <p>These need to be failed over simulatenously.</p>
 <p>First we need to install the packages:</p>
 <pre><code>yum install ipvsadm keepalived -y
-</code></pre><p>If the directors are running within an LXC environment, keepalived won't be
+</code></pre>
+<p>If the directors are running within an LXC environment, keepalived won't be
 able to load the kernel module it needs for the services. From the host machine
 you'll need to run the following command before attempting to start the
 keepalived services.</p>
 <pre><code>modprobe ip_vs
-</code></pre><p>This can be done automatically by creating <code>/etc/rc.d/rc.local</code> and marking it
+</code></pre>
+<p>This can be done automatically by creating <code>/etc/rc.d/rc.local</code> and marking it
 as executable with the following contents.</p>
 <pre><code>#!/bin/sh
 
 modprobe ip_vs
-</code></pre><p>Edit the <code>/etc/keepalived/keepalived.conf</code>:</p>
+</code></pre>
+<p>Edit the <code>/etc/keepalived/keepalived.conf</code>:</p>
 <pre><code>global_defs {
   notification_email_from failover@example.tld
   notification_email {
@@ -220,7 +165,8 @@ vrrp_instance internal_network_1 {
     #2001:db8:16:10::100/64 dev eth2
   }
 }
-</code></pre><p>For &lsquo;director-02&rsquo; the <code>router_id</code> should be set to &lsquo;LVS_DIRECTOR_02&rsquo;. You'll
+</code></pre>
+<p>For 'director-02' the <code>router_id</code> should be set to 'LVS_DIRECTOR_02'. You'll
 also want to update the unicast peer addresses for the individual interfaces as
 well. Since we've disabled <code>preempt</code> failover and are starting the servers in
 the BACKUP state, adjusting the priority between the directors doesn't matter.</p>
@@ -231,18 +177,21 @@ following firewall rules:</p>
 -A SERVICES -i eth2 -p vrrp -s 10.0.0.0/24 -j ACCEPT
 -A OUTPUT -o eth0 -p vrrp -d 192.168.122.0/24 -j ACCEPT
 -A OUTPUT -o eth2 -p vrrp -d 10.0.0.0/24 -j ACCEPT
-</code></pre><p>At this point we can start up keepalived on both directors and test their
+</code></pre>
+<p>At this point we can start up keepalived on both directors and test their
 failover. Run the following two commands on both directors.</p>
 <pre><code>systemctl enable keepalived.service
 systemctl start keepalived.service
-</code></pre><p>You can check the IP addresses of each nodes using <code>ip addr</code>. One of them will
+</code></pre>
+<p>You can check the IP addresses of each nodes using <code>ip addr</code>. One of them will
 have both of the virtual IP addresses. Shutdown the keepalive daemon on the
 other one and you should see it failover and grab the virtual IP addresses
 within a second.</p>
 <pre><code>systemctl stop keepalived.service
 sleep 2
 systemctl start keepalived.service
-</code></pre><p>As much as I tried I couldn't get keepalived to make use of the synchronization
+</code></pre>
+<p>As much as I tried I couldn't get keepalived to make use of the synchronization
 interface to send it's VRRP packets. At the same time for my uses multicast
 isn't an option which I why I chose unicast synchronization. If you have more
 than two directors unicast will increase the amount of traffic required for the
@@ -253,7 +202,8 @@ connection states between the two machines for the event of failover. There is
 a convenient system to do this. Enter <code>conntrackd</code>.</p>
 <p>First we'll need to install the package that has the synchronization daemon.</p>
 <pre><code>yum install conntrack-tools -y
-</code></pre><p>We'll need to throw a configuration into place at
+</code></pre>
+<p>We'll need to throw a configuration into place at
 <code>/etc/conntrackd/conntrackd.conf</code>. The following is for director-01:</p>
 <pre><code>Sync {
   Mode FTFW {
@@ -320,7 +270,8 @@ General {
     }
   }
 }
-</code></pre><p>The only change for director-02 is to change the <code>IPv4_interface</code> to
+</code></pre>
+<p>The only change for director-02 is to change the <code>IPv4_interface</code> to
 <code>10.10.10.11</code>.</p>
 <p>You'll notice that I am using multicast here. There is an option in conntrackd
 to use unicast as well, and I'll need to come back and reconfigure it to make
@@ -328,81 +279,41 @@ use of it. For now though this should work in my environment.</p>
 <p>Add the firewall rules needed for the synchronization process on both machines:</p>
 <pre><code>-A INPUT -i eth1 -m udp -p udp -s 10.10.10.0/24 -d 225.0.0.50 --dport 3780 -j ACCEPT
 -A OUTPUT -o eth1 -m udp -p udp -d 225.0.0.50 --dport 3780 -j ACCEPT
-</code></pre><p>For most services I would also include connection tracking state information,
+</code></pre>
+<p>For most services I would also include connection tracking state information,
 but given the nature of this service I decided against it.</p>
 <p>Enable and start the service:</p>
 <pre><code>systemctl enable conntrackd.service
 systemctl start conntrackd.service
-</code></pre><p>There is some work that conntrackd will need to do whenever keepalive changes
+</code></pre>
+<p>There is some work that conntrackd will need to do whenever keepalive changes
 it's cluster state. A script is provided with the <code>conntrack-tools</code> package, we
 can just copy it into the appropriate place with the following command:</p>
 <pre><code>cp /usr/share/doc/conntrack-tools-1.4.2/doc/sync/primary-backup.sh /etc/conntrackd/
-</code></pre><p>Now we need to tell keepalived to call the script when it's state changes, if
+</code></pre>
+<p>Now we need to tell keepalived to call the script when it's state changes, if
 you're following along with this page you'll need to add the following to the
 section named <code>vrrp_sync_group gateway_group_1</code>.</p>
-<pre><code>notify_backup &quot;/etc/conntrackd/primary-backup.sh backup&quot;
-notify_fault  &quot;/etc/conntrackd/primary-backup.sh fault&quot;
-notify_master &quot;/etc/conntrackd/primary-backup.sh primary&quot;
-</code></pre><p>Make sure you restart keepalived on both machines.</p>
+<pre><code>notify_backup "/etc/conntrackd/primary-backup.sh backup"
+notify_fault  "/etc/conntrackd/primary-backup.sh fault"
+notify_master "/etc/conntrackd/primary-backup.sh primary"
+</code></pre>
+<p>Make sure you restart keepalived on both machines.</p>
 <p>At this point we have everything in place we need to perform our two target
 tasks. Having a gateway on the local network that can failover in the event the
 other machine dies, and provide highly availability to multiple services behind
 them.</p>
-
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/lm-sensors/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>LM Sensors</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/linux-hardening/'>
-        <span class='screen-reader-text'>Next post: </span>Linux Hardening<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

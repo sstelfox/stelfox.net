@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2014&#x2F;finding-ruby-subclasses&#x2F;">Finding Ruby Subclasses</a></h1>
+
+  <div class="post-content"><p>While working through a problem I found it would be immensely useful to be able
+to enumerate all of the current subclasses of a particular class. After
+thinking about this for a while I settled on a good old friend of mine,
+<code>ObjectSpace</code>.</p>
+<span id="continue-reading"></span>
+<p>For those not familiar with the <code>ObjectSpace</code> module, it is a means to inspect
+and access the items being tracked by Ruby's garbage collector. This means it
+has a hook into every living object, and more dangerously, every near-death
+object.</p>
+<p><code>ObjectSpace</code> provides a method for enumerating instances of a specific class,
+specifically named <code>each_object</code> which takes a class. With Ruby all classes are
+in fact instances of the <code>Class</code> class. This allows us to enumerate every
+available class by passing it to the enumerator like so:</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">ObjectSpace.each_object(Class).to_a
+</code></pre>
+<p>Alright so we now have an array of every single class that could possibly be
+instantiated, how do we narrow it down to just the ones we're interested in?
+Once again Ruby provides with the <code>ancestors</code> method, combine that with a
+select and we can quickly narrow it down. You can see it in the following
+example:</p>
+<pre><code>[1] pry(main)> TargetSubclass = Class.new(String)
+=> TargetSubclass
+[2] pry(main)> ObjectSpace.each_object(Class).select { |k| k.ancestors.include?(String) }
+=> [String, TargetSubclass]
+</code></pre>
+<p>Hmm, that's not quite right though. We have found all the subclasses but we've
+also grabbed the parent class. With one small modification we eliminate that as
+well.</p>
+<pre><code>[1] pry(main)> TargetSubclass = Class.new(String)
+=> TargetSubclass
+[2] pry(main)> ObjectSpace.each_object(Class).select { |k| k.ancestors.include?(String) && k != String }
+=> [TargetSubclass]
+</code></pre>
+<p>That line is rather long though, and I generally like to avoid multiple tests
+in a select block. There is a tad bit of syntactic sugar provided by Ruby
+allowing us to accomplish the same thing, our final example is ultimately the
+solution I went with:</p>
+<pre><code>[1] pry(main)> TargetSubclass = Class.new(String)
+=> TargetSubclass
+[2] pry(main)> ObjectSpace.each_object(Class).select { |k| k < String }
+=> [TargetSubclass]
+</code></pre>
+<p>Putting this into a method:</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">def subclasses(klass)
+  ObjectSpace.each_object(Class).select { |k| k < klass }
+end
+</code></pre>
+<p>If you were so inclined you could extend the <code>Class</code> class with a method to
+make this available anywhere like so:</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">class Class
+  def self.subclasses
+    ObjectSpace.each_object(Class).select { |k| k < self }
+  end
+end
+</code></pre>
+<p>I'm personally not a fan of extending any of the core classes unless absolutely
+necessary, but too each there own.</p>
+</div><p class="meta">Posted on <span class="postdate">2014-02-20</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,126 +1,68 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-While it&#39;s described and primarily used as an audio streaming server, it would be more accurate to describe it as a media streaming server as it&#39;s perfectly capable of rebroadcasting video streams with or without audio.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='IceCast • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-While it&#39;s described and primarily used as an audio streaming server, it would be more accurate to describe it as a media streaming server as it&#39;s perfectly capable of rebroadcasting video streams with or without audio.'>
-<meta property='og:url' content='https://stelfox.net/notes/icecast/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>IceCast • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/icecast/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>IceCast</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-26 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>While it's described and primarily used as an audio streaming server, it would
+      <div id="content">
+        
+<article class="post">
+  <h1>IceCast</h1><div class="post-content"><p>While it's described and primarily used as an audio streaming server, it would
 be more accurate to describe it as a media streaming server as it's perfectly
 capable of rebroadcasting video streams with or without audio.</p>
-<h2 id="setup-process">Setup Process</h2>
+<span id="continue-reading"></span><h2 id="setup-process">Setup Process</h2>
 <p>As of this writing Fedora 16 comes with Icecast version 2.3.2, the associated
-documentation can be found on the Icecast website. I found some
-documentation had been removed rather than updated along with the software and
-that documentation can be found in version 2.0.1's documentation.</p>
+documentation can be found on the Icecast website. I found some documentation
+had been removed rather than updated along with the software and that
+documentation can be found in version 2.0.1's documentation.</p>
 <h3 id="networking">Networking</h3>
 <p>Setup a dedicated IP for use by the Icecast server (this is optional but a good
 practice even if it's just an internal address). You'll want to note this down
@@ -129,103 +71,51 @@ for what the server will bind it's addresses to later on.</p>
 with an IP Address of 192.168.20.45 configured like so in
 <code>/etc/sysconfig/network-script/ifcfg-eth0:1</code></p>
 <pre><code># eth0:1 - For Icecast Server
-DEVICE=&quot;eth0:1&quot;
-NM_CONTROLLED=&quot;no&quot;
-ONBOOT=&quot;yes&quot;
-BOOTPROTO=&quot;static&quot;
+DEVICE="eth0:1"
+NM_CONTROLLED="no"
+ONBOOT="yes"
+BOOTPROTO="static"
 
-IPADDR=&quot;192.168.20.45&quot;
-NETMASK=&quot;255.255.255.0&quot;
-NETWORK=&quot;192.168.20.0&quot;
-BROADCAST=&quot;192.168.20.255&quot;
+IPADDR="192.168.20.45"
+NETMASK="255.255.255.0"
+NETWORK="192.168.20.0"
+BROADCAST="192.168.20.255"
 
-IPV4_FAILURE_FATAL=&quot;yes&quot;
-IPV6_AUTOCONF=&quot;no&quot;
-IPV6INIT=&quot;no&quot;
+IPV4_FAILURE_FATAL="yes"
+IPV6_AUTOCONF="no"
+IPV6INIT="no"
 
-NAME=&quot;IceCast Interface&quot;
-</code></pre><p>Setup an A/CNAME record pointing at the server that will be hosting the Icecast
+NAME="IceCast Interface"
+</code></pre>
+<p>Setup an A/CNAME record pointing at the server that will be hosting the Icecast
 server, take note of this as it will be needed for the hostname param in the
 configuration file. This example will use streams.example.org for the hostname.</p>
 <h3 id="firewall">Firewall</h3>
 <p>Add the following <a href="https://stelfox.net/notes/iptables/">IPTables</a> rules:</p>
 <pre><code>-A SERVICES -d 192.168.20.45 -m tcp -p tcp --dport 8000 -j ACCEPT
 -A SERVICES -d 192.168.20.45 -m tcp -p tcp --dport 8001 -j ACCEPT
-</code></pre><h3 id="setup-the-chroot-environment">Setup the chroot Environment</h3>
+</code></pre>
+<h3 id="setup-the-chroot-environment">Setup the chroot Environment</h3>
 <p>The configuration I have here uses a chrooted environment within
 <code>/usr/share/icecast</code>. By default it isn't fully setup.</p>
 <pre><code>mkdir /usr/share/icecast/log
 chown -R icecast:icecast /usr/share/icecast
 rm -rf /var/log/icecast
 ln -s /usr/share/icecast/log/ /var/log/icecast
-</code></pre><h3 id="installation--configuration">Installation &amp; Configuration</h3>
+</code></pre>
+<h3 id="installation-configuration">Installation &amp; Configuration</h3>
 <pre><code>yum install icecast -y
-</code></pre><p>Replace <code>/etc/icecast.xml</code> with the following minimized (read comments and
-mount points removed) configuration. You'll need to change the values,
-especially <a href="https://stelfox.net/notes/password-security/">passwords</a> listed in the configuration before making it live.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;icecast</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;hostname</span><span style="color:#f92672">&gt;</span>streams.example.org<span style="color:#f92672">&lt;/hostname&gt;</span>
-  <span style="color:#f92672">&lt;fileserve</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/fileserve&gt;</span>
-  <span style="color:#f92672">&lt;server-id</span><span style="color:#f92672">&gt;</span>Icecast 2.3.2<span style="color:#f92672">&lt;/server-id&gt;</span>
-  <span style="color:#f92672">&lt;location</span><span style="color:#f92672">&gt;</span>Earth<span style="color:#f92672">&lt;/location&gt;</span>
-  <span style="color:#f92672">&lt;shoutcast-mount</span><span style="color:#f92672">&gt;</span>/stream<span style="color:#f92672">&lt;/shoutcast-mount&gt;</span>
-  <span style="color:#f92672">&lt;listen-socket</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;bind-address</span><span style="color:#f92672">&gt;</span>192.168.20.45<span style="color:#f92672">&lt;/bind-address&gt;</span>
-    <span style="color:#f92672">&lt;port</span><span style="color:#f92672">&gt;</span>8000<span style="color:#f92672">&lt;/port&gt;</span>
-  <span style="color:#f92672">&lt;/listen-socket&gt;</span>
-  <span style="color:#f92672">&lt;listen-socket</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;bind-address</span><span style="color:#f92672">&gt;</span>192.168.20.45<span style="color:#f92672">&lt;/bind-address&gt;</span>
-    <span style="color:#f92672">&lt;port</span><span style="color:#f92672">&gt;</span>8001<span style="color:#f92672">&lt;/port&gt;</span>
-    <span style="color:#f92672">&lt;shoutcast-compat</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/shoutcast-compat&gt;</span>
-  <span style="color:#f92672">&lt;/listen-socket&gt;</span>
-  <span style="color:#f92672">&lt;security</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;chroot</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/chroot&gt;</span>
-    <span style="color:#f92672">&lt;changeowner</span><span style="color:#f92672">&gt;</span>
-      <span style="color:#f92672">&lt;user</span><span style="color:#f92672">&gt;</span>icecast<span style="color:#f92672">&lt;/user&gt;</span>
-      <span style="color:#f92672">&lt;group</span><span style="color:#f92672">&gt;</span>icecast<span style="color:#f92672">&lt;/group&gt;</span>
-    <span style="color:#f92672">&lt;/changeowner&gt;</span>
-  <span style="color:#f92672">&lt;/security&gt;</span>
-  <span style="color:#f92672">&lt;paths</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;pidfile</span><span style="color:#f92672">&gt;</span>/var/run/icecast/icecast.pid<span style="color:#f92672">&lt;/pidfile&gt;</span>
-    <span style="color:#f92672">&lt;basedir</span><span style="color:#f92672">&gt;</span>/usr/share/icecast<span style="color:#f92672">&lt;/basedir&gt;</span>
-    <span style="color:#f92672">&lt;webroot</span><span style="color:#f92672">&gt;</span>/web<span style="color:#f92672">&lt;/webroot&gt;</span>
-    <span style="color:#f92672">&lt;adminroot</span><span style="color:#f92672">&gt;</span>/admin<span style="color:#f92672">&lt;/adminroot&gt;</span>
-    <span style="color:#f92672">&lt;logdir</span><span style="color:#f92672">&gt;</span>/log<span style="color:#f92672">&lt;/logdir&gt;</span>
-    <span style="color:#f92672">&lt;alias</span> <span style="color:#a6e22e">source=</span><span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#a6e22e">dest=</span><span style="color:#e6db74">&#34;/status.xsl&#34;</span><span style="color:#f92672">/&gt;</span>
-  <span style="color:#f92672">&lt;/paths&gt;</span>
-  <span style="color:#f92672">&lt;logging</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;accesslog</span><span style="color:#f92672">&gt;</span>access.log<span style="color:#f92672">&lt;/accesslog&gt;</span>
-    <span style="color:#f92672">&lt;errorlog</span><span style="color:#f92672">&gt;</span>error.log<span style="color:#f92672">&lt;/errorlog&gt;</span>
-    <span style="color:#f92672">&lt;playlistlog</span><span style="color:#f92672">&gt;</span>playlist.log<span style="color:#f92672">&lt;/playlistlog&gt;</span>
-    <span style="color:#f92672">&lt;loglevel</span><span style="color:#f92672">&gt;</span>3<span style="color:#f92672">&lt;/loglevel&gt;</span>
-    <span style="color:#f92672">&lt;logarchive</span><span style="color:#f92672">&gt;</span>0<span style="color:#f92672">&lt;/logarchive&gt;</span>
-    <span style="color:#f92672">&lt;logsize</span><span style="color:#f92672">&gt;</span>102400<span style="color:#f92672">&lt;/logsize&gt;</span>
-  <span style="color:#f92672">&lt;/logging&gt;</span>
-  <span style="color:#f92672">&lt;limits</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;clients</span><span style="color:#f92672">&gt;</span>100<span style="color:#f92672">&lt;/clients&gt;</span>
-    <span style="color:#f92672">&lt;sources</span><span style="color:#f92672">&gt;</span>2<span style="color:#f92672">&lt;/sources&gt;</span>
-    <span style="color:#f92672">&lt;threadpool</span><span style="color:#f92672">&gt;</span>5<span style="color:#f92672">&lt;/threadpool&gt;</span>
-    <span style="color:#f92672">&lt;queue-size</span><span style="color:#f92672">&gt;</span>524288<span style="color:#f92672">&lt;/queue-size&gt;</span>
-    <span style="color:#f92672">&lt;client-timeout</span><span style="color:#f92672">&gt;</span>30<span style="color:#f92672">&lt;/client-timeout&gt;</span>
-    <span style="color:#f92672">&lt;header-timeout</span><span style="color:#f92672">&gt;</span>15<span style="color:#f92672">&lt;/header-timeout&gt;</span>
-    <span style="color:#f92672">&lt;source-timeout</span><span style="color:#f92672">&gt;</span>10<span style="color:#f92672">&lt;/source-timeout&gt;</span>
-    <span style="color:#f92672">&lt;burst-on-connect</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/burst-on-connect&gt;</span>
-    <span style="color:#f92672">&lt;burst-size</span><span style="color:#f92672">&gt;</span>65535<span style="color:#f92672">&lt;/burst-size&gt;</span>
-  <span style="color:#f92672">&lt;/limits&gt;</span>
-  <span style="color:#f92672">&lt;authentication</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;source-user</span><span style="color:#f92672">&gt;</span>source<span style="color:#f92672">&lt;/source-user&gt;</span>
-    <span style="color:#f92672">&lt;source-password</span><span style="color:#f92672">&gt;</span>hackme<span style="color:#f92672">&lt;/source-password&gt;</span>
-    <span style="color:#f92672">&lt;relay-user</span><span style="color:#f92672">&gt;</span>relay<span style="color:#f92672">&lt;/relay-user&gt;</span>
-    <span style="color:#f92672">&lt;relay-password</span><span style="color:#f92672">&gt;</span>hackme<span style="color:#f92672">&lt;/relay-password&gt;</span>
-    <span style="color:#f92672">&lt;admin-user</span><span style="color:#f92672">&gt;</span>admin<span style="color:#f92672">&lt;/admin-user&gt;</span>
-    <span style="color:#f92672">&lt;admin-password</span><span style="color:#f92672">&gt;</span>hackme<span style="color:#f92672">&lt;/admin-password&gt;</span>
-  <span style="color:#f92672">&lt;/authentication&gt;</span>
-<span style="color:#f92672">&lt;/icecast&gt;</span>
-</code></pre></div><p>Icecast hasn't been ported over to systemd yet so you mind as well use the old
+</code></pre>
+<p>Place a copy of the <a href="https://stelfox.net/notes/icecast/icecast_base.xml">icecast config</a> at <code>/etc/icecast.xml</code>. I also have a
+<a href="https://stelfox.net/notes/icecast/icecast_fully_commented.xml">fully commented config</a> available as well. You'll need to change the
+values, especially <a href="https://stelfox.net/notes/password-security/">passwords</a> listed in the configuration before making it
+live.</p>
+<p>Icecast hasn't been ported over to systemd yet so you mind as well use the old
 configuration options to set it to start up on each boot:</p>
 <pre><code>chkconfig icecast on
 service icecast start
-</code></pre><p>If you configured everything properly you now have a happy Icecast server ready
+</code></pre>
+<p>If you configured everything properly you now have a happy Icecast server ready
 to have a source authenticate to it and listeners receive it.</p>
 <h2 id="example-mount-definitions">Example Mount Definitions</h2>
 <h3 id="livedj-with-automation-fallback">LiveDJ with Automation Fallback</h3>
@@ -233,53 +123,54 @@ to have a source authenticate to it and listeners receive it.</p>
 live DJ authenticated and streaming content it will pull users out of the
 automated stream and to listen to the live DJ, if the automated DJ goes down it
 will play silence but won't kill the stream. This requires that you put a file
-in the web directory named &lsquo;silence.ogg&rsquo;.</p>
-<p>You can download the one <a href="/note_files/icecast/silence.ogg">I use here</a>.  With this you'll want to use the URL
+in the web directory named 'silence.ogg'.</p>
+<p>You can download the one <a href="https://stelfox.net/notes/icecast/silence.ogg">I use here</a>. With this you'll want to use the URL
 <code>http://streams.example.org/radio.ogg.m3u</code> to access the stream.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;mount</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;mount-name</span><span style="color:#f92672">&gt;</span>/automation.ogg<span style="color:#f92672">&lt;/mount-name&gt;</span>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml"><mount>
+  <mount-name>/automation.ogg</mount-name>
 
-  <span style="color:#f92672">&lt;username</span><span style="color:#f92672">&gt;</span>automation<span style="color:#f92672">&lt;/username&gt;</span>
-  <span style="color:#f92672">&lt;password</span><span style="color:#f92672">&gt;</span>robot-password-hackme<span style="color:#f92672">&lt;/password&gt;</span>
+  <username>automation</username>
+  <password>robot-password-hackme</password>
 
-  <span style="color:#f92672">&lt;fallback-mount</span><span style="color:#f92672">&gt;</span>/silence.ogg<span style="color:#f92672">&lt;/fallback-mount&gt;</span>
-  <span style="color:#f92672">&lt;fallback-override</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/fallback-override&gt;</span>
+  <fallback-mount>/silence.ogg</fallback-mount>
+  <fallback-override>1</fallback-override>
 
-  <span style="color:#f92672">&lt;charset</span><span style="color:#f92672">&gt;</span>UTF8<span style="color:#f92672">&lt;/charset&gt;</span>
+  <charset>UTF8</charset>
 
-  <span style="color:#f92672">&lt;stream-name</span><span style="color:#f92672">&gt;</span>Radio - Automation System<span style="color:#f92672">&lt;/stream-name&gt;</span>
-  <span style="color:#f92672">&lt;stream-description</span><span style="color:#f92672">&gt;</span>A Radio Station Automaton<span style="color:#f92672">&lt;/stream-description&gt;</span>
-  <span style="color:#f92672">&lt;stream-url</span><span style="color:#f92672">&gt;</span>http://streams.example.org/<span style="color:#f92672">&lt;/stream-url&gt;</span>
-  <span style="color:#f92672">&lt;genre</span><span style="color:#f92672">&gt;</span>A Genre!<span style="color:#f92672">&lt;/genre&gt;</span>
+  <stream-name>Radio - Automation System</stream-name>
+  <stream-description>A Radio Station Automaton</stream-description>
+  <stream-url>http://streams.example.org/</stream-url>
+  <genre>A Genre!</genre>
 
-  <span style="color:#f92672">&lt;bitrate</span><span style="color:#f92672">&gt;</span>128<span style="color:#f92672">&lt;/bitrate&gt;</span>
+  <bitrate>128</bitrate>
 
-  <span style="color:#f92672">&lt;public</span><span style="color:#f92672">&gt;</span>0<span style="color:#f92672">&lt;/public&gt;</span>
-  <span style="color:#f92672">&lt;hidden</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/hidden&gt;</span>
-<span style="color:#f92672">&lt;/mount&gt;</span>
+  <public>0</public>
+  <hidden>1</hidden>
+</mount>
 
-<span style="color:#f92672">&lt;mount</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;mount-name</span><span style="color:#f92672">&gt;</span>/radio.ogg<span style="color:#f92672">&lt;/mount-name&gt;</span>
+<mount>
+  <mount-name>/radio.ogg</mount-name>
 
-  <span style="color:#f92672">&lt;username</span><span style="color:#f92672">&gt;</span>livedj<span style="color:#f92672">&lt;/username&gt;</span>
-  <span style="color:#f92672">&lt;password</span><span style="color:#f92672">&gt;</span>the-live-djs-password<span style="color:#f92672">&lt;/password&gt;</span>
+  <username>livedj</username>
+  <password>the-live-djs-password</password>
 
-  <span style="color:#f92672">&lt;fallback-mount</span><span style="color:#f92672">&gt;</span>/automation.ogg<span style="color:#f92672">&lt;/fallback-mount&gt;</span>
-  <span style="color:#f92672">&lt;fallback-override</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/fallback-override&gt;</span>
+  <fallback-mount>/automation.ogg</fallback-mount>
+  <fallback-override>1</fallback-override>
 
-  <span style="color:#f92672">&lt;charset</span><span style="color:#f92672">&gt;</span>UTF8<span style="color:#f92672">&lt;/charset&gt;</span>
+  <charset>UTF8</charset>
 
-  <span style="color:#f92672">&lt;stream-name</span><span style="color:#f92672">&gt;</span>Radio - Automation System<span style="color:#f92672">&lt;/stream-name&gt;</span>
-  <span style="color:#f92672">&lt;stream-description</span><span style="color:#f92672">&gt;</span>A Radio Station Automaton<span style="color:#f92672">&lt;/stream-description&gt;</span>
-  <span style="color:#f92672">&lt;stream-url</span><span style="color:#f92672">&gt;</span>http://streams.example.org/<span style="color:#f92672">&lt;/stream-url&gt;</span>
-  <span style="color:#f92672">&lt;genre</span><span style="color:#f92672">&gt;</span>A Genre!<span style="color:#f92672">&lt;/genre&gt;</span>
+  <stream-name>Radio - Automation System</stream-name>
+  <stream-description>A Radio Station Automaton</stream-description>
+  <stream-url>http://streams.example.org/</stream-url>
+  <genre>A Genre!</genre>
 
-  <span style="color:#f92672">&lt;bitrate</span><span style="color:#f92672">&gt;</span>128<span style="color:#f92672">&lt;/bitrate&gt;</span>
+  <bitrate>128</bitrate>
 
-  <span style="color:#f92672">&lt;public</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/public&gt;</span>
-  <span style="color:#f92672">&lt;hidden</span><span style="color:#f92672">&gt;</span>0<span style="color:#f92672">&lt;/hidden&gt;</span>
-<span style="color:#f92672">&lt;/mount&gt;</span>
-</code></pre></div><h2 id="logrotate-stanza">Logrotate Stanza</h2>
+  <public>1</public>
+  <hidden>0</hidden>
+</mount>
+</code></pre>
+<h2 id="logrotate-stanza">Logrotate Stanza</h2>
 <p>TODO</p>
 <h2 id="ffmpeg2theora-source-client">ffmpeg2theora Source Client</h2>
 <p>TODO</p>
@@ -289,935 +180,45 @@ in the web directory named &lsquo;silence.ogg&rsquo;.</p>
 <code>http://streams.example.org:8000/radio.ogg</code> with some javascript controls,
 pretty straight forward. The loop is included in case the stream dies or is
 currently in fallback mode to a file.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!DOCTYPE html&gt;</span>
-&lt;<span style="color:#f92672">html</span> <span style="color:#a6e22e">lang</span><span style="color:#f92672">=</span><span style="color:#e6db74">en</span>&gt;
-  &lt;<span style="color:#f92672">head</span>&gt;
-    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">charset</span><span style="color:#f92672">=</span><span style="color:#e6db74">utf-8</span> /&gt;
-    &lt;<span style="color:#f92672">meta</span> <span style="color:#a6e22e">name</span><span style="color:#f92672">=</span><span style="color:#e6db74">viewport</span> <span style="color:#a6e22e">content</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;width=device-width&#34;</span>/&gt;
-    &lt;<span style="color:#f92672">title</span>&gt;HTML5 Radio Player Test&lt;/<span style="color:#f92672">title</span>&gt;
-  &lt;/<span style="color:#f92672">head</span>&gt;
-  &lt;<span style="color:#f92672">body</span>&gt;
-    &lt;<span style="color:#f92672">div</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">container</span>&gt;
-      &lt;<span style="color:#f92672">audio</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">radioStream</span> <span style="color:#a6e22e">preload</span><span style="color:#f92672">=</span><span style="color:#e6db74">metadata</span> <span style="color:#a6e22e">controls</span> <span style="color:#a6e22e">loop</span>&gt;
-      &lt;<span style="color:#f92672">source</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;http://streams.example.org:8000/radio.ogg&#34;</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;audio/ogg&#34;</span>/&gt;
-      &lt;/<span style="color:#f92672">audio</span>&gt;
-      &lt;<span style="color:#f92672">br</span>/&gt;
-      &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;javascript:rs=document.getElementById(&#39;radioStream&#39;);rs.play();&#34;</span>&gt;Play&lt;/<span style="color:#f92672">a</span>&gt;
-      &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;javascript:rs=document.getElementById(&#39;radioStream&#39;);rs.pause();&#34;</span>&gt;Pause&lt;/<span style="color:#f92672">a</span>&gt;
-      &lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;javascript:rs=document.getElementById(&#39;radioStream&#39;);rs.pause();rs.currentTime=0;&#34;</span>&gt;Stop&lt;/<span style="color:#f92672">a</span>&gt;
-      &lt;<span style="color:#f92672">input</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">volume</span> <span style="color:#a6e22e">value</span><span style="color:#f92672">=</span><span style="color:#e6db74">100</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">=</span><span style="color:#e6db74">text</span> /&gt;&lt;<span style="color:#f92672">a</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;#&#34;</span> <span style="color:#a6e22e">onclick</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;javascript:rs=document.getElementById(&#39;radioStream&#39;);vo=document.getElementById(&#39;volume&#39;);rs.volume=parseInt(vo.value)/100.0;&#34;</span>&gt;Set Volume&lt;/<span style="color:#f92672">a</span>&gt;
-    &lt;/<span style="color:#f92672">div</span>&gt;
-  &lt;/<span style="color:#f92672">body</span>&gt;
-&lt;/<span style="color:#f92672">html</span>&gt;
-</code></pre></div><h3 id="video">Video</h3>
-<p>Todo&hellip;</p>
-<h2 id="fully-documented-configuration-file">Fully Documented Configuration File</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;icecast</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This is the DNS name or IP address that will be used for the stream directory
-</span><span style="color:#75715e">    lookups or possibily the playlist generation if a Host header is not
-</span><span style="color:#75715e">    provided. While localhost is shown as an example, in fact you will want
-</span><span style="color:#75715e">    something that your listeners can use.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;hostname</span><span style="color:#f92672">&gt;</span>streams.example.org<span style="color:#f92672">&lt;/hostname&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This flag turns on the icecast2 fileserver from which static files can be
-</span><span style="color:#75715e">    served. All files are served relative to the path specified in the
-</span><span style="color:#75715e">    paths</span><span style="color:#75715e">-</span><span style="color:#75715e">&gt;webroot configuration setting. By default the setting is enabled so
-</span><span style="color:#75715e">    that requests for the images on the status page are retrievable.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This service should not be used for general file serving, use a service
-</span><span style="color:#75715e">    designed for that task such as Apache.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;fileserve</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/fileserve&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This optional setting allows for the administrator of the server to override
-</span><span style="color:#75715e">    the default server identification. The default is icecast followed by a
-</span><span style="color:#75715e">    version number and most will not care to change it however this setting will
-</span><span style="color:#75715e">    change that. 
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;server-id</span><span style="color:#f92672">&gt;</span>Icecast 2.3.2<span style="color:#f92672">&lt;/server-id&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This is an undocumented setting, it probably gets announced to the icecast
-</span><span style="color:#75715e">    directory and defaults to &#34;Earth&#34; the value of this is also visible on the
-</span><span style="color:#75715e">    Icecast Administration page.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;location</span><span style="color:#f92672">&gt;</span>Earth<span style="color:#f92672">&lt;/location&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    An optional mountpoint setting to be used when shoutcast DSP compatible
-</span><span style="color:#75715e">    clients connect. The default global setting is /stream but can be overridden
-</span><span style="color:#75715e">    here to use an alternative name which may include an extension that some
-</span><span style="color:#75715e">    clients require for certain formats.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    Defining this within a listen</span><span style="color:#75715e">-</span><span style="color:#75715e">socket group tells icecast that this port and
-</span><span style="color:#75715e">    the subsequent port are to be used for shoutcast compatible source clients.
-</span><span style="color:#75715e">    This is an alternative to the shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">compat approach as this implicitly
-</span><span style="color:#75715e">    defines the second listening socket and allows for specifying multiple
-</span><span style="color:#75715e">    sockets using different mountpoints for shoutcast source clients.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    The shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">mount outside of a listen</span><span style="color:#75715e">-</span><span style="color:#75715e">socket group is the global setting of
-</span><span style="color:#75715e">    the mountpoint to use. 
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;shoutcast-mount</span><span style="color:#f92672">&gt;</span>/stream<span style="color:#f92672">&lt;/shoutcast-mount&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    The listen</span><span style="color:#75715e">-</span><span style="color:#75715e">sockets define the ports and addresses that the daemon will listen
-</span><span style="color:#75715e">    on. Best practice dictates that you bind a service only to the IP addresses
-</span><span style="color:#75715e">    that you want the service to listen on. Without specifying one Icecast will
-</span><span style="color:#75715e">    listen on all IPv4 and IPv6 addresses the host is aware of.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;listen-socket</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An optional IP address that can be used to bind to a specific network card.
-</span><span style="color:#75715e">      If not supplied, then it will bind to all interfaces. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;bind-address</span><span style="color:#f92672">&gt;</span>192.168.20.45<span style="color:#f92672">&lt;/bind-address&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The TCP port that will be used to accept client connections.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;port</span><span style="color:#f92672">&gt;</span>8000<span style="color:#f92672">&lt;/port&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This could optionally be defined here as well/instead of in the global
-</span><span style="color:#75715e">      configuration. Refer to it&#39;s documentation else where in this config
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> &lt;shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">mount&gt;/stream&lt;/shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">mount&gt; </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;/listen-socket&gt;</span>
-  <span style="color:#f92672">&lt;listen-socket</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#f92672">&lt;bind-address</span><span style="color:#f92672">&gt;</span>192.168.20.45<span style="color:#f92672">&lt;/bind-address&gt;</span>
-    <span style="color:#f92672">&lt;port</span><span style="color:#f92672">&gt;</span>8001<span style="color:#f92672">&lt;/port&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This optional flag will indicate that this port will operate in
-</span><span style="color:#75715e">      &#39;shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">compatibility&#39; mode. Due to major differences in the source client
-</span><span style="color:#75715e">      connection protocol, if you wish to use any of the shoutcast DJ tools, you
-</span><span style="color:#75715e">      will need to configure at least one socket as shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">compatible. Note that
-</span><span style="color:#75715e">      when in this mode, only source clients (and specifically shoutcast source
-</span><span style="color:#75715e">      clients) will be able to attach to this port. All listeners may connect to any
-</span><span style="color:#75715e">      of the ports defined without this flag. Also, for proper Shoutcast DSP
-</span><span style="color:#75715e">      compatibility, you must define a listen socket with a port one less than the
-</span><span style="color:#75715e">      one defined as &#39;shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">compat&#39;. This means if you define 8001 as
-</span><span style="color:#75715e">      shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">compat, then you will need to define a listen port of 8000 and it
-</span><span style="color:#75715e">      must not also be defined as shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">compat.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;shoutcast-compat</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/shoutcast-compat&gt;</span>
-  <span style="color:#f92672">&lt;/listen-socket&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This section contains configuration settings that can be used to secure the
-</span><span style="color:#75715e">    icecast server by performing a chroot to a secured location.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;security</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An indicator which specifies whether a chroot() will be done when the
-</span><span style="color:#75715e">      server is started. The chrooted path is specified by the &lt;basedir&gt;
-</span><span style="color:#75715e">      configuration value the &lt;paths&gt; section.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;chroot</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/chroot&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This section indicates the user and group that will own the icecast process
-</span><span style="color:#75715e">      when it is started. These need to be valid users on the system. This allows
-</span><span style="color:#75715e">      the daemon to drop it&#39;s root privileges. This really shouldn&#39;t be optional.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;changeowner</span><span style="color:#f92672">&gt;</span>
-      <span style="color:#f92672">&lt;user</span><span style="color:#f92672">&gt;</span>icecast<span style="color:#f92672">&lt;/user&gt;</span>
-      <span style="color:#f92672">&lt;group</span><span style="color:#f92672">&gt;</span>icecast<span style="color:#f92672">&lt;/group&gt;</span>
-    <span style="color:#f92672">&lt;/changeowner&gt;</span>
-  <span style="color:#f92672">&lt;/security&gt;</span>
-
-  <span style="color:#f92672">&lt;paths</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This path is used in conjunction with the chroot settings, and specified the
-</span><span style="color:#75715e">      base directory that is chrooted to when the server is started (and is not used
-</span><span style="color:#75715e">      if not chroot&#39;d).
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;basedir</span><span style="color:#f92672">&gt;</span>/usr/share/icecast<span style="color:#f92672">&lt;/basedir&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Note that since chroot is turned on, these paths are all relative to
-</span><span style="color:#75715e">      &lt;basedir&gt; and need to exist within that directory
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This path specifies the base directory used for all static file requests.
-</span><span style="color:#75715e">      This directory can contain all standard file types (including mp3s and ogg
-</span><span style="color:#75715e">      vorbis files). For example, if webroot is set to /usr/share/icecast, and a
-</span><span style="color:#75715e">      request for http://server:port/mp3/stuff.mp3 comes in, then the file
-</span><span style="color:#75715e">      /usr/share/icecast/mp3/stuff.mp3 will be served.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;webroot</span><span style="color:#f92672">&gt;</span>/web<span style="color:#f92672">&lt;/webroot&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This path specifies the base directory used for all admin requests. More
-</span><span style="color:#75715e">      specifically, this is used to hold the XSLT scripts used for the web</span><span style="color:#75715e">-</span><span style="color:#75715e">based
-</span><span style="color:#75715e">      admin interface. The admin directory contained within the icecast
-</span><span style="color:#75715e">      distribution contains these files. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;adminroot</span><span style="color:#f92672">&gt;</span>/admin<span style="color:#f92672">&lt;/adminroot&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This path specifies the base directory used for logging. Both the error.log
-</span><span style="color:#75715e">      and access.log will be created relative to this directory. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;logdir</span><span style="color:#f92672">&gt;</span>/log<span style="color:#f92672">&lt;/logdir&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This pathname specifies the file to write at startup and to remove at
-</span><span style="color:#75715e">      normal shutdown. The file contains the process id of the icecast process.
-</span><span style="color:#75715e">      This could be read and used for sending signals icecast. This is not
-</span><span style="color:#75715e">      affected by basedir and needs a full path
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;pidfile</span><span style="color:#f92672">&gt;</span>/var/run/icecast/icecast.pid<span style="color:#f92672">&lt;/pidfile&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Aliases treat requests for &#39;source&#39; path as being for &#39;dest&#39; path May be
-</span><span style="color:#75715e">      made specific to a port or bound address using the &#34;port&#34; and &#34;bind</span><span style="color:#75715e">-</span><span style="color:#75715e">address&#34;
-</span><span style="color:#75715e">      attributes. The following alias serves up the status page as the root path.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;alias</span> <span style="color:#a6e22e">source=</span><span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#a6e22e">dest=</span><span style="color:#e6db74">&#34;/status.xsl&#34;</span><span style="color:#f92672">/&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      There are two additional settings that may be applied within this context
-</span><span style="color:#75715e">      that may be of use later on, though, they&#39;re not a good replacement for a
-</span><span style="color:#75715e">      good firewall. They are documented here:
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      allow</span><span style="color:#75715e">-</span><span style="color:#75715e">ip:
-</span><span style="color:#75715e">      If specified, this specifies the location of a file that contains a list
-</span><span style="color:#75715e">      of IP addresses that will be allowed to connect to icecast. This could be
-</span><span style="color:#75715e">      useful in cases where a master only feeds known slaves. The format of the
-</span><span style="color:#75715e">      file is simple, one IP per line.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      deny</span><span style="color:#75715e">-</span><span style="color:#75715e">ip:
-</span><span style="color:#75715e">      If specified, this specifies the location of a file that contains a list
-</span><span style="color:#75715e">      of IP addressess that will be dropped immediately. This is mainly for
-</span><span style="color:#75715e">      problem clients when you have no access to any firewall configuration.
-</span><span style="color:#75715e">      The format of the file is simple, one IP per line. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;/paths&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This section contains information relating to logging within icecast. There
-</span><span style="color:#75715e">    are two logfiles currently generated by icecast, an error.log (where all log
-</span><span style="color:#75715e">    messages are placed) and an access.log (where all stream/admin/http requests
-</span><span style="color:#75715e">    are logged).
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    Note that a HUP signal should be sent to icecast when the log files need to
-</span><span style="color:#75715e">    ne re</span><span style="color:#75715e">-</span><span style="color:#75715e">opened after moving or deleting the log files. 
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;logging</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      All requests made to the icecast daemon will be logged in this file. It&#39;s
-</span><span style="color:#75715e">      location is relative to the path specified by the &lt;logdir&gt; config value. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;accesslog</span><span style="color:#f92672">&gt;</span>access.log<span style="color:#f92672">&lt;/accesslog&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      All icecast generated log messages will be written to this file. If the
-</span><span style="color:#75715e">      loglevel is set too high (Debug for instance) then this file can grow
-</span><span style="color:#75715e">      fairly large over time. Log</span><span style="color:#75715e">-</span><span style="color:#75715e">rotation should be handled with logrotate,
-</span><span style="color:#75715e">      and a HUP signal should be generated after the logs have been
-</span><span style="color:#75715e">      moved/truncated to inform the icecast daemon of the change.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;errorlog</span><span style="color:#f92672">&gt;</span>error.log<span style="color:#f92672">&lt;/errorlog&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Into this file, a log of all metadata for each mountpoint will be written.
-</span><span style="color:#75715e">      The developers note that the format of this logfile will most likely
-</span><span style="color:#75715e">      change over time as they haven&#39;t decided on a format.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Currently, the file is pipe delimited. This option is optional.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;playlistlog</span><span style="color:#f92672">&gt;</span>playlist.log<span style="color:#f92672">&lt;/playlistlog&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Indicates what messages are logged by icecast. Log messages are categorized
-</span><span style="color:#75715e">      into one of 4 types, Debug, Info, Warn, and Error. Icecast will log all
-</span><span style="color:#75715e">      messages matching the value set here and below (so level 3 will log info,
-</span><span style="color:#75715e">      warn, and error messages).
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      4</span><span style="color:#75715e">-</span><span style="color:#75715e">Debug, 3</span><span style="color:#75715e">-</span><span style="color:#75715e">Info, 2</span><span style="color:#75715e">-</span><span style="color:#75715e">Warn, 1</span><span style="color:#75715e">-</span><span style="color:#75715e">Error
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;loglevel</span><span style="color:#f92672">&gt;</span>3<span style="color:#f92672">&lt;/loglevel&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      I let logrotate handle all of my log rotations and as such I don&#39;t have any
-</span><span style="color:#75715e">      use for the built in log rotation. These values are set with this in mind,
-</span><span style="color:#75715e">      and I don&#39;t expect the logs to ever actually reach this size. As such I
-</span><span style="color:#75715e">      don&#39;t have to worry about what Icecast will rename the file when it does
-</span><span style="color:#75715e">      reach that size.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      If this value is set, then icecast will append a timestamp to the end of
-</span><span style="color:#75715e">      the logfile name when logsize has been reached. If disabled, then the
-</span><span style="color:#75715e">      default behavior is to rename the logfile to logfile.old (overwriting any
-</span><span style="color:#75715e">      previously saved logfiles). We disable this by default to prevent the
-</span><span style="color:#75715e">      filling up of filesystems for people who don&#39;t care (or know) that their
-</span><span style="color:#75715e">      logs are growing.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;logarchive</span><span style="color:#f92672">&gt;</span>0<span style="color:#f92672">&lt;/logarchive&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This value specifies (in Kb) the maxmimum size of any of the log files.
-</span><span style="color:#75715e">      When the logfile grows beyond this value, icecast will either rename it to
-</span><span style="color:#75715e">      logfile.old, or add a timestamp to the archived file (if logarchive is
-</span><span style="color:#75715e">      enabled). 
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Here I have it set to 100Mb
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;logsize</span><span style="color:#f92672">&gt;</span>102400<span style="color:#f92672">&lt;/logsize&gt;</span>
-  <span style="color:#f92672">&lt;/logging&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This section contains server level settings that, in general, do not need to
-</span><span style="color:#75715e">    be changed. Only modify this section if you are know what you are doing.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;limits</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Total number of concurrent clients supported by the server. Listeners are
-</span><span style="color:#75715e">      considered clients, but so are accesses to any static content (i.e.
-</span><span style="color:#75715e">      fileserved content) and also any requests to gather stats. These are max
-</span><span style="color:#75715e">      *concurrent* connections for the entire server (not per mountpoint). 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;clients</span><span style="color:#f92672">&gt;</span>100<span style="color:#f92672">&lt;/clients&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Maximum number of connected sources supported by the server. This includes
-</span><span style="color:#75715e">      active relays and source clients.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;sources</span><span style="color:#f92672">&gt;</span>2<span style="color:#f92672">&lt;/sources&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This is the number of threads that are started to handle client connections.
-</span><span style="color:#75715e">      You may need to increase this value if you are running a high traffic
-</span><span style="color:#75715e">      stream. This recommended value is for a small to medium traffic server. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;threadpool</span><span style="color:#f92672">&gt;</span>5<span style="color:#f92672">&lt;/threadpool&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This is the maximum size (in bytes) of the stream queue. A listener may
-</span><span style="color:#75715e">      temporarily lag behind due to network congestion and in this case an
-</span><span style="color:#75715e">      internal queue is maintained for the listeners. If the queue grows larger
-</span><span style="color:#75715e">      than this config value, then it is truncated and any listeners found will be
-</span><span style="color:#75715e">      removed from the stream.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This will be the default setting for the streams which is 512k unless
-</span><span style="color:#75715e">      overridden here. You can override this in the individual mount settings which
-</span><span style="color:#75715e">      can be useful if you have a mixture of high bandwidth video and low bitrate 
-</span><span style="color:#75715e">      audio streams. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;queue-size</span><span style="color:#f92672">&gt;</span>524288<span style="color:#f92672">&lt;/queue-size&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This does not seem to be used. (Note from official documentation)
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;client-timeout</span><span style="color:#f92672">&gt;</span>30<span style="color:#f92672">&lt;/client-timeout&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The maximum time (in seconds) to wait for a request to come in once the
-</span><span style="color:#75715e">      client has made a connection to the server. In general this value should not
-</span><span style="color:#75715e">      need to be tweaked. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;header-timeout</span><span style="color:#f92672">&gt;</span>15<span style="color:#f92672">&lt;/header-timeout&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      If a connected source does not send any data within this timeout period (in
-</span><span style="color:#75715e">      seconds), then the source connection will be removed from the server. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;source-timeout</span><span style="color:#f92672">&gt;</span>10<span style="color:#f92672">&lt;/source-timeout&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This setting is really just an alias for burst</span><span style="color:#75715e">-</span><span style="color:#75715e">size. When enabled the
-</span><span style="color:#75715e">      burst</span><span style="color:#75715e">-</span><span style="color:#75715e">size is 64 kbytes and disabled the burst</span><span style="color:#75715e">-</span><span style="color:#75715e">size is 0 kbytes. This option
-</span><span style="color:#75715e">      is deprecated, use burst</span><span style="color:#75715e">-</span><span style="color:#75715e">size instead.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;burst-on-connect</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/burst-on-connect&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The burst size is the amount of data (in bytes) to burst to a client at
-</span><span style="color:#75715e">      connection time. Like burst</span><span style="color:#75715e">-</span><span style="color:#75715e">on</span><span style="color:#75715e">-</span><span style="color:#75715e">connect, this is to quickly fill the 
-</span><span style="color:#75715e">      pre</span><span style="color:#75715e">-</span><span style="color:#75715e">buffer used by media players. The default is 64 kbytes which is a typical
-</span><span style="color:#75715e">      size used by most clients so changing it is not usually required. This
-</span><span style="color:#75715e">      setting applies to all mountpoints unless overridden in the mount settings.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;burst-size</span><span style="color:#f92672">&gt;</span>65535<span style="color:#f92672">&lt;/burst-size&gt;</span>
-  <span style="color:#f92672">&lt;/limits&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This section contains all the usernames and passwords used for administration
-</span><span style="color:#75715e">    purposes or to connect sources and relays. 
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;authentication</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This is undocumented but icecast seems to accept it, it is kind of implied
-</span><span style="color:#75715e">      that it exists from the source</span><span style="color:#75715e">-</span><span style="color:#75715e">password documentation
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;source-user</span><span style="color:#f92672">&gt;</span>source<span style="color:#f92672">&lt;/source-user&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The unencrypted password used by sources to connect to icecast2. The default
-</span><span style="color:#75715e">      username for all source connections is &#39;source&#39; but this option allows to
-</span><span style="color:#75715e">      specify a default password. This and the username can be changed in the
-</span><span style="color:#75715e">      individual mount sections. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;source-password</span><span style="color:#f92672">&gt;</span>hackme<span style="color:#f92672">&lt;/source-password&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Used in the master server as part of the authentication when a slave requests
-</span><span style="color:#75715e">      the list of streams to relay. The default username is &#39;relay&#39; 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;relay-user</span><span style="color:#f92672">&gt;</span>relay<span style="color:#f92672">&lt;/relay-user&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Used in the master server as part of the authentication when a slave requests
-</span><span style="color:#75715e">      the list of streams to relay. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;relay-password</span><span style="color:#f92672">&gt;</span>hackme<span style="color:#f92672">&lt;/relay-password&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The username/password used for all administration functions. This includes
-</span><span style="color:#75715e">      retrieving statistics, accessing the web</span><span style="color:#75715e">-</span><span style="color:#75715e">based administration screens, etc.
-</span><span style="color:#75715e">      A list of these functions can be found in the &#34;Administration&#34; section of
-</span><span style="color:#75715e">      the manual. 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;admin-user</span><span style="color:#f92672">&gt;</span>admin<span style="color:#f92672">&lt;/admin-user&gt;</span>
-    <span style="color:#f92672">&lt;admin-password</span><span style="color:#f92672">&gt;</span>hackme<span style="color:#f92672">&lt;/admin-password&gt;</span>
-  <span style="color:#f92672">&lt;/authentication&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This section contains all the settings for listing a stream on any of the
-</span><span style="color:#75715e">    Icecast2 YP Directory servers. Multiple occurances of this section can be
-</span><span style="color:#75715e">    specified in order to be listed on multiple directory servers. 
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    Right now it is commented out, if you want your stream listed publicly on
-</span><span style="color:#75715e">    Icecast&#39;s directory then uncomment this whole section. 
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    Comments inside this section would mess it up, so I&#39;ve included the
-</span><span style="color:#75715e">    documentation here in the parent block:
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    yp</span><span style="color:#75715e">-</span><span style="color:#75715e">url:
-</span><span style="color:#75715e">    The URL which icecast2 uses to communicate with the Directory server. The
-</span><span style="color:#75715e">    value for this setting is provided by the owner of the Directory server.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    yp</span><span style="color:#75715e">-</span><span style="color:#75715e">url</span><span style="color:#75715e">-</span><span style="color:#75715e">timeout:
-</span><span style="color:#75715e">    This value is the maximum time icecast2 will wait for a response from a
-</span><span style="color:#75715e">    particular directory server. The recommended value should be sufficient
-</span><span style="color:#75715e">    for most directory servers. 
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">  &lt;directory&gt;
-</span><span style="color:#75715e">    &lt;yp</span><span style="color:#75715e">-</span><span style="color:#75715e">url&gt;http://dir.xiph.org/cgi</span><span style="color:#75715e">-</span><span style="color:#75715e">bin/yp</span><span style="color:#75715e">-</span><span style="color:#75715e">cgi&lt;/yp</span><span style="color:#75715e">-</span><span style="color:#75715e">url&gt;
-</span><span style="color:#75715e">    &lt;yp</span><span style="color:#75715e">-</span><span style="color:#75715e">url</span><span style="color:#75715e">-</span><span style="color:#75715e">timeout&gt;15&lt;/yp</span><span style="color:#75715e">-</span><span style="color:#75715e">url</span><span style="color:#75715e">-</span><span style="color:#75715e">timeout&gt;
-</span><span style="color:#75715e">  &lt;/directory&gt;
-</span><span style="color:#75715e">   </span><span style="color:#75715e">--&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    If this server is going to be a slave relaying all of the mount points for
-</span><span style="color:#75715e">    another Icecast server, you can use these settings to configure it to be a
-</span><span style="color:#75715e">    slave. None of these need to be setup on the master server.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    master</span><span style="color:#75715e">-</span><span style="color:#75715e">server:
-</span><span style="color:#75715e">    This is the IP or domain name for the master server that is actually
-</span><span style="color:#75715e">    hosting the streams.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    master</span><span style="color:#75715e">-</span><span style="color:#75715e">server</span><span style="color:#75715e">-</span><span style="color:#75715e">port:
-</span><span style="color:#75715e">    This is the TCP port on the master server to connect to, while not
-</span><span style="color:#75715e">    documented anywhere I suspect that this port needs to be a shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">compat
-</span><span style="color:#75715e">    configured port.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    master</span><span style="color:#75715e">-</span><span style="color:#75715e">update</span><span style="color:#75715e">-</span><span style="color:#75715e">interval:
-</span><span style="color:#75715e">    The interval (in seconds) of how often to update the list of streams
-</span><span style="color:#75715e">    available on the master. If streams are pretty stable and don&#39;t change very
-</span><span style="color:#75715e">    often (such as an internet radio station) it might be a good idea to
-</span><span style="color:#75715e">    increase this up to something like 10 or 15 minutes.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    master</span><span style="color:#75715e">-</span><span style="color:#75715e">username:
-</span><span style="color:#75715e">    This is the username that has been configured on the master server that the
-</span><span style="color:#75715e">    slave will use to authenticate. This defaults to &#39;relay&#39; on both sides and
-</span><span style="color:#75715e">    is optional.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    master</span><span style="color:#75715e">-</span><span style="color:#75715e">password:
-</span><span style="color:#75715e">    This is the password that has been configured on the master server that the
-</span><span style="color:#75715e">    slave will use to authenticate.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    relays</span><span style="color:#75715e">-</span><span style="color:#75715e">on</span><span style="color:#75715e">-</span><span style="color:#75715e">demand:
-</span><span style="color:#75715e">    When this is set the slave will only connect to a master&#39;s stream to
-</span><span style="color:#75715e">    rebroadcast it if the slave has at least one listener. Setting this avoids
-</span><span style="color:#75715e">    using bandwidth unecessarily.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    &lt;master</span><span style="color:#75715e">-</span><span style="color:#75715e">server&gt;other</span><span style="color:#75715e">-</span><span style="color:#75715e">icecast</span><span style="color:#75715e">-</span><span style="color:#75715e">server.local&lt;/master</span><span style="color:#75715e">-</span><span style="color:#75715e">server&gt;
-</span><span style="color:#75715e">    &lt;master</span><span style="color:#75715e">-</span><span style="color:#75715e">server</span><span style="color:#75715e">-</span><span style="color:#75715e">port&gt;8001&lt;/master</span><span style="color:#75715e">-</span><span style="color:#75715e">server</span><span style="color:#75715e">-</span><span style="color:#75715e">port&gt;
-</span><span style="color:#75715e">    &lt;master</span><span style="color:#75715e">-</span><span style="color:#75715e">update</span><span style="color:#75715e">-</span><span style="color:#75715e">interval&gt;120&lt;/master</span><span style="color:#75715e">-</span><span style="color:#75715e">update</span><span style="color:#75715e">-</span><span style="color:#75715e">interval&gt;
-</span><span style="color:#75715e">    &lt;master</span><span style="color:#75715e">-</span><span style="color:#75715e">username&gt;relay&lt;/master</span><span style="color:#75715e">-</span><span style="color:#75715e">password&gt;
-</span><span style="color:#75715e">    &lt;master</span><span style="color:#75715e">-</span><span style="color:#75715e">password&gt;hackme&lt;/master</span><span style="color:#75715e">-</span><span style="color:#75715e">password&gt;
-</span><span style="color:#75715e">    &lt;relays</span><span style="color:#75715e">-</span><span style="color:#75715e">on</span><span style="color:#75715e">-</span><span style="color:#75715e">demand&gt;1&lt;/relays</span><span style="color:#75715e">-</span><span style="color:#75715e">on</span><span style="color:#75715e">-</span><span style="color:#75715e">demand&gt;
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    If only specific mountpoints need to be relayed, then you can configure an
-</span><span style="color:#75715e">    Icecast slave with a &#34;Specific Mountpoint Relay&#34;. Using a Specific
-</span><span style="color:#75715e">    Mountpoint Relay, only those mountpoints specified will be relayed. This
-</span><span style="color:#75715e">    only needs to be configured on the Icecast slaves.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    server:
-</span><span style="color:#75715e">    This is the IP or domain name for the server which contains the mountpoint
-</span><span style="color:#75715e">    to be relayed (The master server).
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    port:
-</span><span style="color:#75715e">    This is the TCP Port for the server which contains the mountpoint to be
-</span><span style="color:#75715e">    relayed (The master server).
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    mount:
-</span><span style="color:#75715e">    The mountpoint located on the remote server. If you are relaying a shoutcast
-</span><span style="color:#75715e">    stream, this should be a &#39;/&#39; or &#39;/;name&#39;. 
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    local</span><span style="color:#75715e">-</span><span style="color:#75715e">mount:
-</span><span style="color:#75715e">    The name to use for the local mountpoint. This is what the mount will be
-</span><span style="color:#75715e">    named on the relaying server. By default the remote mountpoint name is used. 
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    username:
-</span><span style="color:#75715e">    This is the username the slave will use to authenticate to the remote
-</span><span style="color:#75715e">    (master) server. Usually this is &#39;relay&#39;.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    password:
-</span><span style="color:#75715e">    This is the password the slave will use to authenticate to the remote
-</span><span style="color:#75715e">    (master) server.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    on</span><span style="color:#75715e">-</span><span style="color:#75715e">demand:
-</span><span style="color:#75715e">    An on</span><span style="color:#75715e">-</span><span style="color:#75715e">demand relay will only retrieve the stream if there are listeners
-</span><span style="color:#75715e">    requesting the stream. This is useful in cases where you want to limit
-</span><span style="color:#75715e">    bandwidth when no one is listening. 
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    relay</span><span style="color:#75715e">-</span><span style="color:#75715e">shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">metadata:
-</span><span style="color:#75715e">    If you are relaying a Shoutcast stream, you may want to specify this
-</span><span style="color:#75715e">    indicator to also relay the metadata (song titles) that are part of the
-</span><span style="color:#75715e">    Shoutcast data stream. By default this is enabled but it is up to the
-</span><span style="color:#75715e">    remote server on whether it sends any. 
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">  &lt;relay&gt;
-</span><span style="color:#75715e">    &lt;server&gt;other</span><span style="color:#75715e">-</span><span style="color:#75715e">icecast</span><span style="color:#75715e">-</span><span style="color:#75715e">server.local&lt;/server&gt;
-</span><span style="color:#75715e">    &lt;port&gt;8001&lt;/port&gt;
-</span><span style="color:#75715e">    &lt;username&gt;relay&lt;/username&gt;
-</span><span style="color:#75715e">    &lt;password&gt;hackme&lt;/password&gt;
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    &lt;mount&gt;/remote</span><span style="color:#75715e">-</span><span style="color:#75715e">stream&lt;/mount&gt;
-</span><span style="color:#75715e">    &lt;local</span><span style="color:#75715e">-</span><span style="color:#75715e">mount&gt;/local</span><span style="color:#75715e">-</span><span style="color:#75715e">stream&lt;/local</span><span style="color:#75715e">-</span><span style="color:#75715e">mount&gt;
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    &lt;on</span><span style="color:#75715e">-</span><span style="color:#75715e">demand&gt;1&lt;/on</span><span style="color:#75715e">-</span><span style="color:#75715e">demand&gt;
-</span><span style="color:#75715e">    &lt;relay</span><span style="color:#75715e">-</span><span style="color:#75715e">shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">metadata&gt;1&lt;/relay</span><span style="color:#75715e">-</span><span style="color:#75715e">shoutcast</span><span style="color:#75715e">-</span><span style="color:#75715e">metadata&gt;
-</span><span style="color:#75715e">  &lt;/relay&gt;
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-
-  <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">    This section contains the settings which apply only to a specific mountpoint
-</span><span style="color:#75715e">    and applies to an incoming stream whether it is a relay or a source client.
-</span><span style="color:#75715e">    The purpose of the mount definition is to state certain information that can
-</span><span style="color:#75715e">    override either global/default settings or settings provided from the
-</span><span style="color:#75715e">    incoming stream.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">    A mount does not need to be stated for each incoming source although you may
-</span><span style="color:#75715e">    want to specific certain settings like the maximum number of listeners or a
-</span><span style="color:#75715e">    mountpoint specific username/password. As a general rule, only define what
-</span><span style="color:#75715e">    you need to but each mount definition needs at least the mount</span><span style="color:#75715e">-</span><span style="color:#75715e">name.
-</span><span style="color:#75715e">    Changes to most of these will apply across a configuration file re</span><span style="color:#75715e">-</span><span style="color:#75715e">read even
-</span><span style="color:#75715e">    on active streams, however some only apply when the stream starts or ends.
-</span><span style="color:#75715e">  </span><span style="color:#75715e">--&gt;</span>
-  <span style="color:#f92672">&lt;mount</span><span style="color:#f92672">&gt;</span>
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The name of the mount point for which these settings apply
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;mount-name</span><span style="color:#f92672">&gt;</span>/example.ogg<span style="color:#f92672">&lt;/mount-name&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An optional value which will set the username that a source must use to
-</span><span style="color:#75715e">      connect using this mountpoint 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;username</span><span style="color:#f92672">&gt;</span>othersource<span style="color:#f92672">&lt;/username&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An optional value which will set the password that a source must use to
-</span><span style="color:#75715e">      connect using this mountpoint
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;password</span><span style="color:#f92672">&gt;</span>hackmemore<span style="color:#f92672">&lt;/password&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An optional value which will set the maximum number of listeners that can
-</span><span style="color:#75715e">      be attached to this mountpoint.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;max-listeners</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/max-listeners&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An optional value which will set the length of time a listener will stay
-</span><span style="color:#75715e">      connected to the stream. An auth component may override this
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;max-listener-duration</span><span style="color:#f92672">&gt;</span>3600<span style="color:#f92672">&lt;/max-listener-duration&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An optional value which will set the filename which will be a dump of the
-</span><span style="color:#75715e">      stream coming through on this mountpoint 
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;dump-file</span><span style="color:#f92672">&gt;</span>/tmp/dump-example1.ogg<span style="color:#f92672">&lt;/dump-file&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      An optional value which will specify the file those contents will be sent
-</span><span style="color:#75715e">      to new listeners when they connect but before the normal stream is sent.
-</span><span style="color:#75715e">      Make sure the format of the file specified matches the streaming format.
-</span><span style="color:#75715e">      The specified file is appended to webroot before being opened
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;intro</span><span style="color:#f92672">&gt;</span>/intro.ogg<span style="color:#f92672">&lt;/intro&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This optional value specifies a mountpoint that clients are automatically
-</span><span style="color:#75715e">      moved to if the source shuts down or is not streaming at the time a
-</span><span style="color:#75715e">      listener connects. Only one can be listed in each mount and should refer
-</span><span style="color:#75715e">      to another mountpoint on the same server that is streaming in the same
-</span><span style="color:#75715e">      streaming format.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      If clients cannot fallback to another mountpoint, due to a missing
-</span><span style="color:#75715e">      fallback</span><span style="color:#75715e">-</span><span style="color:#75715e">mount or it states a mountpoint that is just not available, then
-</span><span style="color:#75715e">      those clients will be disconnected. If clients are falling back to a
-</span><span style="color:#75715e">      mountpoint and the fallback</span><span style="color:#75715e">-</span><span style="color:#75715e">mount is not actively streaming but defines a
-</span><span style="color:#75715e">      fallback</span><span style="color:#75715e">-</span><span style="color:#75715e">mount itself then those clients may be moved there instead. This
-</span><span style="color:#75715e">      multi</span><span style="color:#75715e">-</span><span style="color:#75715e">level fallback allows clients to cascade several mountpoints.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      A fallback mount can also state a file that is located in webroot. This is
-</span><span style="color:#75715e">      useful for playing a pre</span><span style="color:#75715e">-</span><span style="color:#75715e">recorded file in the case of a stream going down.
-</span><span style="color:#75715e">      It will repeat until either the listener disconnects or a stream comes
-</span><span style="color:#75715e">      back available and takes the listeners back. As per usual, the file format
-</span><span style="color:#75715e">      should match the stream format, failing to do so may cause problems with
-</span><span style="color:#75715e">      playback.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Note that the fallback file is not timed so be careful if you intend to
-</span><span style="color:#75715e">      relay this. They are fine on slave streams but don&#39;t use them on master
-</span><span style="color:#75715e">      streams, if you do then the relay will consume stream data at a faster
-</span><span style="color:#75715e">      rate and the listeners on the relay would eventually get kicked off.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;fallback-mount</span><span style="color:#f92672">&gt;</span>/example2.ogg<span style="color:#f92672">&lt;/fallback-mount&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      When enabled, this allows a connecting source client or relay on this
-</span><span style="color:#75715e">      mountpoint to move listening clients back from the fallback mount
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;fallback-override</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/fallback-override&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      When set to 1, this will cause new listeners, when the max listener count
-</span><span style="color:#75715e">      for the mountpoint has been reached, to move to the fallback mount if
-</span><span style="color:#75715e">      there is one specified
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;fallback-when-full</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/fallback-when-full&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      For non</span><span style="color:#75715e">-</span><span style="color:#75715e">Ogg streams like MP3, the metadata that is inserted into the stream
-</span><span style="color:#75715e">      often has no defined character set. We have traditionally assumed UTF8 as
-</span><span style="color:#75715e">      it allows for multiple language sets on the web pages and stream directory,
-</span><span style="color:#75715e">      however many source clients for MP3 type streams have assumed Latin1
-</span><span style="color:#75715e">      (ISO</span><span style="color:#75715e">-</span><span style="color:#75715e">8859</span><span style="color:#75715e">-</span><span style="color:#75715e">1) or leave it to whatever character set is in use on the source
-</span><span style="color:#75715e">      client system.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This character mismatch has been known to cause a problem as the stats
-</span><span style="color:#75715e">      engine and stream directory servers want UTF8 so now we assume Latin1 for
-</span><span style="color:#75715e">      non</span><span style="color:#75715e">-</span><span style="color:#75715e">Ogg streams (to handle the common case) but you can specify an
-</span><span style="color:#75715e">      alternative character set with this option.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The source clients can also specify a charset= parameter to the metadata
-</span><span style="color:#75715e">      update URL if they so wish.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;charset</span><span style="color:#f92672">&gt;</span>ISO8859-1<span style="color:#f92672">&lt;/charset&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The default setting for this is </span><span style="color:#75715e">-</span><span style="color:#75715e">1 indicating that it is up to the source
-</span><span style="color:#75715e">      client or relay to determine if this mountpoint should advertise. A setting
-</span><span style="color:#75715e">      of 0 will prevent any advertising and a setting of 1 will force it to
-</span><span style="color:#75715e">      advertise. If you do force advertising you may need to set other settings
-</span><span style="color:#75715e">      listed below as the YP server can refuse to advertise if there is not
-</span><span style="color:#75715e">      enough information provided.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;public</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/public&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Setting this will add the specified name to the stats (and therefore YP)
-</span><span style="color:#75715e">      for this mountpoint even if the source client/relay provide one.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;stream-name</span><span style="color:#f92672">&gt;</span>My stream<span style="color:#f92672">&lt;/stream-name&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Setting this will add the specified description to the stats (and therefore
-</span><span style="color:#75715e">      YP) for this mountpoint even if the source client/relay provide one.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;stream-description</span><span style="color:#f92672">&gt;</span>My description<span style="color:#f92672">&lt;/stream-description&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Setting this will add the specified URL to the stats (and therefore YP)
-</span><span style="color:#75715e">      for this mountpoint even if the source client/relay provide one. The URL
-</span><span style="color:#75715e">      is generally for directing people to a website.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;stream-url</span><span style="color:#f92672">&gt;</span>http://streams.example.org/<span style="color:#f92672">&lt;/stream-url&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Setting this will add the specified genre to the stats (and therefore YP)
-</span><span style="color:#75715e">      for this mountpoint even if the source client/relay provide one. This can
-</span><span style="color:#75715e">      be anything be using certain key words can help searches in the YP
-</span><span style="color:#75715e">      directories.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;genre</span><span style="color:#f92672">&gt;</span>my-genre<span style="color:#f92672">&lt;/genre&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Setting this will add the specified bitrate to the stats (and therefore YP)
-</span><span style="color:#75715e">      for this mountpoint even if the source client/relay provide one. This is
-</span><span style="color:#75715e">      stated in kbps.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;bitrate</span><span style="color:#f92672">&gt;</span>128<span style="color:#f92672">&lt;/bitrate&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Setting this will add the specified mime type to the stats (and therefore
-</span><span style="color:#75715e">      YP) for this mountpoint even if the source client/relay provide one. It is
-</span><span style="color:#75715e">      very unlikely that this will be needed.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;type</span><span style="color:#f92672">&gt;</span>application/ogg<span style="color:#f92672">&lt;/type&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Setting this will add the specified subtype to the stats (and therefore
-</span><span style="color:#75715e">      YP) for this mountpoint. The subtype is really to help the YP server to
-</span><span style="color:#75715e">      identify the components of the type. An example setting is vorbis/theora
-</span><span style="color:#75715e">      do indicate the codecs in an Ogg stream.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;subtype</span><span style="color:#f92672">&gt;</span>vorbis<span style="color:#f92672">&lt;/subtype&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Enable this to prevent this mount from being shown on the xsl pages. This
-</span><span style="color:#75715e">      is mainly for cases where a local relay is configured and you do not want
-</span><span style="color:#75715e">      the source of the local relay to be shown.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;hidden</span><span style="color:#f92672">&gt;</span>1<span style="color:#f92672">&lt;/hidden&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This optional setting allows for providing a burst size which overrides
-</span><span style="color:#75715e">      the default burst size as defined in limits. The value is in bytes.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;burst-size</span><span style="color:#f92672">&gt;</span>65536<span style="color:#f92672">&lt;/burst-size&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This optional setting specifies what interval, in bytes, there is between
-</span><span style="color:#75715e">      metadata updates within shoutcast compatible streams. This only applies to
-</span><span style="color:#75715e">      new listeners connecting on this mountpoint, not existing listeners
-</span><span style="color:#75715e">      falling back to this mountpoint. The default is either the hardcoded server
-</span><span style="color:#75715e">      default or the value passed from a relay.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;mp3-metadata-interval</span><span style="color:#f92672">&gt;</span>4096<span style="color:#f92672">&lt;/mp3-metadata-interval&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      This specifies that the named mount point will require listener
-</span><span style="color:#75715e">      authentication using HTTP basic auth. Despite the official documentation
-</span><span style="color:#75715e">      claiming to only support &#34;htpasswd&#34; type authentication, it also supports
-</span><span style="color:#75715e">      &#34;url&#34; type authentication and even provides examples elsewhere in their
-</span><span style="color:#75715e">      documentation.. They really need to go through and clean up everything...
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Anyway here is an example of htpasswd type authentication...
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The htpasswd authenticator requires a few parameters. The first, filename,
-</span><span style="color:#75715e">      specifies the name of the file to use to store users and passwords. Note
-</span><span style="color:#75715e">      that this file need not exist (and probably will not exist when you first
-</span><span style="color:#75715e">      set it up). Icecast has built</span><span style="color:#75715e">-</span><span style="color:#75715e">in support for managing users and passwords
-</span><span style="color:#75715e">      via the web admin interface. The second option, allow_duplicate_users, if
-</span><span style="color:#75715e">      set to 0, will prevent multiple connections using the same username.
-</span><span style="color:#75715e">      Setting this value to 1 will enable mutltiple connections from the same
-</span><span style="color:#75715e">      username on a given mountpoint. Note there is no way to specify a &#34;max
-</span><span style="color:#75715e">      connections&#34; for a particular user.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;authentication</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;htpasswd&#34;</span><span style="color:#f92672">&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;filename&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;users-auth-file&#34;</span> <span style="color:#f92672">/&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;allow_duplicate_users&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#f92672">/&gt;</span>
-    <span style="color:#f92672">&lt;/authentication&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      And an example for URL authentication...
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Authenticating listeners via the URL method involves icecast, when a
-</span><span style="color:#75715e">      listener connects, issuing requests to a web server and checking the
-</span><span style="color:#75715e">      response headers. If a certain header is sent back then the listener
-</span><span style="color:#75715e">      connecting is allowed to continue, if not, an error is sent back to the
-</span><span style="color:#75715e">      listener.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The URLs specified will invoke some web server scripts like PHP to do any
-</span><span style="color:#75715e">      work that they may choose to do. All that is required of the scripting
-</span><span style="color:#75715e">      language is that POST information can be handled and response headers can
-</span><span style="color:#75715e">      be sent back. libcurl is used for the requesting so https connections may
-</span><span style="color:#75715e">      be possible, but be aware of the extra overhead involved.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The useragent sent in each curl request will represent the icecast server
-</span><span style="color:#75715e">      version. The response headers will depend on whether the listener is to be
-</span><span style="color:#75715e">      accepted. Acceptance is determined by the auth_header option you can also
-</span><span style="color:#75715e">      passed a failed reason in a header that looks like the following:
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        icecast</span><span style="color:#75715e">-</span><span style="color:#75715e">auth</span><span style="color:#75715e">-</span><span style="color:#75715e">message: some reason for failure
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      Each of the options described below are optional. Each option sends the
-</span><span style="color:#75715e">      parameters action, mount, server, and port. The action is the name of the
-</span><span style="color:#75715e">      option, the server is either the hostname or IP the user is connected to
-</span><span style="color:#75715e">      (haven&#39;t tested this), the port is the port the user is connected on and
-</span><span style="color:#75715e">      the mount is the stream mount point with leading slash that the user is
-</span><span style="color:#75715e">      attempting to connect to. The last catch is that listener_add and
-</span><span style="color:#75715e">      listener_remove have additional parameters, which are documented in their
-</span><span style="color:#75715e">      sections..
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">      The documentation mentions that these will be sent as a POST request,
-</span><span style="color:#75715e">      however, the way they are shown look like they are actually a GET
-</span><span style="color:#75715e">      request...
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;authentication</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;url&#34;</span><span style="color:#f92672">&gt;</span>
-      <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">        This URL is for informing the auth server of a stream starting. No
-</span><span style="color:#75715e">        listener information is passed for this, but can be used to initialise
-</span><span style="color:#75715e">        any details the auth server may have.
-</span><span style="color:#75715e">      </span><span style="color:#75715e">--&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mount_add&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;http://myauthserver.com/stream_start.php&#34;</span><span style="color:#f92672">/&gt;</span>
-
-      <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">        This URL is for informing the auth server of a stream finishing, like
-</span><span style="color:#75715e">        the start option, no listener details are passed.
-</span><span style="color:#75715e">      </span><span style="color:#75715e">--&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;mount_remove&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;http://myauthserver.com/stream_end.php&#34;</span><span style="color:#f92672">/&gt;</span>
-
-      <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">        This is most likely to be used if anything. When a listener connects,
-</span><span style="color:#75715e">        before anything is sent back to them, this request is processed. The
-</span><span style="color:#75715e">        default action is to reject a listener unless the auth server sends back
-</span><span style="color:#75715e">        a response header which may be stated in the &#39;header&#39; option.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        listener_add also provides, client, user, pass, ip, and agent. client is
-</span><span style="color:#75715e">        a unique number for the client that is connected. I don&#39;t know if the
-</span><span style="color:#75715e">        client number is re</span><span style="color:#75715e">-</span><span style="color:#75715e">used after a client disconnects, I don&#39;t know if this
-</span><span style="color:#75715e">        count gets reset every time a source connect or only when the server
-</span><span style="color:#75715e">        restarts or if it ever resets at all. I suspect user is filled in with
-</span><span style="color:#75715e">        the value of any basic auth user that has been sent, same with password
-</span><span style="color:#75715e">        but this might also get filled in by the the &#39;username&#39; and &#39;password&#39;
-</span><span style="color:#75715e">        options that are undocumented, ip is the IP address of the client and
-</span><span style="color:#75715e">        agent is the user agent the client provided. This is quite a bit of
-</span><span style="color:#75715e">        useful information for authenticating a user though...
-</span><span style="color:#75715e">      </span><span style="color:#75715e">--&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;listener_add&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;http://myauthserver.com/listener_joined.php&#34;</span><span style="color:#f92672">/&gt;</span>
-
-      <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">        This URL is for when a listener connection closes.
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        listener_remove also provides the client, user, pass, and duration. I&#39;m
-</span><span style="color:#75715e">        assuming client is the same number as that sent in listener_add, user and
-</span><span style="color:#75715e">        pass are the same as for listener_add in that I assume it&#39;s the clients
-</span><span style="color:#75715e">        basic auth but it could also be the username and password fields passed
-</span><span style="color:#75715e">        as other options in this section... duration is an interesting one
-</span><span style="color:#75715e">        though, it is the length in seconds that the listener was connected to
-</span><span style="color:#75715e">        the string.
-</span><span style="color:#75715e">      </span><span style="color:#75715e">--&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;listener_remove&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;http://myauthserver.com/listener_left.php&#34;</span><span style="color:#f92672">/&gt;</span>
-
-      <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">        The expected response header to be returned that allows the authencation
-</span><span style="color:#75715e">        to take place may be specified here. The default is:
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">          icecast</span><span style="color:#75715e">-</span><span style="color:#75715e">auth</span><span style="color:#75715e">-</span><span style="color:#75715e">user: 1
-</span><span style="color:#75715e">      </span><span style="color:#75715e">--&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;auth_header&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;icecast-auth-user: 1&#34;</span><span style="color:#f92672">/&gt;</span>
-
-      <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">        Listeners could have a time limit imposed on them, and if this header is
-</span><span style="color:#75715e">        sent back with a figure (which represents seconds) then the Icecast
-</span><span style="color:#75715e">        server will disconnect them after this duration has elapsed.
-</span><span style="color:#75715e">      </span><span style="color:#75715e">--&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;timelimit_header&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;icecast-auth-timelimit:&#34;</span><span style="color:#f92672">/&gt;</span>
-
-      <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">        These are quite the mystery... mentioned yet undocumented... I suspect
-</span><span style="color:#75715e">        they are passed to the listener_{add,remove} script as authentication
-</span><span style="color:#75715e">        for the server to the authentication server but I have no way to be
-</span><span style="color:#75715e">        sure... Maybe they&#39;re a form of default user/pass?
-</span><span style="color:#75715e">      </span><span style="color:#75715e">--&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;username&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">/&gt;</span>
-      <span style="color:#f92672">&lt;option</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;password&#34;</span> <span style="color:#a6e22e">value=</span><span style="color:#e6db74">&#34;pass&#34;</span><span style="color:#f92672">/&gt;</span>
-    <span style="color:#f92672">&lt;/authentication&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      State a program that is run when the source is started. It is passed a
-</span><span style="color:#75715e">      parameter which is the name of the mountpoint that is starting. The
-</span><span style="color:#75715e">      processing of the stream does not wait for the script to end.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;on-connect</span><span style="color:#f92672">&gt;</span>/home/icecast/bin/source-start<span style="color:#f92672">&lt;/on-connect&gt;</span>
-
-    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e">
-</span><span style="color:#75715e">      State a program that is run when the source ends. It is passed a parameter
-</span><span style="color:#75715e">      which is the name of the mountpoint that has ended. The processing of the
-</span><span style="color:#75715e">      stream does not wait for the script to end.
-</span><span style="color:#75715e">    </span><span style="color:#75715e">--&gt;</span>
-    <span style="color:#f92672">&lt;on-disconnect</span><span style="color:#f92672">&gt;</span>/home/icecast/bin/source-end<span style="color:#f92672">&lt;/on-disconnect&gt;</span>
-  <span style="color:#f92672">&lt;/mount&gt;</span>
-<span style="color:#f92672">&lt;/icecast&gt;</span>
-</code></pre></div><h2 id="next-steps">Next Steps</h2>
+<pre data-lang="html" class="language-html "><code class="language-html" data-lang="html"><!DOCTYPE html>
+<html lang=en>
+  <head>
+    <meta charset=utf-8 />
+    <meta name=viewport content="width=device-width"/>
+    <title>HTML5 Radio Player Test</title>
+  </head>
+  <body>
+    <div id=container>
+      <audio id=radioStream preload=metadata controls loop>
+      <source src="http://streams.example.org:8000/radio.ogg" type="audio/ogg"/>
+      </audio>
+      <br/>
+      <a href="#" onclick="javascript:rs=document.getElementById('radioStream');rs.play();">Play</a>
+      <a href="#" onclick="javascript:rs=document.getElementById('radioStream');rs.pause();">Pause</a>
+      <a href="#" onclick="javascript:rs=document.getElementById('radioStream');rs.pause();rs.currentTime=0;">Stop</a>
+      <input id=volume value=100 type=text /><a href="#" onclick="javascript:rs=document.getElementById('radioStream');vo=document.getElementById('volume');rs.volume=parseInt(vo.value)/100.0;">Set Volume</a>
+    </div>
+  </body>
+</html>
+</code></pre>
+<h3 id="video">Video</h3>
+<p>Todo...</p>
+<h2 id="next-steps">Next Steps</h2>
 <ul>
-<li><code>http://koorenneef.nl/content/run-your-own-online-radio-station-icecast2-and-ezstream-howto</code> -&gt; Dead link</li>
-<li><a href="http://www.linuxcertif.com/man/1/ezstream/">http://www.linuxcertif.com/man/1/ezstream/</a></li>
+<li><a href="https://stelfox.net/notes/ezstream/">EZStream</a></li>
+<li><a href="http://www.linuxcertif.com/man/1/ezstream/">EZStream Manual</a></li>
 </ul>
-
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/icinga/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Icinga</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/httpd/'>
-        <span class='screen-reader-text'>Next post: </span>HTTPd<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

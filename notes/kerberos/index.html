@@ -1,301 +1,177 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Kerberos is a secure network authentication system.
-It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Kerberos • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Kerberos is a secure network authentication system.
-It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync.'>
-<meta property='og:url' content='https://stelfox.net/notes/kerberos/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Kerberos • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/kerberos/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Kerberos</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-4 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>Kerberos is a secure network authentication system.</p>
+      <div id="content">
+        
+<article class="post">
+  <h1>Kerberos</h1><div class="post-content"><p>Kerberos is a secure network authentication system.</p>
+<span id="continue-reading"></span>
 <p>It is very important that system times are all very close for successful
 authentication. You should configure <a href="https://stelfox.net/notes/ntpd/">NTPd</a> or <a href="https://stelfox.net/notes/chronyd/">Chronyd</a> to ensure the
 systems stay in sync.</p>
-<h2 id="master-configuration">Master Configuration</h2>
+<h2 id="root-kdc-configuration">Root KDC Configuration</h2>
 <p>Edit the configuration files (provided at the bottom).</p>
 <p>Create the initial database for the realm, it will ask for a master password
 for the database. DO NOT FORGET THIS!!</p>
 <pre><code>kdb5_util create -s
-</code></pre><p>Create an administrator user, it will ask for the password ensure that it is
+</code></pre>
+<p>Create an administrator user, it will ask for the password ensure that it is
 strong as this account will be able to create, delete, and see principal's
 keys.</p>
-<pre><code>kadmin.local -q &quot;addprinc &lt;&lt;username&gt;&gt;/admin&quot;
-</code></pre><p>Set the services to startup automatically and start them up:</p>
+<pre><code>kadmin.local -q "addprinc <<username>>/admin"
+</code></pre>
+<p>Set the services to startup automatically and start them up:</p>
 <pre><code>chkconfig krb5kdc on
 chkconfig kadmin on
 /etc/init.d/krb5kdc start
 /etc/init.d/kadmin start
-</code></pre><p>After the database has been started you'll need to create at least one normal
+</code></pre>
+<p>After the database has been started you'll need to create at least one normal
 user, it will ask for a password for the account.</p>
-<pre><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
-kadmin:  addprinc &lt;&lt;username&gt;&gt;
-</code></pre><h3 id="slave">Slave</h3>
+<pre><code>[root@localhost ~]# kadmin -p <<username>>/admin
+kadmin:  addprinc <<username>>
+</code></pre>
+<h2 id="peer-kdc-configuration">Peer KDC Configuration</h2>
 <p>Please note these instructions are untested but they are believed to be
 correct.</p>
 <p>First we'll need to create an ACL file for the replication utility <code>kprop</code>. It
 should live <code>/var/Kerberos/krb5kdc/kpropd.acl</code> and have the contents:</p>
 <pre><code>host/kdc1.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET
 host/kdc2.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET
-</code></pre><p>You'll need to create host keys for each of the kerberos servers if they
+</code></pre>
+<p>You'll need to create host keys for each of the kerberos servers if they
 haven't been created already.</p>
-<pre><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
+<pre><code>[root@localhost ~]# kadmin -p <<username>>/admin
 kadmin:  addprinc -rand host/kdc1.home.bedroomprogrammers.net
 kadmin:  addprinc -rand host/kdc2.home.bedroomprogrammers.net
-</code></pre><p>You'll need to add the keys to the local keytab file on the primary KDC.</p>
-<pre><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
+</code></pre>
+<p>You'll need to add the keys to the local keytab file on the primary KDC.</p>
+<pre><code>[root@localhost ~]# kadmin -p <<username>>/admin
 kadmin:  ktadd host/kdc1.home.bedroomprogrammers.net
 kadmin:  ktadd host/kdc2.home.bedroomprogrammers.net
-</code></pre><p>Copy the keytab file from the primary KDC to the secondary server using an
+</code></pre>
+<p>Copy the keytab file from the primary KDC to the secondary server using an
 encrypted transfer mechanism such as SCP.</p>
 <pre><code>[root@localhost ~]# scp /etc/krb5.keytab root@krb2.home.bedroomprogrammers.net:/etc/krb5.keytab
-</code></pre><p>At this point you'll want to restart the master's service and then start up the
+</code></pre>
+<p>At this point you'll want to restart the master's service and then start up the
 kdc on the slave server:</p>
 <pre><code>[root@slave ~]# chkconfig krb5kdc start
 [root@slave ~]# /etc/init.d/krb5kdc start
-</code></pre><p>Once the Slave is setup you'll need to modify the <code>/etc/krb5.conf</code> on the
+</code></pre>
+<p>Once the Slave is setup you'll need to modify the <code>/etc/krb5.conf</code> on the
 client machines and the master machine to include the FQDN of the slave in the
 <code>[realms]</code> section for the appropriate domain. The <code>[realms]</code> section would
 then look like:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[realms]</span>
-  <span style="color:#a6e22e">BEDROOMPROGRAMMERS.NET</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">{
-</span><span style="color:#e6db74">    kdc = kdc1.home.bedroomprogrammers.net
-</span><span style="color:#e6db74">    kdc = kdc2.home.bedroomprogrammers.net
-</span><span style="color:#e6db74">    admin_server = kdc1.home.bedroomprogrammers.net
-</span><span style="color:#e6db74">  }</span>
-</code></pre></div><h2 id="adding-a-new-host-to-the-domain">Adding a New Host to the Domain</h2>
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">[realms]
+  BEDROOMPROGRAMMERS.NET = {
+    kdc = kdc1.home.bedroomprogrammers.net
+    kdc = kdc2.home.bedroomprogrammers.net
+    admin_server = kdc1.home.bedroomprogrammers.net
+  }
+</code></pre>
+<h2 id="adding-a-new-host-to-the-domain">Adding a New Host to the Domain</h2>
 <p>Hosts need <code>krb5-workstation</code> and <code>krb5-libs</code> installed. Make sure the client
 firewall rules have been applied.</p>
 <p>Be sure to copy the config file <code>/etc/krb5.conf</code> mentioned on this page to each
 client machine.</p>
-<pre><code>[root@kerb-client ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
-kadmin:  addprinc -randkey host/&lt;&lt;FQDN&gt;&gt;
-kadmin:  ktadd -k /etc/krb5.keytab host/&lt;&lt;FQDN&gt;&gt;
-</code></pre><p>You'll need to replace &laquo;FQDN&raquo; with the domain name of the host you're adding.
-It will need a DNS entry matching this hostname.</p>
+<pre><code>[root@kerb-client ~]# kadmin -p <<username>>/admin
+kadmin:  addprinc -randkey host/<<FQDN>>
+kadmin:  ktadd -k /etc/krb5.keytab host/<<FQDN>>
+</code></pre>
+<p>You'll need to replace <code>&lt;&lt;FQDN&gt;&gt;</code> with the domain name of the host you're
+adding. It will need a DNS entry matching this hostname.</p>
 <h2 id="firewall-configuration">Firewall Configuration</h2>
-<h3 id="server-adjustments">Server Adjustments</h3>
+<p>Server Adjustments:</p>
 <pre><code># Allow authentication to the KDC
 -A INPUT -m tcp -p tcp --dport 88 -j ACCEPT
 # Allow remote kerberos administration. This should probably be restricted more
 -A INPUT -m tcp -p tcp --dport 749 -j ACCEPT
-</code></pre><h3 id="client-adjustments">Client Adjustments</h3>
+</code></pre>
+<p>Client Adjustments:</p>
 <pre><code># Allow authentication to the KDC
 -A OUTPUT -m tcp -p tcp --dport 88 -j ACCEPT
-</code></pre><p>Setting up a client machine to talk to the KDC will initially require this rule
+</code></pre>
+<p>Setting up a client machine to talk to the KDC will initially require this rule
 as well:</p>
 <pre><code># Temporarily need this to setup the connection with the KDC
 -A OUTPUT -m tcp -p tcp --dport 749 -j ACCEPT
-</code></pre><h2 id="configuration-files">Configuration Files</h2>
-<h3 id="etckrb5conf">/etc/krb5.conf</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[logging]</span>
-  <span style="color:#a6e22e">default</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">FILE:/var/log/krb5libs.log
-</span><span style="color:#e6db74">  kdc = FILE:/var/log/krb5kdc.log
-</span><span style="color:#e6db74">  admin_server = FILE:/var/log/kadmind.log</span>
-
-<span style="color:#66d9ef">[libdefaults]</span>
-  <span style="color:#a6e22e">default_realm</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">BEDROOMPROGRAMMERS.NET
-</span><span style="color:#e6db74">  dns_lookup_realm = false
-</span><span style="color:#e6db74">  dns_lookup_kdc = false
-</span><span style="color:#e6db74">  ticket_lifetime = 24h
-</span><span style="color:#e6db74">  renew_lifetime = 3d
-</span><span style="color:#e6db74">  forwardable = true</span>
-
-<span style="color:#66d9ef">[realms]</span>
-  <span style="color:#a6e22e">BEDROOMPROGRAMMERS.NET</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">{
-</span><span style="color:#e6db74">    kdc = kdc1.home.bedroomprogrammers.net
-</span><span style="color:#e6db74">    admin_server = kdc1.home.bedroomprogrammers.net
-</span><span style="color:#e6db74">  }</span>
-
-<span style="color:#66d9ef">[domain_realm]</span>
-  <span style="color:#a6e22e">.bedroomprogrammers.net</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">BEDROOMPROGRAMMERS.NET
-</span><span style="color:#e6db74">  bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-</span><span style="color:#e6db74">  .home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-</span><span style="color:#e6db74">  home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET</span>
-</code></pre></div><h3 id="varkerberoskrb5kdckadm5acl">/var/kerberos/krb5kdc/kadm5.acl</h3>
-<pre><code>*/admin@BEDROOMPROGRAMMERS.NET  *
-</code></pre><h3 id="varkerberoskrb5kdckdcconf">/var/kerberos/krb5kdc/kdc.conf</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[kdcdefaults]</span>
-  <span style="color:#a6e22e">kdc_ports</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">88
-</span><span style="color:#e6db74">  kdc_tcp_ports = 88</span>
-
-<span style="color:#66d9ef">[realms]</span>
-  <span style="color:#a6e22e">BEDROOMPROGRAMMERS.NET</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">{
-</span><span style="color:#e6db74">    master_key_type = aes256-cts
-</span><span style="color:#e6db74">    acl_file = /var/kerberos/krb5kdc/kadm5.acl
-</span><span style="color:#e6db74">    dict_file = /usr/share/dict/words
-</span><span style="color:#e6db74">    admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
-</span><span style="color:#e6db74">    supported_enctypes = aes256-cts:normal aes128-cts:normal 
-</span><span style="color:#e6db74">  }</span>
-</code></pre></div><h2 id="notes-on-cached-client-login">Notes on Cached Client Login</h2>
+</code></pre>
+<h2 id="sample-configuration-files">Sample Configuration Files</h2>
 <ul>
-<li><a href="http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html">http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html</a></li>
-<li><a href="http://ubuntuforums.org/showthread.php?t=1205604">http://ubuntuforums.org/showthread.php?t=1205604</a></li>
-<li><a href="http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127">http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127</a></li>
-<li><a href="http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html">http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html</a></li>
+<li><a href="https://stelfox.net/notes/kerberos/krb5.conf">/etc/krb5.conf</a></li>
+<li><a href="https://stelfox.net/notes/kerberos/kadm5.acl">/var/kerberos/krb5kdc/kadm5.acl</a></li>
+<li><a href="https://stelfox.net/notes/kerberos/kdc.conf">/var/kerberos/krb5kdc/kdc.conf</a></li>
 </ul>
-
+<h2 id="notes-on-cached-client-login">Notes on Cached Client Login</h2>
+<ul>
+<li><a href="https://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html">Caching Kerberos credentials for offline logins</a></li>
+<li><a href="https://ubuntuforums.org/showthread.php?t=1205604">Offline auth. with Kerberos and timeouts (pam_krb5.so, pam_ccreds.so)</a></li>
+<li><a href="https://www.techrepublic.com/blog/linux-and-open-source/authentication-caching-with-nscd/">Authentication caching with nscd</a></li>
+<li><a href="http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html">LDAP/Kerberos + nscd + libpam-ccreds + libpam-mklocaluser/pam_mkhomedir</a></li>
+</ul>
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/libvirtd/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>libvirtd</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/iscsid/'>
-        <span class='screen-reader-text'>Next post: </span>iSCSId<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

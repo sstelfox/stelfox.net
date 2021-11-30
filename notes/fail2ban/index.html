@@ -1,122 +1,63 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-fail2ban provides a vital service of blocking troublesome IPs from attempting brute force logins.
-My immediate issue is that it requires a few packages off the bat that I do not want on my system.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='fail2ban • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-fail2ban provides a vital service of blocking troublesome IPs from attempting brute force logins.
-My immediate issue is that it requires a few packages off the bat that I do not want on my system.'>
-<meta property='og:url' content='https://stelfox.net/notes/fail2ban/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>fail2ban • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/fail2ban/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>fail2ban</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-10 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>fail2ban provides a vital service of blocking troublesome IPs from attempting
+      <div id="content">
+        
+<article class="post">
+  <h1>fail2ban</h1><div class="post-content"><p>fail2ban provides a vital service of blocking troublesome IPs from attempting
 brute force logins.</p>
+<span id="continue-reading"></span>
 <p>My immediate issue is that it requires a few packages off the bat that I do not
 want on my system. Specifically tcpwrappers and shorewall. My firewall scripts
 are stronger, easier to use, and IMHO more secure than what shorewall provides
@@ -131,9 +72,11 @@ updating (and preventing those damn packages from coming back). This is done
 using the following commands:</p>
 <pre><code>[root@localhost ~]# yum install fail2ban -y
 [root@localhost ~]# rpm -v --nodeps -e shorewall tcp_wrappers
-</code></pre><p>Finally add this line to <code>/etc/yum.conf</code>.</p>
+</code></pre>
+<p>Finally add this line to <code>/etc/yum.conf</code>.</p>
 <pre><code>exclude=fail2ban shorewall tcp_wrappers
-</code></pre><p>There are of course security implication too not updating a package (in this
+</code></pre>
+<p>There are of course security implication too not updating a package (in this
 case fail2ban won't ever get updated) however it's an exception that I'm
 willing to make to get fail2ban and not have the shitty shittiness of shorewall
 and tcp_wrappers on my systems.</p>
@@ -143,7 +86,7 @@ should probably be merged with the default as they can't hurt and having
 fail2ban easily available to my default config would be a significant benefit.</p>
 <p>The changes are specifically:</p>
 <ul>
-<li>Add an &ldquo;OFFENDINGIPS&rdquo; chain</li>
+<li>Add an &quot;OFFENDINGIPS&quot; chain</li>
 <li>Push all incoming traffic through the OFFENDINGIPS chain before continuing
 through the INPUT chain</li>
 <li>Add a rule to the OFFENDINGIPS chain to prevent ongoing attacks from getting
@@ -151,195 +94,78 @@ through for the duration of the attack</li>
 </ul>
 <p>The chain definition (near the top) should look like this:</p>
 <pre><code>:OFFENDINGIPS - [0:0]
-</code></pre><p>Push all the traffic through the chain looks like this (this belongs above all other INPUT chain rules):</p>
+</code></pre>
+<p>Push all the traffic through the chain looks like this (this belongs above all other INPUT chain rules):</p>
 <pre><code># [DEF-RULESET] Pass all traffic through the OFFENDINGIPS table to block
 # any hosts that have been caught being malicious in some way
 -A INPUT -j OFFENDINGIPS
-</code></pre><p>Rule to prevent ongoing attacks:</p>
+</code></pre>
+<p>Rule to prevent ongoing attacks:</p>
 <pre><code># [DEF-RULESET] If something keeps trying to connect after we have marked
 # them as an attacker, keep blocking them until they stop for a full hour.
 # When fail2ban is adding IPs to this table, it will initially mark them
 # as an ATTACKER and they will be banned for a minimum of the fail2ban time,
 # but it will be indefinite as long as they keep trying 
 -A OFFENDINGIPS -m recent --name ATTACKER --update --seconds 3600 -j DROP
-</code></pre><h2 id="configuration">Configuration</h2>
+</code></pre>
+<h2 id="configuration">Configuration</h2>
 <p>I've noticed that the documentation on the actual raw config files for fail2ban
 is really poor. Most of the documentation I've found is drop in files for
 specific services but completely unable to find coherent documentation on all
 the options in the actions files. Sure signs of amateur work which disheartens
-me. This package is still useful though&hellip;</p>
-<h3 id="etcfail2banfail2banconf">/etc/fail2ban/fail2ban.conf</h3>
-<pre><code>[Definition]
-# Log informational level messages
-loglevel = 3
-
-# Log to syslog
-logtarget = SYSLOG
-
-socket = /var/run/fail2ban/fail2ban.sock
-</code></pre><h3 id="etcfail2banjailconf">/etc/fail2ban/jail.conf</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[DEFAULT]</span>
-
-<span style="color:#75715e"># Never ban localhost or the internal network</span>
-<span style="color:#a6e22e">ignoreip</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">127.0.0.1 10.13.37.0/24</span>
-
-<span style="color:#75715e"># Number of seconds that a host is banned by default (12 Hours)</span>
-<span style="color:#a6e22e">bantime</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">43200</span>
-
-<span style="color:#75715e"># The time period to look for number of failed attempts</span>
-<span style="color:#a6e22e">findtime</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">600</span>
-
-<span style="color:#75715e"># The number of failures before a host get banned</span>
-<span style="color:#a6e22e">maxretry</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">5</span>
-
-<span style="color:#75715e"># Pick the best backend based on what&#39;s available on the system</span>
-<span style="color:#a6e22e">backend</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">auto</span>
-
-<span style="color:#66d9ef">[ssh-iptables]</span>
-<span style="color:#a6e22e">enabled</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">true</span>
-<span style="color:#a6e22e">filter</span>   <span style="color:#f92672">=</span> <span style="color:#e6db74">sshd</span>
-<span style="color:#a6e22e">action</span>   <span style="color:#f92672">=</span> <span style="color:#e6db74">iptables</span>
-<span style="color:#a6e22e">logpath</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/log/secure</span>
-
-<span style="color:#75715e"># If asterisk is installed on this machine turn this on. The log path assumes you&#39;ve followed the configuration in the FKAM wiki.</span>
-<span style="color:#66d9ef">[asterisk-iptables]</span>
-<span style="color:#a6e22e">enabled</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">false</span>
-<span style="color:#a6e22e">filter</span>   <span style="color:#f92672">=</span> <span style="color:#e6db74">asterisk</span>
-<span style="color:#a6e22e">action</span>   <span style="color:#f92672">=</span> <span style="color:#e6db74">iptables</span>
-<span style="color:#a6e22e">logpath</span>  <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/log/asterisk.log</span>
-</code></pre></div><h3 id="etcfail2banfilterdsshdconf">/etc/fail2ban/filter.d/sshd.conf</h3>
-<pre><code>[INCLUDES]
-# Include common.conf before this file
-before = common.conf
-
-[Definition]
-_daemon = sshd
-
-failregex = ^%(__prefix_line)s(?:error: PAM: )?Authentication failure for .* from &lt;HOST&gt;\s*$
-            ^%(__prefix_line)s(?:error: PAM: )?User not known to the underlying authentication module for .* from &lt;HOST&gt;\s*$
-            ^%(__prefix_line)sFailed (?:password|publickey) for .* from &lt;HOST&gt;(?: port \d*)?(?: ssh\d*)?$
-            ^%(__prefix_line)sROOT LOGIN REFUSED.* FROM &lt;HOST&gt;\s*$
-            ^%(__prefix_line)s[iI](?:llegal|nvalid) user .* from &lt;HOST&gt;\s*$
-            ^%(__prefix_line)sUser \S+ from &lt;HOST&gt; not allowed because not listed in AllowUsers$
-            ^%(__prefix_line)sauthentication failure; logname=\S* uid=\S* euid=\S* tty=\S* ruser=\S* rhost=&lt;HOST&gt;(?:\s+user=.*)?\s*$
-            ^%(__prefix_line)srefused connect from \S+ \(&lt;HOST&gt;\)\s*$
-            ^%(__prefix_line)sAddress &lt;HOST&gt; .* POSSIBLE BREAK-IN ATTEMPT!*\s*$
-            ^%(__prefix_line)sUser \S+ from &lt;HOST&gt; not allowed because none of user's groups are listed in AllowGroups$
-
-ignoreregex =
-</code></pre><h3 id="etcfail2banfilterdasteriskconf">/etc/fail2ban/filter.d/asterisk.conf</h3>
-<p>This file required a bit of special attention, I noticed that the one set of
-regular expressions that have been copied and pasted everywhere DIDN'T MATCH
-actual logs. They didn't take into account the port, and frankly I like
+me. This package is still useful though...</p>
+<ul>
+<li><a href="https://stelfox.net/notes/fail2ban/fail2ban.conf">/etc/fail2ban/fail2ban.conf</a></li>
+<li><a href="https://stelfox.net/notes/fail2ban/jail.conf">/etc/fail2ban/jail.conf</a></li>
+<li><a href="https://stelfox.net/notes/fail2ban/sshd.conf">/etc/fail2ban/filter.d/sshd.conf</a></li>
+<li><a href="https://stelfox.net/notes/fail2ban/asterisk.conf">/etc/fail2ban/filter.d/asterisk.conf</a></li>
+</ul>
+<p>The asterisk file required a bit of special attention, I noticed that the one
+set of regular expressions that have been copied and pasted everywhere DIDN'T
+MATCH actual logs. They didn't take into account the port, and frankly I like
 matching the whole line rather than just part of it. I modified the expressions
 which are now below. They are perfectly backwards compatible with older
 versions of asterisk that may not include the port and as a bonus will match
 against syslog output if you are logging to syslog as well.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[INCLUDES]</span>
-<span style="color:#a6e22e">before</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">common.conf</span>
-
-<span style="color:#66d9ef">[Definition]</span>
-<span style="color:#a6e22e">_daemon</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">asterisk</span>
-
-<span style="color:#75715e"># These are the regular expressions that will trigger fail2ban into blocking an</span>
-<span style="color:#75715e"># IP address for an asterisk 1.8 installation. The first regular expression</span>
-<span style="color:#75715e"># should match against the following line taken directly from a misconfigured</span>
-<span style="color:#75715e"># client:</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># Nov  9 18:47:21 pbx asterisk[3432]: NOTICE[3445]: chan_sip.c:24331 in handle_request_register: Registration from &#39;INCOMING CALL &lt;sip:SPA3000_PSTN@10.13.37.102&gt;&#39; failed for &#39;10.13.37.101:5061&#39; - No matching peer found</span>
-<span style="color:#a6e22e">failregex</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_register: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - No matching peer found\s*$</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># The following should match against the following line log taken directly from</span>
-<span style="color:#75715e"># an attack:</span>
-<span style="color:#75715e"># Nov 14 06:32:16 pbx asterisk: NOTICE[1640]: chan_sip.c:21975 in handle_request_invite: Sending fake auth rejection for device &#34;sip&#34; &lt;sip:sip@91.226.97.107&gt;;tag=L7922NDHSn</span>
-            <span style="color:#a6e22e">^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_invite: Sending fake auth rejection for device &#34;.*&#34; &lt;sip:.*@&lt;HOST&gt;&gt;;tag</span><span style="color:#f92672">=</span><span style="color:#e6db74">[a-zA-Z0-9]+\s*$</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e"># The following regexes were provided through an asterisk forum, they are a bit</span>
-<span style="color:#75715e"># sloppy and might be outdated. I&#39;ve already updated one (the first one above)</span>
-<span style="color:#75715e"># to reflect what I actually see in my logs. The rest will be updated as</span>
-<span style="color:#75715e"># I see the attacks</span>
-<span style="color:#75715e">#</span>
-<span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Wrong Password\s*$</span>
-<span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Username/auth name mismatch\s*$</span>
-<span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Device does not match ACL\s*$</span>
-<span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.* &lt;HOST&gt;(:[0-9]+)? failed to authenticate as &#39;.*&#39;\s*$</span>
-<span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: No registration for peer &#39;.*&#39; \(from &lt;HOST&gt;(:[0-9]+)?\)\s*$</span>
-<span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: Host &lt;HOST&gt;(:[0-9]+)? failed MD5 authentication for &#39;.*&#39; (.*)\s*$</span>
-<span style="color:#75715e">#           ^%(__prefix_line)s?NOTICE.*: Failed to authenticate user .*@&lt;HOST&gt;(:[0-9]+)?.*\s*$</span>
-
-<span style="color:#a6e22e">ignoreregex</span> <span style="color:#f92672">=</span><span style="color:#e6db74"></span>
-</code></pre></div><p>Some notes on this specific file. I found &lsquo;pre-made&rsquo; asterisk configurations
+<p>Some notes on this specific file. I found 'pre-made' asterisk configurations
 for fail2ban on the internet and found them to be very lacking. The did not
-deal with an attack log I saw actually hitting my server the &lsquo;Sending fake
-auth rejection&rsquo; log specifically.</p>
+deal with an attack log I saw actually hitting my server the 'Sending fake auth
+rejection' log specifically.</p>
 <p>I was also greatly displeased by their performance. By making the regular
 expression more specific (without sacrificing positive matches) I was able to
 get a real world performance increase of 442%.</p>
-<p>This was measured using the unix &lsquo;time&rsquo; program and fail2ban's regular
-expression tester &lsquo;fail2ban-regex&rsquo;. As an example with one rule (the &lsquo;No
-matching peer found&rsquo; log) turned on in each test, first the old than my updated
+<p>This was measured using the unix 'time' program and fail2ban's regular
+expression tester 'fail2ban-regex'. As an example with one rule (the 'No
+matching peer found' log) turned on in each test, first the old than my updated
 one gave the following results:</p>
-<pre><code>[root@localhost ~]# time fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/old-asterisk.conf &gt; /dev/null
+<pre><code>[root@localhost ~]# time fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/old-asterisk.conf > /dev/null
 
 real    0m1.621s
 user    0m1.534s
 sys     0m0.049s
-[root@localhost ~]# time fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/asterisk.conf &gt; /dev/null
+[root@localhost ~]# time fail2ban-regex /var/log/asterisk.log /etc/fail2ban/filter.d/asterisk.conf > /dev/null
 
 real    0m0.367s
 user    0m0.298s
 sys     0m0.047s
-</code></pre><h3 id="etcfail2banactionsdiptablesconf">/etc/fail2ban/actions.d/iptables.conf</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[Init]</span>
-<span style="color:#75715e"># The following had defaults that I wasn&#39;t happy with, but now they&#39;re not being</span>
-<span style="color:#75715e"># used anyways as I don&#39;t want offending hosts talking to *any* service on this</span>
-<span style="color:#75715e"># server until the ban expires. IF you just want to block access to the offending</span>
-<span style="color:#75715e"># service these SHOULD NOT have defaults, the triggering rule should apply them</span>
-<span style="color:#75715e"># so they actually block just that service rather than mess up whatever the default</span>
-<span style="color:#75715e"># is</span>
-<span style="color:#75715e">#name =</span>
-<span style="color:#75715e">#port =</span>
-<span style="color:#75715e">#protocol =</span>
-
-<span style="color:#75715e"># This is the manual table that I setup to handle blocked hosts</span>
-<span style="color:#a6e22e">table</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">OFFENDINGIPS</span>
-
-<span style="color:#66d9ef">[Definition]</span>
-
-<span style="color:#75715e"># The commands that get executed when fail2ban starts up</span>
-<span style="color:#75715e"># We don&#39;t need to do anything since I take care of this manually and permanently</span>
-<span style="color:#a6e22e">actionstart</span> <span style="color:#f92672">=</span><span style="color:#e6db74"></span>
-
-<span style="color:#75715e"># The commands that get executed when fail2ban shuts down</span>
-<span style="color:#75715e"># We don&#39;t need to do anything since I take care of this manually and permanently</span>
-<span style="color:#a6e22e">actionstop</span> <span style="color:#f92672">=</span><span style="color:#e6db74"></span>
-
-<span style="color:#75715e"># There doesn&#39;t really seem to be any documentation on what this actually does,</span>
-<span style="color:#75715e"># I&#39;ve modified it so it will look at the appropriate table and it appears that</span>
-<span style="color:#75715e"># it&#39;s just checking to make sure that the INPUT table is properly redirecting</span>
-<span style="color:#75715e"># to the table that has the offending hosts in it</span>
-<span style="color:#a6e22e">actioncheck</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">iptables -n -L INPUT | grep -q &lt;table&gt;</span>
-
-<span style="color:#75715e"># This command bans the offending IP and marks them as an attacker</span>
-<span style="color:#a6e22e">actionban</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">iptables -A &lt;table&gt; -s &lt;ip&gt; -j LOG --log-prefix &#34;Attacker&#39;s Back &#34;
-</span><span style="color:#e6db74">            iptables -A &lt;table&gt; -s &lt;ip&gt; -m recent --set --name ATTACKER -j DROP</span>
-
-<span style="color:#75715e"># This command removes an IP from the ban-list</span>
-<span style="color:#a6e22e">actionunban</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">iptables -D &lt;table&gt; -s &lt;ip&gt; -j LOG --log-prefix &#34;Attacker&#39;s Back &#34;
-</span><span style="color:#e6db74">              iptables -D &lt;table&gt; -s &lt;ip&gt; -j DROP</span>
-</code></pre></div><h2 id="testing-matchesregexesbans-without-making-the-system-live">Testing Matches/Regexes/Bans Without Making the System Live</h2>
+</code></pre>
+<ul>
+<li><a href="https://stelfox.net/notes/fail2ban/iptables.conf">/etc/fail2ban/actions.d/iptables.conf</a></li>
+</ul>
+<h2 id="testing-matches-regexes-bans-without-making-the-system-live">Testing Matches/Regexes/Bans Without Making the System Live</h2>
 <h3 id="validation-configuration">Validation Configuration</h3>
 <p>Using the following command you can verify that the configuration is valid and
 that fail2ban will be happy with what you told it. It's output isn't very
 friendly but it'll do in a pinch.</p>
 <pre><code>[root@localhost ~]# fail2ban-client -d
-</code></pre><h3 id="validation-regular-expressions">Validation Regular Expressions</h3>
+</code></pre>
+<h3 id="validation-regular-expressions">Validation Regular Expressions</h3>
 <p>First off you'll need a sample of the log that your going to be matching
 against. If the message is already in your log more power to you, you can use
 that logfile as the input (and it's what I did).</p>
 <p>As for the regex, the tool supports passing the full thing on the command line
-HOWEVER it doesn't expand fail2ban REGEX variables beyond <!-- raw HTML omitted --> (that is those
-defined in the common.conf file) which means you won't get an accurate
+HOWEVER it doesn't expand fail2ban REGEX variables beyond <code>&lt;HOST&gt;</code> (that is
+those defined in the common.conf file) which means you won't get an accurate
 representation on a match.</p>
 <p>The best way is to define the regex in a filter file for fail2ban and run the
 tool like so (This is from me testing asterisk with the output from my test):</p>
@@ -357,14 +183,14 @@ Results
 
 Failregex
 |- Regular expressions:
-|  [1] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '&lt;HOST&gt;(:[0-9]+)?' - Wrong Password\s*$
-|  [2] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '&lt;HOST&gt;(:[0-9]+)?' - No matching peer found\s*$
-|  [3] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '&lt;HOST&gt;(:[0-9]+)?' - Username/auth name mismatch\s*$
-|  [4] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '&lt;HOST&gt;(:[0-9]+)?' - Device does not match ACL\s*$
-|  [5] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.* &lt;HOST&gt;(:[0-9]+)? failed to authenticate as '.*'\s*$
-|  [6] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: No registration for peer '.*' \(from &lt;HOST&gt;(:[0-9]+)?\)\s*$
-|  [7] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Host &lt;HOST&gt;(:[0-9]+)? failed MD5 authentication for '.*' (.*)\s*$
-|  [8] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Failed to authenticate user .*@&lt;HOST&gt;(:[0-9]+)?.*\s*$
+|  [1] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '<HOST>(:[0-9]+)?' - Wrong Password\s*$
+|  [2] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '<HOST>(:[0-9]+)?' - No matching peer found\s*$
+|  [3] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '<HOST>(:[0-9]+)?' - Username/auth name mismatch\s*$
+|  [4] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Registration from '.*' failed for '<HOST>(:[0-9]+)?' - Device does not match ACL\s*$
+|  [5] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.* <HOST>(:[0-9]+)? failed to authenticate as '.*'\s*$
+|  [6] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: No registration for peer '.*' \(from <HOST>(:[0-9]+)?\)\s*$
+|  [7] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Host <HOST>(:[0-9]+)? failed MD5 authentication for '.*' (.*)\s*$
+|  [8] ^\s*(?:\S+ )?(?:@vserver_\S+ )?(?:(?:\[\d+\])?:\s+[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?|[\[\(]?asterisk(?:\(\S+\))?[\]\)]?:?(?:\[\d+\])?:)?\s*?NOTICE.*: Failed to authenticate user .*@<HOST>(:[0-9]+)?.*\s*$
 |
 `- Number of matches:
    [1] 0 match(es)
@@ -417,69 +243,26 @@ Date template hits:
 0 hit(s): Epoch
 0 hit(s): ISO 8601
 0 hit(s): Hour:Minute:Second
-0 hit(s): &lt;Month/Day/Year@Hour:Minute:Second&gt;
+0 hit(s): <Month/Day/Year@Hour:Minute:Second>
 
 Success, the total number of match is 75
 
 However, look at the above section 'Running tests' which could contain
 important information.
-</code></pre><p>The above shows that I have 75 matches and the IPs (removed) that matched
+</code></pre>
+<p>The above shows that I have 75 matches and the IPs (removed) that matched
 against which rule.</p>
-
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/festival/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Festival</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/ezstream/'>
-        <span class='screen-reader-text'>Next post: </span>EZStream<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

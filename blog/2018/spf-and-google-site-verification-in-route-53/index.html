@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2018&#x2F;spf-and-google-site-verification-in-route-53&#x2F;">SPF and Google Site Verification in Route 53</a></h1>
+
+  <div class="post-content"><p>Route53 doesn't allow multiple definitions of the same name/type pair of DNS
+entries which is quite a headache. This is the first time I've had a conflict
+of a TXT record in Route53 at the base, specifically both Google's site
+verification, and SPF records both want to live at the root of the domain. The
+site verification record needs to stay around as Google periodically
+re-verifies the domain.</p>
+<span id="continue-reading"></span>
+<p>To get this to work you need to quote both the Google verification string and
+the SPF record, but you also have to ensure that there is a newline in the
+field. The contents of the entry should look something like this:</p>
+<pre><code>"google-site-verification=<auth string>"
+"v=spf1 include:_spf.google.com ~all"
+</code></pre>
+<p>You can use <a href="https://toolbox.googleapps.com/apps/checkmx/check">Google's MX Toolbox</a> to verify the SPF record.</p>
+</div><p class="meta">Posted on <span class="postdate">2018-06-14</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

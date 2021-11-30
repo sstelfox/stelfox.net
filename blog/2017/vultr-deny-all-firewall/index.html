@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2017&#x2F;vultr-deny-all-firewall&#x2F;">Vultr Deny All Firewall</a></h1>
+
+  <div class="post-content"><p>While setting up new instances on Vultr for testing, I wanted to initially
+ensure that no traffic beyond my own could touch the instances. After adding a
+matching rule for SSH to my IPv4 address, a default rule shows up that drops
+any unspecified traffic. Switching to the IPv6 I wanted to add a drop all rule
+(as I wouldn't be using IPv6 until the system was up).</p>
+<span id="continue-reading"></span>
+<p>The interface only allows <code>accept</code> rules to be created and additionally you'll
+be greeted with this message while trying to figure out what to do:</p>
+<blockquote>
+<p>This firewall ruleset will not be active until at least one rule is added.</p>
+</blockquote>
+<p>The creative solution I came up with was to add an SSH rule with a custom IP of
+<code>::1/128</code>. The loopback IPv6 address... The drop all rule showed up and unless
+there is some bug in Vultr's firewalling nothing should be able to reach these
+instances over IPv6.</p>
+<p>If you're interested in using Vultr, I'd appreciate it if you consider using my
+<a href="https://www.vultr.com/?ref=7199712">affiliate link</a> to sign up.</p>
+</div><p class="meta">Posted on <span class="postdate">2017-10-20</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

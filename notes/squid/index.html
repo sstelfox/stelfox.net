@@ -1,398 +1,343 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
- http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/ http://gofedora.com/how-to-configure-squid-proxy-server/ http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos http://wiki.squid-cache.org/Features/NegotiateAuthentication http://www.squid-cache.org/Versions/v3/3.2/cfgman/  For URL filtering please refer to the SquidGuard page.
-yum install squid -y Before configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Squid • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
- http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/ http://gofedora.com/how-to-configure-squid-proxy-server/ http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos http://wiki.squid-cache.org/Features/NegotiateAuthentication http://www.squid-cache.org/Versions/v3/3.2/cfgman/  For URL filtering please refer to the SquidGuard page.
-yum install squid -y Before configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package.'>
-<meta property='og:url' content='https://stelfox.net/notes/squid/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Squid • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/squid/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Squid</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-9 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<ul>
-<li><a href="http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/">http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/</a></li>
-<li><a href="http://gofedora.com/how-to-configure-squid-proxy-server/">http://gofedora.com/how-to-configure-squid-proxy-server/</a></li>
-<li><a href="http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html">http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html</a></li>
-<li><a href="http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos">http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos</a></li>
-<li><a href="http://wiki.squid-cache.org/Features/NegotiateAuthentication">http://wiki.squid-cache.org/Features/NegotiateAuthentication</a></li>
-<li><a href="http://www.squid-cache.org/Versions/v3/3.2/cfgman/">http://www.squid-cache.org/Versions/v3/3.2/cfgman/</a></li>
+      <div id="content">
+        
+<article class="post">
+  <h1>Squid</h1><div class="post-content"><ul>
+<li><a href="https://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/">Squid kerberos authentication and ldap authorization in Active Directory</a></li>
+<li><a href="https://gofedora.com/how-to-configure-squid-proxy-server/">How To: Configure Squid Proxy Server</a></li>
+<li><a href="https://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html">DansGuardian Content Filtering with AD Integration</a></li>
+<li><a href="https://wiki.squid-cache.org/Features/NegotiateAuthentication">Feature: Negotiate Authentication</a></li>
+<li><a href="http://www.squid-cache.org/Versions/v3/3.2/cfgman/">Squid Configuration File</a></li>
 </ul>
 <p>For URL filtering please refer to the <a href="https://stelfox.net/notes/squid-guard/">SquidGuard</a> page.</p>
 <pre><code>yum install squid -y
-</code></pre><p>Before configuring squid we mind as well get the authentication credentials in
+</code></pre>
+<p>Before configuring squid we mind as well get the authentication credentials in
 place. To do this we make use of the <code>htpasswd</code> utility which can be installed
 through the <code>httpd-tools</code> package.</p>
 <p>For the first account:</p>
 <pre><code>htpasswd -b -c /etc/squid/accounts username password
-</code></pre><p>And subsequent accounts:</p>
+</code></pre>
+<p>And subsequent accounts:</p>
 <pre><code>htpasswd -b /etc/squid/accounts username2 password2
-</code></pre><p>Lets drop the config into place, this is fairly generic there are just a few IP
+</code></pre>
+<p>Lets drop the config into place, this is fairly generic there are just a few IP
 addresses, networks, and emails to change. It should live at
 <code>/etc/squid/squid.conf</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Configuration reference:</span>
-<span style="color:#75715e"># http://www.squid-cache.org/Versions/v3/3.2/cfgman/</span>
-<span style="color:#75715e"># https://calomel.org/squid.html</span>
-<span style="color:#75715e"># Note to self search for &#34;TODO&#34; and &#34;TEST&#34;</span>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh"># Configuration reference:
+# http://www.squid-cache.org/Versions/v3/3.2/cfgman/
+# https://calomel.org/squid.html
+# Note to self search for "TODO" and "TEST"
 
-<span style="color:#75715e"># Bind to the standard squid part (3128)</span>
-http_port <span style="color:#f92672">[</span>::<span style="color:#f92672">]</span>:3128
+# Bind to the standard squid part (3128)
+http_port [::]:3128
 
-<span style="color:#75715e">### GENERAL CONFIGURATION</span>
+### GENERAL CONFIGURATION
 
-<span style="color:#75715e"># Email address of the local cache manager in case an issue crops up. This will</span>
-<span style="color:#75715e"># also show up in error messages.</span>
+# Email address of the local cache manager in case an issue crops up. This will
+# also show up in error messages.
 cache_mgr cache-admin@proxy-01.i.0x378.net
 
-<span style="color:#75715e"># For security and stability reasons Squid can check hostnames for Internet</span>
-<span style="color:#75715e"># standard RFC compliance.</span>
+# For security and stability reasons Squid can check hostnames for Internet
+# standard RFC compliance.
 check_hostnames on
 
-<span style="color:#75715e"># Leave coredumps in the base cache directory</span>
+# Leave coredumps in the base cache directory
 coredump_dir /var/spool/squid
 
-<span style="color:#75715e"># Automatically close broken persistent connections</span>
+# Automatically close broken persistent connections
 detect_broken_pconn on
 
-<span style="color:#75715e"># Using the transparent option prevent squid from manipulating this header,</span>
-<span style="color:#75715e"># turning it off just sets the client&#39;s address do &#34;unknown&#34;.</span>
+# Using the transparent option prevent squid from manipulating this header,
+# turning it off just sets the client's address do "unknown".
 forwarded_for transparent
 
-<span style="color:#75715e"># Prevent Squid from announcing it&#39;s version information</span>
+# Prevent Squid from announcing it's version information
 httpd_suppress_version_string on
 
-<span style="color:#75715e"># Minimum umask to be enforced for all written files, generally this should be</span>
-<span style="color:#75715e"># public information (cached content) but it can&#39;t hurt to  restrict it.</span>
-umask <span style="color:#ae81ff">027</span>
+# Minimum umask to be enforced for all written files, generally this should be
+# public information (cached content) but it can't hurt to  restrict it.
+umask 027
 
-<span style="color:#75715e"># Hostname that is visible in error messages, and if used in a cluster used to</span>
-<span style="color:#75715e"># detect forwarding loops. If your cluster needs to use the same</span>
-<span style="color:#75715e"># visible_hostname investigate the related option unique_hostname.</span>
+# Hostname that is visible in error messages, and if used in a cluster used to
+# detect forwarding loops. If your cluster needs to use the same
+# visible_hostname investigate the related option unique_hostname.
 visible_hostname proxy-01.internal.private.web
 
-<span style="color:#75715e">### TIMEOUTS</span>
+### TIMEOUTS
 
-<span style="color:#75715e"># How long to wait for TCP connect to a requested server or peer to complete</span>
-<span style="color:#75715e"># before Squid should attempt to find another path to forward the request.</span>
-connect_timeout <span style="color:#ae81ff">5</span> second
+# How long to wait for TCP connect to a requested server or peer to complete
+# before Squid should attempt to find another path to forward the request.
+connect_timeout 5 second
 
-<span style="color:#75715e"># If no response is received to a DNS query within this time all DNS servers</span>
-<span style="color:#75715e"># for the queried domain are assumed to be unavailable. This may cause</span>
-<span style="color:#75715e"># transient resolution errors to be cached but I haven&#39;t verified that.</span>
-dns_timeout <span style="color:#ae81ff">5</span> second
+# If no response is received to a DNS query within this time all DNS servers
+# for the queried domain are assumed to be unavailable. This may cause
+# transient resolution errors to be cached but I haven't verified that.
+dns_timeout 5 second
 
-<span style="color:#75715e"># Max length of time Squid should attempt to find a forwarding path for a</span>
-<span style="color:#75715e"># request before giving up.</span>
-forward_timeout <span style="color:#ae81ff">10</span> second
+# Max length of time Squid should attempt to find a forwarding path for a
+# request before giving up.
+forward_timeout 10 second
 
-<span style="color:#75715e"># How long to wait for complete HTTP request headers after initial connection</span>
-<span style="color:#75715e"># establishment.</span>
-request_timeout <span style="color:#ae81ff">10</span> second
+# How long to wait for complete HTTP request headers after initial connection
+# establishment.
+request_timeout 10 second
 
-<span style="color:#75715e">### AUTHENTICATION</span>
+### AUTHENTICATION
 
-<span style="color:#75715e"># Ensure usernames are case sensitive</span>
+# Ensure usernames are case sensitive
 auth_param basic casesensitive on
 
-<span style="color:#75715e"># Length of time to consider credentials authenticated through the external</span>
-<span style="color:#75715e"># program valid.</span>
-auth_param basic credentialsttl <span style="color:#ae81ff">2</span> hours
+# Length of time to consider credentials authenticated through the external
+# program valid.
+auth_param basic credentialsttl 2 hours
 
-<span style="color:#75715e"># Use basic htpasswd style files to handle authentication.</span>
+# Use basic htpasswd style files to handle authentication.
 auth_param basic program /usr/lib64/squid/basic_ncsa_auth /etc/squid/accounts
 
-<span style="color:#75715e"># The realm to display to any inquistive clients</span>
+# The realm to display to any inquistive clients
 auth_param basic realm Proxy Access Requires Authentication
 
-<span style="color:#75715e">### CACHE CONFIGURATION</span>
+### CACHE CONFIGURATION
 
-<span style="color:#75715e"># &lt;store type&gt; &lt;store location&gt; &lt;cache size in MB&gt; &lt;# of first level</span>
-<span style="color:#75715e"># directories&gt; &lt;# of second level directories&gt; aufs is the non-blocking disk</span>
-<span style="color:#75715e"># storage option</span>
-cache_dir aufs /var/spool/squid <span style="color:#ae81ff">1024</span> <span style="color:#ae81ff">16</span> <span style="color:#ae81ff">256</span>
+# <store type> <store location> <cache size in MB> <# of first level
+# directories> <# of second level directories> aufs is the non-blocking disk
+# storage option
+cache_dir aufs /var/spool/squid 1024 16 256
 
-<span style="color:#75715e"># This represents the maximum amount of ram that squid will utilize to keep</span>
-<span style="color:#75715e"># cached objects in memory. Squid requires about 100Mb of RAM per Gb of cache</span>
-<span style="color:#75715e"># storage. If you have a 10gb cache, Squid will use ~1Gb just to handle that.</span>
-<span style="color:#75715e"># Make sure that cache_mem + (cache_dir size limit * 100Mb) is less than your</span>
-<span style="color:#75715e"># available RAM.</span>
-cache_mem <span style="color:#ae81ff">192</span> MB
+# This represents the maximum amount of ram that squid will utilize to keep
+# cached objects in memory. Squid requires about 100Mb of RAM per Gb of cache
+# storage. If you have a 10gb cache, Squid will use ~1Gb just to handle that.
+# Make sure that cache_mem + (cache_dir size limit * 100Mb) is less than your
+# available RAM.
+cache_mem 192 MB
 
-<span style="color:#75715e"># Least Frequently Used with Dynamic Aging (keeps popular objects in cache</span>
-<span style="color:#75715e"># regardless of their size and thus optimizes byte hit rate at the expense of</span>
-<span style="color:#75715e"># hit rate since one large, popular object will prevent many smaller, slightly</span>
-<span style="color:#75715e"># less popular objects from being cached.</span>
+# Least Frequently Used with Dynamic Aging (keeps popular objects in cache
+# regardless of their size and thus optimizes byte hit rate at the expense of
+# hit rate since one large, popular object will prevent many smaller, slightly
+# less popular objects from being cached.
 cache_replacement_policy heap LFUDA
 
-<span style="color:#75715e"># Limit the size of file to hold in the cache, 10 MB is about the largest file</span>
-<span style="color:#75715e"># I expect multiple of my client to pull down.</span>
-maximum_object_size <span style="color:#ae81ff">10</span> MB
+# Limit the size of file to hold in the cache, 10 MB is about the largest file
+# I expect multiple of my client to pull down.
+maximum_object_size 10 MB
 
-<span style="color:#75715e"># Tell squid to release memory it&#39;s not using</span>
+# Tell squid to release memory it's not using
 memory_pools off
 
-<span style="color:#75715e"># Cacheing rules for content that doesn&#39;t have an explicit expire time.</span>
-refresh_pattern ^ftp:             <span style="color:#ae81ff">1440</span> 20%    <span style="color:#ae81ff">10080</span>
-refresh_pattern -i <span style="color:#f92672">(</span>/cgi-bin/|<span style="color:#ae81ff">\?</span><span style="color:#f92672">)</span> <span style="color:#ae81ff">0</span>    0%     <span style="color:#ae81ff">0</span>
-refresh_pattern .                 <span style="color:#ae81ff">0</span>    20%    <span style="color:#ae81ff">4320</span>
+# Cacheing rules for content that doesn't have an explicit expire time.
+refresh_pattern ^ftp:             1440 20%    10080
+refresh_pattern -i (/cgi-bin/|\?) 0    0%     0
+refresh_pattern .                 0    20%    4320
 
-<span style="color:#75715e"># Specifies how long squid should wait when it&#39;s service is asked to stop.</span>
-<span style="color:#75715e"># Generally this to allow client requests to complete, but I find it more</span>
-<span style="color:#75715e"># useful to make this fast.</span>
-shutdown_lifetime <span style="color:#ae81ff">1</span> second
+# Specifies how long squid should wait when it's service is asked to stop.
+# Generally this to allow client requests to complete, but I find it more
+# useful to make this fast.
+shutdown_lifetime 1 second
 
-<span style="color:#75715e"># This normally evaluate how much data is left in a transfer when a client</span>
-<span style="color:#75715e"># disconnects before it&#39;s completed, and if the remaining data falls in the</span>
-<span style="color:#75715e"># configured range, Squid will finish downloading the file and cache it anyway.</span>
-<span style="color:#75715e"># This is cool but not useful in my environment.</span>
-quick_abort_min <span style="color:#ae81ff">0</span> KB
-quick_abort_max <span style="color:#ae81ff">0</span> KB
+# This normally evaluate how much data is left in a transfer when a client
+# disconnects before it's completed, and if the remaining data falls in the
+# configured range, Squid will finish downloading the file and cache it anyway.
+# This is cool but not useful in my environment.
+quick_abort_min 0 KB
+quick_abort_max 0 KB
 
-<span style="color:#75715e">### SSL BUMP</span>
+### SSL BUMP
 
-<span style="color:#75715e"># TODO: This is exactly worst practices in most cases, however, for a highly</span>
-<span style="color:#75715e"># restricted network of servers using this as their only means of accessing the</span>
-<span style="color:#75715e"># internet... It can be an important security measure.</span>
+# TODO: This is exactly worst practices in most cases, however, for a highly
+# restricted network of servers using this as their only means of accessing the
+# internet... It can be an important security measure.
 
-<span style="color:#75715e">### CUSTOM ERROR MESSAGES</span>
+### CUSTOM ERROR MESSAGES
 
-<span style="color:#75715e"># TODO: Useful for client facing servers</span>
+# TODO: Useful for client facing servers
 
-<span style="color:#75715e">### SQUIDGUARD CONFIG</span>
+### SQUIDGUARD CONFIG
 
-<span style="color:#75715e">#url_rewrite_program /usr/bin/squidGuard -c /etc/squid/squidGuard.conf</span>
-<span style="color:#75715e">#url_rewrite_bypass off</span>
+#url_rewrite_program /usr/bin/squidGuard -c /etc/squid/squidGuard.conf
+#url_rewrite_bypass off
 
-<span style="color:#75715e">### LOGGING</span>
+### LOGGING
 
-<span style="color:#75715e"># &lt;Client IP&gt; &lt;Username&gt; [&lt;Local Time&gt;] &#34;&lt;Request Method&gt; &lt;Request URL&gt;</span>
-<span style="color:#75715e"># HTTP/&lt;Protocol Version&gt; &lt;Response Status Code&gt; &lt;Sent reply size (with</span>
-<span style="color:#75715e"># headers)&gt; &lt;Referer&gt; &lt;User Agent&gt; &lt;Squid Request Status&gt;:&lt;Squid Hierarchy</span>
-<span style="color:#75715e"># Status&gt;</span>
-logformat        combined %&gt;a %un <span style="color:#f92672">[</span>%tl<span style="color:#f92672">]</span> <span style="color:#e6db74">&#34;%rm %ru HTTP/%rv&#34;</span> %&gt;Hs %&lt;st <span style="color:#e6db74">&#34;%{Referer}&gt;h&#34;</span> <span style="color:#e6db74">&#34;%{User-Agent}&gt;h&#34;</span> %Ss:%Sh
+# <Client IP> <Username> [<Local Time>] "<Request Method> <Request URL>
+# HTTP/<Protocol Version> <Response Status Code> <Sent reply size (with
+# headers)> <Referer> <User Agent> <Squid Request Status>:<Squid Hierarchy
+# Status>
+logformat        combined %>a %un [%tl] "%rm %ru HTTP/%rv" %>Hs %<st "%{Referer}>h" "%{User-Agent}>h" %Ss:%Sh
 
-<span style="color:#75715e"># &lt;Client IP&gt; &lt;Username&gt; [&lt;Local Time&gt;] &#34;&lt;Sent Headers&gt;&#34; &#34;&lt;Reply Headers&gt;&#34;</span>
-logformat        debugheaders %&gt;a %un <span style="color:#f92672">[</span>%tl<span style="color:#f92672">]</span> <span style="color:#e6db74">&#34;%&gt;h&#34;</span> <span style="color:#e6db74">&#34;%&lt;h&#34;</span>
+# <Client IP> <Username> [<Local Time>] "<Sent Headers>" "<Reply Headers>"
+logformat        debugheaders %>a %un [%tl] "%>h" "%<h"
 
-<span style="color:#75715e"># Send our neat logs through to the local syslog server</span>
+# Send our neat logs through to the local syslog server
 access_log       syslog:local3.info combined
 
-<span style="color:#75715e"># Useful for debugging</span>
-<span style="color:#75715e">#access_log      syslog:local3.debug debugheaders</span>
-<span style="color:#75715e">#access_log      stdio:/var/log/squid/headers.log debugheaders</span>
-<span style="color:#75715e">#cache_store_log stdio:/var/log/squid/store.log</span>
-<span style="color:#75715e">#cache_log       stdio:/var/log/squid/cache.log</span>
-<span style="color:#75715e">#logfile_rotate  3</span>
+# Useful for debugging
+#access_log      syslog:local3.debug debugheaders
+#access_log      stdio:/var/log/squid/headers.log debugheaders
+#cache_store_log stdio:/var/log/squid/store.log
+#cache_log       stdio:/var/log/squid/cache.log
+#logfile_rotate  3
 
-<span style="color:#75715e">### BEGIN ACL ALIASES</span>
+### BEGIN ACL ALIASES
 
 acl CONNECT method CONNECT
 
-<span style="color:#75715e"># An ACL to match authenticated users</span>
+# An ACL to match authenticated users
 acl authenticated_user proxy_auth REQUIRED
 
-<span style="color:#75715e"># ACL covering clients allowed to use this proxy</span>
+# ACL covering clients allowed to use this proxy
 acl allowed_hosts src 10.0.0.0/24
-acl allowed_hosts src fc00::/7       <span style="color:#75715e"># RFC 4193 local private network range</span>
-acl allowed_hosts src fe80::/10      <span style="color:#75715e"># RFC 4291 link-local (directly plugged) machines</span>
+acl allowed_hosts src fc00::/7       # RFC 4193 local private network range
+acl allowed_hosts src fe80::/10      # RFC 4291 link-local (directly plugged) machines
 
-<span style="color:#75715e"># ACLs covering restricted destinations</span>
+# ACLs covering restricted destinations
 acl to_local_network dst 10.0.0.0/24
 
-<span style="color:#75715e"># Limit individual matching hosts to 500 connections</span>
-acl proxy_connection_limit maxconn <span style="color:#ae81ff">500</span>
+# Limit individual matching hosts to 500 connections
+acl proxy_connection_limit maxconn 500
 
-<span style="color:#75715e"># Which ports to allow raw connects too (For SSL mostly)</span>
-acl SSL_ports port <span style="color:#ae81ff">443</span> 	        <span style="color:#75715e"># https</span>
+# Which ports to allow raw connects too (For SSL mostly)
+acl SSL_ports port 443 	        # https
 
-<span style="color:#75715e"># Which ports to allow regular unencrypted procols to connect to</span>
-acl allowed_ports port <span style="color:#ae81ff">80</span>          <span style="color:#75715e"># http</span>
-acl allowed_ports port <span style="color:#ae81ff">21</span>          <span style="color:#75715e"># ftp</span>
-acl allowed_ports port <span style="color:#ae81ff">443</span>         <span style="color:#75715e"># https</span>
-<span style="color:#75715e">#acl allowed_ports port 1025-65535  # unregistered ports</span>
+# Which ports to allow regular unencrypted procols to connect to
+acl allowed_ports port 80          # http
+acl allowed_ports port 21          # ftp
+acl allowed_ports port 443         # https
+#acl allowed_ports port 1025-65535  # unregistered ports
 
-<span style="color:#75715e">### BEGIN ACLS</span>
+### BEGIN ACLS
 
-<span style="color:#75715e"># Only allow cachemgr access from localhost</span>
+# Only allow cachemgr access from localhost
 http_access allow manager localhost
 http_access deny manager
 
-<span style="color:#75715e"># Access to local web based services should be explictely and directly allowed.</span>
-<span style="color:#75715e"># Deny access to them through this proxy.</span>
+# Access to local web based services should be explictely and directly allowed.
+# Deny access to them through this proxy.
 http_access deny to_local_network
 
-<span style="color:#75715e"># Deny requests from clients that go over the connection limits</span>
+# Deny requests from clients that go over the connection limits
 http_access deny proxy_connection_limit
 
-<span style="color:#75715e"># Allow CONNECT to only the explicitely allowed ports</span>
+# Allow CONNECT to only the explicitely allowed ports
 http_access allow CONNECT SSL_ports
 http_access deny CONNECT
 
-<span style="color:#75715e"># Deny requests to any port we haven&#39;t whitelisted</span>
+# Deny requests to any port we haven't whitelisted
 http_access deny !allowed_ports
 
-<span style="color:#75715e"># Allow access to this squid server from our local whitelisted network... as</span>
-<span style="color:#75715e"># long as they&#39;re authenticated.</span>
+# Allow access to this squid server from our local whitelisted network... as
+# long as they're authenticated.
 http_access allow allowed_hosts authenticated_user
 
-<span style="color:#75715e"># Deny any requests we haven&#39;t allowed by this point</span>
+# Deny any requests we haven't allowed by this point
 http_access deny all
 
-<span style="color:#75715e">### PRIVACY / REQUEST MANGLING</span>
+### PRIVACY / REQUEST MANGLING
 
-<span style="color:#75715e"># TODO: Client information can leak out through headers including information</span>
-<span style="color:#75715e"># about services and OS&#39;s running inside the network. Mangling the requests and</span>
-<span style="color:#75715e"># responses and whitelisting the various headers of value can help mitigate</span>
-<span style="color:#75715e"># this, and provide meaningful dis-information.</span>
+# TODO: Client information can leak out through headers including information
+# about services and OS's running inside the network. Mangling the requests and
+# responses and whitelisting the various headers of value can help mitigate
+# this, and provide meaningful dis-information.
 
-<span style="color:#75715e">#request_header_replace User-Agent Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)</span>
-<span style="color:#75715e">#request_header_replace Accept */*</span>
-<span style="color:#75715e">#request_header_replace Accept-Encoding gzip # May cause issues should TEST</span>
-<span style="color:#75715e">#request_header_replace Accept-Language en</span>
+#request_header_replace User-Agent Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)
+#request_header_replace Accept */*
+#request_header_replace Accept-Encoding gzip # May cause issues should TEST
+#request_header_replace Accept-Language en
 #
-<span style="color:#75715e">## Some of these should be reply_header_access</span>
-<span style="color:#75715e">#request_header_access Accept allow all</span>
-<span style="color:#75715e">#request_header_access Accept-Encoding allow all</span>
-<span style="color:#75715e">#request_header_access Accept-Language allow all</span>
-<span style="color:#75715e">#request_header_access Authorization allow all</span>
-<span style="color:#75715e">#request_header_access Cache-Control allow all</span>
-<span style="color:#75715e">##request_header_access Content-Disposition allow all</span>
-<span style="color:#75715e">#request_header_access Content-Encoding allow all</span>
-<span style="color:#75715e">#request_header_access Content-Length allow all</span>
-<span style="color:#75715e">##request_header_access Content-Location allow all</span>
-<span style="color:#75715e">#request_header_access Content-Range allow all</span>
-<span style="color:#75715e">#request_header_access Content-Type allow all</span>
-<span style="color:#75715e">#request_header_access Cookie allow all</span>
-<span style="color:#75715e">#request_header_access Expires allow all</span>
-<span style="color:#75715e">#request_header_access Host allow all</span>
-<span style="color:#75715e">#request_header_access If-Modified-Since allow all</span>
-<span style="color:#75715e">##request_header_access Location allow all</span>
-<span style="color:#75715e">#request_header_access Range allow all</span>
-<span style="color:#75715e">#request_header_access Referer allow all</span>
-<span style="color:#75715e">#request_header_access Set-Cookie allow all</span>
-<span style="color:#75715e">#request_header_access User-Agent deny all</span>
-<span style="color:#75715e">#request_header_access WWW-Authenticate allow all</span>
-<span style="color:#75715e">#request_header_access All deny all</span>
-</code></pre></div><p>To enable syslog logging we need to add the <code>-s</code> flag to <code>SQUID_OPTS</code> in
+## Some of these should be reply_header_access
+#request_header_access Accept allow all
+#request_header_access Accept-Encoding allow all
+#request_header_access Accept-Language allow all
+#request_header_access Authorization allow all
+#request_header_access Cache-Control allow all
+##request_header_access Content-Disposition allow all
+#request_header_access Content-Encoding allow all
+#request_header_access Content-Length allow all
+##request_header_access Content-Location allow all
+#request_header_access Content-Range allow all
+#request_header_access Content-Type allow all
+#request_header_access Cookie allow all
+#request_header_access Expires allow all
+#request_header_access Host allow all
+#request_header_access If-Modified-Since allow all
+##request_header_access Location allow all
+#request_header_access Range allow all
+#request_header_access Referer allow all
+#request_header_access Set-Cookie allow all
+#request_header_access User-Agent deny all
+#request_header_access WWW-Authenticate allow all
+#request_header_access All deny all
+</code></pre>
+<p>To enable syslog logging we need to add the <code>-s</code> flag to <code>SQUID_OPTS</code> in
 <code>/etc/sysconfig/squid</code>.</p>
 <pre><code># Squid options (additionally log to syslog)
-SQUID_OPTS=&quot;-s&quot;
+SQUID_OPTS="-s"
 
 # Time to wait for Squid to shut down when asked. Should not be necessary
 # most of the time.
 SQUID_SHUTDOWN_TIMEOUT=100
 
 # default squid conf file
-SQUID_CONF=&quot;/etc/squid/squid.conf&quot;
-</code></pre><p>Enable and start the service:</p>
+SQUID_CONF="/etc/squid/squid.conf"
+</code></pre>
+<p>Enable and start the service:</p>
 <pre><code>systemctl enable squid.service
 systemctl start squid.service
-</code></pre><h2 id="firewall">Firewall</h2>
+</code></pre>
+<h2 id="firewall">Firewall</h2>
 <p>Allow access to the squid proxy from within the airlock, and the normal ports
 outbound.</p>
 <pre><code># Allow access to the local squid proxy server (mostly for updates)
@@ -403,32 +348,40 @@ outbound.</p>
 -A OUTPUT -m tcp -p tcp --dport 21  -j ACCEPT
 -A OUTPUT -m tcp -p tcp --dport 80  -j ACCEPT
 -A OUTPUT -m tcp -p tcp --dport 443 -j ACCEPT
-</code></pre><p>Other clients on the network will need to be able to talk to the squid port.</p>
+</code></pre>
+<p>Other clients on the network will need to be able to talk to the squid port.</p>
 <pre><code>-A OUTPUT -m tcp -p tcp --dport 3128 -d 10.0.0.170 -j ACCEPT
-</code></pre><h2 id="a-note-on-nonstandard-ports">A Note on Non-Standard Ports</h2>
+</code></pre>
+<h2 id="a-note-on-non-standard-ports">A Note on Non-Standard Ports</h2>
 <p>It is highly recommended to run squid on a non-standard port if it is going to
 be exposed to the internet. The catch is that this will throw SELinux for a
 loop. The following command will tell SELinux to be ok with squid running on
 port 11637.</p>
 <pre><code>[root@localhost ~]# semanage port -a -t http_cache_port_t -p tcp 11637
-</code></pre><p>This may be necessary if squid needs to listen on multiple ports (for example
+</code></pre>
+<p>This may be necessary if squid needs to listen on multiple ports (for example
 for dansGuardian with kerberos authentication).</p>
 <h2 id="viewing-statistics">Viewing Statistics</h2>
 <p>On the squid server you can run a report to see the status of squid with the
-&ldquo;squidclient&rdquo; command like so:</p>
+&quot;squidclient&quot; command like so:</p>
 <pre><code>squidclient -h 127.0.0.1 mgr:info
-</code></pre><h2 id="testing">Testing</h2>
+</code></pre>
+<h2 id="testing">Testing</h2>
 <p>You can confirm the squid works like so:</p>
 <pre><code>curl -x 10.0.0.170:3128 https://www.google.com/
-</code></pre><p>With authentication:</p>
+</code></pre>
+<p>With authentication:</p>
 <pre><code>curl --proxy-basic --proxy-user user:pass -x 10.0.0.170:3128 https://www.google.com/
-</code></pre><p>To get yum working with the proxy add the following line to the <code>[main]</code>
+</code></pre>
+<p>To get yum working with the proxy add the following line to the <code>[main]</code>
 section of /etc/yum.conf file.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#a6e22e">proxy</span><span style="color:#f92672">=</span><span style="color:#e6db74">http://10.0.0.170:3128</span>
-</code></pre></div><p>If authentication is required the two following lines can always be added:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#a6e22e">proxy_username</span><span style="color:#f92672">=</span><span style="color:#e6db74">username</span>
-<span style="color:#a6e22e">proxy_password</span><span style="color:#f92672">=</span><span style="color:#e6db74">password</span>
-</code></pre></div><p>To setup general proxy use on the system for various command line utilities
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">proxy=http://10.0.0.170:3128
+</code></pre>
+<p>If authentication is required the two following lines can always be added:</p>
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">proxy_username=username
+proxy_password=password
+</code></pre>
+<p>To setup general proxy use on the system for various command line utilities
 like <code>wget</code>, <code>curl</code>, and <code>lynx</code>, there are a set of common environment variable
 to set. I created a file <code>/etc/profile.d/proxy.sh</code> with the following contents
 and make it executable.</p>
@@ -439,63 +392,20 @@ export ftp_proxy=squid.local.tld:3128
 export ALL_PROXY=squid.local.tld:3128
 export no_proxy=.i.0x378.net
 export NO_PROXY=.i.0x378.net
-</code></pre><p>You can include credentials by prepending the <code>user:pass@</code> to the hosts of the
+</code></pre>
+<p>You can include credentials by prepending the <code>user:pass@</code> to the hosts of the
 protocols above.</p>
-
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/squid-guard/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Squid Guard</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/software-raid/'>
-        <span class='screen-reader-text'>Next post: </span>Software RAID<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

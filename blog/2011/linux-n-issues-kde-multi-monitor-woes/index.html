@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2011&#x2F;linux-n-issues-kde-multi-monitor-woes&#x2F;">Linux N Issues &amp; KDE Multi-Monitor Woes</a></h1>
+
+  <div class="post-content"><p>So I recently did a fresh install of Fedora 14 with KDE installed (not the KDE
+spin mind you) on my ThinkPad. I'm pleasantly surprised with hows it's working
+everything seems to be working out the box very stably. I used it without issue
+for a solid month and a half without a single issue.</p>
+<span id="continue-reading"></span>
+<p>Earlier this week I started having issues with my wireless card on some
+networks, but not at all of them. The most prominent one being my home network.
+I've had issues with my access point dropping connections before on a wide
+array of machines and not actually dropping it (IE: my laptop would see it as
+connected but the AP wouldn't exchange traffic with it). So when I started
+seeing this behavior I expected that issue to have cropped up again.</p>
+<p>The actual behavior that I was witnessing was this:</p>
+<ol>
+<li>Connect to wireless network</li>
+<li>Use the connection for 5-10 seconds</li>
+<li>Pages would start timing out even though the connection was still 'active'</li>
+</ol>
+<p>Disconnecting and reconnecting to the wireless would start the situation all
+over again, which quickly became frustrating but I didn't have time to mess
+with it so I just plugged into an ethernet port and went about my business.</p>
+<p>The next day I received my the <code>logwatch</code> from my laptop (Yes, my laptop sends
+it's logs to my email) and it mentioned more than 20,000 new entries of an
+error I've never seen before:</p>
+<pre><code>iwlagn 0000:03:00.0: BA scd_flow 0 does not match txq_id 10
+</code></pre>
+<p>After poking around a bit online I found that the issue is with a recent kernel
+update (I'm currently running 2.6.35.11-83) changing the behavior of some
+sanity checks to wireless connections that support 'N'. Turns out my wireless
+card and all the networks I was having issues with support 'N'. Good to know.</p>
+<p>It was easy enough to solve that issue, the kernel module just needed an option
+passed to it that I believe just disables 'N'. This is all well and good but I
+haven't had to manually pass options to a kernel module for a couple of
+releases now (I think the last was Fedora 10). Since then the file
+<code>/etc/modules.conf</code> has been deprecated in favor of placing files in
+<code>/etc/modules.d/</code>. There are some files that come stock in there but none are
+passing parameters to modules and the naming scheme doesn't seem to conform to
+anything.</p>
+<p>I was unsure if there was something specific I had to name the file or if it
+needed to be in one of the existing files. I ended up creating the
+file <code>/etc/modprobe.d/iwlagn.conf</code> and putting the following in it:</p>
+<pre><code>options iwlagn 11n_disable=1
+# This one might be needed instead
+#options iwlagn 11n_disable50=1
+</code></pre>
+<p>After I rebooted the problem vanished like it was never there. If you notice
+there is a second option in there that is commented out. I found some people
+where the first option didn't work but replacing it with that second option
+did, so if one doesn't work for you try the second option.</p>
+<p>The second issue that I encountered was just this morning. I'm working at a
+remote site today that I'm not at very often, and am using my laptop as my
+desktop workhorse. Usually when I'm at a remote site, I steal an office that
+isn't in use and claim it as my own, and today was no different. There was a
+screen in this office that had its power plugged it but it's VGA cable was just
+sitting there. I figured 'why not?' so I plugged it in and KDE happily
+announced that it detected a new display and offered to take me to the settings
+interface that would allow me to configure it.</p>
+<p>&quot;Awesome!&quot; I thought, multiple desktops has always been one of those things I
+had to tweak and search around for and it looks like KDE is making some serious
+strides in their support for it. When I turned it on I wasn't really paying
+attention to the settings and my laptop display ended up on the wrong side of
+the screen and my primary desktop on the LCD. Not exactly what I wanted but
+it's cool that it was that easy to setup.</p>
+<p>I went back into the configuration options switched things around, but no
+matter what I did, the 'primary desktop' was always on the external monitor.
+What's more is that there isn't any option for selecting the primary display!
+That <em>used to</em> be there...</p>
+<p>I hunted around before getting frustrated and searching around online. Sure
+enough other people were annoyed by this regression but the solution was very
+easy (though it appears you have to do it every time).</p>
+<p>To set the primary monitor to my laptop screen (LCDS1) I just opened a shell
+and put this in:</p>
+<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">xrandr --output LCDS1 --primary
+</code></pre>
+<p>Poof! Everything is all set and I'm happy once again. I hope that the KDE
+developers put back the primary display selection in the settings but for now
+it's easy enough. Hopefully this will help other people on the net.</p>
+</div><p class="meta">Posted on <span class="postdate">2011-02-25</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

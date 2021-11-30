@@ -1,119 +1,65 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced processing and log centralization while maintaining a sane configuration file syntax. I&#39;ve recently come to vastly prefer it over my previous long term favorite Rsyslog.
-It&#39;s important to note that when modifying the logs statements, they will be processed in order. This means log statements that finalize a message will never make it past that statement. This finalization behavior can be a great tool for optimizing the processing path of logs but can result in unexpected behavior if you don&#39;t pay attention when re-ordering the statements.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Syslog-NG • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced processing and log centralization while maintaining a sane configuration file syntax. I&#39;ve recently come to vastly prefer it over my previous long term favorite Rsyslog.
-It&#39;s important to note that when modifying the logs statements, they will be processed in order. This means log statements that finalize a message will never make it past that statement. This finalization behavior can be a great tool for optimizing the processing path of logs but can result in unexpected behavior if you don&#39;t pay attention when re-ordering the statements.'>
-<meta property='og:url' content='https://stelfox.net/notes/syslog-ng/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta property='article:tag' content='linux'><meta property='article:tag' content='security'><meta property='article:published_time' content='2017-10-25T01:56:02-04:00'/><meta property='article:modified_time' content='2017-10-25T01:56:02-04:00'/><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Syslog-NG • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/syslog-ng/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Syslog-NG</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='2017-10-25T01:56:02-04:00'>2017, Oct 25</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-16 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p>Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced
+      <div id="content">
+        
+<article class="post">
+  <h1>Syslog-NG</h1><div class="post-content"><p>Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced
 processing and log centralization while maintaining a sane configuration file
 syntax. I've recently come to vastly prefer it over my previous long term
 favorite <a href="https://stelfox.net/notes/rsyslog/">Rsyslog</a>.</p>
+<span id="continue-reading"></span>
 <p>It's important to note that when modifying the logs statements, they will be
 processed in order. This means log statements that finalize a message will
 never make it past that statement. This finalization behavior can be a great
@@ -169,7 +115,8 @@ log { source(local); filter(mail); destination(mailFile); };
 log { source(local); filter(messages); destination(messageFile); };
 log { source(local); filter(spool); destination(spoolFile); };
 log { source(local); filter(syslog); destination(syslogFile); };
-</code></pre><p>The base config can also be downloaded <a href="/note_files/syslog-ng/syslog-ng.conf">from me</a>.</p>
+</code></pre>
+<p>The base config can also be downloaded <a href="https://stelfox.net/notes/syslog-ng/syslog-ng.conf">from me</a>.</p>
 <h2 id="using-a-log-file-as-a-source">Using a Log File as a Source</h2>
 <p>It is not uncommon for a daemon to write out its own log files rather than
 using syslog. These files should usually be aggregated to a central log server
@@ -190,7 +137,8 @@ file:</p>
     program_override(auditd)
   );
 };
-</code></pre><p>This configuration will poll the file once a second for any changes (you may
+</code></pre>
+<p>This configuration will poll the file once a second for any changes (you may
 want to drop this for programs that don't log as often). I recommend setting a
 program, facility, and priority as the defaults are not ideal for daemon logs.
 Know what the flags mean and set them according to the file you're pulling in.</p>
@@ -199,7 +147,7 @@ Know what the flags mean and set them according to the file you're pulling in.</
 accidentally contain additional sensitive information. Whenever possible, log
 senders should be authenticated and should be using an encrypted transport
 mechanism. This is very easy to setup and tune with Syslog-ng.</p>
-<p>You should create a <a href="https://stelfox.net/notes/building-a-certificate-authority/">certificate authority</a> dedicated to authenticating
+<p>You should create a <a href="https://stelfox.net/notes/certificates/">certificate authority</a> dedicated to authenticating
 clients to your logging infrastructure. The server cert does not have to be
 signed by the same certificate as your clients, but your clients must be able
 to verify the validity of the server using their CA. Clients should not use a
@@ -215,7 +163,8 @@ Syslog-ng uses the hashed directory format so a symlink needs to be created
 with it's hash. The following one liner will create the appropriate hash link
 for the certificate authority file <code>syslog_clients.crt</code>:</p>
 <pre><code>ln -s syslog_clients.crt $(openssl x509 -noout -hash -in syslog_clients.crt).0
-</code></pre><p>If you have a CRL associated with the client certificate (doesn't hurt to
+</code></pre>
+<p>If you have a CRL associated with the client certificate (doesn't hurt to
 pre-generate an empty one and configure it now) place it in the <code>crl.d</code>
 directory. This also needs a hash identifier but the name is slightly
 different. This assumes a CRL file name of <code>syslog_clients.crl</code>, and that
@@ -224,20 +173,24 @@ you're in the <code>crl.d</code> directory:</p>
 Ultimately the hash identifier needs to be the hash of the issuing CA so it may
 simply need to be reused from the last step.</p>
 <pre><code>ln -s syslog_clients.crl $(openssl x509 -noout -hash -in syslog_clients.crl).r0
-</code></pre><p>You'll also want to generate custom a custom <code>dhparam</code> file using the following
+</code></pre>
+<p>You'll also want to generate custom a custom <code>dhparam</code> file using the following
 command:</p>
 <pre><code>openssl dhparam -out /etc/syslog-ng/dhparam.pem 2048
 chmod 0600 /etc/syslog-ng/dhparam.pem
-</code></pre><p>For the security and safety of your log server, I highly recommend restricting
+</code></pre>
+<p>For the security and safety of your log server, I highly recommend restricting
 the cipher list to only those supported by TLS 1.2 or later. You can find which
 of these your log server supports by running the following command on it:</p>
 <pre><code>openssl ciphers -v | grep TLSv1.2 | awk '{ print $1 }' | tr '\n' ':' | sed -e 's/:$//'
-</code></pre><p>The output of the above will be used in the <code>ciphers</code> parameter to <code>tls</code> in the
+</code></pre>
+<p>The output of the above will be used in the <code>ciphers</code> parameter to <code>tls</code> in the
 configuration below.</p>
 <p>Similarly with ECDH curves, view what is supported on your system (and remove
 the NIST curves just in case they really are untrustworthy):</p>
 <pre><code>openssl ecparam -list_curves | sed 's/://g' | awk '{ print $1 }' | grep -v prime | tr '\n' ':'
-</code></pre><p>This list will be used as the contents of the <code>ecdh_curve_list</code> parameter to
+</code></pre>
+<p>This list will be used as the contents of the <code>ecdh_curve_list</code> parameter to
 <code>tls</code> in the configuration below.</p>
 <pre><code>source tlsListener {
   max_connections(100)
@@ -275,7 +228,8 @@ destination networkLogs {
 };
 
 log { source(tlsListener); destination(networkLogs) };
-</code></pre><p>There are a few parameters that should be tuned to your specific log host.
+</code></pre>
+<p>There are a few parameters that should be tuned to your specific log host.
 Those being the <code>max_connections</code>, <code>so_rcvbuf</code> and <code>so_sndbuf</code>.</p>
 <p>The <code>max_connections</code> option is easy, it should be set based on the number of
 log clients you expect to have. There is memory overhead for each of these
@@ -294,7 +248,7 @@ system's <code>net.core.wmem_max</code> sysctl parameter. <code>so_sndbuf</code>
 important here than on the clients so it may also be omitted in the interest of
 saving memory.</p>
 <p>The other two considerations for this are largely administrator preference. The
-first, I prefer to tag my logs that come in through this mechanism as &lsquo;secure&rsquo;
+first, I prefer to tag my logs that come in through this mechanism as 'secure'
 since we received them authenticated, and encrypted. It is very unlikely they
 were tampered with in transit. This is used to differentiate with logs that
 came in through the UDP network mechanism from clients that don't support
@@ -335,7 +289,8 @@ of this)</p>
 };
 
 log { source(udpListener); destination(networkLogs) };
-</code></pre><p>Generally the devices that I have sending UDP only logs to my server have a
+</code></pre>
+<p>Generally the devices that I have sending UDP only logs to my server have a
 fairly low volume, if you do have high incoming volumes, you'll likely want to
 increase the <code>so_rcvbuf</code> option.</p>
 <p>I reuse the same destination target for this as used in the secure log
@@ -354,18 +309,21 @@ tag:</p>
 <pre><code>rewrite secureRemoval {
   clear_tag(secure);
 };
-</code></pre><p>The problem with the above is rewrites can't be applied directly to sources,
+</code></pre>
+<p>The problem with the above is rewrites can't be applied directly to sources,
 they have to be part of a log statement. There are advanced uses involving
 nested logs that may provide this but I haven't looked into it. The alternative
 is to specify a filter like the following and use it in places where I only
 care about the secure logs (which is currently my preferred choice):</p>
 <pre><code>filter secureOnly { tags(secure) and not tags(insecure); };
-</code></pre><p>It may also be useful to separately log these attempts to pollute the logs
+</code></pre>
+<p>It may also be useful to separately log these attempts to pollute the logs
 using something like the following:</p>
 <pre><code>destination spoofed { file(/var/log/network/spoofed_secure.log); };
 filter spoofedSecure { tags(secure, insecure); };
 log { source(tlsListener); filter(spoofedSecure); destination(spoofed); flags(final); }
-</code></pre><h2 id="sending-logs-securely">Sending Logs Securely</h2>
+</code></pre>
+<h2 id="sending-logs-securely">Sending Logs Securely</h2>
 <p>To match our secure reception, we need to be able to securely send logs to our
 central log host. Similar to the server portion of this you'll need to generate
 a client certificate &amp; key pair, as well as place the server's issuing cert (or
@@ -401,7 +359,8 @@ with names similar to <code>ce5e74ef.0</code>.</p>
 };
 
 log { source(local); destination(tlsLogServer); };
-</code></pre><p>You should replace <code>10.0.0.10</code> with the IP or hostname of your log host.</p>
+</code></pre>
+<p>You should replace <code>10.0.0.10</code> with the IP or hostname of your log host.</p>
 <p>As with the server side there is some level of tuning required for your
 specific setup. One that is missing but may be relevant is the <code>so_sndbuf</code>
 option which might need tuning from the defaults, but due to the buffer on the
@@ -434,7 +393,8 @@ mark notice whenever there has been no destination traffic. The following is an
 example of sending a mark after 15 minutes of inactivity to a destination:</p>
 <pre><code>mark_freq(900);
 mark_mode(dst_idle);
-</code></pre><p>There are more mark modes which can be specified and are detailed in chapter 9
+</code></pre>
+<p>There are more mark modes which can be specified and are detailed in chapter 9
 of the syslog-ng OSE admin guide (though <code>dst_idle</code>, <code>none</code>, and <code>periodical</code>
 are the only ones I find of value).</p>
 <h2 id="testing-sources-filters-and-destinations">Testing Sources, Filters, and Destinations</h2>
@@ -451,7 +411,8 @@ setting different ports you could potentially test them all at once).</p>
   system();
   internal();
 };
-</code></pre><p>I would add a syslog block like so:</p>
+</code></pre>
+<p>I would add a syslog block like so:</p>
 <pre><code>source local {
   system();
   internal();
@@ -463,9 +424,11 @@ setting different ports you could potentially test them all at once).</p>
     tags(testCase)
   );
 };
-</code></pre><p>After a restart, you can use the logger utility to send messages like so:</p>
-<pre><code>logger --udp --server 127.0.0.1 --port 5014 --tag syslogTest --id=$$ --priority local1.info &quot;Test message&quot;
-</code></pre><p>A few important details from this, when filtering on program name, you'll want
+</code></pre>
+<p>After a restart, you can use the logger utility to send messages like so:</p>
+<pre><code>logger --udp --server 127.0.0.1 --port 5014 --tag syslogTest --id=$$ --priority local1.info "Test message"
+</code></pre>
+<p>A few important details from this, when filtering on program name, you'll want
 to modify the <code>--tag</code> parameter. The message is the last quoted portion, the
 facility is the portion before the period in the priority, and the severity the
 portion after the dot.</p>
@@ -482,12 +445,13 @@ of your sources to the log entry.</p>
   file(
     /var/log/fallback.log
 
-    template(&quot;${ISODATE} ${SOURCE}-&gt;${FACILITY}.${LEVEL} ${PROGRAM} ${TAG} ${MSGID} ${MSG}\n&quot;)
+    template("${ISODATE} ${SOURCE}->${FACILITY}.${LEVEL} ${PROGRAM} ${TAG} ${MSGID} ${MSG}\n")
     template_escape(no)
   );
 };
 log { source(local); destination(fallback); flags(fallback); };
-</code></pre><h2 id="audit-log-filter">Audit Log Filter</h2>
+</code></pre>
+<h2 id="audit-log-filter">Audit Log Filter</h2>
 <p>If you have <a href="https://stelfox.net/notes/auditd/">auditd</a> configured to send it's messages to syslog via it's
 dispatcher it is useful to filter those out into their own file so the audit
 reporting tools can still operate on them. The following example is intended to
@@ -501,7 +465,7 @@ a <code>final</code> flag to prevent polluting the normal logs from the hosts.</
 
     # We need to strip out the headers so the utilities can understand the
     # format
-    template(&quot;${MSG}\n&quot;)
+    template("${MSG}\n")
     template_escape(no)
   );
 };
@@ -523,10 +487,12 @@ log {
 
   flags(final);
 }
-</code></pre><p>With this in place you can make use of the audit tools as normal, while on the
+</code></pre>
+<p>With this in place you can make use of the audit tools as normal, while on the
 log host, by <code>cat</code>'ing in appropriate file(s) into the tool. For an example:</p>
 <pre><code>cat /var/log/remote/testhost.example.tld/2017/10/19_audit.log | aureport --interpret --failed --executable
-</code></pre><h2 id="value-parsing-concern">Value Parsing Concern</h2>
+</code></pre>
+<h2 id="value-parsing-concern">Value Parsing Concern</h2>
 <p>The default value when using a parser on the incoming log data is to simply
 drop a message. I <em>NEVER</em> want to lose a message because of a bug in the
 parser. At the same time if a data source is expecting a type and it doesn't
@@ -535,7 +501,8 @@ through to the internal() messaging source and it simply won't show up at the
 destination (test this). Alternatively I can try and send it anyway by setting
 the following global option:</p>
 <pre><code>on-error(fallback-to-string);
-</code></pre><h2 id="log-rotation">Log Rotation</h2>
+</code></pre>
+<h2 id="log-rotation">Log Rotation</h2>
 <p>Syslog-ng doesn't handle log rotation on its own, but <a href="https://stelfox.net/notes/logrotate/">logrotate</a> will
 handle this quite well.</p>
 <h2 id="future-work">Future Work</h2>
@@ -548,75 +515,24 @@ its own (there are also more powerful tools such as Graylog as well).</p>
 destinations. They may be useful and should be looked into to see what kind of
 value I can get out of them.</p>
 <p>I may want to modify the group() and user() variable to drop permissions when I
-can&hellip; Reduce privileges wherever possible.</p>
+can... Reduce privileges wherever possible.</p>
 <p>Very good chance that the process accounting logs are something worth
 investigating, but that is beyond the scope of this page.</p>
 <p>For logs coming in from TLS authenticated clients we can inject the
 certificate's CN by modifying that destinations template to include
 <code>${.TLS.X509_CN}</code>. I'm not sure if that is worth while but could add extra
 validity information.</p>
-
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'><div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
-  <line x1="7" y1="7" x2="7" y2="7"/>
-  
-</svg>
-<span class='screen-reader-text'>Tags: </span><a class='tag' href='/tags/linux/'>linux</a>, <a class='tag' href='/tags/security/'>security</a></div>
-
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/cfssl/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>CFSSL</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/cron-daemon/'>
-        <span class='screen-reader-text'>Next post: </span>Cron Daemon<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

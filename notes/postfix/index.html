@@ -1,267 +1,216 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-By default Fedora/CentOS come with sendmail. Postfix is preferable as it was written with security in mind.
-Something that would be good to port over to Fedora/Postfix with a nice Stelfox spin, and it&#39;s follow up.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Postfix • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-By default Fedora/CentOS come with sendmail. Postfix is preferable as it was written with security in mind.
-Something that would be good to port over to Fedora/Postfix with a nice Stelfox spin, and it&#39;s follow up.'>
-<meta property='og:url' content='https://stelfox.net/notes/postfix/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Postfix • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/postfix/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Postfix</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-12 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
+      <div id="content">
+        
+<article class="post">
+  <h1>Postfix</h1><div class="post-content"><p>By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
 written with security in mind.</p>
-<p><a href="https://grepular.com/Automatically_Encrypting_all_Incoming_Email">Something that would be good</a> to port over to Fedora/Postfix with a nice
-Stelfox spin, and it's <a href="https://grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2">follow up</a>.</p>
-<p><a href="https://grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks">This</a> is what originally turned me on to that.</p>
-<p><a href="http://library.linode.com/email/postfix/dovecot-mysql-centos-5">This</a> will help setup a mail gateway.</p>
-<p>I can use <a href="http://library.linode.com/email/fetchmail">this</a> to centralize my email.</p>
-<p>This <a href="http://rimuhosting.com/support/settingupemail.jsp?mta=postfix">site</a> has some diagnostic information that may be useful.</p>
-<p>If I have rate limit issues sending too Yahoo, <a href="http://stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/">this article</a> can help
+<p><a href="https://www.grepular.com/Automatically_Encrypting_all_Incoming_Email">Something that would be good</a> to port over to Fedora/Postfix with a nice
+Stelfox spin, and it's <a href="https://www.grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2">follow up</a>.</p>
+<p><a href="https://www.grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks">This</a> is what originally turned me on to that.</p>
+<p><a href="https://www.linode.com/docs/guides/email-with-postfix-dovecot-and-mysql-on-centos-5/">This</a> will help setup a mail gateway.</p>
+<p>I can use <a href="https://www.linode.com/docs/guides/using-fetchmail-to-retrieve-email/">this</a> to centralize my email.</p>
+<p>This <a href="https://rimuhosting.com/support/settingupemail.jsp?mta=postfix">site</a> has some diagnostic information that may be useful.</p>
+<p>If I have rate limit issues sending too Yahoo, <a href="https://www.stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/">this article</a> can help
 solve it.</p>
 <p>As for Dovecot, while not being Postfix, is still an important piece of this
-puzzle. The <a href="http://wiki.dovecot.org/MailLocation/">Mail Location</a> for Dovecot will need to be considered, so far
-I'm leaning towards <a href="http://wiki2.dovecot.org/MailboxFormat/dbox">sdbox</a>, however, it is not compatible with mutt which
-is my ideal client. My next alternative would be the <a href="http://wiki.dovecot.org/MailboxFormat/Maildir">Maildir</a>.</p>
+puzzle. The <a href="https://doc.dovecot.org/configuration_manual/mail_location/">Mail Location</a> for Dovecot will need to be considered, so far
+I'm leaning towards <a href="https://doc.dovecot.org/admin_manual/mailbox_formats/dbox/">sdbox</a>, however, it is not compatible with mutt which
+is my ideal client. My next alternative would be the <a href="https://doc.dovecot.org/admin_manual/mailbox_formats/maildir/">Maildir</a>.</p>
 <h2 id="general-host-mta">General Host MTA</h2>
 <h2 id="local-network-mail-relay">Local Network Mail Relay</h2>
 <h2 id="generic-mail-relay">Generic Mail Relay</h2>
 <h3 id="configuration">Configuration</h3>
-<h4 id="etcpostfixmaincf">/etc/postfix/main.cf</h4>
+<h4 id="etc-postfix-main-cf">/etc/postfix/main.cf</h4>
 <p>The following configuration was used as a temporary mail relay. It does not
 filter spam and was done fast so there are probably problems in the
 configuration that were missed. Proceed with caution. A tool that was
 invaluable to me in diagnosing queueing issues was <code>qshape</code> which is part of
 the package <code>postfix-perl-scripts</code> in Fedora 15.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#a6e22e">myhostname</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">mailrelay.example.org</span>
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">myhostname = mailrelay.example.org
 
-<span style="color:#a6e22e">command_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/sbin</span>
-<span style="color:#a6e22e">daemon_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/libexec/postfix</span>
-<span style="color:#a6e22e">data_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/lib/postfix</span>
-<span style="color:#a6e22e">queue_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/spool/postfix</span>
+command_directory = /usr/sbin
+daemon_directory = /usr/libexec/postfix
+data_directory = /var/lib/postfix
+queue_directory = /var/spool/postfix
 
-<span style="color:#a6e22e">mail_owner</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">postfix</span>
-<span style="color:#a6e22e">default_privs</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">nobody</span>
-<span style="color:#a6e22e">setgid_group</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">postdrop</span>
+mail_owner = postfix
+default_privs = nobody
+setgid_group = postdrop
 
-<span style="color:#a6e22e">allow_percent_hack</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">no</span>
-<span style="color:#a6e22e">disable_vrfy_command</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">yes</span>
-<span style="color:#a6e22e">smtpd_helo_required</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">yes</span>
+allow_percent_hack = no
+disable_vrfy_command = yes
+smtpd_helo_required = yes
 
-<span style="color:#a6e22e">inet_interfaces</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">all</span>
-<span style="color:#a6e22e">inet_protocols</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">all</span>
+inet_interfaces = all
+inet_protocols = all
 
-<span style="color:#a6e22e">mydestination</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">$myhostname</span>
-<span style="color:#a6e22e">unknown_local_recipient_reject_code</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">550</span>
+mydestination = $myhostname
+unknown_local_recipient_reject_code = 550
 
-<span style="color:#a6e22e">mynetworks_style</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">subnet</span>
-<span style="color:#a6e22e">mynetworks</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">10.15.0.0/16, 127.0.0.0/8</span>
+mynetworks_style = subnet
+mynetworks = 10.15.0.0/16, 127.0.0.0/8
 
-<span style="color:#a6e22e">relay_domains</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">example.org, example.com</span>
-<span style="color:#a6e22e">relayhost</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">[10.15.1.65]</span>
+relay_domains = example.org, example.com
+relayhost = [10.15.1.65]
 
-<span style="color:#a6e22e">in_flow_delay</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">0</span>
+in_flow_delay = 0
 
-<span style="color:#a6e22e">alias_maps</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash:/etc/aliases</span>
-<span style="color:#a6e22e">alias_database</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash:/etc/aliases</span>
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
 
-<span style="color:#a6e22e">fast_flush_domains</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">$relay_domains</span>
+fast_flush_domains = $relay_domains
 
-<span style="color:#a6e22e">smtpd_banner</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">$myhostname ESMTP</span>
+smtpd_banner = $myhostname ESMTP
 
-<span style="color:#a6e22e">local_destination_concurrency_limit</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2</span>
-<span style="color:#a6e22e">default_destination_concurrency_limit</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">20</span>
+local_destination_concurrency_limit = 2
+default_destination_concurrency_limit = 20
 
-<span style="color:#a6e22e">sendmail_path</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/sbin/sendmail.postfix</span>
-<span style="color:#a6e22e">newaliases_path</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/bin/newaliases.postfix</span>
-<span style="color:#a6e22e">mailq_path</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/bin/mailq.postfix</span>
-</code></pre></div><h2 id="full-local-client-mta-w-relaying">Full Local Client MTA w/ Relaying</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#a6e22e">queue_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/spool/postfix</span>
-<span style="color:#a6e22e">command_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/sbin</span>
-<span style="color:#a6e22e">daemon_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/libexec/postfix</span>
-<span style="color:#a6e22e">data_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/lib/postfix</span>
-<span style="color:#a6e22e">mail_owner</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">postfix</span>
-<span style="color:#a6e22e">inet_interfaces</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">localhost</span>
-<span style="color:#a6e22e">inet_protocols</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">all</span>
-<span style="color:#a6e22e">mydestination</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">$myhostname, localhost</span>
-<span style="color:#a6e22e">local_recipient_maps</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">unix:passwd.byname $alias_maps</span>
-<span style="color:#a6e22e">unknown_local_recipient_reject_code</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">550</span>
-<span style="color:#a6e22e">mynetworks_style</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">host</span>
-<span style="color:#a6e22e">mynetworks</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">127.0.0.0/8</span>
-<span style="color:#a6e22e">relayhost</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">0x378.net</span>
-<span style="color:#75715e">#relayhost = [mail-01.i.0x378.net]</span>
-<span style="color:#a6e22e">alias_maps</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash:/etc/aliases</span>
-<span style="color:#a6e22e">alias_database</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hash:/etc/aliases</span>
-<span style="color:#a6e22e">debug_peer_level</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2</span>
+sendmail_path = /usr/sbin/sendmail.postfix
+newaliases_path = /usr/bin/newaliases.postfix
+mailq_path = /usr/bin/mailq.postfix
+</code></pre>
+<h2 id="full-local-client-mta-w-relaying">Full Local Client MTA w/ Relaying</h2>
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">queue_directory = /var/spool/postfix
+command_directory = /usr/sbin
+daemon_directory = /usr/libexec/postfix
+data_directory = /var/lib/postfix
+mail_owner = postfix
+inet_interfaces = localhost
+inet_protocols = all
+mydestination = $myhostname, localhost
+local_recipient_maps = unix:passwd.byname $alias_maps
+unknown_local_recipient_reject_code = 550
+mynetworks_style = host
+mynetworks = 127.0.0.0/8
+relayhost = 0x378.net
+#relayhost = [mail-01.i.0x378.net]
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+debug_peer_level = 2
 
-<span style="color:#a6e22e">debugger_command</span> <span style="color:#f92672">=</span><span style="color:#e6db74">
-</span><span style="color:#e6db74">         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
-</span><span style="color:#e6db74">         ddd $daemon_directory/$process_name $process_id &amp; sleep 5</span>
+debugger_command =
+         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+         ddd $daemon_directory/$process_name $process_id & sleep 5
 
-<span style="color:#a6e22e">sendmail_path</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/sbin/sendmail.postfix</span>
-<span style="color:#a6e22e">newaliases_path</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/bin/newaliases.postfix</span>
-<span style="color:#a6e22e">mailq_path</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/bin/mailq.postfix</span>
+sendmail_path = /usr/sbin/sendmail.postfix
+newaliases_path = /usr/bin/newaliases.postfix
+mailq_path = /usr/bin/mailq.postfix
 
-<span style="color:#a6e22e">setgid_group</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">postdrop</span>
-<span style="color:#a6e22e">html_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">no</span>
-<span style="color:#a6e22e">manpage_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/share/man</span>
-<span style="color:#a6e22e">sample_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/share/doc/postfix-2.10.2/samples</span>
-<span style="color:#a6e22e">readme_directory</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/usr/share/doc/postfix-2.10.2/README_FILES</span>
-</code></pre></div><p>You'll also want to append an administrator's email to the aliases table:</p>
-<pre><code>echo &quot;root:  admin+$(hostname -s)@i.0x378.net&quot; &gt;&gt; /etc/aliases
+setgid_group = postdrop
+html_directory = no
+manpage_directory = /usr/share/man
+sample_directory = /usr/share/doc/postfix-2.10.2/samples
+readme_directory = /usr/share/doc/postfix-2.10.2/README_FILES
+</code></pre>
+<p>You'll also want to append an administrator's email to the aliases table:</p>
+<pre><code>echo "root:  admin+$(hostname -s)@i.0x378.net" >> /etc/aliases
 newaliases
-</code></pre><p>And enable/start the service:</p>
+</code></pre>
+<p>And enable/start the service:</p>
 <pre><code>systemctl enable postfix.service
 systemctl start postfix.service
-</code></pre><h2 id="creating-a-catchall">Creating a catch-all</h2>
+</code></pre>
+<h2 id="creating-a-catch-all">Creating a catch-all</h2>
 <pre><code>yum install postfix -y
-</code></pre><p>Edit <code>/etc/postfix/main.cf</code></p>
+</code></pre>
+<p>Edit <code>/etc/postfix/main.cf</code></p>
 <p>Created lines:</p>
 <pre><code>disable_vrfy_command = yes
 myhostname = mail-01.i.0x378.net
 home_mailbox = Maildir/
 local_recipient_maps = unix:passwd.byname $alias_maps
 virtual_alias_maps = regexp:/etc/postfix/virtual_aliases
-</code></pre><p>Changed lines:</p>
+</code></pre>
+<p>Changed lines:</p>
 <pre><code>inet_interfaces = all
-</code></pre><p>Make sure <code>mydestination</code> is unset</p>
+</code></pre>
+<p>Make sure <code>mydestination</code> is unset</p>
 <p>Created the file <code>/etc/postfix/virtual_aliases</code> with the following contents:</p>
 <pre><code>/.*/  root
-</code></pre><p>Opened port <code>25/tcp</code> on the firewall.</p>
+</code></pre>
+<p>Opened port <code>25/tcp</code> on the firewall.</p>
 <p>Since the root account is going to be receiving mail for all accounts and all
 domains make sure that root is not being redirected to another email address in
 the <code>/etc/aliases</code> file. Make sure to run <code>newaliases</code> if you make a change to
 the file.</p>
 <p>Great success! The local root account is now receiving emails to literally any
-address. In production this probably shouldn't be the root user&hellip;.</p>
+address. In production this probably shouldn't be the root user....</p>
 <h2 id="notes-on-building-the-app">Notes on Building the App</h2>
 <pre><code>yum install ruby git rubygem-bundler ruby-devel make gcc openssl-devel \
   openssh-server -y
 
 systemctl enable sshd.service
 systemctl start sshd.service
-</code></pre><p>Temporarily allow HTTPS for gem installation&hellip;</p>
-<p>On development box&hellip;</p>
+</code></pre>
+<p>Temporarily allow HTTPS for gem installation...</p>
+<p>On development box...</p>
 <pre><code>rails new parcel_pot --skip-test-unit --skip-bundle
 cd parcel_pot
 
-cat &gt; Gemfile &lt;&lt;-EOS
+cat > Gemfile <<-EOS
 source 'https://rubygems.org'
 
 gem 'rails', '4.0.0'
 
 gem 'jquery-rails'
 gem 'turbolinks'
-gem 'jbuilder', '~&gt; 1.2'
+gem 'jbuilder', '~> 1.2'
 
 # Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~&gt; 3.0.0'
+# gem 'bcrypt-ruby', '~> 3.0.0'
 
 gem 'puma'
 
@@ -276,11 +225,11 @@ EOS
 bundle
 git init
 git add .
-git commit -m &quot;Initial commit&quot;
+git commit -m "Initial commit"
 
 cap install
 
-cat &gt; Capfile &lt;&lt;-EOS
+cat > Capfile <<-EOS
 require 'capistrano/setup'
 require 'capistrano/deploy'
 require 'capistrano/bundler'
@@ -289,27 +238,32 @@ require 'capistrano/rails/migrations'
 
 Dir.glob('lib/capistrano/tasks/*.cap').each { |r| import r } 
 EOS
-</code></pre><h2 id="potentially-useful-links">Potentially Useful Links</h2>
+</code></pre>
+<h2 id="potentially-useful-links">Potentially Useful Links</h2>
 <ul>
-<li><a href="http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby">http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby</a></li>
+<li>http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby</li>
 </ul>
 <h2 id="diagnosing-mail-issues">Diagnosing Mail Issues</h2>
 <p>To check the current state of the mail queue on a server you can run the
 following command:</p>
 <pre><code>postqueue -p
-</code></pre><p>or:</p>
+</code></pre>
+<p>or:</p>
 <pre><code>mailq
-</code></pre><p>The error messages often indicate what the problem is allowing you to find mail
+</code></pre>
+<p>The error messages often indicate what the problem is allowing you to find mail
 routing issues.</p>
 <p>To immediately flush the queue (attempt to resent all the mail:</p>
 <pre><code>postqueue -f
-</code></pre><p>Alternatively you can just delete all the deferred mail in the queue or all
+</code></pre>
+<p>Alternatively you can just delete all the deferred mail in the queue or all
 mail in the queue with one of the following two commands:</p>
 <pre><code>postsuper -d ALL deferred
 postsuper -d ALL
-</code></pre><h2 id="authenticated-mail-relay">Authenticated Mail Relay</h2>
+</code></pre>
+<h2 id="authenticated-mail-relay">Authenticated Mail Relay</h2>
 <ul>
-<li><a href="http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/">http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/</a></li>
+<li>http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/</li>
 </ul>
 <h2 id="greylisting">Greylisting</h2>
 <ul>
@@ -318,19 +272,23 @@ postsuper -d ALL
 </ul>
 <h2 id="ssl">SSL</h2>
 <pre><code>yum install cyrus-sasl -y
-</code></pre><p>Create the SSL certificate</p>
+</code></pre>
+<p>Create the SSL certificate</p>
 <pre><code>cd /etc/postfix
 openssl req -new -x509 -newkey rsa:4096 -keyout key.pem -nodes -days 365 -out cert.pem
 chmod 0600 *.pem
-</code></pre><p>Enable TLS on the SMTP server by adding the following set of commands:</p>
+</code></pre>
+<p>Enable TLS on the SMTP server by adding the following set of commands:</p>
 <pre><code>smtpd_use_tls = yes
 tls_random_source = dev:/dev/urandom
 smtpd_tls_cert_file = /etc/postfix/cert.pem
 smtpd_tls_key_file = /etc/postfix/key.pem
-</code></pre><h2 id="antivirus--spam-filtering">Anti-Virus &amp; Spam Filtering</h2>
+</code></pre>
+<h2 id="anti-virus-spam-filtering">Anti-Virus &amp; Spam Filtering</h2>
 <pre><code>yum install amavisd-new spamassassin clamav clamav-update \
   clamav-server-sysvinit -y
-</code></pre><p>I opened up <code>/etc/sysconfig/freshclam</code> and commented out the last line.</p>
+</code></pre>
+<p>I opened up <code>/etc/sysconfig/freshclam</code> and commented out the last line.</p>
 <p>Edited <code>$mydomain</code> variable in <code>/etc/amavisd/amavisd.conf</code> to be <code>0x378.net</code>
 and finally enable and start the services.</p>
 <pre><code>systemctl enable amavisd.service
@@ -339,7 +297,8 @@ systemctl enable spamassassin.service
 systemctl start amavisd.service
 systemctl start clamd.amavisd.service
 systemctl start spamassassin.service
-</code></pre><p>Additional things to consider:</p>
+</code></pre>
+<p>Additional things to consider:</p>
 <ul>
 <li>bogofilter</li>
 <li>spambayes</li>
@@ -351,104 +310,45 @@ systemctl start spamassassin.service
 The former is a fork of the latter, has fewer bugs, and is under a much tighter
 release schedule.</p>
 <pre><code>yum install opendkim -y
-</code></pre><h2 id="dmarc">DMARC</h2>
+</code></pre>
+<h2 id="dmarc">DMARC</h2>
 <h2 id="spf-validation">SPF Validation</h2>
 <p>There are two postfix SPF filters available as well. The first one is
 <code>perl-Mail-SPF</code> and the other is <code>pypolicyd-spf</code>. From what I can tell the
 latter is significantly more sophisticated and it provides a saner set of
 defaults so thats the choice I'm going with.</p>
 <p>The following is a set of the valid SPF keywords and their modifiers.</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>v=spf1</td>
-<td>Specifies this is an SPF record, and we're using version 1 of it.</td>
-</tr>
-<tr>
-<td>all</td>
-<td>Matches everything not specifically matched.</td>
-</tr>
-<tr>
-<td>a</td>
-<td>Match the A record of the domain by default, additionally an other domain can be specified, and a CIDR network prefix can be applied to the resolved address. (ex: a a:other.tld a/24 a:test.tld/24)</td>
-</tr>
-<tr>
-<td>mx</td>
-<td>Match the MX records of the domain by default, additional domains and CIDR suffixes can be applied like the a record. (ex: mx mx:other.tld mx/28 mx:something.tld/24)</td>
-</tr>
-<tr>
-<td>ip4</td>
-<td>IPv4 address or network (CIDR format) (ex: ip4:192.168.0.0/24)</td>
-</tr>
-<tr>
-<td>ip6</td>
-<td>IPv6 address or network (CIDR format) (ex: ip6:2001:51b2:200C::/64)</td>
-</tr>
-<tr>
-<td>ptr</td>
-<td>ptr, without an argument this validates that at least one of the domains resolved by looking up the client's IP address resolves back to the current domain. When a domain is provided it validates the reverse lookups match that domain instead.</td>
-</tr>
-<tr>
-<td>exists</td>
-<td>Matches successfully if the provided domain successfully resolves to an address (it doesn't matter what address). This is valuable for use with macros, allowing RBL-style reversed-IP lookups.</td>
-</tr>
-<tr>
-<td>include</td>
-<td>Additionally add the SPF record from another domain. If that other domain doesn't include an SPF record the result will be a PermError. (ex: include:example.com).</td>
-</tr>
-<tr>
-<td>redirect</td>
-<td>ignore this SPF record and use the SPF record at the provided domain instead. If the provided domain doesn't have an spf record the result is unknown. (ex: redirect=example.com)</td>
-</tr>
-<tr>
-<td>exp</td>
-<td>If an SMTP receiver rejects a message, it can direct non-conforming users to a web page that provides further instructions. When the domain is expanded; a TXT lookup is performed, the result of the TXT query is then macro expanded and shown to the sender (ex: exp=explain._spf.%{d})</td>
-</tr>
-</tbody>
-</table>
+<table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>v=spf1</td><td>Specifies this is an SPF record, and we're using version 1 of it.</td></tr>
+<tr><td>all</td><td>Matches everything not specifically matched.</td></tr>
+<tr><td>a</td><td>Match the A record of the domain by default, additionally an other domain can be specified, and a CIDR network prefix can be applied to the resolved address. (ex: a a:other.tld a/24 a:test.tld/24)</td></tr>
+<tr><td>mx</td><td>Match the MX records of the domain by default, additional domains and CIDR suffixes can be applied like the a record. (ex: mx mx:other.tld mx/28 mx:something.tld/24)</td></tr>
+<tr><td>ip4</td><td>IPv4 address or network (CIDR format) (ex: ip4:192.168.0.0/24)</td></tr>
+<tr><td>ip6</td><td>IPv6 address or network (CIDR format) (ex: ip6:2001:51b2:200C::/64)</td></tr>
+<tr><td>ptr</td><td>ptr, without an argument this validates that at least one of the domains resolved by looking up the client's IP address resolves back to the current domain. When a domain is provided it validates the reverse lookups match that domain instead.</td></tr>
+<tr><td>exists</td><td>Matches successfully if the provided domain successfully resolves to an address (it doesn't matter what address). This is valuable for use with macros, allowing RBL-style reversed-IP lookups.</td></tr>
+<tr><td>include</td><td>Additionally add the SPF record from another domain. If that other domain doesn't include an SPF record the result will be a PermError. (ex: include:example.com).</td></tr>
+<tr><td>redirect</td><td>ignore this SPF record and use the SPF record at the provided domain instead. If the provided domain doesn't have an spf record the result is unknown. (ex: redirect=example.com)</td></tr>
+<tr><td>exp</td><td>If an SMTP receiver rejects a message, it can direct non-conforming users to a web page that provides further instructions. When the domain is expanded; a TXT lookup is performed, the result of the TXT query is then macro expanded and shown to the sender (ex: exp=explain._spf.%{d})</td></tr>
+</tbody></table>
 <p>Expressions:</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>-</td>
-<td>Fail</td>
-</tr>
-<tr>
-<td>~</td>
-<td>Soft-fail (accept but mark)</td>
-</tr>
-<tr>
-<td>+</td>
-<td>Pass</td>
-</tr>
-<tr>
-<td>?</td>
-<td>Neutral</td>
-</tr>
-</tbody>
-</table>
+<table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td>-</td><td>Fail</td></tr>
+<tr><td>~</td><td>Soft-fail (accept but mark)</td></tr>
+<tr><td>+</td><td>Pass</td></tr>
+<tr><td>?</td><td>Neutral</td></tr>
+</tbody></table>
 <p>Install SPF stuff:</p>
 <pre><code>yum install pypolicyd-spf -y
-</code></pre><h2 id="senderid">SenderID</h2>
+</code></pre>
+<h2 id="senderid">SenderID</h2>
 <p>This is the Microsoft specific version of SPF. It's confusing as they have
 similar syntax. SenderID is obsolete but occasionally still causes issues when
 broken SenderID implementations attempt to validate a SPF record. There was
 some mention in the articles I read that SPF and SenderID operate at different
 layers, but they never went into details about it.</p>
-<p>Looking into the &lsquo;layers&rsquo; thing a little bit deeper, it seems that SPF use the
-SMTP protocol's &ldquo;MAIL FROM&rdquo; envelope address to perform the validation while
+<p>Looking into the 'layers' thing a little bit deeper, it seems that SPF use the
+SMTP protocol's &quot;MAIL FROM&quot; envelope address to perform the validation while
 SenderID uses the headers in the body content. Definitely smarter on the SPF
 front.</p>
 <h2 id="spam-trapping">Spam Trapping</h2>
@@ -472,16 +372,17 @@ a spammer, especially so if the name is obvious too a human reader.</p>
 remote mail server, it additionally sends a copy to static address. This is
 useful for monitoring for abuse from mail clients that are compromised (large
 number of bounce messages probably indicate a spam blast).</p>
-<p>To send these too the address <a href="mailto:'sent-bounces@example.tld">'sent-bounces@example.tld</a>&rsquo; you'll want to add the
+<p>To send these too the address 'sent-bounces@example.tld' you'll want to add the
 following lines too your postfix configuration:</p>
 <pre><code>notify_classes = resource, software, bounce
 bounce_notice_recipient = sent-bounces@example.tld
-</code></pre><p>The first line adds the &lsquo;bounce&rsquo; class of messages to the standard messages
+</code></pre>
+<p>The first line adds the 'bounce' class of messages to the standard messages
 sent too the postmaster for delivery issues related too the software or server.
 The second line redirects those specific messages to the email address shown
 above.</p>
 <h3 id="verp">VERP</h3>
-<p>This is a pretty nifty trick that has <a href="http://cr.yp.to/proto/verp.txt">been standardized</a> too a certain
+<p>This is a pretty nifty trick that has <a href="https://cr.yp.to/proto/verp.txt">been standardized</a> too a certain
 extent. The key too understanding how this works is knowing the difference
 between the various forms of the FROM address used by mail servers. The three
 are:</p>
@@ -507,39 +408,41 @@ human (mail client) responses if the email doesn't have a Reply-To header.</p>
 <li>
 <p>The Reply-To header is added by the sender (or the sender's software). This
 header is used to direct human responses to another address. It should be
-the first thing looked for when a user clicks on the &lsquo;Reply&rsquo; button in their
+the first thing looked for when a user clicks on the 'Reply' button in their
 client and should be used to populate the <code>To:</code> field on the new message.</p>
 </li>
 </ol>
-<p>VERP takes advantage of the &lsquo;Return-Path&rsquo; header to help direct bounces too an
+<p>VERP takes advantage of the 'Return-Path' header to help direct bounces too an
 automated system. While this can be used by things like mailing list systems
 too automatically unsubscribe bad or no longer active email addresses, it can
 also be used too detect compromised accounts and abuse of your mail server.</p>
-<p>By combining a recipient delimiter in the &lsquo;Return-Path&rsquo;, you could add unique
+<p>By combining a recipient delimiter in the 'Return-Path', you could add unique
 bounce message processing detection based on any individual metric you want.
 Usually a unique value for the receiver of the original message is the most
 relevant.</p>
 <p>As it stands Postfix supports VERP both for receiving, and for sending. Sending
 is trickier as the client that is initiating the SMTP session for the mail to
 get relayed has too explicitely enable VERP for that message by appending
-&lsquo;VERP&rsquo; too the &lsquo;MAIL FROM:&rsquo; component. This is not ideal for general tracking
+'VERP' too the 'MAIL FROM:' component. This is not ideal for general tracking
 and I haven't found a solution for it yet.</p>
 <p>For receipt of these VERP bounces I prefer setting up a dedicated address that
-I can pass too a script for processing such as <a href="mailto:'bounce@example.tld">'bounce@example.tld</a>&rsquo;. Make sure
+I can pass too a script for processing such as 'bounce@example.tld'. Make sure
 this address exists if before taking the following actions.</p>
 <p>This method makes use of postfix transports too handle bounces speciality.
 After the address has been created ensure you have the recipient delimiter
 option configured in your <code>main.cf</code> file like so:</p>
 <pre><code>recipient_delimiter = +
-</code></pre><p>We'll need to define a new transport, which will send the mail through the
+</code></pre>
+<p>We'll need to define a new transport, which will send the mail through the
 script or software that will be handling the bounce messages. This will receive
 the messages via STDIN, and can take any arguments you want too provide. I use
 the bounce extension as the only argument too my script which results in an
-addition to my &lsquo;master.cf&rsquo; file that looks like the following:</p>
+addition to my 'master.cf' file that looks like the following:</p>
 <pre><code>bounce   unix  -       n       n       -       -       pipe
   flags=RX user=nobody argv=/srv/scripts/mail_bounce_handler ${extension}
-</code></pre><p>The &lsquo;R&rsquo; flag ensures that a &lsquo;Return-Path&rsquo; message header is added too the
-message before passing it into the script. The &lsquo;X&rsquo; flag is used specifically by
+</code></pre>
+<p>The 'R' flag ensures that a 'Return-Path' message header is added too the
+message before passing it into the script. The 'X' flag is used specifically by
 me for my script, this flag indicates that this transport performs final
 delivery of the message. If you want to additionally have these bounce messages
 end up in a mailbox you'll want too leave this out.</p>
@@ -548,71 +451,30 @@ will be executed as the nobody user with the extension passed as the sole
 parameter too the script. You'll want too change the path of argv too the path
 of your script.</p>
 <p>If you don't already have a transports map (otherwise just add this tranport
-and remap it if it's a hash type), create the file &lsquo;/etc/postfix/transport&rsquo; and
+and remap it if it's a hash type), create the file '/etc/postfix/transport' and
 add the following contents:</p>
 <pre><code>bounce@example.tld    bounce:
-</code></pre><p>And build the hash map:</p>
+</code></pre>
+<p>And build the hash map:</p>
 <pre><code>postmap /etc/postfix/transport
-</code></pre><p>Finally make sure postfix is aware of your transport map (the following line
-should be in your &lsquo;main.cf&rsquo; file).</p>
+</code></pre>
+<p>Finally make sure postfix is aware of your transport map (the following line
+should be in your 'main.cf' file).</p>
 <pre><code>transport_maps = hash:/etc/postfix/transport
-</code></pre><p>Reload your postfix configuration and your script should now be handling all
-mail sent too <a href="mailto:'bounce@example.tld">'bounce@example.tld</a>&rsquo;.</p>
-
+</code></pre>
+<p>Reload your postfix configuration and your script should now be handling all
+mail sent too 'bounce@example.tld'.</p>
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/puppet/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Puppet</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/password-security/'>
-        <span class='screen-reader-text'>Next post: </span>Password Security<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-

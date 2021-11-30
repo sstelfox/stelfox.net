@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1>Cron Daemon</h1><div class="post-content"><p>Cron is a pretty standard utility and there isn't much to it. I generally use
+<code>cronie</code> as my cron daemon with the associated <code>anacron</code>. Cron runs tasks
+periodically, and anacron helps ensure that a missed task will get run if it
+was off or powercycled when it would have otherwise run.</p>
+<span id="continue-reading"></span><h2 id="file-format">File Format</h2>
+<p>The config format differs slightly between crontabs, regular cron files, and
+anacron entries. At the beginning of all the files environment variables can be
+set using <code>key=value</code> pairs to control the behavior of <code>cron</code> and <code>anacron</code>
+followed by entries for that file one to a line.  The first five portions of
+the cron and crontab entry format consist of numbers, steps, ranges, lists, or
+the wildcard <code>*</code> character.</p>
+<p>The fields are in order minutes (can be 0-59), hours (0-23), date (1-31), month
+(1-12), and day of week (0-6, 0 being Sunday, and 6 being Saturday). The
+wildcard character matches all values for the field. A hyphen can be used to
+specify a range of numbers (such as 0-5 for the first six hours of a day). A
+comma can be used to specify several numbers or ranges (0,20-23 for minutes
+would be at the top of the hour and each of the four minutes between 20 and
+23). The last one is step values which specifies every Nth value starting at
+the lower end of the range (*/5 is every five minutes, 3-23/7 is every seventh
+hour starting at 3 which would be 3, 10 and 17).</p>
+<p>For cron files the next field is the username. The username is omitted from
+crontabs as that is implicitely implied by the user that created it. And lastly
+is the command that should be run. The following is a sample cron config that
+you definitely should not put on your system:</p>
+<pre><code># /etc/cron.d/sample
+
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+HOME=/
+
+# On the 23rd minute after midnight the next time there is a Friday the 13th...
+# execute a fork bomb... spoooookkyy alerts
+23 0 13 * 5 root /bin/bash -c ':(){ :|: & };:'
+</code></pre>
+<p>Anacron has a different file format and can be found at <code>/etc/anacrontab</code>.
+The variables at the header are generally the same The
+format is period in days, the delay in minutes for anacron to execute the job
+(can be useful to spread the jobs around), a unique job identifier name for
+logging purposes, and finally a script or command to be run. A sample might
+look like:</p>
+<pre><code># /etc/anacrontab
+
+SHELL=/bin/sh
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+
+# the maximal random delay added to the base delay of the jobs
+RANDOM_DELAY=45
+# the jobs will be started during the following hours only
+START_HOURS_RANGE=3-22
+
+# Period   Delay  Job ID        Command
+1          5      cron.daily    nice run-parts /etc/cron.daily
+7          25     cron.weekly   nice run-parts /etc/cron.weekly
+@monthly   45     cron.monthly  nice run-parts /etc/cron.monthly
+</code></pre>
+<h2 id="restricting-access">Restricting Access</h2>
+<p>Tasks executed through cron will be executed with the privileges of the user
+who created the crontab but can be done while they're not present. It is
+generally a good idea to whitelist users to prevent abuse of resources on a
+system. In practice this tends to be pretty easy to manage as most interactive
+users tend to not need scheduled tasks like this (IMHO at least).</p>
+<p>The primary means of restricting access is through the <code>/etc/cron.allow</code>, and
+<code>/etc/cron.deny</code>. If the &quot;allow&quot; file exists the &quot;deny&quot; file will be ignored.
+If neither exist then all users will be able to use <code>cron</code>. The files
+themselves consist of one username per line with no leading or trailing
+whitespace.</p>
+<p>Starting out with an empty whitelist still allows for root to run cron tasks
+but prevents any user on that system from executing them until added. This can
+be done with the following command:</p>
+<pre><code>touch /etc/cron.allow
+</code></pre>
+<p>You can confirm the restriction from any user account by running the following
+command (you'll see the same error):</p>
+<pre><code>$ crontab -l
+You (testuser) are not allowed to use this program (crontab)
+See crontab(1) for more information
+</code></pre>
+<p>The allow and deny files don't support specifying groups (which would generally
+make access management to these significantly easier). This can be worked
+around using the <code>pam_listfile</code> module but doesn't provide as much context when
+a user is prevented to run a cron job. A user who is not permitted to run cron
+jobs through PAM will have their configured jobs silently fail (the system log
+will reflect the failure).</p>
+<p>Add the following line to <code>/etc/pam.d/crond</code> session section:</p>
+<pre><code>session    required   pam_listfile.so item=group sense=allow file=/etc/cron.groups.allow onerr=fail
+</code></pre>
+<p>Create a file <code>/etc/cron.groups.allow</code> with the following contents:</p>
+<pre><code>crontab
+</code></pre>
+<p>This assumes the group <code>crontab</code> already exists on your system. To allow a user
+to run cron entries they now just need to be added to the <code>crontab</code> group. If
+they are not, they'll still be able to edit, view, and clear their crontab
+entries but when they attempt to execute, lines like the following will show up
+in the system logs:</p>
+<pre><code>2017-10-26T22:52:01.000000+00:00 collapsed-autumn-sound crond[706]: pam_listfile(crond:session): Refused user testuser for service crond
+2017-10-26T22:52:01.000000+00:00 collapsed-autumn-sound crond[702]: (testuser) PAM ERROR (Authentication failure)
+2017-10-26T22:52:01.000000+00:00 collapsed-autumn-sound crond[702]: (testuser) FAILED to open PAM security session (Authentication failure)
+</code></pre>
+<h2 id="ensure-tasks-don-t-overlap">Ensure Tasks Don't Overlap</h2>
+<p>One trick I've picked up to ensure that a periodically running long command
+doesn't overlap with itself (for example a backup script, or scrubbing a large
+ZFS pool).</p>
+<p>This can be done with the <code>flock</code> utility, it creates an empty file with a lock
+on it that is released when your command or script is finished executing. If it
+can't obtain the lock, it simply won't run your script and return a bad exit
+code. Be sure to use a unique lock file for each task.</p>
+<p>An example of how to do this would look in a user's crontab would look like the
+following:</p>
+<pre><code>0 0 * * * /usr/bin/flock --nonblock /tmp/backup.lock $HOME/scripts/full_backup.sh
+</code></pre>
+<p>You can have flock wait for any number of seconds by replacing <code>--nonblock</code>
+with <code>--wait 300</code> (300 being five minutes).</p>
+</div>
+</article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

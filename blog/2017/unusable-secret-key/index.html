@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2017&#x2F;unusable-secret-key&#x2F;">Unusable Secret Key</a></h1>
+
+  <div class="post-content"><p>I use a Yubikey NEO to store subkeys used for signing and authentication. I
+started experiencing a weird issue with it. It coincided with me rebuilding my
+system so diagnosing it ended up being harder than normal. The behavior I
+experienced allowed me to use the key to authenticate (SSH'ing worked fine) but
+any attempt to sign new data resulted in an 'Unusuable secret key' error. For
+git this resulted in the following message:</p>
+<span id="continue-reading"></span><pre><code>gpg: skipped "Sam Stelfox <sstelfox@bedroomprogrammers.net>": Unusable secret
+key
+gpg: signing failed: Unusable secret key
+error: gpg failed to sign the data
+fatal: failed to write commit object
+</code></pre>
+<p>There is a second Yubikey I use on occasion that contains my companies software
+signing key. When reviewing my available secret keys, it seemed like GPG was
+listing those private keys as available when they weren't. That was a red
+herring and unrelated (though still likely a bug). After resetting my GPG
+config as well as the agent, and re-importing my key the private keys were not
+be listed at all.</p>
+<p>Ultimate the issue was that all of my subkeys were expired and only became
+visible when I used the following command:</p>
+<pre><code>$ gpg2 --list-options show-unusable-subkeys --list-keys
+/home/sstelfox/.gnupg/pubring.kbx
+---------------------------------
+pub   rsa4096/0x30856D4EA0FFBA8F 2016-04-26 [C] [expires: 2019-12-01]
+      Key fingerprint = DC75 C8B8 7434 4360 FB30  3FC9 3085 6D4E A0FF BA8F
+uid                   [ unknown] Sam Stelfox <sstelfox@bedroomprogrammers.net>
+uid                   [ unknown] Sam Stelfox <sam@stelfox.net>
+uid                   [ unknown] Sam Stelfox <sam@pwnieexpress.com>
+uid                   [ unknown] [jpeg image of size 2803]
+sub   rsa2048/0x5E2FD479ABDD395A 2016-04-26 [S] [expired: 2017-12-01]
+sub   rsa2048/0xD87BD950C29A0FA2 2016-04-26 [E] [expired: 2017-12-01]
+sub   rsa2048/0x4B218A4FB733A150 2016-04-26 [A] [expired: 2017-12-01]
+</code></pre>
+</div><p class="meta">Posted on <span class="postdate">2017-12-04</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

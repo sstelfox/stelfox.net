@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2017&#x2F;a-krack-in-the-defenses&#x2F;">A KRACK In the Defenses</a></h1>
+
+  <div class="post-content"><p>An advisory from US CERT has been circulating for the last week about a
+protocol level flaw in WPA &amp; WPA2. The advisory itself was:</p>
+<span id="continue-reading"></span>
+<blockquote>
+<p>US-CERT has become aware of several key management vulnerabilities in the
+4-way handshake of the Wi-Fi Protected Access II (WPA2) security protocol.
+The impact of exploiting these vulnerabilities includes decryption, packet
+replay, TCP connection hijacking, HTTP content injection, and others. Note
+that as protocol-level issues, most or all correct implementations of the
+standard will be affected. The CERT/CC and the reporting researcher KU
+Leuven, will be publicly disclosing these vulnerabilities on 16 October 2017.</p>
+</blockquote>
+<p>Details of the vulnerability have been <a href="https://www.krackattacks.com/">released today</a>, and paint a pretty
+horrifying picture. Ultimately this is an issue with a mechanism for dealing
+with lost packets during the initial 4-way key negotiation and the client's
+behavior when they receive one of these packets after they're session is
+already established.</p>
+<p>Almost all WiFi devices out there are vulnerable to this attack and patches
+should be applied as soon as they are available. Some very quick and important
+notes I'd like to make available for people:</p>
+<ul>
+<li>This is an active against clients</li>
+<li>WPA &amp; WPA2 both personal and enterprise are effected</li>
+<li>The WiFi association key (your network's passphrase) is safe, this attack
+breaks a per-client session key.</li>
+<li>Assume all your traffic is being sent in plain text and can be manipulated by
+an attacker until you have patched.</li>
+</ul>
+<p>If you have a VPN available to your client devices, having it active will
+protect your traffic from this attack.</p>
+</div><p class="meta">Posted on <span class="postdate">2017-10-16</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

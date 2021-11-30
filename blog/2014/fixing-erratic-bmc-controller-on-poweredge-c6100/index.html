@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2014&#x2F;fixing-erratic-bmc-controller-on-poweredge-c6100&#x2F;">Fixing Erratic BMC Controller on PowerEdge C6100</a></h1>
+
+  <div class="post-content"><p>I randomly started experiencing an issue with one blade in one of my PowerEdge
+C6100 blades. It wouldn't obey all commands issued too it via IPMI or through
+the BMC's web interface. Additionally the blade would randomly power on when
+off, and the front light would consistently blink as if a hardware fault was
+detected.</p>
+<span id="continue-reading"></span>
+<p>This has been bothering me for a while, but it was my spare blade and wasn't
+affecting my lab in anyway so I've ignored it. I finally needed it for a
+project and looked into what may be causing the issue.</p>
+<p>A <a href="https://forums.servethehome.com/index.php?threads/dell-c6100-anyone-brick-a-board-yet.1448/">thread</a> on the Serve the Home forums lead to me too a solution, even
+though my symptoms didn't quite match up with what I was experiencing.</p>
+<p>I downloaded the <a href="https://ftp.dell.com/Manuals/all-products/esuprt_ser_stor_net/esuprt_cloud_products/poweredge-c6100_Owner%27s%20Manual_en-us.pdf">PowerEdge C6100 Owner's Manual</a> for the jumper
+information, and found it too be redundant. The board itself has each of the
+jumpers clearly labeled.</p>
+<p>After pulling the affected chassis out of the server I connected the pins for
+the CMOS reset, CMOS password reset, and system reset for about 15 seconds. I
+pulled the jumpers, reinstalled the blade and it's happy once again. Problem
+solved.</p>
+<p><em>Update:</em> After performing a few commands via the web interface the issue
+returned. I'm still looking for a solution too the problem.</p>
+<p><em>Update 2:</em> I'm now suspecting that the issue may be related too me not
+updating the FSB, which is responsible for handling power management of
+individual nodes as well as reporting temperature and command response from the
+BMC.</p>
+</div><p class="meta">Posted on <span class="postdate">2014-06-30</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

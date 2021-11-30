@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2014&#x2F;modifying-the-hosts-file-in-a-docker-container&#x2F;">Modifying the Hosts File in a Docker Container</a></h1>
+
+  <div class="post-content"><p>Before I describe the issue that I encountered, let me be very clear. This hack
+is <em>potentially dangerous and should absolutely only be done in development
+environments</em>. This won't affect your host system, only the docker container so
+the most damage you'll do is prevent hostname and possibly user/group lookups
+within the container itself.</p>
+<span id="continue-reading"></span>
+<p>Alright with that out of the way, I was actively working on a codebase that
+uses subdomains as part of the identifier. Rather than setup a full DNS server,
+point my local system at it and load in the domains I wanted to simply modify
+the /etc/hosts file inside the environment.</p>
+<p>Docker mounts an /etc/hosts file inside it's containers, read-only, and the
+container's 'root' user has had it's mount permissions revoked so it's not able
+to be modified. Other users have encountered this issue, and a <a href="https://stackoverflow.com/questions/19414543/how-can-i-make-etc-hosts-writable-by-root-in-a-docker-container">novel
+workaround was put forward</a>. The solution however makes use of Perl, and is
+specific too Ubuntu base systems.</p>
+<p>I'll explain the solution after showing a more general way to accomplish the
+same thing. Different linux systems will store their libraries in different
+directory structures. CentOS is different from Fedora, which is different from
+Ubuntu and Debian. All of them name their libraries, in this case we're looking
+for 'libnss_files.so.2'.</p>
+<p>You can find where your copy of this library lives with the following command.
+This should be run inside the docker container that you want to modify the
+/etc/hosts file in.</p>
+<pre><code>find / -name libnss_files.so.2 -print 2> /dev/null
+</code></pre>
+<p>Pay attention to the path, multiple files may show up and you want the one that
+matches your system's running kernel (generally x86_64 systems will have their
+libraries in a lib64 directory).</p>
+<p>Once you've found this add the following lines to your <code>Dockerfile</code>. Make sure
+you modify the path in the copy in the first line to the path of your copy of
+the library. Once done you'll use the /var/hosts file to modify your hosts file
+instead.</p>
+<pre><code>RUN mkdir -p /override_lib && cp /etc/hosts /var/ && cp /usr/lib64/libnss_files.so.2 /override_lib
+RUN sed -ie 's:/etc/hosts:/var/hosts:g' /override_lib/libnss_files.so.2
+ENV LD_LIBRARY_PATH /override_lib
+</code></pre>
+<p>So what is this actually doing? On linux systems, name configurations such as
+DNS, username, and group lookups are generally handled by the <code>nss</code> or name
+service switch configuration tools including the hosts file. The library that
+we're copying and modifying is a very specific to reading from files on the
+system and includes the default paths to these files.</p>
+<p>Generally you have to be very careful when you're manipulating strings within
+compiled libraries. The length of the string is encoded along with it, so at a
+minimum it's important that the string is <em>the same length or less</em>. You can
+get away with less but it requires additionally writing an end of string
+character as well.</p>
+<p>Too make this hack simple, we're simply replacing the 'etc' with 'var', both
+systems directories that regular users generally should have read access but
+not write access too.</p>
+<p>Finally we need to tell all programs that need to perform lookups using
+hostnames in the hosts file to make use of our modified library instead of the
+system one. Linux will look for shared libraries at runtime in any paths set in
+in the LD_LIBRARY_PATH (colon delimited just like PATH) and this doesn't
+require any privileges too set.</p>
+<p>And the result? An editable hosts file, with no extra services. I can't stress
+enough though, there could be bad ramifications from modifying libraries this
+way. This is definitely not a 'production ready' hack.</p>
+</div><p class="meta">Posted on <span class="postdate">2014-06-03</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

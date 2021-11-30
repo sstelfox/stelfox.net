@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2014&#x2F;extracting-content-from-markdown&#x2F;">Extracting Content From Markdown</a></h1>
+
+  <div class="post-content"><p>Recently I've been playing around with building a pure javascript full text
+search engine for static content sites like this one. One of the challenges
+with doing this has been working around the Markdown markup embedded in the
+written content.</p>
+<span id="continue-reading"></span>
+<p>Most of the markdown syntax can be stripped out simply by removing all
+non-alphanumeric characters from the document and move on. This doesn't solve
+one of the bigger challenges I've experienced... Code blocks. Code blocks have
+plenty of regular English-ish words and can easily skew keyword detection
+within it.</p>
+<p>I didn't want to write my own Markdown parser, so I started with the one
+already in use by this site's renderer (<a href="https://github.com/vmg/redcarpet">redcarpet</a>). Another GitHub user,
+<a href="https://github.com/toupeira">Markus Koller or toupeira on GitHub</a> provided <a href="https://github.com/vmg/redcarpet/issues/79">the basis</a> for the code
+that became the redcarpet &quot;StripDown&quot; formatter, which was designed to
+essentially render a Markdown document without the markup.</p>
+<p>It does almost exactly what I want, except it still outputs raw code inside the
+content. The following code sample includes a modified version that excludes
+any code blocks. My content is also formatted inside the markdown documents to
+never be longer than 80 lines, this also turns individual paragraphs and list
+items into individual lines for paragraph detection.</p>
+<pre data-lang="ruby" class="language-ruby "><code class="language-ruby" data-lang="ruby">require 'redcarpet'
+require 'redcarpet/render_strip'
+
+class ContentRenderer < Redcarpet::Render::StripDown
+  def block_code(*args)
+    nil
+  end
+
+  def list_item(content, list_type)
+    content.gsub("\n", " ") + "\n\n"
+  end
+
+  def paragraph(text)
+    text.gsub("\n", " ") + "\n\n"
+  end
+end
+
+markdown = Redcarpet::Markdown.new(ContentRenderer, fenced_code_blocks: true)
+puts markdown.render(File.read('sample_markdown_article.md'))
+</code></pre>
+<p>The above code will print out just the content of the markdown formatted file
+'sample_markdown_article.md'.</p>
+</div><p class="meta">Posted on <span class="postdate">2014-05-30</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

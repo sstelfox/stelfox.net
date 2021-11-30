@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
+      </div>
+      <div id="content">
+        
+<article class="post">
+  <h1><a href="https:&#x2F;&#x2F;stelfox.net&#x2F;blog&#x2F;2014&#x2F;spf-and-dkim-records-in-route-53&#x2F;">SPF &amp; DKIM Records in Route 53</a></h1>
+
+  <div class="post-content"><p>I'm going to do a more detailed post on emailing from Amazon's infrastructure
+soon, but in the meantime I wanted to quickly throw out solutions too a couple
+of problems I encountered. These are all specific too Amazon's Route 53, and
+most are user error (myself).</p>
+<span id="continue-reading"></span><h2 id="spf-invalid-characters-or-format">SPF Invalid Characters or Format</h2>
+<p>After generating my SPF record, I jumped into Route 53, created a new record
+pasted in my record, attempted to save and received the following message:</p>
+<blockquote>
+<p>The record set could not be saved because:</p>
+<ul>
+<li>The Value field contains invalid characters or is in an invalid format.</li>
+</ul>
+</blockquote>
+<p>I was using the SPF record type at a time (see the next section) and assumed
+that I had messed up the format of my record in some way. I banged my head
+against the wall and through RFCs thoroughly before I found the solution...</p>
+<p>Solution: Wrap your SPF records in quotation characters.</p>
+<h2 id="no-spf-record-found-validation-failure">No SPF Record Found / Validation Failure</h2>
+<p>Since I have my DMARC policy in place (I'll cover this in my email follow up),
+I receive daily domain reports from Google whenever something fails validation
+about my domain. After switching to Route 53 for DNS the <code>authresult</code> component
+started showing up as fail for SPF.</p>
+<p>Testing around a few online SPF validators indicated that none of them were
+able to see my new SPF record, and there had been plenty of time for it too
+propagate.</p>
+<p>The SPF resource record type (RRTYPE 99) is available in Route 53 even though
+<a href="https://tools.ietf.org/html/rfc6686#section-3.1">the record type has been deprecated</a>. Not being familiar with this
+particular decision, I assumed I should be using it <em>instead</em> of the TXT record
+I've used for every other domain, and it would be handled correctly or more
+intelligently.</p>
+<p>Solution: Either switch the SPF record too a TXT record or, my preference,
+duplicate it into a TXT record so you have both.</p>
+<h2 id="invalid-dkim-record">Invalid DKIM record</h2>
+<p>This one had me scratching my head for a while. This was my first time
+deploying DKIM on a domain that I was not running a Bind name server for.
+OpenDKIM is nice enough too generate a Bind record for you which works
+perfectly. It's output looks like the following:</p>
+<pre><code>default._domainkey.example.tld.   IN      TXT     ( "v=DKIM1; k=rsa; t=y; s=email; "
+          "p=MIHfMA0GCSqGSIb3DQEBAQUAA4HNADCByQKBwQC2Cwpa/+Xhfkzn0QnyQoxRwoJPb+s51dIt9UtFLMlMFuYa/k3GBwZ7UWeyAaQJ3RibSzKV/YwgFuMrzyISrLNSuL2k1bQlQQG8nl23Mu9Mowcb+mV2/3G7roshK6kOLNA0IV2SBl8/0UoNZR/x7c1lzVtVqdj0vW1SsJzgGfbt4LGRvCPyjdg+SLpYtOd/Li4Y1pvHgSRKQRrklpKeJo"
+          "nJQ4+lXWqzYtuX9xdNH46ck2HUl56Ob4cy3/gYCJBWrAsCAwEAAQ==" )  ; ----- DKIM key default for example.tld
+</code></pre>
+<p>Copying and pasting everything between the parentheses in the value field and
+pasting them into Route 53 works flawlessly. The catch? This won't be treated
+as a single record, but three individual responses. None of which are complete
+and valid DKIM records.</p>
+<p>This happens because Route 53's value field treats newlines as separate
+records.</p>
+<p>Solution: Turn it into one long string so it isn't covering multiple lines
+right? Not quite...</p>
+<h2 id="txtrdatatoolong">TXTRDATATooLong</h2>
+<p>Combining the DKIM key into one string like so:</p>
+<pre><code>"v=DKIM1; k=rsa; t=y; s=email; p=MIHfMA0GCSqGSIb3DQEBAQUAA4HNADCByQKBwQC2Cwpa/+Xhfkzn0QnyQoxRwoJPb+s51dIt9UtFLMlMFuYa/k3GBwZ7UWeyAaQJ3RibSzKV/YwgFuMrzyISrLNSuL2k1bQlQQG8nl23Mu9Mowcb+mV2/3G7roshK6kOLNA0IV2SBl8/0UoNZR/x7c1lzVtVqdj0vW1SsJzgGfbt4LGRvCPyjdg+SLpYtOd/Li4Y1pvHgSRKQRrklpKeJonJQ4+lXWqzYtuX9xdNH46ck2HUl56Ob4cy3/gYCJBWrAsCAwEAAQ=="
+</code></pre>
+<p>And attempting to save results in the following error message:</p>
+<pre><code>Invalid Resource Record: FATAL problem: TXTRDATATooLong encountered at ...`<snip>`
+</code></pre>
+<p>Now we're left in a tricky spot. After some research the reason behind this is
+clear, and makes sense. Though it is another poor usability bug in the way
+Amazon's Route 53 behaves. Individual DNS UDP packets are limited too 255
+characters for their response.</p>
+<p>Too properly deliver records longer than that DNS servers are supposed to break
+up the response into chunks. Properly implemented clients combine these chunks
+together (with no spaces, newlines or other characters added). What this means
+is that the record can be broken up transparently behind the scenes anywhere in
+the message and the client will put it back together correctly.</p>
+<p>The Route 53 entry form won't handle this for you though, and in hindsight it
+looks like Bind might not do it for you though I suspected that was more for
+readability of zone files rather than a technical limitation (and I haven't
+tested whether Bind is intelligent enough too handle just a long string).</p>
+<p>Solution: Take the original output of Bind between the parentheses and just
+remove the newline characters, leave the quotation marks and spaces between the
+sections like the following sample and you'll be golden:</p>
+<pre><code>"v=DKIM1; k=rsa; t=y; s=email; " "p=MIHfMA0GCSqGSIb3DQEBAQUAA4HNADCByQKBwQC2Cwpa/+Xhfkzn0QnyQoxRwoJPb+s51dIt9UtFLMlMFuYa/k3GBwZ7UWeyAaQJ3RibSzKV/YwgFuMrzyISrLNSuL2k1bQlQQG8nl23Mu9Mowcb+mV2/3G7roshK6kOLNA0IV2SBl8/0UoNZR/x7c1lzVtVqdj0vW1SsJzgGfbt4LGRvCPyjdg+SLpYtOd/Li4Y1pvHgSRKQRrklpKeJo" "nJQ4+lXWqzYtuX9xdNH46ck2HUl56Ob4cy3/gYCJBWrAsCAwEAAQ=="
+</code></pre>
+<p>Hope this helps someone else!</p>
+</div><p class="meta">Posted on <span class="postdate">2014-07-30</span></p></article>
+
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

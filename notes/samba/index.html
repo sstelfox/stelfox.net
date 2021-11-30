@@ -1,282 +1,184 @@
 <!DOCTYPE html>
-<html lang='en'><head>
-  <meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<meta name='description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
-SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share.'>
-<meta name='theme-color' content='#ffcd00'>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 
-<meta property='og:title' content='Samba • Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:description' content='Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
-SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share.'>
-<meta property='og:url' content='https://stelfox.net/notes/samba/'>
-<meta property='og:site_name' content='Sam Stelfox&#39;s Thoughts &amp; Notes'>
-<meta property='og:type' content='article'><meta property='article:section' content='notes'><meta name='twitter:card' content='summary'>
+    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
+    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
 
-<meta name="generator" content="Hugo 0.61.0-DEV" />
-
-  <title>Samba • Sam Stelfox&#39;s Thoughts &amp; Notes</title>
-  <link rel='canonical' href='https://stelfox.net/notes/samba/'>
-  
-  
-  <link rel='icon' href='/favicon.ico'>
-<link rel='stylesheet' href='/assets/css/main.ab98e12b.css'><style>
-:root{--color-accent:#ffcd00;}
-</style>
-
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-32188490-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
-  
-
-</head>
-<body class='page type-notes'>
-
-  <div class='site'><a class='screen-reader-text' href='#content'>Skip to Content</a><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Main Menu'>
-  <div class='container'>
     
-    <ul><li class='item'>
-        <a href='/'>Home</a>
-      </li><li class='item'>
-        <a href='/about/'>About</a>
-      </li><li class='item'>
-        <a href='/blog/'>Blog Posts</a>
-      </li><li class='item'>
-        <a href='/notes/'>Various Notes</a>
-      </li></ul>
-  </div>
-</nav><div class='header-widgets'>
-        <div class='container'></div>
+
+    
+    
+  </head>
+  <body>
+    <header id="header">
+      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
+      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
+    </header>
+    <div id="page">
+      <div id="sidebar">
+        
+          
+          <nav>
+            <ul class="nav">
+              
+                
+                  <li>
+                    <a href="&#x2F;"><span>Home</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
+                  </li>
+                
+                  <li>
+                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
+                  </li>
+                
+              
+            </ul>
+          </nav>
+          
+        
       </div>
-
-      <header id='header' class='header site-header'>
-        <div class='container sep-after'>
-          <div class='header-info'><p class='site-title title'>Sam Stelfox&#39;s Thoughts &amp; Notes</p><p class='desc site-desc'>Thoughts from a software engineer, systems architect and Linux gubernāre.</p>
-          </div>
-        </div>
-      </header>
-
-      <main id='content'>
-
-
-<article lang='en' class='entry'>
-  <header class='header entry-header'>
-  <div class='container sep-after'>
-    <div class='header-info'>
-      <h1 class='title'>Samba</h1>
-      
-
-    </div>
-    <div class='entry-meta'>
-  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-  <line x1="16" y1="2" x2="16" y2="6"/>
-  <line x1="8" y1="2" x2="8" y2="6"/>
-  <line x1="3" y1="10" x2="21" y2="10"/>
-  
-</svg>
-<span class='screen-reader-text'>Posted on </span>
-  <time class='entry-date' datetime='0001-01-01T00:00:00Z'>0001, Jan 01</time>
-</span>
-
-  
-  
-<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <circle cx="12" cy="12" r="10"/>
-  <polyline points="12 6 12 12 15 15"/>
-  
-</svg>
-3 mins read
-</span>
-
-
-</div>
-
-
-  </div>
-</header>
-
-  
-  
-
-  <div class='container entry-content'>
-  <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.</p>
-<h2 id="selinux-adjustments">SELinux Adjustments</h2>
+      <div id="content">
+        
+<article class="post">
+  <h1>Samba</h1><div class="post-content"><p>FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.</p>
+<span id="continue-reading"></span><h2 id="selinux-adjustments">SELinux Adjustments</h2>
 <p>SELinux hates Samba and with good reason. To allow authenticated clients to
 access the contents of a samba share you need to label the share. The easiest
 way to make this persistent is by adjusting the targeted SELinux config. In the
 following example the only samba share is location at /media/sharing.</p>
 <p>Add this to <code>/etc/selinux/targeted/contexts/files/file_contexts</code>:</p>
 <pre><code>/media/storage(/.*)?    system_u:object_r:samba_share_t:s0
-</code></pre><p>Then run this command:</p>
+</code></pre>
+<p>Then run this command:</p>
 <pre><code>[root@localhost ~]# restorecon -R /media/storage
-</code></pre><h2 id="on-anonymous-access">On Anonymous Access</h2>
+</code></pre>
+<h2 id="on-anonymous-access">On Anonymous Access</h2>
 <p>If you intend to allow anonymous browsing of shares and/or access to a share,
-you will need to create a &lsquo;nobody&rsquo; user with no password and add a few lines to
-the configuration file. Add the user by following the instructions in &lsquo;Managing
-Users&rsquo;</p>
+you will need to create a 'nobody' user with no password and add a few lines to
+the configuration file. Add the user by following the instructions in 'Managing
+Users'</p>
 <h2 id="managing-users">Managing Users</h2>
 <p>To add a samba user make sure they have an account on the local machine, and
 run the command:</p>
-<pre><code>[root@localhost ~]# pdbedit -a &lt;username&gt;
-</code></pre><p>To list samba users:</p>
+<pre><code>[root@localhost ~]# pdbedit -a <username>
+</code></pre>
+<p>To list samba users:</p>
 <pre><code>[root@localhost ~]# pdbedit -L
-</code></pre><p>To delete a samba user:</p>
-<pre><code>[root@localhost ~]# pdbedit -x &lt;username&gt;
-</code></pre><h2 id="configuration">Configuration</h2>
-<h3 id="etcsambasmbconf">/etc/samba/smb.conf</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[global]</span>
-<span style="color:#75715e"># ----------------------- Network-Related Options -------------------------</span>
+</code></pre>
+<p>To delete a samba user:</p>
+<pre><code>[root@localhost ~]# pdbedit -x <username>
+</code></pre>
+<h2 id="configuration">Configuration</h2>
+<h3 id="etc-samba-smb-conf">/etc/samba/smb.conf</h3>
+<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">[global]
+# ----------------------- Network-Related Options -------------------------
 
-        <span style="color:#a6e22e">workgroup</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Pantheon
-</span><span style="color:#e6db74">        server string = For Sexual Favors
-</span><span style="color:#e6db74">        netbios name = Moirae
-</span><span style="color:#e6db74">        interfaces = eth0:0
-</span><span style="color:#e6db74">        bind interfaces only = yes
-</span><span style="color:#e6db74">        hosts allow = 10.13.37.0/24
-</span><span style="color:#e6db74">        guest account = nobody
-</span><span style="color:#e6db74">        map to guest = bad user
-</span><span style="color:#e6db74">        force directory mode = 0777
-</span><span style="color:#e6db74">        force create mode = 0666</span>
+        workgroup = Pantheon
+        server string = For Sexual Favors
+        netbios name = Moirae
+        interfaces = eth0:0
+        bind interfaces only = yes
+        hosts allow = 10.13.37.0/24
+        guest account = nobody
+        map to guest = bad user
+        force directory mode = 0777
+        force create mode = 0666
 
-        <span style="color:#75715e"># Force master browser elections to choose this server</span>
-        <span style="color:#a6e22e">domain master</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">no
-</span><span style="color:#e6db74">        local master = yes
-</span><span style="color:#e6db74">        preferred master = yes
-</span><span style="color:#e6db74">        os level = 60</span>
+        # Force master browser elections to choose this server
+        domain master = no
+        local master = yes
+        preferred master = yes
+        os level = 60
 
-        <span style="color:#a6e22e">socket options</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">TCP_NODELAY
-</span><span style="color:#e6db74">        read raw = yes
-</span><span style="color:#e6db74">        write raw = yes</span>
+        socket options = TCP_NODELAY
+        read raw = yes
+        write raw = yes
 
-        <span style="color:#a6e22e">security</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">user
-</span><span style="color:#e6db74">        passdb backend = tdbsam</span>
+        security = user
+        passdb backend = tdbsam
 
-<span style="color:#75715e"># --------------------------- Logging Options -----------------------------</span>
+# --------------------------- Logging Options -----------------------------
 
-        <span style="color:#75715e"># log files split per-machine:</span>
-        <span style="color:#a6e22e">log file</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/var/log/samba/log.%m</span>
+        # log files split per-machine:
+        log file = /var/log/samba/log.%m
 
-        <span style="color:#75715e"># maximum size of 50KB per log file, then rotate:</span>
-        <span style="color:#a6e22e">max log size</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">50</span>
+        # maximum size of 50KB per log file, then rotate:
+        max log size = 50
 
-<span style="color:#75715e"># --------------------------- Printing Options -----------------------------</span>
-<span style="color:#75715e"># Disable printing altogether</span>
+# --------------------------- Printing Options -----------------------------
+# Disable printing altogether
 
-        <span style="color:#a6e22e">load printers</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">no
-</span><span style="color:#e6db74">        printcap name = /dev/null
-</span><span style="color:#e6db74">        printing = bsd
-</span><span style="color:#e6db74">        disable spoolss = yes</span>
+        load printers = no
+        printcap name = /dev/null
+        printing = bsd
+        disable spoolss = yes
 
-<span style="color:#75715e"># --------------------------- File System Options ---------------------------</span>
+# --------------------------- File System Options ---------------------------
 
-<span style="color:#75715e">;       map archive = no</span>
-<span style="color:#75715e">;       map hidden = no</span>
-<span style="color:#75715e">;       map read only = no</span>
-<span style="color:#75715e">;       map system = no</span>
-<span style="color:#75715e">;       store dos attributes = yes</span>
+;       map archive = no
+;       map hidden = no
+;       map read only = no
+;       map system = no
+;       store dos attributes = yes
 
 
-<span style="color:#75715e">#============================ Share Definitions ==============================</span>
+#============================ Share Definitions ==============================
 
-<span style="color:#66d9ef">[Hidden]</span>
-        <span style="color:#a6e22e">comment</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">I&#39;m a secret!
-</span><span style="color:#e6db74">        browsable = no
-</span><span style="color:#e6db74">        path = /media/storage/Dropbox
-</span><span style="color:#e6db74">        public = no
-</span><span style="color:#e6db74">        writable = no
-</span><span style="color:#e6db74">        printable = no
-</span><span style="color:#e6db74">        write list = @users
-</span><span style="color:#e6db74">        guest ok = no</span>
+[Hidden]
+        comment = I'm a secret!
+        browsable = no
+        path = /media/storage/Dropbox
+        public = no
+        writable = no
+        printable = no
+        write list = @users
+        guest ok = no
 
-<span style="color:#66d9ef">[Anonymous Dropbox]</span>
-        <span style="color:#a6e22e">comment</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Public File Drop Be Nice
-</span><span style="color:#e6db74">        browsable = yes
-</span><span style="color:#e6db74">        path = /media/storage/Dropbox
-</span><span style="color:#e6db74">        public = yes
-</span><span style="color:#e6db74">        writable = yes
-</span><span style="color:#e6db74">        printable = no
-</span><span style="color:#e6db74">        guest ok = yes</span>
+[Anonymous Dropbox]
+        comment = Public File Drop Be Nice
+        browsable = yes
+        path = /media/storage/Dropbox
+        public = yes
+        writable = yes
+        printable = no
+        guest ok = yes
 
-<span style="color:#66d9ef">[Media]</span>
-        <span style="color:#a6e22e">comment</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">Public Media Shares
-</span><span style="color:#e6db74">        browsable = yes
-</span><span style="color:#e6db74">        path = /media/storage/Media
-</span><span style="color:#e6db74">        public = yes
-</span><span style="color:#e6db74">        writable = no
-</span><span style="color:#e6db74">        printable = no
-</span><span style="color:#e6db74">        write list = @users
-</span><span style="color:#e6db74">        guest ok = yes</span>
-</code></pre></div>
+[Media]
+        comment = Public Media Shares
+        browsable = yes
+        path = /media/storage/Media
+        public = yes
+        writable = no
+        printable = no
+        write list = @users
+        guest ok = yes
+</code></pre>
 </div>
-
-  
-<footer class='entry-footer'>
-  <div class='container sep-before'>
-  </div>
-</footer>
-
-
 </article>
 
-<nav class='entry-nav'>
-  <div class='container'><div class='prev-entry sep-before'>
-      <a href='/notes/sendmail/'>
-        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="20" y1="12" x2="4" y2="12"/>
-  <polyline points="10 18 4 12 10 6"/>
-  
-</svg>
- Previous</span>
-        <span class='screen-reader-text'>Previous post: </span>Sendmail</a>
-    </div><div class='next-entry sep-before'>
-      <a href='/notes/ruby/'>
-        <span class='screen-reader-text'>Next post: </span>Ruby<span aria-hidden='true'>Next <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
-  
-  <line x1="4" y1="12" x2="20" y2="12"/>
-  <polyline points="14 6 20 12 14 18"/>
-  
-</svg>
-</span>
-      </a>
-    </div></div>
-</nav>
-
-
-
-
-      </main>
-
-      <footer id='footer' class='footer'>
-        <div class='container sep-before'><div class='copyright'>
-  <p> &copy; 2011-2020 Sam Stelfox </p>
-</div>
-
-        </div>
+      </div>
+      <footer id="footer">
+        <p class="copyright">
+          
+          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
+          
+        </p>
       </footer>
-
     </div>
-  </div><script>window.__assets_js_src="/assets/js/"</script>
-
-<script src='/assets/js/main.c3bcf2df.js'></script>
-
-</body>
-
+  </body>
 </html>
-
