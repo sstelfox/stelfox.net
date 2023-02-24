@@ -1,7 +1,7 @@
 # Note to self: this is included because it seems like hugo isn't handling
 # time zones correctly
 build:
-	@hugo --baseURL https://stelfox.net/ --log --verbose --verboseLog --enableGitInfo --printI18nWarnings --printPathWarnings --printUnusedTemplates
+	@hugo --baseURL https://stelfox.net/ --log --verbose --verboseLog --printI18nWarnings --printPathWarnings --printUnusedTemplates
 
 clean:
 	@rm -rf public/*
@@ -9,7 +9,7 @@ clean:
 logo: static/favicon.ico static/apple-touch-icon.png static/logo.png
 
 server:
-	hugo server --log --verbose --verboseLog --enableGitInfo --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --printUnusedTemplates
+	hugo server --log --verbose --verboseLog --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --printUnusedTemplates
 
 static/favicon.ico: logo_src/stelfox_favicon.svg Makefile
 	convert -scale 16x16 logo_src/stelfox_favicon.svg static/favicon.ico
