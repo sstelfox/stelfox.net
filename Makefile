@@ -1,18 +1,15 @@
 # Note to self: this is included because it seems like hugo isn't handling
 # time zones correctly
 build:
-	@hugo --buildFuture
+	@hugo --baseURL https://stelfox.net/ --log --verbose --verboseLog --enableGitInfo --printI18nWarnings --printPathWarnings --printUnusedTemplates
 
 clean:
 	@rm -rf public/*
 
-depends:
-	go get -u -v github.com/gohugoio/hugo
-
 logo: static/favicon.ico static/apple-touch-icon.png static/logo.png
 
 server:
-	hugo server --log --verbose --verboseLog --i18n-warnings --enableGitInfo --buildDrafts --buildFuture
+	hugo server --log --verbose --verboseLog --enableGitInfo --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --printUnusedTemplates
 
 static/favicon.ico: logo_src/stelfox_favicon.svg Makefile
 	convert -scale 16x16 logo_src/stelfox_favicon.svg static/favicon.ico
