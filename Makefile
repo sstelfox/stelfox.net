@@ -9,7 +9,7 @@ clean:
 logo: static/favicon.ico static/apple-touch-icon.png static/logo.png
 
 server:
-	hugo server --log --verbose --verboseLog --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --printUnusedTemplates
+	hugo server --port 8080 --log --verbose --verboseLog --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --printUnusedTemplates
 
 static/favicon.ico: logo_src/stelfox_favicon.svg Makefile
 	convert -scale 16x16 logo_src/stelfox_favicon.svg static/favicon.ico
