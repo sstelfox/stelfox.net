@@ -1,570 +1,655 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install redis -y Configuration Default configuration:
+############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/redis/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Redis :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Redis">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install redis -y Configuration Default configuration:
+############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127.">
+
+<meta itemprop="wordCount" content="3813">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Redis"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install redis -y Configuration Default configuration:
+############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127."/>
+
+
+
+    <meta property="og:title" content="Redis" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install redis -y Configuration Default configuration:
+############### GENERAL ############### # Daemonize the Redis process and write out the specified PID file # daemonize no pidfile /var/run/redis/redis.pid # TCP Listen mode, if bind is not specified it will listen on all available # interfaces # bind 127." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/redis/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Redis</h1><div class="post-content"><h2 id="installation">Installation</h2>
-<pre><code>yum install redis -y
-</code></pre>
-<h2 id="configuration">Configuration</h2>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/redis/">Redis</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install redis -y
+</span></span></code></pre></div><h2 id="configuration">Configuration</h2>
 <p>Default configuration:</p>
-<pre><code>############### GENERAL ###############
-
-# Daemonize the Redis process and write out the specified PID file
-#
-daemonize no
-pidfile /var/run/redis/redis.pid
-
-# TCP Listen mode, if bind is not specified it will listen on all available
-# interfaces
-#
-bind 127.0.0.1
-port 6379
-
-# Specify the path for the unix socket that will be used to listen for incoming
-# connections. There is no default, so Redis will not listen on a unix socket
-# when not specified.
-#
-#unixsocket /tmp/redis.sock
-#unixsocketperm 755
-
-# Close the connection after a client is idle for N seconds (0 to disable)
-#
-timeout 30
-tcp-keepalive 5
-
-# Set the log output:
-#   debug (a lot of information, useful for development/testing)
-#   verbose (many rarely useful info, but not a mess like the debug level)
-#   notice (moderately verbose, what you want in production probably)
-#   warning (only very important / critical messages are logged)
-#
-loglevel notice
-
-# Specify the log file name. Also 'stdout' can be used to force Redis to log on
-# the standard output. Note that if you use standard output for logging but
-# daemonize, logs will be sent to /dev/null
-#
-logfile /var/log/redis/redis.log
-
-# To enable logging to the system logger, just set 'syslog-enabled' to yes, and
-# optionally update the other syslog parameters to suit your needs.
-#
-syslog-enabled yes
-
-# Specify the syslog identity.
-#
-syslog-ident redis
-
-# Specify the syslog facility.  Must be USER or between LOCAL0-LOCAL7.
-#
-syslog-facility local0
-
-# Set the number of databases. The default database is DB 0, you can select a
-# different one on a per-connection basis using SELECT <dbid> where dbid is a
-# number between 0 and 'databases' - 1
-#
-databases 16
-
-############### SNAPSHOTTING ###############
-
-# The name of the file to sync the in memory database too.
-#
-dbfilename database.rdb
-
-# The working directory.
-#
-# The DB will be written inside this directory, with the filename specified
-# above using the 'dbfilename' configuration directive. Also the Append Only
-# File will be created inside this directory. Note that you must specify a
-# directory here, not a file name.
-#
-dir /var/lib/redis/
-
-# Compress string objects using LZF when dump .rdb databases? For default that's
-# set to 'yes' as it's almost always a win. If you want to save some CPU in the
-# saving child set it to 'no' but the dataset will likely be bigger if you have
-# compressible values or keys.
-#
-rdbcompression yes
-
-# Save the DB on disk:
-#   save <seconds> <changes>
-#
-# Will save the DB if both the given number of seconds and the given number of
-# write operations against the DB occurred. In the configuration below, the
-# database will be saved when any of the following rules are matched:
-#
-#   after 900 sec (15 min) if at least 1 key changed
-#   after 300 sec (5 min) if at least 10 keys changed
-#   after 60 sec if at least 10000 keys changed
-#
-# You can disable saving to disk at all commenting all the "save" lines.
-#
-save 900 1
-save 300 10
-save  60 10000
-
-############### REPLICATION ###############
-
-# Master-Slave replication. Use slaveof to make a Redis instance a copy of
-# another Redis server. Note that the configuration is local to the slave so for
-# example it is possible to configure the slave to save the DB with a different
-# interval, or to listen to another port, and so on.
-#
-#slaveof <masterip> <masterport>
-
-# If the master is password protected (using the "requirepass" configuration
-# directive below) it is possible to tell the slave to authenticate before
-# starting the replication synchronization process, otherwise the master will
-# refuse the slave request.
-#
-#masterauth <master-password>
-
-# When a slave lost the connection with the master, or when the replication is
-# still in progress, the slave can act in two different ways:
-#
-# 1) if slave-serve-stale-data is set to 'yes' (the default) the slave will
-#    still reply to client requests, possibly with out of data data, or the data
-#    set may just be empty if this is the first synchronization.
-#
-# 2) if slave-serve-stale data is set to 'no' the slave will reply with an error
-#    "SYNC with master in progress" to all the kind of commands but to INFO and
-#    SLAVEOF.
-#
-slave-serve-stale-data yes
-
-# Slaves send PINGs to server in a predefined interval. It's possible to change
-# this interval with the repl_ping_slave_period option. The default value is 10
-# seconds.
-#
-repl-ping-slave-period 10
-
-# The following option sets a timeout for both Bulk transfer I/O timeout and
-# master data or ping response timeout. The default value is 60 seconds.
-#
-# It is important to make sure that this value is greater than the value
-# specified for repl-ping-slave-period otherwise a timeout will be detected every
-# time there is low traffic between the master and the slave.
-#
-repl-timeout 60
-
-############### SECURITY ###############
-
-# Require clients to issue AUTH <PASSWORD> before processing any other commands.
-# This might be useful in environments in which you do not trust others with
-# access to the host running redis-server.
-#
-# This should stay commented out for backward compatibility and because most
-# people do not need auth (e.g. they run their own servers).
-#
-# Warning: since Redis is pretty fast an outside user can try up to 150k
-# passwords per second against a good box. This means that you should use a very
-# strong password otherwise it will be very easy to break.
-#
-requirepass xRDdPoEtcB6DtrRhuMDi1B1TXa0h3hNhxmaFWzruZdFd9hBJnNqzkY0pRY7UVxf5
-
-# Command renaming.
-#
-# It is possilbe to change the name of dangerous commands in a shared
-# environment. For instance the CONFIG command may be renamed into something of
-# hard to guess so that it will be still available for internal-use tools but
-# not available for general clients.
-#
-#   rename-command CONFIG b840fc02d524045429941cc15f59e41cb7be6c52
-#
-# It is also possilbe to completely kill a command renaming it into an empty
-# string:
-#
-#   rename-command CONFIG ""
-#
-# The following commands are potentially dangerous and they've either been
-# renamed if they seem legitimately useful or disabled completely otherwise.
-# Most of the commands that have been disabled are configuration options that
-# should be specified in this file.
-
-rename-command CLIENT ""
-rename-command CONFIG ""
-rename-command SLAVEOF ""
-
-rename-command MONITOR ""
-rename-command OBJECT ""
-
-rename-command FLUSHALL ""
-rename-command FLUSHDB ""
-
-rename-command EVAL ""
-rename-command EVALSHA ""
-rename-command SCRIPT ""
-
-############### LIMITS ###############
-
-# Set the max number of connected clients at the same time. By default there is
-# no limit, and it's up to the number of file descriptors the Redis process is
-# able to open. The special value '0' means no limits. Once the limit is reached
-# Redis will close all the new connections sending an error 'max number of
-# clients reached'.
-#
-maxclients 128
-
-# Don't use more memory than the specified amount of bytes. When the memory
-# limit is reached Redis will try to remove keys accordingly to the eviction
-# policy selected (see maxmemmory-policy).
-#
-# If Redis can't remove keys according to the policy, or if the policy is set to
-# 'noeviction', Redis will start to reply with errors to commands that would use
-# more memory, like SET, LPUSH, and so on, and will continue to reply to
-# read-only commands like GET.
-#
-# This option is usually useful when using Redis as an LRU cache, or to set a
-# hard memory limit for an instance (using the 'noeviction' policy).
-#
-# WARNING: If you have slaves attached to an instance with maxmemory on, the
-# size of the output buffers needed to feed the slaves are subtracted from the
-# used memory count, so that network problems / resyncs will not trigger a loop
-# where keys are evicted, and in turn the output buffer of slaves is full with
-# DELs of keys evicted triggering the deletion of more keys, and so forth until
-# the database is completely emptied.
-#
-# In short... if you have slaves attached it is suggested that you set a lower
-# limit for maxmemory so that there is some free RAM on the system for slave
-# output buffers (but this is not needed if the policy is 'noeviction').
-#
-#maxmemory 512Mb
-
-# MAXMEMORY POLICY: how Redis will select what to remove when maxmemory is
-# reached? You can select among five behavior:
-#
-# volatile-lru: remove keys with an expire set using an LRU algorithm (default)
-# allkeys-lru: remove any key accordingly to the LRU algorithm
-# volatile-random: remove a random key with an expire set
-# allkeys->random: remove a random key, any key
-# volatile-ttl: remove the key with the nearest expire time (minor TTL)
-# noeviction: don't expire at all, just return an error on write operations
-#
-# Note: with all the kind of policies, Redis will return an error on write
-# operations, when there are not suitable keys for eviction.
-#
-# At the date of writing this commands are: set setnx setex append incr decr
-# rpush lpush rpushx lpushx linsert lset rpoplpush sadd sinter sinterstore
-# sunion sunionstore sdiff sdiffstore zadd zincrby zunionstore zinterstore hset
-# hsetnx hmset hincrby incrby decrby getset mset msetnx exec sort
-#
-#maxmemory-policy volatile-lru
-
-# LRU and minimal TTL algorithms are not precise algorithms but approximated
-# algorithms (in order to save memory), so you can select as well the sample
-# size to check. For instance for default Redis will check three keys and
-# pick the one that was used less recently, you can change the sample size
-# using the following configuration directive.
-#
-#maxmemory-samples 3
-
-############### APPEND ONLY MODE ###############
-
-# By default Redis asynchronously dumps the dataset on disk. If you can live
-# with the idea that the latest records will be lost if something like a crash
-# happens this is the preferred way to run Redis. If instead you care a lot
-# about your data and don't want to that a single record can get lost you should
-# enable the append only mode: when this mode is enabled Redis will append every
-# write operation received in the file appendonly.aof. This file will be read on
-# startup in order to rebuild the full dataset in memory.
-#
-# Note that you can have both the async dumps and the append only file if you
-# like (you have to comment the "save" statements above to disable the dumps).
-# Still if append only mode is enabled Redis will load the data from the log
-# file at startup ignoring the dump.rdb file.
-#
-# IMPORTANT: Check the BGREWRITEAOF to check how to rewrite the append log file
-# in background when it gets too big.
-#
-appendonly no
-
-# The name of the append only file (default: "appendonly.aof")
-#
-appendfilename appendonly.aof
-
-# The fsync() call tells the Operating System to actually write data on disk
-# instead to wait for more data in the output buffer. Some OS will really flush
-# data on disk, some other OS will just try to do it ASAP.
-#
-# Redis supports three different modes:
-#
-# no: don't fsync, just let the OS flush the data when it wants. Faster.
-# always: fsync after every write to the append only log. Slow, Safest.
-# everysec: fsync only if one second passed since the last fsync. Compromise.
-#
-# The default is "everysec" that's usually the right compromise between speed
-# and data safety. It's up to you to understand if you can relax this to "no"
-# that will will let the operating system flush the output buffer when it wants,
-# for better performances (but if you can live with the idea of some data loss
-# consider the default persistence mode that's snapshotting), or on the
-# contrary, use "always" that's very slow but a bit safer than everysec.
-#
-# If unsure, use "everysec".
-#
-appendfsync everysec
-
-# When the AOF fsync policy is set to always or everysec, and a background
-# saving process (a background save or AOF log background rewriting) is
-# performing a lot of I/O against the disk, in some Linux configurations Redis
-# may block too long on the fsync() call. Note that there is no fix for this
-# currently, as even performing fsync in a different thread will block our
-# synchronous write(2) call.
-#
-# In order to mitigate this problem it's possible to use the following option
-# that will prevent fsync() from being called in the main process while a BGSAVE
-# or BGREWRITEAOF is in progress.
-#
-# This means that while another child is saving the durability of Redis is the
-# same as "appendfsync none", that in pratical terms means that it is possible
-# to lost up to 30 seconds of log in the worst scenario (with the default Linux
-# settings).
-#
-# If you have latency problems turn this to "yes". Otherwise leave it as "no"
-# that is the safest pick from the point of view of durability.
-#
-no-appendfsync-on-rewrite no
-
-# Automatic rewrite of the append only file. Redis is able to automatically
-# rewrite the log file implicitly calling BGREWRITEAOF when the AOF log size
-# will growth by the specified percentage.
-#
-# This is how it works: Redis remembers the size of the AOF file after the
-# latest rewrite (or if no rewrite happened since the restart, the size of the
-# AOF at startup is used).
-#
-# This base size is compared to the current size. If the current size is bigger
-# than the specified percentage, the rewrite is triggered. Also you need to
-# specify a minimal size for the AOF file to be rewritten, this is useful to
-# avoid rewriting the AOF file even if the percentage increase is reached but it
-# is still pretty small.
-#
-# Specify a precentage of zero in order to disable the automatic AOF rewrite
-# feature.
-#
-auto-aof-rewrite-min-size 64mb
-auto-aof-rewrite-percentage 100
-
-############### SLOW LOG ###############
-
-# The Redis Slow Log is a system to log queries that exceeded a specified
-# execution time. The execution time does not include the I/O operations like
-# talking with the client, sending the reply and so forth, but just the time
-# needed to actually execute the command (this is the only stage of command
-# execution where the thread is blocked and can not serve other requests in the
-# meantime).
-#
-# You can configure the slow log with two parameters: one tells Redis what is
-# the execution time, in microseconds, to exceed in order for the command to get
-# logged, and the other parameter is the length of the slow log. When a new
-# command is logged the oldest one is removed from the queue of logged commands.
-#
-# The following time is expressed in microseconds, so 1000000 is equivalent to
-# one second. Note that a negative number disables the slow log, while a value
-# of zero forces the logging of every command.
-#
-slowlog-log-slower-than 10000
-
-# There is no limit to this length. Just be aware that it will consume memory.
-# You can reclaim memory used by the slow log with SLOWLOG RESET.
-#
-slowlog-max-len 1024
-
-############### VIRTUAL MEMORY ###############
-
-### WARNING! Virtual Memory is deprecated in Redis 2.4
-### The use of Virtual Memory is strongly discouraged.
-
-# Virtual Memory allows Redis to work with datasets bigger than the actual
-# amount of RAM needed to hold the whole dataset in memory. In order to do so
-# very used keys are taken in memory while the other keys are swapped into a
-# swap file, similarly to what operating systems do with memory pages.
-#
-# To enable VM just set 'vm-enabled' to yes, and set the following three VM
-# parameters accordingly to your needs.
-#
-vm-enabled no
-
-# This is the path of the Redis swap file. As you can guess, swap files can't be
-# shared by different Redis instances, so make sure to use a swap file for every
-# redis process you are running. Redis will complain if the swap file is already
-# in use.
-#
-# The best kind of storage for the Redis swap file (that's accessed at random)
-# is a Solid State Disk (SSD).
-#
-# *** WARNING *** if you are using a shared hosting the default of putting the
-# swap file under /tmp is not secure. Create a dir with access granted only to
-# Redis user and configure Redis to create the swap file there.
-#
-vm-swap-file /tmp/redis.swap
-
-# vm-max-memory configures the VM to use at max the specified amount of RAM.
-# Everything that deos not fit will be swapped on disk *if* possible, that is,
-# if there is still enough contiguous space in the swap file.
-#
-# With vm-max-memory 0 the system will swap everything it can. Not a good
-# default, just specify the max amount of RAM you can in bytes, but it's better
-# to leave some margin. For instance specify an amount of RAM that's more or
-# less between 60 and 80% of your free RAM.
-#
-vm-max-memory 0
-
-# Redis swap files is split into pages. An object can be saved using multiple
-# contiguous pages, but pages can't be shared between different objects. So if
-# your page is too big, small objects swapped out on disk will waste a lot of
-# space. If you page is too small, there is less space in the swap file
-# (assuming you configured the same number of total swap file pages).
-#
-# If you use a lot of small objects, use a page size of 64 or 32 bytes.
-# If you use a lot of big objects, use a bigger page size.
-# If unsure, use the default :)
-#
-vm-page-size 32
-
-# Number of total memory pages in the swap file. Given that the page table (a
-# bitmap of free/used pages) is taken in memory, every 8 pages on disk will
-# consume 1 byte of RAM.
-#
-# The total swap size is vm-page-size * vm-pages
-#
-# With the default of 32-bytes memory pages and 134217728 pages Redis will use a
-# 4 GB swap file, that will use 16 MB of RAM for the page table.
-#
-# It's better to use the smallest acceptable value for your application, but the
-# default is large in order to work in most conditions.
-#
-vm-pages 134217728
-
-# Max number of VM I/O threads running at the same time. This threads are used
-# to read/write data from/to swap file, since they also encode and decode
-# objects from disk to memory or the reverse, a bigger number of threads can
-# help with big objects even if they can't help with I/O itself as the physical
-# device may not be able to couple with many reads/writes operations at the same
-# time.
-#
-# The special value of 0 turn off threaded I/O and enables the blocking Virtual
-# Memory implementation.
-#
-vm-max-threads 4
-
-############### ADVANCED CONFIG ###############
-
-# Hashes are encoded in a special way (much more memory efficient) when they
-# have at max a given numer of elements, and the biggest element does not exceed
-# a given threshold. You can configure this limits with the following
-# configuration directives.
-#
-hash-max-zipmap-entries 512
-hash-max-zipmap-value 64
-
-# Similarly to hashes, small lists are also encoded in a special way in order to
-# save a lot of space. The special representation is only used when you are under
-# the following limits:
-#
-list-max-ziplist-entries 512
-list-max-ziplist-value 64
-
-# Sets have a special encoding in just one case: when a set is composed of just
-# strings that happens to be integers in radix 10 in the range of 64 bit signed
-# integers. The following configuration setting sets the limit in the size of
-# the set in order to use this special memory saving encoding.
-#
-set-max-intset-entries 512
-
-# Similarly to hashes and lists, sorted sets are also specially encoded in order
-# to save a lot of space. This encoding is only used when the length and
-# elements of a sorted set are below the following limits:
-#
-zset-max-ziplist-entries 128
-zset-max-ziplist-value 64
-
-# Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
-# order to help rehashing the main Redis hash table (the one mapping top-level
-# keys to values). The hash table implementation redis uses (see dict.c)
-# performs a lazy rehashing: the more operation you run into an hash table that
-# is rhashing, the more rehashing "steps" are performed, so if the server is
-# idle the rehashing is never complete and some more memory is used by the hash
-# table.
-#
-# The default is to use this millisecond 10 times every second in order to
-# active rehashing the main dictionaries, freeing memory when possible.
-#
-# Use "activerehashing no". If you have hard latency requirements and it is not
-# a good thing in your environment that Redis can reply form time to time to
-# queries with 2 milliseconds delay.
-#
-# use "activerehashing yes" if you don't have such hard requirements but want to
-# free memory asap when possible.
-#
-activerehashing yes
-
-############### INCLUDES ###############
-# Include one or more other config files here. This is useful if you have a
-# standard template that goes to all redis server but also need to customize a
-# few per-server settings. Include files can include other files, so use this
-# wisely.
-#
-# include /path/to/local.conf
-# include /path/to/other.conf
-</code></pre>
-<h2 id="master">Master</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>############### GENERAL ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Daemonize the Redis process and write out the specified PID file
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>daemonize no
+</span></span><span style="display:flex;"><span>pidfile /var/run/redis/redis.pid
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># TCP Listen mode, if bind is not specified it will listen on all available
+</span></span><span style="display:flex;"><span># interfaces
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>bind 127.0.0.1
+</span></span><span style="display:flex;"><span>port 6379
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Specify the path for the unix socket that will be used to listen for incoming
+</span></span><span style="display:flex;"><span># connections. There is no default, so Redis will not listen on a unix socket
+</span></span><span style="display:flex;"><span># when not specified.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#unixsocket /tmp/redis.sock
+</span></span><span style="display:flex;"><span>#unixsocketperm 755
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Close the connection after a client is idle for N seconds (0 to disable)
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>timeout 30
+</span></span><span style="display:flex;"><span>tcp-keepalive 5
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Set the log output:
+</span></span><span style="display:flex;"><span>#   debug (a lot of information, useful for development/testing)
+</span></span><span style="display:flex;"><span>#   verbose (many rarely useful info, but not a mess like the debug level)
+</span></span><span style="display:flex;"><span>#   notice (moderately verbose, what you want in production probably)
+</span></span><span style="display:flex;"><span>#   warning (only very important / critical messages are logged)
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>loglevel notice
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Specify the log file name. Also &#39;stdout&#39; can be used to force Redis to log on
+</span></span><span style="display:flex;"><span># the standard output. Note that if you use standard output for logging but
+</span></span><span style="display:flex;"><span># daemonize, logs will be sent to /dev/null
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>logfile /var/log/redis/redis.log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># To enable logging to the system logger, just set &#39;syslog-enabled&#39; to yes, and
+</span></span><span style="display:flex;"><span># optionally update the other syslog parameters to suit your needs.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>syslog-enabled yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Specify the syslog identity.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>syslog-ident redis
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Specify the syslog facility.  Must be USER or between LOCAL0-LOCAL7.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>syslog-facility local0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Set the number of databases. The default database is DB 0, you can select a
+</span></span><span style="display:flex;"><span># different one on a per-connection basis using SELECT &lt;dbid&gt; where dbid is a
+</span></span><span style="display:flex;"><span># number between 0 and &#39;databases&#39; - 1
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>databases 16
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### SNAPSHOTTING ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># The name of the file to sync the in memory database too.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>dbfilename database.rdb
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># The working directory.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The DB will be written inside this directory, with the filename specified
+</span></span><span style="display:flex;"><span># above using the &#39;dbfilename&#39; configuration directive. Also the Append Only
+</span></span><span style="display:flex;"><span># File will be created inside this directory. Note that you must specify a
+</span></span><span style="display:flex;"><span># directory here, not a file name.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>dir /var/lib/redis/
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Compress string objects using LZF when dump .rdb databases? For default that&#39;s
+</span></span><span style="display:flex;"><span># set to &#39;yes&#39; as it&#39;s almost always a win. If you want to save some CPU in the
+</span></span><span style="display:flex;"><span># saving child set it to &#39;no&#39; but the dataset will likely be bigger if you have
+</span></span><span style="display:flex;"><span># compressible values or keys.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>rdbcompression yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Save the DB on disk:
+</span></span><span style="display:flex;"><span>#   save &lt;seconds&gt; &lt;changes&gt;
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># Will save the DB if both the given number of seconds and the given number of
+</span></span><span style="display:flex;"><span># write operations against the DB occurred. In the configuration below, the
+</span></span><span style="display:flex;"><span># database will be saved when any of the following rules are matched:
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#   after 900 sec (15 min) if at least 1 key changed
+</span></span><span style="display:flex;"><span>#   after 300 sec (5 min) if at least 10 keys changed
+</span></span><span style="display:flex;"><span>#   after 60 sec if at least 10000 keys changed
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># You can disable saving to disk at all commenting all the &#34;save&#34; lines.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>save 900 1
+</span></span><span style="display:flex;"><span>save 300 10
+</span></span><span style="display:flex;"><span>save  60 10000
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### REPLICATION ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Master-Slave replication. Use slaveof to make a Redis instance a copy of
+</span></span><span style="display:flex;"><span># another Redis server. Note that the configuration is local to the slave so for
+</span></span><span style="display:flex;"><span># example it is possible to configure the slave to save the DB with a different
+</span></span><span style="display:flex;"><span># interval, or to listen to another port, and so on.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#slaveof &lt;masterip&gt; &lt;masterport&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># If the master is password protected (using the &#34;requirepass&#34; configuration
+</span></span><span style="display:flex;"><span># directive below) it is possible to tell the slave to authenticate before
+</span></span><span style="display:flex;"><span># starting the replication synchronization process, otherwise the master will
+</span></span><span style="display:flex;"><span># refuse the slave request.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#masterauth &lt;master-password&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># When a slave lost the connection with the master, or when the replication is
+</span></span><span style="display:flex;"><span># still in progress, the slave can act in two different ways:
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># 1) if slave-serve-stale-data is set to &#39;yes&#39; (the default) the slave will
+</span></span><span style="display:flex;"><span>#    still reply to client requests, possibly with out of data data, or the data
+</span></span><span style="display:flex;"><span>#    set may just be empty if this is the first synchronization.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># 2) if slave-serve-stale data is set to &#39;no&#39; the slave will reply with an error
+</span></span><span style="display:flex;"><span>#    &#34;SYNC with master in progress&#34; to all the kind of commands but to INFO and
+</span></span><span style="display:flex;"><span>#    SLAVEOF.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>slave-serve-stale-data yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Slaves send PINGs to server in a predefined interval. It&#39;s possible to change
+</span></span><span style="display:flex;"><span># this interval with the repl_ping_slave_period option. The default value is 10
+</span></span><span style="display:flex;"><span># seconds.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>repl-ping-slave-period 10
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># The following option sets a timeout for both Bulk transfer I/O timeout and
+</span></span><span style="display:flex;"><span># master data or ping response timeout. The default value is 60 seconds.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># It is important to make sure that this value is greater than the value
+</span></span><span style="display:flex;"><span># specified for repl-ping-slave-period otherwise a timeout will be detected every
+</span></span><span style="display:flex;"><span># time there is low traffic between the master and the slave.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>repl-timeout 60
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### SECURITY ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Require clients to issue AUTH &lt;PASSWORD&gt; before processing any other commands.
+</span></span><span style="display:flex;"><span># This might be useful in environments in which you do not trust others with
+</span></span><span style="display:flex;"><span># access to the host running redis-server.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># This should stay commented out for backward compatibility and because most
+</span></span><span style="display:flex;"><span># people do not need auth (e.g. they run their own servers).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># Warning: since Redis is pretty fast an outside user can try up to 150k
+</span></span><span style="display:flex;"><span># passwords per second against a good box. This means that you should use a very
+</span></span><span style="display:flex;"><span># strong password otherwise it will be very easy to break.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>requirepass xRDdPoEtcB6DtrRhuMDi1B1TXa0h3hNhxmaFWzruZdFd9hBJnNqzkY0pRY7UVxf5
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Command renaming.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># It is possilbe to change the name of dangerous commands in a shared
+</span></span><span style="display:flex;"><span># environment. For instance the CONFIG command may be renamed into something of
+</span></span><span style="display:flex;"><span># hard to guess so that it will be still available for internal-use tools but
+</span></span><span style="display:flex;"><span># not available for general clients.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#   rename-command CONFIG b840fc02d524045429941cc15f59e41cb7be6c52
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># It is also possilbe to completely kill a command renaming it into an empty
+</span></span><span style="display:flex;"><span># string:
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#   rename-command CONFIG &#34;&#34;
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The following commands are potentially dangerous and they&#39;ve either been
+</span></span><span style="display:flex;"><span># renamed if they seem legitimately useful or disabled completely otherwise.
+</span></span><span style="display:flex;"><span># Most of the commands that have been disabled are configuration options that
+</span></span><span style="display:flex;"><span># should be specified in this file.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rename-command CLIENT &#34;&#34;
+</span></span><span style="display:flex;"><span>rename-command CONFIG &#34;&#34;
+</span></span><span style="display:flex;"><span>rename-command SLAVEOF &#34;&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rename-command MONITOR &#34;&#34;
+</span></span><span style="display:flex;"><span>rename-command OBJECT &#34;&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rename-command FLUSHALL &#34;&#34;
+</span></span><span style="display:flex;"><span>rename-command FLUSHDB &#34;&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>rename-command EVAL &#34;&#34;
+</span></span><span style="display:flex;"><span>rename-command EVALSHA &#34;&#34;
+</span></span><span style="display:flex;"><span>rename-command SCRIPT &#34;&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### LIMITS ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Set the max number of connected clients at the same time. By default there is
+</span></span><span style="display:flex;"><span># no limit, and it&#39;s up to the number of file descriptors the Redis process is
+</span></span><span style="display:flex;"><span># able to open. The special value &#39;0&#39; means no limits. Once the limit is reached
+</span></span><span style="display:flex;"><span># Redis will close all the new connections sending an error &#39;max number of
+</span></span><span style="display:flex;"><span># clients reached&#39;.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>maxclients 128
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Don&#39;t use more memory than the specified amount of bytes. When the memory
+</span></span><span style="display:flex;"><span># limit is reached Redis will try to remove keys accordingly to the eviction
+</span></span><span style="display:flex;"><span># policy selected (see maxmemmory-policy).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># If Redis can&#39;t remove keys according to the policy, or if the policy is set to
+</span></span><span style="display:flex;"><span># &#39;noeviction&#39;, Redis will start to reply with errors to commands that would use
+</span></span><span style="display:flex;"><span># more memory, like SET, LPUSH, and so on, and will continue to reply to
+</span></span><span style="display:flex;"><span># read-only commands like GET.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># This option is usually useful when using Redis as an LRU cache, or to set a
+</span></span><span style="display:flex;"><span># hard memory limit for an instance (using the &#39;noeviction&#39; policy).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># WARNING: If you have slaves attached to an instance with maxmemory on, the
+</span></span><span style="display:flex;"><span># size of the output buffers needed to feed the slaves are subtracted from the
+</span></span><span style="display:flex;"><span># used memory count, so that network problems / resyncs will not trigger a loop
+</span></span><span style="display:flex;"><span># where keys are evicted, and in turn the output buffer of slaves is full with
+</span></span><span style="display:flex;"><span># DELs of keys evicted triggering the deletion of more keys, and so forth until
+</span></span><span style="display:flex;"><span># the database is completely emptied.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># In short... if you have slaves attached it is suggested that you set a lower
+</span></span><span style="display:flex;"><span># limit for maxmemory so that there is some free RAM on the system for slave
+</span></span><span style="display:flex;"><span># output buffers (but this is not needed if the policy is &#39;noeviction&#39;).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#maxmemory 512Mb
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># MAXMEMORY POLICY: how Redis will select what to remove when maxmemory is
+</span></span><span style="display:flex;"><span># reached? You can select among five behavior:
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># volatile-lru: remove keys with an expire set using an LRU algorithm (default)
+</span></span><span style="display:flex;"><span># allkeys-lru: remove any key accordingly to the LRU algorithm
+</span></span><span style="display:flex;"><span># volatile-random: remove a random key with an expire set
+</span></span><span style="display:flex;"><span># allkeys-&gt;random: remove a random key, any key
+</span></span><span style="display:flex;"><span># volatile-ttl: remove the key with the nearest expire time (minor TTL)
+</span></span><span style="display:flex;"><span># noeviction: don&#39;t expire at all, just return an error on write operations
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># Note: with all the kind of policies, Redis will return an error on write
+</span></span><span style="display:flex;"><span># operations, when there are not suitable keys for eviction.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># At the date of writing this commands are: set setnx setex append incr decr
+</span></span><span style="display:flex;"><span># rpush lpush rpushx lpushx linsert lset rpoplpush sadd sinter sinterstore
+</span></span><span style="display:flex;"><span># sunion sunionstore sdiff sdiffstore zadd zincrby zunionstore zinterstore hset
+</span></span><span style="display:flex;"><span># hsetnx hmset hincrby incrby decrby getset mset msetnx exec sort
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#maxmemory-policy volatile-lru
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># LRU and minimal TTL algorithms are not precise algorithms but approximated
+</span></span><span style="display:flex;"><span># algorithms (in order to save memory), so you can select as well the sample
+</span></span><span style="display:flex;"><span># size to check. For instance for default Redis will check three keys and
+</span></span><span style="display:flex;"><span># pick the one that was used less recently, you can change the sample size
+</span></span><span style="display:flex;"><span># using the following configuration directive.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>#maxmemory-samples 3
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### APPEND ONLY MODE ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># By default Redis asynchronously dumps the dataset on disk. If you can live
+</span></span><span style="display:flex;"><span># with the idea that the latest records will be lost if something like a crash
+</span></span><span style="display:flex;"><span># happens this is the preferred way to run Redis. If instead you care a lot
+</span></span><span style="display:flex;"><span># about your data and don&#39;t want to that a single record can get lost you should
+</span></span><span style="display:flex;"><span># enable the append only mode: when this mode is enabled Redis will append every
+</span></span><span style="display:flex;"><span># write operation received in the file appendonly.aof. This file will be read on
+</span></span><span style="display:flex;"><span># startup in order to rebuild the full dataset in memory.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># Note that you can have both the async dumps and the append only file if you
+</span></span><span style="display:flex;"><span># like (you have to comment the &#34;save&#34; statements above to disable the dumps).
+</span></span><span style="display:flex;"><span># Still if append only mode is enabled Redis will load the data from the log
+</span></span><span style="display:flex;"><span># file at startup ignoring the dump.rdb file.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># IMPORTANT: Check the BGREWRITEAOF to check how to rewrite the append log file
+</span></span><span style="display:flex;"><span># in background when it gets too big.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>appendonly no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># The name of the append only file (default: &#34;appendonly.aof&#34;)
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>appendfilename appendonly.aof
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># The fsync() call tells the Operating System to actually write data on disk
+</span></span><span style="display:flex;"><span># instead to wait for more data in the output buffer. Some OS will really flush
+</span></span><span style="display:flex;"><span># data on disk, some other OS will just try to do it ASAP.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># Redis supports three different modes:
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># no: don&#39;t fsync, just let the OS flush the data when it wants. Faster.
+</span></span><span style="display:flex;"><span># always: fsync after every write to the append only log. Slow, Safest.
+</span></span><span style="display:flex;"><span># everysec: fsync only if one second passed since the last fsync. Compromise.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The default is &#34;everysec&#34; that&#39;s usually the right compromise between speed
+</span></span><span style="display:flex;"><span># and data safety. It&#39;s up to you to understand if you can relax this to &#34;no&#34;
+</span></span><span style="display:flex;"><span># that will will let the operating system flush the output buffer when it wants,
+</span></span><span style="display:flex;"><span># for better performances (but if you can live with the idea of some data loss
+</span></span><span style="display:flex;"><span># consider the default persistence mode that&#39;s snapshotting), or on the
+</span></span><span style="display:flex;"><span># contrary, use &#34;always&#34; that&#39;s very slow but a bit safer than everysec.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># If unsure, use &#34;everysec&#34;.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>appendfsync everysec
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># When the AOF fsync policy is set to always or everysec, and a background
+</span></span><span style="display:flex;"><span># saving process (a background save or AOF log background rewriting) is
+</span></span><span style="display:flex;"><span># performing a lot of I/O against the disk, in some Linux configurations Redis
+</span></span><span style="display:flex;"><span># may block too long on the fsync() call. Note that there is no fix for this
+</span></span><span style="display:flex;"><span># currently, as even performing fsync in a different thread will block our
+</span></span><span style="display:flex;"><span># synchronous write(2) call.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># In order to mitigate this problem it&#39;s possible to use the following option
+</span></span><span style="display:flex;"><span># that will prevent fsync() from being called in the main process while a BGSAVE
+</span></span><span style="display:flex;"><span># or BGREWRITEAOF is in progress.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># This means that while another child is saving the durability of Redis is the
+</span></span><span style="display:flex;"><span># same as &#34;appendfsync none&#34;, that in pratical terms means that it is possible
+</span></span><span style="display:flex;"><span># to lost up to 30 seconds of log in the worst scenario (with the default Linux
+</span></span><span style="display:flex;"><span># settings).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># If you have latency problems turn this to &#34;yes&#34;. Otherwise leave it as &#34;no&#34;
+</span></span><span style="display:flex;"><span># that is the safest pick from the point of view of durability.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>no-appendfsync-on-rewrite no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Automatic rewrite of the append only file. Redis is able to automatically
+</span></span><span style="display:flex;"><span># rewrite the log file implicitly calling BGREWRITEAOF when the AOF log size
+</span></span><span style="display:flex;"><span># will growth by the specified percentage.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># This is how it works: Redis remembers the size of the AOF file after the
+</span></span><span style="display:flex;"><span># latest rewrite (or if no rewrite happened since the restart, the size of the
+</span></span><span style="display:flex;"><span># AOF at startup is used).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># This base size is compared to the current size. If the current size is bigger
+</span></span><span style="display:flex;"><span># than the specified percentage, the rewrite is triggered. Also you need to
+</span></span><span style="display:flex;"><span># specify a minimal size for the AOF file to be rewritten, this is useful to
+</span></span><span style="display:flex;"><span># avoid rewriting the AOF file even if the percentage increase is reached but it
+</span></span><span style="display:flex;"><span># is still pretty small.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># Specify a precentage of zero in order to disable the automatic AOF rewrite
+</span></span><span style="display:flex;"><span># feature.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>auto-aof-rewrite-min-size 64mb
+</span></span><span style="display:flex;"><span>auto-aof-rewrite-percentage 100
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### SLOW LOG ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># The Redis Slow Log is a system to log queries that exceeded a specified
+</span></span><span style="display:flex;"><span># execution time. The execution time does not include the I/O operations like
+</span></span><span style="display:flex;"><span># talking with the client, sending the reply and so forth, but just the time
+</span></span><span style="display:flex;"><span># needed to actually execute the command (this is the only stage of command
+</span></span><span style="display:flex;"><span># execution where the thread is blocked and can not serve other requests in the
+</span></span><span style="display:flex;"><span># meantime).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># You can configure the slow log with two parameters: one tells Redis what is
+</span></span><span style="display:flex;"><span># the execution time, in microseconds, to exceed in order for the command to get
+</span></span><span style="display:flex;"><span># logged, and the other parameter is the length of the slow log. When a new
+</span></span><span style="display:flex;"><span># command is logged the oldest one is removed from the queue of logged commands.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The following time is expressed in microseconds, so 1000000 is equivalent to
+</span></span><span style="display:flex;"><span># one second. Note that a negative number disables the slow log, while a value
+</span></span><span style="display:flex;"><span># of zero forces the logging of every command.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>slowlog-log-slower-than 10000
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># There is no limit to this length. Just be aware that it will consume memory.
+</span></span><span style="display:flex;"><span># You can reclaim memory used by the slow log with SLOWLOG RESET.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>slowlog-max-len 1024
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### VIRTUAL MEMORY ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>### WARNING! Virtual Memory is deprecated in Redis 2.4
+</span></span><span style="display:flex;"><span>### The use of Virtual Memory is strongly discouraged.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Virtual Memory allows Redis to work with datasets bigger than the actual
+</span></span><span style="display:flex;"><span># amount of RAM needed to hold the whole dataset in memory. In order to do so
+</span></span><span style="display:flex;"><span># very used keys are taken in memory while the other keys are swapped into a
+</span></span><span style="display:flex;"><span># swap file, similarly to what operating systems do with memory pages.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># To enable VM just set &#39;vm-enabled&#39; to yes, and set the following three VM
+</span></span><span style="display:flex;"><span># parameters accordingly to your needs.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>vm-enabled no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># This is the path of the Redis swap file. As you can guess, swap files can&#39;t be
+</span></span><span style="display:flex;"><span># shared by different Redis instances, so make sure to use a swap file for every
+</span></span><span style="display:flex;"><span># redis process you are running. Redis will complain if the swap file is already
+</span></span><span style="display:flex;"><span># in use.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The best kind of storage for the Redis swap file (that&#39;s accessed at random)
+</span></span><span style="display:flex;"><span># is a Solid State Disk (SSD).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># *** WARNING *** if you are using a shared hosting the default of putting the
+</span></span><span style="display:flex;"><span># swap file under /tmp is not secure. Create a dir with access granted only to
+</span></span><span style="display:flex;"><span># Redis user and configure Redis to create the swap file there.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>vm-swap-file /tmp/redis.swap
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># vm-max-memory configures the VM to use at max the specified amount of RAM.
+</span></span><span style="display:flex;"><span># Everything that deos not fit will be swapped on disk *if* possible, that is,
+</span></span><span style="display:flex;"><span># if there is still enough contiguous space in the swap file.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># With vm-max-memory 0 the system will swap everything it can. Not a good
+</span></span><span style="display:flex;"><span># default, just specify the max amount of RAM you can in bytes, but it&#39;s better
+</span></span><span style="display:flex;"><span># to leave some margin. For instance specify an amount of RAM that&#39;s more or
+</span></span><span style="display:flex;"><span># less between 60 and 80% of your free RAM.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>vm-max-memory 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Redis swap files is split into pages. An object can be saved using multiple
+</span></span><span style="display:flex;"><span># contiguous pages, but pages can&#39;t be shared between different objects. So if
+</span></span><span style="display:flex;"><span># your page is too big, small objects swapped out on disk will waste a lot of
+</span></span><span style="display:flex;"><span># space. If you page is too small, there is less space in the swap file
+</span></span><span style="display:flex;"><span># (assuming you configured the same number of total swap file pages).
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># If you use a lot of small objects, use a page size of 64 or 32 bytes.
+</span></span><span style="display:flex;"><span># If you use a lot of big objects, use a bigger page size.
+</span></span><span style="display:flex;"><span># If unsure, use the default :)
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>vm-page-size 32
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Number of total memory pages in the swap file. Given that the page table (a
+</span></span><span style="display:flex;"><span># bitmap of free/used pages) is taken in memory, every 8 pages on disk will
+</span></span><span style="display:flex;"><span># consume 1 byte of RAM.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The total swap size is vm-page-size * vm-pages
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># With the default of 32-bytes memory pages and 134217728 pages Redis will use a
+</span></span><span style="display:flex;"><span># 4 GB swap file, that will use 16 MB of RAM for the page table.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># It&#39;s better to use the smallest acceptable value for your application, but the
+</span></span><span style="display:flex;"><span># default is large in order to work in most conditions.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>vm-pages 134217728
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Max number of VM I/O threads running at the same time. This threads are used
+</span></span><span style="display:flex;"><span># to read/write data from/to swap file, since they also encode and decode
+</span></span><span style="display:flex;"><span># objects from disk to memory or the reverse, a bigger number of threads can
+</span></span><span style="display:flex;"><span># help with big objects even if they can&#39;t help with I/O itself as the physical
+</span></span><span style="display:flex;"><span># device may not be able to couple with many reads/writes operations at the same
+</span></span><span style="display:flex;"><span># time.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The special value of 0 turn off threaded I/O and enables the blocking Virtual
+</span></span><span style="display:flex;"><span># Memory implementation.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>vm-max-threads 4
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### ADVANCED CONFIG ###############
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Hashes are encoded in a special way (much more memory efficient) when they
+</span></span><span style="display:flex;"><span># have at max a given numer of elements, and the biggest element does not exceed
+</span></span><span style="display:flex;"><span># a given threshold. You can configure this limits with the following
+</span></span><span style="display:flex;"><span># configuration directives.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>hash-max-zipmap-entries 512
+</span></span><span style="display:flex;"><span>hash-max-zipmap-value 64
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Similarly to hashes, small lists are also encoded in a special way in order to
+</span></span><span style="display:flex;"><span># save a lot of space. The special representation is only used when you are under
+</span></span><span style="display:flex;"><span># the following limits:
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>list-max-ziplist-entries 512
+</span></span><span style="display:flex;"><span>list-max-ziplist-value 64
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Sets have a special encoding in just one case: when a set is composed of just
+</span></span><span style="display:flex;"><span># strings that happens to be integers in radix 10 in the range of 64 bit signed
+</span></span><span style="display:flex;"><span># integers. The following configuration setting sets the limit in the size of
+</span></span><span style="display:flex;"><span># the set in order to use this special memory saving encoding.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>set-max-intset-entries 512
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Similarly to hashes and lists, sorted sets are also specially encoded in order
+</span></span><span style="display:flex;"><span># to save a lot of space. This encoding is only used when the length and
+</span></span><span style="display:flex;"><span># elements of a sorted set are below the following limits:
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>zset-max-ziplist-entries 128
+</span></span><span style="display:flex;"><span>zset-max-ziplist-value 64
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Active rehashing uses 1 millisecond every 100 milliseconds of CPU time in
+</span></span><span style="display:flex;"><span># order to help rehashing the main Redis hash table (the one mapping top-level
+</span></span><span style="display:flex;"><span># keys to values). The hash table implementation redis uses (see dict.c)
+</span></span><span style="display:flex;"><span># performs a lazy rehashing: the more operation you run into an hash table that
+</span></span><span style="display:flex;"><span># is rhashing, the more rehashing &#34;steps&#34; are performed, so if the server is
+</span></span><span style="display:flex;"><span># idle the rehashing is never complete and some more memory is used by the hash
+</span></span><span style="display:flex;"><span># table.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># The default is to use this millisecond 10 times every second in order to
+</span></span><span style="display:flex;"><span># active rehashing the main dictionaries, freeing memory when possible.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># Use &#34;activerehashing no&#34;. If you have hard latency requirements and it is not
+</span></span><span style="display:flex;"><span># a good thing in your environment that Redis can reply form time to time to
+</span></span><span style="display:flex;"><span># queries with 2 milliseconds delay.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># use &#34;activerehashing yes&#34; if you don&#39;t have such hard requirements but want to
+</span></span><span style="display:flex;"><span># free memory asap when possible.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span>activerehashing yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>############### INCLUDES ###############
+</span></span><span style="display:flex;"><span># Include one or more other config files here. This is useful if you have a
+</span></span><span style="display:flex;"><span># standard template that goes to all redis server but also need to customize a
+</span></span><span style="display:flex;"><span># few per-server settings. Include files can include other files, so use this
+</span></span><span style="display:flex;"><span># wisely.
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># include /path/to/local.conf
+</span></span><span style="display:flex;"><span># include /path/to/other.conf
+</span></span></code></pre></div><h2 id="master">Master</h2>
 <p>Open up incoming connections from the app servers (or the app server network)
 to port 6379.</p>
-<p>Use the default 'redis.conf' file in this repository, but change the
+<p>Use the default &lsquo;redis.conf&rsquo; file in this repository, but change the
 requirepass to something random and difficult and set masterauth to match the
 value.</p>
 <h2 id="slaves">Slaves</h2>
@@ -572,19 +657,37 @@ value.</p>
 to port tcp/6379. As well as outgoing connections to the master server on port
 tcp/6379.</p>
 <p>Use the identical config from the master but append the following line to it:</p>
-<pre><code>slaveof <master-ip> 6379
-</code></pre>
-</div>
-</article>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>slaveof &lt;master-ip&gt; 6379
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

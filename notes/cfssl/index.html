@@ -1,207 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&amp;rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I&amp;rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains." />
+<meta name="keywords" content="blog, programming, linux, systems, personal, certificates, security" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/cfssl/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            CFSSL :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="CFSSL">
+<meta itemprop="description" content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I&rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."><meta itemprop="datePublished" content="2017-10-24T18:39:22-04:00" />
+<meta itemprop="dateModified" content="2017-10-24T18:39:22-04:00" />
+<meta itemprop="wordCount" content="736">
+<meta itemprop="keywords" content="certificates,security," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="CFSSL"/>
+<meta name="twitter:description" content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I&rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."/>
+
+
+
+    <meta property="og:title" content="CFSSL" />
+<meta property="og:description" content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I&rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/cfssl/" /><meta property="article:section" content="notes" />
+<meta property="article:published_time" content="2017-10-24T18:39:22-04:00" />
+<meta property="article:modified_time" content="2017-10-24T18:39:22-04:00" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2017-10-24 18:39:22 -0400 EDT" />
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>CFSSL</h1><div class="post-content"><p><a href="https://github.com/cloudflare/cfssl">CFSSL</a> is a toolkit of utilities for TLS PKI infrastructures and supports
-more functionality than I've personally needed. It is a fast and convenient way
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/cfssl/">CFSSL</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><a href="https://github.com/cloudflare/cfssl">CFSSL</a> is a toolkit of utilities for TLS PKI infrastructures and supports
+more functionality than I&rsquo;ve personally needed. It is a fast and convenient way
 to setup and manage a multi-layer internal certificate authority.</p>
-<span id="continue-reading"></span>
-<p>I've used it to generate an internal root CA, with sub-CAs for internal only
+<p>I&rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only
 server certificates, and separate CAs for each domain of client certificates
 (such as VPN, log, mail, and LDAP servers). This allows the root CA to be
 protected more stringently than specific domains.</p>
 <p>CFSSL supports hardware backed private keys (HSMs), including the <a href="https://stelfox.net/notes/yubikey/">Yubikey
-NEO</a> as long as you don't need &gt; 1 signature/sec (which I definitely don't).
+NEO</a> as long as you don&rsquo;t need &gt; 1 signature/sec (which I definitely don&rsquo;t).
 You could also set it up with a Red October server for private key management,
 which could in turn be HSM backed.</p>
-<p>I haven't settled on software or processes to reliably handle my PKI
+<p>I haven&rsquo;t settled on software or processes to reliably handle my PKI
 infrastructure.</p>
 <h2 id="installation">Installation</h2>
 <p>These notes assume you have a working <a href="https://golang.org/">golang</a> installation. To install
 cfssl and the other associated utilities run the following command:</p>
-<pre><code>go get -u github.com/cloudflare/cfssl/cmd/...
-</code></pre>
-<p>If you have any errors, ensure your golang installation is sane. Some
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>go get -u github.com/cloudflare/cfssl/cmd/...
+</span></span></code></pre></div><p>If you have any errors, ensure your golang installation is sane. Some
 distributions do not have support for all of the available ciphers
 (specifically the eliptic curve variants in Red Hat based distributions) which
 may impact your ability to install and use the tool.</p>
 <h2 id="root-ca-setup">Root CA Setup</h2>
 <p>For the sake of organization I use a fairly simple directory structure which
 can be created with the following command:</p>
-<pre><code>mkdir -p ca/{source,json,output}
-cd ca
-</code></pre>
-<p>All the configuration is done through JSON files. The config for a root CA may
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mkdir -p ca/{source,json,output}
+</span></span><span style="display:flex;"><span>cd ca
+</span></span></code></pre></div><p>All the configuration is done through JSON files. The config for a root CA may
 look something like the following (which I placed in <code>ca/source/root.json</code>):</p>
-<pre data-lang="json" class="language-json "><code class="language-json" data-lang="json">{
-  "CN": "Stelfox Root Certificate Authority",
-  "key": {
-    "algo": "ecdsa",
-    "size": 521
-  }
-}
-</code></pre>
-<p>If you want to use RSA as your root key, you'd replace the <code>algo</code> field with
-<code>rsa</code> and the <code>size</code> field with an appropriately sized key (I'd recommend 3072
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;CN&#34;</span>: <span style="color:#a5d6ff">&#34;Stelfox Root Certificate Authority&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;key&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;algo&#34;</span>: <span style="color:#a5d6ff">&#34;ecdsa&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;size&#34;</span>: <span style="color:#a5d6ff">521</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>If you want to use RSA as your root key, you&rsquo;d replace the <code>algo</code> field with
+<code>rsa</code> and the <code>size</code> field with an appropriately sized key (I&rsquo;d recommend 3072
 or 4096 but you should match it to your security standards.</p>
 <p>To generate the cert/key pair you can use the following command:</p>
-<pre><code>cfssl genkey -initca source/root.json > json/root.json
-</code></pre>
-<p>You can turn the resulting files into a set of PEM encoded files more familiar
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cfssl genkey -initca source/root.json &gt; json/root.json
+</span></span></code></pre></div><p>You can turn the resulting files into a set of PEM encoded files more familiar
 to day to operation:</p>
-<pre><code>cat json/root.json | cfssljson -bare output/root
-</code></pre>
-<p>In the output directory you'll find <code>root.csr</code>, <code>root-key.pem</code>, and <code>root.pem</code>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cat json/root.json | cfssljson -bare output/root
+</span></span></code></pre></div><p>In the output directory you&rsquo;ll find <code>root.csr</code>, <code>root-key.pem</code>, and <code>root.pem</code>
 which is the effective CSR used to generate the cert, the private key, and the
 cert itself respectively. You can view the contents of the certificate using
 the following command:</p>
-<pre><code>openssl x509 -in output/root.pem -text -noout
-</code></pre>
-<p>We'll then want to create a <code>config.json</code> file to define who, and how we sign
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>openssl x509 -in output/root.pem -text -noout
+</span></span></code></pre></div><p>We&rsquo;ll then want to create a <code>config.json</code> file to define who, and how we sign
 future certificates.</p>
-<pre data-lang="json" class="language-json "><code class="language-json" data-lang="json">{
-  "signing": {
-    "profiles": {
-      "subca": {
-        "ca_constraint": {
-          "is_ca": true,
-          "max_path_len": 0
-        },
-        "expiry": "8760h",
-        "usages": ["cert sign", "crl sign"]
-      }
-    }
-  }
-}
-</code></pre>
-<h2 id="generating-a-sub-ca">Generating a Sub-CA</h2>
-<p>We'll generate a CA to handle internal server authentication (my servers to my
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;signing&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;profiles&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;subca&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;ca_constraint&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;is_ca&#34;</span>: <span style="color:#79c0ff">true</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#7ee787">&#34;max_path_len&#34;</span>: <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;expiry&#34;</span>: <span style="color:#a5d6ff">&#34;8760h&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#7ee787">&#34;usages&#34;</span>: [<span style="color:#a5d6ff">&#34;cert sign&#34;</span>, <span style="color:#a5d6ff">&#34;crl sign&#34;</span>]
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="generating-a-sub-ca">Generating a Sub-CA</h2>
+<p>We&rsquo;ll generate a CA to handle internal server authentication (my servers to my
 servers). I created the following file in <code>sources/servers.json</code>:</p>
-<pre data-lang="json" class="language-json "><code class="language-json" data-lang="json">{
-  "CN": "Stelfox Server Certificate Authority",
-  "key": {
-    "algo": "ecdsa",
-    "size": 521
-  }
-}
-</code></pre>
-<p>And generate the servers CA with the following command:</p>
-<pre><code>cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem \
-  -config config.json -profile subca source/servers.json > json/servers.json
-</code></pre>
-<p>Which can in turn be turned into normal certificates as before with the
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;CN&#34;</span>: <span style="color:#a5d6ff">&#34;Stelfox Server Certificate Authority&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;key&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;algo&#34;</span>: <span style="color:#a5d6ff">&#34;ecdsa&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;size&#34;</span>: <span style="color:#a5d6ff">521</span>
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And generate the servers CA with the following command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem \
+</span></span><span style="display:flex;"><span>  -config config.json -profile subca source/servers.json &gt; json/servers.json
+</span></span></code></pre></div><p>Which can in turn be turned into normal certificates as before with the
 following command:</p>
-<pre><code>cat json/servers.json | cfssljson -bare output/servers
-</code></pre>
-<p>You'll also want to generate a certificate for your first server using this.
-Before we can we'll want to add another profile to our config. This is up to
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cat json/servers.json | cfssljson -bare output/servers
+</span></span></code></pre></div><p>You&rsquo;ll also want to generate a certificate for your first server using this.
+Before we can we&rsquo;ll want to add another profile to our config. This is up to
 you to merge into your config:</p>
-<pre data-lang="json" class="language-json "><code class="language-json" data-lang="json">"server": {
-  "expiry": "8760h",
-  "usages": ["signing", "key encipherment", "server auth", "client auth"]
-}
-</code></pre>
-<h2 id="creating-a-server-certificate">Creating a Server Certificate</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="color:#a5d6ff">&#34;server&#34;</span><span style="color:#f85149">:</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;expiry&#34;</span>: <span style="color:#a5d6ff">&#34;8760h&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;usages&#34;</span>: [<span style="color:#a5d6ff">&#34;signing&#34;</span>, <span style="color:#a5d6ff">&#34;key encipherment&#34;</span>, <span style="color:#a5d6ff">&#34;server auth&#34;</span>, <span style="color:#a5d6ff">&#34;client auth&#34;</span>]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="creating-a-server-certificate">Creating a Server Certificate</h2>
 <p>Create a certificate configuration for the server (this one for
 testhost.stelfox.net with a couple of CNAMEs) store in <code>source/testhost.json</code>.
 If you use the hosts array, be sure to include the CN name as well if it needs
 to be validated as well.</p>
-<pre data-lang="json" class="language-json "><code class="language-json" data-lang="json">{
-  "CN": "testhost.stelfox.net",
-  "key": {
-    "algo": "ecdsa",
-    "size": 521
-  },
-  "hosts": [
-    "testhost.stelfox.net",
-    "tst01.dev.sfa.stelfox.net",
-    "fud01.dev.sfa.stelfox.net"
-  ],
-  "names": [
-    {
-      "C": "US",
-      "ST": "No State",
-      "L": "No Town",
-      "O": "Stelfox Personal Systems",
-      "OU": "Research & Development"
-    }
-  ]
-}
-</code></pre>
-<p>And generate the key and certificate:</p>
-<pre><code>cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem \
-  -config config.json -profile server source/testhost.json > json/testhost.json
-cat json/testhost.json | cfssljson -bare output/testhost
-</code></pre>
-<h2 id="distributing-trust">Distributing Trust</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;CN&#34;</span>: <span style="color:#a5d6ff">&#34;testhost.stelfox.net&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;key&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;algo&#34;</span>: <span style="color:#a5d6ff">&#34;ecdsa&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#7ee787">&#34;size&#34;</span>: <span style="color:#a5d6ff">521</span>
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;hosts&#34;</span>: [
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;testhost.stelfox.net&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;tst01.dev.sfa.stelfox.net&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#a5d6ff">&#34;fud01.dev.sfa.stelfox.net&#34;</span>
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>  <span style="color:#7ee787">&#34;names&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;C&#34;</span>: <span style="color:#a5d6ff">&#34;US&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;ST&#34;</span>: <span style="color:#a5d6ff">&#34;No State&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;L&#34;</span>: <span style="color:#a5d6ff">&#34;No Town&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;O&#34;</span>: <span style="color:#a5d6ff">&#34;Stelfox Personal Systems&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#7ee787">&#34;OU&#34;</span>: <span style="color:#a5d6ff">&#34;Research &amp; Development&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>And generate the key and certificate:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem \
+</span></span><span style="display:flex;"><span>  -config config.json -profile server source/testhost.json &gt; json/testhost.json
+</span></span><span style="display:flex;"><span>cat json/testhost.json | cfssljson -bare output/testhost
+</span></span></code></pre></div><h2 id="distributing-trust">Distributing Trust</h2>
 <p>I generally recommend distributing the CA certificate for the specific service
 to the specific service and not make it a generally trusted the system as a
 whole. This is especially true for this program as without a HSM there is no
 protection over any of the private keys.</p>
-</div>
-</article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://stelfox.net/tags/certificates/">certificates</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/security/">security</a></span>
+        
+    </p>
+
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

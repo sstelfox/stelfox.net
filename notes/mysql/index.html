@@ -1,199 +1,432 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Server Installation Install the package.
+yum install mysql-server -y Set to start up auto-magically and get it going now.
+systemctl enable mysqld.service systemctl start mysqld.service Run the quick and dirty secure installation script that comes with the server." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/mysql/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            MySQL :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="MySQL">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Server Installation Install the package.
+yum install mysql-server -y Set to start up auto-magically and get it going now.
+systemctl enable mysqld.service systemctl start mysqld.service Run the quick and dirty secure installation script that comes with the server.">
+
+<meta itemprop="wordCount" content="2053">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="MySQL"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Server Installation Install the package.
+yum install mysql-server -y Set to start up auto-magically and get it going now.
+systemctl enable mysqld.service systemctl start mysqld.service Run the quick and dirty secure installation script that comes with the server."/>
+
+
+
+    <meta property="og:title" content="MySQL" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Server Installation Install the package.
+yum install mysql-server -y Set to start up auto-magically and get it going now.
+systemctl enable mysqld.service systemctl start mysqld.service Run the quick and dirty secure installation script that comes with the server." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/mysql/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>MySQL</h1><div class="post-content"><h2 id="server">Server</h2>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/mysql/">MySQL</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="server">Server</h2>
 <h3 id="installation">Installation</h3>
 <p>Install the package.</p>
-<pre><code>yum install mysql-server -y
-</code></pre>
-<p>Set to start up auto-magically and get it going now.</p>
-<pre><code>systemctl enable mysqld.service
-systemctl start mysqld.service
-</code></pre>
-<p>Run the quick and dirty secure installation script that comes with the server.
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install mysql-server -y
+</span></span></code></pre></div><p>Set to start up auto-magically and get it going now.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl enable mysqld.service
+</span></span><span style="display:flex;"><span>systemctl start mysqld.service
+</span></span></code></pre></div><p>Run the quick and dirty secure installation script that comes with the server.
 The questions are pretty straight-forward just set a secure password when it
 asks for it.</p>
-<pre><code>mysql_secure_installation
-</code></pre>
-<h3 id="configuration">Configuration</h3>
-<p>Before applying the <a href="https://stelfox.net/notes/mysql/my.cnf">configuration file</a> in <code>/etc/my.cnf</code>. Safely
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mysql_secure_installation
+</span></span></code></pre></div><h3 id="configuration">Configuration</h3>
+<p>Before applying the following configuration file in <code>/etc/my.cnf</code>. Safely
 shutdown the server and delete the logfiles <code>/var/lib/mysql/ib_logfile*</code>. This
 configuration file will change the size of the log buffer and it will cause an
 error when starting the server backup that will look like:</p>
-<pre><code>InnoDB: Error: log file ./ib_logfile0 is of a different size 0 5242880 bytes
-InnoDB: than specified in the .cnf file 0 67108864 bytes!
-</code></pre>
-<p>There is still one major security feature that I haven't added to this
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>InnoDB: Error: log file ./ib_logfile0 is of a different size 0 5242880 bytes
+</span></span><span style="display:flex;"><span>InnoDB: than specified in the .cnf file 0 67108864 bytes!
+</span></span></code></pre></div><p>There is still one major security feature that I haven&rsquo;t added to this
 configuration yet. Running the mysql daemon in a chroot environment. Details on
-setting up a chroot environment for mysql can be found, <a href="https://community.broadcom.com/symantecenterprise/communities/community-home/librarydocuments/viewdocument?DocumentKey=e424fa89-758d-42ec-a272-a0c285d887ac&amp;CommunityKey=1ecf5f55-9545-44d6-b0f4-4e4a7f5f5e68&amp;tab=librarydocuments">here</a>.</p>
+setting up a chroot environment for mysql can be found, <a href="http://www.symantec.com/connect/articles/securing-mysql-step-step">here</a>, and
+<a href="http://www.webhostingskills.com/articles/mysql_in_a_chrooted_environment">here</a>.</p>
 <p>Detailed information on all of the configuration options can be found
-<a href="https://dev.mysql.com/doc/refman/8.0/en/dynamic-system-variables.html">here</a>. There is a script that can assist in tuning larger production
-databases I've stored <a href="https://stelfox.net/notes/mysql/mysql_tuning.sh">here</a>.</p>
-<p>There is some additional configuration in the systemd init script, specifically
+<a href="http://dev.mysql.com/doc/refman/5.5/en/dynamic-system-variables.html">here</a>.  There is a script that can assist in tuning larger production
+databases I&rsquo;ve stored <a href="https://stelfox.net/notes/mysql-tuning/">here</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#ff7b72">[mysqld]</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Bind only to expected address. You can not bind to multiple addresses, it&#39;s</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># none, 1 or all (0.0.0.0)</span>
+</span></span><span style="display:flex;"><span>bind-address <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">127.0.0.1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Always use UTF-8</span>
+</span></span><span style="display:flex;"><span>character-set-server <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">utf8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Root path used to store MySQL&#39;s data</span>
+</span></span><span style="display:flex;"><span>datadir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/mysql</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Use innodb by default (true anyways but I like to be explicit)</span>
+</span></span><span style="display:flex;"><span>default-storage-engine <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">innodb</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># 0 = Don&#39;t log warnings, 1 = log warnings, 2 = log warnings and access denied</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># errors.</span>
+</span></span><span style="display:flex;"><span>log-warnings <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># How many real world seconds pass before we consider a query to be long</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># running. Default is 10.</span>
+</span></span><span style="display:flex;"><span>long_query_time <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Which port to listen on, default is 3306</span>
+</span></span><span style="display:flex;"><span>port <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3306</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># A user needs to have the INSERT privilege on the mysql.user table to use the</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># GRANT statement. This can be provided to non-root users with the following</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># command:</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># GRANT INSERT(user) ON mysql.user TO &#39;user_name&#39;@&#39;host_name&#39;;</span>
+</span></span><span style="display:flex;"><span>safe_user_create
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Prevent client connections from clients attempting to use insecure password</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># authentication</span>
+</span></span><span style="display:flex;"><span>secure_auth
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Only allow load data and outfile to be to/from the given directory. This</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># ensures that whatever user is trying to load or dump data from this server</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># instance already needs to be able to write to that directory. If an</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># unauthorized person can write to the mysql data directory anyways the data</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># can&#39;t be trusted anyway.</span>
+</span></span><span style="display:flex;"><span>secure-file-priv <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/mysql</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Require privileges to actually list/enumerate the databases</span>
+</span></span><span style="display:flex;"><span>skip-show-database
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Prevent symbolic links as a security measureskip-symbolic-links</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Log any &#34;slow&#34; queries from hosts, useful as a diagnostic measure for both</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># application development and production diagnostics. A slow query is defined by</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># the long_query_time variable.</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># These logs will live in /var/lib/mysql/ and will be pre-pended with the</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># hostname that caused the slow query itself.</span>
+</span></span><span style="display:flex;"><span>slow_query_log
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Path to the socket file used to access the server locally</span>
+</span></span><span style="display:flex;"><span>socket <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/mysql/mysql.sock</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### SSL Settings #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># All three options are required to enable SSL for the server. To force a user</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># to use an SSL connection when they are connecting to the server, while granting</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># them privileges add &#34;REQUIRE SSL&#34; to the end of the grant statement. &#34;REQUIRE</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># X509&#34; will require the user to present a valid certificate (it&#39;s unclear whether</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># this needs to be signed by a certificate in the server&#39;s CA file), &#34;REQUIRE</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># ISSUER&#34; and &#34;REQUIRE SUBJECT&#34; specify details required in the provided</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># certificate. The last three imply &#34;REQUIRE SSL&#34;.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Define the certificate authority file, it should have been used to sign the</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># server&#39;s certificate, and will be used to validate client certificates that</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># have been presented.</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#ssl_ca = ca.crt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The name of the SSL certficate file in PEM format to use for establishing a</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># secure connection.</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#ssl_cert = mysql.crt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The name of the SSL key file in PEM format to use for establishing a secure</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># connection</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#ssl_key = mysql.key</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### InnoDB specific settings #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># If there are lots of tables in the database you may need to increase this</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># value from it&#39;s default of 8Mb. MySQLd will log warning messages if this is</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># the case.</span>
+</span></span><span style="display:flex;"><span>innodb_additional_mem_pool_size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8M</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Amount of data to cache, default is 8Mb, shouldn&#39;t ever be more than 80% of</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># server&#39;s physical memory size even on a dedicated box. Even that high may</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># cause other issues on the server such as competition from the OS, and the</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># space must be contiguous which isn&#39;t always available. This is only the table</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># and data cache, MySQLd may allocate additional memory for buffers and control</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># structures. On dedicated MySQL boxes it is recommended that this be between</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># 75% and 80%</span>
+</span></span><span style="display:flex;"><span>innodb_buffer_pool_size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">32M</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Validate the checksums of all pages read from disk to ensure fault tolerance</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># against broken hardware or data files. Enabled by default but I like to be</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># explicit...</span>
+</span></span><span style="display:flex;"><span>innodb_checksums <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Breaks the database into smaller more managable pieces, and if careful can</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># allow for individual table backups and restoration while the server is</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># running. There is a special process to handle this and it should looked up</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># before attempting. The main benefit of using this option is the prevention</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># of main tablespace growth.</span>
+</span></span><span style="display:flex;"><span>innodb_file_per_table
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># 0 = A most one second of transactions are lost in the event of an application</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># crash, 1 = ACID compliant and most reliable storage of data, 2 is somewhere in</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># between 0 and 1 losing at most 1 second of data only in the case of power</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># outage or server failure. 1 is the default. If you&#39;re not worried about losing</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># transactions for the last second or two a value of 2 can have a dramatic increase</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># especially when there are a lot of short write transactions.</span>
+</span></span><span style="display:flex;"><span>innodb_flush_log_at_trx_commit <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># An upper limit on the IO activity performed by InnoDB background tasks.</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Default value is 200 with a minimum value of 100. This parameter should be set</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># approximately what the IOPS of the system disk the tables are stored on is</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># able to provide (100 for 5.2k &amp; 7.2k drives, 150 for 10k, 200 for 15k and</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># 250 for SSDs). It is recommended to &#39;keep this setting as low as practical, but</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># not so low that these background activities fall behind.&#39; Too high and data will</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># be removed from the buffer pool too quickly to benefit from the caching.</span>
+</span></span><span style="display:flex;"><span>innodb_io_capacity <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">100</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># This will prevent too much log switching on write heavy databases (default is</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># 8Mb). Larger buffers all larger transactions to run without the need to write</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># the log to disk before the transactions commit. On larger databases this should</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># be set higher to something like 256Mb, there isn&#39;t a large benefit above 512Mb</span>
+</span></span><span style="display:flex;"><span>innodb_log_file_size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">64M</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The size of the buffer that InnoDB uses to write to the log files on disk.</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Default is 8Mb. A larger log buffer allows larger transactions to run without</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># a need to write the log to disk before the transactions commit.</span>
+</span></span><span style="display:flex;"><span>innodb_log_buffer_size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8M</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The size of each transaction log (default is 5Mb). The larger the value the</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># less checkpoint flush activity is needed in the buffer pool saving disk IO at</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># the expense of crash recovery time. Recommended is 1/nth of the</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># innodb_buffer_pool_size where N is the value of innodb_log_files_in_group. In</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># this file that&#39;s 1/2 of 32Mb.</span>
+</span></span><span style="display:flex;"><span>innodb_log_file_size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">16M</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The number of transaction logs to make use of, the default, recommended and</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># minimum is 2. These will written to in a circular fashion.</span>
+</span></span><span style="display:flex;"><span>innodb_log_files_in_group <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[mysqld_safe]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Where to store the MySQLd process ID</span>
+</span></span><span style="display:flex;"><span>pid-file <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/run/mysqld/mysqld.pid</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Enable logging to syslog</span>
+</span></span><span style="display:flex;"><span>syslog
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[mysql]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Adjust the prompt to be more useful/verbose.</span>
+</span></span><span style="display:flex;"><span>prompt<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">(\\u@\\h) [\\d]&gt;\\_</span>
+</span></span></code></pre></div><p>There is some additional configuration in the systemd init script, specifically
 which user/group the service will fork too (default is mysql/mysql). If you
-need to change this you'll need to make the adjustment in
+need to change this you&rsquo;ll need to make the adjustment in
 <code>/etc/systemd/system/multi-user.target.wants/mysqld.service</code>.</p>
 <h3 id="firewall">Firewall</h3>
-<pre><code>-A SERVICES -m tcp -p tcp --dport 3306 -j ACCEPT
-</code></pre>
-<h3 id="resetting-the-root-password">Resetting the Root Password</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>-A SERVICES -m tcp -p tcp --dport 3306 -j ACCEPT
+</span></span></code></pre></div><h3 id="resetting-the-root-password">Resetting the Root Password</h3>
 <p>Stop the MySQL daemon, and disable remote access to the server (block in
 firewall etc). Start up MySQL with privilege checking disabled (In this mode
 any credential will be accepted for any username and that user will have full
 root database privileges (thus blocking remote access).</p>
-<pre><code>mysqld_safe --skip-grant-tables
-</code></pre>
-<p>In a separate terminal window connect to the database:</p>
-<pre><code>mysql -u root
-</code></pre>
-<p>Refer to the section on changing a user's password at this point. When done be
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mysqld_safe --skip-grant-tables
+</span></span></code></pre></div><p>In a separate terminal window connect to the database:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mysql -u root
+</span></span></code></pre></div><p>Refer to the section on changing a user&rsquo;s password at this point. When done be
 sure to kill the <code>mysqld_safe</code> instance, start up the daemon normally and
 restore access to the server.</p>
 <h3 id="quick-self-signed-ssl-cert-w-client">Quick Self Signed SSL Cert w/ Client</h3>
 <p>This should be used for testing and development only, it requires a bit more
-than a simple SSL cert as MySQL requires a CA cert as well so we'll generate a
+than a simple SSL cert as MySQL requires a CA cert as well so we&rsquo;ll generate a
 self signed CA, a server certificate, and then a client certificate that can be
 used for user authentication.</p>
 <p>First the CA:</p>
-<pre><code>openssl req -new -x509 -newkey rsa:4096 -keyout ca.key -nodes -days 365 \
-  -out ca.crt
-</code></pre>
-<p>Then the server cert:</p>
-<pre><code>openssl req -newkey rsa:4096 -keyout server.key -nodes -days 365 \
-  -out server.csr
-openssl x509 -req -in server.csr -days 365 -CA ca.crt -CAkey ca.key \
-  -set_serial 01 -out server.crt
-rm server.csr
-</code></pre>
-<p>Then the client cert:</p>
-<pre><code>openssl req -newkey rsa:4096 -keyout client.key -nodes -days 365 \
-  -out client.csr
-openssl x509 -req -in client.csr -days 365 -CA ca.crt -CAkey ca.key \
-  -set_serial 02 -out client.crt
-rm client.csr
-</code></pre>
-<h2 id="client">Client</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>openssl req -new -x509 -newkey rsa:4096 -keyout ca.key -nodes -days 365 \
+</span></span><span style="display:flex;"><span>  -out ca.crt
+</span></span></code></pre></div><p>Then the server cert:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>openssl req -newkey rsa:4096 -keyout server.key -nodes -days 365 \
+</span></span><span style="display:flex;"><span>  -out server.csr
+</span></span><span style="display:flex;"><span>openssl x509 -req -in server.csr -days 365 -CA ca.crt -CAkey ca.key \
+</span></span><span style="display:flex;"><span>  -set_serial 01 -out server.crt
+</span></span><span style="display:flex;"><span>rm server.csr
+</span></span></code></pre></div><p>Then the client cert:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>openssl req -newkey rsa:4096 -keyout client.key -nodes -days 365 \
+</span></span><span style="display:flex;"><span>  -out client.csr
+</span></span><span style="display:flex;"><span>openssl x509 -req -in client.csr -days 365 -CA ca.crt -CAkey ca.key \
+</span></span><span style="display:flex;"><span>  -set_serial 02 -out client.crt
+</span></span><span style="display:flex;"><span>rm client.csr
+</span></span></code></pre></div><h2 id="client">Client</h2>
 <h3 id="remotely-calculate-the-size-of-a-database">Remotely Calculate the Size of a Database</h3>
 <p>Paste the following query into an interactive console session to collect the
 sizes of all databases the current user has access to:</p>
-<pre><code>SELECT table_schema "Database Name", SUM(data_length + index_length) / 1024
-  / 1024 "Size in Mb" FROM information_schema.TABLES GROUP BY table_schema;
-</code></pre>
-<h3 id="drop-tables">Drop Tables</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>SELECT table_schema &#34;Database Name&#34;, SUM(data_length + index_length) / 1024
+</span></span><span style="display:flex;"><span>  / 1024 &#34;Size in Mb&#34; FROM information_schema.TABLES GROUP BY table_schema;
+</span></span></code></pre></div><h3 id="drop-tables">Drop Tables</h3>
 <p>Without being able to drop a database and create a new one it can be kind of
-frustrating to empty a database of all it's tables so I've written a quick
+frustrating to empty a database of all it&rsquo;s tables so I&rsquo;ve written a quick
 script to drop all the tables from a specified database.</p>
-<pre><code>#!/bin/bash
-
-DBUSER="$1"
-DBPASS="$2"
-DBNAME="$3"
-DBHOST="$4"
-
-if [ $# -ne 4 ]; then
-  echo "Usage: $0 {username} {password} {database} {hostname}"
-  echo "Drops all tables from a MySQL"
-  exit 1
-fi
-
-TABLES=$(mysql -u $DBUSER -p$DBPASS -h$DBHOST $DBNAME -e 'show tables;' |
-  awk '{ print $1}' | grep -v '^Tables' )
-
-for t in $TABLES; do
-  echo "Deleting $t table from $MDB database..."
-  mysql -u $DBUSER -p$DBPASS -h$DBHOST $DBNAME -e "drop table $t;"
-done
-</code></pre>
-<h3 id="new-database-and-user">New Database and User</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">DBUSER</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$1</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">DBPASS</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$2</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">DBNAME</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$3</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">DBHOST</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$4</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[</span> <span style="color:#79c0ff">$#</span> -ne <span style="color:#a5d6ff">4</span> <span style="color:#ff7b72;font-weight:bold">]</span>; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#a5d6ff">&#34;Usage: </span><span style="color:#79c0ff">$0</span><span style="color:#a5d6ff"> {username} {password} {database} {hostname}&#34;</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#a5d6ff">&#34;Drops all tables from a MySQL&#34;</span>
+</span></span><span style="display:flex;"><span>  exit <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">TABLES</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#ff7b72">$(</span>mysql -u <span style="color:#79c0ff">$DBUSER</span> -p<span style="color:#79c0ff">$DBPASS</span> -h<span style="color:#79c0ff">$DBHOST</span> <span style="color:#79c0ff">$DBNAME</span> -e <span style="color:#a5d6ff">&#39;show tables;&#39;</span> |
+</span></span><span style="display:flex;"><span>  awk <span style="color:#a5d6ff">&#39;{ print $1}&#39;</span> | grep -v <span style="color:#a5d6ff">&#39;^Tables&#39;</span> <span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">for</span> t in <span style="color:#79c0ff">$TABLES</span>; <span style="color:#ff7b72">do</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#a5d6ff">&#34;Deleting </span><span style="color:#79c0ff">$t</span><span style="color:#a5d6ff"> table from </span><span style="color:#79c0ff">$MDB</span><span style="color:#a5d6ff"> database...&#34;</span>
+</span></span><span style="display:flex;"><span>  mysql -u <span style="color:#79c0ff">$DBUSER</span> -p<span style="color:#79c0ff">$DBPASS</span> -h<span style="color:#79c0ff">$DBHOST</span> <span style="color:#79c0ff">$DBNAME</span> -e <span style="color:#a5d6ff">&#34;drop table </span><span style="color:#79c0ff">$t</span><span style="color:#a5d6ff">;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">done</span>
+</span></span></code></pre></div><h3 id="new-database-and-user">New Database and User</h3>
 <p>Note: For security reasons user creation should be performed over an encrypted
 channel. See the section on Using SSL.</p>
-<pre><code>CREATE DATABASE example;
-GRANT ALL ON example.* TO 'some-example-user'@'%.home-network.net' IDENTIFIED
-  BY 'mYsUperSt0ngpassWordD0ntcoPyM3!';
-FLUSH PRIVILEGES;
-</code></pre>
-<h3 id="change-user-password">Change User Password</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>CREATE DATABASE example;
+</span></span><span style="display:flex;"><span>GRANT ALL ON example.* TO &#39;some-example-user&#39;@&#39;%.home-network.net&#39; IDENTIFIED
+</span></span><span style="display:flex;"><span>  BY &#39;mYsUperSt0ngpassWordD0ntcoPyM3!&#39;;
+</span></span><span style="display:flex;"><span>FLUSH PRIVILEGES;
+</span></span></code></pre></div><h3 id="change-user-password">Change User Password</h3>
 <p>Note: For security reasons this password update should be performed over an
 encrypted channel. See the section on Using SSL.</p>
-<pre><code>UPDATE mysql.user SET password=PASSWORD("my-new-super-secure-password") WHERE
-  user='some-user-name';
-</code></pre>
-<h3 id="configuration-1">Configuration</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>UPDATE mysql.user SET password=PASSWORD(&#34;my-new-super-secure-password&#34;) WHERE
+</span></span><span style="display:flex;"><span>  user=&#39;some-user-name&#39;;
+</span></span></code></pre></div><h3 id="configuration-1">Configuration</h3>
 <p>Quick and simple change I make to my client configuration to make the prompt a
 little more verbose. Create the following file in <code>~/.my.cnf</code>:</p>
-<pre><code>[mysql]prompt=(\\u@\\h) [\\d]>\\_
-</code></pre>
-<p>This can also be set system wide in <code>/etc/my.cnf</code> for all users by appending
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[mysql]prompt=(\\u@\\h) [\\d]&gt;\\_
+</span></span></code></pre></div><p>This can also be set system wide in <code>/etc/my.cnf</code> for all users by appending
 the above (which I do in all my server configurations).</p>
 <h3 id="using-ssl">Using SSL</h3>
 <p>Pretty straight forward, one off can be done like the following:</p>
-<pre><code>mysql -u user -ppassword -h host --ssl-ca=./ca.crt database
-</code></pre>
-<p>Once connected you can verify the session is encrypted with the following
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mysql -u user -ppassword -h host --ssl-ca=./ca.crt database
+</span></span></code></pre></div><p>Once connected you can verify the session is encrypted with the following
 query:</p>
-<pre><code>(root@127.0.0.1) [(none)]> show status like 'ssl_cipher';
-</code></pre>
-<p>If the second column returned is non-empty then your session is encrypted.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>(root@127.0.0.1) [(none)]&gt; show status like &#39;ssl_cipher&#39;;
+</span></span></code></pre></div><p>If the second column returned is non-empty then your session is encrypted.</p>
 <h3 id="see-remote-version">See Remote Version</h3>
-<pre><code>(user@example-mysql) [(none)]> SELECT VERSION();
-</code></pre>
-<h3 id="useful-diagnostic-testing-maintenance-scripts">Useful Diagnostic / Testing / Maintenance Scripts</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>(user@example-mysql) [(none)]&gt; SELECT VERSION();
+</span></span></code></pre></div><h3 id="useful-diagnostic--testing--maintenance-scripts">Useful Diagnostic / Testing / Maintenance Scripts</h3>
 <ul>
-<li><a href="https://www.percona.com/doc/percona-toolkit/2.1/index.html">Percona Toolkit</a></li>
+<li><a href="http://www.percona.com/doc/percona-toolkit/2.1/">http://www.percona.com/doc/percona-toolkit/2.1/</a></li>
 </ul>
 <h3 id="tcmalloc">TCMalloc</h3>
 <p>Due to high thread contention in some versions of MySQL a huge performance
@@ -201,21 +434,40 @@ boost can be gained by using a third party malloc, TCMalloc has been proven to
 reduce thread contention in MySQL and provide as much as a 30% boost in all
 query timing.</p>
 <ul>
-<li><a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">TCMalloc : Thread-Caching Malloc</a></li>
-<li><a href="https://github.com/gperftools/gperftools">gperftools</a></li>
+<li><a href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">http://goog-perftools.sourceforge.net/doc/tcmalloc.html</a></li>
+<li><a href="https://code.google.com/p/gperftools/">https://code.google.com/p/gperftools/</a></li>
 </ul>
 <p>MORE TODO</p>
-</div>
-</article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on Sam Stelfox</title>
+    <link>https://stelfox.net/tags/linux/</link>
+    <description>Recent content in linux on Sam Stelfox</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <managingEditor>sam@stelfox.net (Sam Stelfox)</managingEditor>
+    <webMaster>sam@stelfox.net (Sam Stelfox)</webMaster>
+    <lastBuildDate>Sun, 23 Feb 2020 20:09:02 -0400</lastBuildDate><atom:link href="https://stelfox.net/tags/linux/atom.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Logical Volume in Use</title>
+      <link>https://stelfox.net/blog/2020/02/logical-volume-in-use/</link>
+      <pubDate>Sun, 23 Feb 2020 20:09:02 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2020/02/logical-volume-in-use/</guid>
+      <description>While attempting to automate some filesytem creation that involved LVM I kept running into an issue occasionally with some holding open the logical volumes. I would attempt to disable the volume using the following command:
+$ lvchange -an system/storage Logical volume system/storage contains a filesystem in use. All of the mounts for the filesystems that were on the volume were unmounted, so it must have been a process. The trick to finding this out is to query all the processes mount files to find out what is holding this open.</description>
+    </item>
+    
+    <item>
+      <title>Extracting Dracut Built initramfs</title>
+      <link>https://stelfox.net/blog/2020/02/extracting-dracut-built-initramfs/</link>
+      <pubDate>Tue, 18 Feb 2020 18:42:02 -0500</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2020/02/extracting-dracut-built-initramfs/</guid>
+      <description>It&amp;rsquo;s been a hot second since I&amp;rsquo;ve dived into the lands of initramfs and since then it seems like things have gotten more complicated. This is the way of things in tech and usually has a good reason. The simple way that used to work wonders (and is still required) to start with, was to identify if the file is compressed:
+$ file /boot/initramfs-current.img /boot/initramfs-current.img: ASCII cpio archive (SVR4 with no CRC) In this case the file appears to be entirely uncompressed which is convenient and likely exactly what you&amp;rsquo;ll experience for reasons I&amp;rsquo;m about to get to.</description>
+    </item>
+    
+    <item>
+      <title>Blender Loop Select in Cinnamon</title>
+      <link>https://stelfox.net/blog/2019/11/blender-loop-select-in-cinnamon/</link>
+      <pubDate>Wed, 27 Nov 2019 16:42:02 -0500</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2019/11/blender-loop-select-in-cinnamon/</guid>
+      <description>I&amp;rsquo;ve recently been playing around with Blender (following this tutorial series). In Part 4 of the Level 1 series, the host Andrew Price is teaching about loop selects which very simply is holding down Alt while clicking on a vertex. The issue wasn&amp;rsquo;t working for me though I found quite a few other users experiencing the issue.
+The most common fix was when people had three button mouse emulation enabled (a common setting people turn on when using laptops or Macs).</description>
+    </item>
+    
+    <item>
+      <title>Fixing Hung Nginx Workers</title>
+      <link>https://stelfox.net/blog/2019/10/fixing-hung-nginx-workers/</link>
+      <pubDate>Fri, 25 Oct 2019 11:26:31 -0500</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2019/10/fixing-hung-nginx-workers/</guid>
+      <description>While cleaning up some tech debt, a curious issue cropped up. Nginx was running in an alpine container as a front end load balancer. It had a dynamic config that got periodically updated by a sidecar, and had filebeat shipping logs out to a central collector but otherwise was just a very simple Nginx config.
+Every now and then the container would crash, it would automatically recover fast enough no alarms were lost and the clients would just resend their requests.</description>
+    </item>
+    
+    <item>
+      <title>Fixing Dark Input Boxes in Firefox</title>
+      <link>https://stelfox.net/blog/2019/04/fixing-dark-input-boxes-in-firefox/</link>
+      <pubDate>Sat, 13 Apr 2019 11:53:22 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2019/04/fixing-dark-input-boxes-in-firefox/</guid>
+      <description>I recently began trying out Cinnamon as my desktop environment and I&amp;rsquo;ve been thoroughly enjoying it. The only issue I was having was occasionally a page&amp;rsquo;s form input fields would have a dark background while still having dark text making it impossible to read, and very difficult to write.
+It wasn&amp;rsquo;t happening everywhere, and I couldn&amp;rsquo;t track down what about a website would cause the issue. Most prominently for me was when this showed up in AWS&amp;rsquo;s interface.</description>
+    </item>
+    
+    <item>
+      <title>Merging Overlapping Subnets</title>
+      <link>https://stelfox.net/blog/2019/03/merging-overlapping-subnets/</link>
+      <pubDate>Wed, 27 Mar 2019 19:11:30 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2019/03/merging-overlapping-subnets/</guid>
+      <description>Once upon a time there was a single AWS account. In this AWS account was several regions but a single VPC. To make sure expansions into other regions was possible this VPC chose to use the largest private subnet which just so happened to also be the default (10.0.0.0/8).
+Another AWS account enter the picture and while they were single they came to the same conclusion and followed the best practices and defaults to their heart&amp;rsquo;s content.</description>
+    </item>
+    
+    <item>
+      <title>Fighting IPSec on AWS</title>
+      <link>https://stelfox.net/blog/2019/03/fighting-ipsec-on-aws/</link>
+      <pubDate>Thu, 14 Mar 2019 21:26:30 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2019/03/fighting-ipsec-on-aws/</guid>
+      <description>IPSec is a well known and well understood protocol that is pretty easy to get setup and going&amp;hellip; Most of the time. While setting up an IPSec tunnel to an AWS host I came across a new and unique experience that didn&amp;rsquo;t seem to have an easily searchable solution.
+I had two CentOS 7 EC2 instances, each set up with their own Elastic IP in a default VPC. I installed and configured libreswan with the following config:</description>
+    </item>
+    
+    <item>
+      <title>Hosting Your Own Private Git Repo</title>
+      <link>https://stelfox.net/blog/2018/12/hosting-your-own-private-git-repo/</link>
+      <pubDate>Fri, 21 Dec 2018 18:53:30 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2018/12/hosting-your-own-private-git-repo/</guid>
+      <description>Git was built and developed with the intention of being a distributed reversion control system. Most people now use it with one or another central repository even when working on large teams which is perfectly fine if that model works for you and your team.
+It can be useful to quickly work with others on private repositories without requiring them to get on your platform of choice, or for sensitive repositories keep the repository entirely under your control.</description>
+    </item>
+    
+    <item>
+      <title>Performance Impact of OpenVPN Port Sharing</title>
+      <link>https://stelfox.net/blog/2018/11/performance-impact-of-openvpn-port-sharing/</link>
+      <pubDate>Sun, 04 Nov 2018 15:09:02 -0600</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2018/11/performance-impact-of-openvpn-port-sharing/</guid>
+      <description>I recently had cause to use OpenVPN on the standard HTTPS port to protect my traffic. This was done as a compromise with administrators who didn&amp;rsquo;t want to change their egress filtering, but wanted to allow me to continue doing my normal work.
+I already run several webservers, including this one, and didn&amp;rsquo;t want to give up exclusive access to the precious TCP port 443. The recommended way to deal with this is to make use of the port-share option built into OpenVPN.</description>
+    </item>
+    
+    <item>
+      <title>Run Your Own DNS-over-TLS Server</title>
+      <link>https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/</link>
+      <pubDate>Fri, 02 Nov 2018 15:09:02 -0600</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/</guid>
+      <description>DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing &amp;lsquo;free wifi&amp;rsquo; to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development.</description>
+    </item>
+    
+  </channel>
+</rss>

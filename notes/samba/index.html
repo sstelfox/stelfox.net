@@ -1,184 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
+SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/samba/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Samba :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Samba">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
+SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share.">
+
+<meta itemprop="wordCount" content="481">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Samba"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
+SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share."/>
+
+
+
+    <meta property="og:title" content="Samba" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
+SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/samba/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Samba</h1><div class="post-content"><p>FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.</p>
-<span id="continue-reading"></span><h2 id="selinux-adjustments">SELinux Adjustments</h2>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/samba/">Samba</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<p>FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.</p>
+<h2 id="selinux-adjustments">SELinux Adjustments</h2>
 <p>SELinux hates Samba and with good reason. To allow authenticated clients to
 access the contents of a samba share you need to label the share. The easiest
 way to make this persistent is by adjusting the targeted SELinux config. In the
 following example the only samba share is location at /media/sharing.</p>
 <p>Add this to <code>/etc/selinux/targeted/contexts/files/file_contexts</code>:</p>
-<pre><code>/media/storage(/.*)?    system_u:object_r:samba_share_t:s0
-</code></pre>
-<p>Then run this command:</p>
-<pre><code>[root@localhost ~]# restorecon -R /media/storage
-</code></pre>
-<h2 id="on-anonymous-access">On Anonymous Access</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/media/storage(/.*)?    system_u:object_r:samba_share_t:s0
+</span></span></code></pre></div><p>Then run this command:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# restorecon -R /media/storage
+</span></span></code></pre></div><h2 id="on-anonymous-access">On Anonymous Access</h2>
 <p>If you intend to allow anonymous browsing of shares and/or access to a share,
-you will need to create a 'nobody' user with no password and add a few lines to
-the configuration file. Add the user by following the instructions in 'Managing
-Users'</p>
+you will need to create a &rsquo;nobody&rsquo; user with no password and add a few lines to
+the configuration file. Add the user by following the instructions in &lsquo;Managing
+Users&rsquo;</p>
 <h2 id="managing-users">Managing Users</h2>
 <p>To add a samba user make sure they have an account on the local machine, and
 run the command:</p>
-<pre><code>[root@localhost ~]# pdbedit -a <username>
-</code></pre>
-<p>To list samba users:</p>
-<pre><code>[root@localhost ~]# pdbedit -L
-</code></pre>
-<p>To delete a samba user:</p>
-<pre><code>[root@localhost ~]# pdbedit -x <username>
-</code></pre>
-<h2 id="configuration">Configuration</h2>
-<h3 id="etc-samba-smb-conf">/etc/samba/smb.conf</h3>
-<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">[global]
-# ----------------------- Network-Related Options -------------------------
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# pdbedit -a &lt;username&gt;
+</span></span></code></pre></div><p>To list samba users:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# pdbedit -L
+</span></span></code></pre></div><p>To delete a samba user:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# pdbedit -x &lt;username&gt;
+</span></span></code></pre></div><h2 id="configuration">Configuration</h2>
+<h3 id="etcsambasmbconf">/etc/samba/smb.conf</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#ff7b72">[global]</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># ----------------------- Network-Related Options -------------------------</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        workgroup <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Pantheon
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        server string = For Sexual Favors
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        netbios name = Moirae
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        interfaces = eth0:0
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        bind interfaces only = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        hosts allow = 10.13.37.0/24
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        guest account = nobody
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        map to guest = bad user
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        force directory mode = 0777
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        force create mode = 0666</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># Force master browser elections to choose this server</span>
+</span></span><span style="display:flex;"><span>        domain master <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        local master = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        preferred master = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        os level = 60</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        socket options <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">TCP_NODELAY
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        read raw = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        write raw = yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        security <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">user
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        passdb backend = tdbsam</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># --------------------------- Logging Options -----------------------------</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># log files split per-machine:</span>
+</span></span><span style="display:flex;"><span>        log file <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/log/samba/log.%m</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#8b949e;font-style:italic"># maximum size of 50KB per log file, then rotate:</span>
+</span></span><span style="display:flex;"><span>        max log size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">50</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># --------------------------- Printing Options -----------------------------</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Disable printing altogether</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        load printers <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        printcap name = /dev/null
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        printing = bsd
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        disable spoolss = yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># --------------------------- File System Options ---------------------------</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;       map archive = no</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;       map hidden = no</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;       map read only = no</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;       map system = no</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;       store dos attributes = yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">#============================ Share Definitions ==============================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Hidden]</span>
+</span></span><span style="display:flex;"><span>        comment <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">I&#39;m a secret!
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        browsable = no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        path = /media/storage/Dropbox
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        public = no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        writable = no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        printable = no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        write list = @users
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        guest ok = no</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Anonymous Dropbox]</span>
+</span></span><span style="display:flex;"><span>        comment <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Public File Drop Be Nice
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        browsable = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        path = /media/storage/Dropbox
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        public = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        writable = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        printable = no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        guest ok = yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Media]</span>
+</span></span><span style="display:flex;"><span>        comment <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Public Media Shares
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        browsable = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        path = /media/storage/Media
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        public = yes
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        writable = no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        printable = no
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        write list = @users
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">        guest ok = yes</span>
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-        workgroup = Pantheon
-        server string = For Sexual Favors
-        netbios name = Moirae
-        interfaces = eth0:0
-        bind interfaces only = yes
-        hosts allow = 10.13.37.0/24
-        guest account = nobody
-        map to guest = bad user
-        force directory mode = 0777
-        force create mode = 0666
+        <hr />
 
-        # Force master browser elections to choose this server
-        domain master = no
-        local master = yes
-        preferred master = yes
-        os level = 60
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
 
-        socket options = TCP_NODELAY
-        read raw = yes
-        write raw = yes
+            </div>
 
-        security = user
-        passdb backend = tdbsam
+            
+                <footer class="footer">
+    
+    
+</footer>
 
-# --------------------------- Logging Options -----------------------------
+            
+        </div>
 
-        # log files split per-machine:
-        log file = /var/log/samba/log.%m
-
-        # maximum size of 50KB per log file, then rotate:
-        max log size = 50
-
-# --------------------------- Printing Options -----------------------------
-# Disable printing altogether
-
-        load printers = no
-        printcap name = /dev/null
-        printing = bsd
-        disable spoolss = yes
-
-# --------------------------- File System Options ---------------------------
-
-;       map archive = no
-;       map hidden = no
-;       map read only = no
-;       map system = no
-;       store dos attributes = yes
+        
 
 
-#============================ Share Definitions ==============================
 
-[Hidden]
-        comment = I'm a secret!
-        browsable = no
-        path = /media/storage/Dropbox
-        public = no
-        writable = no
-        printable = no
-        write list = @users
-        guest ok = no
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
 
-[Anonymous Dropbox]
-        comment = Public File Drop Be Nice
-        browsable = yes
-        path = /media/storage/Dropbox
-        public = yes
-        writable = yes
-        printable = no
-        guest ok = yes
 
-[Media]
-        comment = Public Media Shares
-        browsable = yes
-        path = /media/storage/Media
-        public = yes
-        writable = no
-        printable = no
-        write list = @users
-        guest ok = yes
-</code></pre>
-</div>
-</article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+    </body>
 </html>

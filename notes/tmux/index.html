@@ -1,233 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install tmux -y Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&amp;rsquo;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/tmux/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Tmux :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Tmux">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install tmux -y Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&rsquo;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment.">
+
+<meta itemprop="wordCount" content="814">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Tmux"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install tmux -y Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&rsquo;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment."/>
+
+
+
+    <meta property="og:title" content="Tmux" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install tmux -y Shared Session Configuration The idea behind this was to allow easy pair programming in a fairly secure way using a separate unprivileged account to host the session. I&rsquo;ve used a combination of tmux, some bash scripts, and sudo to accomplish this environment." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/tmux/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Tmux</h1><div class="post-content"><h2 id="installation">Installation</h2>
-<pre><code>yum install tmux -y
-</code></pre>
-<h2 id="shared-session-configuration">Shared Session Configuration</h2>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/tmux/">Tmux</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install tmux -y
+</span></span></code></pre></div><h2 id="shared-session-configuration">Shared Session Configuration</h2>
 <p>The idea behind this was to allow easy pair programming in a fairly secure way
-using a separate unprivileged account to host the session. I've used a
+using a separate unprivileged account to host the session. I&rsquo;ve used a
 combination of tmux, some bash scripts, and sudo to accomplish this
-environment. Please note that I don't add the shared user to the 'sshers' group
+environment. Please note that I don&rsquo;t add the shared user to the &lsquo;sshers&rsquo; group
 so there is only local access to the account.</p>
 <h3 id="user-setup">User Setup</h3>
-<p>Create a new user, I used &quot;shared&quot; for the user name as shown in the example
-below. This will also create the &quot;shared&quot; group.</p>
-<pre><code>useradd shared
-password shared
-</code></pre>
-<p>Set some rediculous password for the user as no one will be logging directly
+<p>Create a new user, I used &ldquo;shared&rdquo; for the user name as shown in the example
+below. This will also create the &ldquo;shared&rdquo; group.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>useradd shared
+</span></span><span style="display:flex;"><span>password shared
+</span></span></code></pre></div><p>Set some rediculous password for the user as no one will be logging directly
 in.</p>
 <p>Add any users that you want to participate in the shared environment to the
 shared group like so:</p>
-<pre><code>usermod -a -G shared <username>
-</code></pre>
-<p>Add this line to the <code>/etc/sudoers</code> to allow any user added to the shared group
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>usermod -a -G shared &lt;username&gt;
+</span></span></code></pre></div><p>Add this line to the <code>/etc/sudoers</code> to allow any user added to the shared group
 to be able to switch to it without a password:</p>
-<pre><code>%shared   ALL=(ALL) NOPASSWD: /bin/su shared -
-</code></pre>
-<h3 id="shared-session-setup">Shared Session Setup</h3>
-<p>Switch to the shared user's account from a user that is a member of the shared
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>%shared   ALL=(ALL) NOPASSWD: /bin/su shared -
+</span></span></code></pre></div><h3 id="shared-session-setup">Shared Session Setup</h3>
+<p>Switch to the shared user&rsquo;s account from a user that is a member of the shared
 group and create a .bin directory in their home.</p>
-<pre><code>mkdir /home/shared/.bin
-</code></pre>
-<p>Inside of that create a file &quot;shared-tmux&quot; with the following contents and make
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mkdir /home/shared/.bin
+</span></span></code></pre></div><p>Inside of that create a file &ldquo;shared-tmux&rdquo; with the following contents and make
 it executable. This is a simplified version of a more flexible shared tmux
 session script I found on the <a href="https://wiki.archlinux.org/index.php/Tmux#Clients_simultaneously_interacting_with_various_windows_of_a_session">Arch Linux Wiki</a> which has a ridiculous
 amount of very good information that I strongly recommend people reference with
 any questions.</p>
-<pre><code>#!/bin/bash
-
-base_session="shared-session"
-tmux_session_count=`tmux ls | grep "^$base_session" | wc -l`
-
-if [[ "$tmux_session_count" == "0" ]]; then
-  echo "Launching tmux base session $base_session ..."
-  tmux new-session -s $base_session
-else
-  # Make sure we are not already in a tmux session
-  if [[ -z "$TMUX" ]]; then
-    # Kill defunct sessions first
-    old_sessions=$(tmux ls 2>/dev/null | egrep "^[0-9]{14}.*[0-9]+\)$" | cut -f 1 -d:)
-    for old_session_id in $old_sessions; do
-        tmux kill-session -t $old_session_id
-    done
-
-    echo "Launching copy of base session $base_session ..."
-
-    # Session is is date and time to prevent conflict
-    session_id=`date +%Y%m%d%H%M%S`
-
-    # Create a new session (without attaching it) and link to base session 
-    # to share windows
-    tmux new-session -d -t $base_session -s $session_id
-
-    # Attach to the new session
-    tmux attach-session -t $session_id
-
-    # When we detach from it, kill the session
-    tmux kill-session -t $session_id
-  fi
-fi
-</code></pre>
-<p>I added the following to the shared user's .bashrc file so the shared session
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">base_session</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;shared-session&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">tmux_session_count</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">`</span>tmux ls | grep <span style="color:#a5d6ff">&#34;^</span><span style="color:#79c0ff">$base_session</span><span style="color:#a5d6ff">&#34;</span> | wc -l<span style="color:#a5d6ff">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[[</span> <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$tmux_session_count</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#ff7b72;font-weight:bold">==</span> <span style="color:#a5d6ff">&#34;0&#34;</span> <span style="color:#ff7b72;font-weight:bold">]]</span>; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#a5d6ff">&#34;Launching tmux base session </span><span style="color:#79c0ff">$base_session</span><span style="color:#a5d6ff"> ...&#34;</span>
+</span></span><span style="display:flex;"><span>  tmux new-session -s <span style="color:#79c0ff">$base_session</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">else</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Make sure we are not already in a tmux session</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">if</span> <span style="color:#ff7b72;font-weight:bold">[[</span> -z <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$TMUX</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#ff7b72;font-weight:bold">]]</span>; <span style="color:#ff7b72">then</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Kill defunct sessions first</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">old_sessions</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#ff7b72">$(</span>tmux ls 2&gt;/dev/null | egrep <span style="color:#a5d6ff">&#34;^[0-9]{14}.*[0-9]+\)</span>$<span style="color:#a5d6ff">&#34;</span> | cut -f <span style="color:#a5d6ff">1</span> -d:<span style="color:#ff7b72">)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">for</span> old_session_id in <span style="color:#79c0ff">$old_sessions</span>; <span style="color:#ff7b72">do</span>
+</span></span><span style="display:flex;"><span>        tmux kill-session -t <span style="color:#79c0ff">$old_session_id</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">done</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    echo <span style="color:#a5d6ff">&#34;Launching copy of base session </span><span style="color:#79c0ff">$base_session</span><span style="color:#a5d6ff"> ...&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Session is is date and time to prevent conflict</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">session_id</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">`</span>date +%Y%m%d%H%M%S<span style="color:#a5d6ff">`</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Create a new session (without attaching it) and link to base session </span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># to share windows</span>
+</span></span><span style="display:flex;"><span>    tmux new-session -d -t <span style="color:#79c0ff">$base_session</span> -s <span style="color:#79c0ff">$session_id</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># Attach to the new session</span>
+</span></span><span style="display:flex;"><span>    tmux attach-session -t <span style="color:#79c0ff">$session_id</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#8b949e;font-style:italic"># When we detach from it, kill the session</span>
+</span></span><span style="display:flex;"><span>    tmux kill-session -t <span style="color:#79c0ff">$session_id</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">fi</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">fi</span>
+</span></span></code></pre></div><p>I added the following to the shared user&rsquo;s .bashrc file so the shared session
 pops open automatically as soon as a user has opened a shell and it will drop
-them out of the user's account as soon as they leave tmux.</p>
-<pre><code>if [[ -z "$TMUX" ]]; then
-  export PS1="\W\$(__git_ps1)\$ "
-  shared-session
-  # The following is needed because funny shit happens when the server drops
-  reset
-  exit
-else
-  export PS1="[\u@\h \W]\$(__git_ps1)\$ "
-fi
-</code></pre>
-<p>I also created a small shell script to make it easier for user's to make use of
+them out of the user&rsquo;s account as soon as they leave tmux.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>if [[ -z &#34;$TMUX&#34; ]]; then
+</span></span><span style="display:flex;"><span>  export PS1=&#34;\W\$(__git_ps1)\$ &#34;
+</span></span><span style="display:flex;"><span>  shared-session
+</span></span><span style="display:flex;"><span>  # The following is needed because funny shit happens when the server drops
+</span></span><span style="display:flex;"><span>  reset
+</span></span><span style="display:flex;"><span>  exit
+</span></span><span style="display:flex;"><span>else
+</span></span><span style="display:flex;"><span>  export PS1=&#34;[\u@\h \W]\$(__git_ps1)\$ &#34;
+</span></span><span style="display:flex;"><span>fi
+</span></span></code></pre></div><p>I also created a small shell script to make it easier for user&rsquo;s to make use of
 the shared session in <code>/bin/shared</code>. The contents are below, make sure to make
 it executable:</p>
-<pre><code>#!/bin/bash
-
-sudo su shared -
-clear
-echo "Left shared environment"
-</code></pre>
-<h4 id="vim-tmux">VIM &amp; Tmux</h4>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span>sudo su shared -
+</span></span><span style="display:flex;"><span>clear
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;Left shared environment&#34;</span>
+</span></span></code></pre></div><h4 id="vim--tmux">VIM &amp; Tmux</h4>
 <p>I made a few compromises on my vim and tmux configuration to work with a
-co-worker and tried to keep it simple at the same time, so I'm including their
+co-worker and tried to keep it simple at the same time, so I&rsquo;m including their
 configuration.</p>
 <p>Here is the tmux configuration <code>/home/shared/.tmux.conf</code>, there are two
 configuration items that are relevant to the shared session configuration and
-should be included even if you don't use any of the rest of it. The two
-relevant configuration lines are the &quot;setw -g aggressive-resize on&quot; and the
-&quot;set-option destroy-unattached on&quot;.</p>
-<pre><code>set-option -g prefix C-a
-set-option destroy-unattached on
-bind r source-file ~/.tmux.conf
-bind C-a last-window
-bind a send-prefix
-set-window-option -g mode-keys vi
-bind-key k select-pane -U
-bind-key j select-pane -D
-bind-key h select-pane -L
-bind-key l select-pane -R
-setw -g aggressive-resize on
-bind \ split-window -h
-bind - split-window -v
-set -g base-index 1
-set -g visual-activity on
-set -g monitor-activity on
-set -g history-limit 100000
-set -g status-bg black
-set -g status-fg green
-set -g status-interval 30
-set -g status-left-length 40
-set -g status-left '#[fg=green](#S) #(whoami)@#H#[default]'
-set -g status-right '#[fg=yellow]#(cut -d " " -f 1-3 /proc/loadavg)#[default] #[fg=cyan]%H:%M#[default]'
-</code></pre>
-<p>Here is the vim configuration I use /home/shared/vimrc, nothing specifically
+should be included even if you don&rsquo;t use any of the rest of it. The two
+relevant configuration lines are the &ldquo;setw -g aggressive-resize on&rdquo; and the
+&ldquo;set-option destroy-unattached on&rdquo;.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>set-option -g prefix C-a
+</span></span><span style="display:flex;"><span>set-option destroy-unattached on
+</span></span><span style="display:flex;"><span>bind r source-file ~/.tmux.conf
+</span></span><span style="display:flex;"><span>bind C-a last-window
+</span></span><span style="display:flex;"><span>bind a send-prefix
+</span></span><span style="display:flex;"><span>set-window-option -g mode-keys vi
+</span></span><span style="display:flex;"><span>bind-key k select-pane -U
+</span></span><span style="display:flex;"><span>bind-key j select-pane -D
+</span></span><span style="display:flex;"><span>bind-key h select-pane -L
+</span></span><span style="display:flex;"><span>bind-key l select-pane -R
+</span></span><span style="display:flex;"><span>setw -g aggressive-resize on
+</span></span><span style="display:flex;"><span>bind \ split-window -h
+</span></span><span style="display:flex;"><span>bind - split-window -v
+</span></span><span style="display:flex;"><span>set -g base-index 1
+</span></span><span style="display:flex;"><span>set -g visual-activity on
+</span></span><span style="display:flex;"><span>set -g monitor-activity on
+</span></span><span style="display:flex;"><span>set -g history-limit 100000
+</span></span><span style="display:flex;"><span>set -g status-bg black
+</span></span><span style="display:flex;"><span>set -g status-fg green
+</span></span><span style="display:flex;"><span>set -g status-interval 30
+</span></span><span style="display:flex;"><span>set -g status-left-length 40
+</span></span><span style="display:flex;"><span>set -g status-left &#39;#[fg=green](#S) #(whoami)@#H#[default]&#39;
+</span></span><span style="display:flex;"><span>set -g status-right &#39;#[fg=yellow]#(cut -d &#34; &#34; -f 1-3 /proc/loadavg)#[default] #[fg=cyan]%H:%M#[default]&#39;
+</span></span></code></pre></div><p>Here is the vim configuration I use /home/shared/vimrc, nothing specifically
 related to the shared session in this one:</p>
-<pre><code>set history=500
-set nocompatible
-autocmd! bufwritepost vimrc source ~/.vimrc
-set modelines=10
-set autoread
-set scrolloff=5
-set wildmenu
-set ruler
-set cmdheight=2
-set nostartofline
-set confirm
-set pastetoggle=<F11>
-nnoremap <C-L> :nohl<CR><C-L>
-set shiftwidth=2 tabstop=2
-set expandtab
-set ai
-set smarttab
-set ignorecase
-set hlsearch
-set magic
-set showmatch
-set noerrorbells
-set visualbell
-set number
-set hidden
-syntax on
-set ai
-set encoding=utf8
-try
-  lang en_US
-catch
-endtry
-set ffs=unix,dos,mac
-set lbr
-set laststatus=2
-</code></pre>
-</div>
-</article>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>set history=500
+</span></span><span style="display:flex;"><span>set nocompatible
+</span></span><span style="display:flex;"><span>autocmd! bufwritepost vimrc source ~/.vimrc
+</span></span><span style="display:flex;"><span>set modelines=10
+</span></span><span style="display:flex;"><span>set autoread
+</span></span><span style="display:flex;"><span>set scrolloff=5
+</span></span><span style="display:flex;"><span>set wildmenu
+</span></span><span style="display:flex;"><span>set ruler
+</span></span><span style="display:flex;"><span>set cmdheight=2
+</span></span><span style="display:flex;"><span>set nostartofline
+</span></span><span style="display:flex;"><span>set confirm
+</span></span><span style="display:flex;"><span>set pastetoggle=&lt;F11&gt;
+</span></span><span style="display:flex;"><span>nnoremap &lt;C-L&gt; :nohl&lt;CR&gt;&lt;C-L&gt;
+</span></span><span style="display:flex;"><span>set shiftwidth=2 tabstop=2
+</span></span><span style="display:flex;"><span>set expandtab
+</span></span><span style="display:flex;"><span>set ai
+</span></span><span style="display:flex;"><span>set smarttab
+</span></span><span style="display:flex;"><span>set ignorecase
+</span></span><span style="display:flex;"><span>set hlsearch
+</span></span><span style="display:flex;"><span>set magic
+</span></span><span style="display:flex;"><span>set showmatch
+</span></span><span style="display:flex;"><span>set noerrorbells
+</span></span><span style="display:flex;"><span>set visualbell
+</span></span><span style="display:flex;"><span>set number
+</span></span><span style="display:flex;"><span>set hidden
+</span></span><span style="display:flex;"><span>syntax on
+</span></span><span style="display:flex;"><span>set ai
+</span></span><span style="display:flex;"><span>set encoding=utf8
+</span></span><span style="display:flex;"><span>try
+</span></span><span style="display:flex;"><span>  lang en_US
+</span></span><span style="display:flex;"><span>catch
+</span></span><span style="display:flex;"><span>endtry
+</span></span><span style="display:flex;"><span>set ffs=unix,dos,mac
+</span></span><span style="display:flex;"><span>set lbr
+</span></span><span style="display:flex;"><span>set laststatus=2
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

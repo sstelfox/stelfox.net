@@ -1,168 +1,274 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Resources:
+http://www.fclose.com/816/port-forwarding-using-iptables/ This was done as a quick and dirty iptables NAT/gateway for a private LXC network. Create the LXC container using our base templating trick:
+cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &amp;#34;/var/lib/libvirt/lxc/gateway-01,/&amp;#34; --network=&amp;#34;network=br0&amp;#34; \ --network=&amp;#34;network=isolated&amp;#34; --console &amp;#34;pty&amp;#34; --check-cpu echo 1 &amp;gt; /proc/sys/net/ipv4/ip_forward echo &amp;#39;net." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/router/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Router :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Router">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Resources:
+http://www.fclose.com/816/port-forwarding-using-iptables/ This was done as a quick and dirty iptables NAT/gateway for a private LXC network. Create the LXC container using our base templating trick:
+cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &#34;/var/lib/libvirt/lxc/gateway-01,/&#34; --network=&#34;network=br0&#34; \ --network=&#34;network=isolated&#34; --console &#34;pty&#34; --check-cpu echo 1 &gt; /proc/sys/net/ipv4/ip_forward echo &#39;net.">
+
+<meta itemprop="wordCount" content="507">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Router"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Resources:
+http://www.fclose.com/816/port-forwarding-using-iptables/ This was done as a quick and dirty iptables NAT/gateway for a private LXC network. Create the LXC container using our base templating trick:
+cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &#34;/var/lib/libvirt/lxc/gateway-01,/&#34; --network=&#34;network=br0&#34; \ --network=&#34;network=isolated&#34; --console &#34;pty&#34; --check-cpu echo 1 &gt; /proc/sys/net/ipv4/ip_forward echo &#39;net."/>
+
+
+
+    <meta property="og:title" content="Router" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Resources:
+http://www.fclose.com/816/port-forwarding-using-iptables/ This was done as a quick and dirty iptables NAT/gateway for a private LXC network. Create the LXC container using our base templating trick:
+cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01 virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \ --filesystem &#34;/var/lib/libvirt/lxc/gateway-01,/&#34; --network=&#34;network=br0&#34; \ --network=&#34;network=isolated&#34; --console &#34;pty&#34; --check-cpu echo 1 &gt; /proc/sys/net/ipv4/ip_forward echo &#39;net." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/router/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Router</h1><div class="post-content"><p>Resources:</p>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/router/">Router</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<p>Resources:</p>
 <ul>
-<li><a href="https://www.systutorials.com/port-forwarding-using-iptables/">Linux Port Forwarding Using iptables</a></li>
+<li><a href="http://www.fclose.com/816/port-forwarding-using-iptables/">http://www.fclose.com/816/port-forwarding-using-iptables/</a></li>
 </ul>
 <p>This was done as a quick and dirty iptables NAT/gateway for a private LXC
 network. Create the LXC container using our base templating trick:</p>
-<pre><code>cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01
-virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \
-  --filesystem "/var/lib/libvirt/lxc/gateway-01,/" --network="network=br0" \
-  --network="network=isolated" --console "pty" --check-cpu
-</code></pre>
-<pre><code>echo 1 > /proc/sys/net/ipv4/ip_forward
-echo 'net.ipv4.ip_forward = 1' > /etc/sysctl.d/70-routing.conf
-</code></pre>
-<p>cat &lt;&lt; EOF &gt; /etc/sysconfig/network-scripts/ifcfg-eth1
-DEVICE=&quot;eth1&quot;
-NM_CONTROLLED=&quot;no&quot;
-ONBOOT=&quot;yes&quot;
-TYPE=&quot;Ethernet&quot;
-BOOTPROTO=&quot;static&quot;</p>
-<p>IPADDR=&quot;10.0.0.1&quot;
-NETMASK=&quot;255.255.255.0&quot;
-DEFROUTE=&quot;no&quot;</p>
-<p>IPV4_FAILURE_FATAL=&quot;no&quot;
-IPV6INIT=&quot;yes&quot;</p>
-<p>NAME=&quot;LAN&quot;
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cp -ar /var/lib/libvirt/lxc/fedora-19-x86_64-template /var/lib/libvirt/lxc/gateway-01
+</span></span><span style="display:flex;"><span>virt-install --connect lxc:// --name gateway-01 --ram 512 --vcpus 1 \
+</span></span><span style="display:flex;"><span>  --filesystem &#34;/var/lib/libvirt/lxc/gateway-01,/&#34; --network=&#34;network=br0&#34; \
+</span></span><span style="display:flex;"><span>  --network=&#34;network=isolated&#34; --console &#34;pty&#34; --check-cpu
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+</span></span><span style="display:flex;"><span>echo &#39;net.ipv4.ip_forward = 1&#39; &gt; /etc/sysctl.d/70-routing.conf
+</span></span></code></pre></div><p>cat &laquo; EOF &gt; /etc/sysconfig/network-scripts/ifcfg-eth1
+DEVICE=&ldquo;eth1&rdquo;
+NM_CONTROLLED=&ldquo;no&rdquo;
+ONBOOT=&ldquo;yes&rdquo;
+TYPE=&ldquo;Ethernet&rdquo;
+BOOTPROTO=&ldquo;static&rdquo;</p>
+<p>IPADDR=&ldquo;10.0.0.1&rdquo;
+NETMASK=&ldquo;255.255.255.0&rdquo;
+DEFROUTE=&ldquo;no&rdquo;</p>
+<p>IPV4_FAILURE_FATAL=&ldquo;no&rdquo;
+IPV6INIT=&ldquo;yes&rdquo;</p>
+<p>NAME=&ldquo;LAN&rdquo;
 EOF</p>
 <p>Going to ignore IPv6 for now :(</p>
 <p>For this eth0 is the external network connection and eth1 is the internal
 network. These will have 192.168.122.10 as the external IP address and 10.0.0.1
 for the internal IP address.</p>
-<h2 id="etc-sysconfig-iptables">/etc/sysconfig/iptables</h2>
-<pre><code>*filter
-:INPUT DROP [0:0]
-:FORWARD DROP [0:0]
-:OUTPUT DROP [0:0]
+<h2 id="etcsysconfigiptables">/etc/sysconfig/iptables</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>*filter
+</span></span><span style="display:flex;"><span>:INPUT DROP [0:0]
+</span></span><span style="display:flex;"><span>:FORWARD DROP [0:0]
+</span></span><span style="display:flex;"><span>:OUTPUT DROP [0:0]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -p icmp -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -i lo -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Allow the internal network to connect to this SSH server (harden to airlock)
+</span></span><span style="display:flex;"><span>-A INPUT -m tcp -p tcp --dport 22 -i eth1 -m conntrack --ctstate NEW -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>-A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+</span></span><span style="display:flex;"><span>-A OUTPUT -p icmp -j ACCEPT
+</span></span><span style="display:flex;"><span>-A OUTPUT -o lo -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># DNS requests (harden to internal server)
+</span></span><span style="display:flex;"><span>-A OUTPUT -m udp -p udp --dport 53 -m conntrack --ctstate NEW -j ACCEPT
+</span></span><span style="display:flex;"><span>-A OUTPUT -m tcp -p tcp --dport 53 -m conntrack --ctstate NEW -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># For updates (harden to squid server)
+</span></span><span style="display:flex;"><span>-A OUTPUT -m tcp -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+</span></span><span style="display:flex;"><span>-A OUTPUT -m tcp -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Log any attempts that try to slip through
+</span></span><span style="display:flex;"><span>-A OUTPUT -m limit --limit 2/s --limit-burst 5 -j LOG --log-prefix &#34;Outgoing attempt: &#34;
+</span></span><span style="display:flex;"><span>-A OUTPUT -j REJECT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Allow existing connections in both directions
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth0 -o eth1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth1 -o eth0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Always allow pinging out from the internal network
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth1 -o eth0 -s 10.0.0.0/24 -p icmp -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Allow us to forward to the airlock&#39;s SSH server
+</span></span><span style="display:flex;"><span>-A FORWARD -m tcp -p tcp -d 10.0.0.100 --dport 22 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Temporarily allow routing all other traffic from the inside out
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth1 -s 10.0.0.0/24 -o eth0 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COMMIT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>*nat
+</span></span><span style="display:flex;"><span>:PREROUTING   ACCEPT [0:0] # TODO: Harden?
+</span></span><span style="display:flex;"><span>:INPUT        ACCEPT [0:0] # TODO: Harden?
+</span></span><span style="display:flex;"><span>:OUTPUT       ACCEPT [0:0] # TODO: Harden?
+</span></span><span style="display:flex;"><span>:POSTROUTING  ACCEPT [0:0] # TODO: Harden?
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Portfowarding port 2200 to port 22 on the airlock
+</span></span><span style="display:flex;"><span>-A PREROUTING -i eth0 -m tcp -p tcp --dport 2200 -j DNAT --to 10.0.0.100:22
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Handle the NAT routing
+</span></span><span style="display:flex;"><span>-A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COMMIT
+</span></span></code></pre></div><p>LXC /proc/sys fix can be accomplished by:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat <span style="color:#a5d6ff">&lt;&lt; EOF &gt; /etc/rc.d/rc.local
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">umount /proc/sys
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">systemctl start systemd-sysctl.service
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">EOF</span>
+</span></span><span style="display:flex;"><span>chmod +x /etc/rc.d/rc.local
+</span></span></code></pre></div>
+            </div>
+        </article>
 
--A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
--A INPUT -p icmp -j ACCEPT
--A INPUT -i lo -j ACCEPT
+        <hr />
 
-# Allow the internal network to connect to this SSH server (harden to airlock)
--A INPUT -m tcp -p tcp --dport 22 -i eth1 -m conntrack --ctstate NEW -j ACCEPT
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
 
--A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
--A OUTPUT -p icmp -j ACCEPT
--A OUTPUT -o lo -j ACCEPT
+            </div>
 
-# DNS requests (harden to internal server)
--A OUTPUT -m udp -p udp --dport 53 -m conntrack --ctstate NEW -j ACCEPT
--A OUTPUT -m tcp -p tcp --dport 53 -m conntrack --ctstate NEW -j ACCEPT
+            
+                <footer class="footer">
+    
+    
+</footer>
 
-# For updates (harden to squid server)
--A OUTPUT -m tcp -p tcp --dport 80 -m conntrack --ctstate NEW -j ACCEPT
--A OUTPUT -m tcp -p tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
+            
+        </div>
 
-# Log any attempts that try to slip through
--A OUTPUT -m limit --limit 2/s --limit-burst 5 -j LOG --log-prefix "Outgoing attempt: "
--A OUTPUT -j REJECT
+        
 
-# Allow existing connections in both directions
--A FORWARD -i eth0 -o eth1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
--A FORWARD -i eth1 -o eth0 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-# Always allow pinging out from the internal network
--A FORWARD -i eth1 -o eth0 -s 10.0.0.0/24 -p icmp -j ACCEPT
 
-# Allow us to forward to the airlock's SSH server
--A FORWARD -m tcp -p tcp -d 10.0.0.100 --dport 22 -j ACCEPT
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
 
-# Temporarily allow routing all other traffic from the inside out
--A FORWARD -i eth1 -s 10.0.0.0/24 -o eth0 -j ACCEPT
 
-COMMIT
 
-*nat
-:PREROUTING   ACCEPT [0:0] # TODO: Harden?
-:INPUT        ACCEPT [0:0] # TODO: Harden?
-:OUTPUT       ACCEPT [0:0] # TODO: Harden?
-:POSTROUTING  ACCEPT [0:0] # TODO: Harden?
-
-# Portfowarding port 2200 to port 22 on the airlock
--A PREROUTING -i eth0 -m tcp -p tcp --dport 2200 -j DNAT --to 10.0.0.100:22
-
-# Handle the NAT routing
--A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
-
-COMMIT
-</code></pre>
-<p>LXC /proc/sys fix can be accomplished by:</p>
-<pre><code>cat << EOF > /etc/rc.d/rc.local
-#!/bin/sh
-umount /proc/sys
-systemctl start systemd-sysctl.service
-EOF
-chmod +x /etc/rc.d/rc.local
-</code></pre>
-</div>
-</article>
-
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+    </body>
 </html>

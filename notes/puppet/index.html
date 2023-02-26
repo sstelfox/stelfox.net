@@ -1,800 +1,907 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Puppet Master / Server Installation yum install puppet puppet-server -y And configure the puppet master like so:
+The following file is /etc/puppet/puppet.conf:
+[master] confdir = /etc/puppet vardir = /var/lib/puppet logdir = /var/log/puppet # Whether to print stack traces on some errors trace = false # Whether log files should always flush to disk." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/puppet/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Puppet :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Puppet">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Puppet Master / Server Installation yum install puppet puppet-server -y And configure the puppet master like so:
+The following file is /etc/puppet/puppet.conf:
+[master] confdir = /etc/puppet vardir = /var/lib/puppet logdir = /var/log/puppet # Whether to print stack traces on some errors trace = false # Whether log files should always flush to disk.">
+
+<meta itemprop="wordCount" content="4112">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Puppet"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Puppet Master / Server Installation yum install puppet puppet-server -y And configure the puppet master like so:
+The following file is /etc/puppet/puppet.conf:
+[master] confdir = /etc/puppet vardir = /var/lib/puppet logdir = /var/log/puppet # Whether to print stack traces on some errors trace = false # Whether log files should always flush to disk."/>
+
+
+
+    <meta property="og:title" content="Puppet" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Puppet Master / Server Installation yum install puppet puppet-server -y And configure the puppet master like so:
+The following file is /etc/puppet/puppet.conf:
+[master] confdir = /etc/puppet vardir = /var/lib/puppet logdir = /var/log/puppet # Whether to print stack traces on some errors trace = false # Whether log files should always flush to disk." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/puppet/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
-
+        <body>
     
     
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
         
-          
-          <nav>
-            <ul class="nav">
-              
-                
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
         
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Puppet</h1><div class="post-content"><h2 id="puppet-master-server">Puppet Master / Server</h2>
-<h3 id="installation">Installation</h3>
-<pre><code>yum install puppet puppet-server -y
-</code></pre>
-<p>And configure the puppet master like so:</p>
-<p>The following file is <code>/etc/puppet/puppet.conf</code>:</p>
-<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">[master]
-  confdir = /etc/puppet
-  vardir = /var/lib/puppet
-  logdir = /var/log/puppet
-
-  # Whether to print stack traces on some errors
-  trace = false
-
-  # Whether log files should always flush to disk.
-  autoflush = true
-
-  # What syslog facility to use when logging to syslog.
-  syslogfacility = daemon
-
-  # The directory where Puppet state is stored.  Generally, this directory can
-  # be removed without causing harm (although it might result in spurious
-  # service restarts).
-  statedir = /var/lib/puppet/state
-
-  # Where Puppet PID files are kept.
-  rundir = /var/run/puppet
-
-  # Whether to just print a manifest to stdout and exit. Only makes sense when
-  # used interactively. Takes into account arguments specified on the CLI.
-  #genmanifest = false
-
-  # Whether to use colors when logging to the console.  Valid values are
-  # `ansi` (equivalent to `true`), `html`, and `false`, which produces no color.
-  color = ansi
-
-  # Whether to create the necessary user and group that puppet agent will run
-  # as.
-  #mkusers = false
-
-  # Whether Puppet should manage the owner, group, and mode of files it uses
-  # internally
-  manage_internal_file_permissions = true
-
-  # Run the configuration once, rather than as a long-running daemon. This is
-  # useful for interactively running puppetd.
-  #onetime = false
-
-  # The shell search path.  Defaults to whatever is inherited from the parent
-  # process.
-  #path = none
-
-  # An extra search path for Puppet. This is only useful for those files that
-  # Puppet will load on demand, and is only guaranteed to work for those
-  # cases. In fact, the autoload mechanism is responsible for making sure this
-  # directory is in Ruby's search path
-  libdir = /var/lib/puppet/lib
-
-  # If true, allows the parser to continue without requiring all files
-  # referenced with `import` statements to exist. This setting was primarily
-  # designed for use with commit hooks for parse-checking.
-  #ignoreimport = false
-
-  # The configuration file that defines the rights to the different namespaces
-  # and methods. This can be used as a coarse-grained authorization system for
-  # both `puppet agent` and `puppet master`.
-  authconfig = /etc/puppet/namespaceauth.conf
-
-  # The environment Puppet is running in. For clients (e.g., `puppet agent`)
-  # this determines the environment itself, which is used to find modules and
-  # much more. For servers (i.e., `puppet master`) this provides the default
-  # environment for nodes we know nothing about.
-  environment = production
-
-  # Which arguments to pass to the diff command when printing differences between
-  # files. The command to use can be chosen with the `diff` setting.
-  #diff_args = -u
-
-  # Which diff command to use when printing differences between files. This
-  # setting has no default value on Windows, as standard `diff` is not
-  # available, but Puppet can use many third-party diff tools.
-  diff = diff
-
-  # Whether to log and report a contextual diff when files are being replaced.
-  # This causes partial file contents to pass through Puppet's normal logging
-  # and reporting system, so this setting should be used with caution if you
-  # are sending Puppet's reports to an insecure destination. This feature
-  # currently requires the `diff/lcs` Ruby library.
-  show_diff = false
-
-  # Whether to send the process into the background. This defaults to true on
-  # POSIX systems, and to false on Windows (where Puppet currently cannot
-  # daemonize).
-  #daemonize = true
-
-  # The maximum allowed UID. Some platforms use negative UIDs but then ship
-  # with tools that do not know how to handle signed ints, so the UIDs show up
-  # as huge numbers that can then not be fed back into the system. This is a
-  # hackish way to fail in a slightly more useful way when that happens.
-  #maximum_uid = 4294967290
-
-  # The YAML file containing indirector route configuration.
-  route_file = /etc/puppet/routes.yaml
-
-  # Where to find information about nodes.
-  #node_terminus = plain
-
-  # Where to get node catalogs. This is useful to change if, for instance,
-  # you'd like to pre-compile catalogs and store them in memcached or some
-  # other easily-accessed store.
-  catalog_terminus = compiler
-
-  # The node facts terminus.
-  facts_terminus = yaml
-
-  # Should usually be the same as the facts terminus
-  inventory_terminus = yaml
-
-  # Where the puppet agent web server logs.
-  httplog = /var/log/puppet/http.log
-
-  # The HTTP proxy host to use for outgoing connections. Note: You may need to
-  # use a FQDN for the server hostname when using a proxy.
-  http_proxy_host = none
-
-  # The HTTP proxy port to use for outgoing connections
-  #http_proxy_port = 3128
-
-  # The minimum time to wait (in seconds) between checking for updates in
-  # configuration files. This timeout determines how quickly Puppet checks
-  # whether a file (such as manifests or templates) has changed on disk.
-  filetimeout = 15
-
-  # Which type of queue to use for asynchronous processing.
-  #queue_type = stomp
-
-  # Which type of queue to use for asynchronous processing. If your stomp
-  # server requires authentication, you can include it in the URI as long as
-  # your stomp client library is at least 1.1.1
-  #queue_source = stomp://localhost:61613/
-
-  # Whether to use a queueing system to provide asynchronous database
-  # integration. Requires that `puppetqd` be running and that 'PSON' support
-  # for ruby be installed.
-  #async_storeconfigs = false
-
-  # Whether storeconfigs store in the database only the facts and exported
-  # resources. If true, then storeconfigs performance will be higher and still
-  # allow exported/collected resources, but other usage external to Puppet
-  # might not work.
-  #thin_storeconfigs = false
-
-  # How to determine the configuration version. By default, it will be the
-  # time that the configuration is parsed, but you can provide a shell script
-  # to override how the version is determined. The output of this script will
-  # be added to every log message in the reports, allowing you to correlate
-  # changes on your hosts to the source version on the server.
-  #config_version = 
-
-  # Whether to use the zlib library
-  zlib = true
-
-  # A command to run before every agent run. If this command returns a
-  # non-zero return code, the entire Puppet run will fail.
-  #prerun_command = 
-
-  # A command to run after every agent run. If this command returns a non-zero
-  # return code, the entire Puppet run will be considered to have failed, even
-  # though it might have performed work during the normal run.
-  #postrun_command = 
-
-  # Freezes the 'main' class, disallowing any code to be added to it. This
-  # essentially means that you can't have any code outside of a node, class,
-  # or definition other than in the site manifest.
-  #freeze_main = false
-
-  # The name to use when handling certificates.
-  certname = balum.internal.bedroomprogrammers.net
-
-  # The certificate directory.
-  certdir = /var/lib/puppet/ssl/certs
-
-  # Where SSL certificates are kept.
-  ssldir = /var/lib/puppet/ssl
-
-  # The public key directory.
-  publickeydir = /var/lib/puppet/ssl/public_keys
-
-  # Where host certificate requests are stored.
-  requestdir = /var/lib/puppet/ssl/certificate_requests
-
-  # The private key directory.
-  privatekeydir = /var/lib/puppet/ssl/private_keys
-
-  # Where the client stores private certificate information.
-  privatedir = /var/lib/puppet/ssl/private
-
-  # Where puppet agent stores the password for its private key.
-  passfile = /var/lib/puppet/ssl/private/password
-
-  # Where individual hosts store and look for their certificate information.
-  hostcsr = /var/lib/puppet/ssl/csr_balum.internal.bedroomprogrammers.net.pem
-  hostcert = /var/lib/puppet/ssl/certs/balum.internal.bedroomprogrammers.net.pem
-  hostprivkey = /var/lib/puppet/ssl/private_keys/balum.internal.bedroomprogrammers.net.pem
-  hostpubkey = /var/lib/puppet/ssl/public_keys/balum.internal.bedroomprogrammers.net.pem
-
-  localcacert = /var/lib/puppet/ssl/certs/ca.pem
-
-  # Where the host's certificate revocation list can be found. This is
-  # distinct from the certificate authority's CRL.
-  hostcrl = /var/lib/puppet/ssl/crl.pem
-
-  # Whether certificate revocation should be supported by downloading a
-  # Certificate Revocation List (CRL) to all clients. If enabled, CA chaining
-  # will almost definitely not work.
-  certificate_revocation = true
-
-  # Where Puppet should store plugins that it pulls down from the central
-  # server.
-  plugindest = /var/lib/puppet/lib
-
-  # From where to retrieve plugins. The standard Puppet `file` type is used
-  # for retrieval, so anything that is a valid file source can be used here.
-  pluginsource = puppet://puppet/plugins
-
-  # Whether plugins should be synced with the central server.
-  pluginsync = true
-
-  # What files to ignore when pulling down plugins.
-  pluginsignore = .git
-
-  # Where Puppet should look for facts. Multiple directories should be
-  # separated by the system path separator character. (The POSIX path
-  # separator is ':', and the Windows path separator is ';'.)
-  factpath = /var/lib/puppet/lib/facter:/var/lib/puppet/facts
-
-  # Where Puppet should store facts that it pulls down from the central
-  # server.
-  factdest = /var/lib/puppet/facts/
-
-  # From where to retrieve facts. The standard Puppet `file` type is used for
-  # retrieval, so anything that is a valid file source can be used here.
-  factsource = puppet://puppet/facts/
-
-  # Whether facts should be synced with the central server.
-  factsync = true
-
-  # What files to ignore when pulling down facts.
-  factsignore = .git
-
-  # An external command that can produce node information. The command's
-  # output must be a YAML dump of a hash, and that hash must have a `classes`
-  # key and/or a `parameters` key, where `classes` is an array or hash and
-  # `parameters` is a hash. For unknown nodes, the command should exit with a
-  # non-zero exit code. This command makes it straightforward to store your
-  # node mapping information in other data sources like databases.
-  #external_nodes = none
-
-  # The module repository
-  #module_repository = http://forge.puppetlabs.com
-
-  # The directory into which module tool data is stored
-  module_working_dir = /var/lib/puppet/puppet-module
-
-  # Certificate authority configuration
-  ca_name = Puppet CA: balum.internal.bedroomprogrammers.net
-  cadir = /var/lib/puppet/ssl/ca
-  cacert = /var/lib/puppet/ssl/ca/ca_crt.pem
-  cakey = /var/lib/puppet/ssl/ca/ca_key.pem
-  capub = /var/lib/puppet/ssl/ca/ca_pub.pem
-  cacrl = /var/lib/puppet/ssl/ca/ca_crl.pem
-  caprivatedir = /var/lib/puppet/ssl/ca/private
-  csrdir = /var/lib/puppet/ssl/ca/requests
-
-  # Where the CA stores signed certificates.
-  signeddir = /var/lib/puppet/ssl/ca/signed
-
-  # Where the CA stores the password for the private key
-  capass = /var/lib/puppet/ssl/ca/private/ca.pass
-
-  # Where the serial number for certificates is stored.
-  serial = /var/lib/puppet/ssl/ca/serial
-
-  # Whether to enable autosign. Valid values are true (which autosigns any key
-  # request, and is a very bad idea), false (which never autosigns any key
-  # request), and the path to a file, which uses that configuration file to
-  # determine which keys to sign.
-  autosign = /etc/puppet/autosign.conf
-
-  # Whether to allow a new certificate request to overwrite an existing
-  # certificate.
-  allow_duplicate_certs = false
-
-  # The default TTL for new certificates; valid values must be an integer,
-  # optionally followed by one of the units 'y' (years of 365 days), 'd'
-  # (days), 'h' (hours), or 's' (seconds). The unit defaults to seconds. If
-  # this setting is set, ca_days is ignored. Examples are '3600' (one hour)
-  # and '1825d', which is the same as '5y' (5 years) 
-  ca_ttl = 3y
-
-  # The type of hash used in certificates.
-  ca_md = sha256
-
-  # The bit length of the certificates.
-  req_bits = 4096
-
-  # The bit length of keys.
-  keylength = 4096
-
-  # A Complete listing of all certificates
-  cert_inventory = /var/lib/puppet/ssl/ca/inventory.txt
-
-  # The configuration file for master.
-  config = /etc/puppet/puppet.conf
-
-  # The pid file
-  pidfile = /var/run/puppet/master.pid
-
-  # The address a listening server should bind to. Mongrel servers default to
-  # 127.0.0.1 and WEBrick defaults to 0.0.0.0.
-  bindaddress = 0.0.0.0
-
-  # The type of server to use. Currently supported options are webrick and
-  # mongrel. If you use mongrel, you will need a proxy in front of the process
-  # or processes, since Mongrel cannot speak SSL.
-  servertype = webrick
-
-  # The user puppet master should run as.
-  user = puppet
-
-  # The group puppet master should run as.
-  group = puppet
-
-  # Where puppet master looks for its manifests.
-  manifestdir = /etc/puppet/manifests
-
-  # The entry-point manifest for puppet master.
-  manifest = /etc/puppet/manifests/site.pp
-
-  # Code to parse directly. This is essentially only used by `puppet`, and
-  # should only be set if you're writing your own Puppet executable.
-  #code = 
-
-  # Where puppet master logs. This is generally not used, since syslog is the
-  # default log destination.
-  masterlog = /var/log/puppet/puppetmaster.log
-
-  # Where the puppet master web server logs.
-  masterhttplog = /var/log/puppet/masterhttp.log
-
-  # Which port puppet master listens on.
-
-  # How the puppet master determines the client's identity and sets the
-  # 'hostname', 'fqdn' and 'domain' facts for use in the manifest, in
-  # particular for determining which 'node' statement applies to the client.
-  # 
-  # Possible values are 'cert' (use the subject's CN in the client's
-  # certificate) and 'facter' (use the hostname that the client reported in
-  # its facts)
-  node_name = cert
-
-  # Where FileBucket files are stored.
-  bucketdir = /var/lib/puppet/bucket
-
-  # The configuration file that defines the rights to the different rest
-  # indirections. This can be used as a fine-grained authorization system for
-  # `puppet master`.
-  rest_authconfig = /etc/puppet/auth.conf
-
-  # Wether the master should function as a certificate authority.
-  ca = true
-
-  # The search path for modules, as a list of directories separated by the
-  # system path separator character. (The POSIX path separator is ':', and the
-  # Windows path separator is ';'.)
-  modulepath = /etc/puppet/modules:/usr/share/puppet/modules
-
-  # The directory in which YAML data is stored, usually in a subdirectory.
-  yamldir = /var/lib/puppet/yaml
-
-  # The directory in which serialized data is stored, usually in a
-  # subdirectory.
-  server_datadir = /var/lib/puppet/server_data
-
-  # The list of reports to generate. All reports are looked for in
-  # `puppet/reports/name.rb`, and multiple report names should be
-  # comma-separated (whitespace is okay).
-  #reports = store
-
-  # The directory in which to store reports received from the client. Each
-  # client gets a separate subdirectory.
-  reportdir = /var/lib/puppet/reports
-
-  # The URL used by the http reports processor to send reports
-  #reporturl = http://localhost:3000/reports/upload
-
-  # Where the fileserver configuration is stored.
-  fileserverconfig = /etc/puppet/fileserver.conf
-
-  # Whether to only search for the complete hostname as it is in the
-  # certificate when searching for node information in the catalogs.
-  #
-  # TODO: Probably for the best to set this to true
-  #strict_hostname_checking = false
-
-  # Whether to store each client's configuration, including catalogs, facts,
-  # and related data. This also enables the import and export of resources in
-  # the Puppet language - a mechanism for exchange resources between nodes.
-  # 
-  # By default this uses ActiveRecord and an SQL database to store and query
-  # the data; this, in turn, will depend on Rails being available. You can
-  # adjust the backend using the storeconfigs_backend setting.
-  #
-  # TODO: This would probably be useful
-  #storeconfigs = false
-
-  # Configure the backend terminus used for StoreConfigs. By default, this
-  # uses the ActiveRecord store, which directly talks to the database from
-  # within the Puppet Master process.
-  #storeconfigs_backend = active_record
-
-  # The directory where RRD database files are stored. Directories for each
-  # reporting host will be created under this directory.
-  rrddir = /var/lib/puppet/rrd
-
-  # How often RRD should expect data. This should match how often the hosts
-  # report back to the server.
-  rrdinterval = 1800
-
-  # The root directory of devices' $vardir
-  devicedir = /var/lib/puppet/devices
-
-  # Path to the device config file for puppet device
-  deviceconfig = /etc/puppet/device.conf
-
-  # The explicit value used for the node name for all requests the agent makes
-  # to the master. WARNING: This setting is mutually exclusive with
-  # node_name_fact. Changing this setting also requires changes to the default
-  # auth.conf configuration on the Puppet Master. Please see
-  # http://links.puppetlabs.com/node_name_value for more information.
-  node_name_value = balum.internal.bedroomprogrammers.net
-
-  # Where puppet agent caches the local configuration. An extension indicating
-  # the cache format is added automatically.
-  localconfig = /var/lib/puppet/state/localconfig
-
-  # Where puppet agent and puppet master store state associated with the
-  # running configuration. In the case of puppet master, this file reflects
-  # the state discovered through interacting with clients.
-  statefile = /var/lib/puppet/state/state.yaml
-
-  # The directory in which client-side YAML data is stored.
-  clientyamldir = /var/lib/puppet/client_yaml
-
-  # The directory in which serialized data is stored on the client.
-  client_datadir = /var/lib/puppet/client_data
-
-  # The file in which puppet agent stores a list of the classes associated
-  # with the retrieved configuration. Can be loaded in the separate `puppet`
-  # executable using the `--loadclasses` option.
-  classfile = /var/lib/puppet/state/classes.txt
-
-  # The file in which puppet agent stores a list of the resources associated
-  # with the retrieved configuration.
-  resourcefile = /var/lib/puppet/state/resources.txt
-
-  # The log file for puppet agent.  This is generally not used.
-  # The default value is '$logdir/puppetd.log'.
-  puppetdlog = /var/log/puppet/puppetd.log
-
-  # The server to which server puppet agent should connect
-  server = balum.internal.bedroomprogrammers.net
-
-  # Whether puppet agent should ignore schedules. This is useful for initial
-  # puppet agent runs.
-  ignoreschedules = false
-
-  # Which port puppet agent listens on.
-  puppetport = 8139
-
-  # Whether puppet agent should be run in noop mode.
-  noop = false
-
-  # How often puppet agent applies the client configuration; in seconds. Note
-  # that a runinterval of 0 means "run continuously" rather than "never run".
-  # If you want puppet agent to never run, you should start it with the
-  # `--no-client` option.
-  runinterval = 1800
-
-  # Whether puppet agent should listen for connections. If this is true, then
-  # puppet agent will accept incoming REST API requests, subject to the
-  # default ACLs and the ACLs set in the `rest_authconfig` file. Puppet agent
-  # can respond usefully to requests on the `run`, `facts`, `certificate`,
-  # and `resource` endpoints.
-  #
-  # TODO: This may be valuable
-  #listen = false
-
-  # The server to use for certificate authority requests. It's a separate
-  # server because it cannot and does not need to horizontally scale.
-  ca_server = balum.internal.bedroomprogrammers.net
-
-  # The port to use for the certificate authority.
-  ca_port = 8140
-
-  # The preferred means of serializing ruby instances for passing over the
-  # wire. This won't guarantee that all instances will be serialized using
-  # this method, since not all classes can be guaranteed to support this
-  # format, but it will be used for all classes that support it.
-  preferred_serialization_format = pson
-
-  # A lock file to temporarily stop puppet agent from doing anything.
-  puppetdlockfile = /var/lib/puppet/state/puppetdlock
-
-  # Whether to use the cached configuration when the remote configuration will
-  # not compile. This option is useful for testing new configurations, where
-  # you want to fix the broken configuration rather than reverting to a
-  # known-good one.
-  usecacheonfailure = true
-
-  # Whether to only use the cached catalog rather than compiling a new catalog
-  # on every run. Puppet can be run with this enabled by default and then
-  # selectively disabled when a recompile is desired.
-  use_cached_catalog = false
-
-  # Ignore cache and always recompile the configuration. This is useful for
-  # testing new configurations, where the local cache may in fact be stale
-  # even if the timestamps are up to date - if the facts change or if the
-  # server changes.
-  #ignorecache = false
-
-  # Whether facts should be made all lowercase when sent to the server.
-  #downcasefacts = false
-
-  # Facts that are dynamic; these facts will be ignored when deciding whether
-  # changed facts should result in a recompile. Multiple facts should be
-  # comma-separated.
-  #dynamicfacts = memorysize,memoryfree,swapsize,swapfree
-
-  # The maximum time to delay before runs. Defaults to being the same as the
-  # run interval.
-  splaylimit = 1800
-
-  # Whether to sleep for a pseudo-random (but consistent) amount of time
-  # before a run.
-  splay = true
-
-  # Where FileBucket files are stored locally.
-  clientbucketdir = /var/lib/puppet/clientbucket
-
-  # How long the client should wait for the configuration to be retrieved
-  # before considering it a failure. This can help reduce flapping if too many
-  # clients contact the server at one time.
-  configtimeout = 60
-
-  # The server to send transaction reports to.
-  report_server = balum.internal.bedroomprogrammers.net
-
-  # The port to communicate with the report_server.
-  report_port = 8140
-
-  # The server to send facts to.
-  inventory_server = balum.internal.bedroomprogrammers.net
-
-  # The port to communicate with the inventory_server.
-  inventory_port = 8140
-
-  # Whether to send reports after every transaction.
-  report = true
-
-  # Where puppet agent stores the last run report summary in yaml format.
-  lastrunfile = /var/lib/puppet/state/last_run_summary.yaml
-
-  # Where puppet agent stores the last run report in yaml format.
-  lastrunreport = /var/lib/puppet/state/last_run_report.yaml
-
-  # Whether to create dot graph files for the different configuration graphs.
-  # These dot files can be interpreted by tools like OmniGraffle or dot (which
-  # is part of ImageMagick).
-  graph = true
-
-  # Where to store dot-outputted graphs.
-  graphdir = /var/lib/puppet/state/graphs
-
-  # Allow http compression in REST communication with the master. This setting
-  # might improve performance for agent -> master communications over slow
-  # WANs.
-  #
-  # Your puppet master needs to support compression (usually by activating
-  # some settings in a reverse-proxy in front of the puppet master, which
-  # rules out webrick).
-  #
-  # It is harmless to activate this settings if your master doesn't support
-  # compression, but if it supports it, this setting might reduce performance
-  # on high-speed LANs.
-  http_compression = false
-
-  # During an inspect run, whether to archive files whose contents are audited
-  # to a file bucket.
-  archive_files = true
-
-  # During an inspect run, the file bucket server to archive files to if
-  # archive_files is set.
-  archive_file_server = balum.internal.bedroomprogrammers.net
-
-  # The mapping between reporting tags and email addresses.
-  tagmap = /etc/puppet/tagmail.conf
-
-  # Where to find the sendmail binary with which to send email.
-  sendmail = /usr/sbin/sendmail
-
-  # The 'from' email address for the reports.
-  reportfrom = puppet-master@balum.internal.bedroomprogrammers.net
-
-  # The server through which to send email reports.
-  smtpserver = none
-
-  # The database cache for client configurations. Used for querying within the
-  # language.
-  dblocation = /var/lib/puppet/state/clientconfigs.sqlite3
-
-  # The type of database to use.
-  dbadapter = sqlite3
-
-  # Whether to automatically migrate the database.
-  dbmigrate = true
-
-
-  # The database server for caching.
-  #dbserver = localhost
-  #dbport = 
-  #dbname = puppet
-  #dbuser = puppet
-  #dbpassword = puppet
-
-  # The number of database connections for networked databases.
-  #dbconnections = 
-
-  # The database socket location. Only used when networked databases are used.
-  # Will be ignored if the value is an empty string.
-  #dbsocket = 
-
-  # Where Rails-specific logs are sent
-  railslog = /var/log/puppet/rails.log
-
-  # The log level for Rails connections. The value must be a valid log level
-  # within Rails. Production environments normally use `info` and other
-  # environments normally use `debug`.
-  rails_loglevel = info
-
-  # The url where the puppet couchdb database will be created
-  #couchdb_url = http://127.0.0.1:5984/puppet
-
-  # Tags to use to find resources. If this is set, then only resources tagged
-  # with the specified tags will be applied. Values must be comma-separated.
-  #tags = 
-
-  # Whether each resource should log when it is being evaluated. This allows
-  # you to interactively see exactly what is being done.
-  #evaltrace = false
-
-  # Whether to print a transaction summary.
-  #summarize = false
-
-  # Whether to search for node configurations in LDAP. See
-  # http://projects.puppetlabs.com/projects/puppet/wiki/LDAP_Nodes for more
-  # information.
-  #ldapnodes = false
-
-  # Whether SSL should be used when searching for nodes. Defaults to false
-  # because SSL usually requires certificates to be set up on the client
-  # side.
-  #ldapssl = false
-
-  # Whether TLS should be used when searching for nodes. Defaults to false
-  # because TLS usually requires certificates to be set up on the client
-  # side.
-  #ldaptls = false
-
-  # The LDAP server. Only used if `ldapnodes` is enabled.
-  #ldapserver = ldap.example.org
-
-  # The LDAP port.  Only used if `ldapnodes` is enabled.
-  #ldapport = 389
-
-  # The search string used to find an LDAP node.
-  #ldapstring = (&(objectclass=puppetClient)(cn=%s))
-
-  # The LDAP attributes to use to define Puppet classes. Values should be
-  # comma-separated.
-  #ldapclassattrs = puppetclass
-
-  # The LDAP attributes that should be stacked to arrays by adding the values
-  # in all hierarchy elements of the tree. Values should be comma-separated.
-  #ldapstackedattrs = puppetvar
-
-  # The LDAP attributes to include when querying LDAP for nodes. All returned
-  # attributes are set as variables in the top-level scope. Multiple values
-  # should be comma-separated. The value 'all' returns all attributes.
-  #ldapattrs = all
-
-  # The attribute to use to define the parent node.
-  #ldapparentattr = parentnode
-
-  # The user to use to connect to LDAP. Must be specified as a full DN.
-  #ldapuser = 
-
-  # The password to use to connect to LDAP.
-  #ldappassword = 
-
-  # The search base for LDAP searches. It's impossible to provide a meaningful
-  # default here, although the LDAP libraries might have one already set.
-  # Generally, it should be the 'ou=Hosts' branch under your main directory.
-  #ldapbase = 
-
-  # Whether to use lexical scoping (vs. dynamic).
-  #lexical = false
-
-  # Where Puppet looks for template files. Can be a list of colon-separated
-  # directories.
-  templatedir = /var/lib/puppet/templates
-
-  # Document all resources
-  #document_all = false
-</code></pre>
-<h2 id="puppet-client">Puppet Client</h2>
-<h3 id="installation-1">Installation</h3>
-<pre><code>yum install puppet -y
-</code></pre>
-</div>
-</article>
-
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
     </div>
-  </body>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/puppet/">Puppet</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="puppet-master--server">Puppet Master / Server</h2>
+<h3 id="installation">Installation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install puppet puppet-server -y
+</span></span></code></pre></div><p>And configure the puppet master like so:</p>
+<p>The following file is <code>/etc/puppet/puppet.conf</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#ff7b72">[master]</span>
+</span></span><span style="display:flex;"><span>  confdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  vardir = /var/lib/puppet
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  logdir = /var/log/puppet</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to print stack traces on some errors</span>
+</span></span><span style="display:flex;"><span>  trace <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether log files should always flush to disk.</span>
+</span></span><span style="display:flex;"><span>  autoflush <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># What syslog facility to use when logging to syslog.</span>
+</span></span><span style="display:flex;"><span>  syslogfacility <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">daemon</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory where Puppet state is stored.  Generally, this directory can</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># be removed without causing harm (although it might result in spurious</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># service restarts).</span>
+</span></span><span style="display:flex;"><span>  statedir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where Puppet PID files are kept.</span>
+</span></span><span style="display:flex;"><span>  rundir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/run/puppet</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to just print a manifest to stdout and exit. Only makes sense when</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># used interactively. Takes into account arguments specified on the CLI.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#genmanifest = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to use colors when logging to the console.  Valid values are</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># `ansi` (equivalent to `true`), `html`, and `false`, which produces no color.</span>
+</span></span><span style="display:flex;"><span>  color <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">ansi</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to create the necessary user and group that puppet agent will run</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># as.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#mkusers = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether Puppet should manage the owner, group, and mode of files it uses</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># internally</span>
+</span></span><span style="display:flex;"><span>  manage_internal_file_permissions <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Run the configuration once, rather than as a long-running daemon. This is</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># useful for interactively running puppetd.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#onetime = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The shell search path.  Defaults to whatever is inherited from the parent</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># process.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#path = none</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># An extra search path for Puppet. This is only useful for those files that</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Puppet will load on demand, and is only guaranteed to work for those</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># cases. In fact, the autoload mechanism is responsible for making sure this</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># directory is in Ruby&#39;s search path</span>
+</span></span><span style="display:flex;"><span>  libdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/lib</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># If true, allows the parser to continue without requiring all files</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># referenced with `import` statements to exist. This setting was primarily</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># designed for use with commit hooks for parse-checking.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ignoreimport = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The configuration file that defines the rights to the different namespaces</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># and methods. This can be used as a coarse-grained authorization system for</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># both `puppet agent` and `puppet master`.</span>
+</span></span><span style="display:flex;"><span>  authconfig <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/namespaceauth.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The environment Puppet is running in. For clients (e.g., `puppet agent`)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># this determines the environment itself, which is used to find modules and</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># much more. For servers (i.e., `puppet master`) this provides the default</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># environment for nodes we know nothing about.</span>
+</span></span><span style="display:flex;"><span>  environment <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">production</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Which arguments to pass to the diff command when printing differences between</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># files. The command to use can be chosen with the `diff` setting.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#diff_args = -u</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Which diff command to use when printing differences between files. This</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># setting has no default value on Windows, as standard `diff` is not</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># available, but Puppet can use many third-party diff tools.</span>
+</span></span><span style="display:flex;"><span>  diff <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">diff</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to log and report a contextual diff when files are being replaced.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># This causes partial file contents to pass through Puppet&#39;s normal logging</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># and reporting system, so this setting should be used with caution if you</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># are sending Puppet&#39;s reports to an insecure destination. This feature</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># currently requires the `diff/lcs` Ruby library.</span>
+</span></span><span style="display:flex;"><span>  show_diff <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to send the process into the background. This defaults to true on</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># POSIX systems, and to false on Windows (where Puppet currently cannot</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># daemonize).</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#daemonize = true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The maximum allowed UID. Some platforms use negative UIDs but then ship</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># with tools that do not know how to handle signed ints, so the UIDs show up</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># as huge numbers that can then not be fed back into the system. This is a</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># hackish way to fail in a slightly more useful way when that happens.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#maximum_uid = 4294967290</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The YAML file containing indirector route configuration.</span>
+</span></span><span style="display:flex;"><span>  route_file <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/routes.yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where to find information about nodes.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#node_terminus = plain</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where to get node catalogs. This is useful to change if, for instance,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># you&#39;d like to pre-compile catalogs and store them in memcached or some</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># other easily-accessed store.</span>
+</span></span><span style="display:flex;"><span>  catalog_terminus <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">compiler</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The node facts terminus.</span>
+</span></span><span style="display:flex;"><span>  facts_terminus <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Should usually be the same as the facts terminus</span>
+</span></span><span style="display:flex;"><span>  inventory_terminus <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the puppet agent web server logs.</span>
+</span></span><span style="display:flex;"><span>  httplog <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/log/puppet/http.log</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The HTTP proxy host to use for outgoing connections. Note: You may need to</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># use a FQDN for the server hostname when using a proxy.</span>
+</span></span><span style="display:flex;"><span>  http_proxy_host <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">none</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The HTTP proxy port to use for outgoing connections</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#http_proxy_port = 3128</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The minimum time to wait (in seconds) between checking for updates in</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># configuration files. This timeout determines how quickly Puppet checks</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># whether a file (such as manifests or templates) has changed on disk.</span>
+</span></span><span style="display:flex;"><span>  filetimeout <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">15</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Which type of queue to use for asynchronous processing.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#queue_type = stomp</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Which type of queue to use for asynchronous processing. If your stomp</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># server requires authentication, you can include it in the URI as long as</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># your stomp client library is at least 1.1.1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#queue_source = stomp://localhost:61613/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to use a queueing system to provide asynchronous database</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># integration. Requires that `puppetqd` be running and that &#39;PSON&#39; support</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># for ruby be installed.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#async_storeconfigs = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether storeconfigs store in the database only the facts and exported</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># resources. If true, then storeconfigs performance will be higher and still</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># allow exported/collected resources, but other usage external to Puppet</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># might not work.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#thin_storeconfigs = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># How to determine the configuration version. By default, it will be the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># time that the configuration is parsed, but you can provide a shell script</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># to override how the version is determined. The output of this script will</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># be added to every log message in the reports, allowing you to correlate</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># changes on your hosts to the source version on the server.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#config_version = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to use the zlib library</span>
+</span></span><span style="display:flex;"><span>  zlib <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># A command to run before every agent run. If this command returns a</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># non-zero return code, the entire Puppet run will fail.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#prerun_command = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># A command to run after every agent run. If this command returns a non-zero</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># return code, the entire Puppet run will be considered to have failed, even</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># though it might have performed work during the normal run.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#postrun_command = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Freezes the &#39;main&#39; class, disallowing any code to be added to it. This</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># essentially means that you can&#39;t have any code outside of a node, class,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># or definition other than in the site manifest.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#freeze_main = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The name to use when handling certificates.</span>
+</span></span><span style="display:flex;"><span>  certname <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The certificate directory.</span>
+</span></span><span style="display:flex;"><span>  certdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/certs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where SSL certificates are kept.</span>
+</span></span><span style="display:flex;"><span>  ssldir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The public key directory.</span>
+</span></span><span style="display:flex;"><span>  publickeydir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/public_keys</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where host certificate requests are stored.</span>
+</span></span><span style="display:flex;"><span>  requestdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/certificate_requests</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The private key directory.</span>
+</span></span><span style="display:flex;"><span>  privatekeydir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/private_keys</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the client stores private certificate information.</span>
+</span></span><span style="display:flex;"><span>  privatedir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/private</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where puppet agent stores the password for its private key.</span>
+</span></span><span style="display:flex;"><span>  passfile <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/private/password</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where individual hosts store and look for their certificate information.</span>
+</span></span><span style="display:flex;"><span>  hostcsr <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/csr_balum.internal.bedroomprogrammers.net.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  hostcert = /var/lib/puppet/ssl/certs/balum.internal.bedroomprogrammers.net.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  hostprivkey = /var/lib/puppet/ssl/private_keys/balum.internal.bedroomprogrammers.net.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  hostpubkey = /var/lib/puppet/ssl/public_keys/balum.internal.bedroomprogrammers.net.pem</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  localcacert <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/certs/ca.pem</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the host&#39;s certificate revocation list can be found. This is</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># distinct from the certificate authority&#39;s CRL.</span>
+</span></span><span style="display:flex;"><span>  hostcrl <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/crl.pem</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether certificate revocation should be supported by downloading a</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Certificate Revocation List (CRL) to all clients. If enabled, CA chaining</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># will almost definitely not work.</span>
+</span></span><span style="display:flex;"><span>  certificate_revocation <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where Puppet should store plugins that it pulls down from the central</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># server.</span>
+</span></span><span style="display:flex;"><span>  plugindest <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/lib</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># From where to retrieve plugins. The standard Puppet `file` type is used</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># for retrieval, so anything that is a valid file source can be used here.</span>
+</span></span><span style="display:flex;"><span>  pluginsource <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">puppet://puppet/plugins</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether plugins should be synced with the central server.</span>
+</span></span><span style="display:flex;"><span>  pluginsync <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># What files to ignore when pulling down plugins.</span>
+</span></span><span style="display:flex;"><span>  pluginsignore <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">.git</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where Puppet should look for facts. Multiple directories should be</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># separated by the system path separator character. (The POSIX path</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># separator is &#39;:&#39;, and the Windows path separator is &#39;;&#39;.)</span>
+</span></span><span style="display:flex;"><span>  factpath <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/lib/facter:/var/lib/puppet/facts</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where Puppet should store facts that it pulls down from the central</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># server.</span>
+</span></span><span style="display:flex;"><span>  factdest <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/facts/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># From where to retrieve facts. The standard Puppet `file` type is used for</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># retrieval, so anything that is a valid file source can be used here.</span>
+</span></span><span style="display:flex;"><span>  factsource <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">puppet://puppet/facts/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether facts should be synced with the central server.</span>
+</span></span><span style="display:flex;"><span>  factsync <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># What files to ignore when pulling down facts.</span>
+</span></span><span style="display:flex;"><span>  factsignore <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">.git</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># An external command that can produce node information. The command&#39;s</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># output must be a YAML dump of a hash, and that hash must have a `classes`</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># key and/or a `parameters` key, where `classes` is an array or hash and</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># `parameters` is a hash. For unknown nodes, the command should exit with a</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># non-zero exit code. This command makes it straightforward to store your</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># node mapping information in other data sources like databases.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#external_nodes = none</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The module repository</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#module_repository = http://forge.puppetlabs.com</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory into which module tool data is stored</span>
+</span></span><span style="display:flex;"><span>  module_working_dir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/puppet-module</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Certificate authority configuration</span>
+</span></span><span style="display:flex;"><span>  ca_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Puppet CA: balum.internal.bedroomprogrammers.net
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  cadir = /var/lib/puppet/ssl/ca
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  cacert = /var/lib/puppet/ssl/ca/ca_crt.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  cakey = /var/lib/puppet/ssl/ca/ca_key.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  capub = /var/lib/puppet/ssl/ca/ca_pub.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  cacrl = /var/lib/puppet/ssl/ca/ca_crl.pem
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  caprivatedir = /var/lib/puppet/ssl/ca/private
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  csrdir = /var/lib/puppet/ssl/ca/requests</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the CA stores signed certificates.</span>
+</span></span><span style="display:flex;"><span>  signeddir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/ca/signed</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the CA stores the password for the private key</span>
+</span></span><span style="display:flex;"><span>  capass <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/ca/private/ca.pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the serial number for certificates is stored.</span>
+</span></span><span style="display:flex;"><span>  serial <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/ca/serial</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to enable autosign. Valid values are true (which autosigns any key</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># request, and is a very bad idea), false (which never autosigns any key</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># request), and the path to a file, which uses that configuration file to</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># determine which keys to sign.</span>
+</span></span><span style="display:flex;"><span>  autosign <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/autosign.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to allow a new certificate request to overwrite an existing</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># certificate.</span>
+</span></span><span style="display:flex;"><span>  allow_duplicate_certs <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The default TTL for new certificates; valid values must be an integer,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># optionally followed by one of the units &#39;y&#39; (years of 365 days), &#39;d&#39;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># (days), &#39;h&#39; (hours), or &#39;s&#39; (seconds). The unit defaults to seconds. If</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># this setting is set, ca_days is ignored. Examples are &#39;3600&#39; (one hour)</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># and &#39;1825d&#39;, which is the same as &#39;5y&#39; (5 years) </span>
+</span></span><span style="display:flex;"><span>  ca_ttl <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3y</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The type of hash used in certificates.</span>
+</span></span><span style="display:flex;"><span>  ca_md <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">sha256</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The bit length of the certificates.</span>
+</span></span><span style="display:flex;"><span>  req_bits <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4096</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The bit length of keys.</span>
+</span></span><span style="display:flex;"><span>  keylength <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4096</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># A Complete listing of all certificates</span>
+</span></span><span style="display:flex;"><span>  cert_inventory <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/ssl/ca/inventory.txt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The configuration file for master.</span>
+</span></span><span style="display:flex;"><span>  config <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/puppet.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The pid file</span>
+</span></span><span style="display:flex;"><span>  pidfile <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/run/puppet/master.pid</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The address a listening server should bind to. Mongrel servers default to</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># 127.0.0.1 and WEBrick defaults to 0.0.0.0.</span>
+</span></span><span style="display:flex;"><span>  bindaddress <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0.0.0.0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The type of server to use. Currently supported options are webrick and</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># mongrel. If you use mongrel, you will need a proxy in front of the process</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># or processes, since Mongrel cannot speak SSL.</span>
+</span></span><span style="display:flex;"><span>  servertype <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">webrick</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The user puppet master should run as.</span>
+</span></span><span style="display:flex;"><span>  user <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">puppet</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The group puppet master should run as.</span>
+</span></span><span style="display:flex;"><span>  group <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">puppet</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where puppet master looks for its manifests.</span>
+</span></span><span style="display:flex;"><span>  manifestdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/manifests</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The entry-point manifest for puppet master.</span>
+</span></span><span style="display:flex;"><span>  manifest <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/manifests/site.pp</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Code to parse directly. This is essentially only used by `puppet`, and</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># should only be set if you&#39;re writing your own Puppet executable.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#code = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where puppet master logs. This is generally not used, since syslog is the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># default log destination.</span>
+</span></span><span style="display:flex;"><span>  masterlog <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/log/puppet/puppetmaster.log</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the puppet master web server logs.</span>
+</span></span><span style="display:flex;"><span>  masterhttplog <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/log/puppet/masterhttp.log</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Which port puppet master listens on.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># How the puppet master determines the client&#39;s identity and sets the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># &#39;hostname&#39;, &#39;fqdn&#39; and &#39;domain&#39; facts for use in the manifest, in</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># particular for determining which &#39;node&#39; statement applies to the client.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Possible values are &#39;cert&#39; (use the subject&#39;s CN in the client&#39;s</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># certificate) and &#39;facter&#39; (use the hostname that the client reported in</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># its facts)</span>
+</span></span><span style="display:flex;"><span>  node_name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">cert</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where FileBucket files are stored.</span>
+</span></span><span style="display:flex;"><span>  bucketdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/bucket</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The configuration file that defines the rights to the different rest</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># indirections. This can be used as a fine-grained authorization system for</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># `puppet master`.</span>
+</span></span><span style="display:flex;"><span>  rest_authconfig <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/auth.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Wether the master should function as a certificate authority.</span>
+</span></span><span style="display:flex;"><span>  ca <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The search path for modules, as a list of directories separated by the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># system path separator character. (The POSIX path separator is &#39;:&#39;, and the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Windows path separator is &#39;;&#39;.)</span>
+</span></span><span style="display:flex;"><span>  modulepath <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/modules:/usr/share/puppet/modules</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory in which YAML data is stored, usually in a subdirectory.</span>
+</span></span><span style="display:flex;"><span>  yamldir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory in which serialized data is stored, usually in a</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># subdirectory.</span>
+</span></span><span style="display:flex;"><span>  server_datadir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/server_data</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The list of reports to generate. All reports are looked for in</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># `puppet/reports/name.rb`, and multiple report names should be</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># comma-separated (whitespace is okay).</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#reports = store</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory in which to store reports received from the client. Each</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># client gets a separate subdirectory.</span>
+</span></span><span style="display:flex;"><span>  reportdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/reports</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The URL used by the http reports processor to send reports</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#reporturl = http://localhost:3000/reports/upload</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where the fileserver configuration is stored.</span>
+</span></span><span style="display:flex;"><span>  fileserverconfig <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/fileserver.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to only search for the complete hostname as it is in the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># certificate when searching for node information in the catalogs.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># TODO: Probably for the best to set this to true</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#strict_hostname_checking = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to store each client&#39;s configuration, including catalogs, facts,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># and related data. This also enables the import and export of resources in</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># the Puppet language - a mechanism for exchange resources between nodes.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># By default this uses ActiveRecord and an SQL database to store and query</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># the data; this, in turn, will depend on Rails being available. You can</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># adjust the backend using the storeconfigs_backend setting.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># TODO: This would probably be useful</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#storeconfigs = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Configure the backend terminus used for StoreConfigs. By default, this</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># uses the ActiveRecord store, which directly talks to the database from</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># within the Puppet Master process.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#storeconfigs_backend = active_record</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory where RRD database files are stored. Directories for each</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># reporting host will be created under this directory.</span>
+</span></span><span style="display:flex;"><span>  rrddir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/rrd</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># How often RRD should expect data. This should match how often the hosts</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># report back to the server.</span>
+</span></span><span style="display:flex;"><span>  rrdinterval <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1800</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The root directory of devices&#39; $vardir</span>
+</span></span><span style="display:flex;"><span>  devicedir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/devices</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Path to the device config file for puppet device</span>
+</span></span><span style="display:flex;"><span>  deviceconfig <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/device.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The explicit value used for the node name for all requests the agent makes</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># to the master. WARNING: This setting is mutually exclusive with</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># node_name_fact. Changing this setting also requires changes to the default</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># auth.conf configuration on the Puppet Master. Please see</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># http://links.puppetlabs.com/node_name_value for more information.</span>
+</span></span><span style="display:flex;"><span>  node_name_value <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where puppet agent caches the local configuration. An extension indicating</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># the cache format is added automatically.</span>
+</span></span><span style="display:flex;"><span>  localconfig <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/localconfig</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where puppet agent and puppet master store state associated with the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># running configuration. In the case of puppet master, this file reflects</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># the state discovered through interacting with clients.</span>
+</span></span><span style="display:flex;"><span>  statefile <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/state.yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory in which client-side YAML data is stored.</span>
+</span></span><span style="display:flex;"><span>  clientyamldir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/client_yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The directory in which serialized data is stored on the client.</span>
+</span></span><span style="display:flex;"><span>  client_datadir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/client_data</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The file in which puppet agent stores a list of the classes associated</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># with the retrieved configuration. Can be loaded in the separate `puppet`</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># executable using the `--loadclasses` option.</span>
+</span></span><span style="display:flex;"><span>  classfile <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/classes.txt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The file in which puppet agent stores a list of the resources associated</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># with the retrieved configuration.</span>
+</span></span><span style="display:flex;"><span>  resourcefile <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/resources.txt</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The log file for puppet agent.  This is generally not used.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The default value is &#39;$logdir/puppetd.log&#39;.</span>
+</span></span><span style="display:flex;"><span>  puppetdlog <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/log/puppet/puppetd.log</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The server to which server puppet agent should connect</span>
+</span></span><span style="display:flex;"><span>  server <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether puppet agent should ignore schedules. This is useful for initial</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># puppet agent runs.</span>
+</span></span><span style="display:flex;"><span>  ignoreschedules <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Which port puppet agent listens on.</span>
+</span></span><span style="display:flex;"><span>  puppetport <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8139</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether puppet agent should be run in noop mode.</span>
+</span></span><span style="display:flex;"><span>  noop <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># How often puppet agent applies the client configuration; in seconds. Note</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># that a runinterval of 0 means &#34;run continuously&#34; rather than &#34;never run&#34;.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># If you want puppet agent to never run, you should start it with the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># `--no-client` option.</span>
+</span></span><span style="display:flex;"><span>  runinterval <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1800</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether puppet agent should listen for connections. If this is true, then</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># puppet agent will accept incoming REST API requests, subject to the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># default ACLs and the ACLs set in the `rest_authconfig` file. Puppet agent</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># can respond usefully to requests on the `run`, `facts`, `certificate`,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># and `resource` endpoints.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># TODO: This may be valuable</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#listen = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The server to use for certificate authority requests. It&#39;s a separate</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># server because it cannot and does not need to horizontally scale.</span>
+</span></span><span style="display:flex;"><span>  ca_server <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The port to use for the certificate authority.</span>
+</span></span><span style="display:flex;"><span>  ca_port <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8140</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The preferred means of serializing ruby instances for passing over the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># wire. This won&#39;t guarantee that all instances will be serialized using</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># this method, since not all classes can be guaranteed to support this</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># format, but it will be used for all classes that support it.</span>
+</span></span><span style="display:flex;"><span>  preferred_serialization_format <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">pson</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># A lock file to temporarily stop puppet agent from doing anything.</span>
+</span></span><span style="display:flex;"><span>  puppetdlockfile <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/puppetdlock</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to use the cached configuration when the remote configuration will</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># not compile. This option is useful for testing new configurations, where</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># you want to fix the broken configuration rather than reverting to a</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># known-good one.</span>
+</span></span><span style="display:flex;"><span>  usecacheonfailure <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to only use the cached catalog rather than compiling a new catalog</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># on every run. Puppet can be run with this enabled by default and then</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># selectively disabled when a recompile is desired.</span>
+</span></span><span style="display:flex;"><span>  use_cached_catalog <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Ignore cache and always recompile the configuration. This is useful for</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># testing new configurations, where the local cache may in fact be stale</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># even if the timestamps are up to date - if the facts change or if the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># server changes.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ignorecache = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether facts should be made all lowercase when sent to the server.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#downcasefacts = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Facts that are dynamic; these facts will be ignored when deciding whether</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># changed facts should result in a recompile. Multiple facts should be</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># comma-separated.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dynamicfacts = memorysize,memoryfree,swapsize,swapfree</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The maximum time to delay before runs. Defaults to being the same as the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># run interval.</span>
+</span></span><span style="display:flex;"><span>  splaylimit <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1800</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to sleep for a pseudo-random (but consistent) amount of time</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># before a run.</span>
+</span></span><span style="display:flex;"><span>  splay <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where FileBucket files are stored locally.</span>
+</span></span><span style="display:flex;"><span>  clientbucketdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/clientbucket</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># How long the client should wait for the configuration to be retrieved</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># before considering it a failure. This can help reduce flapping if too many</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># clients contact the server at one time.</span>
+</span></span><span style="display:flex;"><span>  configtimeout <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">60</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The server to send transaction reports to.</span>
+</span></span><span style="display:flex;"><span>  report_server <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The port to communicate with the report_server.</span>
+</span></span><span style="display:flex;"><span>  report_port <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8140</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The server to send facts to.</span>
+</span></span><span style="display:flex;"><span>  inventory_server <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The port to communicate with the inventory_server.</span>
+</span></span><span style="display:flex;"><span>  inventory_port <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8140</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to send reports after every transaction.</span>
+</span></span><span style="display:flex;"><span>  report <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where puppet agent stores the last run report summary in yaml format.</span>
+</span></span><span style="display:flex;"><span>  lastrunfile <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/last_run_summary.yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where puppet agent stores the last run report in yaml format.</span>
+</span></span><span style="display:flex;"><span>  lastrunreport <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/last_run_report.yaml</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to create dot graph files for the different configuration graphs.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># These dot files can be interpreted by tools like OmniGraffle or dot (which</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># is part of ImageMagick).</span>
+</span></span><span style="display:flex;"><span>  graph <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where to store dot-outputted graphs.</span>
+</span></span><span style="display:flex;"><span>  graphdir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/graphs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Allow http compression in REST communication with the master. This setting</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># might improve performance for agent -&gt; master communications over slow</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># WANs.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Your puppet master needs to support compression (usually by activating</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># some settings in a reverse-proxy in front of the puppet master, which</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># rules out webrick).</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># It is harmless to activate this settings if your master doesn&#39;t support</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># compression, but if it supports it, this setting might reduce performance</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># on high-speed LANs.</span>
+</span></span><span style="display:flex;"><span>  http_compression <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># During an inspect run, whether to archive files whose contents are audited</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># to a file bucket.</span>
+</span></span><span style="display:flex;"><span>  archive_files <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># During an inspect run, the file bucket server to archive files to if</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># archive_files is set.</span>
+</span></span><span style="display:flex;"><span>  archive_file_server <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The mapping between reporting tags and email addresses.</span>
+</span></span><span style="display:flex;"><span>  tagmap <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/etc/puppet/tagmail.conf</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where to find the sendmail binary with which to send email.</span>
+</span></span><span style="display:flex;"><span>  sendmail <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/usr/sbin/sendmail</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The &#39;from&#39; email address for the reports.</span>
+</span></span><span style="display:flex;"><span>  reportfrom <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">puppet-master@balum.internal.bedroomprogrammers.net</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The server through which to send email reports.</span>
+</span></span><span style="display:flex;"><span>  smtpserver <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">none</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The database cache for client configurations. Used for querying within the</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># language.</span>
+</span></span><span style="display:flex;"><span>  dblocation <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/state/clientconfigs.sqlite3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The type of database to use.</span>
+</span></span><span style="display:flex;"><span>  dbadapter <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">sqlite3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to automatically migrate the database.</span>
+</span></span><span style="display:flex;"><span>  dbmigrate <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">true</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The database server for caching.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dbserver = localhost</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dbport = </span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dbname = puppet</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dbuser = puppet</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dbpassword = puppet</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The number of database connections for networked databases.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dbconnections = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The database socket location. Only used when networked databases are used.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Will be ignored if the value is an empty string.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#dbsocket = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where Rails-specific logs are sent</span>
+</span></span><span style="display:flex;"><span>  railslog <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/log/puppet/rails.log</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The log level for Rails connections. The value must be a valid log level</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># within Rails. Production environments normally use `info` and other</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># environments normally use `debug`.</span>
+</span></span><span style="display:flex;"><span>  rails_loglevel <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">info</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The url where the puppet couchdb database will be created</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#couchdb_url = http://127.0.0.1:5984/puppet</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Tags to use to find resources. If this is set, then only resources tagged</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># with the specified tags will be applied. Values must be comma-separated.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#tags = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether each resource should log when it is being evaluated. This allows</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># you to interactively see exactly what is being done.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#evaltrace = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to print a transaction summary.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#summarize = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to search for node configurations in LDAP. See</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># http://projects.puppetlabs.com/projects/puppet/wiki/LDAP_Nodes for more</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># information.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapnodes = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether SSL should be used when searching for nodes. Defaults to false</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># because SSL usually requires certificates to be set up on the client</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># side.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapssl = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether TLS should be used when searching for nodes. Defaults to false</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># because TLS usually requires certificates to be set up on the client</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># side.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldaptls = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The LDAP server. Only used if `ldapnodes` is enabled.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapserver = ldap.example.org</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The LDAP port.  Only used if `ldapnodes` is enabled.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapport = 389</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The search string used to find an LDAP node.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapstring = (&amp;(objectclass=puppetClient)(cn=%s))</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The LDAP attributes to use to define Puppet classes. Values should be</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># comma-separated.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapclassattrs = puppetclass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The LDAP attributes that should be stacked to arrays by adding the values</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># in all hierarchy elements of the tree. Values should be comma-separated.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapstackedattrs = puppetvar</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The LDAP attributes to include when querying LDAP for nodes. All returned</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># attributes are set as variables in the top-level scope. Multiple values</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># should be comma-separated. The value &#39;all&#39; returns all attributes.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapattrs = all</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The attribute to use to define the parent node.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapparentattr = parentnode</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The user to use to connect to LDAP. Must be specified as a full DN.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapuser = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The password to use to connect to LDAP.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldappassword = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># The search base for LDAP searches. It&#39;s impossible to provide a meaningful</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># default here, although the LDAP libraries might have one already set.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Generally, it should be the &#39;ou=Hosts&#39; branch under your main directory.</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#ldapbase = </span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Whether to use lexical scoping (vs. dynamic).</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#lexical = false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Where Puppet looks for template files. Can be a list of colon-separated</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># directories.</span>
+</span></span><span style="display:flex;"><span>  templatedir <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/var/lib/puppet/templates</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic"># Document all resources</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">#document_all = false</span>
+</span></span></code></pre></div><h2 id="puppet-client">Puppet Client</h2>
+<h3 id="installation-1">Installation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install puppet -y
+</span></span></code></pre></div>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

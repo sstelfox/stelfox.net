@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Various Notes on Sam Stelfox</title>
+    <link>https://stelfox.net/notes/</link>
+    <description>Recent content in Various Notes on Sam Stelfox</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <managingEditor>sam@stelfox.net (Sam Stelfox)</managingEditor>
+    <webMaster>sam@stelfox.net (Sam Stelfox)</webMaster>
+    <lastBuildDate>Thu, 26 Oct 2017 17:35:42 -0400</lastBuildDate><atom:link href="https://stelfox.net/notes/atom.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cron Daemon</title>
+      <link>https://stelfox.net/notes/cron-daemon/</link>
+      <pubDate>Thu, 26 Oct 2017 17:35:42 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/cron-daemon/</guid>
+      <description>Cron is a pretty standard utility and there isn&amp;rsquo;t much to it. I generally use cronie as my cron daemon with the associated anacron. Cron runs tasks periodically, and anacron helps ensure that a missed task will get run if it was off or powercycled when it would have otherwise run.
+File Format The config format differs slightly between crontabs, regular cron files, and anacron entries. At the beginning of all the files environment variables can be set using key=value pairs to control the behavior of cron and anacron followed by entries for that file one to a line.</description>
+    </item>
+    
+    <item>
+      <title>Syslog-NG</title>
+      <link>https://stelfox.net/notes/syslog-ng/</link>
+      <pubDate>Wed, 25 Oct 2017 01:56:02 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/syslog-ng/</guid>
+      <description>Syslog-NG is a fast, reliable, and secure syslog daemon that can do advanced processing and log centralization while maintaining a sane configuration file syntax. I&amp;rsquo;ve recently come to vastly prefer it over my previous long term favorite Rsyslog.
+It&amp;rsquo;s important to note that when modifying the logs statements, they will be processed in order. This means log statements that finalize a message will never make it past that statement. This finalization behavior can be a great tool for optimizing the processing path of logs but can result in unexpected behavior if you don&amp;rsquo;t pay attention when re-ordering the statements.</description>
+    </item>
+    
+    <item>
+      <title>CFSSL</title>
+      <link>https://stelfox.net/notes/cfssl/</link>
+      <pubDate>Tue, 24 Oct 2017 18:39:22 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/cfssl/</guid>
+      <description>CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&amp;rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I&amp;rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains.</description>
+    </item>
+    
+    <item>
+      <title>Server Naming Convention</title>
+      <link>https://stelfox.net/notes/server-naming-convention/</link>
+      <pubDate>Fri, 20 Oct 2017 19:59:02 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/server-naming-convention/</guid>
+      <description>Over the years I&amp;rsquo;ve found myself using many different naming schemes for servers under my control. I came across a naming convention that finally feels correct. That blog post is quite well written and will let it stand on its own. In the event it ever disappears the important bits (and those where I&amp;rsquo;ve personalized it) are included here.
+There are ultimately two or three DNS names that each host receives.</description>
+    </item>
+    
+    <item>
+      <title>Mutt</title>
+      <link>https://stelfox.net/notes/mutt/</link>
+      <pubDate>Fri, 20 Oct 2017 12:51:00 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/mutt/</guid>
+      <description>I keep a copy of my mutt config both here on the site as well as in my public dotfiles. Eventually I&amp;rsquo;ll likely document my reasoning, preferences and the tradeoffs made in that config (and change my mind on most in the process).
+Vim Since I use vim as my editor I also added the following line to my vim configuration file to autowrap my lines at 72 characters, but only for mutt composed messsages.</description>
+    </item>
+    
+    <item>
+      <title>IPTables</title>
+      <link>https://stelfox.net/notes/iptables/</link>
+      <pubDate>Fri, 20 Oct 2017 12:14:02 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/iptables/</guid>
+      <description>iptables (and ip6tables) is a simple application for interacting directly with the Linux kernel&amp;rsquo;s netfilter firewall. nftables is attempting to replace it. nftables has better performance but is incredibly complex and difficult to use. Until the tooling and usability around nftables is addressed iptables will likely remain the reigning champion.
+It is important that your systems have effective ingress and egress rules. Depending on your host OS, you&amp;rsquo;ll find your rule set stored in different locations but the following list are where I&amp;rsquo;ve seen them before:</description>
+    </item>
+    
+    <item>
+      <title>Time</title>
+      <link>https://stelfox.net/notes/time/</link>
+      <pubDate>Fri, 13 Oct 2017 12:30:23 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/time/</guid>
+      <description>This is a very basic operation on a Linux system, but I have to interact with it so rarely since I run either chronyd or ntpd on all of machines. Occasionally, I find a device that needs a helping hand.
+On a device with a known good time (or approximate enough):
+date +%s This will get you the current unix timestamp. On the target system needing updating as root (replacing &amp;lt;unix timestamp&amp;gt; with the results from the last command):</description>
+    </item>
+    
+    <item>
+      <title>Auditd</title>
+      <link>https://stelfox.net/notes/auditd/</link>
+      <pubDate>Thu, 12 Oct 2017 15:33:21 -0400</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/auditd/</guid>
+      <description>Auditd collects any configured syscall execution with critical security metadata associated with the event. This can help enrich other security tools such as AIDE to determine what user and process are responsible for the change.
+For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel&amp;rsquo;s audit subsystem, may trigger a kernel panic.</description>
+    </item>
+    
+    <item>
+      <title>AIDE</title>
+      <link>https://stelfox.net/notes/aide/</link>
+      <pubDate>Wed, 11 Oct 2017 02:19:45 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/aide/</guid>
+      <description>AIDE (Advanced Intrusion Detection Environment) is a file and directory integrity checker that compares the current hashes, permissions, and attributes of files directories against a known database built from the system.
+This can be run periodically to detect manipulation of critical system files, though a motivated attacker with an appropriate level of permissions could modify this database or disable the check as long as the system is able to write to it.</description>
+    </item>
+    
+    <item>
+      <title>Yubikey</title>
+      <link>https://stelfox.net/notes/yubikey/</link>
+      <pubDate>Tue, 10 Oct 2017 00:28:32 +0000</pubDate>
+      <author>sam@stelfox.net (Sam Stelfox)</author>
+      <guid>https://stelfox.net/notes/yubikey/</guid>
+      <description>NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
+NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t= This will hit the API with a URL like:
+https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh The API can then return a token that for accessing additional functionality.
+Resetting This will wipe all keys, user, and admin pins on the card.
+This requires scdaemon and gpg-agent to be working and able to connect to the smartcard.</description>
+    </item>
+    
+  </channel>
+</rss>

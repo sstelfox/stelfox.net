@@ -1,72 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Secure Shell or SSH is a network protocol that allows data to be exchanged using a secure channel between two networked devices. Used primarily on GNU/Linux and Unix based systems to access shell accounts, SSH was designed as a replacement for Telnet and other insecure remote shells, which send information, notably passwords, in plaintext, rendering them susceptible to packet analysis." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/sshd/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            SSHd :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="SSHd">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Secure Shell or SSH is a network protocol that allows data to be exchanged using a secure channel between two networked devices. Used primarily on GNU/Linux and Unix based systems to access shell accounts, SSH was designed as a replacement for Telnet and other insecure remote shells, which send information, notably passwords, in plaintext, rendering them susceptible to packet analysis.">
+
+<meta itemprop="wordCount" content="1538">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="SSHd"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Secure Shell or SSH is a network protocol that allows data to be exchanged using a secure channel between two networked devices. Used primarily on GNU/Linux and Unix based systems to access shell accounts, SSH was designed as a replacement for Telnet and other insecure remote shells, which send information, notably passwords, in plaintext, rendering them susceptible to packet analysis."/>
+
+
+
+    <meta property="og:title" content="SSHd" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Secure Shell or SSH is a network protocol that allows data to be exchanged using a secure channel between two networked devices. Used primarily on GNU/Linux and Unix based systems to access shell accounts, SSH was designed as a replacement for Telnet and other insecure remote shells, which send information, notably passwords, in plaintext, rendering them susceptible to packet analysis." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/sshd/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>SSHd</h1><div class="post-content"><p>Secure Shell or SSH is a network protocol that allows data to be exchanged
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/sshd/">SSHd</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<p>Secure Shell or SSH is a network protocol that allows data to be exchanged
 using a secure channel between two networked devices. Used primarily on
 GNU/Linux and Unix based systems to access shell accounts, SSH was designed as
 a replacement for Telnet and other insecure remote shells, which send
 information, notably passwords, in plaintext, rendering them susceptible to
 packet analysis. The encryption used by SSH provides confidentiality and
 integrity of data over an insecure network, such as the Internet.</p>
-<span id="continue-reading"></span><h2 id="security-notes">Security Notes</h2>
+<h2 id="security-notes">Security Notes</h2>
 <p>SSH is a crux service. An improperly configured SSH could be equivalent to
 letting an attacker have physical access to the box.</p>
-<p>Generally it's recommended to run any instances of SSH exposed to the public
-internet on an alternate port. Alternate ports won't protect you against
+<p>Generally it&rsquo;s recommended to run any instances of SSH exposed to the public
+internet on an alternate port. Alternate ports won&rsquo;t protect you against
 vulnerabilities but it will drastrically reduce the number of automated and
 scripted attacks your server will be subjected to. If nothing else it will allow
 real attacks to stand out more clearly in your logs.</p>
@@ -74,208 +157,214 @@ real attacks to stand out more clearly in your logs.</p>
 <p>My default <a href="https://stelfox.net/notes/iptables/">IPTables</a> firewall already has the following rules in place to
 allow access to SSH by default while still providing a modicum of protection
 from attackers.</p>
-<pre><code># Allow SSH, but no more than 5 new connections every minute Note: This has
-# extreme repercussions if I was to use sftp as each file transfer initiates a
-# new connection. Since it's rare for me to use sftp this isn't really an
-# issue, however, when I do want to use it this rule will be the cause of
-# failed transfers. Hopefully I will save myself the diagnostic nightmare
-# scenario I went through last time
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix "SSH Brute Force"
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
-</code></pre>
-<h2 id="configuration">Configuration</h2>
-<h3 id="etc-ssh-sshd-config">/etc/ssh/sshd_config</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Allow SSH, but no more than 5 new connections every minute Note: This has
+</span></span><span style="display:flex;"><span># extreme repercussions if I was to use sftp as each file transfer initiates a
+</span></span><span style="display:flex;"><span># new connection. Since it&#39;s rare for me to use sftp this isn&#39;t really an
+</span></span><span style="display:flex;"><span># issue, however, when I do want to use it this rule will be the cause of
+</span></span><span style="display:flex;"><span># failed transfers. Hopefully I will save myself the diagnostic nightmare
+</span></span><span style="display:flex;"><span># scenario I went through last time
+</span></span><span style="display:flex;"><span>-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
+</span></span><span style="display:flex;"><span>-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix &#34;SSH Brute Force&#34;
+</span></span><span style="display:flex;"><span>-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
+</span></span><span style="display:flex;"><span>-A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
+</span></span></code></pre></div><h2 id="configuration">Configuration</h2>
+<h3 id="etcsshsshd_config">/etc/ssh/sshd_config</h3>
 <p>The following is a minimal SSHd config relying mostly on the defaults. It
 requires a group named <code>sshers</code> to be created before hand and any user that
 should have legitimate access via SSH should be added to the group.</p>
-<pre><code>Banner /etc/issue.net
-
-ClientAliveInterval 60
-TCPKeepAlive no
-
-SyslogFacility AUTHPRIV
-UseDNS no
-
-PermitRootLogin no
-PasswordAuthentication no
-UsePAM yes
-
-AllowTcpForwarding no
-AllowGroups sshers
-
-# Accept locale-related environment variables
-AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
-AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
-AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
-</code></pre>
-<p>To create the group and add the user 'test' to it you can run the following
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Banner /etc/issue.net
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ClientAliveInterval 60
+</span></span><span style="display:flex;"><span>TCPKeepAlive no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SyslogFacility AUTHPRIV
+</span></span><span style="display:flex;"><span>UseDNS no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PermitRootLogin no
+</span></span><span style="display:flex;"><span>PasswordAuthentication no
+</span></span><span style="display:flex;"><span>UsePAM yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>AllowTcpForwarding no
+</span></span><span style="display:flex;"><span>AllowGroups sshers
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Accept locale-related environment variables
+</span></span><span style="display:flex;"><span>AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES
+</span></span><span style="display:flex;"><span>AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT
+</span></span><span style="display:flex;"><span>AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE
+</span></span></code></pre></div><p>To create the group and add the user &rsquo;test&rsquo; to it you can run the following
 commands:</p>
-<pre><code>groupadd sshers
-usermod -a -G sshers test
-</code></pre>
-<h3 id="etc-issue-net">/etc/issue.net</h3>
-<p>The net issue file is what gets displayed before a user logs in. While I'm
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>groupadd sshers
+</span></span><span style="display:flex;"><span>usermod -a -G sshers test
+</span></span></code></pre></div><h3 id="etcissuenet">/etc/issue.net</h3>
+<p>The net issue file is what gets displayed before a user logs in. While I&rsquo;m
 under no false pretense that having a policy displayed to a potential attacker
 will prevent them from their malicious activity, it is generally recommended by
 law enforcement to ensure that notice of unauthorized access was given prior.</p>
 <p>At a minimum it will show the server has been professionally configured and
 that they are not dealing with a service that was left unconfigured.</p>
-<pre><code>************************************************************************
-This system is privately owned. If you are not authorized to access this
-system, exit immediately. Unauthorized access to this system is
-forbidden by organization policies, national, and international laws.
-Unauthorized users are subject to criminal and civil penalties as well
-as organization initiated disciplinary proceedings.
-
-By entry into this system you acknowledge that you are authorized to
-access and have been granted the level of privileges you will
-subsequently execute on this system. You further acknowledge that by
-entry into this system you expect no privacy from monitoring.
-************************************************************************
-</code></pre>
-<h3 id="default-ssh-client-configuration">Default SSH Client Configuration</h3>
-<pre><code># /etc/ssh/ssh_config
-Host *
-  Compression yes
-  HashKnownHosts yes
-  Protocol 2
-  SendEnv LC_ALL
-  VerifyHostKeyDNS ask
-  VisualHostKey yes
-</code></pre>
-<h3 id="ssh-authorized-keys">SSH Authorized Keys</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>************************************************************************
+</span></span><span style="display:flex;"><span>This system is privately owned. If you are not authorized to access this
+</span></span><span style="display:flex;"><span>system, exit immediately. Unauthorized access to this system is
+</span></span><span style="display:flex;"><span>forbidden by organization policies, national, and international laws.
+</span></span><span style="display:flex;"><span>Unauthorized users are subject to criminal and civil penalties as well
+</span></span><span style="display:flex;"><span>as organization initiated disciplinary proceedings.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>By entry into this system you acknowledge that you are authorized to
+</span></span><span style="display:flex;"><span>access and have been granted the level of privileges you will
+</span></span><span style="display:flex;"><span>subsequently execute on this system. You further acknowledge that by
+</span></span><span style="display:flex;"><span>entry into this system you expect no privacy from monitoring.
+</span></span><span style="display:flex;"><span>************************************************************************
+</span></span></code></pre></div><h3 id="default-ssh-client-configuration">Default SSH Client Configuration</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># /etc/ssh/ssh_config
+</span></span><span style="display:flex;"><span>Host *
+</span></span><span style="display:flex;"><span>  Compression yes
+</span></span><span style="display:flex;"><span>  HashKnownHosts yes
+</span></span><span style="display:flex;"><span>  Protocol 2
+</span></span><span style="display:flex;"><span>  SendEnv LC_ALL
+</span></span><span style="display:flex;"><span>  VerifyHostKeyDNS ask
+</span></span><span style="display:flex;"><span>  VisualHostKey yes
+</span></span></code></pre></div><h3 id="ssh-authorized-keys">SSH Authorized Keys</h3>
 <p>SSH authorized keys provide a considerably stronger authentication method than
-a user's password as long as the key is protected by a pass-phrase. If the key
+a user&rsquo;s password as long as the key is protected by a pass-phrase. If the key
 is left without a pass-phrase, anyone who manages to get access to the system
 can immediately login as that user anywhere they have deployed the key. Ensure
 there is a strong pass-phrase on the key.</p>
 <p>The keys are normally created as <code>~/.ssh/id_rsa</code> and <code>~/.ssh/id_rsa.pub</code>,
-however I like to physically separate my keys from my computers so I'll give my
+however I like to physically separate my keys from my computers so I&rsquo;ll give my
 keys a descriptive name of <code>username@host.key</code> and put them on a pendrive
 located at <code>/media/pendrive</code>. Personally I to use keys with 4096 bits. The
 following command will create the public / private keys:</p>
-<pre><code>[user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
-Generating public/private rsa key pair.
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /media/pendrive/username@host.key.
-Your public key has been saved in /media/pendrive/username@host.key.pub.
-The key fingerprint is:
-xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx user@localhost
-</code></pre>
-<p>Now that we have a strong key we just need to place it on the servers we want
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
+</span></span><span style="display:flex;"><span>Generating public/private rsa key pair.
+</span></span><span style="display:flex;"><span>Enter passphrase (empty for no passphrase):
+</span></span><span style="display:flex;"><span>Enter same passphrase again:
+</span></span><span style="display:flex;"><span>Your identification has been saved in /media/pendrive/username@host.key.
+</span></span><span style="display:flex;"><span>Your public key has been saved in /media/pendrive/username@host.key.pub.
+</span></span><span style="display:flex;"><span>The key fingerprint is:
+</span></span><span style="display:flex;"><span>xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx user@localhost
+</span></span></code></pre></div><p>Now that we have a strong key we just need to place it on the servers we want
 to access. Conveniently enough there is a utility that makes this quick and
-simple, if for some reason you don't trust this utility or want to do it by
-hand just copy the contents of username@host.key.pub into
-<code>~/.ssh/authorized_keys</code> on the remote host and make sure the file's
+simple, if for some reason you don&rsquo;t trust this utility or want to do it by
+hand just copy the contents of <a href="mailto:username@host.key.pub">username@host.key.pub</a> into
+<code>~/.ssh/authorized_keys</code> on the remote host and make sure the file&rsquo;s
 permissions are set to 0400.</p>
 <p>You can use the utility by performing the following command, replacing
 <code>remoteuser@remotehost</code> with a valid username and hostname for the remote host.</p>
-<pre><code>[user@localhost ~]$ ssh-copy-id -i /media/pendrive/username@host.key.pub remoteuser@remotehost
-remoteuser@remotehost's password: 
-Now try logging into the machine, with "ssh 'remoteuser@remotehost'", and check in:
-
-  .ssh/authorized_keys
-
-to make sure we haven't added extra keys that you weren't expecting.
-
-[user@localhost ~]$ ssh -i /media/pendrive/username@host.key remoteuser@remotehost
-Enter passphrase for key '/media/pendrive/username@remotehost.key':
-[remoteuser@remotehost ~]$
-</code></pre>
-<p>Once your sure that the key based login is working you can safely disable
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[user@localhost ~]$ ssh-copy-id -i /media/pendrive/username@host.key.pub remoteuser@remotehost
+</span></span><span style="display:flex;"><span>remoteuser@remotehost&#39;s password: 
+</span></span><span style="display:flex;"><span>Now try logging into the machine, with &#34;ssh &#39;remoteuser@remotehost&#39;&#34;, and check in:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  .ssh/authorized_keys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>to make sure we haven&#39;t added extra keys that you weren&#39;t expecting.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[user@localhost ~]$ ssh -i /media/pendrive/username@host.key remoteuser@remotehost
+</span></span><span style="display:flex;"><span>Enter passphrase for key &#39;/media/pendrive/username@remotehost.key&#39;:
+</span></span><span style="display:flex;"><span>[remoteuser@remotehost ~]$
+</span></span></code></pre></div><p>Once your sure that the key based login is working you can safely disable
 password based logins through ssh to the system entirely by changing the
 following line in <code>/etc/ssh/sshd_config</code>:</p>
-<pre><code>PasswordAuthentication yes
----- Replace with ----
-PasswordAuthentication no
-</code></pre>
-<p>This replaces the 'something you know' of a password based login, with
-'something you have' (the key, especially if it's on a pendrive) and 'something
-you know' (the key's pass-phrase).</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>PasswordAuthentication yes
+</span></span><span style="display:flex;"><span>---- Replace with ----
+</span></span><span style="display:flex;"><span>PasswordAuthentication no
+</span></span></code></pre></div><p>This replaces the &lsquo;something you know&rsquo; of a password based login, with
+&lsquo;something you have&rsquo; (the key, especially if it&rsquo;s on a pendrive) and &lsquo;something
+you know&rsquo; (the key&rsquo;s pass-phrase).</p>
 <h2 id="user-jails">User Jails</h2>
-<p>Jails can isolate users from sensitive parts of the system, creating a 'fake'
-environment for them to execute their programs. In the event that a user's
+<p>Jails can isolate users from sensitive parts of the system, creating a &lsquo;fake&rsquo;
+environment for them to execute their programs. In the event that a user&rsquo;s
 account becomes compromised, the jail can limit what an attacker has access too
 though it should be considered a delay rather than a security measure since a
 determined hacker might be able to break out of an otherwise secure jail.</p>
-<p>To start off we're going to need to setup an environment for our jail. The
+<p>To start off we&rsquo;re going to need to setup an environment for our jail. The
 following commands create the base directories and the /dev/null device within
 the jail.</p>
-<pre><code>mkdir -p /var/jail/{dev,etc,lib,lib64,usr/bin,bin,home}
-chown -R root:root /var/jail/
-mknod -m 666 /var/jail/dev/null c 1 3
-</code></pre>
-<p>There is something serious to note here. The <a href="https://stelfox.net/notes/partitioning/">partitioning</a> security
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>mkdir -p /var/jail/{dev,etc,lib,lib64,usr/bin,bin,home}
+</span></span><span style="display:flex;"><span>chown -R root:root /var/jail/
+</span></span><span style="display:flex;"><span>mknod -m 666 /var/jail/dev/null c 1 3
+</span></span></code></pre></div><p>There is something serious to note here. The <a href="https://stelfox.net/notes/partitioning/">partitioning</a> security
 guidelines add two flags to the mount options of the /var partition.  You will
-need to remove the 'nosuid', and 'noexec' options from this partition to be
+need to remove the &rsquo;nosuid&rsquo;, and &rsquo;noexec&rsquo; options from this partition to be
 able use a chroot jail.</p>
-<p>Next we need to copy a few minimum files into the jail's etc directory. Hard
+<p>Next we need to copy a few minimum files into the jail&rsquo;s etc directory. Hard
 links may work better for these as they will get properly updated with the rest
 of the system, however, I am unsure whether or not that would actually work.</p>
-<pre><code>cp /etc/ld.so.cache /etc/ld.so.conf /etc/nsswitch.conf /etc/hosts /var/jail/etc/
-</code></pre>
-<p>At this point you need to decide what commands you want you're user to have
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cp /etc/ld.so.cache /etc/ld.so.conf /etc/nsswitch.conf /etc/hosts /var/jail/etc/
+</span></span></code></pre></div><p>At this point you need to decide what commands you want you&rsquo;re user to have
 access too and copy the appropriate binaries into place. You can use the
 <code>which</code> command to locate a binary and then copy it into the same directory
 within the jail. The following is an example for moving <code>bash</code> over.</p>
-<pre><code>[root@localhost]# which bash
-/bin/bash
-[root@localhost]# cp /bin/bash /var/jail/bin/
-</code></pre>
-<p>The trickiest part of setting up a jail is the required libraries for the
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost]# which bash
+</span></span><span style="display:flex;"><span>/bin/bash
+</span></span><span style="display:flex;"><span>[root@localhost]# cp /bin/bash /var/jail/bin/
+</span></span></code></pre></div><p>The trickiest part of setting up a jail is the required libraries for the
 allowed executables. Conveniently, all the Linux distributions that I have
-tried come with a tool too determine what libraries are required. <code>ldd</code>. Here's
+tried come with a tool too determine what libraries are required. <code>ldd</code>. Here&rsquo;s
 a little snippet that will give you a run down of the counts for the number of
 times each library is used by a system:</p>
-<pre><code>find /bin -type f -perm /a+x -exec ldd {} \; \
-| grep so \
-| sed -e '/^[^\t]/ d' \
-| sed -e 's/\t//' \
-| sed -e 's/.*=..//' \
-| sed -e 's/ (0.*)//' \
-| sort \
-| uniq -c \
-| sort -n
-</code></pre>
-<p>If for some reason ldd isn't reporting all of the libraries, while the app is
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>find /bin -type f -perm /a+x -exec ldd {} \; \
+</span></span><span style="display:flex;"><span>| grep so \
+</span></span><span style="display:flex;"><span>| sed -e &#39;/^[^\t]/ d&#39; \
+</span></span><span style="display:flex;"><span>| sed -e &#39;s/\t//&#39; \
+</span></span><span style="display:flex;"><span>| sed -e &#39;s/.*=..//&#39; \
+</span></span><span style="display:flex;"><span>| sed -e &#39;s/ (0.*)//&#39; \
+</span></span><span style="display:flex;"><span>| sort \
+</span></span><span style="display:flex;"><span>| uniq -c \
+</span></span><span style="display:flex;"><span>| sort -n
+</span></span></code></pre></div><p>If for some reason ldd isn&rsquo;t reporting all of the libraries, while the app is
 running you can use this command to track down what it has actually loaded:</p>
-<pre><code>lsof -P -T -p Application_PID
-</code></pre>
-<p>A few references:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>lsof -P -T -p Application_PID
+</span></span></code></pre></div><p>A few references:</p>
 <ul>
-<li>http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/</li>
-<li>http://allanfeid.com/content/creating-chroot-jail-ssh-access</li>
+<li><a href="http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/">http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/</a></li>
+<li><a href="http://allanfeid.com/content/creating-chroot-jail-ssh-access">http://allanfeid.com/content/creating-chroot-jail-ssh-access</a></li>
 </ul>
-<h2 id="multiplex-sessions-signed-pubkeys">Multiplex-Sessions &amp; Signed PubKeys</h2>
+<h2 id="multiplex-sessions--signed-pubkeys">Multiplex-Sessions &amp; Signed PubKeys</h2>
 <ul>
-<li>http://comments.gmane.org/gmane.network.openssh.general/8269</li>
+<li><a href="http://comments.gmane.org/gmane.network.openssh.general/8269">http://comments.gmane.org/gmane.network.openssh.general/8269</a></li>
 </ul>
 <h2 id="published-ssh-host-keys">Published SSH Host Keys</h2>
 <ul>
-<li>https://www.rfc-editor.org/rfc/rfc4255.txt</li>
-<li>http://www.dnorth.net/2007/12/16/sshfp-howto/</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc4255.txt">https://www.rfc-editor.org/rfc/rfc4255.txt</a></li>
+<li><a href="http://www.dnorth.net/2007/12/16/sshfp-howto/">http://www.dnorth.net/2007/12/16/sshfp-howto/</a></li>
 </ul>
 <h2 id="lxc-specific">LXC Specific</h2>
 <p>If you want to run sshd in a LXC container you will need to disable
 <code>pam_loginuid.so</code> in <code>/etc/pam.d/sshd</code> by commenting out the appropriate line.</p>
 <h2 id="misc">Misc</h2>
-<p>I've play around with implementing a <a href="https://stelfox.net/notes/sshd-gatekeeper/">gatekeeper style script</a> to provide an
+<p>I&rsquo;ve play around with implementing a <a href="https://stelfox.net/notes/gatekeeper-script-for-ssh/">gatekeeper style script</a> to provide an
 additional layer of security. In practice real multi-factor authentication is
 more reliable and should be used instead.</p>
-</div>
-</article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

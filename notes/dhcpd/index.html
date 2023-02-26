@@ -1,81 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/dhcpd/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            DHCPd :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="DHCPd">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be.">
+
+<meta itemprop="wordCount" content="292">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="DHCPd"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be."/>
+
+
+
+    <meta property="og:title" content="DHCPd" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Firewall Adjustments # Accept DHCP requests -A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT Configuration /etc/dhcp/dhcpd.conf # Default lease time information min-lease-time 300; max-lease-time 86400; default-lease-time 86400; # We are the only DHCP server there should be." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/dhcpd/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
-
+        <body>
     
     
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
         
-          
-          <nav>
-            <ul class="nav">
-              
-                
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
         
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>DHCPd</h1><div class="post-content"><p>Heavy but full featured open source DHCP server.</p>
-<span id="continue-reading"></span><h2 id="firewall-adjustments">Firewall Adjustments</h2>
-<pre><code># Accept DHCP requests
--A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT
-</code></pre>
-<h2 id="configuration">Configuration</h2>
-<ul>
-<li><a href="https://stelfox.net/notes/dhcpd/dhcpd.conf">/etc/dhcp/dhcpd.conf</a></li>
-<li><a href="https://stelfox.net/notes/dhcpd/known-clients.conf">/etc/dhcp/known-clients.conf</a></li>
-</ul>
-</div>
-</article>
-
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
     </div>
-  </body>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/dhcpd/">DHCPd</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="firewall-adjustments">Firewall Adjustments</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Accept DHCP requests
+</span></span><span style="display:flex;"><span>-A INPUT -m udp -p udp --dport 67 --sport 68 -j ACCEPT
+</span></span></code></pre></div><h2 id="configuration">Configuration</h2>
+<h3 id="etcdhcpdhcpdconf">/etc/dhcp/dhcpd.conf</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Default lease time information
+</span></span><span style="display:flex;"><span>min-lease-time 300;
+</span></span><span style="display:flex;"><span>max-lease-time 86400;
+</span></span><span style="display:flex;"><span>default-lease-time 86400;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># We are the only DHCP server there should be...
+</span></span><span style="display:flex;"><span>authoritative;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># No updates, might deal with this later
+</span></span><span style="display:flex;"><span>ddns-updates off;
+</span></span><span style="display:flex;"><span>ddns-update-style none;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Security measures
+</span></span><span style="display:flex;"><span>ignore bootp;
+</span></span><span style="display:flex;"><span>ignore client-updates;
+</span></span><span style="display:flex;"><span>deny declines;
+</span></span><span style="display:flex;"><span>deny duplicates;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Verify the address is unused before assigning
+</span></span><span style="display:flex;"><span>ping-check true;
+</span></span><span style="display:flex;"><span>ping-timeout 1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Logging information
+</span></span><span style="display:flex;"><span>log-facility local1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Default DNS servers
+</span></span><span style="display:flex;"><span>option domain-name-servers 8.8.8.8, 4.2.2.2;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Room Mate&#39;s network
+</span></span><span style="display:flex;"><span>subnet 192.168.100.0 netmask 255.255.255.0 {
+</span></span><span style="display:flex;"><span>  option routers 192.168.100.1;
+</span></span><span style="display:flex;"><span>  option broadcast-address 192.168.100.255;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  range 192.168.100.50 192.168.100.250;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  # I don&#39;t monitor nor care about the devices my room mates
+</span></span><span style="display:flex;"><span>  # put on this subnet. Allow them all.
+</span></span><span style="display:flex;"><span>  allow unknown-clients;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Public network
+</span></span><span style="display:flex;"><span>subnet 10.13.37.0 netmask 255.255.255.192 {
+</span></span><span style="display:flex;"><span>  option routers 10.13.37.1;
+</span></span><span style="display:flex;"><span>  option broadcast-address 10.13.37.63;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  range 10.13.37.10 10.13.37.40;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  # They probably won&#39;t be around long... no need to hold onto
+</span></span><span style="display:flex;"><span>  # resources they don&#39;t need
+</span></span><span style="display:flex;"><span>  max-lease-time 1800;
+</span></span><span style="display:flex;"><span>  default-lease-time 600;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  # I don&#39;t know who will get on this... besides I want to have
+</span></span><span style="display:flex;"><span>  # some fun with strangers...
+</span></span><span style="display:flex;"><span>  allow unknown-clients;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Private/Trusted LAN
+</span></span><span style="display:flex;"><span>subnet 10.13.37.128 netmask 255.255.255.192 {
+</span></span><span style="display:flex;"><span>  option routers 10.13.37.129;
+</span></span><span style="display:flex;"><span>  option broadcast-address 10.13.37.191;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  option domain-name &#34;home.bedroomprogrammers.net&#34;;
+</span></span><span style="display:flex;"><span>  option ntp-servers 10.13.37.129;
+</span></span><span style="display:flex;"><span>  option time-offset -18000;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  range 10.13.37.140 10.13.37.170;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  deny unknown-clients;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Include my known clients configurations
+</span></span><span style="display:flex;"><span>include &#34;/etc/dhcp/known-hosts.conf&#34;;
+</span></span></code></pre></div><h3 id="etcdhcpknown-clientsconf">/etc/dhcp/known-clients.conf</h3>
+<p>This file needs to be created by hand. Initially it is empty, clients should be
+added as needed.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>host caerleon {
+</span></span><span style="display:flex;"><span>    hardware ethernet 00:25:22:0d:6d:66;
+</span></span><span style="display:flex;"><span>    fixed-address 10.13.37.140;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

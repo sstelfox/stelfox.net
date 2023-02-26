@@ -1,158 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install suricata -y Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/suricata/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Suricata :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Suricata">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install suricata -y Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1.">
+
+<meta itemprop="wordCount" content="293">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Suricata"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install suricata -y Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1."/>
+
+
+
+    <meta property="og:title" content="Suricata" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install suricata -y Configuration Network Configuration for IPS I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode. When connected these interfaces were reported to me as devices p1p1 and p2p1." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/suricata/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Suricata</h1><div class="post-content"><h2 id="installation">Installation</h2>
-<pre><code>yum install suricata -y
-</code></pre>
-<h2 id="configuration">Configuration</h2>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/suricata/">Suricata</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install suricata -y
+</span></span></code></pre></div><h2 id="configuration">Configuration</h2>
 <h3 id="network-configuration-for-ips">Network Configuration for IPS</h3>
 <p>I purchased a dedicated two NIC PCIe card to make use of Suricata in IPS mode.
 When connected these interfaces were reported to me as devices p1p1 and p2p1. I
 want the IPS to show up transparently, at no point should the IPS be
-addressable on it's sniffing interfaces. The bridge interface that will handle
+addressable on it&rsquo;s sniffing interfaces. The bridge interface that will handle
 the filtering, sniffing etc will be br256. Here are the various configuration
 files:</p>
-<h4 id="etc-sysconfig-network-scripts-ifcfg-p1p1">/etc/sysconfig/network-scripts/ifcfg-p1p1</h4>
-<pre><code>DEVICE="p1p1"
-NM_CONTROLLED="no"
-HWADDR="00:0A:CD:20:86:EC"
-ONBOOT="yes"
-BOOTPROTO="none"
-
-BRIDGE=br256
-
-IPV6INIT=no
-IPV6_AUTOCONF=no
-
-NAME="Transparent TAP"
-</code></pre>
-<h4 id="etc-sysconfig-network-scripts-ifcfg-p2p1">/etc/sysconfig/network-scripts/ifcfg-p2p1</h4>
-<pre><code>DEVICE="p2p1"
-NM_CONTROLLED="no"
-HWADDR="00:0A:CD:20:86:ED"
-ONBOOT="yes"
-BOOTPROTO="none"
-
-BRIDGE=br256
-
-IPV6INIT=no
-IPV6_AUTOCONF=no
-
-NAME="Transparent TAP"
-</code></pre>
-<h4 id="etc-sysconfig-network-scripts-ifcfg-br256">/etc/sysconfig/network-scripts/ifcfg-br256</h4>
-<pre><code># br256 - No VLAN - Transparent Intercept Bridge
-DEVICE=br256
-NM_CONTROLLED=no
-ONBOOT=yes
-TYPE=Bridge
-
-STP=off
-DELAY=0
-
-BOOTPROTO=none
-
-IPV6INIT=no
-IPV6_AUTOCONF=no
-
-NAME="Transparent Intercept Bridge"
-</code></pre>
-<h3 id="sysctl-configuration-options">Sysctl Configuration Options</h3>
+<h4 id="etcsysconfignetwork-scriptsifcfg-p1p1">/etc/sysconfig/network-scripts/ifcfg-p1p1</h4>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>DEVICE=&#34;p1p1&#34;
+</span></span><span style="display:flex;"><span>NM_CONTROLLED=&#34;no&#34;
+</span></span><span style="display:flex;"><span>HWADDR=&#34;00:0A:CD:20:86:EC&#34;
+</span></span><span style="display:flex;"><span>ONBOOT=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>BOOTPROTO=&#34;none&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>BRIDGE=br256
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPV6INIT=no
+</span></span><span style="display:flex;"><span>IPV6_AUTOCONF=no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME=&#34;Transparent TAP&#34;
+</span></span></code></pre></div><h4 id="etcsysconfignetwork-scriptsifcfg-p2p1">/etc/sysconfig/network-scripts/ifcfg-p2p1</h4>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>DEVICE=&#34;p2p1&#34;
+</span></span><span style="display:flex;"><span>NM_CONTROLLED=&#34;no&#34;
+</span></span><span style="display:flex;"><span>HWADDR=&#34;00:0A:CD:20:86:ED&#34;
+</span></span><span style="display:flex;"><span>ONBOOT=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>BOOTPROTO=&#34;none&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>BRIDGE=br256
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPV6INIT=no
+</span></span><span style="display:flex;"><span>IPV6_AUTOCONF=no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME=&#34;Transparent TAP&#34;
+</span></span></code></pre></div><h4 id="etcsysconfignetwork-scriptsifcfg-br256">/etc/sysconfig/network-scripts/ifcfg-br256</h4>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># br256 - No VLAN - Transparent Intercept Bridge
+</span></span><span style="display:flex;"><span>DEVICE=br256
+</span></span><span style="display:flex;"><span>NM_CONTROLLED=no
+</span></span><span style="display:flex;"><span>ONBOOT=yes
+</span></span><span style="display:flex;"><span>TYPE=Bridge
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>STP=off
+</span></span><span style="display:flex;"><span>DELAY=0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>BOOTPROTO=none
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPV6INIT=no
+</span></span><span style="display:flex;"><span>IPV6_AUTOCONF=no
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME=&#34;Transparent Intercept Bridge&#34;
+</span></span></code></pre></div><h3 id="sysctl-configuration-options">Sysctl Configuration Options</h3>
 <p>The following changes will need to be made to sysctl settings to allow
 filtering of traffic across bridges:</p>
-<pre><code># Ensure all traffic is forwarded where appropriate
-net.ipv4.ip_forward = 1
-net.ipv6.conf.default.forwarding = 1
-net.ipv6.conf.all.forwarding = 1
-
-# Enable netfilter on bridges.
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.bridge.bridge-nf-call-arptables = 0
-net.bridge.bridge-nf-filter-pppoe-tagged = 0
-net.bridge.bridge-nf-filter-vlan-tagged = 0
-net.bridge.bridge-nf-pass-vlan-input-dev = 1
-</code></pre>
-<h3 id="initial-firewall-rules">Initial Firewall Rules</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Ensure all traffic is forwarded where appropriate
+</span></span><span style="display:flex;"><span>net.ipv4.ip_forward = 1
+</span></span><span style="display:flex;"><span>net.ipv6.conf.default.forwarding = 1
+</span></span><span style="display:flex;"><span>net.ipv6.conf.all.forwarding = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Enable netfilter on bridges.
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-call-ip6tables = 1
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-call-iptables = 1
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-call-arptables = 0
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-filter-pppoe-tagged = 0
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-filter-vlan-tagged = 0
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-pass-vlan-input-dev = 1
+</span></span></code></pre></div><h3 id="initial-firewall-rules">Initial Firewall Rules</h3>
 <p>Initially we want to allow all the traffic across the bridges.</p>
 <p>First iptables:</p>
-<pre><code># Traffic across the transparent bridge
--A FORWARD -i br256 -o br256 -j ACCEPT
-</code></pre>
-<p>And then ip6tables:</p>
-<pre><code># Traffic across the transparent bridge
--A FORWARD -i br256 -o br256 -j ACCEPT
-</code></pre>
-<p>After restarting the network, applying the sysctl file, connecting the card's
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Traffic across the transparent bridge
+</span></span><span style="display:flex;"><span>-A FORWARD -i br256 -o br256 -j ACCEPT
+</span></span></code></pre></div><p>And then ip6tables:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Traffic across the transparent bridge
+</span></span><span style="display:flex;"><span>-A FORWARD -i br256 -o br256 -j ACCEPT
+</span></span></code></pre></div><p>After restarting the network, applying the sysctl file, connecting the card&rsquo;s
 ports and bringing up the interfaces you can start watching traffic with
 tshark:</p>
-<pre><code>tshark -i br256
-</code></pre>
-</div>
-</article>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>tshark -i br256
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

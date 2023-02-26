@@ -1,147 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Red Hat Based Systems Simple Static IP Address You&amp;rsquo;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&amp;rsquo;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention)." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/network/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Network :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Network">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Red Hat Based Systems Simple Static IP Address You&rsquo;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&rsquo;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention).">
+
+<meta itemprop="wordCount" content="1741">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Network"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Red Hat Based Systems Simple Static IP Address You&rsquo;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&rsquo;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention)."/>
+
+
+
+    <meta property="og:title" content="Network" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Red Hat Based Systems Simple Static IP Address You&rsquo;ll need to find the interface name of your primary ethernet card. Generally this can be done with the ipaddr show command. The device name will more likely than not be either eth0 or em1, though occasionally I&rsquo;ve seen ethernet addresses along the lines of p12p1 (which is a terrible naming convention that bothers the hell out of me but I understand why the linux developers switched to this naming convention)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/network/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Network</h1><div class="post-content"><h2 id="red-hat-based-systems">Red Hat Based Systems</h2>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/network/">Network</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="red-hat-based-systems">Red Hat Based Systems</h2>
 <h3 id="simple-static-ip-address">Simple Static IP Address</h3>
-<p>You'll need to find the interface name of your primary ethernet card. Generally
+<p>You&rsquo;ll need to find the interface name of your primary ethernet card. Generally
 this can be done with the <code>ipaddr show</code> command. The device name will more
-likely than not be either <code>eth0</code> or <code>em1</code>, though occasionally I've seen
+likely than not be either <code>eth0</code> or <code>em1</code>, though occasionally I&rsquo;ve seen
 ethernet addresses along the lines of <code>p12p1</code> (which is a terrible naming
 convention that bothers the hell out of me but I understand why the linux
 developers switched to this naming convention).</p>
-<p>This is going to assume that you want to set a static address on <code>eth0</code>, it's
+<p>This is going to assume that you want to set a static address on <code>eth0</code>, it&rsquo;s
 going to be the primary interface (in that it will have the default gateway).
-You'll want to edit the file <code>/etc/sysconfig/network-scripts/ifcfg-eth0</code> in
+You&rsquo;ll want to edit the file <code>/etc/sysconfig/network-scripts/ifcfg-eth0</code> in
 this case. Make sure that the device name at the end of the file AND the one in
 the config match.</p>
-<p>You'll also need to make sure the mac address of the card matches the <code>HWADDR</code>
+<p>You&rsquo;ll also need to make sure the mac address of the card matches the <code>HWADDR</code>
 in the file otherwise the network script will throw a fit and will either fail
 to bring up the interface or just complain and use the real hardware address
-anyway. You can not use this script to &quot;spoof&quot; mac addresses.</p>
+anyway. You can not use this script to &ldquo;spoof&rdquo; mac addresses.</p>
 <p>The contents of the following file set the static IP address <code>10.13.37.200</code> on
 the interface with <code>10.13.37.1</code> as the default gateway, and two nameservers
 <code>8.8.8.8</code> and <code>4.2.2.2</code>.</p>
-<p>This also tells the network that we're on a <code>/24</code> network the interface should
+<p>This also tells the network that we&rsquo;re on a <code>/24</code> network the interface should
 start up when the machine does and that if this fails to come up the rest of
-the boot scripts that rely on a network should be skipped (That's the
+the boot scripts that rely on a network should be skipped (That&rsquo;s the
 <code>IPV4_FAILURE_FATAL</code> command).</p>
-<pre><code># /etc/sysconfig/network-scripts/ifcfg-eth0
-DEVICE="eth0"
-NM_CONTROLLED="yes"
-ONBOOT="yes"
-HWADDR="12:34:56:78:90:AB"
-BOOTPROTO="static"
-
-IPADDR="10.13.37.200"
-NETMASK="255.255.255.0"
-GATEWAY="10.13.37.1"
-
-DNS1="8.8.8.8"
-DNS2="4.2.2.2"
-DOMAIN="internal.example.org"
-
-DEFROUTE="yes"
-
-IPV4_FAILURE_FATAL="yes"
-IPV6INIT="yes"
-
-NAME="Standard LAN"
-</code></pre>
-<p>You'll need to restart the NetworkManager for this to take effect like so:</p>
-<pre><code>systemctl restart NetworkManager.service
-</code></pre>
-<h3 id="additional-ip-addresses">Additional IP Addresses</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># /etc/sysconfig/network-scripts/ifcfg-eth0
+</span></span><span style="display:flex;"><span>DEVICE=&#34;eth0&#34;
+</span></span><span style="display:flex;"><span>NM_CONTROLLED=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>ONBOOT=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>HWADDR=&#34;12:34:56:78:90:AB&#34;
+</span></span><span style="display:flex;"><span>BOOTPROTO=&#34;static&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPADDR=&#34;10.13.37.200&#34;
+</span></span><span style="display:flex;"><span>NETMASK=&#34;255.255.255.0&#34;
+</span></span><span style="display:flex;"><span>GATEWAY=&#34;10.13.37.1&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DNS1=&#34;8.8.8.8&#34;
+</span></span><span style="display:flex;"><span>DNS2=&#34;4.2.2.2&#34;
+</span></span><span style="display:flex;"><span>DOMAIN=&#34;internal.example.org&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DEFROUTE=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPV4_FAILURE_FATAL=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>IPV6INIT=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME=&#34;Standard LAN&#34;
+</span></span></code></pre></div><p>You&rsquo;ll need to restart the NetworkManager for this to take effect like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl restart NetworkManager.service
+</span></span></code></pre></div><h3 id="additional-ip-addresses">Additional IP Addresses</h3>
 <p>Additional IP addresses are one of the simplest things to perform. In the
-following example I'm going to be created an additional IP on the eth0
-interface assuming we're using the same eth0 described in the last section.</p>
+following example I&rsquo;m going to be created an additional IP on the eth0
+interface assuming we&rsquo;re using the same eth0 described in the last section.</p>
 <p>Too add an IP address to the eth0 interface we simply create a new one by
 copying that file into a new one and adding a <code>:1</code> to the name additional
 addresses would need to increment this number. So like so:</p>
-<pre><code>cp /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth0:1
-</code></pre>
-<p>You'll need to open up the new file and change a few things. Specifically you
-want to get rid of the &quot;HWADDR&quot; variable, change the IP to whatever the second
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cp /etc/sysconfig/network-scripts/ifcfg-eth0 /etc/sysconfig/network-scripts/ifcfg-eth0:1
+</span></span></code></pre></div><p>You&rsquo;ll need to open up the new file and change a few things. Specifically you
+want to get rid of the &ldquo;HWADDR&rdquo; variable, change the IP to whatever the second
 IP will be and change the device name to reflect the <code>:1</code>. The new file will
 look like this:</p>
-<pre><code># /etc/sysconfig/network-scripts/ifcfg-eth0:1
-DEVICE="eth0:1"
-NM_CONTROLLED="no"
-ONBOOT="yes"
-BOOTPROTO="static"
-
-IPADDR="10.13.37.201"
-NETMASK="255.255.255.0"
-DEFROUTE="no"
-
-IPV4_FAILURE_FATAL="yes"
-IPV6INIT="yes"
-
-NAME="Standard LAN"
-</code></pre>
-<p>Bring it up like so:</p>
-<pre><code>ifup eth0:1
-</code></pre>
-<p>Bam. Done.</p>
-<pre><code>[root@localhost ~]# ifconfig eth0:1
-eth0:1    Link encap:Ethernet  HWaddr 12:34:56:78:90:AB  
-          inet addr:10.13.37.201  Bcast:10.13.37.255  Mask:255.255.255.0
-          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-</code></pre>
-<h3 id="bridges">Bridges</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># /etc/sysconfig/network-scripts/ifcfg-eth0:1
+</span></span><span style="display:flex;"><span>DEVICE=&#34;eth0:1&#34;
+</span></span><span style="display:flex;"><span>NM_CONTROLLED=&#34;no&#34;
+</span></span><span style="display:flex;"><span>ONBOOT=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>BOOTPROTO=&#34;static&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPADDR=&#34;10.13.37.201&#34;
+</span></span><span style="display:flex;"><span>NETMASK=&#34;255.255.255.0&#34;
+</span></span><span style="display:flex;"><span>DEFROUTE=&#34;no&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPV4_FAILURE_FATAL=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>IPV6INIT=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME=&#34;Standard LAN&#34;
+</span></span></code></pre></div><p>Bring it up like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>ifup eth0:1
+</span></span></code></pre></div><p>Bam. Done.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# ifconfig eth0:1
+</span></span><span style="display:flex;"><span>eth0:1    Link encap:Ethernet  HWaddr 12:34:56:78:90:AB  
+</span></span><span style="display:flex;"><span>          inet addr:10.13.37.201  Bcast:10.13.37.255  Mask:255.255.255.0
+</span></span><span style="display:flex;"><span>          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+</span></span></code></pre></div><h3 id="bridges">Bridges</h3>
 <p>TODO</p>
 <h4 id="spanning-tree">Spanning Tree</h4>
 <p>TODO</p>
@@ -154,252 +231,246 @@ already including what needs to be routed.</p>
 <p>Note: I noticed that my port forwarding issue seemed to go away after
 installing the iptstate package. This may be because it installed
 <code>libnetfilter_conntrack</code> as a dependency. Based on the <code>yum info</code> description I
-don't believe this to be the case. Further testing may be required.</p>
+don&rsquo;t believe this to be the case. Further testing may be required.</p>
 <h4 id="configuration">Configuration</h4>
-<h5 id="etc-sysctl-conf">/etc/sysctl.conf</h5>
+<h5 id="etcsysctlconf">/etc/sysctl.conf</h5>
 <p>The following settings need to be changed/added to securely handle the routing.
-Detailed information about the individual options is <a href="https://www.frozentux.net/ipsysctl-tutorial/ipsysctl-tutorial.html">available</a> as well as
-<a href="https://www.rfc-editor.org/rfc/rfc1812.txt">Routing RFC information</a>.</p>
-<pre><code># Controls IP packet forwarding
-net.ipv4.ip_forward = 1
-
-# Enable dynamic-ip address hacking for use with a DHCP WAN address and Masquerading
-net.ipv4.ip_dynaddr = 1
-
-# Ignore ICMP broadcast packets
-net.ipv4.icmp_echo_ignore_broadcasts = 1
-
-# Log spoofed packets, source routed packets, redirect packets
-net.ipv4.conf.default.log_martians = 1
-
-# Do not accept source routing
-net.ipv4.conf.default.accept_source_route = 0
-
-# Controls source route verification, this would drop all packets going out a different interface
-net.ipv4.conf.default.rp_filter = 0
-
-# Since we're only going to have one route going out (the WAN interface, we have no need to adjust our routing table
-net.ipv4.conf.default.accept_redirects = 0
-
-# Decrease the time default value for tcp_fin_timeout connection
-net.ipv4.tcp_fin_timeout = 15
-
-# Decrease the time default value for tcp_keepalive_time connection
-net.ipv4.tcp_keepalive_time = 1800
-</code></pre>
-<p>Active One:</p>
-<pre><code># Kernel sysctl configuration file for Red Hat Linux
-#
-# For binary values, 0 is disabled, 1 is enabled.  See sysctl(8) and
-# sysctl.conf(5) for more details.
-
-# Controls IP packet forwarding
-net.ipv4.ip_forward = 1
-
-# We use a dynamic address for our WAN
-net.ipv4.ip_dynaddr = 1
-
-# Controls source route verification
-net.ipv4.conf.default.rp_filter = 1
-net.ipv4.conf.all.rp_filter = 1
-
-# Do not accept source routing
-net.ipv4.conf.default.accept_source_route = 0
-net.ipv4.conf.all.accept_source_route = 0
-
-# Disable protocol features with few legitimate uses
-net.ipv4.conf.default.accept_redirects = 0
-net.ipv4.conf.all.accept_redirects = 0
-net.ipv4.conf.default.secure_redirects = 0
-net.ipv4.conf.all.secure_redirects = 0
-
-# Log all suspcious packets
-net.ipv4.conf.all.log_martians = 1
-
-# Thwart some forms of ICMP attacks
-net.ipv4.icmp_echo_ignore_broadcasts = 1
-net.ipv4.icmp_ignore_bogus_error_messages = 1
-
-net.ipv4.tcp_syncookies - 1
-
-# Controls the System Request debugging functionality of the kernel
-kernel.sysrq = 0
-
-# Controls whether core dumps will append the PID to the core filename.
-# Useful for debugging multi-threaded applications.
-kernel.core_uses_pid = 1
-
-# Disable netfilter on bridges.
-net.bridge.bridge-nf-call-ip6tables = 0
-net.bridge.bridge-nf-call-iptables = 0
-net.bridge.bridge-nf-call-arptables = 0
-</code></pre>
-<h5 id="etc-sysconfig-network">/etc/sysconfig/network</h5>
-<pre><code>NETWORKING=yes
-HOSTNAME=talos.home.bedroomprogrammers.net
-FORWARD_IPV4=yes
-NETWORKING_IPV6=yes
-</code></pre>
-<h5 id="etc-sysconfig-network-scripts-ifcfg-eth1">/etc/sysconfig/network-scripts/ifcfg-eth1</h5>
-<pre><code># eth1 - br1 - vlan100 - WAN
-DEVICE=eth1
-NM_CONTROLLED=no
-ONBOOT=yes
-HWADDR=52:54:00:10:B6:10
-TYPE=Ethernet
-BOOTPROTO=dhcp
-
-DEFROUTE=yes
-PEERROUTES=yes
-
-PEERDNS=no
-DNS1="208.67.222.222"
-DNS2="208.67.220.220"
-
-IPV4_FAILURE_FATAL=yes
-IPV6INIT=yes
-IPV6_PRIVACY="rfc3041"
-
-NAME="WAN"
-</code></pre>
-<h5 id="etc-sysconfig-network-scripts-ifcfg-eth-0-2-3-4-5">/etc/sysconfig/network-scripts/ifcfg-eth{0,2,3,4,5}</h5>
+Detailed information about the individual options is <a href="http://www.frozentux.net/ipsysctl-tutorial/ipsysctl-tutorial.html">available</a> as well as
+<a href="http://www.faqs.org/rfcs/rfc1812.html">Routing RFC information</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Controls IP packet forwarding
+</span></span><span style="display:flex;"><span>net.ipv4.ip_forward = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Enable dynamic-ip address hacking for use with a DHCP WAN address and Masquerading
+</span></span><span style="display:flex;"><span>net.ipv4.ip_dynaddr = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Ignore ICMP broadcast packets
+</span></span><span style="display:flex;"><span>net.ipv4.icmp_echo_ignore_broadcasts = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Log spoofed packets, source routed packets, redirect packets
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.log_martians = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Do not accept source routing
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.accept_source_route = 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Controls source route verification, this would drop all packets going out a different interface
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.rp_filter = 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Since we&#39;re only going to have one route going out (the WAN interface, we have no need to adjust our routing table
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.accept_redirects = 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Decrease the time default value for tcp_fin_timeout connection
+</span></span><span style="display:flex;"><span>net.ipv4.tcp_fin_timeout = 15
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Decrease the time default value for tcp_keepalive_time connection
+</span></span><span style="display:flex;"><span>net.ipv4.tcp_keepalive_time = 1800
+</span></span></code></pre></div><p>Active One:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Kernel sysctl configuration file for Red Hat Linux
+</span></span><span style="display:flex;"><span>#
+</span></span><span style="display:flex;"><span># For binary values, 0 is disabled, 1 is enabled.  See sysctl(8) and
+</span></span><span style="display:flex;"><span># sysctl.conf(5) for more details.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Controls IP packet forwarding
+</span></span><span style="display:flex;"><span>net.ipv4.ip_forward = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># We use a dynamic address for our WAN
+</span></span><span style="display:flex;"><span>net.ipv4.ip_dynaddr = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Controls source route verification
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.rp_filter = 1
+</span></span><span style="display:flex;"><span>net.ipv4.conf.all.rp_filter = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Do not accept source routing
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.accept_source_route = 0
+</span></span><span style="display:flex;"><span>net.ipv4.conf.all.accept_source_route = 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Disable protocol features with few legitimate uses
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.accept_redirects = 0
+</span></span><span style="display:flex;"><span>net.ipv4.conf.all.accept_redirects = 0
+</span></span><span style="display:flex;"><span>net.ipv4.conf.default.secure_redirects = 0
+</span></span><span style="display:flex;"><span>net.ipv4.conf.all.secure_redirects = 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Log all suspcious packets
+</span></span><span style="display:flex;"><span>net.ipv4.conf.all.log_martians = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Thwart some forms of ICMP attacks
+</span></span><span style="display:flex;"><span>net.ipv4.icmp_echo_ignore_broadcasts = 1
+</span></span><span style="display:flex;"><span>net.ipv4.icmp_ignore_bogus_error_messages = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>net.ipv4.tcp_syncookies - 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Controls the System Request debugging functionality of the kernel
+</span></span><span style="display:flex;"><span>kernel.sysrq = 0
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Controls whether core dumps will append the PID to the core filename.
+</span></span><span style="display:flex;"><span># Useful for debugging multi-threaded applications.
+</span></span><span style="display:flex;"><span>kernel.core_uses_pid = 1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Disable netfilter on bridges.
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-call-ip6tables = 0
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-call-iptables = 0
+</span></span><span style="display:flex;"><span>net.bridge.bridge-nf-call-arptables = 0
+</span></span></code></pre></div><h5 id="etcsysconfignetwork">/etc/sysconfig/network</h5>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>NETWORKING=yes
+</span></span><span style="display:flex;"><span>HOSTNAME=talos.home.bedroomprogrammers.net
+</span></span><span style="display:flex;"><span>FORWARD_IPV4=yes
+</span></span><span style="display:flex;"><span>NETWORKING_IPV6=yes
+</span></span></code></pre></div><h5 id="etcsysconfignetwork-scriptsifcfg-eth1">/etc/sysconfig/network-scripts/ifcfg-eth1</h5>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># eth1 - br1 - vlan100 - WAN
+</span></span><span style="display:flex;"><span>DEVICE=eth1
+</span></span><span style="display:flex;"><span>NM_CONTROLLED=no
+</span></span><span style="display:flex;"><span>ONBOOT=yes
+</span></span><span style="display:flex;"><span>HWADDR=52:54:00:10:B6:10
+</span></span><span style="display:flex;"><span>TYPE=Ethernet
+</span></span><span style="display:flex;"><span>BOOTPROTO=dhcp
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DEFROUTE=yes
+</span></span><span style="display:flex;"><span>PEERROUTES=yes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PEERDNS=no
+</span></span><span style="display:flex;"><span>DNS1=&#34;208.67.222.222&#34;
+</span></span><span style="display:flex;"><span>DNS2=&#34;208.67.220.220&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPV4_FAILURE_FATAL=yes
+</span></span><span style="display:flex;"><span>IPV6INIT=yes
+</span></span><span style="display:flex;"><span>IPV6_PRIVACY=&#34;rfc3041&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME=&#34;WAN&#34;
+</span></span></code></pre></div><h5 id="etcsysconfignetwork-scriptsifcfg-eth02345">/etc/sysconfig/network-scripts/ifcfg-eth{0,2,3,4,5}</h5>
 <p>The only thing that changes in this among the five interfaces are the IP
 address options, the comment at the top and the name at the bottom. All of that
 information is documented elsewhere on this wiki.</p>
-<pre><code># eth0 - br0 - vlan37 - Public
-DEVICE="eth0"
-NM_CONTROLLED="no"
-ONBOOT="yes"
-HWADDR="52:54:00:40:97:25"
-TYPE=Ethernet
-BOOTPROTO="static"
-
-IPADDR="10.13.37.1"
-NETMASK="255.255.255.192"
-#NETWORK="10.13.37.0"
-#BROADCAST="10.13.37.63"
-
-IPV4_FAILURE_FATAL=yes
-IPV6INIT=yes
-IPV6_PRIVACY="rfc3041"
-
-NAME="LAN/Trusted"
-</code></pre>
-<h5 id="firewall">Firewall</h5>
-<pre><code>####################### NAT Table ######################
-
-*nat
-:PREROUTING ACCEPT [0:0]
-:POSTROUTING ACCEPT [0:0]
-:OUTPUT ACCEPT [0:0]
-:PRUPNP - [0:0]
-
-# Forwarding packets
--A PREROUTING -m tcp -p tcp -i eth0 --dport 2200 -j DNAT --to 10.13.37.70:22
-
-# This is a precursor to the UPnP rules to prevent ports from 
--A PREROUTING -m multiport -m tcp -p tcp -i eth0 --dports 1:1024 -j ACCEPT
-
-# Run through the UPnP rules after the rest of the forward rules to prevent
-# any of them from overuling our manually generated rules
--A PREROUTING -i eth0 -j PRUPNP
-
-# Many-to-One NAT Masquerading
--A POSTROUTING -s 10.13.37.0/24 -o eth0 -j MASQUERADE
--A POSTROUTING -s 192.168.100.0/24 -o eth0 -j MASQUERADE
-
-# Weird DMZ shit going on here
--A POSTROUTING -s 10.13.37.0/24 -o eth3 -j ACCEPT
--A POSTROUTING -s 192.168.100.0/24 -o eth3 -j ACCEPT
-
-COMMIT
-
-##################### Filter Table #####################
-
-*filter
-:INPUT DROP [0:0]
-:FORWARD DROP [0:0]
-:OUTPUT ACCEPT [0:0]
-:FWUPNP - [0:0]
-
-# I trust the loopback device
--A INPUT -i lo -j ACCEPT
--A OUTPUT -o lo -j ACCEPT
-
-# Any connections that are already established may continue unheeded
--A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
--A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
--A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
-
-#################### Sanity Checks #####################
-
-# Drop any new connections that aren't advertising themselves as new
--A INPUT -m tcp -p tcp ! --syn -m state --state NEW -j LOG --log-prefix "Invalid new connection in"
--A INPUT -m tcp -p tcp ! --syn -m state --state NEW -j DROP
--A FORWARD -m tcp -p tcp ! --syn -m state --state NEW -j LOG --log-prefix "Invalid new connection fw"
--A FORWARD -m tcp -p tcp ! --syn -m state --state NEW -j DROP
-
-#################### Local Traffic #####################
-
-# Allow ping from local subnets
--A INPUT -s 192.168.100.0/16 -p icmp -j ACCEPT
--A INPUT -s 10.13.37.0/24 -p icmp -j ACCEPT
-
-# Allow access to the standard SSH from our local subnets
--A INPUT -s 10.13.37.64/26 -m tcp -p tcp --dport 22 -j ACCEPT
--A INPUT -s 10.13.37.128/26 -m tcp -p tcp --dport 22 -j ACCEPT
--A INPUT -s 10.13.37.192/26 -m tcp -p tcp --dport 22 -j ACCEPT
-
-# Accept DHCP requests
--A INPUT -i eth1 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
--A INPUT -i eth2 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
--A INPUT -i eth3 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
--A INPUT -i eth4 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
--A INPUT -i eth5 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
-
-################ Inter-Subnet Traffic ##################
-
-# Public net
--A FORWARD -i eth4 -j DROP
-
-# DMZ - This needs to be restricted further
--A FORWARD -i eth3 -o eth0 -s 10.13.37.64/26 -j ACCEPT
-
-# Trusted - This needs to be restricted further
--A FORWARD -i eth1 -o eth0 -s 10.13.37.128/26 -j ACCEPT
-
-# Servers - This needs to be restricted further
--A FORWARD -i eth2 -o eth0 -s 10.13.37.192/26 -j ACCEPT
-
-# Room mates
--A FORWARD -i eth5 -o eth0 -s 192.168.100.0/24 -j DROP
-
-# Forward traffic from the trusted subnet to the server subnet and vice versa
--A FORWARD -i eth1 -o eth2 -s 10.13.37.128/26 -d 10.13.37.192/26 -j ACCEPT
--A FORWARD -i eth2 -o eth1 -s 10.13.37.192/26 -d 10.13.37.128/26 -j ACCEPT
-
-# Forward traffic from the DMZ subnet and the server subnet, this will need to
-# be restricted more later
--A FORWARD -i eth3 -o eth2 -s 10.13.37.64/26 -d 10.13.37.192/26 -j ACCEPT
--A FORWARD -i eth2 -o eth3 -s 10.13.37.192/26 -d 10.13.37.64/26 -j ACCEPT
-
-# Forward traffic from the trusted subnet to the DMZ, but not vice versa
--A FORWARD -i eth1 -o eth3 -s 10.13.37.128/26 -d 10.13.37.64/26 -j ACCEPT
-
-# Allow the public and room mate networks to access the DMZ but not vice versa
--A FORWARD -i eth4 -o eth3 -s 10.13.37.0/26 -d 10.13.37.64/26 -j ACCEPT
--A FORWARD -i eth5 -o eth3 -s 192.168.100.0/24 -d 10.13.37.64/26 -j ACCEPT
-
-# Allow port forwarded traffic, only valid to the DMZ subnet (.66-126)
--A FORWARD -m tcp -p tcp -d 10.13.37.70 --dport 22 -o eth3 -j ACCEPT
-
-# Jump into the UPnP chain if on an interface that is allowed to use UPnP
--A FORWARD -i eth0 -o eth1 -d 10.13.37.128/26 -j FWUPNP
--A FORWARD -i eth0 -o eth5 -d 192.168.100.0/24 -j FWUPNP
-
-COMMIT
-</code></pre>
-<h5 id="useful-tools">Useful Tools</h5>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># eth0 - br0 - vlan37 - Public
+</span></span><span style="display:flex;"><span>DEVICE=&#34;eth0&#34;
+</span></span><span style="display:flex;"><span>NM_CONTROLLED=&#34;no&#34;
+</span></span><span style="display:flex;"><span>ONBOOT=&#34;yes&#34;
+</span></span><span style="display:flex;"><span>HWADDR=&#34;52:54:00:40:97:25&#34;
+</span></span><span style="display:flex;"><span>TYPE=Ethernet
+</span></span><span style="display:flex;"><span>BOOTPROTO=&#34;static&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPADDR=&#34;10.13.37.1&#34;
+</span></span><span style="display:flex;"><span>NETMASK=&#34;255.255.255.192&#34;
+</span></span><span style="display:flex;"><span>#NETWORK=&#34;10.13.37.0&#34;
+</span></span><span style="display:flex;"><span>#BROADCAST=&#34;10.13.37.63&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>IPV4_FAILURE_FATAL=yes
+</span></span><span style="display:flex;"><span>IPV6INIT=yes
+</span></span><span style="display:flex;"><span>IPV6_PRIVACY=&#34;rfc3041&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>NAME=&#34;LAN/Trusted&#34;
+</span></span></code></pre></div><h5 id="firewall">Firewall</h5>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>####################### NAT Table ######################
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>*nat
+</span></span><span style="display:flex;"><span>:PREROUTING ACCEPT [0:0]
+</span></span><span style="display:flex;"><span>:POSTROUTING ACCEPT [0:0]
+</span></span><span style="display:flex;"><span>:OUTPUT ACCEPT [0:0]
+</span></span><span style="display:flex;"><span>:PRUPNP - [0:0]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Forwarding packets
+</span></span><span style="display:flex;"><span>-A PREROUTING -m tcp -p tcp -i eth0 --dport 2200 -j DNAT --to 10.13.37.70:22
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># This is a precursor to the UPnP rules to prevent ports from 
+</span></span><span style="display:flex;"><span>-A PREROUTING -m multiport -m tcp -p tcp -i eth0 --dports 1:1024 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Run through the UPnP rules after the rest of the forward rules to prevent
+</span></span><span style="display:flex;"><span># any of them from overuling our manually generated rules
+</span></span><span style="display:flex;"><span>-A PREROUTING -i eth0 -j PRUPNP
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Many-to-One NAT Masquerading
+</span></span><span style="display:flex;"><span>-A POSTROUTING -s 10.13.37.0/24 -o eth0 -j MASQUERADE
+</span></span><span style="display:flex;"><span>-A POSTROUTING -s 192.168.100.0/24 -o eth0 -j MASQUERADE
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Weird DMZ shit going on here
+</span></span><span style="display:flex;"><span>-A POSTROUTING -s 10.13.37.0/24 -o eth3 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A POSTROUTING -s 192.168.100.0/24 -o eth3 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COMMIT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>##################### Filter Table #####################
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>*filter
+</span></span><span style="display:flex;"><span>:INPUT DROP [0:0]
+</span></span><span style="display:flex;"><span>:FORWARD DROP [0:0]
+</span></span><span style="display:flex;"><span>:OUTPUT ACCEPT [0:0]
+</span></span><span style="display:flex;"><span>:FWUPNP - [0:0]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># I trust the loopback device
+</span></span><span style="display:flex;"><span>-A INPUT -i lo -j ACCEPT
+</span></span><span style="display:flex;"><span>-A OUTPUT -o lo -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Any connections that are already established may continue unheeded
+</span></span><span style="display:flex;"><span>-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+</span></span><span style="display:flex;"><span>-A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+</span></span><span style="display:flex;"><span>-A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#################### Sanity Checks #####################
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Drop any new connections that aren&#39;t advertising themselves as new
+</span></span><span style="display:flex;"><span>-A INPUT -m tcp -p tcp ! --syn -m state --state NEW -j LOG --log-prefix &#34;Invalid new connection in&#34;
+</span></span><span style="display:flex;"><span>-A INPUT -m tcp -p tcp ! --syn -m state --state NEW -j DROP
+</span></span><span style="display:flex;"><span>-A FORWARD -m tcp -p tcp ! --syn -m state --state NEW -j LOG --log-prefix &#34;Invalid new connection fw&#34;
+</span></span><span style="display:flex;"><span>-A FORWARD -m tcp -p tcp ! --syn -m state --state NEW -j DROP
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>#################### Local Traffic #####################
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Allow ping from local subnets
+</span></span><span style="display:flex;"><span>-A INPUT -s 192.168.100.0/16 -p icmp -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -s 10.13.37.0/24 -p icmp -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Allow access to the standard SSH from our local subnets
+</span></span><span style="display:flex;"><span>-A INPUT -s 10.13.37.64/26 -m tcp -p tcp --dport 22 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -s 10.13.37.128/26 -m tcp -p tcp --dport 22 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -s 10.13.37.192/26 -m tcp -p tcp --dport 22 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Accept DHCP requests
+</span></span><span style="display:flex;"><span>-A INPUT -i eth1 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -i eth2 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -i eth3 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -i eth4 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A INPUT -i eth5 -m udp -p udp --dport 67 --sport 68 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>################ Inter-Subnet Traffic ##################
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Public net
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth4 -j DROP
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># DMZ - This needs to be restricted further
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth3 -o eth0 -s 10.13.37.64/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Trusted - This needs to be restricted further
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth1 -o eth0 -s 10.13.37.128/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Servers - This needs to be restricted further
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth2 -o eth0 -s 10.13.37.192/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Room mates
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth5 -o eth0 -s 192.168.100.0/24 -j DROP
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Forward traffic from the trusted subnet to the server subnet and vice versa
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth1 -o eth2 -s 10.13.37.128/26 -d 10.13.37.192/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth2 -o eth1 -s 10.13.37.192/26 -d 10.13.37.128/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Forward traffic from the DMZ subnet and the server subnet, this will need to
+</span></span><span style="display:flex;"><span># be restricted more later
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth3 -o eth2 -s 10.13.37.64/26 -d 10.13.37.192/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth2 -o eth3 -s 10.13.37.192/26 -d 10.13.37.64/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Forward traffic from the trusted subnet to the DMZ, but not vice versa
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth1 -o eth3 -s 10.13.37.128/26 -d 10.13.37.64/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Allow the public and room mate networks to access the DMZ but not vice versa
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth4 -o eth3 -s 10.13.37.0/26 -d 10.13.37.64/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth5 -o eth3 -s 192.168.100.0/24 -d 10.13.37.64/26 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Allow port forwarded traffic, only valid to the DMZ subnet (.66-126)
+</span></span><span style="display:flex;"><span>-A FORWARD -m tcp -p tcp -d 10.13.37.70 --dport 22 -o eth3 -j ACCEPT
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Jump into the UPnP chain if on an interface that is allowed to use UPnP
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth0 -o eth1 -d 10.13.37.128/26 -j FWUPNP
+</span></span><span style="display:flex;"><span>-A FORWARD -i eth0 -o eth5 -d 192.168.100.0/24 -j FWUPNP
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>COMMIT
+</span></span></code></pre></div><h5 id="useful-tools">Useful Tools</h5>
 <ul>
 <li>netstat-nat</li>
 <li>conntrack-tools</li>
@@ -407,17 +478,36 @@ COMMIT
 <li>dstat</li>
 </ul>
 <h3 id="vlans">VLANs</h3>
-</div>
-</article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

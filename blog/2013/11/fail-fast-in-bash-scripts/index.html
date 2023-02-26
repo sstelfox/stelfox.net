@@ -1,6 +1,224 @@
-<!doctype html>
-<meta charset="utf-8">
-<link rel="canonical" href="https://stelfox.net/blog/2013/fail-fast-in-bash-scripts/">
-<meta http-equiv="refresh" content="0; url=https://stelfox.net/blog/2013/fail-fast-in-bash-scripts/">
-<title>Redirect</title>
-<p><a href="https://stelfox.net/blog/2013/fail-fast-in-bash-scripts/">Click here</a> to be redirected.</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash function error_handler() { echo &amp;#34;Error occurred in script at line: ${1}." />
+<meta name="keywords" content="blog, programming, linux, systems, personal, linux, tips" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/blog/2013/11/fail-fast-in-bash-scripts/" />
+
+
+    <title>
+        
+            Fail Fast in Bash Scripts :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Fail Fast in Bash Scripts">
+<meta itemprop="description" content="I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash function error_handler() { echo &#34;Error occurred in script at line: ${1}."><meta itemprop="datePublished" content="2013-11-26T15:19:40-05:00" />
+<meta itemprop="dateModified" content="2013-11-26T15:19:40-05:00" />
+<meta itemprop="wordCount" content="319">
+<meta itemprop="keywords" content="linux,tips," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Fail Fast in Bash Scripts"/>
+<meta name="twitter:description" content="I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash function error_handler() { echo &#34;Error occurred in script at line: ${1}."/>
+
+
+
+    <meta property="og:title" content="Fail Fast in Bash Scripts" />
+<meta property="og:description" content="I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash function error_handler() { echo &#34;Error occurred in script at line: ${1}." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/blog/2013/11/fail-fast-in-bash-scripts/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2013-11-26T15:19:40-05:00" />
+<meta property="article:modified_time" content="2013-11-26T15:19:40-05:00" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2013-11-26 15:19:40 -0500 EST" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/blog/2013/11/fail-fast-in-bash-scripts/">Fail Fast in Bash Scripts</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p>I found myself writing another bash script that should exit should any of the
+few commands within it fail to run. As I began writing some error handling
+after each command, and isolating the sections into bash functions I figured
+there had to be a better way. After a little Googling and a trip through the
+bash man pages sure enough:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">function</span> error_handler<span style="color:#ff7b72;font-weight:bold">()</span> <span style="color:#ff7b72;font-weight:bold">{</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#a5d6ff">&#34;Error occurred in script at line: </span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">1</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">.&#34;</span>
+</span></span><span style="display:flex;"><span>  echo <span style="color:#a5d6ff">&#34;Line exited with status: </span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">2</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff">&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>trap <span style="color:#a5d6ff">&#39;error_handler ${LINENO} $?&#39;</span> ERR
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>set -o errexit
+</span></span><span style="display:flex;"><span>set -o errtrace
+</span></span><span style="display:flex;"><span>set -o errpipe
+</span></span><span style="display:flex;"><span>set -o nounset
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;Everything is running fine...&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># A command outside of a conditional that will always return a exit code of 1</span>
+</span></span><span style="display:flex;"><span>test <span style="color:#a5d6ff">1</span> -eq <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;This will never run, as a command has failed&#34;</span>
+</span></span><span style="display:flex;"><span>echo <span style="color:#a5d6ff">&#34;Using unset variable </span><span style="color:#a5d6ff">${</span><span style="color:#79c0ff">TEST</span><span style="color:#a5d6ff">}</span><span style="color:#a5d6ff"> will also cause this script to exit&#34;</span>
+</span></span></code></pre></div><p>The first piece of that is setting up an error handler that will get run
+whenever an error condition occurs with the script. You can use this section to
+roll back any changes or cleanup your environment as well as give you some
+debug information about the failure.</p>
+<p>I&rsquo;m then setting a few bash options, The following is a description taken more
+or less directly from the bash man pages:</p>
+<blockquote>
+<p>-o errexit: Exit immediately if a pipeline (which may consist of a single
+simple command), a subshell command enclosed in parentheses, or one of the
+commands executed as part of a command list enclosed by braces exits with a
+non-zero status.</p>
+<p>-o errtrace: If set, any trap on ERR is inherited by shell functions, command
+substitutions, and commands execute in a subshell environment.</p>
+<p>-o nounset: Treat unset variables and parameters other than the special
+parameters &ldquo;@&rdquo; and &ldquo;*&rdquo; as an error when performing parameter expansion.</p>
+</blockquote>
+<p>If anything goes wrong in the script it will fail once, fail fast, and let you
+know where it died.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/tips/">tips</a></span>
+        
+    </p>
+
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

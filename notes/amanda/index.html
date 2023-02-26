@@ -1,64 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open source computer archiving tool that is able to back up data residing on multiple computers on a network.
+I am not a huge fan of having xinetd or perl on my system and this is reliant on both, however, there does not currently seem to be any reasonable open source alternatives that support managing a tape library.
+My notes on setting this up were incomplete and woefully outdated so I removed them." />
+<meta name="keywords" content="blog, programming, linux, systems, personal, backups, linux" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/amanda/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Amanda :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Amanda">
+<meta itemprop="description" content="Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open source computer archiving tool that is able to back up data residing on multiple computers on a network.
+I am not a huge fan of having xinetd or perl on my system and this is reliant on both, however, there does not currently seem to be any reasonable open source alternatives that support managing a tape library.
+My notes on setting this up were incomplete and woefully outdated so I removed them."><meta itemprop="datePublished" content="2017-10-09T14:50:23+00:00" />
+<meta itemprop="dateModified" content="2017-10-09T14:50:23+00:00" />
+<meta itemprop="wordCount" content="124">
+<meta itemprop="keywords" content="backups,linux," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Amanda"/>
+<meta name="twitter:description" content="Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open source computer archiving tool that is able to back up data residing on multiple computers on a network.
+I am not a huge fan of having xinetd or perl on my system and this is reliant on both, however, there does not currently seem to be any reasonable open source alternatives that support managing a tape library.
+My notes on setting this up were incomplete and woefully outdated so I removed them."/>
+
+
+
+    <meta property="og:title" content="Amanda" />
+<meta property="og:description" content="Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open source computer archiving tool that is able to back up data residing on multiple computers on a network.
+I am not a huge fan of having xinetd or perl on my system and this is reliant on both, however, there does not currently seem to be any reasonable open source alternatives that support managing a tape library.
+My notes on setting this up were incomplete and woefully outdated so I removed them." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/amanda/" /><meta property="article:section" content="notes" />
+<meta property="article:published_time" content="2017-10-09T14:50:23+00:00" />
+<meta property="article:modified_time" content="2017-10-09T14:50:23+00:00" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2017-10-09 14:50:23 &#43;0000 UTC" />
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Amanda</h1><div class="post-content"><p>Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/amanda/">Amanda</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p>Amanda, or the Advanced Maryland Automatic Network Disk Archiver is an open
 source computer archiving tool that is able to back up data residing on
 multiple computers on a network.</p>
-<span id="continue-reading"></span>
 <p>I am not a huge fan of having xinetd or perl on my system and this is reliant
 on both, however, there does not currently seem to be any reasonable open
 source alternatives that support managing a tape library.</p>
@@ -70,26 +155,53 @@ I either do or did find useful:</p>
 <p>Any LTO cleaning tape may be used in any LTO drive</p>
 </blockquote>
 <ul>
-<li><a href="https://arstechnica.com/civis/viewtopic.php?t=1206963">Tape Drives - How often do yours need cleaning?</a></li>
-<li><a href="https://www.tandbergdata.com/knowledge-base/index.cfm/are-there-any-guidelines-for-cleaning-the-lto-tape-drive/">Guidelines for Cleaning LTO Tape Drives</a></li>
+<li><a href="http://arstechnica.com/civis/viewtopic.php?t=1206963">http://arstechnica.com/civis/viewtopic.php?t=1206963</a></li>
+<li><a href="http://www.tandbergdata.com/knowledge-base/index.cfm/are-there-any-guidelines-for-cleaning-the-lto-tape-drive/">http://www.tandbergdata.com/knowledge-base/index.cfm/are-there-any-guidelines-for-cleaning-the-lto-tape-drive/</a></li>
 </ul>
 <h2 id="encryption">Encryption</h2>
 <ul>
-<li><a href="https://linux.die.net/man/8/amcheck">amcheck manpage</a></li>
-<li><a href="https://wiki.zmanda.com/index.php/How_To:Set_up_data_encryption">How To:Set up data encryption</a></li>
-<li><a href="https://serverfault.com/questions/68487/tape-encryption-management-best-practices">Tape encryption management &amp; best practices</a></li>
+<li><a href="http://linux.die.net/man/8/amcheck">http://linux.die.net/man/8/amcheck</a></li>
+<li><a href="https://wiki.zmanda.com/index.php/How_To:Set_up_data_encryption">https://wiki.zmanda.com/index.php/How_To:Set_up_data_encryption</a></li>
+<li><a href="https://serverfault.com/questions/68487/tape-encryption-management-best-practices">https://serverfault.com/questions/68487/tape-encryption-management-best-practices</a></li>
 </ul>
-</div>
-</article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://stelfox.net/tags/backups/">backups</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
+        
+    </p>
+
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

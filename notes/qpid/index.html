@@ -1,373 +1,599 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Qpid is an open source AMQP broker, providing transaction management, queuing, distribution, security, management, clustering, and federation.
+http://wiki.openstack.org/QpidSupport http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1 Installation Fedora provides a package for qpid called qpid-cpp-server which can be installed like so:" />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/qpid/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Qpid :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Qpid">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Qpid is an open source AMQP broker, providing transaction management, queuing, distribution, security, management, clustering, and federation.
+http://wiki.openstack.org/QpidSupport http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1 Installation Fedora provides a package for qpid called qpid-cpp-server which can be installed like so:">
+
+<meta itemprop="wordCount" content="1476">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Qpid"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Qpid is an open source AMQP broker, providing transaction management, queuing, distribution, security, management, clustering, and federation.
+http://wiki.openstack.org/QpidSupport http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1 Installation Fedora provides a package for qpid called qpid-cpp-server which can be installed like so:"/>
+
+
+
+    <meta property="og:title" content="Qpid" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Qpid is an open source AMQP broker, providing transaction management, queuing, distribution, security, management, clustering, and federation.
+http://wiki.openstack.org/QpidSupport http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1 Installation Fedora provides a package for qpid called qpid-cpp-server which can be installed like so:" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/qpid/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Qpid</h1><div class="post-content"><p>Qpid is an open source AMQP broker, providing transaction management, queuing,
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/qpid/">Qpid</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<p>Qpid is an open source AMQP broker, providing transaction management, queuing,
 distribution, security, management, clustering, and federation.</p>
-<span id="continue-reading"></span>
 <ul>
-<li><a href="https://wiki.openstack.org/wiki/QpidSupport">QpidSupport</a></li>
-<li><a href="https://www.linuxjournal.com/article/10379?page=0%2C1">Advanced Message Queuing Protocol (AMQP)</a></li>
+<li><a href="http://wiki.openstack.org/QpidSupport">http://wiki.openstack.org/QpidSupport</a></li>
+<li><a href="http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1">http://www.linuxjournal.com/magazine/advanced-message-queuing-protocol-amqp?page=0,1</a></li>
 </ul>
 <h2 id="installation">Installation</h2>
 <p>Fedora provides a package for qpid called <code>qpid-cpp-server</code> which can be
 installed like so:</p>
-<pre><code>yum install qpid-cpp-server qpid-cpp-server-ssl qpid-cpp-server-store \
-  qpid-cpp-server-ha -y
-</code></pre>
-<p>Additional packages that may be of use:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install qpid-cpp-server qpid-cpp-server-ssl qpid-cpp-server-store \
+</span></span><span style="display:flex;"><span>  qpid-cpp-server-ha -y
+</span></span></code></pre></div><p>Additional packages that may be of use:</p>
 <ul>
 <li>qpid-tools</li>
 <li>qpid-qmf</li>
 </ul>
 <h2 id="configuration">Configuration</h2>
 <p>The following configuration file assumes the rest of the configuration on this
-page. You'll want to replace the existing configuration at <code>/etc/qpidd.conf</code>
+page. You&rsquo;ll want to replace the existing configuration at <code>/etc/qpidd.conf</code>
 with the following:</p>
-<pre data-lang="ini" class="language-ini "><code class="language-ini" data-lang="ini">##### General Configuration #####
-
-# Directory to contain persistent data
-data-dir=/var/lib/qpidd/
-
-worker-threads=3
-
-##### Queue Configuration #####
-
-# Set queue events async, used for services like replication
-async-queue-events=no
-
-# How often to attempt purging expired messages from the queues
-queue-purge-interval=600
-
-# Default storage limit of any given queue
-default-queue-limit=104857600
-
-# The ratio of any specified queue limit at which an event will be raised
-default-event-threshold-ratio=80
-
-# Percent of queues maximum capacity at which flow control is activated and
-# deactivated.
-default-flow-stop-threshold=80
-default-flow-resume-threshold=70
-
-# Group identifier to assign to messages delivered to a message group queue that
-# do not contain an identifier.
-default-message-group=qpid.no-group
-
-# Add current time to each received message
-enable-timestamp=yes
-
-##### Management Options #####
-
-# Enable management, publishing data every 10 seconds, with QMF protocol 1 and
-# 2
-mgmt-enable=yes
-mgmt-publish=yes
-mgmt-pub-interval=10
-mgmt-qmf1=yes
-mgmt-qmf2=yes
-
-##### Networking Configuration #####
-
-connection-backlog=10
-
-link-heartbeat-interval=120
-link-maintenace-interval=2
-
-# Maximum time a connection can take to send the initial protocol negotiation
-# (in milliseconds).
-max-negotiate-time=2000
-
-# Port to listen on for unencrypted connections
-port=5672
-
-# Set TCP_NODELAY on TCP connections
-tcp-nodelay=yes
-
-##### Logging Options #####
-
-log-enable=info+
-
-log-category=yes
-log-level=yes
-log-time=no
-
-log-to-stderr=no
-log-to-stdout=no
-log-to-syslog=yes
-
-##### Persistent Storage Options #####
-
-# Number of pages in each journal (1 page is 64Kb)
-jfile-size-pgs=24
-
-# Default number of files for each journal instance (queue)
-num-jfiles=8
-
-truncate=no
-
-# Size of the pages in the write page cache in Kb, allowable values are powers
-# of 2
-wcache-page-size=32
-
-##### Authentication & Authorization Configurations #####
-
-# Enable authentication, and configured to use the QPID realm
-auth=yes
-realm=QPID
-
-# Get SASL configuration from standard redhat location
-sasl-config=/etc/sasl2/
-
-# The policy file to load from, loaded from the data dir
-acl-file=qpid.acl
-
-# Maximum combined number of connections allowed (0 is no limit)
-max-connections=500
-max-connections-per-user=0
-max-connections-per-ip=0
-
-##### SSL Settings #####
-
-ssl-port=5671
-
-# File containing password to use for accessing the certificate database
-ssl-cert-password-file=/var/lib/qpidd/ssl-db-pass
-
-# Where the cert database is stored, the data directory is as good as any
-ssl-cert-db=/var/lib/qpidd
-
-# Name of the cerificate to use (usually the hostname)
-ssl-cert-name=agni
-
-# Whether or not the server will accept unencrypted connections, there is of
-# course overhead to encrypted connections and if the only services that will
-# be talking to it will be the localhost then there is no need to require it...
-# External connections should of course be encrypted wherever possible.
-require-encryption=no
-</code></pre>
-<p>You'll want to enable and start the service once the configuration is complete.</p>
-<pre><code>systemctl enable qpidd.service
-systemctl start qpidd.service
-</code></pre>
-<h3 id="enabling-user-pass-authentication">Enabling User/Pass Authentication</h3>
-<p>By default only ANONYMOUS authentication is enabled which isn't good for any
-production systems... Qpid uses SASL for user authentication and that is how we
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### General Configuration #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Directory to contain persistent data</span>
+</span></span><span style="display:flex;"><span>data-dir<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">/var/lib/qpidd/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>worker-threads<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### Queue Configuration #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Set queue events async, used for services like replication</span>
+</span></span><span style="display:flex;"><span>async-queue-events<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">no</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># How often to attempt purging expired messages from the queues</span>
+</span></span><span style="display:flex;"><span>queue-purge-interval<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">600</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Default storage limit of any given queue</span>
+</span></span><span style="display:flex;"><span>default-queue-limit<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">104857600</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The ratio of any specified queue limit at which an event will be raised</span>
+</span></span><span style="display:flex;"><span>default-event-threshold-ratio<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">80</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Percent of queues maximum capacity at which flow control is activated and</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># deactivated.</span>
+</span></span><span style="display:flex;"><span>default-flow-stop-threshold<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">80</span>
+</span></span><span style="display:flex;"><span>default-flow-resume-threshold<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">70</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Group identifier to assign to messages delivered to a message group queue that</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># do not contain an identifier.</span>
+</span></span><span style="display:flex;"><span>default-message-group<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">qpid.no-group</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Add current time to each received message</span>
+</span></span><span style="display:flex;"><span>enable-timestamp<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### Management Options #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Enable management, publishing data every 10 seconds, with QMF protocol 1 and</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># 2</span>
+</span></span><span style="display:flex;"><span>mgmt-enable<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>mgmt-publish<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>mgmt-pub-interval<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>mgmt-qmf1<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>mgmt-qmf2<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### Networking Configuration #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>connection-backlog<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>link-heartbeat-interval<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">120</span>
+</span></span><span style="display:flex;"><span>link-maintenace-interval<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Maximum time a connection can take to send the initial protocol negotiation</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># (in milliseconds).</span>
+</span></span><span style="display:flex;"><span>max-negotiate-time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">2000</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Port to listen on for unencrypted connections</span>
+</span></span><span style="display:flex;"><span>port<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">5672</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Set TCP_NODELAY on TCP connections</span>
+</span></span><span style="display:flex;"><span>tcp-nodelay<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### Logging Options #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>log-enable<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">info+</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>log-category<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>log-level<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>log-time<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">no</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>log-to-stderr<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">no</span>
+</span></span><span style="display:flex;"><span>log-to-stdout<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">no</span>
+</span></span><span style="display:flex;"><span>log-to-syslog<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### Persistent Storage Options #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Number of pages in each journal (1 page is 64Kb)</span>
+</span></span><span style="display:flex;"><span>jfile-size-pgs<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">24</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Default number of files for each journal instance (queue)</span>
+</span></span><span style="display:flex;"><span>num-jfiles<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>truncate<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">no</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Size of the pages in the write page cache in Kb, allowable values are powers</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># of 2</span>
+</span></span><span style="display:flex;"><span>wcache-page-size<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">32</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### Authentication &amp; Authorization Configurations #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Enable authentication, and configured to use the QPID realm</span>
+</span></span><span style="display:flex;"><span>auth<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">yes</span>
+</span></span><span style="display:flex;"><span>realm<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">QPID</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Get SASL configuration from standard redhat location</span>
+</span></span><span style="display:flex;"><span>sasl-config<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">/etc/sasl2/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># The policy file to load from, loaded from the data dir</span>
+</span></span><span style="display:flex;"><span>acl-file<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">qpid.acl</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Maximum combined number of connections allowed (0 is no limit)</span>
+</span></span><span style="display:flex;"><span>max-connections<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">500</span>
+</span></span><span style="display:flex;"><span>max-connections-per-user<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>max-connections-per-ip<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">##### SSL Settings #####</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ssl-port<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">5671</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># File containing password to use for accessing the certificate database</span>
+</span></span><span style="display:flex;"><span>ssl-cert-password-file<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">/var/lib/qpidd/ssl-db-pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Where the cert database is stored, the data directory is as good as any</span>
+</span></span><span style="display:flex;"><span>ssl-cert-db<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">/var/lib/qpidd</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Name of the cerificate to use (usually the hostname)</span>
+</span></span><span style="display:flex;"><span>ssl-cert-name<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">agni</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Whether or not the server will accept unencrypted connections, there is of</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># course overhead to encrypted connections and if the only services that will</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># be talking to it will be the localhost then there is no need to require it...</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># External connections should of course be encrypted wherever possible.</span>
+</span></span><span style="display:flex;"><span>require-encryption<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">no</span>
+</span></span></code></pre></div><p>You&rsquo;ll want to enable and start the service once the configuration is complete.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl enable qpidd.service
+</span></span><span style="display:flex;"><span>systemctl start qpidd.service
+</span></span></code></pre></div><h3 id="enabling-userpass-authentication">Enabling User/Pass Authentication</h3>
+<p>By default only ANONYMOUS authentication is enabled which isn&rsquo;t good for any
+production systems&hellip; Qpid uses SASL for user authentication and that is how we
 need to configure what system to make use of. Open up the file
-<code>/etc/sasl2/qpidd.conf</code> and replace it's contents with the following:</p>
-<pre><code>auxprop_plugin: sasldb
-mech_list: DIGEST-MD5 PLAIN+SSL
-pwcheck_method: auxprop
-sasldb_path: /var/lib/qpidd/qpidd.sasldb
-sql_select: dummy select
-</code></pre>
-<h3 id="creating-users">Creating Users</h3>
-<p>I've named the SASL authentication realm after the service that uses it, in
-this case Qpid (makes sense no?). You'll need to create at least one user to
+<code>/etc/sasl2/qpidd.conf</code> and replace it&rsquo;s contents with the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>auxprop_plugin: sasldb
+</span></span><span style="display:flex;"><span>mech_list: DIGEST-MD5 PLAIN+SSL
+</span></span><span style="display:flex;"><span>pwcheck_method: auxprop
+</span></span><span style="display:flex;"><span>sasldb_path: /var/lib/qpidd/qpidd.sasldb
+</span></span><span style="display:flex;"><span>sql_select: dummy select
+</span></span></code></pre></div><h3 id="creating-users">Creating Users</h3>
+<p>I&rsquo;ve named the SASL authentication realm after the service that uses it, in
+this case Qpid (makes sense no?). You&rsquo;ll need to create at least one user to
 make use of authentication, I chose to make one user for administration tasks
 (admin), and one per server named after the server (in this case the server is
 named openstack after the service I mainly use Qpid for).</p>
-<p>Create the user's as root:</p>
-<pre><code>saslpasswd2 -f /var/lib/qpidd/qpidd.sasldb -u QPID admin
-saslpasswd2 -f /var/lib/qpidd/qpidd.sasldb -u QPID openstack
-</code></pre>
-<p>Set STRONG passwords for both as arbitrary instructions can be provided to
+<p>Create the user&rsquo;s as root:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>saslpasswd2 -f /var/lib/qpidd/qpidd.sasldb -u QPID admin
+</span></span><span style="display:flex;"><span>saslpasswd2 -f /var/lib/qpidd/qpidd.sasldb -u QPID openstack
+</span></span></code></pre></div><p>Set STRONG passwords for both as arbitrary instructions can be provided to
 various openstack services through this service.</p>
 <p>The saslpasswd2 command will additionally create the password file, but with
 incorrect permissions. Set the ownership and strengthen the permissions like
 so:</p>
-<pre><code>chown qpidd:qpidd /var/lib/qpidd/qpidd.sasldb
-chmod 0640 /var/lib/qpidd/qpidd.sasldb
-</code></pre>
-<p>If you have started Qpid with <code>auth=yes</code> configured before creating the account
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>chown qpidd:qpidd /var/lib/qpidd/qpidd.sasldb
+</span></span><span style="display:flex;"><span>chmod 0640 /var/lib/qpidd/qpidd.sasldb
+</span></span></code></pre></div><p>If you have started Qpid with <code>auth=yes</code> configured before creating the account
 it will automatically create this file and add a user with the username and
-password 'guest'.</p>
+password &lsquo;guest&rsquo;.</p>
 <h3 id="listing-users">Listing Users</h3>
 <p>You can list all the configured realm / username combinations with the
 following command:</p>
-<pre><code>sasldblistusers2 -f /var/lib/qpidd/qpidd.sasldb
-</code></pre>
-<h3 id="user-acls">User ACLs</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sasldblistusers2 -f /var/lib/qpidd/qpidd.sasldb
+</span></span></code></pre></div><h3 id="user-acls">User ACLs</h3>
 <p>The ACL files are pretty straight-forward and plain text. The file lives at
-<code>/var/lib/qpidd/qpid.acl</code> which doesn't exist initially and will need to be
+<code>/var/lib/qpidd/qpid.acl</code> which doesn&rsquo;t exist initially and will need to be
 created. This is a solid initial ACL allowing the admin and openstack access to
 any permissions they need while preventing anything else.</p>
-<p>In the future I'll need to make this more fine-grained. This is more useful
-when using Kerberos as the back end which would have more users you wouldn't
+<p>In the future I&rsquo;ll need to make this more fine-grained. This is more useful
+when using Kerberos as the back end which would have more users you wouldn&rsquo;t
 want to have access.</p>
-<pre><code># Define the admins and let them do whatever they want
-group admins admin@Qpid
-acl allow admins all all
-
-# Define the server accounts and set their permissions
-group servers openstack@Qpid
-acl allow servers all all
-
-# Default deny with logging on any other attempts
-acl deny-log all all
-</code></pre>
-<p>Ensure the ownership and permissions on the file are appropriate:</p>
-<pre><code>chown qpidd:qpidd /var/lib/qpidd/qpid.acl
-chmod 0640 /var/lib/qpidd/qpid.acl
-</code></pre>
-<h4 id="acl-bml-syntax">ACL BML Syntax</h4>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Define the admins and let them do whatever they want
+</span></span><span style="display:flex;"><span>group admins admin@Qpid
+</span></span><span style="display:flex;"><span>acl allow admins all all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Define the server accounts and set their permissions
+</span></span><span style="display:flex;"><span>group servers openstack@Qpid
+</span></span><span style="display:flex;"><span>acl allow servers all all
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span># Default deny with logging on any other attempts
+</span></span><span style="display:flex;"><span>acl deny-log all all
+</span></span></code></pre></div><p>Ensure the ownership and permissions on the file are appropriate:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>chown qpidd:qpidd /var/lib/qpidd/qpid.acl
+</span></span><span style="display:flex;"><span>chmod 0640 /var/lib/qpidd/qpid.acl
+</span></span></code></pre></div><h4 id="acl-bml-syntax">ACL BML Syntax</h4>
 <p>ACLs are case-insensitve, all white space is essentially ignored except when
 delimiting between syntax types. Lines can be wrapped by ending the line with a
 backslash.</p>
-<pre><code>user = username[/domain[@realm]]
-user-list = user1 user2 user3 ...
-group-name-list = group1 group2 group3 ...
-
-group <group-name> = [user-list] [group-name-list]
-
-permission = [allow|allow-log|deny|deny-log]
-action = [consume|publish|create|access|bind|unbind|delete|purge|update]
-object = [virtualhost|queue|exchange|broker|link|route|method]
-property = [name|durable|owner|routingkey|autodelete|exclusive|
-            type|alternate|queuename|schemapackage|schemaclass|
-            queuemaxsizelowerlimit|queuemaxsizeupperlimit|
-            queuemaxcountlowerlimit|queuemaxcountupperlimit]
-
-acl permission {<group-name>|<user-name>|"all"} {action|"all"} [object|"all" 
-            [property=<property-value> ...]]
-</code></pre>
-<h4 id="action-listing">Action Listing</h4>
-<table><thead><tr><th>Action</th><th>Description</th></tr></thead><tbody>
-<tr><td>consume</td><td>Applied when subscriptions are created</td></tr>
-<tr><td>publish</td><td>Applied on a per message basis on publish message transfers, this rule consumes the most resources</td></tr>
-<tr><td>create</td><td>Applied when an object is created, such as bindings, queues, exchanges, links</td></tr>
-<tr><td>access</td><td>Applied when an object is read or accessed</td></tr>
-<tr><td>bind</td><td>Applied when objects are bound together</td></tr>
-<tr><td>unbind</td><td>Applied when objects are unbound</td></tr>
-<tr><td>delete</td><td>Applied when objects are deleted</td></tr>
-<tr><td>purge</td><td>Similar to delete but the action is performed on more than one object</td></tr>
-<tr><td>update</td><td>Applied when an object is updated</td></tr>
-</tbody></table>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-zed" data-lang="zed"><span style="display:flex;"><span>user<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>username[<span style="color:#ff7b72;font-weight:bold">/</span>domain[<span style="color:#f85149">@</span>realm]]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>user<span style="color:#ff7b72;font-weight:bold">-</span>list<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>user1<span style="color:#6e7681"> </span>user2<span style="color:#6e7681"> </span>user3<span style="color:#6e7681"> </span>...<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>group<span style="color:#ff7b72;font-weight:bold">-</span>name<span style="color:#ff7b72;font-weight:bold">-</span>list<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>group1<span style="color:#6e7681"> </span>group2<span style="color:#6e7681"> </span>group3<span style="color:#6e7681"> </span>...<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>group<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">&lt;</span>group<span style="color:#ff7b72;font-weight:bold">-</span>name<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>[user<span style="color:#ff7b72;font-weight:bold">-</span>list]<span style="color:#6e7681"> </span>[group<span style="color:#ff7b72;font-weight:bold">-</span>name<span style="color:#ff7b72;font-weight:bold">-</span>list]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">permission</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>[allow<span style="color:#ff7b72;font-weight:bold">|</span>allow<span style="color:#ff7b72;font-weight:bold">-</span>log<span style="color:#ff7b72;font-weight:bold">|</span>deny<span style="color:#ff7b72;font-weight:bold">|</span>deny<span style="color:#ff7b72;font-weight:bold">-</span>log]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>action<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>[consume<span style="color:#ff7b72;font-weight:bold">|</span>publish<span style="color:#ff7b72;font-weight:bold">|</span>create<span style="color:#ff7b72;font-weight:bold">|</span>access<span style="color:#ff7b72;font-weight:bold">|</span>bind<span style="color:#ff7b72;font-weight:bold">|</span>unbind<span style="color:#ff7b72;font-weight:bold">|</span>delete<span style="color:#ff7b72;font-weight:bold">|</span>purge<span style="color:#ff7b72;font-weight:bold">|</span>update]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>object<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>[virtualhost<span style="color:#ff7b72;font-weight:bold">|</span>queue<span style="color:#ff7b72;font-weight:bold">|</span>exchange<span style="color:#ff7b72;font-weight:bold">|</span>broker<span style="color:#ff7b72;font-weight:bold">|</span>link<span style="color:#ff7b72;font-weight:bold">|</span>route<span style="color:#ff7b72;font-weight:bold">|</span>method]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>property<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>[name<span style="color:#ff7b72;font-weight:bold">|</span>durable<span style="color:#ff7b72;font-weight:bold">|</span>owner<span style="color:#ff7b72;font-weight:bold">|</span>routingkey<span style="color:#ff7b72;font-weight:bold">|</span>autodelete<span style="color:#ff7b72;font-weight:bold">|</span>exclusive<span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>type<span style="color:#ff7b72;font-weight:bold">|</span>alternate<span style="color:#ff7b72;font-weight:bold">|</span>queuename<span style="color:#ff7b72;font-weight:bold">|</span>schemapackage<span style="color:#ff7b72;font-weight:bold">|</span>schemaclass<span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>queuemaxsizelowerlimit<span style="color:#ff7b72;font-weight:bold">|</span>queuemaxsizeupperlimit<span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>queuemaxcountlowerlimit<span style="color:#ff7b72;font-weight:bold">|</span>queuemaxcountupperlimit]<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>acl<span style="color:#6e7681"> </span><span style="color:#ff7b72">permission</span><span style="color:#6e7681"> </span>{<span style="color:#ff7b72;font-weight:bold">&lt;</span>group<span style="color:#ff7b72;font-weight:bold">-</span>name<span style="color:#ff7b72;font-weight:bold">&gt;|&lt;</span>user<span style="color:#ff7b72;font-weight:bold">-</span>name<span style="color:#ff7b72;font-weight:bold">&gt;|</span><span style="color:#f85149">&#34;</span>all<span style="color:#f85149">&#34;</span>}<span style="color:#6e7681"> </span>{action<span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#f85149">&#34;</span>all<span style="color:#f85149">&#34;</span>}<span style="color:#6e7681"> </span>[object<span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#f85149">&#34;</span>all<span style="color:#f85149">&#34;</span><span style="color:#6e7681"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">            </span>[property<span style="color:#ff7b72;font-weight:bold">=&lt;</span>property<span style="color:#ff7b72;font-weight:bold">-</span>value<span style="color:#ff7b72;font-weight:bold">&gt;</span><span style="color:#6e7681"> </span>...]]<span style="color:#6e7681">
+</span></span></span></code></pre></div><h4 id="action-listing">Action Listing</h4>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>consume</td>
+<td>Applied when subscriptions are created</td>
+</tr>
+<tr>
+<td>publish</td>
+<td>Applied on a per message basis on publish message transfers, this rule consumes the most resources</td>
+</tr>
+<tr>
+<td>create</td>
+<td>Applied when an object is created, such as bindings, queues, exchanges, links</td>
+</tr>
+<tr>
+<td>access</td>
+<td>Applied when an object is read or accessed</td>
+</tr>
+<tr>
+<td>bind</td>
+<td>Applied when objects are bound together</td>
+</tr>
+<tr>
+<td>unbind</td>
+<td>Applied when objects are unbound</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>Applied when objects are deleted</td>
+</tr>
+<tr>
+<td>purge</td>
+<td>Similar to delete but the action is performed on more than one object</td>
+</tr>
+<tr>
+<td>update</td>
+<td>Applied when an object is updated</td>
+</tr>
+</tbody>
+</table>
 <h4 id="object-listing">Object Listing</h4>
-<table><thead><tr><th>Object</th><th>Description</th></tr></thead><tbody>
-<tr><td>queue</td><td>A queue</td></tr>
-<tr><td>exchange</td><td>An exchange</td></tr>
-<tr><td>broker</td><td>The broker</td></tr>
-<tr><td>link</td><td>A federation or inter-broker link</td></tr>
-<tr><td>method</td><td>Management or agent or broker method</td></tr>
-</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>queue</td>
+<td>A queue</td>
+</tr>
+<tr>
+<td>exchange</td>
+<td>An exchange</td>
+</tr>
+<tr>
+<td>broker</td>
+<td>The broker</td>
+</tr>
+<tr>
+<td>link</td>
+<td>A federation or inter-broker link</td>
+</tr>
+<tr>
+<td>method</td>
+<td>Management or agent or broker method</td>
+</tr>
+</tbody>
+</table>
 <h4 id="property-listing">Property Listing</h4>
-<table><thead><tr><th>Property</th><th>Type</th><th>Description</th><th>Usage</th></tr></thead><tbody>
-<tr><td>name</td><td>String</td><td>Object name, such as a queue name or exchange name.</td><td></td></tr>
-<tr><td>durable</td><td>Boolean</td><td>Indicates the object is durable</td><td>CREATE QUEUE, CREATE EXCHANGE</td></tr>
-<tr><td>routingkey</td><td>String</td><td>Specifies routing key</td><td>BIND EXCHANGE, UNBIND EXCHANGE, ACCESS EXCHANGE</td></tr>
-<tr><td>autodelete</td><td>Boolean</td><td>Indicates whether or not the object gets deleted when the connection is closed</td><td>CREATE QUEUE</td></tr>
-<tr><td>exclusive</td><td>Boolean</td><td>Indicates the presence of an exclusive flag</td><td>CREATE QUEUE</td></tr>
-<tr><td>type</td><td>String</td><td>Type of exchange, such as topic, fanout, or xml</td><td>CREATE EXCHANGE</td></tr>
-<tr><td>alternate</td><td>String</td><td>Name of the alternate exchange</td><td>CREATE EXCHANGE, CREATE QUEUE</td></tr>
-<tr><td>queuename</td><td>String</td><td>Name of the queue</td><td>ACCESS EXCHANGE</td></tr>
-<tr><td>schemapackage</td><td>String</td><td>QMF schema package name</td><td>ACCESS METHOD</td></tr>
-<tr><td>schemaclass</td><td>String</td><td>QMF schema class name</td><td>ACCESS METHOD</td></tr>
-<tr><td>queuemaxsizelowerlimit</td><td>Integer</td><td>Minimum value for queue.max_size</td><td>CREATE QUEUE</td></tr>
-<tr><td>queuemaxsizeupperlimit</td><td>Integer</td><td>Maximum value for queue.max_size</td><td>CREATE QUEUE</td></tr>
-<tr><td>queuemaxcountlowerlimit</td><td>Integer</td><td>Minimum value for queue.max_count</td><td>CREATE QUEUE</td></tr>
-<tr><td>queuemaxcountupperlimit</td><td>Integer</td><td>Maximum value for queue.max_count</td><td>CREATE QUEUE</td></tr>
-</tbody></table>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Object name, such as a queue name or exchange name.</td>
+<td></td>
+</tr>
+<tr>
+<td>durable</td>
+<td>Boolean</td>
+<td>Indicates the object is durable</td>
+<td>CREATE QUEUE, CREATE EXCHANGE</td>
+</tr>
+<tr>
+<td>routingkey</td>
+<td>String</td>
+<td>Specifies routing key</td>
+<td>BIND EXCHANGE, UNBIND EXCHANGE, ACCESS EXCHANGE</td>
+</tr>
+<tr>
+<td>autodelete</td>
+<td>Boolean</td>
+<td>Indicates whether or not the object gets deleted when the connection is closed</td>
+<td>CREATE QUEUE</td>
+</tr>
+<tr>
+<td>exclusive</td>
+<td>Boolean</td>
+<td>Indicates the presence of an exclusive flag</td>
+<td>CREATE QUEUE</td>
+</tr>
+<tr>
+<td>type</td>
+<td>String</td>
+<td>Type of exchange, such as topic, fanout, or xml</td>
+<td>CREATE EXCHANGE</td>
+</tr>
+<tr>
+<td>alternate</td>
+<td>String</td>
+<td>Name of the alternate exchange</td>
+<td>CREATE EXCHANGE, CREATE QUEUE</td>
+</tr>
+<tr>
+<td>queuename</td>
+<td>String</td>
+<td>Name of the queue</td>
+<td>ACCESS EXCHANGE</td>
+</tr>
+<tr>
+<td>schemapackage</td>
+<td>String</td>
+<td>QMF schema package name</td>
+<td>ACCESS METHOD</td>
+</tr>
+<tr>
+<td>schemaclass</td>
+<td>String</td>
+<td>QMF schema class name</td>
+<td>ACCESS METHOD</td>
+</tr>
+<tr>
+<td>queuemaxsizelowerlimit</td>
+<td>Integer</td>
+<td>Minimum value for queue.max_size</td>
+<td>CREATE QUEUE</td>
+</tr>
+<tr>
+<td>queuemaxsizeupperlimit</td>
+<td>Integer</td>
+<td>Maximum value for queue.max_size</td>
+<td>CREATE QUEUE</td>
+</tr>
+<tr>
+<td>queuemaxcountlowerlimit</td>
+<td>Integer</td>
+<td>Minimum value for queue.max_count</td>
+<td>CREATE QUEUE</td>
+</tr>
+<tr>
+<td>queuemaxcountupperlimit</td>
+<td>Integer</td>
+<td>Maximum value for queue.max_count</td>
+<td>CREATE QUEUE</td>
+</tr>
+</tbody>
+</table>
 <h3 id="ssl">SSL</h3>
-<p>Unfortunately SSL for Qpid isn't as easy as generating PEM certificates and
+<p>Unfortunately SSL for Qpid isn&rsquo;t as easy as generating PEM certificates and
 pointing the config at them. Qpid makes use of a Mozilla Network Security
 Services database. These databases can be created using certutil.</p>
-<p>First we'll need to initialize the database:</p>
-<pre><code>certutil -N -d /var/lib/qpidd/
-</code></pre>
-<p>Provide a strong password to the database and put a copy in the file
-<code>/var/lib/qpidd/ssl-db-pass</code> on it's own with no newline.</p>
-<p>I already have PKI in place and a trusted <a href="https://stelfox.net/notes/certificates/">Certificate Authority</a>, so I
+<p>First we&rsquo;ll need to initialize the database:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>certutil -N -d /var/lib/qpidd/
+</span></span></code></pre></div><p>Provide a strong password to the database and put a copy in the file
+<code>/var/lib/qpidd/ssl-db-pass</code> on it&rsquo;s own with no newline.</p>
+<p>I already have PKI in place and a trusted <a href="https://stelfox.net/notes/building-a-certificate-authority/">Certificate Authority</a>, so I
 just have to import my trusted certificate authority chain. Generate a
-certificate for this server and import it's certificate and chain.</p>
+certificate for this server and import it&rsquo;s certificate and chain.</p>
 <p>Import the CA cert:</p>
-<pre><code>certutil -A -n cert-authority -t "TC,," -i ca.crt -d /var/lib/qpidd
-</code></pre>
-<p>The server certificate is a bit trickier, before we can import an OpenSSL
-generated PEM format key set we'll need to convert it to a pkcs12 file, luckily
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>certutil -A -n cert-authority -t &#34;TC,,&#34; -i ca.crt -d /var/lib/qpidd
+</span></span></code></pre></div><p>The server certificate is a bit trickier, before we can import an OpenSSL
+generated PEM format key set we&rsquo;ll need to convert it to a pkcs12 file, luckily
 OpenSSL plays well with others:</p>
-<pre><code>openssl pkcs12 -export -out qpid.pfx -inkey qpid.key -in qpid.crt -certfile ca.crt
-</code></pre>
-<p>Import the newly generate pkcs12 file, it will firstly ask for the password for
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>openssl pkcs12 -export -out qpid.pfx -inkey qpid.key -in qpid.crt -certfile ca.crt
+</span></span></code></pre></div><p>Import the newly generate pkcs12 file, it will firstly ask for the password for
 the database, and then the password for the pkcs12 file:</p>
-<pre><code>pk12util -d /var/lib/qpidd/ -i qpid.pfx
-</code></pre>
-<p>And be sure to clean up after yourself:</p>
-<pre><code>rm qpid.pfx
-</code></pre>
-<p>Set the permissions on all of the files we just created:</p>
-<pre><code>chown qpidd:qpidd /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
-chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
-</code></pre>
-<h3 id="firewall">Firewall</h3>
-<pre><code># Encrypted Qpid connections (Unencrypted are 5672 but those shouldn't be
-# accessed remotely)
--A SERVICE -m tcp -p tcp --dport 5671 -j ACCEPT
-</code></pre>
-</div>
-</article>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pk12util -d /var/lib/qpidd/ -i qpid.pfx
+</span></span></code></pre></div><p>And be sure to clean up after yourself:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rm qpid.pfx
+</span></span></code></pre></div><p>Set the permissions on all of the files we just created:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>chown qpidd:qpidd /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
+</span></span><span style="display:flex;"><span>chmod 0640 /var/lib/qpidd/{cert8.db,key3.db,ssl-db-pass}
+</span></span></code></pre></div><h3 id="firewall">Firewall</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Encrypted Qpid connections (Unencrypted are 5672 but those shouldn&#39;t be
+</span></span><span style="display:flex;"><span># accessed remotely)
+</span></span><span style="display:flex;"><span>-A SERVICE -m tcp -p tcp --dport 5671 -j ACCEPT
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

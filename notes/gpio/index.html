@@ -1,236 +1,337 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+I came across this python script that accesses GPIO pins in linux. It&amp;rsquo;s potentially very useful so I&amp;rsquo;m including it here, in it&amp;rsquo;s entirety. I can later on reference this for use in my own programs." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/gpio/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            GPIO :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="GPIO">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+I came across this python script that accesses GPIO pins in linux. It&rsquo;s potentially very useful so I&rsquo;m including it here, in it&rsquo;s entirety. I can later on reference this for use in my own programs.">
+
+<meta itemprop="wordCount" content="646">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GPIO"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+I came across this python script that accesses GPIO pins in linux. It&rsquo;s potentially very useful so I&rsquo;m including it here, in it&rsquo;s entirety. I can later on reference this for use in my own programs."/>
+
+
+
+    <meta property="og:title" content="GPIO" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+I came across this python script that accesses GPIO pins in linux. It&rsquo;s potentially very useful so I&rsquo;m including it here, in it&rsquo;s entirety. I can later on reference this for use in my own programs." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/gpio/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
-
+        <body>
     
     
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
         
-          
-          <nav>
-            <ul class="nav">
-              
-                
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
         
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>GPIO</h1><div class="post-content"><p>I came across this python script that accesses GPIO pins in linux. It's
-potentially very useful so I'm including it here, in it's entirety. I can later
-on reference this for use in my own programs.</p>
-<span id="continue-reading"></span><pre data-lang="python" class="language-python "><code class="language-python" data-lang="python">"""Arduino-like library for Python on BeagleBone"""
-import time
-
-HIGH = "HIGH"
-LOW = "LOW"
-OUTPUT = "OUTPUT"
-INPUT = "INPUT"
-pinList = [] # needed for unexport()
-startTime = time.time() # needed for millis()
-digitalPinDef = {
-  "P8.3":   38,
-  "P8.4":   39,
-  "P8.5":   34,
-  "P8.6":   35,
-  "P8.11":  45,
-  "P8.12":  44,
-  "P8.14":  26,
-  "P8.15":  47,
-  "P8.16":  46,
-  "P8.17":  27,
-  "P8.18":  65,
-  "P8.20":  63,
-  "P8.21":  62,
-  "P8.22":  37,
-  "P8.23":  36,
-  "P8.24":  33,
-  "P8.25":  32,
-  "P8.26":  61,
-  "P8.27":  86,
-  "P8.28":  88,
-  "P8.29":  87,
-  "P8.30":  89,
-  "P8.39":  76,
-  "P8.40":  77,
-  "P8.41":  74,
-  "P8.42":  75,
-  "P8.43":  72,
-  "P8.44":  73,
-  "P8.45":  70,
-  "P8.46":  71,
-  "P9.12":  60,
-  "P9.15":  48,
-  "P9.23":  49,
-  "P9.25":  117,
-  "P9.27":  115,
-  "P9.42":  7
-}
-
-analogPinDef = {
-  "P9.33":  "ain4",
-  "P9.35":  "ain6",
-  "P9.36":  "ain5",
-  "P9.37":  "ain2",
-  "P9.38":  "ain3",
-  "P9.39":  "ain0",
-  "P9.40":  "ain1"
-}
-
-def pinMode(pin, direction):
-  """pinMode(pin, direction) opens (exports)  a pin for use and 
-  sets the direction"""
-  if pin in digitalPinDef:
-    fw = file("/sys/class/gpio/export", "w")
-    fw.write("%d" % (digitalPinDef[pin]))
-    fw.close()
-    fileName = "/sys/class/gpio/gpio%d/direction" % (digitalPinDef[pin])
-    fw = file(fileName, "w")
-    if direction == INPUT:
-      fw.write("in")
-    else:
-      fw.write("out")
-    fw.close()
-    pinList.append(digitalPinDef[pin])
-  else:
-    print "pinMode error: Pin " + pin + " is not defined as a digital I/O pin in the pin definition."
-
-
-def digitalWrite(pin, status):
-  """digitalWrite(pin, status) sets a pin HIGH or LOW"""
-  if pin in digitalPinDef:
-    fileName = "/sys/class/gpio/gpio%d/value" % (digitalPinDef[pin])
-    fw = file(fileName, "w")
-    if status == HIGH:
-      fw.write("1")
-    if status == LOW:
-      fw.write("0")
-    fw.close()
-  else:
-    print "digitalWrite error: Pin " + pin + " is not defined as a digital I/O pin in the pin definition."
-
-def digitalRead(pin):
-  """digitalRead(pin) returns HIGH or LOW for a given pin."""
-  if pin in digitalPinDef:
-    fileName = "/sys/class/gpio/gpio%d/value" % (digitalPinDef[pin])
-    fw = file(fileName, "r")
-    inData = fw.read()
-    fw.close()
-    if inData == "0\n":
-      return LOW
-    if inData == "1\n":
-      return HIGH
-  else:
-    print "digitalRead error: Pin " + pin + " is not defined as a digital I/O pin in the pin definition."
-    return -1;
-
-def analogRead(pin):
-  """analogRead(pin) returns analog value for a given pin."""
-  if pin in analogPinDef:
-    fileName = "/sys/devices/platform/tsc/" + (analogPinDef[pin])
-    fw = file(fileName, "r")
-    return fw.read()
-  fw.close()
-else:
-  print "analogRead error: Pin " + pin + " is not defined as an analog in pin in the pin definition."
-    return -1;
-
-def pinUnexport(pin):
-  """pinUnexport(pin) closes a pin in sysfs. This is susally 
-  called by cleanup() when a script is exiting."""
-  fw = file("/sys/class/gpio/unexport", "w")
-  fw.write("%d" % (pin))
-  fw.close()
-
-def cleanup():
-  """ takes care of stepping through pins that were set with
-  pinMode and unExports them. Prints result"""
-  def find_key(dic, val):
-    return [k for k, v in dic.iteritems() if v == val][0]
-  print ""
-  print "Cleaning up. Unexporting the following pins:",
-  for pin in pinList:
-    pinUnexport(pin)
-    print find_key(digitalPinDef, pin),
-
-def delay(millis):
-  """delay(millis) sleeps the script for a given number of 
-  milliseconds"""
-  time.sleep(millis/1000.0)
-
-def millis():
-  """millis() returns an int for the number of milliseconds since 
-  the script started."""
-  return int((time.time() - startTime) * 1000)
-
-def run(setup, main): # from PyBBIO by Alexander Hiam - ahiam@marlboro.edu - www.alexanderhiam.com https://github.com/alexanderhiam/PyBBIO
-  """ The main loop; must be passed a setup and a main function.
-  First the setup function will be called once, then the main
-  function wil be continuously until a stop signal is raised, 
-  e.g. CTRL-C or a call to the stop() function from within the
-  main function. """
-  try:
-    setup()
-    while (True):
-      main()
-  except KeyboardInterrupt:
-    # Manual exit signal, clean up and exit happy
-    cleanup()
-  except Exception, e:
-    # Something may have gone wrong, clean up and print exception
-    cleanup()
-    print e
-</code></pre>
-</div>
-</article>
-
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
     </div>
-  </body>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/gpio/">GPIO</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<p>I came across this python script that accesses GPIO pins in linux. It&rsquo;s
+potentially very useful so I&rsquo;m including it here, in it&rsquo;s entirety. I can later
+on reference this for use in my own programs.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>&#34;&#34;&#34;Arduino-like library for Python on BeagleBone&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>import time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>HIGH = &#34;HIGH&#34;
+</span></span><span style="display:flex;"><span>LOW = &#34;LOW&#34;
+</span></span><span style="display:flex;"><span>OUTPUT = &#34;OUTPUT&#34;
+</span></span><span style="display:flex;"><span>INPUT = &#34;INPUT&#34;
+</span></span><span style="display:flex;"><span>pinList = [] # needed for unexport()
+</span></span><span style="display:flex;"><span>startTime = time.time() # needed for millis()
+</span></span><span style="display:flex;"><span>digitalPinDef = {
+</span></span><span style="display:flex;"><span>  &#34;P8.3&#34;:   38,
+</span></span><span style="display:flex;"><span>  &#34;P8.4&#34;:   39,
+</span></span><span style="display:flex;"><span>  &#34;P8.5&#34;:   34,
+</span></span><span style="display:flex;"><span>  &#34;P8.6&#34;:   35,
+</span></span><span style="display:flex;"><span>  &#34;P8.11&#34;:  45,
+</span></span><span style="display:flex;"><span>  &#34;P8.12&#34;:  44,
+</span></span><span style="display:flex;"><span>  &#34;P8.14&#34;:  26,
+</span></span><span style="display:flex;"><span>  &#34;P8.15&#34;:  47,
+</span></span><span style="display:flex;"><span>  &#34;P8.16&#34;:  46,
+</span></span><span style="display:flex;"><span>  &#34;P8.17&#34;:  27,
+</span></span><span style="display:flex;"><span>  &#34;P8.18&#34;:  65,
+</span></span><span style="display:flex;"><span>  &#34;P8.20&#34;:  63,
+</span></span><span style="display:flex;"><span>  &#34;P8.21&#34;:  62,
+</span></span><span style="display:flex;"><span>  &#34;P8.22&#34;:  37,
+</span></span><span style="display:flex;"><span>  &#34;P8.23&#34;:  36,
+</span></span><span style="display:flex;"><span>  &#34;P8.24&#34;:  33,
+</span></span><span style="display:flex;"><span>  &#34;P8.25&#34;:  32,
+</span></span><span style="display:flex;"><span>  &#34;P8.26&#34;:  61,
+</span></span><span style="display:flex;"><span>  &#34;P8.27&#34;:  86,
+</span></span><span style="display:flex;"><span>  &#34;P8.28&#34;:  88,
+</span></span><span style="display:flex;"><span>  &#34;P8.29&#34;:  87,
+</span></span><span style="display:flex;"><span>  &#34;P8.30&#34;:  89,
+</span></span><span style="display:flex;"><span>  &#34;P8.39&#34;:  76,
+</span></span><span style="display:flex;"><span>  &#34;P8.40&#34;:  77,
+</span></span><span style="display:flex;"><span>  &#34;P8.41&#34;:  74,
+</span></span><span style="display:flex;"><span>  &#34;P8.42&#34;:  75,
+</span></span><span style="display:flex;"><span>  &#34;P8.43&#34;:  72,
+</span></span><span style="display:flex;"><span>  &#34;P8.44&#34;:  73,
+</span></span><span style="display:flex;"><span>  &#34;P8.45&#34;:  70,
+</span></span><span style="display:flex;"><span>  &#34;P8.46&#34;:  71,
+</span></span><span style="display:flex;"><span>  &#34;P9.12&#34;:  60,
+</span></span><span style="display:flex;"><span>  &#34;P9.15&#34;:  48,
+</span></span><span style="display:flex;"><span>  &#34;P9.23&#34;:  49,
+</span></span><span style="display:flex;"><span>  &#34;P9.25&#34;:  117,
+</span></span><span style="display:flex;"><span>  &#34;P9.27&#34;:  115,
+</span></span><span style="display:flex;"><span>  &#34;P9.42&#34;:  7
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>analogPinDef = {
+</span></span><span style="display:flex;"><span>  &#34;P9.33&#34;:  &#34;ain4&#34;,
+</span></span><span style="display:flex;"><span>  &#34;P9.35&#34;:  &#34;ain6&#34;,
+</span></span><span style="display:flex;"><span>  &#34;P9.36&#34;:  &#34;ain5&#34;,
+</span></span><span style="display:flex;"><span>  &#34;P9.37&#34;:  &#34;ain2&#34;,
+</span></span><span style="display:flex;"><span>  &#34;P9.38&#34;:  &#34;ain3&#34;,
+</span></span><span style="display:flex;"><span>  &#34;P9.39&#34;:  &#34;ain0&#34;,
+</span></span><span style="display:flex;"><span>  &#34;P9.40&#34;:  &#34;ain1&#34;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def pinMode(pin, direction):
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34;pinMode(pin, direction) opens (exports)  a pin for use and 
+</span></span><span style="display:flex;"><span>  sets the direction&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  if pin in digitalPinDef:
+</span></span><span style="display:flex;"><span>    fw = file(&#34;/sys/class/gpio/export&#34;, &#34;w&#34;)
+</span></span><span style="display:flex;"><span>    fw.write(&#34;%d&#34; % (digitalPinDef[pin]))
+</span></span><span style="display:flex;"><span>    fw.close()
+</span></span><span style="display:flex;"><span>    fileName = &#34;/sys/class/gpio/gpio%d/direction&#34; % (digitalPinDef[pin])
+</span></span><span style="display:flex;"><span>    fw = file(fileName, &#34;w&#34;)
+</span></span><span style="display:flex;"><span>    if direction == INPUT:
+</span></span><span style="display:flex;"><span>      fw.write(&#34;in&#34;)
+</span></span><span style="display:flex;"><span>    else:
+</span></span><span style="display:flex;"><span>      fw.write(&#34;out&#34;)
+</span></span><span style="display:flex;"><span>    fw.close()
+</span></span><span style="display:flex;"><span>    pinList.append(digitalPinDef[pin])
+</span></span><span style="display:flex;"><span>  else:
+</span></span><span style="display:flex;"><span>    print &#34;pinMode error: Pin &#34; + pin + &#34; is not defined as a digital I/O pin in the pin definition.&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def digitalWrite(pin, status):
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34;digitalWrite(pin, status) sets a pin HIGH or LOW&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  if pin in digitalPinDef:
+</span></span><span style="display:flex;"><span>    fileName = &#34;/sys/class/gpio/gpio%d/value&#34; % (digitalPinDef[pin])
+</span></span><span style="display:flex;"><span>    fw = file(fileName, &#34;w&#34;)
+</span></span><span style="display:flex;"><span>    if status == HIGH:
+</span></span><span style="display:flex;"><span>      fw.write(&#34;1&#34;)
+</span></span><span style="display:flex;"><span>    if status == LOW:
+</span></span><span style="display:flex;"><span>      fw.write(&#34;0&#34;)
+</span></span><span style="display:flex;"><span>    fw.close()
+</span></span><span style="display:flex;"><span>  else:
+</span></span><span style="display:flex;"><span>    print &#34;digitalWrite error: Pin &#34; + pin + &#34; is not defined as a digital I/O pin in the pin definition.&#34;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def digitalRead(pin):
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34;digitalRead(pin) returns HIGH or LOW for a given pin.&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  if pin in digitalPinDef:
+</span></span><span style="display:flex;"><span>    fileName = &#34;/sys/class/gpio/gpio%d/value&#34; % (digitalPinDef[pin])
+</span></span><span style="display:flex;"><span>    fw = file(fileName, &#34;r&#34;)
+</span></span><span style="display:flex;"><span>    inData = fw.read()
+</span></span><span style="display:flex;"><span>    fw.close()
+</span></span><span style="display:flex;"><span>    if inData == &#34;0\n&#34;:
+</span></span><span style="display:flex;"><span>      return LOW
+</span></span><span style="display:flex;"><span>    if inData == &#34;1\n&#34;:
+</span></span><span style="display:flex;"><span>      return HIGH
+</span></span><span style="display:flex;"><span>  else:
+</span></span><span style="display:flex;"><span>    print &#34;digitalRead error: Pin &#34; + pin + &#34; is not defined as a digital I/O pin in the pin definition.&#34;
+</span></span><span style="display:flex;"><span>    return -1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def analogRead(pin):
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34;analogRead(pin) returns analog value for a given pin.&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  if pin in analogPinDef:
+</span></span><span style="display:flex;"><span>    fileName = &#34;/sys/devices/platform/tsc/&#34; + (analogPinDef[pin])
+</span></span><span style="display:flex;"><span>    fw = file(fileName, &#34;r&#34;)
+</span></span><span style="display:flex;"><span>    return fw.read()
+</span></span><span style="display:flex;"><span>  fw.close()
+</span></span><span style="display:flex;"><span>else:
+</span></span><span style="display:flex;"><span>  print &#34;analogRead error: Pin &#34; + pin + &#34; is not defined as an analog in pin in the pin definition.&#34;
+</span></span><span style="display:flex;"><span>    return -1;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def pinUnexport(pin):
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34;pinUnexport(pin) closes a pin in sysfs. This is susally 
+</span></span><span style="display:flex;"><span>  called by cleanup() when a script is exiting.&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  fw = file(&#34;/sys/class/gpio/unexport&#34;, &#34;w&#34;)
+</span></span><span style="display:flex;"><span>  fw.write(&#34;%d&#34; % (pin))
+</span></span><span style="display:flex;"><span>  fw.close()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def cleanup():
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34; takes care of stepping through pins that were set with
+</span></span><span style="display:flex;"><span>  pinMode and unExports them. Prints result&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  def find_key(dic, val):
+</span></span><span style="display:flex;"><span>    return [k for k, v in dic.iteritems() if v == val][0]
+</span></span><span style="display:flex;"><span>  print &#34;&#34;
+</span></span><span style="display:flex;"><span>  print &#34;Cleaning up. Unexporting the following pins:&#34;,
+</span></span><span style="display:flex;"><span>  for pin in pinList:
+</span></span><span style="display:flex;"><span>    pinUnexport(pin)
+</span></span><span style="display:flex;"><span>    print find_key(digitalPinDef, pin),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def delay(millis):
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34;delay(millis) sleeps the script for a given number of 
+</span></span><span style="display:flex;"><span>  milliseconds&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  time.sleep(millis/1000.0)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def millis():
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34;millis() returns an int for the number of milliseconds since 
+</span></span><span style="display:flex;"><span>  the script started.&#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  return int((time.time() - startTime) * 1000)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def run(setup, main): # from PyBBIO by Alexander Hiam - ahiam@marlboro.edu - www.alexanderhiam.com https://github.com/alexanderhiam/PyBBIO
+</span></span><span style="display:flex;"><span>  &#34;&#34;&#34; The main loop; must be passed a setup and a main function.
+</span></span><span style="display:flex;"><span>  First the setup function will be called once, then the main
+</span></span><span style="display:flex;"><span>  function wil be continuously until a stop signal is raised, 
+</span></span><span style="display:flex;"><span>  e.g. CTRL-C or a call to the stop() function from within the
+</span></span><span style="display:flex;"><span>  main function. &#34;&#34;&#34;
+</span></span><span style="display:flex;"><span>  try:
+</span></span><span style="display:flex;"><span>    setup()
+</span></span><span style="display:flex;"><span>    while (True):
+</span></span><span style="display:flex;"><span>      main()
+</span></span><span style="display:flex;"><span>  except KeyboardInterrupt:
+</span></span><span style="display:flex;"><span>    # Manual exit signal, clean up and exit happy
+</span></span><span style="display:flex;"><span>    cleanup()
+</span></span><span style="display:flex;"><span>  except Exception, e:
+</span></span><span style="display:flex;"><span>    # Something may have gone wrong, clean up and print exception
+</span></span><span style="display:flex;"><span>    cleanup()
+</span></span><span style="display:flex;"><span>    print e
+</span></span></code></pre></div>
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

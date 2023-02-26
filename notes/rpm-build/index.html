@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Sources:
+https://fedoraproject.org/wiki/How_to_create_an_RPM_package https://fedoraproject.org/wiki/Packaging:Guidelines Create a build user whose sole purpose is to handle building packages. Do not use root under any circumstances.
+As root:
+useradd mockbuild echo -n &amp;#39;mockbuild:password&amp;#39; | chpasswd Its valuable to grant the mockbuild user sudo permissions to allow that user to install missing development packages." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/rpm-build/" />
+
+
+    <title>
+        
+            RPM Build :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="RPM Build">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Sources:
+https://fedoraproject.org/wiki/How_to_create_an_RPM_package https://fedoraproject.org/wiki/Packaging:Guidelines Create a build user whose sole purpose is to handle building packages. Do not use root under any circumstances.
+As root:
+useradd mockbuild echo -n &#39;mockbuild:password&#39; | chpasswd Its valuable to grant the mockbuild user sudo permissions to allow that user to install missing development packages.">
+
+<meta itemprop="wordCount" content="414">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="RPM Build"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Sources:
+https://fedoraproject.org/wiki/How_to_create_an_RPM_package https://fedoraproject.org/wiki/Packaging:Guidelines Create a build user whose sole purpose is to handle building packages. Do not use root under any circumstances.
+As root:
+useradd mockbuild echo -n &#39;mockbuild:password&#39; | chpasswd Its valuable to grant the mockbuild user sudo permissions to allow that user to install missing development packages."/>
+
+
+
+    <meta property="og:title" content="RPM Build" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Sources:
+https://fedoraproject.org/wiki/How_to_create_an_RPM_package https://fedoraproject.org/wiki/Packaging:Guidelines Create a build user whose sole purpose is to handle building packages. Do not use root under any circumstances.
+As root:
+useradd mockbuild echo -n &#39;mockbuild:password&#39; | chpasswd Its valuable to grant the mockbuild user sudo permissions to allow that user to install missing development packages." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/rpm-build/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/rpm-build/">RPM Build</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<p>Sources:</p>
+<ul>
+<li><a href="https://fedoraproject.org/wiki/How_to_create_an_RPM_package">https://fedoraproject.org/wiki/How_to_create_an_RPM_package</a></li>
+<li><a href="https://fedoraproject.org/wiki/Packaging:Guidelines">https://fedoraproject.org/wiki/Packaging:Guidelines</a></li>
+</ul>
+<p>Create a build user whose sole purpose is to handle building packages. Do not
+use root under any circumstances.</p>
+<p>As root:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>useradd mockbuild
+</span></span><span style="display:flex;"><span>echo -n &#39;mockbuild:password&#39; | chpasswd
+</span></span></code></pre></div><p>Its valuable to grant the mockbuild user sudo permissions to allow that user to
+install missing development packages.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install sudo -y
+</span></span><span style="display:flex;"><span>groupadd -g 400 sudoers
+</span></span><span style="display:flex;"><span>usermod -a -G sudoers mockbuild
+</span></span><span style="display:flex;"><span>echo &#39;%sudoers ALL=(ALL) NOPASSWD: ALL&#39; &gt;&gt; /etc/sudoers
+</span></span></code></pre></div><p>And install the requisite tools:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install @development-tools fedora-packager wget -y
+</span></span></code></pre></div><p>Login as the build user and setup the build environment.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rpmdev-setuptree
+</span></span><span style="display:flex;"><span>echo &#39;timestamping = on&#39; &gt; .wgetrc
+</span></span><span style="display:flex;"><span>echo &#39;-R&#39; &gt; .curlrc
+</span></span></code></pre></div><p>The latter bits setup preservation of files when downloading the packages with
+wget and curl.</p>
+<h2 id="downloading-existing-source-packages">Downloading existing source packages</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yumdownloader --source nginx
+</span></span><span style="display:flex;"><span>rpm -ivh nginx*.src.rpm
+</span></span><span style="display:flex;"><span>rm nginx*.src.rpm
+</span></span></code></pre></div><h2 id="running-a-spec">Running a spec</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rpmbuild -ba ~/rpmbuild/SPECS/nginx.spec
+</span></span></code></pre></div><p>When running the above command you will probably encounter missing
+dependencies.</p>
+<p>For nginx these were:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo yum install GeoIP-devel gd-devel gperftools-devel libxslt-devel \
+</span></span><span style="display:flex;"><span>  openssl-devel pcre-devel perl-devel perl zlib-devel perl-ExtUtils-Embed -y
+</span></span></code></pre></div><h2 id="modifying-nginx-to-include-lua-support">Modifying Nginx to include Lua support</h2>
+<p>Since we are going to be adding lua we need to make sure it is represented as
+dependencies by adding them to the spec files.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>BuildRequires:     lua-devel
+</span></span><span style="display:flex;"><span>Requires:          lua
+</span></span></code></pre></div><p>Download the ngx_devel_kit which is a module that provides common functions and
+useful utilities for other modules.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cd ~/rpmbuild/SOURCES
+</span></span><span style="display:flex;"><span>wget https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz
+</span></span><span style="display:flex;"><span>wget https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.0.tar.gz
+</span></span></code></pre></div><p>Add the following sources:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Source2: https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz
+</span></span><span style="display:flex;"><span>Source3: https://github.com/chaoslawful/lua-nginx-module/archive/v0.9.0.tar.gz
+</span></span></code></pre></div><p>We need to make sure the additional tar balls are extracted. Add the following
+lines after the <code>%setup -q</code> line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>%setup -T -D -a 2 -n ngx_devel_kit-0.2.19
+</span></span><span style="display:flex;"><span>%setup -T -D -a 3 -n lua-nginx-module-0.9.0
+</span></span></code></pre></div><p>For future reference the <code>-D</code> means dont delete the prior directories before
+uncompressing. The <code>-a</code> flag indicates the source number that should be
+processed. Finally the <code>-T</code> flag prevents the original tar ball from being
+extracted again. The <code>-n</code> flag fixes the name of the folder that the package
+gets uncompressed into.</p>
+<p>At the beginning of the <code>%build</code> section we need to add a few additional
+exports.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>export LUA_LIB=/usr/lib64
+</span></span><span style="display:flex;"><span>export LUA_INC=/usr/share/lua/5.1
+</span></span></code></pre></div><p>Finally we need to add the compile flags to include the modules. Near the end
+of the ./configure flags (I Choose after the &ndash;with-pcre flag) add the
+following lines:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>  --add-module=./ngx_devel_kit-0.2.19 \
+</span></span><span style="display:flex;"><span>  --add-module=./lua-nginx-module-0.9.0 \
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install lua lua-socket lua-devel -y
+</span></span></code></pre></div><h2 id="signing-packages">Signing Packages</h2>
+<p>Source:</p>
+<ul>
+<li><a href="http://www.question-defense.com/2010/03/04/generate-a-gpg-key-to-sign-rpm-packages-created-using-rpmbuild-on-centos-linux">http://www.question-defense.com/2010/03/04/generate-a-gpg-key-to-sign-rpm-packages-created-using-rpmbuild-on-centos-linux</a></li>
+</ul>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

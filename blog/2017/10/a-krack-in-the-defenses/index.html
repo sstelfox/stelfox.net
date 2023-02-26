@@ -1,6 +1,208 @@
-<!doctype html>
-<meta charset="utf-8">
-<link rel="canonical" href="https://stelfox.net/blog/2017/a-krack-in-the-defenses/">
-<meta http-equiv="refresh" content="0; url=https://stelfox.net/blog/2017/a-krack-in-the-defenses/">
-<title>Redirect</title>
-<p><a href="https://stelfox.net/blog/2017/a-krack-in-the-defenses/">Click here</a> to be redirected.</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="An advisory from US CERT has been circulating for the last week about a protocol level flaw in WPA &amp;amp; WPA2. The advisory itself was:
+US-CERT has become aware of several key management vulnerabilities in the 4-way handshake of the Wi-Fi Protected Access II (WPA2) security protocol. The impact of exploiting these vulnerabilities includes decryption, packet replay, TCP connection hijacking, HTTP content injection, and others. Note that as protocol-level issues, most or all correct implementations of the standard will be affected." />
+<meta name="keywords" content="blog, programming, linux, systems, personal, security" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/blog/2017/10/a-krack-in-the-defenses/" />
+
+
+    <title>
+        
+            A KRACK In the Defenses :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="A KRACK In the Defenses">
+<meta itemprop="description" content="An advisory from US CERT has been circulating for the last week about a protocol level flaw in WPA &amp; WPA2. The advisory itself was:
+US-CERT has become aware of several key management vulnerabilities in the 4-way handshake of the Wi-Fi Protected Access II (WPA2) security protocol. The impact of exploiting these vulnerabilities includes decryption, packet replay, TCP connection hijacking, HTTP content injection, and others. Note that as protocol-level issues, most or all correct implementations of the standard will be affected."><meta itemprop="datePublished" content="2017-10-16T08:23:43-04:00" />
+<meta itemprop="dateModified" content="2017-10-16T08:23:43-04:00" />
+<meta itemprop="wordCount" content="256">
+<meta itemprop="keywords" content="security," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="A KRACK In the Defenses"/>
+<meta name="twitter:description" content="An advisory from US CERT has been circulating for the last week about a protocol level flaw in WPA &amp; WPA2. The advisory itself was:
+US-CERT has become aware of several key management vulnerabilities in the 4-way handshake of the Wi-Fi Protected Access II (WPA2) security protocol. The impact of exploiting these vulnerabilities includes decryption, packet replay, TCP connection hijacking, HTTP content injection, and others. Note that as protocol-level issues, most or all correct implementations of the standard will be affected."/>
+
+
+
+    <meta property="og:title" content="A KRACK In the Defenses" />
+<meta property="og:description" content="An advisory from US CERT has been circulating for the last week about a protocol level flaw in WPA &amp; WPA2. The advisory itself was:
+US-CERT has become aware of several key management vulnerabilities in the 4-way handshake of the Wi-Fi Protected Access II (WPA2) security protocol. The impact of exploiting these vulnerabilities includes decryption, packet replay, TCP connection hijacking, HTTP content injection, and others. Note that as protocol-level issues, most or all correct implementations of the standard will be affected." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/blog/2017/10/a-krack-in-the-defenses/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2017-10-16T08:23:43-04:00" />
+<meta property="article:modified_time" content="2017-10-16T08:23:43-04:00" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2017-10-16 08:23:43 -0400 EDT" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/blog/2017/10/a-krack-in-the-defenses/">A KRACK In the Defenses</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p>An advisory from US CERT has been circulating for the last week about a
+protocol level flaw in WPA &amp; WPA2. The advisory itself was:</p>
+<blockquote>
+<p>US-CERT has become aware of several key management vulnerabilities in the
+4-way handshake of the Wi-Fi Protected Access II (WPA2) security protocol.
+The impact of exploiting these vulnerabilities includes decryption, packet
+replay, TCP connection hijacking, HTTP content injection, and others. Note
+that as protocol-level issues, most or all correct implementations of the
+standard will be affected. The CERT/CC and the reporting researcher KU
+Leuven, will be publicly disclosing these vulnerabilities on 16 October 2017.</p>
+</blockquote>
+<p>Details of the vulnerability have been <a href="https://www.krackattacks.com/">released today</a>, and paint a pretty
+horrifying picture. Ultimately this is an issue with a mechanism for dealing
+with lost packets during the initial 4-way key negotiation and the client&rsquo;s
+behavior when they receive one of these packets after they&rsquo;re session is
+already established.</p>
+<p>Almost all WiFi devices out there are vulnerable to this attack and patches
+should be applied as soon as they are available. Some very quick and important
+notes I&rsquo;d like to make available for people:</p>
+<ul>
+<li>This is an active against clients</li>
+<li>WPA &amp; WPA2 both personal and enterprise are effected</li>
+<li>The WiFi association key (your network&rsquo;s passphrase) is safe, this attack
+breaks a per-client session key.</li>
+<li>Assume all your traffic is being sent in plain text and can be manipulated by
+an attacker until you have patched.</li>
+</ul>
+<p>If you have a VPN available to your client devices, having it active will
+protect your traffic from this attack.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://stelfox.net/tags/security/">security</a></span>
+        
+    </p>
+
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

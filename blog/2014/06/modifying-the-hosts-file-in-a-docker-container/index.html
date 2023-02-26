@@ -1,6 +1,234 @@
-<!doctype html>
-<meta charset="utf-8">
-<link rel="canonical" href="https://stelfox.net/blog/2014/modifying-the-hosts-file-in-a-docker-container/">
-<meta http-equiv="refresh" content="0; url=https://stelfox.net/blog/2014/modifying-the-hosts-file-in-a-docker-container/">
-<title>Redirect</title>
-<p><a href="https://stelfox.net/blog/2014/modifying-the-hosts-file-in-a-docker-container/">Click here</a> to be redirected.</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Before I describe the issue that I encountered, let me be very clear. This hack is potentially dangerous and should absolutely only be done in development environments. This won&amp;rsquo;t affect your host system, only the docker container so the most damage you&amp;rsquo;ll do is prevent hostname and possibly user/group lookups within the container itself.
+Alright with that out of the way, I was actively working on a codebase that uses subdomains as part of the identifier." />
+<meta name="keywords" content="blog, programming, linux, systems, personal, docker, linux" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/blog/2014/06/modifying-the-hosts-file-in-a-docker-container/" />
+
+
+    <title>
+        
+            Modifying the Hosts File in a Docker Container :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Modifying the Hosts File in a Docker Container">
+<meta itemprop="description" content="Before I describe the issue that I encountered, let me be very clear. This hack is potentially dangerous and should absolutely only be done in development environments. This won&rsquo;t affect your host system, only the docker container so the most damage you&rsquo;ll do is prevent hostname and possibly user/group lookups within the container itself.
+Alright with that out of the way, I was actively working on a codebase that uses subdomains as part of the identifier."><meta itemprop="datePublished" content="2014-06-03T11:43:59-04:00" />
+<meta itemprop="dateModified" content="2014-06-03T11:43:59-04:00" />
+<meta itemprop="wordCount" content="584">
+<meta itemprop="keywords" content="docker,linux," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Modifying the Hosts File in a Docker Container"/>
+<meta name="twitter:description" content="Before I describe the issue that I encountered, let me be very clear. This hack is potentially dangerous and should absolutely only be done in development environments. This won&rsquo;t affect your host system, only the docker container so the most damage you&rsquo;ll do is prevent hostname and possibly user/group lookups within the container itself.
+Alright with that out of the way, I was actively working on a codebase that uses subdomains as part of the identifier."/>
+
+
+
+    <meta property="og:title" content="Modifying the Hosts File in a Docker Container" />
+<meta property="og:description" content="Before I describe the issue that I encountered, let me be very clear. This hack is potentially dangerous and should absolutely only be done in development environments. This won&rsquo;t affect your host system, only the docker container so the most damage you&rsquo;ll do is prevent hostname and possibly user/group lookups within the container itself.
+Alright with that out of the way, I was actively working on a codebase that uses subdomains as part of the identifier." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/blog/2014/06/modifying-the-hosts-file-in-a-docker-container/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2014-06-03T11:43:59-04:00" />
+<meta property="article:modified_time" content="2014-06-03T11:43:59-04:00" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2014-06-03 11:43:59 -0400 EDT" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/blog/2014/06/modifying-the-hosts-file-in-a-docker-container/">Modifying the Hosts File in a Docker Container</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p>Before I describe the issue that I encountered, let me be very clear. This hack
+is <em>potentially dangerous and should absolutely only be done in development
+environments</em>. This won&rsquo;t affect your host system, only the docker container so
+the most damage you&rsquo;ll do is prevent hostname and possibly user/group lookups
+within the container itself.</p>
+<p>Alright with that out of the way, I was actively working on a codebase that
+uses subdomains as part of the identifier. Rather than setup a full DNS server,
+point my local system at it and load in the domains I wanted to simply modify
+the /etc/hosts file inside the environment.</p>
+<p>Docker mounts an /etc/hosts file inside it&rsquo;s containers, read-only, and the
+container&rsquo;s &lsquo;root&rsquo; user has had it&rsquo;s mount permissions revoked so it&rsquo;s not able
+to be modified. Other users have encountered this issue, and a <a href="https://stackoverflow.com/questions/19414543/how-can-i-make-etc-hosts-writable-by-root-in-a-docker-container">novel
+workaround was put forward</a>. The solution however makes use of Perl, and is
+specific too Ubuntu base systems.</p>
+<p>I&rsquo;ll explain the solution after showing a more general way to accomplish the
+same thing. Different linux systems will store their libraries in different
+directory structures. CentOS is different from Fedora, which is different from
+Ubuntu and Debian. All of them name their libraries, in this case we&rsquo;re looking
+for &rsquo;libnss_files.so.2&rsquo;.</p>
+<p>You can find where your copy of this library lives with the following command.
+This should be run inside the docker container that you want to modify the
+/etc/hosts file in.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>find / -name libnss_files.so.2 -print 2&gt; /dev/null
+</span></span></code></pre></div><p>Pay attention to the path, multiple files may show up and you want the one that
+matches your system&rsquo;s running kernel (generally x86_64 systems will have their
+libraries in a lib64 directory).</p>
+<p>Once you&rsquo;ve found this add the following lines to your Dockerfile. Make sure
+you modify the path in the copy in the first line to the path of your copy of
+the library. Once done you&rsquo;ll use the /var/hosts file to modify your hosts file
+instead.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-docker" data-lang="docker"><span style="display:flex;"><span><span style="color:#ff7b72">RUN</span> mkdir -p /override_lib <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> cp /etc/hosts /var/ <span style="color:#ff7b72;font-weight:bold">&amp;&amp;</span> cp /usr/lib64/libnss_files.so.2 /override_lib<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">RUN</span> sed -ie <span style="color:#a5d6ff">&#39;s:/etc/hosts:/var/hosts:g&#39;</span> /override_lib/libnss_files.so.2<span style="color:#f85149">
+</span></span></span><span style="display:flex;"><span><span style="color:#f85149"></span><span style="color:#ff7b72">ENV</span> LD_LIBRARY_PATH /override_lib<span style="color:#f85149">
+</span></span></span></code></pre></div><p>So what is this actually doing? On linux systems, name configurations such as
+DNS, username, and group lookups are generally handled by the <code>nss</code> or name
+service switch configuration tools including the hosts file. The library that
+we&rsquo;re copying and modifying is a very specific to reading from files on the
+system and includes the default paths to these files.</p>
+<p>Generally you have to be very careful when you&rsquo;re manipulating strings within
+compiled libraries. The length of the string is encoded along with it, so at a
+minimum it&rsquo;s important that the string is <em>the same length or less</em>. You can
+get away with less but it requires additionally writing an end of string
+character as well.</p>
+<p>Too make this hack simple, we&rsquo;re simply replacing the &rsquo;etc&rsquo; with &lsquo;var&rsquo;, both
+systems directories that regular users generally should have read access but
+not write access too.</p>
+<p>Finally we need to tell all programs that need to perform lookups using
+hostnames in the hosts file to make use of our modified library instead of the
+system one. Linux will look for shared libraries at runtime in any paths set in
+in the LD_LIBRARY_PATH (colon delimited just like PATH) and this doesn&rsquo;t
+require any privileges too set.</p>
+<p>And the result? An editable hosts file, with no extra services. I can&rsquo;t stress
+enough though, there could be bad ramifications from modifying libraries this
+way. This is definitely not a &lsquo;production ready&rsquo; hack.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://stelfox.net/tags/docker/">docker</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
+        
+    </p>
+
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

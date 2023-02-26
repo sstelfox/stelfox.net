@@ -1,61 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Recommended / Best Practices /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot Creating an LVM partition Create a Physical Partition Open the drive in fdisk, create a new primary partition Mark the new partition as type &amp;lsquo;8e&amp;rsquo; or Linux LVM Write the partition table Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created) Volume Group Creation This point needs a bit of thinking before doing." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/partitioning/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Partitioning :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Partitioning">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Recommended / Best Practices /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot Creating an LVM partition Create a Physical Partition Open the drive in fdisk, create a new primary partition Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM Write the partition table Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created) Volume Group Creation This point needs a bit of thinking before doing.">
+
+<meta itemprop="wordCount" content="324">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Partitioning"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Recommended / Best Practices /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot Creating an LVM partition Create a Physical Partition Open the drive in fdisk, create a new primary partition Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM Write the partition table Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created) Volume Group Creation This point needs a bit of thinking before doing."/>
+
+
+
+    <meta property="og:title" content="Partitioning" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Recommended / Best Practices /boot 200Mb swap 1.5x times the amount of RAM / /home /tmp /var /var/log /var/log/audit Encrypt all partitions except /boot Creating an LVM partition Create a Physical Partition Open the drive in fdisk, create a new primary partition Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM Write the partition table Create Physical LVM Volume pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created) Volume Group Creation This point needs a bit of thinking before doing." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/partitioning/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Partitioning</h1><div class="post-content"><h2 id="recommended-best-practices">Recommended / Best Practices</h2>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/partitioning/">Partitioning</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="recommended--best-practices">Recommended / Best Practices</h2>
 <ul>
 <li>/boot 200Mb</li>
 <li>swap 1.5x times the amount of RAM</li>
@@ -71,13 +154,12 @@
 <h3 id="create-a-physical-partition">Create a Physical Partition</h3>
 <ul>
 <li>Open the drive in fdisk, create a new primary partition</li>
-<li>Mark the new partition as type '8e' or Linux LVM</li>
+<li>Mark the new partition as type &lsquo;8e&rsquo; or Linux LVM</li>
 <li>Write the partition table</li>
 </ul>
 <h3 id="create-physical-lvm-volume">Create Physical LVM Volume</h3>
-<pre><code>pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)
-</code></pre>
-<h3 id="volume-group-creation">Volume Group Creation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)
+</span></span></code></pre></div><h3 id="volume-group-creation">Volume Group Creation</h3>
 <p>This point needs a bit of thinking before doing. There is a limit on the number
 of physical extents that can be accessed. This in turn limits the size of the
 volume group. This limit is 65,536 extents.</p>
@@ -85,15 +167,13 @@ volume group. This limit is 65,536 extents.</p>
 volume group. 8MB/extent gets you 512GB. The maximum size I see needing is
 32MB/extent for a size of 2TB. The following example uses an extent size of
 16MB and assumes the partition is <code>/dev/sdc1</code>.</p>
-<pre><code>vgcreate -s 16M vg_test /dev/sdc1
-</code></pre>
-<h3 id="logical-volume-creation">Logical Volume Creation</h3>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>vgcreate -s 16M vg_test /dev/sdc1
+</span></span></code></pre></div><h3 id="logical-volume-creation">Logical Volume Creation</h3>
 <p>The following creates a 1GB logical volume group, there does not seem to be a
 way to create a logical volume with all the remaining space in the volume
 group.</p>
-<pre><code>lvcreate -L 1G -n lv_test vg_test
-</code></pre>
-<h2 id="securing-partitions">Securing Partitions</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>lvcreate -L 1G -n lv_test vg_test
+</span></span></code></pre></div><h2 id="securing-partitions">Securing Partitions</h2>
 <ul>
 <li>Add <code>nodev</code> to all non-root local ext{2,3,4} partitions in <code>/etc/fstab</code></li>
 <li>Add <code>nosuid</code> and <code>noexec</code> to <code>/tmp</code> partition</li>
@@ -105,23 +185,41 @@ partitions</li>
 hibernated)</li>
 </ul>
 <h2 id="encrypting-additional-partitions">Encrypting Additional Partitions</h2>
-<pre><code>cryptsetup luksFormat -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test
-cryptsetup luksOpen -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test \
-  cryptTest
-mkfs.ext4 /dev/mapper/cryptTest
-cryptsetup luksClose /dev/mapper/cryptTest
-</code></pre>
-</div>
-</article>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cryptsetup luksFormat -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test
+</span></span><span style="display:flex;"><span>cryptsetup luksOpen -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test \
+</span></span><span style="display:flex;"><span>  cryptTest
+</span></span><span style="display:flex;"><span>mkfs.ext4 /dev/mapper/cryptTest
+</span></span><span style="display:flex;"><span>cryptsetup luksClose /dev/mapper/cryptTest
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

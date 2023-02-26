@@ -1,6 +1,1017 @@
-<!doctype html>
-<meta charset="utf-8">
-<link rel="canonical" href="https://stelfox.net/notes/apache/">
-<meta http-equiv="refresh" content="0; url=https://stelfox.net/notes/apache/">
-<title>Redirect</title>
-<p><a href="https://stelfox.net/notes/apache/">Click here</a> to be redirected.</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Apache or httpd is a strong and well tested webserver.
+Installation To install the Apache web server for this hardening guide on fedora run the following command as root:
+[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security \ mod_selinux -y A few modules I need to look into (TODO):" />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/httpd/" />
+
+
+    <title>
+        
+            HTTPd :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="HTTPd">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Apache or httpd is a strong and well tested webserver.
+Installation To install the Apache web server for this hardening guide on fedora run the following command as root:
+[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security \ mod_selinux -y A few modules I need to look into (TODO):">
+
+<meta itemprop="wordCount" content="3497">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HTTPd"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Apache or httpd is a strong and well tested webserver.
+Installation To install the Apache web server for this hardening guide on fedora run the following command as root:
+[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security \ mod_selinux -y A few modules I need to look into (TODO):"/>
+
+
+
+    <meta property="og:title" content="HTTPd" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Apache or httpd is a strong and well tested webserver.
+Installation To install the Apache web server for this hardening guide on fedora run the following command as root:
+[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security \ mod_selinux -y A few modules I need to look into (TODO):" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/httpd/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/httpd/">HTTPd</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<p>Apache or httpd is a strong and well tested webserver.</p>
+<h2 id="installation">Installation</h2>
+<p>To install the Apache web server for this hardening guide on fedora run the
+following command as root:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost] ~# yum install httpd mod_evasive mod_gnutls mod_security \
+</span></span><span style="display:flex;"><span>  mod_selinux -y
+</span></span></code></pre></div><p>A few modules I need to look into (TODO):</p>
+<ul>
+<li><code>mod_log_post</code></li>
+</ul>
+<h2 id="security-notes">Security Notes</h2>
+<p>Apache starts up using root privileges initially. Dropping the privileges is
+highly recommended as soon as possible (which it does if alternative
+credentials are supplied in it&rsquo;s configuration).</p>
+<p>Additionally, the Apache web server can be used to remotely execute dynamic
+code if a vulnerability is found with the privileges the process is running as.
+This could be very dangerous&hellip; The languages allowed to be executed should be
+chosen wisely and hardened appropriately.</p>
+<p>User credentials can be passed through the web server so it is strongly
+recommended that SSL certificates be used. If SSL certificates are available
+there are very few reasons not to use SSL everywhere.</p>
+<p>The only exception I have been able to come up with is for an application that
+is extremely latency sensitive, contains no sensitive data, and have the data
+verified in a different way (through data signatures like HMAC or GPG). The
+latter is not necessarily required.</p>
+<h3 id="firewall-adjustments">Firewall Adjustments</h3>
+<p>By default Apache only runs on port 80 using TCP, if SSL is enabled it will
+also use port 443 over SSL. Additional ports can be configured by the admin.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>-A SERVICES -m tcp -p tcp --dport 80 -j ACCEPT
+</span></span><span style="display:flex;"><span>-A SERVICES -m tcp -p tcp --dport 443 -j ACCEPT
+</span></span></code></pre></div><p>This service is very sensitive to the flood attack rules. It is recommended
+these be adjusted to allow twice the maximum number of connections expected
+during a time frame or alternatively to allow traffic on these two ports too
+bypass the anti-flood rules.</p>
+<h2 id="performance-notes">Performance Notes</h2>
+<p>If you use <code>mod_security</code> you should note that in my testing each Apache thread
+increases it&rsquo;s resident memory size by ~27Mb using the stock configuration. For
+servers that need to handle a high volume of requests this may not be
+acceptable. If using <code>mod_security</code> you DEFINITELY need to adjust the
+<code>ServerLimit</code> and <code>MaxClients</code> (they are aliases of each other so should always
+be the same).</p>
+<h3 id="tuning-serverlimitmaxclients-with-the-worker-mpm">Tuning ServerLimit/MaxClients with the worker MPM</h3>
+<ul>
+<li>Start up the apache server</li>
+<li>Use the <code>ps</code> utility to determine the size of client threads (will be in Kb)</li>
+<li>Determine that max amount of RAM the apache process should be allowed to use</li>
+<li>Subtract the <code>parent</code> processes RAM from that</li>
+<li>Divide the remaining RAM by the size of the client threads, this is your
+ServerLimit / MaxClient value</li>
+</ul>
+<p>An example of this is provided below:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# /etc/init.d/httpd start
+</span></span><span style="display:flex;"><span>Starting httpd:                                            [  OK  ]
+</span></span><span style="display:flex;"><span>[root@localhost ~]# ps aux -u apache | grep httpd
+</span></span><span style="display:flex;"><span>root      2238  0.7  0.4 177132  9312 ?        Ss   10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2240  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2241  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2242  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2243  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2244  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2245  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2246  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>apache    2247  0.0  0.2 177132  5124 ?        S    10:45   0:00 /usr/sbin/httpd
+</span></span><span style="display:flex;"><span>root      2249  0.0  0.0 103376   832 pts/0    S+   10:45   0:00 grep --color=auto httpd
+</span></span><span style="display:flex;"><span>[root@localhost ~]# PARENTMEMORY=$((9312/1024))
+</span></span><span style="display:flex;"><span>[root@localhost ~]# CHILDMEMORY=$((5124/1024))
+</span></span><span style="display:flex;"><span>[root@localhost ~]# APACHERAM=1024
+</span></span><span style="display:flex;"><span>[root@localhost ~]# echo $(($(($APACHERAM-$PARENTMEMORY))/$CHILDMEMORY))
+</span></span><span style="display:flex;"><span>203
+</span></span></code></pre></div><p>The parent process will have a running user of &lsquo;root&rsquo;, all of the children
+processes will have &lsquo;apache&rsquo;. In the above example the parent process is using
+9312Kb of memory or ~9Mb, the child process is using 5124Kb or ~5Mb, and we&rsquo;re
+allowing Apache to use up to 1Gb of memory (1024Mb). With that knowledge we can
+see that we should set ServerLimit and MaxClients to &ldquo;203&rdquo; each.</p>
+<h2 id="configuration">Configuration</h2>
+<h3 id="etchttpdconfhttpdconf">/etc/httpd/conf/httpd.conf</h3>
+<p>This is the main configuration file. This differs quite a bit from the
+configuration files that come with most distributions, most notably most of the
+modules are disabled and sections of the config are only applicable if certain
+modules are loaded. This preserves compatibility with any functionality I may
+need in the future while removing the bloat of the modules.</p>
+<p>To use this configuration you&rsquo;ll need to create the directory
+<code>/var/www/html/default</code>. Any additional domains should be created in
+<code>/var/www/html</code> with their domain name as the folder name.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">###</span> <span style="color:#f0883e;font-weight:bold">Section</span> <span style="color:#a5d6ff">1</span>: <span style="color:#f0883e;font-weight:bold">Global</span> <span style="color:#f0883e;font-weight:bold">Environment</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">ServerTokens</span> <span style="color:#f0883e;font-weight:bold">Prod</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">ServerRoot</span> <span style="color:#a5d6ff">&#34;/etc/httpd&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">PidFile</span> <span style="color:#79c0ff">run</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">httpd</span>.<span style="color:#79c0ff">pid</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">Timeout</span> <span style="color:#a5d6ff">60</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">KeepAlive</span> <span style="color:#f0883e;font-weight:bold">On</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">MaxKeepAliveRequests</span> <span style="color:#a5d6ff">100</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">KeepAliveTimeout</span> <span style="color:#a5d6ff">5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">prefork</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">StartServers</span>    <span style="color:#a5d6ff">8</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">MinSpareServers</span>   <span style="color:#a5d6ff">5</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">MaxSpareServers</span>   <span style="color:#a5d6ff">20</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">ServerLimit</span>   <span style="color:#a5d6ff">256</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">MaxClients</span>    <span style="color:#a5d6ff">256</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">MaxRequestsPerChild</span> <span style="color:#a5d6ff">5000</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">This</span> <span style="color:#79c0ff">isn</span><span style="color:#a5d6ff">&#39;t used by default in Fedora but can be by adjusting
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># /etc/sysconfig/httpd
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">&lt;IfModule worker.c&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  StartServers    4
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  MaxClients    300
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  MinSpareThreads   25
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  MaxSpareThreads   75
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  ThreadsPerChild   25
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  MaxRequestsPerChild 0
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">&lt;/IfModule&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">Listen 80
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Use to restrict by IP Address/Range
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule authz_host_module modules/mod_authz_host.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Logging Modules
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule log_forensic_module modules/mod_log_forensic.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule log_config_module modules/mod_log_config.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule logio_module modules/mod_logio.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Allow sending and detecting of mime types
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule mime_module modules/mod_mime.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Header magic and compression
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule headers_module modules/mod_headers.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule expires_module modules/mod_expires.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule deflate_module modules/mod_deflate.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Provides DirectoryIndex directive
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">LoadModule dir_module modules/mod_dir.so
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">
+</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff"># Disable if you don&#39;</span><span style="color:#79c0ff">t</span> <span style="color:#79c0ff">need</span> <span style="color:#79c0ff">directory</span> <span style="color:#79c0ff">indexes</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">autoindex_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_autoindex</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Used</span> <span style="color:#79c0ff">by</span> <span style="color:#79c0ff">most</span> <span style="color:#f0883e;font-weight:bold">MVC</span> <span style="color:#79c0ff">stuff</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">rewrite_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_rewrite</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule env_module modules/mod_env.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule setenvif_module modules/mod_setenvif.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule auth_basic_module modules/mod_auth_basic.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authn_file_module modules/mod_authn_file.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authn_alias_module modules/mod_authn_alias.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authn_dbm_module modules/mod_authn_dbm.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authn_default_module modules/mod_authn_default.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authz_user_module modules/mod_authz_user.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authz_owner_module modules/mod_authz_owner.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authz_groupfile_module modules/mod_authz_groupfile.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authz_dbm_module modules/mod_authz_dbm.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authz_default_module modules/mod_authz_default.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule mime_magic_module modules/mod_mime_magic.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule vhost_alias_module modules/mod_vhost_alias.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule alias_module modules/mod_alias.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule cache_module modules/mod_cache.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule disk_cache_module modules/mod_disk_cache.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule ext_filter_module modules/mod_ext_filter.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule usertrack_module modules/mod_usertrack.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule dav_module modules/mod_dav.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule dav_fs_module modules/mod_dav_fs.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule actions_module modules/mod_actions.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule speling_module modules/mod_speling.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule suexec_module modules/mod_suexec.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule cgi_module modules/mod_cgi.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule ldap_module modules/mod_ldap.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule auth_digest_module modules/mod_auth_digest.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authn_anon_module modules/mod_authn_anon.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule authnz_ldap_module modules/mod_authnz_ldap.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule userdir_module modules/mod_userdir.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule status_module modules/mod_status.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule include_module modules/mod_include.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule info_module modules/mod_info.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule negotiation_module modules/mod_negotiation.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule proxy_module modules/mod_proxy.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule proxy_balancer_module modules/mod_proxy_balancer.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule proxy_http_module modules/mod_proxy_http.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule proxy_connect_module modules/mod_proxy_connect.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule proxy_ftp_module modules/mod_proxy_ftp.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule cern_meta_module modules/mod_cern_meta.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule asis_module modules/mod_asis.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#LoadModule unique_id_module modules/mod_unique_id.so</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">Include</span> <span style="color:#79c0ff">conf</span>.<span style="color:#79c0ff">d</span><span style="color:#8b949e;font-style:italic">/*.conf
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">&lt;IfModule status_module&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  ExtendedStatus Off
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">&lt;/IfModule&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">User apache
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">Group apache
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">### Section 2: &#39;Main&#39; server configuration
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">ServerAdmin sstelfox@bedroomprogrammers.net
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">UseCanonicalName Off
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">DocumentRoot &#34;/var/www/html/default&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">&lt;Directory /&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  Options FollowSymLinks
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  AllowOverride None
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  Order Deny,Allow
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  Deny from all
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">&lt;/Directory&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">&lt;Directory &#34;/var/www/html&#34;&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  # Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  Options Indexes SymLinksifOwnerMatch
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  AllowOverride FileInfo AuthConfig Limit
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  Order allow,deny
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  Allow from all
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">&lt;/Directory&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">&lt;IfModule mod_userdir.c&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  # This module won&#39;t get loaded unless we want to use it so we should
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  # make sure that it&#39;s properly configured
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  UserDir disabled root
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  UserDir public_html
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">  &lt;Directory /home/*/</span><span style="color:#79c0ff">public_html</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">AllowOverride</span> <span style="color:#f0883e;font-weight:bold">AuthConfig</span> <span style="color:#f0883e;font-weight:bold">Limit</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Options</span> <span style="color:#f0883e;font-weight:bold">Indexes</span> <span style="color:#f0883e;font-weight:bold">SymLinksIfOwnerMatch</span>
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f0883e;font-weight:bold">Limit</span> <span style="color:#f0883e;font-weight:bold">GET</span> <span style="color:#f0883e;font-weight:bold">POST</span>&gt;
+</span></span><span style="display:flex;"><span>      <span style="color:#f0883e;font-weight:bold">Order</span> <span style="color:#79c0ff">allow</span>,<span style="color:#79c0ff">deny</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f0883e;font-weight:bold">Allow</span> <span style="color:#79c0ff">from</span> <span style="color:#79c0ff">all</span>
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Limit</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f0883e;font-weight:bold">LimitExcept</span> <span style="color:#f0883e;font-weight:bold">GET</span> <span style="color:#f0883e;font-weight:bold">POST</span>&gt;
+</span></span><span style="display:flex;"><span>      <span style="color:#f0883e;font-weight:bold">Order</span> <span style="color:#79c0ff">deny</span>,<span style="color:#79c0ff">allow</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f0883e;font-weight:bold">Deny</span> <span style="color:#79c0ff">from</span> <span style="color:#79c0ff">all</span>
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">LimitExcept</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Directory</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">DirectoryIndex</span> <span style="color:#79c0ff">index</span>.<span style="color:#79c0ff">html</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AccessFileName</span> .<span style="color:#79c0ff">htaccess</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">Files</span> <span style="color:#ff7b72;font-weight:bold">~</span> <span style="color:#a5d6ff">&#34;^\.ht&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">Order</span> <span style="color:#79c0ff">allow</span>,<span style="color:#79c0ff">deny</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">Deny</span> <span style="color:#79c0ff">from</span> <span style="color:#79c0ff">all</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Files</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">TypesConfig</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">etc</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mime</span>.<span style="color:#79c0ff">types</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">DefaultType</span> <span style="color:#79c0ff">text</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">plain</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_mime_magic</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">MIMEMagicFile</span> <span style="color:#79c0ff">conf</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">magic</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">HostnameLookups</span> <span style="color:#f0883e;font-weight:bold">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Disable</span> <span style="color:#79c0ff">these</span> <span style="color:#ff7b72">if</span> <span style="color:#79c0ff">we</span> <span style="color:#79c0ff">need</span> <span style="color:#79c0ff">to</span> <span style="color:#79c0ff">serve</span> <span style="color:#79c0ff">files</span> <span style="color:#79c0ff">from</span> <span style="color:#f0883e;font-weight:bold">NFS</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">EnableMMAP</span> <span style="color:#f0883e;font-weight:bold">On</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">EnableSendfile</span> <span style="color:#f0883e;font-weight:bold">On</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">ErrorLog</span> <span style="color:#79c0ff">logs</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">error_log</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LogLevel</span> <span style="color:#79c0ff">warn</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LogFormat</span> <span style="color:#a5d6ff">&#34;%v %h %t </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%r</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> %&gt;s %b </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%{Referer}i</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%{User-Agent}i</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%{forensic-id}n</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> %I %O %T&#34;</span> <span style="color:#79c0ff">combined</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LogFormat</span> <span style="color:#a5d6ff">&#34;%v %h %t </span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff">%r</span><span style="color:#79c0ff">\&#34;</span><span style="color:#a5d6ff"> %&gt;s %b&#34;</span> <span style="color:#79c0ff">common</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LogFormat</span> <span style="color:#a5d6ff">&#34;%v %{Referer}i -&gt; %U&#34;</span> <span style="color:#79c0ff">referer</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LogFormat</span> <span style="color:#a5d6ff">&#34;%v %{User-agent}i&#34;</span> <span style="color:#79c0ff">agent</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">CustomLog</span> <span style="color:#79c0ff">logs</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">access_log</span> <span style="color:#79c0ff">combined</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">ForensicLog</span> <span style="color:#79c0ff">logs</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">forensic_log</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">ServerSignature</span> <span style="color:#f0883e;font-weight:bold">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_dav_fs</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DAVLockDB</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">var</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">lib</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">dav</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">lockdb</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">autoindex_module</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">Alias</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span> <span style="color:#a5d6ff">&#34;/var/www/icons/&#34;</span>
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">Directory</span> <span style="color:#a5d6ff">&#34;/var/www/icons&#34;</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Options</span> <span style="color:#f0883e;font-weight:bold">SymLinksIfOwnerMatch</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">AllowOverride</span> <span style="color:#f0883e;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Order</span> <span style="color:#79c0ff">allow</span>,<span style="color:#79c0ff">deny</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Allow</span> <span style="color:#79c0ff">from</span> <span style="color:#79c0ff">all</span>
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Directory</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">IndexOptions</span> <span style="color:#f0883e;font-weight:bold">FancyIndexing</span> <span style="color:#f0883e;font-weight:bold">VersionSort</span> <span style="color:#f0883e;font-weight:bold">NameWidth</span><span style="color:#ff7b72;font-weight:bold">=*</span> <span style="color:#f0883e;font-weight:bold">HTMLTable</span> <span style="color:#f0883e;font-weight:bold">Charset</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#f0883e;font-weight:bold">UTF</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIconByEncoding</span> (<span style="color:#f0883e;font-weight:bold">CMP</span>,<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">compressed</span>.<span style="color:#79c0ff">gif</span>) <span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">compress</span> <span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">gzip</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIconByType</span> (<span style="color:#f0883e;font-weight:bold">TXT</span>,<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">text</span>.<span style="color:#79c0ff">gif</span>) <span style="color:#79c0ff">text</span><span style="color:#ff7b72;font-weight:bold">/*</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIconByType</span> (<span style="color:#f0883e;font-weight:bold">IMG</span>,<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">image2</span>.<span style="color:#79c0ff">gif</span>) <span style="color:#79c0ff">image</span><span style="color:#ff7b72;font-weight:bold">/*</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIconByType</span> (<span style="color:#f0883e;font-weight:bold">SND</span>,<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">sound2</span>.<span style="color:#79c0ff">gif</span>) <span style="color:#79c0ff">audio</span><span style="color:#ff7b72;font-weight:bold">/*</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIconByType</span> (<span style="color:#f0883e;font-weight:bold">VID</span>,<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">movie</span>.<span style="color:#79c0ff">gif</span>) <span style="color:#79c0ff">video</span><span style="color:#ff7b72;font-weight:bold">/*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">binary</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">bin</span> .<span style="color:#79c0ff">exe</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">binhex</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">hqx</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">tar</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">tar</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">world2</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">wrl</span> .<span style="color:#79c0ff">wrl</span>.<span style="color:#79c0ff">gz</span> .<span style="color:#79c0ff">vrml</span> .<span style="color:#79c0ff">vrm</span> .<span style="color:#79c0ff">iv</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">compressed</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#f0883e;font-weight:bold">Z</span> .<span style="color:#79c0ff">z</span> .<span style="color:#79c0ff">tgz</span> .<span style="color:#79c0ff">gz</span> .<span style="color:#79c0ff">zip</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">a</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">ps</span> .<span style="color:#79c0ff">ai</span> .<span style="color:#79c0ff">eps</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">layout</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">html</span> .<span style="color:#79c0ff">shtml</span> .<span style="color:#79c0ff">htm</span> .<span style="color:#79c0ff">pdf</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">text</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">txt</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">c</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">c</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">p</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">pl</span> .<span style="color:#79c0ff">py</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">f</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#ff7b72">for</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">dvi</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">dvi</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">uuencoded</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">uu</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">script</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">conf</span> .<span style="color:#79c0ff">sh</span> .<span style="color:#79c0ff">shar</span> .<span style="color:#79c0ff">csh</span> .<span style="color:#79c0ff">ksh</span> .<span style="color:#79c0ff">tcl</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">tex</span>.<span style="color:#79c0ff">gif</span> .<span style="color:#79c0ff">tex</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">bomb</span>.<span style="color:#79c0ff">gif</span> <span style="color:#79c0ff">core</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">back</span>.<span style="color:#79c0ff">gif</span> <span style="color:#ff7b72;font-weight:bold">..</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">hand</span>.<span style="color:#79c0ff">right</span>.<span style="color:#79c0ff">gif</span> <span style="color:#f0883e;font-weight:bold">README</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">folder</span>.<span style="color:#79c0ff">gif</span> <span style="color:#ff7b72;font-weight:bold">^^</span><span style="color:#f0883e;font-weight:bold">DIRECTORY</span><span style="color:#ff7b72;font-weight:bold">^^</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">blank</span>.<span style="color:#79c0ff">gif</span> <span style="color:#ff7b72;font-weight:bold">^^</span><span style="color:#f0883e;font-weight:bold">BLANKICON</span><span style="color:#ff7b72;font-weight:bold">^^</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DefaultIcon</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">icons</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">unknown</span>.<span style="color:#79c0ff">gif</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddDescription</span> <span style="color:#a5d6ff">&#34;GZIP compressed document&#34;</span> .<span style="color:#79c0ff">gz</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddDescription</span> <span style="color:#a5d6ff">&#34;tar archive&#34;</span> .<span style="color:#79c0ff">tar</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddDescription</span> <span style="color:#a5d6ff">&#34;GZIP compressed tar archive&#34;</span> .<span style="color:#79c0ff">tgz</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddDescription</span> <span style="color:#a5d6ff">&#34;BZIP2 compressed tar archive&#34;</span> .<span style="color:#79c0ff">tar</span>.<span style="color:#79c0ff">bz2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">ReadmeName</span> <span style="color:#f0883e;font-weight:bold">README</span>.<span style="color:#79c0ff">html</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">HeaderName</span> <span style="color:#f0883e;font-weight:bold">HEADER</span>.<span style="color:#79c0ff">html</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">IndexIgnore</span> .<span style="color:#ff7b72">??</span><span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#ff7b72;font-weight:bold">*~</span> <span style="color:#ff7b72;font-weight:bold">*#</span> <span style="color:#f0883e;font-weight:bold">HEADER</span><span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#f0883e;font-weight:bold">README</span><span style="color:#ff7b72;font-weight:bold">*</span> <span style="color:#f0883e;font-weight:bold">RCS</span> <span style="color:#f0883e;font-weight:bold">CVS</span> <span style="color:#ff7b72;font-weight:bold">*</span>,<span style="color:#79c0ff">v</span> <span style="color:#ff7b72;font-weight:bold">*</span>,<span style="color:#79c0ff">t</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddDefaultCharset</span> <span style="color:#f0883e;font-weight:bold">UTF</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Compressed</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">tar</span>      .<span style="color:#79c0ff">tgz</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">compress</span> .<span style="color:#f0883e;font-weight:bold">Z</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">gzip</span>     .<span style="color:#79c0ff">gz</span> .<span style="color:#79c0ff">tgz</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Certificates</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">x509</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">ca</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">cert</span> .<span style="color:#79c0ff">crt</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">pkcs7</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">crl</span>    .<span style="color:#79c0ff">crl</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Audio</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">audio</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">ogg</span>     <span style="color:#79c0ff">oga</span> <span style="color:#79c0ff">ogg</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Video</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">video</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">ogg</span>     <span style="color:#79c0ff">ogv</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">video</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mp4</span>     <span style="color:#79c0ff">mp4</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">video</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">webm</span>    <span style="color:#79c0ff">webm</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">SVG</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">image</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">svg</span><span style="color:#ff7b72;font-weight:bold">+</span><span style="color:#79c0ff">xmlsvg</span> <span style="color:#79c0ff">svgz</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddEncoding</span> <span style="color:#79c0ff">gzip</span>         <span style="color:#79c0ff">svgz</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Web</span> <span style="color:#f0883e;font-weight:bold">Fonts</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">vnd</span>.<span style="color:#79c0ff">ms</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">fontobject</span> <span style="color:#79c0ff">eot</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">font</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">truetype</span>                 <span style="color:#79c0ff">ttf</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">font</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">opentype</span>                 <span style="color:#79c0ff">otf</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">font</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">woff</span>       <span style="color:#79c0ff">woff</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Assorted</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">image</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">icon</span>                   <span style="color:#79c0ff">ico</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">image</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">webp</span>                     <span style="color:#79c0ff">webp</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">text</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">cache</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">manifest</span>            <span style="color:#79c0ff">appcache</span> <span style="color:#79c0ff">manifest</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">text</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">component</span>               <span style="color:#79c0ff">htc</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">chrome</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">extension</span> <span style="color:#79c0ff">crx</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">xpinstall</span>        <span style="color:#79c0ff">xpi</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">octet</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">stream</span>       <span style="color:#79c0ff">safariextz</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Add</span> <span style="color:#79c0ff">a</span> <span style="color:#79c0ff">bunch</span> <span style="color:#79c0ff">of</span> <span style="color:#79c0ff">compression</span> <span style="color:#79c0ff">directives</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_deflate</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#a5d6ff">0</span> <span style="color:#ff7b72;font-weight:bold">-</span> <span style="color:#a5d6ff">9</span> <span style="color:#f0883e;font-weight:bold">CPU</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Bandwidth</span> <span style="color:#79c0ff">tradeoff</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DeflateCompressionLevel</span> <span style="color:#a5d6ff">7</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_setenvif</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_headers</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>      <span style="color:#f0883e;font-weight:bold">SetEnvIfNoCase</span> <span style="color:#ff7b72;font-weight:bold">^</span>(<span style="color:#f0883e;font-weight:bold">Accept</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">EncodXng</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#f0883e;font-weight:bold">X</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">cept</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">Encoding</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#f0883e;font-weight:bold">X</span>{<span style="color:#a5d6ff">15</span>}<span style="color:#ff7b72;font-weight:bold">|~</span>{<span style="color:#a5d6ff">15</span>}<span style="color:#ff7b72;font-weight:bold">|-</span>{<span style="color:#a5d6ff">15</span>})<span style="color:#f85149">$</span> <span style="color:#ff7b72;font-weight:bold">^</span>((<span style="color:#79c0ff">gzip</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">deflate</span>)<span style="color:#f85149">\</span><span style="color:#79c0ff">s</span>,<span style="color:#ff7b72">?</span><span style="color:#f85149">\</span><span style="color:#d2a8ff;font-weight:bold">s</span>(<span style="color:#79c0ff">gzip</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">deflate</span>)<span style="color:#ff7b72">?</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#f0883e;font-weight:bold">X</span>{<span style="color:#a5d6ff">4</span>,<span style="color:#a5d6ff">13</span>}<span style="color:#ff7b72;font-weight:bold">|~</span>{<span style="color:#a5d6ff">4</span>,<span style="color:#a5d6ff">13</span>}<span style="color:#ff7b72;font-weight:bold">|-</span>{<span style="color:#a5d6ff">4</span>,<span style="color:#a5d6ff">13</span>})<span style="color:#f85149">$</span> <span style="color:#f0883e;font-weight:bold">HAVE_Accept</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">Encoding</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f0883e;font-weight:bold">RequestHeader</span> <span style="color:#79c0ff">append</span> <span style="color:#f0883e;font-weight:bold">Accept</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">Encoding</span> <span style="color:#a5d6ff">&#34;gzip,deflate&#34;</span> <span style="color:#79c0ff">env</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#f0883e;font-weight:bold">HAVE_Accept</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">Encoding</span>
+</span></span><span style="display:flex;"><span>    &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#79c0ff">html</span>, <span style="color:#79c0ff">txt</span>, <span style="color:#79c0ff">css</span>, <span style="color:#79c0ff">js</span>, <span style="color:#79c0ff">json</span>, <span style="color:#79c0ff">xml</span>, <span style="color:#79c0ff;font-weight:bold">etc</span>:
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">filter_module</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">FilterDeclare</span> <span style="color:#f0883e;font-weight:bold">COMPRESS</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">FilterProvider</span>  <span style="color:#f0883e;font-weight:bold">COMPRESS</span> <span style="color:#f0883e;font-weight:bold">DEFLATE</span> <span style="color:#79c0ff">resp</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#f0883e;font-weight:bold">Content</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">Type</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">text</span><span style="color:#ff7b72;font-weight:bold">/</span>(<span style="color:#79c0ff">html</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">css</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">javascript</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">plain</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#d2a8ff;font-weight:bold">x</span>(<span style="color:#79c0ff">ml</span><span style="color:#ff7b72;font-weight:bold">|-</span><span style="color:#79c0ff">component</span>))<span style="color:#ff7b72;font-weight:bold">/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">FilterProvider</span>  <span style="color:#f0883e;font-weight:bold">COMPRESS</span> <span style="color:#f0883e;font-weight:bold">DEFLATE</span> <span style="color:#79c0ff">resp</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#f0883e;font-weight:bold">Content</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">Type</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span>(<span style="color:#79c0ff">javascript</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">json</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">xml</span><span style="color:#ff7b72;font-weight:bold">|</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">javascript</span>)<span style="color:#ff7b72;font-weight:bold">/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">FilterChain</span> <span style="color:#f0883e;font-weight:bold">COMPRESS</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">FilterProtocol</span>  <span style="color:#f0883e;font-weight:bold">COMPRESS</span> <span style="color:#79c0ff">change</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">yes</span>;<span style="color:#79c0ff">byteranges</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#79c0ff">no</span>
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#79c0ff">webfonts</span> <span style="color:#79c0ff">and</span> <span style="color:#79c0ff;font-weight:bold">svg</span>:
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">FilesMatch</span> <span style="color:#a5d6ff">&#34;\.(ttf|otf|eot|svg)</span><span style="color:#ff7b72;font-weight:bold">$</span><span style="color:#a5d6ff">&#34;</span> &gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">SetOutputFilter</span> <span style="color:#f0883e;font-weight:bold">DEFLATE</span>
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">FilesMatch</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_include</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">text</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">html</span> .<span style="color:#79c0ff">shtml</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">AddOutputFilter</span> <span style="color:#f0883e;font-weight:bold">INCLUDES</span> .<span style="color:#79c0ff">shtml</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#ErrorDocument 500 &#34;The server just diagnosed itself with schizophrenia.&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#ErrorDocument 404 /missing.html</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#ErrorDocument 404 &#34;/cgi-bin/missing_handler.pl&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#ErrorDocument 402 http://www.example.com/subscription_info.html</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_setenvif</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;Mozilla/2&#34;</span> <span style="color:#79c0ff">nokeepalive</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;MSIE 4\.0b2;&#34;</span> <span style="color:#79c0ff">nokeepalive</span> <span style="color:#79c0ff">downgrade</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1.0</span> <span style="color:#79c0ff">force</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">response</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1.0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;RealPlayer 4\.0&#34;</span> <span style="color:#79c0ff">force</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">response</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1.0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;Java/1\.0&#34;</span> <span style="color:#79c0ff">force</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">response</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1.0</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;JDK/1\.0&#34;</span> <span style="color:#79c0ff">force</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">response</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#a5d6ff">1.0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;Microsoft Data Access Internet Publishing Provider&#34;</span> <span style="color:#79c0ff">redirect</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">carefully</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;MS FrontPage&#34;</span> <span style="color:#79c0ff">redirect</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">carefully</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;^WebDrive&#34;</span> <span style="color:#79c0ff">redirect</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">carefully</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;^WebDAVFS/1.[0123]&#34;</span> <span style="color:#79c0ff">redirect</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">carefully</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;^gnome-vfs/1.0&#34;</span> <span style="color:#79c0ff">redirect</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">carefully</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;^XML Spy&#34;</span> <span style="color:#79c0ff">redirect</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">carefully</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">BrowserMatch</span> <span style="color:#a5d6ff">&#34;^Dreamweaver-WebDAV-SCM1&#34;</span> <span style="color:#79c0ff">redirect</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">carefully</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">status_module</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">Location</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">server</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">status</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">SetHandler</span> <span style="color:#79c0ff">server</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">status</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Order</span> <span style="color:#79c0ff">deny</span>,<span style="color:#79c0ff">allow</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Deny</span> <span style="color:#79c0ff">from</span> <span style="color:#79c0ff">all</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Allow</span> <span style="color:#79c0ff">from</span> <span style="color:#a5d6ff">10.13.37</span>.
+</span></span><span style="display:flex;"><span>        &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Location</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">info_module</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">Location</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">server</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">info</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">SetHandler</span> <span style="color:#79c0ff">server</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">info</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Order</span> <span style="color:#79c0ff">deny</span>,<span style="color:#79c0ff">allow</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Deny</span> <span style="color:#79c0ff">from</span> <span style="color:#79c0ff">all</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Allow</span> <span style="color:#79c0ff">from</span> <span style="color:#a5d6ff">10.13.37</span>.
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Location</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_proxy</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">ProxyRequests</span> <span style="color:#f0883e;font-weight:bold">On</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">ProxyVia</span> <span style="color:#f0883e;font-weight:bold">Block</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">Proxy</span> <span style="color:#ff7b72;font-weight:bold">*</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Order</span> <span style="color:#79c0ff">deny</span>,<span style="color:#79c0ff">allow</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Deny</span> <span style="color:#79c0ff">from</span> <span style="color:#79c0ff">all</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">Allow</span> <span style="color:#79c0ff">from</span> <span style="color:#a5d6ff">10.13.37</span>.
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">Proxy</span>&gt;
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_disk_cache</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">CacheEnable</span> <span style="color:#79c0ff">disk</span> <span style="color:#ff7b72;font-weight:bold">/</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f0883e;font-weight:bold">CacheRoot</span> <span style="color:#a5d6ff">&#34;/var/cache/mod_proxy&#34;</span>
+</span></span><span style="display:flex;"><span>  &lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span></code></pre></div><h3 id="etchttpdconfdphpconf">/etc/httpd/conf.d/php.conf</h3>
+<p>This file is being included here as it will be needed most places that I run
+Apache. Please refer to the PHP section below for more information.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">prefork</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">php5_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">libphp5</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">worker</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">php5_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">libphp5</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">zts</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddHandler</span> <span style="color:#79c0ff">php5</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">script</span> .<span style="color:#79c0ff">php</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">text</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">html</span> .<span style="color:#79c0ff">php</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">AddType</span> <span style="color:#79c0ff">application</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">x</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">httpd</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">php</span><span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">source</span> .<span style="color:#79c0ff">phps</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">DirectoryIndex</span> <span style="color:#79c0ff">index</span>.<span style="color:#79c0ff">php</span>
+</span></span></code></pre></div><h3 id="etchttpdconfdmod_evasiveconf">/etc/httpd/conf.d/mod_evasive.conf</h3>
+<p><code>mod_evasive</code> is a crafty little module designed to limit the impact of DoS and
+DDoS attacks. This won&rsquo;t stop them but it will help defend against them. It
+will also send notices to an admin if desired (it&rsquo;s an optional feature which
+can be disabled).</p>
+<p>The one potential problem I can see cropping up is with AJAX requests. Those
+can come in fast and hard, and they are intentional and necessary, if that
+becomes a problem (you&rsquo;ll get a 403 response when you trip and it will last for
+DOSBlockingPeriod seconds) then play with the DOSPageCount setting and the
+DOSSiteCount setting. Alternatively you can just program your AJAX clients to
+understand what happened and to react accordingly.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">evasive20_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_evasive20</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f0883e;font-weight:bold">IfModule</span> <span style="color:#79c0ff">mod_evasive20</span>.<span style="color:#79c0ff">c</span>&gt;
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DOSHashTableSize</span>  <span style="color:#a5d6ff">3097</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DOSPageCount</span>    <span style="color:#a5d6ff">2</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DOSSiteCount</span>    <span style="color:#a5d6ff">50</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DOSPageInterval</span>   <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DOSSiteInterval</span>   <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DOSBlockingPeriod</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-weight:bold;font-style:italic">#DOSEmailNotify   alerts@example.org</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f0883e;font-weight:bold">DOSLogDir</span>   <span style="color:#a5d6ff">&#34;/var/lock/mod_evasive&#34;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-weight:bold;font-style:italic">#DOSWhitelist   192.168.0.*</span>
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#f0883e;font-weight:bold">IfModule</span>&gt;
+</span></span></code></pre></div><h3 id="etchttpdconfdmod_gnutlsconf">/etc/httpd/conf.d/mod_gnutls.conf</h3>
+<p>The GnuTLS module provides SSL encryption for web requests. It&rsquo;s quite a bit
+more flexible than <code>mod_ssl</code> though it hasn&rsquo;t been audited as thoroughly. It is
+also considered an &rsquo;experimental&rsquo; module for apache even though it&rsquo;s been in
+the wild for two years.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">gnutls_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_gnutls</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">GnuTLSCache</span> <span style="color:#79c0ff">dbm</span> <span style="color:#a5d6ff">&#34;/var/cache/mod_gnutls&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">GnuTLSCacheTimeout</span> <span style="color:#a5d6ff">300</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">Listen</span> <span style="color:#a5d6ff">443</span>
+</span></span></code></pre></div><h3 id="etchttpdconfdmod_securityconf">/etc/httpd/conf.d/mod_security.conf</h3>
+<p>WARNING: While this is a good module to have loaded it sextuples the amount of
+memory used by child processes. You will need to tune the server&rsquo;s performance
+settings accordingly. This may have a huge impact on high-traffic sites.</p>
+<p>With that out of the way this is a very good application firewall to have as
+part of the defense-in-depth doctrine, though it&rsquo;s configuration can be a
+burden. The <code>mod_security</code> module gives your Apache Web server increased
+ability to inspect and process input from Web clients before it&rsquo;s acted on by
+the scripts or processes waiting for the input.</p>
+<p>The <code>mod_security</code> module even lets you inspect Web server output before it&rsquo;s
+transmitted back to clients. I love this feature: it allows you to watch out
+for server responses that might indicate that other filters have failed and an
+attack has succeeded!</p>
+<p>With that said this isn&rsquo;t the file you should actually be looking at. Yes this
+is where everything will get loaded but the stock Fedora <code>mod_security</code> for the
+most parts loads up <code>mod_security</code> rules in other places including the Core
+ModSecurity Rule Set which will get updated with the rest of your server.</p>
+<p>The variables that you&rsquo;ll want to play around with are located in
+<code>/etc/httpd/modsecurity.d/modsecurity_crs_10_config.conf</code> and if you want to
+write your own rules in <code>/etc/httpd/modsecurity.d/modsecurity_localrules.conf</code>.</p>
+<p>Some changes I&rsquo;d recommend in
+<code>/etc/httpd/modsecurity.d/modsecurity_crs_10_config.conf</code>:</p>
+<ul>
+<li>Uncomment the rule that limits argument name length to 100 characters</li>
+<li>Uncomment the rule that limits the value of an argument&rsquo;s length to 400
+characters</li>
+<li>Uncomment the rule that limits the total argument length to 64000 characters</li>
+<li>Review the restricted extension types</li>
+</ul>
+<p>After keeping an eye on the logs for a few weeks and ensuring that there aren&rsquo;t
+any false positives, you should change the line <code>SecDefaultAction &quot;phase:2,pass</code> to <code>SecDefaultAction &quot;phase:2,deny,log,status:403&quot;</code>.</p>
+<h3 id="etchttpdconfdmod_selinuxconf">/etc/httpd/conf.d/mod_selinux.conf</h3>
+<p>The <code>mod_selinux</code> module allows us to extend SELinux contexts into individual
+web applications or virtual hosts without impacting the memory usage of
+individual child processes (The parent process seems to use about 100Kb of
+memory more but this is negligible).</p>
+<p>Since I don&rsquo;t use the built in apache authentication I&rsquo;m limited to
+restrictions based on virtual hosts, which is still a rather large gain of
+security.</p>
+<p>You can additionally adjust contexts based on the IP the user is connecting
+from.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">selinux_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_selinux</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">selinuxServerDomain</span> <span style="color:#ff7b72;font-weight:bold">*</span>:<span style="color:#79c0ff">s0</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">selinuxDomainEnv</span>  <span style="color:#f0883e;font-weight:bold">SELINUX_DOMAIN</span>
+</span></span></code></pre></div><p>If you enable the environment module (<code>env_module</code>) in apache the domain may be
+available for use within the application (it would be <code>SELINUX_DOMAIN</code>). This
+hasn&rsquo;t been tested. With PHP you may need to add the <code>E</code> to the string
+<code>variable_order</code>, and adjust <code>auto_globals_jit</code> in the <code>php.ini</code> file.</p>
+<p>Changing contexts with the stock SELinux rules is denied! You will need to
+create a SELinux policy to allow it.</p>
+<h4 id="virtual-host-contexts">Virtual Host Contexts</h4>
+<p>To make use of this feature you need to define contexts within each of the
+virtual host configuration directives after enabling <code>mod_selinux</code> by adding
+the following line:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>selinuxDomainVal    *:s0:c1
+</span></span></code></pre></div><p>The trailing domain should be different for virtual host (the next one would be
+c2).</p>
+<h4 id="ip-based-contexts">IP Based Contexts</h4>
+<p>You can set contexts based on the IP address being connected from by adding the
+following line within a Directory definition:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>SetEnvIf Remote_Addr &#34;10.13.37.(25[0-5]|2[0-4][0-9]|[1-9]?[0-9])$&#34; SELINUX_DOMAIN=*:s0:c1
+</span></span></code></pre></div><h3 id="etchttpdconfdvirtual_hostsconf">/etc/httpd/conf.d/virtual_hosts.conf</h3>
+<p>This does not exist upon the default installation and will need to be created.
+No certificates are automatically generated when you install the GnuTLS module,
+if you need them you will need to generate them yourself.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>NameVirtualHost *:80
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;IfModule gnutls_module&gt;
+</span></span><span style="display:flex;"><span>  NameVirtualHost *:443
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  # Redirect all unencrypted connections which haven&#39;t been defined to the secure ones
+</span></span><span style="display:flex;"><span>  &lt;VirtualHost _default_:80&gt;
+</span></span><span style="display:flex;"><span>    RewriteEngine On
+</span></span><span style="display:flex;"><span>    RewriteCond %{HTTPS} off
+</span></span><span style="display:flex;"><span>    RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+</span></span><span style="display:flex;"><span>  &lt;/VirtualHost&gt;
+</span></span><span style="display:flex;"><span>&lt;/IfModule&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;VirtualHost _default_:443&gt;
+</span></span><span style="display:flex;"><span>  GnuTLSEnable On
+</span></span><span style="display:flex;"><span>  GnuTLSPriorities SECURE
+</span></span><span style="display:flex;"><span>  GnuTLSCertificateFile /etc/pki/tls/certs/localhost.crt
+</span></span><span style="display:flex;"><span>  GnuTLSKeyFile /etc/pki/tls/private/localhost.key
+</span></span><span style="display:flex;"><span>&lt;/VirtualHost&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>&lt;VirtualHost *:443&gt;
+</span></span><span style="display:flex;"><span>  ServerName something.example.org
+</span></span><span style="display:flex;"><span>  GnuTLSEnable On
+</span></span><span style="display:flex;"><span>  GnuTLSPriorities SECURE
+</span></span><span style="display:flex;"><span>  GnuTLSCertificateFile /etc/pki/tls/certs/something.example.org.crt
+</span></span><span style="display:flex;"><span>  GnuTLSKeyFile /etc/pki/tls/private/something.example.org.key
+</span></span><span style="display:flex;"><span>  DocumentRoot &#34;/var/www/html/something.example.org&#34;
+</span></span><span style="display:flex;"><span>&lt;/VirtualHost&gt;
+</span></span></code></pre></div><h3 id="etchttpdconfdwelcomeconf">/etc/httpd/conf.d/welcome.conf</h3>
+<p>Delete this file, it has no use and should be removed.</p>
+<h2 id="virtual-hosts">Virtual Hosts</h2>
+<p>Please note that name based virtual hosts are not supported on SSL connections
+when using <code>mod_ssl</code>. They work quite well with <code>mod_gnutls</code> and browsers that
+support SNI (Server Name Indication, as described in section 3.1 of
+<a href="http://www.ietf.org/rfc/rfc3546.txt">RFC3546</a>). Compatibility with older browsers may be impacted.</p>
+<h3 id="name-based">Name Based</h3>
+<p>Name based virtual hosts allow you to re-use an IP to host multiple websites.
+This is only officially supported for unencrypted connections, however by using
+the GnuTLS module you can easily set this up with SSL based hosts as well. An
+example of how to use this can be seen in the <code>virtual_hosts.conf</code> file on this
+page.</p>
+<h3 id="ip-based">IP Based</h3>
+<p>I don&rsquo;t really use these so I&rsquo;m not including documentation, this section is
+mostly so other people referencing this documentation can be aware that they
+can have different virtual hosts bound to specific IP addresses rather than
+hostnames.</p>
+<h2 id="php">PHP</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost] ~# yum install php php-suhosin
+</span></span></code></pre></div><p>Additional PHP packages that may be needed and that I&rsquo;ve found very useful:</p>
+<ul>
+<li>php-mcrypt</li>
+<li>php-bcmath</li>
+<li>php-ldap</li>
+<li>php-snmp</li>
+<li>php-pdo</li>
+<li>php-mysql</li>
+<li>php-pecl-xdebug</li>
+</ul>
+<h3 id="etcphpini">/etc/php.ini</h3>
+<p>The following is for production use, <code>display_errors</code>,
+<code>display_startup_errors</code>, <code>mysql.trace_mode</code> may be useful in development.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#ff7b72">[PHP]</span>
+</span></span><span style="display:flex;"><span>short_open_tag <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>asp_tags <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>precision <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">14</span>
+</span></span><span style="display:flex;"><span>y2k_compliance <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>output_buffering <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4096</span>
+</span></span><span style="display:flex;"><span>zlib.output_compression <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>implicit_flush <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>serialize_precision <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">100</span>
+</span></span><span style="display:flex;"><span>allow_call_time_pass_reference <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>safe_mode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>open_basedir /var/www/html:/tmp
+</span></span><span style="display:flex;"><span>disable_functions <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">system, show_source, symlink, exec, dl, shell_exec, passthru, escapeshellarg, escapeshellcmd, pcntl_exec, phpinfo</span>
+</span></span><span style="display:flex;"><span>expose_php <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>max_execution_time <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">30</span>
+</span></span><span style="display:flex;"><span>max_input_time <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">60</span>
+</span></span><span style="display:flex;"><span>memory_limit <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">128M</span>
+</span></span><span style="display:flex;"><span>error_reporting <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">E_ALL | E_STRICT</span>
+</span></span><span style="display:flex;"><span>display_errors <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>display_startup_errors <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>log_errors <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>log_errors_max_len <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1024</span>
+</span></span><span style="display:flex;"><span>ignore_repeated_errors <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>ignore_repeated_source <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>report_memleaks <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>track_errors <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>variables_order <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;GPCS&#34;</span>
+</span></span><span style="display:flex;"><span>request_order <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;GP&#34;</span>
+</span></span><span style="display:flex;"><span>register_globals <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>register_long_arrays <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>register_argc_argv <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>auto_globals_jit <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>post_max_size <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">8M</span>
+</span></span><span style="display:flex;"><span>magic_quotes_gpc <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>magic_quotes_runtime <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>magic_quotes_sybase <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>default_mimetype <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;text/html&#34;</span>
+</span></span><span style="display:flex;"><span>enable_dl <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>file_uploads <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>upload_max_filesize <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">2M</span>
+</span></span><span style="display:flex;"><span>allow_url_fopen <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>allow_url_include <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>default_socket_timeout <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">15</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Date]</span>
+</span></span><span style="display:flex;"><span>date.timezone <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">America/Montreal</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Syslog]</span>
+</span></span><span style="display:flex;"><span>define_syslog_variables  <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[mail function]</span>
+</span></span><span style="display:flex;"><span>sendmail_path <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/usr/sbin/sendmail -t -i</span>
+</span></span><span style="display:flex;"><span>mail.add_x_header <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[SQL]</span>
+</span></span><span style="display:flex;"><span>sql.safe_mode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[ODBC]</span>
+</span></span><span style="display:flex;"><span>odbc.allow_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>odbc.check_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>odbc.max_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>odbc.max_links <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>odbc.defaultlrl <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4096</span>
+</span></span><span style="display:flex;"><span>odbc.defaultbinmode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[MySQL]</span>
+</span></span><span style="display:flex;"><span>mysql.allow_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>mysql.max_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>mysql.max_links <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>mysql.default_port <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3306</span>
+</span></span><span style="display:flex;"><span>mysql.connect_timeout <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">15</span>
+</span></span><span style="display:flex;"><span>mysql.trace_mode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[MySQLi]</span>
+</span></span><span style="display:flex;"><span>mysqli.max_links <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>mysqli.default_port <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3306</span>
+</span></span><span style="display:flex;"><span>mysqli.reconnect <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[PostgresSQL]</span>
+</span></span><span style="display:flex;"><span>pgsql.allow_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>pgsql.auto_reset_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>pgsql.max_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>pgsql.max_links <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>pgsql.ignore_notice <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>pgsql.log_notice <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Sybase-CT]</span>
+</span></span><span style="display:flex;"><span>sybct.allow_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>sybct.max_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>sybct.max_links <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>sybct.min_server_severity <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>sybct.min_client_severity <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[bcmath]</span>
+</span></span><span style="display:flex;"><span>bcmath.scale <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Session]</span>
+</span></span><span style="display:flex;"><span>session.save_handler <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">files</span>
+</span></span><span style="display:flex;"><span>session.save_path <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;/var/lib/php/session&#34;</span>
+</span></span><span style="display:flex;"><span>session.use_cookies <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>session.use_only_cookies <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>session.name <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">UNCID</span>
+</span></span><span style="display:flex;"><span>session.auto_start <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>session.cookie_lifetime <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">21600</span>
+</span></span><span style="display:flex;"><span>session.cookie_path <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/</span>
+</span></span><span style="display:flex;"><span>session.serialize_handler <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">php</span>
+</span></span><span style="display:flex;"><span>session.gc_probability <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>session.gc_divisor <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1000</span>
+</span></span><span style="display:flex;"><span>session.gc_maxlifetime <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1440</span>
+</span></span><span style="display:flex;"><span>session.bug_compat_42 <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>session.bug_compat_warn <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>session.entropy_length <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">16</span>
+</span></span><span style="display:flex;"><span>session.entropy_file <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">/dev/urandom</span>
+</span></span><span style="display:flex;"><span>session.cache_limiter <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">nocache</span>
+</span></span><span style="display:flex;"><span>session.cache_expire <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">180</span>
+</span></span><span style="display:flex;"><span>session.use_trans_sid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>session.hash_function <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>session.hash_bits_per_character <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[MSSQL]</span>
+</span></span><span style="display:flex;"><span>mssql.allow_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>mssql.max_persistent <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>mssql.max_links <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>mssql.min_error_severity <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>mssql.min_message_severity <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">10</span>
+</span></span><span style="display:flex;"><span>mssql.compatability_mode <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>mssql.connect_timeout <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">5</span>
+</span></span><span style="display:flex;"><span>mssql.timeout <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">15</span>
+</span></span><span style="display:flex;"><span>mssql.textlimit <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4096</span>
+</span></span><span style="display:flex;"><span>mssql.textsize <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">4096</span>
+</span></span><span style="display:flex;"><span>mssql.batchsize <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>mssql.datetimeconvert <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This may need to be adjusted</span>
+</span></span><span style="display:flex;"><span>mssql.secure_connection <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>mssql.max_procs <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">-1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Assertion]</span>
+</span></span><span style="display:flex;"><span>assert.active <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>assert.warning <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">On</span>
+</span></span><span style="display:flex;"><span>assert.bail <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>assert.callback <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[Tidy]</span>
+</span></span><span style="display:flex;"><span>tidy.clean_output <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[soap]</span>
+</span></span><span style="display:flex;"><span>soap.wsdl_cache_enabled<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">1</span>
+</span></span><span style="display:flex;"><span>soap.wsdl_cache_dir<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;/tmp&#34;</span>
+</span></span><span style="display:flex;"><span>soap.wsdl_cache_ttl<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">86400</span>
+</span></span></code></pre></div><h3 id="etcphpdsuhosinini">/etc/php.d/suhosin.ini</h3>
+<p>This is the config file for the suhosin extension. If an application isn&rsquo;t
+working check the logs generated by suhosin to see if it is the issue.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>extension = suhosin.so
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[suhosin]
+</span></span><span style="display:flex;"><span>suhosin.log.syslog.facility = LOG_LOCAL2
+</span></span><span style="display:flex;"><span>suhosin.executor.max_depth = 15
+</span></span><span style="display:flex;"><span>suhosin.executor.include.max_traversal = 2
+</span></span><span style="display:flex;"><span>suhosin.executor.disable_eval = On
+</span></span><span style="display:flex;"><span>suhosin.executor.disable_emodifier = On
+</span></span><span style="display:flex;"><span>suhosin.mail.protect = 2
+</span></span><span style="display:flex;"><span>suhosin.session.cryptraddr = 2
+</span></span><span style="display:flex;"><span>suhosin.cookie.cryptraddr = 2
+</span></span><span style="display:flex;"><span>; This is not an official response, just funny :D
+</span></span><span style="display:flex;"><span>suhosin.filter.action = 418
+</span></span><span style="display:flex;"><span>suhosin.upload.disallow_elf = On
+</span></span></code></pre></div><h2 id="basic-authentication">Basic Authentication</h2>
+<p>Sometimes it&rsquo;s just needed to prevent access to something for a little while,
+HTTP basic authentication can help! If you&rsquo;re using the hardened configuration
+above you&rsquo;ll need to enable a few modules to actually use it and make sure that
+a .htaccess file has permission to override <code>AuthConfig</code>. Add the following
+lines if they aren&rsquo;t already there in the section where you load modules:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">auth_basic_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_auth_basic</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">authn_file_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_authn_file</span>.<span style="color:#79c0ff">so</span>
+</span></span><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">authz_user_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_authz_user</span>.<span style="color:#79c0ff">so</span>
+</span></span></code></pre></div><p>Additionally if you want to use group based authentication add:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#f0883e;font-weight:bold">LoadModule</span> <span style="color:#79c0ff">authz_groupfile_module</span> <span style="color:#79c0ff">modules</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">mod_authz_groupfile</span>.<span style="color:#79c0ff">so</span>
+</span></span></code></pre></div><p>First create a user to use for the login:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>htpasswd -c .htpasswd demouser
+</span></span></code></pre></div><p>Additional users can be added by omitting the <code>-c</code>.</p>
+<p>Create or append the following to a <code>.htaccess</code> file in the directory you want
+to protect:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AuthType Basic
+</span></span><span style="display:flex;"><span>AuthName &#34;Some Name Describing the site&#34;
+</span></span><span style="display:flex;"><span>AuthUserFile /path/to/.htpasswd
+</span></span><span style="display:flex;"><span>Require valid-user
+</span></span></code></pre></div><p>That&rsquo;s it you&rsquo;ll have HTTP Basic authentication. If you want to use a group
+file you&rsquo;ll need to change the setting in the <code>.htaccess</code> file to match:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>AuthType Basic
+</span></span><span style="display:flex;"><span>AuthName &#34;Some Name Describing the site&#34;
+</span></span><span style="display:flex;"><span>AuthUserFile /path/to/.htpasswd
+</span></span><span style="display:flex;"><span>AuthGroupFile /path/to/.htgroups
+</span></span><span style="display:flex;"><span>Require group demogroup
+</span></span></code></pre></div><p>And create a group file <code>.htgroups</code> with the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>demogroup: demouser someotheruser
+</span></span></code></pre></div><h2 id="kerberos-authentication">Kerberos Authentication</h2>
+<p><a href="http://www.grolmsnet.de/kerbtut/">http://www.grolmsnet.de/kerbtut/</a></p>
+<h2 id="passenger">Passenger</h2>
+<p>Before going through this you need to ensure that the tools for compiling ruby
+are installed on the system these are listed in <a href="https://stelfox.net/notes/ruby/">Ruby</a>.</p>
+<p>Ensure that ruby is installed on the system as well as the development headers
+needed to compile the passenger module, this is all done as root:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install ruby curl-devel ruby-devel httpd-devel apr-devel apr-util-devel -y
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gem install passenger
+</span></span><span style="display:flex;"><span>passenger-install-apache2-module
+</span></span></code></pre></div><p>I wasn&rsquo;t able to get this working at the current time as there is a bug in
+passenger 3.0.12 that prevents it from being compiled with GCC 4.6.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>

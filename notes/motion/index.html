@@ -1,95 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install motion -y Make sure all your camera&amp;rsquo;s are on and connected.
+Configuration SELinux Woes SELinux by default block motion&amp;rsquo;s access to it&amp;rsquo;s logfile /var/log/motion.log, to allow this write the following out to a file motion_log_file_access." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/motion/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Motion :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Motion">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install motion -y Make sure all your camera&rsquo;s are on and connected.
+Configuration SELinux Woes SELinux by default block motion&rsquo;s access to it&rsquo;s logfile /var/log/motion.log, to allow this write the following out to a file motion_log_file_access.">
+
+<meta itemprop="wordCount" content="209">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Motion"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install motion -y Make sure all your camera&rsquo;s are on and connected.
+Configuration SELinux Woes SELinux by default block motion&rsquo;s access to it&rsquo;s logfile /var/log/motion.log, to allow this write the following out to a file motion_log_file_access."/>
+
+
+
+    <meta property="og:title" content="Motion" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Installation yum install motion -y Make sure all your camera&rsquo;s are on and connected.
+Configuration SELinux Woes SELinux by default block motion&rsquo;s access to it&rsquo;s logfile /var/log/motion.log, to allow this write the following out to a file motion_log_file_access." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/motion/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Motion</h1><div class="post-content"><h2 id="installation">Installation</h2>
-<pre><code>yum install motion -y
-</code></pre>
-<p>Make sure all your camera's are on and connected.</p>
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/motion/">Motion</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<h2 id="installation">Installation</h2>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install motion -y
+</span></span></code></pre></div><p>Make sure all your camera&rsquo;s are on and connected.</p>
 <h2 id="configuration">Configuration</h2>
 <h3 id="selinux-woes">SELinux Woes</h3>
-<p>SELinux by default block motion's access to it's logfile <code>/var/log/motion.log</code>,
+<p>SELinux by default block motion&rsquo;s access to it&rsquo;s logfile <code>/var/log/motion.log</code>,
 to allow this write the following out to a file <code>motion_log_file_access.log</code>:</p>
-<pre><code>type=AVC msg=audit(1361649114.076:677): avc:  denied  { open } for  pid=25482 comm="motion" path="/var/log/motion.log" dev="dm-1" ino=6293030 scontext=system_u:system_r:zoneminder_t:s0 tcontext=unconfined_u:object_r:var_log_t:s0 tclass=filetype=SYSCALL msg=audit(1361649114.076:677): arch=c000003e syscall=2 success=no exit=-13 a0=1dc3160 a1=441 a2=1b6 a3=238 items=0 ppid=25481 pid=25482 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 ses=4294967295 tty=(none) comm="motion" exe="/usr/bin/motion" subj=system_u:system_r:zoneminder_t:s0 key=(null)
-type=SERVICE_START msg=audit(1361649114.103:678): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg=' comm="motion" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=failed'
-</code></pre>
-<p>Run the following commands to generate and install the new policy:</p>
-<pre><code>cat motion_log_file_access.log | audit2allow -M motion_log_file_access
-semodule -i motion_log_file_access.pp
-</code></pre>
-<p>It can also help to restore the SELinux contexts on the entire <code>/var/motion</code>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>type=AVC msg=audit(1361649114.076:677): avc:  denied  { open } for  pid=25482 comm=&#34;motion&#34; path=&#34;/var/log/motion.log&#34; dev=&#34;dm-1&#34; ino=6293030 scontext=system_u:system_r:zoneminder_t:s0 tcontext=unconfined_u:object_r:var_log_t:s0 tclass=filetype=SYSCALL msg=audit(1361649114.076:677): arch=c000003e syscall=2 success=no exit=-13 a0=1dc3160 a1=441 a2=1b6 a3=238 items=0 ppid=25481 pid=25482 auid=4294967295 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 ses=4294967295 tty=(none) comm=&#34;motion&#34; exe=&#34;/usr/bin/motion&#34; subj=system_u:system_r:zoneminder_t:s0 key=(null)
+</span></span><span style="display:flex;"><span>type=SERVICE_START msg=audit(1361649114.103:678): pid=1 uid=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:init_t:s0 msg=&#39; comm=&#34;motion&#34; exe=&#34;/usr/lib/systemd/systemd&#34; hostname=? addr=? terminal=? res=failed&#39;
+</span></span></code></pre></div><p>Run the following commands to generate and install the new policy:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#79c0ff">cat</span> <span style="color:#79c0ff">motion_log_file_access</span>.<span style="color:#79c0ff">log</span> <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#79c0ff">audit2allow</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#f0883e;font-weight:bold">M</span> <span style="color:#79c0ff">motion_log_file_access</span>
+</span></span><span style="display:flex;"><span><span style="color:#79c0ff">semodule</span> <span style="color:#ff7b72;font-weight:bold">-</span><span style="color:#79c0ff">i</span> <span style="color:#79c0ff">motion_log_file_access</span>.<span style="color:#79c0ff">pp</span>
+</span></span></code></pre></div><p>It can also help to restore the SELinux contexts on the entire <code>/var/motion</code>
 directory like so:</p>
-<pre><code>restorecon -R /var/motion
-</code></pre>
-<h3 id="disable-auto-focus-on-a-camera">Disable Auto-Focus on a Camera</h3>
-<p>I found the LifeCam was regularly refocusing itself much to my annoyance... It
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>restorecon -R /var/motion
+</span></span></code></pre></div><h3 id="disable-auto-focus-on-a-camera">Disable Auto-Focus on a Camera</h3>
+<p>I found the LifeCam was regularly refocusing itself much to my annoyance&hellip; It
 shows up as <code>/dev/video2</code> for me so this is how I turned it off:</p>
-<pre><code>uvcdynctrl -d /dev/video2 -s 'Focus, Auto' 0
-</code></pre>
-</div>
-</article>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>uvcdynctrl -d /dev/video2 -s &#39;Focus, Auto&#39; 0
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+        <hr />
+
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

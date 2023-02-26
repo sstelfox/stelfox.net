@@ -1,86 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y rm -f /etc/httpd/conf.d/welcome.conf There is also an undeclared depedency:
+yum install perl-Text-ParseWords -y htpasswd -c /etc/nagios/passwd nagiosadmin Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios." />
+<meta name="keywords" content="blog, programming, linux, systems, personal" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/notes/nagios/" />
 
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
+
+    <title>
+        
+            Nagios :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Nagios">
+<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y rm -f /etc/httpd/conf.d/welcome.conf There is also an undeclared depedency:
+yum install perl-Text-ParseWords -y htpasswd -c /etc/nagios/passwd nagiosadmin Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios.">
+
+<meta itemprop="wordCount" content="258">
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Nagios"/>
+<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y rm -f /etc/httpd/conf.d/welcome.conf There is also an undeclared depedency:
+yum install perl-Text-ParseWords -y htpasswd -c /etc/nagios/passwd nagiosadmin Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios."/>
+
+
+
+    <meta property="og:title" content="Nagios" />
+<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+yum install nagios nagios-plugins httpd nagios-plugins-load \ nagios-plugins-users nagios-plugins-http nagios-plugins-ping \ nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \ nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y rm -f /etc/httpd/conf.d/welcome.conf There is also an undeclared depedency:
+yum install perl-Text-ParseWords -y htpasswd -c /etc/nagios/passwd nagiosadmin Updates are going to be handled by yum exclusively, so the first change is adjusting check_for_updates=1 to 0, and for good measure bare_update_check=0 to 1 in /etc/nagios/nagios." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/notes/nagios/" /><meta property="article:section" content="notes" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </head>
 
     
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
 
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
                 
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Nagios</h1><div class="post-content"><pre><code>yum install nagios nagios-plugins httpd nagios-plugins-load \
-  nagios-plugins-users nagios-plugins-http nagios-plugins-ping \
-  nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \
-  nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y
-</code></pre>
-<pre><code>rm -f /etc/httpd/conf.d/welcome.conf
-</code></pre>
-<p>There is also an undeclared depedency:</p>
-<pre><code>yum install perl-Text-ParseWords -y
-</code></pre>
-<pre><code>htpasswd -c /etc/nagios/passwd nagiosadmin
-</code></pre>
-<p>Updates are going to be handled by yum exclusively, so the first change is
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/notes/nagios/">Nagios</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install nagios nagios-plugins httpd nagios-plugins-load \
+</span></span><span style="display:flex;"><span>  nagios-plugins-users nagios-plugins-http nagios-plugins-ping \
+</span></span><span style="display:flex;"><span>  nagios-plugins-ssh nagios-plugins-procs nagios-plugins-disk \
+</span></span><span style="display:flex;"><span>  nagios-plugins-smtp nagios-plugins-dns nagios-plugins-tcp -y
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rm -f /etc/httpd/conf.d/welcome.conf
+</span></span></code></pre></div><p>There is also an undeclared depedency:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install perl-Text-ParseWords -y
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>htpasswd -c /etc/nagios/passwd nagiosadmin
+</span></span></code></pre></div><p>Updates are going to be handled by yum exclusively, so the first change is
 adjusting <code>check_for_updates=1</code> to <code>0</code>, and for good measure
 <code>bare_update_check=0</code> to <code>1</code> in <code>/etc/nagios/nagios.cfg</code>.</p>
-<pre><code>systemctl enable httpd.service
-systemctl enable nagios.service
-systemctl start httpd.service
-systemctl start nagios.service
-</code></pre>
-<p>I had a strange issue where the ping plugin wasn't working with an error like
-&quot;CRITICAL - Could not interpret output from ping command&quot; the solution was to
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl enable httpd.service
+</span></span><span style="display:flex;"><span>systemctl enable nagios.service
+</span></span><span style="display:flex;"><span>systemctl start httpd.service
+</span></span><span style="display:flex;"><span>systemctl start nagios.service
+</span></span></code></pre></div><p>I had a strange issue where the ping plugin wasn&rsquo;t working with an error like
+&ldquo;CRITICAL - Could not interpret output from ping command&rdquo; the solution was to
 give the setuid bit to the ping program like so:</p>
-<pre><code>chmod u+s /usr/bin/ping
-</code></pre>
-<p>Next steps:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>chmod u+s /usr/bin/ping
+</span></span></code></pre></div><p>Next steps:</p>
 <ul>
 <li>Investigate using nginx instead of apache</li>
 <li>Setup nagios to be the root of apache</li>
@@ -88,34 +169,52 @@ give the setuid bit to the ping program like so:</p>
 <li>Add a port forward through to nagios</li>
 </ul>
 <h2 id="permission-fixing">Permission Fixing</h2>
-<p>In the event all the editing goo breaks nagios's ability to access files I
+<p>In the event all the editing goo breaks nagios&rsquo;s ability to access files I
 wrote the following quick little script to fix the various ownerships and
 permissions.</p>
-<pre data-lang="sh" class="language-sh "><code class="language-sh" data-lang="sh">#!/bin/bash
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Fix the ownership of the various directories</span>
+</span></span><span style="display:flex;"><span>chown root:root /etc/nagios
+</span></span><span style="display:flex;"><span>chown -R root:nagios /etc/nagios/*
+</span></span><span style="display:flex;"><span>chown root:apache /etc/nagios/passwd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># And fix the permissions on the various files and directories</span>
+</span></span><span style="display:flex;"><span>chmod -R <span style="color:#79c0ff">u</span><span style="color:#ff7b72;font-weight:bold">=</span>rwX,g<span style="color:#ff7b72;font-weight:bold">=</span>rX,o<span style="color:#ff7b72;font-weight:bold">=</span>rX /etc/nagios
+</span></span><span style="display:flex;"><span>chmod <span style="color:#a5d6ff">0640</span> /etc/nagios/private/resource.cfg /etc/nagios/passwd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># And restore any selinux attributes on the files</span>
+</span></span><span style="display:flex;"><span>restorecon -R /etc/nagios
+</span></span></code></pre></div>
+            </div>
+        </article>
 
-# Fix the ownership of the various directories
-chown root:root /etc/nagios
-chown -R root:nagios /etc/nagios/*
-chown root:apache /etc/nagios/passwd
+        <hr />
 
-# And fix the permissions on the various files and directories
-chmod -R u=rwX,g=rX,o=rX /etc/nagios
-chmod 0640 /etc/nagios/private/resource.cfg /etc/nagios/passwd
+        <div class="post-info">
+            
+            
+  		</div>
+    </main>
 
-# And restore any selinux attributes on the files
-restorecon -R /etc/nagios
-</code></pre>
-</div>
-</article>
+            </div>
 
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
 </html>

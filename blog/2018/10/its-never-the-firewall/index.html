@@ -1,6 +1,241 @@
-<!doctype html>
-<meta charset="utf-8">
-<link rel="canonical" href="https://stelfox.net/blog/2018/its-never-the-firewall/">
-<meta http-equiv="refresh" content="0; url=https://stelfox.net/blog/2018/its-never-the-firewall/">
-<title>Redirect</title>
-<p><a href="https://stelfox.net/blog/2018/its-never-the-firewall/">Click here</a> to be redirected.</p>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="This last Thursday I had the privilege of giving a talk at our local Linux User Group about diagnosing firewall issues on Linux entitled &amp;ldquo;It&amp;rsquo;s Never the Firewall: Diagnosing Linux Firewall Issues&amp;rdquo;. I really enjoyed giving the talk, however, I left a few questions unanswered. While I may do a more extensive post on everything that I went through in the talk (I have been lax on writing content for this blog), this post is more to answer the outstanding questions and of course to make my slides available." />
+<meta name="keywords" content="blog, programming, linux, systems, personal, firewall, iptables, linux, security" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/blog/2018/10/its-never-the-firewall/" />
+
+
+    <title>
+        
+            It&#39;s Never the Firewall :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="It&#39;s Never the Firewall">
+<meta itemprop="description" content="This last Thursday I had the privilege of giving a talk at our local Linux User Group about diagnosing firewall issues on Linux entitled &ldquo;It&rsquo;s Never the Firewall: Diagnosing Linux Firewall Issues&rdquo;. I really enjoyed giving the talk, however, I left a few questions unanswered. While I may do a more extensive post on everything that I went through in the talk (I have been lax on writing content for this blog), this post is more to answer the outstanding questions and of course to make my slides available."><meta itemprop="datePublished" content="2018-10-14T13:36:09-06:00" />
+<meta itemprop="dateModified" content="2018-10-14T13:36:09-06:00" />
+<meta itemprop="wordCount" content="702">
+<meta itemprop="keywords" content="firewall,iptables,linux,security," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="It&#39;s Never the Firewall"/>
+<meta name="twitter:description" content="This last Thursday I had the privilege of giving a talk at our local Linux User Group about diagnosing firewall issues on Linux entitled &ldquo;It&rsquo;s Never the Firewall: Diagnosing Linux Firewall Issues&rdquo;. I really enjoyed giving the talk, however, I left a few questions unanswered. While I may do a more extensive post on everything that I went through in the talk (I have been lax on writing content for this blog), this post is more to answer the outstanding questions and of course to make my slides available."/>
+
+
+
+    <meta property="og:title" content="It&#39;s Never the Firewall" />
+<meta property="og:description" content="This last Thursday I had the privilege of giving a talk at our local Linux User Group about diagnosing firewall issues on Linux entitled &ldquo;It&rsquo;s Never the Firewall: Diagnosing Linux Firewall Issues&rdquo;. I really enjoyed giving the talk, however, I left a few questions unanswered. While I may do a more extensive post on everything that I went through in the talk (I have been lax on writing content for this blog), this post is more to answer the outstanding questions and of course to make my slides available." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/blog/2018/10/its-never-the-firewall/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2018-10-14T13:36:09-06:00" />
+<meta property="article:modified_time" content="2018-10-14T13:36:09-06:00" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2018-10-14 13:36:09 -0600 -0600" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/">Home</a></li><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/blog/2018/10/its-never-the-firewall/">It&rsquo;s Never the Firewall</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p>This last Thursday I had the privilege of giving a talk at our local Linux User
+Group about diagnosing firewall issues on Linux entitled &ldquo;It&rsquo;s Never the
+Firewall: Diagnosing Linux Firewall Issues&rdquo;. I really enjoyed giving the talk,
+however, I left a few questions unanswered. While I may do a more extensive
+post on everything that I went through in the talk (I have been lax on writing
+content for this blog), this post is more to answer the outstanding questions
+and of course <a href="/files/it_is_never_the_firewall.pdf">to make my slides available</a>.</p>
+<p>As far as I remember the only question I wasn&rsquo;t able to answer was about file
+descriptors related to TCP connections. It isn&rsquo;t exactly a firewall issue but
+exhaustion of file descriptors is one of the issues I&rsquo;ve seen blamed on the
+firewall (which in turn was relevant to the talk).</p>
+<p>Established TCP connections consume file descriptors on Linux systems. Each
+user session is restricted by a limit defined by the system administrator (or
+more likely using the distribution&rsquo;s defaults). Some services consume a large
+number of file descriptors for their basic operations before any network
+connections are involved (<a href="https://redis.io/topics/clients">Redis</a> and <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/file-descriptors.html">Elasticsearch</a> being two common
+services that both recommend increasing this limit).</p>
+<p>When file descriptors are exhausted there are two common behaviors of
+applications depending on how they&rsquo;re written. The first and more common
+behavior will an immediately terminated connection, which to the user will look
+quite similar to a iptables REJECT response. The less common behavior is
+waiting until a file descriptor to become available before accepting the
+connection, which will result in a hanging incomplete connection much like an
+iptables DROP target.</p>
+<p>An important caveat here is that I&rsquo;m talking about user perception. If you look
+at the packets being exchanged, it&rsquo;s clear that this isn&rsquo;t the case.</p>
+<p>A quick way to diagnose if this is an issue is to compare the current number of
+open file descriptors by a user to their limit. In my experience most of these
+commands are available to unprivileged users which is also handy if there is a
+complicated process for using or executing commands with elevated privileges.</p>
+<p>First let&rsquo;s check what the total number of open file descriptors are on the
+system:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[user@sample-host] ~ $ lsof | wc -l
+</span></span><span style="display:flex;"><span>185779
+</span></span></code></pre></div><p>If it is under 10,000 there is a very good chance this is not the problem
+you&rsquo;re looking for. If you see a large number like the output above, it is
+worth investigating more. The host that I sampled that from currently has no
+file descriptor issues.</p>
+<p>First you&rsquo;ll want to identify the main process of the application that is
+having issues. Make sure you note the user that the application is running as.
+Identify the current configured limits for that process (replace <!-- raw HTML omitted --> with the
+pid you just found):</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[user@sample-host] ~ $ grep &#39;open files&#39; /proc/&lt;PID&gt;/limits
+</span></span><span style="display:flex;"><span>Max open files            1024                 4096                 files
+</span></span></code></pre></div><p>This tells the process is currently operating with a soft limit of 1,024 file
+descriptors and a hard limit of 4,096. This is where the diagnostics can get a
+little fuzzy. File descriptors are limited by user <em>session</em> not by process or
+user which is what we can directly query on. To get a rough idea of where we&rsquo;re
+at lets query those two specifics.</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[user@sample-host] ~ $ lsof -p &lt;PID&gt; | wc -l
+</span></span><span style="display:flex;"><span>5
+</span></span><span style="display:flex;"><span>[user@sample-host] ~ $ lsof -u &lt;USER&gt; | wc -l
+</span></span><span style="display:flex;"><span>721
+</span></span></code></pre></div><p>This particular example is enough for us to clearly see file descriptors are
+not an issue. The current number of file descriptors open for the user (721) is
+below the process&rsquo;s soft limit of 1,024. If the number of file descriptors is
+closer to our limits you&rsquo;ll have to get an exact count of what is going on.
+Unfortunately I don&rsquo;t know an easy one liner to check this.</p>
+<p>To get an exact count you need to enumerate all processes with the same session
+identifier (SID) as your target process, query them all for the current file
+descriptor consumption, and add them up into a total. As a rule of thumb I
+recommend leaving about a 25% overhead for your service during peak load which
+can be set in your system limits file for that service&rsquo;s user.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://stelfox.net/tags/firewall/">firewall</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/iptables/">iptables</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/security/">security</a></span>
+        
+    </p>
+
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>
