@@ -12,7 +12,7 @@ things in tech and usually has a good reason. The simple way that used to work
 wonders (and is still required) to start with, was to identify if the file is
 compressed:
 
-```
+```bash
 $ file /boot/initramfs-current.img
 /boot/initramfs-current.img: ASCII cpio archive (SVR4 with no CRC)
 ```
@@ -25,7 +25,7 @@ modern version of Dracut and this post isn't right for you.
 
 Next let's extract the contents into a new temporary directory:
 
-```
+```bash
 $ mkdir init_tmp
 $ cd init_tmp
 $ cpio -mvid < /boot/initramfs-current.img
@@ -43,7 +43,7 @@ dealing with LVM, filesystems, device scanning? No core system directories like
 `/dev`, `/sys`, or `/proc`? What is going on here. We can also quickly see the
 size doesn't match what we extracted:
 
-```
+```bash
 $ du --max-depth=1 -h
 32K     ./kernel
 36K     .
@@ -65,7 +65,7 @@ directory and emptied out the extracted contents of the `init_tmp` directory we
 created earlier as that's where we want to put the extracted inner initramfs
 contents.
 
-```
+```bash
 $ dd if=/boot/initramfs-current.img bs=512 skip=62 of=inner-initramfs-current.img
 25995+1 records in
 25995+1 records out
@@ -74,7 +74,7 @@ $ dd if=/boot/initramfs-current.img bs=512 skip=62 of=inner-initramfs-current.im
 
 Once again we need to identify if compression is present:
 
-```
+```bash
 $ file inner-initramfs-current.img
 inner-initramfs-current.img: LZ4 compressed data (v0.1-v0.9)
 ```
@@ -83,7 +83,7 @@ From here we can decompress it and extract the inner archive much like before
 using the appropriate utility (lz4cat does the trick here, your compression may
 vary).
 
-```
+```bash
 $ cd init_tmp
 $ lz4cat ../inner-initramfs-current.img | cpio -mvid
 .
