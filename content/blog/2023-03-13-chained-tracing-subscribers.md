@@ -23,7 +23,7 @@ use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() {
     let (non_blocking_writer, _guard) = tracing_appender::non_blocking(std::io::stderr());
 
     let env_filter = EnvFilter::builder()
@@ -32,8 +32,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let stderr_layer = tracing_subscriber::fmt::layer()
         .compact()
-        .with_writer(non_blocking_writer)
-        .with_filter(env_filter);
+        .with_filter(env_filter)
+        .with_writer(non_blocking_writer);
     let console_layer = ConsoleLayer::builder()
         .retention(Duration::from_secs(30))
         .spawn();
