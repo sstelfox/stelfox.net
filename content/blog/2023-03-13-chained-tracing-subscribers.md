@@ -34,8 +34,8 @@ async fn main() {
         .from_env_lossy();
     let stderr_layer = tracing_subscriber::fmt::layer()
         .compact()
-        .with_filter(env_filter)
-        .with_writer(non_blocking_writer);
+        .with_writer(non_blocking_writer)
+        .with_filter(env_filter);
 
     tracing_subscriber::registry()
         .with(console_layer)
