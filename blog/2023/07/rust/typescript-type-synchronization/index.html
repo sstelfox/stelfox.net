@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="sam@stelfox.net Sam Stelfox ">
+<meta name="description" content="I&amp;rsquo;ve been looking at integrating a React front-end with a Rust API server and one of the ongoing annoyances I encountered was keeping API types in sync with each other. I found a couple of options, the smallest and simplest one I liked was tsync.
+I try to keep my dependency lists small, and this crate is a bit of an odd duck as it is only really doing work as a build dependency." />
+<meta name="keywords" content="blog, programming, linux, systems, personal, development, rust, typescript, web-development" />
+<meta name="robots" content="noodp" />
+<meta name="theme-color" content="" />
+<link rel="canonical" href="https://stelfox.net/blog/2023/07/rust/typescript-type-synchronization/" />
+
+
+    <title>
+        
+            Rust/TypeScript Type Synchronization :: Sam Stelfox 
+        
+    </title>
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+
+
+<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
+
+
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="msapplication-TileColor" content="">
+
+
+<meta itemprop="name" content="Rust/TypeScript Type Synchronization">
+<meta itemprop="description" content="I&rsquo;ve been looking at integrating a React front-end with a Rust API server and one of the ongoing annoyances I encountered was keeping API types in sync with each other. I found a couple of options, the smallest and simplest one I liked was tsync.
+I try to keep my dependency lists small, and this crate is a bit of an odd duck as it is only really doing work as a build dependency."><meta itemprop="datePublished" content="2023-07-31T07:38:29-04:00" />
+<meta itemprop="dateModified" content="2023-07-31T07:38:29-04:00" />
+<meta itemprop="wordCount" content="391">
+<meta itemprop="keywords" content="development,rust,typescript,web-development," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Rust/TypeScript Type Synchronization"/>
+<meta name="twitter:description" content="I&rsquo;ve been looking at integrating a React front-end with a Rust API server and one of the ongoing annoyances I encountered was keeping API types in sync with each other. I found a couple of options, the smallest and simplest one I liked was tsync.
+I try to keep my dependency lists small, and this crate is a bit of an odd duck as it is only really doing work as a build dependency."/>
+
+
+
+    <meta property="og:title" content="Rust/TypeScript Type Synchronization" />
+<meta property="og:description" content="I&rsquo;ve been looking at integrating a React front-end with a Rust API server and one of the ongoing annoyances I encountered was keeping API types in sync with each other. I found a couple of options, the smallest and simplest one I liked was tsync.
+I try to keep my dependency lists small, and this crate is a bit of an odd duck as it is only really doing work as a build dependency." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://stelfox.net/blog/2023/07/rust/typescript-type-synchronization/" /><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2023-07-31T07:38:29-04:00" />
+<meta property="article:modified_time" content="2023-07-31T07:38:29-04:00" />
+
+
+
+
+
+
+    <meta property="article:published_time" content="2023-07-31 07:38:29 -0400 EDT" />
+
+
+
+
+
+
+
+
+
+
+    </head>
+
+    
+        <body>
+    
+    
+        <div class="container">
+            <header class="header">
+    <span class="header__inner">
+        <a href="/" style="text-decoration: none;">
+    <div class="logo">
+        
+            <span class="logo__mark">></span>
+            <span class="logo__text ">
+                ./Sam_Stelfox.sh</span>
+            <span class="logo__cursor" style=
+                  "
+                   
+                   ">
+            </span>
+        
+    </div>
+</a>
+
+
+        <span class="header__right">
+            
+                <nav class="menu">
+    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
+    </ul>
+</nav>
+
+                <span class="menu-trigger">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                </span>
+            
+        </span>
+    </span>
+</header>
+
+
+            <div class="content">
+                
+    <main class="post">
+
+        <div class="post-info">
+            
+            </p>
+        </div>
+
+        <article>
+            <h2 class="post-title"><a href="https://stelfox.net/blog/2023/07/rust/typescript-type-synchronization/">Rust/TypeScript Type Synchronization</a></h2>
+
+            
+            
+            
+
+            <div class="post-content">
+                <p>I&rsquo;ve been looking at integrating a React front-end with a Rust API server and
+one of the ongoing annoyances I encountered was keeping API types in sync with
+each other. I found a couple of options, the smallest and simplest one I liked
+was <a href="https://crates.io/crates/tsync">tsync</a>.</p>
+<p>I try to keep my dependency lists small, and this crate is a bit of an odd duck
+as it is only really doing work as a build dependency. If you look at the macro
+definition it doesn&rsquo;t do anthing to the TokenStream its passed, making it a
+no-op attribute. It&rsquo;s just used during this special pass done during the build
+step.</p>
+<p>Since its a no-op during regular compilation, it&rsquo;d be nice if the tsync code
+wasn&rsquo;t compiled or linked in to the final application. The nature of attribute
+macros means they cause an error without the definition, and since Rust
+requires attribute macros be defined in a special type of crate they tend to be
+fully decoupled from the main crate which is also the case here.</p>
+<p>The workaround uses the macro crate directly in normal builds while only using
+the full version during the build step. First we need to add both crates as
+direct dependencies:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cargo add --build tsync@^1
+</span></span><span style="display:flex;"><span>cargo add tsync-macro@^0.1
+</span></span></code></pre></div><p>The versions are correct, the tsync-macro crate is independently versioned and
+hasn&rsquo;t been bumped.</p>
+<p>Now during builds we want our source scanned for the attribute, and a
+typescript file generated with all the appropriate types. You can create or
+edit an existing <code>build.rs</code> file with the following content to do so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>use std::path::PathBuf;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>const TYPESCRIPT_OUTPUT: &amp;str = &#34;frontend/src/rust_types.d.ts&#34;;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fn generate_typescript_definitions() {
+</span></span><span style="display:flex;"><span>    let dir = env!(&#34;CARGO_MANIFEST_DIR&#34;);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    let inputs = vec![PathBuf::from(dir)];
+</span></span><span style="display:flex;"><span>    let output = PathBuf::from_iter([dir, TYPESCRIPT_OUTPUT]);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tsync::generate_typescript_defs(inputs, output, false);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>fn main() {
+</span></span><span style="display:flex;"><span>    generate_typescript_definitions();
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>My TypeScript/React frontend project lives inside my Rust project in a
+directory called &ldquo;frontend&rdquo;. If you&rsquo;d like the file to be saved elsewhere, edit
+the value of the <code>TYPESCRIPT_OUTPUT</code> variable.</p>
+<p>Using the attribute is pretty straight-forward but slightly different than what
+the crate&rsquo;s documentation tell you to do:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">use</span><span style="color:#6e7681"> </span>tsync_macro::tsync;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-weight:bold;font-style:italic">#[tsync]</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">pub</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">type</span> <span style="color:#f0883e;font-weight:bold">Timestamp</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">usize</span>;<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Or just inline:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#[tsync_macro::tsync]</span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">type</span> <span style="color:#f0883e;font-weight:bold">Timestamp</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">usize</span>;<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>Run a build and you should see the file <code>frontend/src/rust_types.d.ts</code> get
+created with the following contents:</p>
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ts" data-lang="ts"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">/* This file is generated and managed by tsync */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ff7b72">type</span> Timestamp <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#ff7b72">number</span>
+</span></span></code></pre></div><p>Voila! Effortless type synchronization.</p>
+
+            </div>
+        </article>
+
+        <hr />
+
+        <div class="post-info">
+            
+    <p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
+
+        <span class="tag"><a href="https://stelfox.net/tags/development/">development</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/rust/">rust</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/typescript/">typescript</a></span>
+        <span class="tag"><a href="https://stelfox.net/tags/web-development/">web-development</a></span>
+        
+    </p>
+
+            
+  		</div>
+    </main>
+
+            </div>
+
+            
+                <footer class="footer">
+    
+    
+</footer>
+
+            
+        </div>
+
+        
+
+
+
+<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+
+
+
+    </body>
+</html>
