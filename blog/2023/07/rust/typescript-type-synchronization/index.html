@@ -154,30 +154,30 @@ fully decoupled from the main crate which is also the case here.</p>
 <p>The workaround uses the macro crate directly in normal builds while only using
 the full version during the build step. First we need to add both crates as
 direct dependencies:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cargo add --build tsync@^1
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cargo add --build tsync@^1
 </span></span><span style="display:flex;"><span>cargo add tsync-macro@^0.1
 </span></span></code></pre></div><p>The versions are correct, the tsync-macro crate is independently versioned and
 hasn&rsquo;t been bumped.</p>
 <p>Now during builds we want our source scanned for the attribute, and a
 typescript file generated with all the appropriate types. You can create or
 edit an existing <code>build.rs</code> file with the following content to do so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>use std::path::PathBuf;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>const TYPESCRIPT_OUTPUT: &amp;str = &#34;frontend/src/rust_types.d.ts&#34;;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>fn generate_typescript_definitions() {
-</span></span><span style="display:flex;"><span>    let dir = env!(&#34;CARGO_MANIFEST_DIR&#34;);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    let inputs = vec![PathBuf::from(dir)];
-</span></span><span style="display:flex;"><span>    let output = PathBuf::from_iter([dir, TYPESCRIPT_OUTPUT]);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    tsync::generate_typescript_defs(inputs, output, false);
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>fn main() {
-</span></span><span style="display:flex;"><span>    generate_typescript_definitions();
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>My TypeScript/React frontend project lives inside my Rust project in a
+<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#ff7b72">use</span><span style="color:#6e7681"> </span>std::path::PathBuf;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">const</span><span style="color:#6e7681"> </span><span style="color:#79c0ff;font-weight:bold">TYPESCRIPT_OUTPUT</span>: <span style="color:#79c0ff">&amp;</span><span style="color:#ff7b72">str</span> <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#34;frontend/src/rust_types.d.ts&#34;</span>;<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">generate_typescript_definitions</span>()<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>dir<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>env!(<span style="color:#a5d6ff">&#34;CARGO_MANIFEST_DIR&#34;</span>);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>inputs<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>vec![PathBuf::from(dir)];<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span><span style="color:#ff7b72">let</span><span style="color:#6e7681"> </span>output<span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#6e7681"> </span>PathBuf::from_iter([dir,<span style="color:#6e7681"> </span><span style="color:#79c0ff;font-weight:bold">TYPESCRIPT_OUTPUT</span>]);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>tsync::generate_typescript_defs(inputs,<span style="color:#6e7681"> </span>output,<span style="color:#6e7681"> </span><span style="color:#79c0ff">false</span>);<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">fn</span> <span style="color:#d2a8ff;font-weight:bold">main</span>()<span style="color:#6e7681"> </span>{<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">    </span>generate_typescript_definitions();<span style="color:#6e7681">
+</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>}<span style="color:#6e7681">
+</span></span></span></code></pre></div><p>My TypeScript/React frontend project lives inside my Rust project in a
 directory called &ldquo;frontend&rdquo;. If you&rsquo;d like the file to be saved elsewhere, edit
 the value of the <code>TYPESCRIPT_OUTPUT</code> variable.</p>
 <p>Using the attribute is pretty straight-forward but slightly different than what
