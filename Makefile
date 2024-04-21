@@ -1,7 +1,7 @@
 # Note to self: this is included because it seems like hugo isn't handling
 # time zones correctly
 build:
-	@hugo --baseURL https://stelfox.net/ --log --verbose --verboseLog --printI18nWarnings --printPathWarnings --printUnusedTemplates
+	@hugo --baseURL https://stelfox.net/ --verbose --printI18nWarnings --printPathWarnings --printUnusedTemplates
 
 clean:
 	@rm -rf public/*
