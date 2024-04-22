@@ -1,274 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Dynamic Backend w/ Fallback Sources:
-http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/ upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/nginx/" />
-
-
-    <title>
-        
-            NGinx :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="NGinx">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/ upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/nginx/><title>NGinx :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="NGinx"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Dynamic Backend w/ Fallback Sources:
-http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/ upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access.">
-
-<meta itemprop="wordCount" content="294">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="NGinx"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/ upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access."><meta itemprop=wordCount content="294"><meta name=twitter:card content="summary"><meta name=twitter:title content="NGinx"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Dynamic Backend w/ Fallback Sources:
-http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/ upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access."/>
-
-
-
-    <meta property="og:title" content="NGinx" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Dynamic Backend w/ Fallback Sources:
-http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/ upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/nginx/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/nginx/">NGinx</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+http://wiki.nginx.org/HttpRedis2Module http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/ upstream redis { # TODO Properly configure this server redis-01.i.0x378.net:6379; keepalive 1024 single; redis2_connect_timeout 100ms; redis2_send_timeout 100ms; redis2_read_timeout 100ms; redis2_pass redis; } server { listen 443; # Include SSL stuff; # Log stuff access_log /var/log/nginx/access."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/nginx/>NGinx</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<h2 id="dynamic-backend-w-fallback">Dynamic Backend w/ Fallback</h2>
-<p>Sources:</p>
-<ul>
-<li><a href="http://wiki.nginx.org/HttpRedis2Module">http://wiki.nginx.org/HttpRedis2Module</a></li>
-<li><a href="http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/">http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/</a></li>
-</ul>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>upstream redis {
-</span></span><span style="display:flex;"><span>  # TODO Properly configure this
-</span></span><span style="display:flex;"><span>  server redis-01.i.0x378.net:6379;
-</span></span><span style="display:flex;"><span>  keepalive 1024 single;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  redis2_connect_timeout 100ms;
-</span></span><span style="display:flex;"><span>  redis2_send_timeout 100ms;
-</span></span><span style="display:flex;"><span>  redis2_read_timeout 100ms;
-</span></span><span style="display:flex;"><span>  redis2_pass redis;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>server {
-</span></span><span style="display:flex;"><span>  listen 443;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Include SSL stuff;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Log stuff
-</span></span><span style="display:flex;"><span>  access_log /var/log/nginx/access.log;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Local/Internal DNS resolver
-</span></span><span style="display:flex;"><span>  resolver 192.168.122.1;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  location / {
-</span></span><span style="display:flex;"><span>    # Don&#39;t do any magic to static files
-</span></span><span style="display:flex;"><span>    root &#39;/var/www/assets.i.0x378.net&#39;;
-</span></span><span style="display:flex;"><span>    if (-f $request_filename) {
-</span></span><span style="display:flex;"><span>      break;
-</span></span><span style="display:flex;"><span>      # This probably needs some work
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    # TODO: Get this from Redis
-</span></span><span style="display:flex;"><span>    set $server &#39;app-01.i.0x378.net&#39;;
-</span></span><span style="display:flex;"><span>    set $port &#39;80&#39;;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-</span></span><span style="display:flex;"><span>    proxy_set_header Host $http_host;
-</span></span><span style="display:flex;"><span>    proxy_set_header X-Real-IP $remote_addr;
-</span></span><span style="display:flex;"><span>    proxy_set_header X-Forwarded-Proto $scheme; # Should always be https
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    # Intercept all errors, if one matches the error block sent the request to
-</span></span><span style="display:flex;"><span>    # a different backend
-</span></span><span style="display:flex;"><span>    proxy_intercept_errors on;
-</span></span><span style="display:flex;"><span>    error_page 502 = @fallback;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    proxy_pass http://$server:$port;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  location @fallback {
-</span></span><span style="display:flex;"><span>    # Look this up, but pretty sure it means don&#39;t allow clients / HTTP
-</span></span><span style="display:flex;"><span>    # requests to access this.
-</span></span><span style="display:flex;"><span>    internal;
-</span></span><span style="display:flex;"><span>    proxy_pass http://fall-back-host.i.0x378.net:80/;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="cert">Cert</h2>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>echo -e &#34;AC\n\n \n \n\n*.i.0x378.net\n\n&#34; | openssl req -new -x509 \
-</span></span><span style="display:flex;"><span>  -newkey rsa:2048 -keyout server.key -nodes -days 365 -out server.crt
-</span></span></code></pre></div><p>And include some DH parameters.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>openssl dhparam -rand - 2048 &gt; server_dh.pem
-</span></span></code></pre></div><p>I just dropped <code>server.{key,cert}</code> into <code>/etc/nginx/</code>, and a quick SSL
-configuration to dump into the nginx configuration.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cat &lt;&lt; EOF &gt; /etc/nginx/conf.d/ssl.conf
-</span></span><span style="display:flex;"><span>server {
-</span></span><span style="display:flex;"><span>  listen 443;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  ssl on;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  ssl_certificate     /etc/nginx/server.crt;
-</span></span><span style="display:flex;"><span>  ssl_certificate_key /etc/nginx/server.key;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  ssl_dhparam /etc/nginx/server_dh.pem;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  ssl_session_timeout 5m;
-</span></span><span style="display:flex;"><span>  ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  ssl_ciphers &#39;ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:RC4-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!3DES:!MD5:!PSK&#39;;
-</span></span><span style="display:flex;"><span>  ssl_prefer_server_ciphers on;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  add_header Strict-Transport-Security max-age=15768000;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  access_log /var/log/nginx/access.log;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  resolver 192.168.122.1;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  location / {
-</span></span><span style="display:flex;"><span>    # Don&#39;t do any magic to static files
-</span></span><span style="display:flex;"><span>    root &#39;/var/www/default&#39;;
-</span></span><span style="display:flex;"><span>    index index.html;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>EOF
-</span></span></code></pre></div>
-            </div>
-        </article>
+until I get around to updating it.</strong></em></p><h2 id=dynamic-backend-w-fallback>Dynamic Backend w/ Fallback</h2><p>Sources:</p><ul><li><a href=http://wiki.nginx.org/HttpRedis2Module>http://wiki.nginx.org/HttpRedis2Module</a></li><li><a href=http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/>http://spin.atomicobject.com/2013/07/08/nignx-load-balancing-reverse-proxy-updated/</a></li></ul><pre tabindex=0><code>upstream redis {
+  # TODO Properly configure this
+  server redis-01.i.0x378.net:6379;
+  keepalive 1024 single;
 
-        <hr />
+  redis2_connect_timeout 100ms;
+  redis2_send_timeout 100ms;
+  redis2_read_timeout 100ms;
+  redis2_pass redis;
+}
 
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
+server {
+  listen 443;
 
-            </div>
+  # Include SSL stuff;
 
-            
-                <footer class="footer">
-    
-    
-</footer>
+  # Log stuff
+  access_log /var/log/nginx/access.log;
 
-            
-        </div>
+  # Local/Internal DNS resolver
+  resolver 192.168.122.1;
 
-        
+  location / {
+    # Don&#39;t do any magic to static files
+    root &#39;/var/www/assets.i.0x378.net&#39;;
+    if (-f $request_filename) {
+      break;
+      # This probably needs some work
+    }
 
+    # TODO: Get this from Redis
+    set $server &#39;app-01.i.0x378.net&#39;;
+    set $port &#39;80&#39;;
 
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-Proto $scheme; # Should always be https
 
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
+    # Intercept all errors, if one matches the error block sent the request to
+    # a different backend
+    proxy_intercept_errors on;
+    error_page 502 = @fallback;
 
+    proxy_pass http://$server:$port;
+  }
 
+  location @fallback {
+    # Look this up, but pretty sure it means don&#39;t allow clients / HTTP
+    # requests to access this.
+    internal;
+    proxy_pass http://fall-back-host.i.0x378.net:80/;
+  }
+}
+</code></pre><h2 id=cert>Cert</h2><pre tabindex=0><code>echo -e &#34;AC\n\n \n \n\n*.i.0x378.net\n\n&#34; | openssl req -new -x509 \
+  -newkey rsa:2048 -keyout server.key -nodes -days 365 -out server.crt
+</code></pre><p>And include some DH parameters.</p><pre tabindex=0><code>openssl dhparam -rand - 2048 &gt; server_dh.pem
+</code></pre><p>I just dropped <code>server.{key,cert}</code> into <code>/etc/nginx/</code>, and a quick SSL
+configuration to dump into the nginx configuration.</p><pre tabindex=0><code>cat &lt;&lt; EOF &gt; /etc/nginx/conf.d/ssl.conf
+server {
+  listen 443;
 
-    </body>
-</html>
+  ssl on;
+
+  ssl_certificate     /etc/nginx/server.crt;
+  ssl_certificate_key /etc/nginx/server.key;
+
+  ssl_dhparam /etc/nginx/server_dh.pem;
+
+  ssl_session_timeout 5m;
+  ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
+
+  ssl_ciphers &#39;ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:RC4-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!3DES:!MD5:!PSK&#39;;
+  ssl_prefer_server_ciphers on;
+
+  add_header Strict-Transport-Security max-age=15768000;
+
+  access_log /var/log/nginx/access.log;
+
+  resolver 192.168.122.1;
+
+  location / {
+    # Don&#39;t do any magic to static files
+    root &#39;/var/www/default&#39;;
+    index index.html;
+  }
+}
+EOF
+</code></pre></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

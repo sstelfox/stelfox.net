@@ -1,0 +1,113 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="One of the Cisco Catalyst 3750 I had to work on recently had it&amp;rsquo;s flash completely wiped. When this happens you can only flash the filesystem using the XMODEM serial console. This is a fairly well documented process on Windows. On Linux most of the documented ways involve switching between multiple utilities and can be tricky. I wanted to documented how I did this and possibly help other in the same situation."><meta name=keywords content=",cisco,tips"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2019-03-24-reflashing-cisco-catalyst-with-xmodem/><title>Reflashing Cisco Catalyst With XMODEM :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Reflashing Cisco Catalyst With XMODEM"><meta itemprop=description content="One of the Cisco Catalyst 3750 I had to work on recently had it&rsquo;s flash completely wiped. When this happens you can only flash the filesystem using the XMODEM serial console. This is a fairly well documented process on Windows. On Linux most of the documented ways involve switching between multiple utilities and can be tricky. I wanted to documented how I did this and possibly help other in the same situation."><meta itemprop=datePublished content="2019-03-24T23:26:30-04:00"><meta itemprop=dateModified content="2019-03-24T23:26:30-04:00"><meta itemprop=wordCount content="964"><meta itemprop=keywords content="Cisco,Tips"><meta name=twitter:card content="summary"><meta name=twitter:title content="Reflashing Cisco Catalyst With XMODEM"><meta name=twitter:description content="One of the Cisco Catalyst 3750 I had to work on recently had it&rsquo;s flash completely wiped. When this happens you can only flash the filesystem using the XMODEM serial console. This is a fairly well documented process on Windows. On Linux most of the documented ways involve switching between multiple utilities and can be tricky. I wanted to documented how I did this and possibly help other in the same situation."><meta property="article:published_time" content="2019-03-24 23:26:30 -0400 EDT"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2019-03-24-reflashing-cisco-catalyst-with-xmodem/>Reflashing Cisco Catalyst With XMODEM</a></h2><div class=post-content><p>One of the Cisco Catalyst 3750 I had to work on recently had it&rsquo;s flash
+completely wiped. When this happens you can only flash the filesystem using the
+XMODEM serial console. This is a fairly well documented process on Windows. On
+Linux most of the documented ways involve switching between multiple utilities
+and can be tricky. I wanted to documented how I did this and possibly help
+other in the same situation.</p><p>I&rsquo;m doing this on Fedora, but the only thing specific to Fedora is installing
+the packages which can be done with the following command (and are pretty
+standard names):</p><pre tabindex=0><code>dnf install lrzsz screen -y
+</code></pre><p>From an external perspective the switch was rapidly blinking it&rsquo;s <code>SYST</code> light
+with all of the other lights off. I connected up a console cable, the serial
+port showed up as <code>/dev/ttyUSB0</code>. We&rsquo;ll connect to the serial port using screen
+with the following command:</p><pre tabindex=0><code>sudo screen /dev/ttyUSB0 9600
+</code></pre><p>Power cycling the switch gets you the boot messages that show us the issue:</p><pre tabindex=0><code>Using driver version 1 for media type 1
+Base ethernet MAC Address: xx:xx:xx:xx:xx:xx
+Xmodem file system is available.
+The password-recovery mechanism is enabled.
+Initializing Flash...
+mifs[2]: 0 files, 1 directories
+mifs[2]: Total bytes     :    3870720
+mifs[2]: Bytes used      :       1024
+mifs[2]: Bytes available :    3869696
+mifs[2]: mifs fsck took 0 seconds.
+mifs[3]: 0 files, 1 directories
+mifs[3]: Total bytes     :   27998208
+mifs[3]: Bytes used      :       1024
+mifs[3]: Bytes available :   27997184
+mifs[3]: mifs fsck took 1 seconds.
+...done Initializing Flash.
+done.
+Loading &#34;flash:/c3750-ipservicesk9-mz-15.0-2_SE10a.bin&#34;...flash:/c3750-ipservicesk9-mz-15.0-2_SE10a.bin: no such file or directory
+
+Error loading &#34;flash:/c3750-ipservicesk9-mz-15.0-2_SE10a.bin&#34;
+
+Interrupt within 5 seconds to abort boot process.
+Boot process failed...
+
+The system is unable to boot automatically.  The BOOT
+environment variable needs to be set to a bootable
+image.
+
+
+switch:
+</code></pre><p>We can confirm this isn&rsquo;t just a badly named file quickly:</p><pre tabindex=0><code>switch: dir flash:/
+Directory of flash://
+
+
+32513024 bytes available (1024 bytes used)
+
+switch:
+</code></pre><p>If you you get the following error:</p><pre tabindex=0><code>switch: dir flash:
+unable to stat flash:/: invalid argument
+</code></pre><p>The flash hardware hasn&rsquo;t been enabled yet. We need to initialize it with the
+<code>flash_init</code> command which will allow us access to the flash again:</p><pre tabindex=0><code>switch: flash_init
+Initializing Flash...
+flashfs[0]: 0 files, 1 directories
+flashfs[0]: 0 orphaned files, 0 orphaned directories
+flashfs[0]: Total bytes: 32514048
+flashfs[0]: Bytes used: 1024
+flashfs[0]: Bytes available: 32513024
+flashfs[0]: flashfs fsck took 6 seconds.
+...done Initializing Flash.
+
+switch: dir flash:/
+Directory of flash://
+
+
+32513024 bytes available (1024 bytes used)
+
+switch:
+</code></pre><p>Definitely nothing present. At this point we need to use XMODEM to get the
+firmware file. You&rsquo;ll need to use your support contract to get the latest
+firmware for your model of switch. I made sure this file was in my current
+directory (saves some time in a bit). For me this file was named
+<code>c3750-ipservicesk9-mz.150-2.SE10a.bin</code> you&rsquo;ll want to replace this with the
+appropriate filename you pull yourself. Right, carrying on.</p><p>XMODEM is a very slow process especially when we use the default speed of 9600
+baud. We can speed this process up by 12x by adjusting the baud rate. You can
+skip this bit though if you&rsquo;re willing to wait several hours for the file to
+transfer.</p><p>To speed up the baud rate execute the following command, be aware that your
+terminal is expected to immediately become responsive and this is fine:</p><pre tabindex=0><code>switch: set BAUD 115200
+</code></pre><p>Kill the screen session by pressing <code>Ctrl-a</code> quickly following by a lone <code>k</code>.
+It will prompt you to confirm exiting the session, do so with <code>y</code> and start a
+new session with the higher baud rate:</p><pre tabindex=0><code>sudo screen /dev/ttyUSB0 115200
+</code></pre><p>Press return and you&rsquo;ll get back to the switch prompt. This next bit is tricky
+as there is about a ten second timeout between starting the copy command and
+needing to being the transfer. If you don&rsquo;t quite make it I&rsquo;ve got a tip after
+the command below:</p><pre tabindex=0><code>switch: copy xmodem:/ flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
+</code></pre><p>Quick press <code>Ctrl-a</code> followed by <code>:</code>. In the prompt that shows up type in the
+following:</p><pre tabindex=0><code>exec !! sx -b -X c3750-ipservicesk9-mz.150-2.SE10a.bin
+</code></pre><p>If you get an error, it reports as cancelled, it times out just try again. This
+time though after pressing <code>Ctrl-a</code> and <code>:</code> you can press your up arrow to
+bring up the last run command. Assuming you typed it in correctly this should
+give you enough time to start the transfer. It will show you the progress of
+the transfer which depending on size will take between twenty and thirty
+minutes (or hours if you didn&rsquo;t update the baud rate).</p><p>Site note: One of the benefits of performing the <code>sx</code> command through screen is
+that if anything happens to your terminal the transfer will continue. This was
+particularly important for me at the time as I found myself SSH&rsquo;d into a laptop
+far away from myself over an unstable and shared cell connection running these
+commands.</p><p>When it&rsquo;s complete you&rsquo;re going to want to ensure the <code>BOOT</code> variable properly
+matches the filename you just transferred:</p><pre tabindex=0><code>set BOOT flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
+</code></pre><p>We&rsquo;re going to reset the baud rate back to normal (skip this if you didn&rsquo;t
+update your baud rate) which will cause you to loose the connection again:</p><pre tabindex=0><code>unset BAUD
+</code></pre><p>Disconnect as we did before and reconnect at the 9600 rate. One final command
+should start the switch and get you back into the good graces of the Cisco CLI:</p><pre tabindex=0><code>switch: boot
+</code></pre><p>One final tip, if you want to access the boot menu of the switch I had a hell
+of a time trying to figure out how to actually send the break command to
+interrupt the boot menu. None of the recommended combinations of <code>Ctrl</code>, <code>Alt</code>,
+<code>Shift</code>, <code>b</code>, <code>Break</code>, and <code>Scroll Lock</code>. You can instead press the <code>Mode</code>
+button on the front of the switch to emulate this break key.</p><p>Cheers friends. Hope this helps another CLI adventurer.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/cisco/>cisco</a></span>
+<span class=tag><a href=https://stelfox.net/tags/tips/>tips</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

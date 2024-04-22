@@ -1,242 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Duplicity is a command line backup utility that makes use of the rsync libraries to perform incremental backups. It also can use GPG public/private keypairs to handle backing up and restoring files.
-I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/duplicity/" />
-
-
-    <title>
-        
-            Duplicity :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Duplicity">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/duplicity/><title>Duplicity :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Duplicity"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Duplicity is a command line backup utility that makes use of the rsync libraries to perform incremental backups. It also can use GPG public/private keypairs to handle backing up and restoring files.
-I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key.">
-
-<meta itemprop="wordCount" content="658">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Duplicity"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key."><meta itemprop=wordCount content="658"><meta name=twitter:card content="summary"><meta name=twitter:title content="Duplicity"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Duplicity is a command line backup utility that makes use of the rsync libraries to perform incremental backups. It also can use GPG public/private keypairs to handle backing up and restoring files.
-I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key."/>
-
-
-
-    <meta property="og:title" content="Duplicity" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Duplicity is a command line backup utility that makes use of the rsync libraries to perform incremental backups. It also can use GPG public/private keypairs to handle backing up and restoring files.
-I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/duplicity/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/duplicity/">Duplicity</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+I personally want to use public / private key pairs for my backups and contrary with what I do most of the time I share a single public / private key pair for my backups, with a strong pass string on the private key."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/duplicity/>Duplicity</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>Duplicity is a command line backup utility that makes use of the rsync
+until I get around to updating it.</strong></em></p><p>Duplicity is a command line backup utility that makes use of the rsync
 libraries to perform incremental backups. It also can use GPG public/private
-keypairs to handle backing up and restoring files.</p>
-<p>I personally want to use public / private key pairs for my backups and contrary
+keypairs to handle backing up and restoring files.</p><p>I personally want to use public / private key pairs for my backups and contrary
 with what I do most of the time I share a single public / private key pair for
-my backups, with a strong pass string on the private key.</p>
-<p>This is an adequate level of security for me as the backups will all be
+my backups, with a strong pass string on the private key.</p><p>This is an adequate level of security for me as the backups will all be
 encrypted and can be decrypted and restored from any of the other machines as
-needed.</p>
-<p>The backups are performed to a remote system using SFTP and thus I handle
-per-machine authentication using SSH keys.</p>
-<p>Duplicity supports more than SFTP as a backend, however, it will just make my
-scripts less relevant too you.</p>
-<h2 id="installation">Installation</h2>
-<p>Fedora happily has a package available so this is as easy as:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo yum install duplicity python-paramiko -y
-</span></span></code></pre></div><p>It also happily doesn&rsquo;t have a whole lot of dependencies.</p>
-<p>You&rsquo;ll also need GPG installed if you want to make use of my scripts, this
+needed.</p><p>The backups are performed to a remote system using SFTP and thus I handle
+per-machine authentication using SSH keys.</p><p>Duplicity supports more than SFTP as a backend, however, it will just make my
+scripts less relevant too you.</p><h2 id=installation>Installation</h2><p>Fedora happily has a package available so this is as easy as:</p><pre tabindex=0><code>sudo yum install duplicity python-paramiko -y
+</code></pre><p>It also happily doesn&rsquo;t have a whole lot of dependencies.</p><p>You&rsquo;ll also need GPG installed if you want to make use of my scripts, this
 won&rsquo;t trample on any GPG setup you may currently have. On Fedora this is
-provided with the gpgme package and can be installed like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo yum install gpgme -y
-</span></span></code></pre></div><h3 id="gpg-key-creation">GPG Key Creation</h3>
-<p>You&rsquo;ll only need to perform this process once, afterwards you&rsquo;ll have the
+provided with the gpgme package and can be installed like so:</p><pre tabindex=0><code>sudo yum install gpgme -y
+</code></pre><h3 id=gpg-key-creation>GPG Key Creation</h3><p>You&rsquo;ll only need to perform this process once, afterwards you&rsquo;ll have the
 exported keys to move and backup as you please. I&rsquo;ve chosen to use a 4096 bit
 RSA and RSA key that doesn&rsquo;t expire and has the name &ldquo;System Backups&rdquo; without
-an email address or a comment.</p>
-<p>I&rsquo;ve also set a very long pass string on the key as you&rsquo;ll be relying on this
+an email address or a comment.</p><p>I&rsquo;ve also set a very long pass string on the key as you&rsquo;ll be relying on this
 to protect all the data on all your systems you&rsquo;ll be backing up with this.
 These settings are of course personal preference and a 4096 bit key may be
 overkill for most uses, though I really enjoy overkill when it comes to
-security and peace of mind.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gpg --keyring backup-pub.gpg --secret-keyring backup-sec.gpg \
-</span></span><span style="display:flex;"><span>  --no-default-keyring --gen-key
-</span></span></code></pre></div><p>Now we need a way to securely move the generated keys around without worrying
+security and peace of mind.</p><pre tabindex=0><code>gpg --keyring backup-pub.gpg --secret-keyring backup-sec.gpg \
+  --no-default-keyring --gen-key
+</code></pre><p>Now we need a way to securely move the generated keys around without worrying
 about. I&rsquo;ve chosen to export the public and private keys, encrypt them with a
-symmetric pass string and move the resulting file between machines.</p>
-<p>The private key should be encrypted anyway but it&rsquo;s one extra layer that can be
+symmetric pass string and move the resulting file between machines.</p><p>The private key should be encrypted anyway but it&rsquo;s one extra layer that can be
 added on that allows me to feel comfortable enough to leave the whole blob in
 the script without fear of compromising the private key in case that gets
-cracked.</p>
-<p>I refer to this password as the &ldquo;installation key&rdquo; as the script will use it to
-decrypt and import the keys into the local GPG on other machines.</p>
-<p>First you&rsquo;ll need to get the key ID of the key we just generated. This can be
-done like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gpg --keyring backup-pub.gpg --list-keys
-</span></span><span style="display:flex;"><span>/home/user/.gnupg/backup-pub.gpg
-</span></span><span style="display:flex;"><span>------------------------------------
-</span></span><span style="display:flex;"><span>pub   4096R/01234567 2012-09-24
-</span></span><span style="display:flex;"><span>uid                  System Backups
-</span></span><span style="display:flex;"><span>sub   4096R/89ABCDEF 2012-09-24
-</span></span></code></pre></div><p>Given the output above our key ID is <code>01234567</code>, you&rsquo;ll want to replace that in
+cracked.</p><p>I refer to this password as the &ldquo;installation key&rdquo; as the script will use it to
+decrypt and import the keys into the local GPG on other machines.</p><p>First you&rsquo;ll need to get the key ID of the key we just generated. This can be
+done like so:</p><pre tabindex=0><code>gpg --keyring backup-pub.gpg --list-keys
+/home/user/.gnupg/backup-pub.gpg
+------------------------------------
+pub   4096R/01234567 2012-09-24
+uid                  System Backups
+sub   4096R/89ABCDEF 2012-09-24
+</code></pre><p>Given the output above our key ID is <code>01234567</code>, you&rsquo;ll want to replace that in
 the following commands with your own key ID. First we&rsquo;ll export the public key,
-there isn&rsquo;t any security concerns here:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gpg --keyring backup-pub.gpg --output backup-pubkey.gpg --export 01234567
-</span></span></code></pre></div><p>You now have the public key in the file <code>backup-pubkey.gpg</code>. Now we&rsquo;re going to
+there isn&rsquo;t any security concerns here:</p><pre tabindex=0><code>gpg --keyring backup-pub.gpg --output backup-pubkey.gpg --export 01234567
+</code></pre><p>You now have the public key in the file <code>backup-pubkey.gpg</code>. Now we&rsquo;re going to
 export the private key without saving it, combine it with the public key, and
-encrypt the whole shebang into one file. Watch closely&hellip;</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gpg --secret-keyring backup-sec.gpg --export-secret-key 01234567 |
-</span></span><span style="display:flex;"><span>  cat backup-pubkey.gpg - | gpg --armor --symmetric --cipher-algo AES256 \
-</span></span><span style="display:flex;"><span>  --output backup-keys.asc
-</span></span></code></pre></div><p>You now have a block of base64 encoded encrypted goodness in the
-<code>backup-keys.asc</code> file which you can import later on.</p>
-<h3 id="gpg-key-import">GPG Key Import</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cat export.asc | gpg2 --decrypt --batch --passphrase &#34;PASSWORD&#34; | gpg2 \
-</span></span><span style="display:flex;"><span>  --keyring backup-pub.gpg --secret-keyring backup-sec.gpg --import
-</span></span></code></pre></div>
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+encrypt the whole shebang into one file. Watch closely&mldr;</p><pre tabindex=0><code>gpg --secret-keyring backup-sec.gpg --export-secret-key 01234567 |
+  cat backup-pubkey.gpg - | gpg --armor --symmetric --cipher-algo AES256 \
+  --output backup-keys.asc
+</code></pre><p>You now have a block of base64 encoded encrypted goodness in the
+<code>backup-keys.asc</code> file which you can import later on.</p><h3 id=gpg-key-import>GPG Key Import</h3><pre tabindex=0><code>cat export.asc | gpg2 --decrypt --batch --passphrase &#34;PASSWORD&#34; | gpg2 \
+  --keyring backup-pub.gpg --secret-keyring backup-sec.gpg --import
+</code></pre></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

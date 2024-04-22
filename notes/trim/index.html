@@ -1,253 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/trim/" />
-
-
-    <title>
-        
-            Trim :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Trim">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well.">
-
-<meta itemprop="wordCount" content="676">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Trim"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well."/>
-
-
-
-    <meta property="og:title" content="Trim" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/trim/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/trim/">Trim</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/trim/><title>Trim :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Trim"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well."><meta itemprop=wordCount content="676"><meta name=twitter:card content="summary"><meta name=twitter:title content="Trim"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Configuring This page is referring to TRIM support for SSDs. To enable it add noatime,discard to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/trim/>Trim</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<h2 id="configuring">Configuring</h2>
-<p>This page is referring to TRIM support for SSDs. To enable it add
+until I get around to updating it.</strong></em></p><h2 id=configuring>Configuring</h2><p>This page is referring to TRIM support for SSDs. To enable it add
 <code>noatime,discard</code> to the options on all of the fstab partition entries that
 live on the drive. Be sure to disable any swap partitions that live on that
-drive as well.</p>
-<h3 id="note-on-encrypted-drives">Note on Encrypted Drives</h3>
-<p>Turning TRIM support on for an encrypted hard drive will not actually do
+drive as well.</p><h3 id=note-on-encrypted-drives>Note on Encrypted Drives</h3><p>Turning TRIM support on for an encrypted hard drive will not actually do
 anything. <code>discard</code> is a file system level option and full disk encryption
 lives below that. It makes sense that it doesn&rsquo;t work, writing a sector full of
 0s to an encrypted partition will result in a sector of encrypted 0s which will
-look more or less like random garbage.</p>
-<p>There is a trick to allow this to work but I&rsquo;m not will to go that route due to
+look more or less like random garbage.</p><p>There is a trick to allow this to work but I&rsquo;m not will to go that route due to
 the security implications of allowing attackers to see where the data lives on
 my hard drive and where it doesn&rsquo;t, but for completeness, I&rsquo;m documenting
-(untested) what needs to be done to enable this.</p>
-<p>You&rsquo;ll need to replace &lt;your_device&gt; with the DM mapper crypted partition such
+(untested) what needs to be done to enable this.</p><p>You&rsquo;ll need to replace &lt;your_device> with the DM mapper crypted partition such
 as <code>/dev/mapper/vg_desktop-lv_root</code>. You&rsquo;ll want to do this for all of the
-encrypted partitions on the drive.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>dmsetup table &lt;your_device&gt; --showkeys
-</span></span><span style="display:flex;"><span>dmsetup load &lt;your_device&gt; --&#34;&lt;line above&gt; 1 allow_discards&#34;
-</span></span><span style="display:flex;"><span>dmsetup resume &lt;your_device&gt;
-</span></span></code></pre></div><p>Even without TRIM support noatime and no swap partitions are still good
-performance improvements.</p>
-<h2 id="testing">Testing</h2>
-<p>This requires you install the <code>hdparm</code> package on Fedora.</p>
-<p>To test and make sure that trim support is working, make sure you&rsquo;re in a
+encrypted partitions on the drive.</p><pre tabindex=0><code>dmsetup table &lt;your_device&gt; --showkeys
+dmsetup load &lt;your_device&gt; --&#34;&lt;line above&gt; 1 allow_discards&#34;
+dmsetup resume &lt;your_device&gt;
+</code></pre><p>Even without TRIM support noatime and no swap partitions are still good
+performance improvements.</p><h2 id=testing>Testing</h2><p>This requires you install the <code>hdparm</code> package on Fedora.</p><p>To test and make sure that trim support is working, make sure you&rsquo;re in a
 directory that lives on a partition on the SSD, then create a test file like
-so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>seq 1 1000 &gt; trimtest
-</span></span><span style="display:flex;"><span>sync
-</span></span><span style="display:flex;"><span>hdparm --fibmap trimtest
-</span></span></code></pre></div><p>You will get output like this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>trimtest:
-</span></span><span style="display:flex;"><span> filesystem blocksize 4096, begins at LBA 0; assuming 512 byte sectors.
-</span></span><span style="display:flex;"><span> byte_offset  begin_LBA    end_LBA    sectors
-</span></span><span style="display:flex;"><span>           0   25565616   25565623          8
-</span></span></code></pre></div><p>The important thing to take into account is the <code>begin_LBA</code> column make note of
+so:</p><pre tabindex=0><code>seq 1 1000 &gt; trimtest
+sync
+hdparm --fibmap trimtest
+</code></pre><p>You will get output like this:</p><pre tabindex=0><code>trimtest:
+ filesystem blocksize 4096, begins at LBA 0; assuming 512 byte sectors.
+ byte_offset  begin_LBA    end_LBA    sectors
+           0   25565616   25565623          8
+</code></pre><p>The important thing to take into account is the <code>begin_LBA</code> column make note of
 this number and use it in place in the following commands. You&rsquo;ll need to
-replace <code>/dev/sda</code> with the device name matching your SSD.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>hdparm --read-sector 25565616 /dev/sda
-</span></span></code></pre></div><p>You&rsquo;ll receive output that looks a lot like the following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/dev/sda:
-</span></span><span style="display:flex;"><span>reading sector 25565616: succeeded
-</span></span><span style="display:flex;"><span>bb2d 06dc 87c3 6bb6 c43c fab7 a0a9 12db
-</span></span><span style="display:flex;"><span>9e35 2246 4ae3 9eaf 373e 3ce3 ea75 2657
-</span></span><span style="display:flex;"><span>4bb9 e299 c9cf eee9 c74b bb86 9b25 b36c
-</span></span><span style="display:flex;"><span>5214 bf13 7f2b 0cf3 9866 6b7e 0344 8f33
-</span></span><span style="display:flex;"><span>4ea4 0cdc 6ad3 f3e2 8a72 4032 b0d5 7c8c
-</span></span><span style="display:flex;"><span>2002 82cc d631 6f80 0967 e698 5e7c b9c3
-</span></span><span style="display:flex;"><span>c660 9953 ed1e 832f 29a2 7c46 5fab f7e0
-</span></span><span style="display:flex;"><span>8705 6c74 10d2 3649 6b4c 136e e3ba b36f
-</span></span><span style="display:flex;"><span>21dd f96e 9d7c 7c9e 8596 0c0b 67df 76fe
-</span></span><span style="display:flex;"><span>6797 608c 0f42 145e b381 4efe 754f bd59
-</span></span><span style="display:flex;"><span>8575 d75e 95b0 7281 f454 c364 43ab 11dd
-</span></span><span style="display:flex;"><span>79a4 e3b2 1b11 67fa ec04 5d73 6ed9 d77b
-</span></span><span style="display:flex;"><span>bebe 3df2 086c 26e3 ac8e c6b3 0591 370f
-</span></span><span style="display:flex;"><span>5c9c ec7f 777e 15de 23e0 d432 5b8a 460a
-</span></span><span style="display:flex;"><span>132c d09c a81d 3683 79ff c7de 4631 f88f
-</span></span><span style="display:flex;"><span>fa53 5aa6 0286 1817 0dde 85c8 84bc 3a03
-</span></span><span style="display:flex;"><span>f8b1 60eb e1ca 5f1e 2094 eba9 ec61 6fe8
-</span></span><span style="display:flex;"><span>7214 1a0c 88e1 4dac 5f3c f3b7 9d29 7dfd
-</span></span><span style="display:flex;"><span>2c2a 6539 a675 a755 482b 31c8 755c 832c
-</span></span><span style="display:flex;"><span>e166 25b9 539d e0a2 2360 217b 79ec a7d9
-</span></span><span style="display:flex;"><span>9930 e7a7 3af7 d318 83aa 1098 81c2 161f
-</span></span><span style="display:flex;"><span>e55c 6c45 4641 b4e8 8aeb 58e3 e199 74d5
-</span></span><span style="display:flex;"><span>b6ff 93a1 da35 11e9 c3f3 e84d 10e8 ee5b
-</span></span><span style="display:flex;"><span>094f f905 af0e 2872 a683 4836 9d7b 1dba
-</span></span><span style="display:flex;"><span>c528 e972 f72d 1575 a116 bc3d 44b4 970c
-</span></span><span style="display:flex;"><span>db54 690e 2434 3c4e 9eec 2b60 6ccf 4765
-</span></span><span style="display:flex;"><span>6f90 b0bc 7f15 9bd5 6213 3b4b c477 9972
-</span></span><span style="display:flex;"><span>cb27 d777 afcb d95e 1528 2ecd 5d2e 63c9
-</span></span><span style="display:flex;"><span>a25e 9132 39af dab4 81db ea9e a168 204e
-</span></span><span style="display:flex;"><span>f162 8616 7c6a c7e3 bdb2 cb5c 7620 fd43
-</span></span><span style="display:flex;"><span>17af b869 978d 6b58 c54f fdc9 8a37 01d2
-</span></span><span style="display:flex;"><span>f82e b721 631b 3888 bb27 874c 872a 28e0
-</span></span></code></pre></div><p>Now we&rsquo;ll remove the file, sync the filesystem and check that sector again:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rm -f trimtest
-</span></span><span style="display:flex;"><span>sync
-</span></span><span style="display:flex;"><span>hdparm --read-sector 25565616 /dev/sda
-</span></span></code></pre></div><p>If trim support is working the sector read should be all 0s.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+replace <code>/dev/sda</code> with the device name matching your SSD.</p><pre tabindex=0><code>hdparm --read-sector 25565616 /dev/sda
+</code></pre><p>You&rsquo;ll receive output that looks a lot like the following:</p><pre tabindex=0><code>/dev/sda:
+reading sector 25565616: succeeded
+bb2d 06dc 87c3 6bb6 c43c fab7 a0a9 12db
+9e35 2246 4ae3 9eaf 373e 3ce3 ea75 2657
+4bb9 e299 c9cf eee9 c74b bb86 9b25 b36c
+5214 bf13 7f2b 0cf3 9866 6b7e 0344 8f33
+4ea4 0cdc 6ad3 f3e2 8a72 4032 b0d5 7c8c
+2002 82cc d631 6f80 0967 e698 5e7c b9c3
+c660 9953 ed1e 832f 29a2 7c46 5fab f7e0
+8705 6c74 10d2 3649 6b4c 136e e3ba b36f
+21dd f96e 9d7c 7c9e 8596 0c0b 67df 76fe
+6797 608c 0f42 145e b381 4efe 754f bd59
+8575 d75e 95b0 7281 f454 c364 43ab 11dd
+79a4 e3b2 1b11 67fa ec04 5d73 6ed9 d77b
+bebe 3df2 086c 26e3 ac8e c6b3 0591 370f
+5c9c ec7f 777e 15de 23e0 d432 5b8a 460a
+132c d09c a81d 3683 79ff c7de 4631 f88f
+fa53 5aa6 0286 1817 0dde 85c8 84bc 3a03
+f8b1 60eb e1ca 5f1e 2094 eba9 ec61 6fe8
+7214 1a0c 88e1 4dac 5f3c f3b7 9d29 7dfd
+2c2a 6539 a675 a755 482b 31c8 755c 832c
+e166 25b9 539d e0a2 2360 217b 79ec a7d9
+9930 e7a7 3af7 d318 83aa 1098 81c2 161f
+e55c 6c45 4641 b4e8 8aeb 58e3 e199 74d5
+b6ff 93a1 da35 11e9 c3f3 e84d 10e8 ee5b
+094f f905 af0e 2872 a683 4836 9d7b 1dba
+c528 e972 f72d 1575 a116 bc3d 44b4 970c
+db54 690e 2434 3c4e 9eec 2b60 6ccf 4765
+6f90 b0bc 7f15 9bd5 6213 3b4b c477 9972
+cb27 d777 afcb d95e 1528 2ecd 5d2e 63c9
+a25e 9132 39af dab4 81db ea9e a168 204e
+f162 8616 7c6a c7e3 bdb2 cb5c 7620 fd43
+17af b869 978d 6b58 c54f fdc9 8a37 01d2
+f82e b721 631b 3888 bb27 874c 872a 28e0
+</code></pre><p>Now we&rsquo;ll remove the file, sync the filesystem and check that sector again:</p><pre tabindex=0><code>rm -f trimtest
+sync
+hdparm --read-sector 25565616 /dev/sda
+</code></pre><p>If trim support is working the sector read should be all 0s.</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

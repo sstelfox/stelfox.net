@@ -1,275 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/ntpd/" />
-
-
-    <title>
-        
-            NTPd :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="NTPd">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer.">
-
-<meta itemprop="wordCount" content="774">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="NTPd"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer."/>
-
-
-
-    <meta property="og:title" content="NTPd" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/ntpd/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/ntpd/">NTPd</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/ntpd/><title>NTPd :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="NTPd"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer."><meta itemprop=wordCount content="774"><meta name=twitter:card content="summary"><meta name=twitter:title content="NTPd"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of computer systems over packet-switched, variable-latency data networks. NTP uses UDP on port 123 as its transport layer. It is designed particularly to resist the effects of variable latency by using a jitter buffer."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/ntpd/>NTPd</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of
+until I get around to updating it.</strong></em></p><p>The Network Time Protocol (NTP) is a protocol for synchronizing the clocks of
 computer systems over packet-switched, variable-latency data networks. NTP uses
 UDP on port 123 as its transport layer. It is designed particularly to resist
-the effects of variable latency by using a jitter buffer.</p>
-<p>NTP also refers to a reference software implementation that is distributed by
-the NTP Public Services Project.</p>
-<h2 id="security-notes">Security Notes</h2>
-<p>Several authentication schemes and miscellaneous programs running on the
+the effects of variable latency by using a jitter buffer.</p><p>NTP also refers to a reference software implementation that is distributed by
+the NTP Public Services Project.</p><h2 id=security-notes>Security Notes</h2><p>Several authentication schemes and miscellaneous programs running on the
 servers rely heavily on closely synced clocks. NTP provides a clock
 synchronized to within 10 milliseconds of the other clocks over the internet
-and as close as 200 microseconds.</p>
-<p>This runs as an unprivileged user with no shell when run as a server as such
+and as close as 200 microseconds.</p><p>This runs as an unprivileged user with no shell when run as a server as such
 it&rsquo;s compromise could at the very worst make it hand out incorrect time. While
 this would mean the authentication schemes and programs wouldn&rsquo;t function
 correctly this is something that would be noticed when day to day activity
-ceased to function.</p>
-<p>When run as a client, it has to be run as root to update the system&rsquo;s clock. If
+ceased to function.</p><p>When run as a client, it has to be run as root to update the system&rsquo;s clock. If
 an attacker was to compromise the data stream and was able to execute arbitrary
 commands in a response packet there would be issues. This is a highly unlikely
 scenario. None-the-less I prefer to have them synchronize against a trusted
-locally run server.</p>
-<h2 id="firewall-adjustments">Firewall Adjustments</h2>
-<p>NTP synchronizations are allowed through my default <a href="https://stelfox.net/notes/iptables/">IPTables</a> firewall
+locally run server.</p><h2 id=firewall-adjustments>Firewall Adjustments</h2><p>NTP synchronizations are allowed through my default <a href=https://stelfox.net/notes/iptables/>IPTables</a> firewall
 script. By default it is unrestricted and should be configured to be more
 restrictive by replacing it with the one below. You should replace the address
-with your time server&rsquo;s address.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Allow time sync updates, once an ntp server is setup this can be further
-</span></span><span style="display:flex;"><span># restricted to only update from there.
-</span></span><span style="display:flex;"><span>-A OUTPUT -m udp -p udp --dport 123 -j ACCEPT
-</span></span></code></pre></div><p>For the server the opposite should be true. The service should only accept
+with your time server&rsquo;s address.</p><pre tabindex=0><code># Allow time sync updates, once an ntp server is setup this can be further
+# restricted to only update from there.
+-A OUTPUT -m udp -p udp --dport 123 -j ACCEPT
+</code></pre><p>For the server the opposite should be true. The service should only accept
 connections on the local subnets. The following firewall rules should be added
-to the firewall.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Allow other servers and clients on the local subnet to synchronize their
-</span></span><span style="display:flex;"><span># clocks to this server using ntp
-</span></span><span style="display:flex;"><span>-A SERVICES -m udp -p udp -s 10.13.37.0/24 --dport 123 -j ACCEPT
-</span></span><span style="display:flex;"><span>-A SERVICES -m udp -p udp -s 10.13.38.0/24 --dport 123 -j ACCEPT
-</span></span></code></pre></div><h2 id="configuration">Configuration</h2>
-<h3 id="etcntpconf">/etc/ntp.conf</h3>
-<p>A standard configuration of ntp is shown below, there isn&rsquo;t a whole lot to
-explain so I&rsquo;ll leave it at that.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># For more information about this file, see the man pages
-</span></span><span style="display:flex;"><span># ntp.conf(5), ntp_acc(5), ntp_auth(5), ntp_clock(5), ntp_misc(5), ntp_mon(5).
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>driftfile /var/lib/ntp/drift
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Permit time synchronization with our time source, but do not
-</span></span><span style="display:flex;"><span># permit the source to query or modify the service on this system.
-</span></span><span style="display:flex;"><span>restrict default kod nomodify notrap nopeer noquery
-</span></span><span style="display:flex;"><span>restrict -6 default kod nomodify notrap nopeer noquery
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>restrict 127.0.0.1 
-</span></span><span style="display:flex;"><span>restrict -6 ::1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Hosts on local network are less restricted.
-</span></span><span style="display:flex;"><span>restrict 10.13.37.64 mask 255.255.255.192 nomodify notrap nopeer
-</span></span><span style="display:flex;"><span>restrict 10.13.37.128 mask 255.255.255.192 nomodify notrap nopeer
-</span></span><span style="display:flex;"><span>restrict 10.13.37.192 mask 255.255.255.192 nomodify notrap nopeer
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Stratum 1 time servers - diverse group
-</span></span><span style="display:flex;"><span>server clock.nyc.he.net iburst # IPv6 enabled
-</span></span><span style="display:flex;"><span>server clock.sjc.he.net iburst # IPv6 enabled
-</span></span><span style="display:flex;"><span>server time.keneli.org iburst
-</span></span><span style="display:flex;"><span>server bonehed.lcs.mit.edu iburst
-</span></span><span style="display:flex;"><span>server gnomon.cc.columbia.edu iburst
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Enable public key cryptography.
-</span></span><span style="display:flex;"><span>#crypto
-</span></span><span style="display:flex;"><span>includefile /etc/ntp/crypto/pw
-</span></span><span style="display:flex;"><span>keys /etc/ntp/keys
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Specify the key identifiers which are trusted.
-</span></span><span style="display:flex;"><span>trustedkey 1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Specify the key identifier to use with the ntpdc utility.
-</span></span><span style="display:flex;"><span>requestkey 1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Specify the key identifier to use with the ntpq utility.
-</span></span><span style="display:flex;"><span>controlkey 1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Enable writing of statistics records.
-</span></span><span style="display:flex;"><span>statistics clockstats cryptostats loopstats peerstats
-</span></span></code></pre></div><p>The server will need to be set to start automatically on boot. Use the
-following command to do this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>chkconfig --level 345 ntpd on
-</span></span></code></pre></div><h3 id="etcntpkeys">/etc/ntp/keys</h3>
-<p>A keyfile needs to be created for local and remote administration of the
+to the firewall.</p><pre tabindex=0><code># Allow other servers and clients on the local subnet to synchronize their
+# clocks to this server using ntp
+-A SERVICES -m udp -p udp -s 10.13.37.0/24 --dport 123 -j ACCEPT
+-A SERVICES -m udp -p udp -s 10.13.38.0/24 --dport 123 -j ACCEPT
+</code></pre><h2 id=configuration>Configuration</h2><h3 id=etcntpconf>/etc/ntp.conf</h3><p>A standard configuration of ntp is shown below, there isn&rsquo;t a whole lot to
+explain so I&rsquo;ll leave it at that.</p><pre tabindex=0><code># For more information about this file, see the man pages
+# ntp.conf(5), ntp_acc(5), ntp_auth(5), ntp_clock(5), ntp_misc(5), ntp_mon(5).
+
+driftfile /var/lib/ntp/drift
+
+# Permit time synchronization with our time source, but do not
+# permit the source to query or modify the service on this system.
+restrict default kod nomodify notrap nopeer noquery
+restrict -6 default kod nomodify notrap nopeer noquery
+
+restrict 127.0.0.1 
+restrict -6 ::1
+
+# Hosts on local network are less restricted.
+restrict 10.13.37.64 mask 255.255.255.192 nomodify notrap nopeer
+restrict 10.13.37.128 mask 255.255.255.192 nomodify notrap nopeer
+restrict 10.13.37.192 mask 255.255.255.192 nomodify notrap nopeer
+
+# Stratum 1 time servers - diverse group
+server clock.nyc.he.net iburst # IPv6 enabled
+server clock.sjc.he.net iburst # IPv6 enabled
+server time.keneli.org iburst
+server bonehed.lcs.mit.edu iburst
+server gnomon.cc.columbia.edu iburst
+
+# Enable public key cryptography.
+#crypto
+includefile /etc/ntp/crypto/pw
+keys /etc/ntp/keys
+
+# Specify the key identifiers which are trusted.
+trustedkey 1
+
+# Specify the key identifier to use with the ntpdc utility.
+requestkey 1
+
+# Specify the key identifier to use with the ntpq utility.
+controlkey 1
+
+# Enable writing of statistics records.
+statistics clockstats cryptostats loopstats peerstats
+</code></pre><p>The server will need to be set to start automatically on boot. Use the
+following command to do this:</p><pre tabindex=0><code>chkconfig --level 345 ntpd on
+</code></pre><h3 id=etcntpkeys>/etc/ntp/keys</h3><p>A keyfile needs to be created for local and remote administration of the
 service. To do this generate a random 8 character alphanumeric password and
-replace the &lsquo;xxxxxxxx&rsquo; in the file <code>/etc/ntp/keys</code>.</p>
-<p>This file should also be protected from read / write from unauthorized users
-<code>600</code> with chmod. The contents are below:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>1      M       xxxxxxxx
-</span></span></code></pre></div><h2 id="checking-server-status">Checking Server Status</h2>
-<p>On the server running <code>ntpd</code> you can use the <code>ntpq</code> utility to check the
-current status of the ntpd service like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# ntpq -p 127.0.0.1
-</span></span><span style="display:flex;"><span>     remote           refid      st t when poll reach   delay   offset  jitter
-</span></span><span style="display:flex;"><span>==============================================================================
-</span></span><span style="display:flex;"><span>*clock.nyc.he.ne .CDMA.           1 u    1   64    1   52.015  -16.888   2.421
-</span></span><span style="display:flex;"><span> clock.sjc.he.ne .GPS.            1 u    2   64    1  110.573    3.201   0.366
-</span></span><span style="display:flex;"><span> time.keneli.org .PPS.            1 u    1   64    1   29.378   -4.100   1.737
-</span></span><span style="display:flex;"><span> bonehed.lcs.mit .PPS.            1 u    2   64    1   16.254   -1.620   1.396
-</span></span><span style="display:flex;"><span> gnomon.cc.colum .USNO.           1 u    1   64    1   51.110  -15.607   2.697
-</span></span></code></pre></div>
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+replace the &lsquo;xxxxxxxx&rsquo; in the file <code>/etc/ntp/keys</code>.</p><p>This file should also be protected from read / write from unauthorized users
+<code>600</code> with chmod. The contents are below:</p><pre tabindex=0><code>1      M       xxxxxxxx
+</code></pre><h2 id=checking-server-status>Checking Server Status</h2><p>On the server running <code>ntpd</code> you can use the <code>ntpq</code> utility to check the
+current status of the ntpd service like so:</p><pre tabindex=0><code>[root@localhost ~]# ntpq -p 127.0.0.1
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*clock.nyc.he.ne .CDMA.           1 u    1   64    1   52.015  -16.888   2.421
+ clock.sjc.he.ne .GPS.            1 u    2   64    1  110.573    3.201   0.366
+ time.keneli.org .PPS.            1 u    1   64    1   29.378   -4.100   1.737
+ bonehed.lcs.mit .PPS.            1 u    2   64    1   16.254   -1.620   1.396
+ gnomon.cc.colum .USNO.           1 u    1   64    1   51.110  -15.607   2.697
+</code></pre></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

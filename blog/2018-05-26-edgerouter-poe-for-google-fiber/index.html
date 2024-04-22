@@ -1,0 +1,573 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="I recently moved to an area with Google Fiber and jumped on the chance to have a cheap and fast connection, and I didn&amp;rsquo;t need to sell my soul to certain other companies. I already owned a Ubiquiti EdgeRouter PoE 5 which has been battle tested at easily routing a gigabit worth of small packets.
+When setting up my service, the representative I talked to told me I was able to use my own router, but I would still need to get a Google Fiber Network Box."><meta name=keywords content=",network,ubiquiti"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2018-05-26-edgerouter-poe-for-google-fiber/><title>Setting Up EdgeRouter PoE on Google Fiber :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Setting Up EdgeRouter PoE on Google Fiber"><meta itemprop=description content="I recently moved to an area with Google Fiber and jumped on the chance to have a cheap and fast connection, and I didn&rsquo;t need to sell my soul to certain other companies. I already owned a Ubiquiti EdgeRouter PoE 5 which has been battle tested at easily routing a gigabit worth of small packets.
+When setting up my service, the representative I talked to told me I was able to use my own router, but I would still need to get a Google Fiber Network Box."><meta itemprop=datePublished content="2018-05-26T18:41:09-06:00"><meta itemprop=dateModified content="2018-05-26T18:41:09-06:00"><meta itemprop=wordCount content="2967"><meta itemprop=keywords content="Network,Ubiquiti"><meta name=twitter:card content="summary"><meta name=twitter:title content="Setting Up EdgeRouter PoE on Google Fiber"><meta name=twitter:description content="I recently moved to an area with Google Fiber and jumped on the chance to have a cheap and fast connection, and I didn&rsquo;t need to sell my soul to certain other companies. I already owned a Ubiquiti EdgeRouter PoE 5 which has been battle tested at easily routing a gigabit worth of small packets.
+When setting up my service, the representative I talked to told me I was able to use my own router, but I would still need to get a Google Fiber Network Box."><meta property="article:published_time" content="2018-05-26 18:41:09 -0600 -0600"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2018-05-26-edgerouter-poe-for-google-fiber/>Setting Up EdgeRouter PoE on Google Fiber</a></h2><div class=post-content><p>I recently moved to an area with Google Fiber and jumped on the chance to have
+a cheap and fast connection, and I didn&rsquo;t need to sell my soul to certain other
+companies. I already owned a <a href=https://www.ubnt.com/edgemax/edgerouter-poe/>Ubiquiti EdgeRouter PoE 5</a> which has been
+battle tested at easily routing a gigabit worth of small packets.</p><p>When setting up my service, the representative I talked to told me I was able
+to use my own router, but I would still need to get a Google Fiber Network Box.
+I confirmed this with the staff who handed me the network box, informing me I
+just had to &ldquo;put it into bridge mode&rdquo;. Turns out there is no bridge mode, and
+no you don&rsquo;t need the Fiber Box.</p><p>After much Googling and confirming those two points, I came across <a href=http://comptechrt.blogspot.com/2015/10/google-fiber-with-3rd-party.html>other</a>
+<a href=https://www.stevejenkins.com/blog/2015/11/replace-your-google-fiber-network-box-with-a-ubiquiti-edgerouter-lite/>people</a> have been in this situation <a href=https://productforums.google.com/forum/#!msg/fiber/AbNh8ij72Mw/l0quYBiiCJ8J>before</a> and have written up their
+own very good documentation on very similar setups. A lot of the information is
+at least a year old so it was worth going over carefully, and didn&rsquo;t go quite
+as far as I&rsquo;d like.</p><p>One thing I will say ahead of time. I&rsquo;m not adventuring into the TV service as
+I don&rsquo;t have it. From the messages I read, if you want this a cheap Gigabit
+switch between your router and the fiber jack that you can additionally plug
+the TV box into will do the trick (but you want to avoid powering the jack with
+PoE if you go this route).</p><p>There was some discussion from an official Google representative in one of the
+many threads that made a passing mention they would switch to untagged traffic
+so I wanted to verify what was happening. For this I <a href=/blog/2018/05/quick-and-silent-gigabit-packet-interception/>became the wire</a> and
+sniffed the traffic directly. The settings on the wire matched the contents of
+a deleted post from a Google representative early on in <a href=https://productforums.google.com/forum/#!msg/fiber/AbNh8ij72Mw/l0quYBiiCJ8J>this thread</a>
+reproduced here for future reference:</p><blockquote><p>Here&rsquo;s the gory details if you really want to use your own router:</p><ol><li>Traffic in/out of the fiberjack is vlan tagged with vlan2.</li><li>DHCP traffic should have 802.1p bit = 2</li><li>IGMP traffic should have 802.1p bit = 6</li><li>All other internet traffic 802.1p bit = 3</li></ol><p>You can send data without the 802.1p bits but your performance will get
+throttled to something like 10Mbit.</p><p>NOTE: This data is subject to change. We are planning on changing the data
+in/out of the fiberjack to be untagged, which will then make it really easy
+for you to connect your own router.</p><p>A word of warning, most consumer routers don&rsquo;t have hardware forwarding (that
+is my feeble understanding) so you might not be happy with the performance on
+your network, and which will also probably affect tv service quality.</p></blockquote><p>One other piece of information that I gleaned from the traffic capture is that
+the IPv6 prefix length of /56. If you want to reproduce this, look into the
+DHCPv6 messages for a pair of solicit / request (actually a response but that
+is how it is labeled).</p><p>I had some initial concern about VLAN tagging as I suspected it may force
+software handling of all routed packets. The EdgeRouter PoE has hardware
+offloading for VLAN tagging available so this is not an issue for this router.
+For anyone using this as a reference for another router, you&rsquo;ll want to make
+sure yours supports this.</p><h2 id=basic-connectivity>Basic Connectivity</h2><p>The first task was to get basic IPv4 connectivity going. When I started the
+configuration my router was on version 1.9.1.1, which I upgraded to 1.10.1
+<em>after</em> I finished all of the configuration. I didn&rsquo;t have any issues with the
+software, everything seemed very stable.</p><p>The basic connectivity just requires tagging outbound traffic with VLAN 2, to
+get the full speed the packets additionally need to have the correct 802.1q QoS
+tags. The one bonus we&rsquo;ll add that is totally unecessary is powering the jack
+with PoE since we&rsquo;re already going to messing with that interface.</p><p><em>Sidenote: If you want to play with egress values, changing after the fact
+requires editing of the <a href=#changing-the-egress-qos-value>config on disk and a full restart</a>. It&rsquo;s kind of a
+pain to go through a bunch of different options.</em></p><p>The EdgeRouter PoE doesn&rsquo;t seem to be able to adjust QoS settings based on the
+protocol (I could be wrong I didn&rsquo;t look into this too deeply, maybe the
+advanced traffic control stuff?), but since I don&rsquo;t have the TV service, I
+don&rsquo;t have the IGMP traffic to worry about. That just leaves DHCPv4 packets.</p><p>I confirmed that DHCPv4 will get an address when tagged with a QoS value of 3
+(which is what the bulk traffic should be tagged with). Later on, I go into
+detail <a href=#initial-connectivity-time>about an issue</a> that I think could be potentially related to this
+but I haven&rsquo;t done additional testing.</p><p>I tried several mapping values for different types of traffic and settled on
+mapping everything to a QoS value of 3 (option 3 below). The mappings that I
+tried are:</p><ol><li>0:2</li><li>0:3</li><li>0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3</li><li>0:3 1:3 2:3 3:3 4:4 5:5 6:6 7:7</li><li>0:6</li></ol><p>To configure the router, connect the fiber jack to eth0 on the router and make
+sure the fiber jack doesn&rsquo;t have its external power connected. SSH into your
+router (this will depend on your current settings, or do a full reset and use
+the default static IP setting) and go into configure mode:</p><pre tabindex=0><code>configure
+</code></pre><p>There are a lot of changes that need to be made, the one thing you&rsquo;ll want to
+double check is the name of your firewall rules which should have already been
+setup. By default they get named <code>WAN_IN</code>, <code>WANv6_IN</code>, <code>WAN_LOCAL</code>, and
+<code>WANv6_LOCAL</code> and I didn&rsquo;t need to make any changes to them to get things
+working. Because there are so many changes from the default WAN settings, we&rsquo;re
+going to start from a clean slate:</p><pre tabindex=0><code>delete interfaces ethernet eth0
+</code></pre><p>Now we need to setup the physical connection details again and we&rsquo;ll add the
+PoE configuration to power the jack. Please note that these will not go into
+effect until we commit them (which we&rsquo;re going to wait to do until later).</p><pre tabindex=0><code>edit interfaces ethernet eth0
+set description &#34;Google Fiber Jack&#34;
+set duplex auto
+set speed auto
+set poe output 48v
+exit
+</code></pre><p>We&rsquo;re now going to want to create the VLAN interface on eth0, which is done
+through the <code>vif</code> sub-commands off the interface. While not necessary yet,
+we&rsquo;ll also place the IPv6 firewalls in place, even if you don&rsquo;t intend to using
+IPv6 having these in place can prevent accidents if it ever gets enabled.</p><pre tabindex=0><code>edit interfaces ethernet eth0 vif 2
+set description Internet
+set address dhcp
+set egress-qos &#34;0:3 1:3 2:3 3:3 4:3 5:3 6:3 7:3&#34;
+set firewall in name WAN_IN
+set firewall in ipv6-name WANv6_IN
+set firewall local name WAN_LOCAL
+set firewall local name WANv6_IN
+exit
+</code></pre><p>To ensure the routing performance is as good as it can be, we want to ensure
+the relevant hardware offload settings are configured:</p><pre tabindex=0><code>edit system offload
+set ipv4 forwarding enable
+set ipv4 vlan enable
+exit
+</code></pre><p>At this point we need to commit the change to allow the VLAN interface to be
+created. Routing won&rsquo;t work yet, but this will power the jack and get it
+booting. To get basic routing working the outbound interface for NAT will also
+need to be updated and recommitted. You&rsquo;ll want to double check your NAT rule
+number matches mine (5010).</p><pre tabindex=0><code>commit
+set service nat rule 5010 outbound-interface eth0.2
+commit
+</code></pre><p>Now you&rsquo;ll have to wait a while for everything to come up, which can be <a href=#initial-connectivity-time>up to
+five minutes</a> but your IPv4 connectivity should be all set.</p><p>I also setup IPv6 separately using DHCPv6-PD, giving a separate /64 network to
+each of my internal networks. I&rsquo;m going to leave that for another post though.</p><h2 id=changing-the-egress-qos-value>Changing the egress-qos Value</h2><p>If you want to change the <code>egress-qos</code> value after the VLAN interface comes up
+you&rsquo;ll be presented with the following error message:</p><pre tabindex=0><code>admin@ubnt-router:~$ configure
+[edit]
+admin@ubnt-router# set interfaces ethernet eth0 vif 2 egress-qos &#34;0:2&#34;
+[edit]
+admin@ubnt-router# commit
+egress-qos can only be set at vlan creation for 2
+
+Commit failed
+[edit]
+</code></pre><p>To actually change this value, you need to switch to root, and use <code>vi</code> to edit
+the <code>/config/config.boot</code> file and reboot the router itself.</p><h2 id=initial-connectivity-time>Initial Connectivity Time</h2><p>Several time during the course of testing this I assumed I had broken my
+connectivity while testing. I was actually experiencing surprisingly long
+delays getting connectivity after changes. Part of this is that the PoE to the
+fiber jack isn&rsquo;t maintained while the router is rebooting, forcing the jack to
+boot as well, but a large portion of that is the IPv4 connectivity itself.</p><p>The timings I measured during a reboot were:</p><ul><li>1 minute 18 seconds to first ping of internal LAN interface</li><li>An additional 35 seconds before the SSH port was open</li><li>19 more seconds before logins were allowed</li><li>A further 33 seconds before the router saw the link from the fiber jack come
+up</li><li>22 seconds until IPv6 connectivity was established (internal hosts now have
+IPv6 internet)</li><li>An additional 3 minutes 46 seconds before the eth0.2 interface gets an IPv4
+address and IPv4 connectivity is available.</li></ul><p>Total boot time: 5 minutes 53 seconds. That is pretty crazy and it&rsquo;s almost all
+waiting for an IPv4 address on the link. Either something is really slow on
+Google&rsquo;s end, or this delay is because the DHCP traffic is tagged with an
+incorrect QoS value (I haven&rsquo;t tested it).</p><p>Either way, reboots once setup are pretty rare and I can wait the almost six
+minutes without internet when it happens.</p><h2 id=mss-clamping>MSS Clamping</h2><p><a href=https://www.stevejenkins.com/blog/2015/11/replace-your-google-fiber-network-box-with-a-ubiquiti-edgerouter-lite/>Steve Jenkins</a>&rsquo;s post has the most complete documentation on setting up the
+EdgeRouter (and makes his configs <a href=https://github.com/stevejenkins/UBNT-EdgeRouter-Example-Configs>available on GitHub</a>), but I was a tad
+confused about him using MSS clamping, which I&rsquo;ve left out of my config.</p><p>MSS clamping is used to restrict MTU sizes through TCP headers, and is very
+useful when tunneling traffic or wrapping in an authentication mechanism such
+as PPPoE, MPLS, or GRE. During the crafting of packets, hosts won&rsquo;t be aware of
+the tunnel which will have its own MTU and packet overhead and thus can hit
+some performance snags.</p><p>With this config, we are at most adding 4 bytes to each packet as a VLAN tag
+but won&rsquo;t encounter a tunnel that will break a packet up into multiple tunneled
+packets when a packet is to large and rebuild it at the other exactly the same.
+Any fragmentation that occurs in transit will be visible to the MSS detection
+algorithms and handled correctly without the overhead or limitation of MSS
+clamping. If anything I&rsquo;d expect it to slow down the connection slightly for
+large packets.</p><h2 id=notes-for-the-post>Notes for the post:</h2><p>Raw config:</p><pre tabindex=0><code>/* Everything in this section with the one exception are defaults */
+firewall {
+    all-ping enable
+    broadcast-ping disable
+    ipv6-name WANv6_IN {
+        default-action drop
+        description &#34;WAN inbound traffic forwarded to LAN&#34;
+        enable-default-log
+        rule 10 {
+            action accept
+            description &#34;Allow established/related sessions&#34;
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description &#34;Drop invalid state&#34;
+            state {
+                invalid enable
+            }
+        }
+        /* This is the one thing that was added, but I&#39;m not sure it&#39;s necessary... */
+        rule 30 {
+            action accept
+            description &#34;Allow ICMPv6&#34;
+            log disable
+            protocol icmpv6
+        }
+    }
+    ipv6-name WANv6_LOCAL {
+        default-action drop
+        description &#34;WAN inbound traffic to the router&#34;
+        enable-default-log
+        rule 10 {
+            action accept
+            description &#34;Allow established/related sessions&#34;
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description &#34;Drop invalid state&#34;
+            state {
+                invalid enable
+            }
+        }
+        rule 30 {
+            action accept
+            description &#34;Allow IPv6 icmp&#34;
+            protocol ipv6-icmp
+        }
+        rule 40 {
+            action accept
+            description &#34;allow dhcpv6&#34;
+            destination {
+                port 546
+            }
+            protocol udp
+            source {
+                port 547
+            }
+        }
+    }
+    ipv6-receive-redirects disable
+    ipv6-src-route disable
+    ip-src-route disable
+    log-martians enable
+    name WAN_IN {
+        default-action drop
+        description &#34;WAN to internal&#34;
+        rule 10 {
+            action accept
+            description &#34;Allow established/related&#34;
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description &#34;Drop invalid state&#34;
+            state {
+                invalid enable
+            }
+        }
+    }
+    name WAN_LOCAL {
+        default-action drop
+        description &#34;WAN to router&#34;
+        rule 10 {
+            action accept
+            description &#34;Allow established/related&#34;
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 20 {
+            action drop
+            description &#34;Drop invalid state&#34;
+            state {
+                invalid enable
+            }
+        }
+    }
+    receive-redirects disable
+    send-redirects enable
+    source-validation disable
+    syn-cookies enable
+}
+interfaces {
+    ethernet eth0 {
+        description &#34;Google Fiber Jack&#34;
+        duplex auto
+        poe {
+            /* Power the Fiber jack */
+            output 48v
+        }
+        speed auto
+        /* Most of this section is relevant */
+        vif 2 {
+            address dhcp
+            description Internet
+            dhcpv6-pd {
+                /* Go over the DNS options even though they&#39;re not required... */
+                no-dns
+                pd 0 {
+                    interface eth1 {
+                        /* Relevant option */
+                        host-address ::1
+                        /* Go over the DNS options even though they&#39;re not required... */
+                        no-dns
+                        /* Relevant options */
+                        prefix-id :0
+                        service slaac
+                    }
+                    interface switch0 {
+                        /* Relevant option */
+                        host-address ::1
+                        /* Go over the DNS options even though they&#39;re not required... */
+                        no-dns
+                        /* Relevant options */
+                        prefix-id :1
+                        service slaac
+                    }
+                    /* Google Fiber specific */
+                    prefix-length /56
+                }
+                /* This is debateable and seems to work either way, cover the discussion */
+                rapid-commit enable
+            }
+            /* This is worth going over */
+            egress-qos 0:3
+            firewall {
+                in {
+                    ipv6-name WANv6_IN
+                    name WAN_IN
+                }
+                local {
+                    ipv6-name WANv6_LOCAL
+                    name WAN_LOCAL
+                }
+            }
+        }
+    }
+    ethernet eth1 {
+        /* Person specific */
+        address 10.186.208.1/24
+        description DMZ
+        duplex auto
+        ipv6 {
+            /* Set automatically */
+            dup-addr-detect-transmits 1
+            router-advert {
+                /* Set automatically */
+                cur-hop-limit 64
+                link-mtu 0
+                managed-flag false
+                max-interval 600
+                /* Good to go over but not relevant */
+                name-server 2606:4700:4700::1111
+                name-server 2606:4700:4700::1001
+                other-config-flag false
+                /* Needs to be set, without it it will be missing from the dhcpv6-pd config, but only if name servers are set */
+                prefix ::/64 {
+                    autonomous-flag true
+                    on-link-flag true
+                    /* Will get set automatically */
+                    valid-lifetime 2592000
+                }
+                /* Will get set automatically */
+                reachable-time 0
+                retrans-timer 0
+                send-advert true
+            }
+        }
+        poe {
+            output off
+        }
+        speed auto
+    }
+    ethernet eth2 {
+        description &#34;LAN&#34;
+        duplex auto
+        poe {
+            output off
+        }
+        speed auto
+    }
+    ethernet eth3 {
+        description &#34;LAN&#34;
+        duplex auto
+        poe {
+            output off
+        }
+        speed auto
+    }
+    ethernet eth4 {
+        description &#34;LAN&#34;
+        duplex auto
+        poe {
+            output off
+        }
+        speed auto
+    }
+    loopback lo {
+    }
+    switch switch0 {
+        /* Person specific */
+        address 10.202.254.1/24
+        description &#34;LAN&#34;
+        ipv6 {
+            /* Set automatically */
+            dup-addr-detect-transmits 1
+            router-advert {
+                /* Set automatically */
+                cur-hop-limit 64
+                link-mtu 0
+                managed-flag false
+                max-interval 600
+                /* Good to go over but not relevant */
+                name-server 2606:4700:4700::1111
+                name-server 2606:4700:4700::1001
+                /* Will get set automatically */
+                other-config-flag false
+                /* Needs to be set, without it it will be missing from the dhcpv6-pd config, but only if name servers are set */
+                prefix ::/64 {
+                    autonomous-flag true
+                    on-link-flag true
+                    /* Will get set automatically */
+                    valid-lifetime 2592000
+                }
+                /* Will get set automatically */
+                reachable-time 0
+                retrans-timer 0
+                send-advert true
+            }
+        }
+        mtu 1500
+        switch-port {
+            interface eth2 {
+            }
+            interface eth3 {
+            }
+            interface eth4 {
+            }
+            vlan-aware disable
+        }
+    }
+}
+service {
+    dhcp-server {
+        disabled false
+        hostfile-update disable
+        shared-network-name LAN {
+            authoritative enable
+            /* Person specific */
+            subnet 10.186.208.0/24 {
+                /* Person specific */
+                default-router 10.186.208.1
+                /* Good to go over but not relevant */
+                dns-server 1.1.1.1
+                dns-server 1.0.0.1
+                /* Irrelevant */
+                domain-name example.tld
+                lease 86400
+                /* Person specific */
+                start 10.186.208.38 {
+                    stop 10.186.208.243
+                }
+            }
+        }
+        shared-network-name DMZ {
+            authoritative enable
+            /* Person specific */
+            subnet 10.202.254.0/24 {
+                /* Person specific */
+                default-router 10.202.254.1
+                /* Good to go over but not relevant */
+                dns-server 1.1.1.1
+                dns-server 1.0.0.1
+                /* Irrelevant */
+                domain-name example.tld
+                lease 86400
+                /* Person specific */
+                start 10.202.254.38 {
+                    stop 10.202.254.243
+                }
+            }
+        }
+        use-dnsmasq disable
+    }
+    gui {
+        http-port 80
+        https-port 443
+        /* Good practice, but not relevant to Fiber */
+        older-ciphers disable
+    }
+    nat {
+        rule 5010 {
+            description &#34;masquerade for WAN&#34;
+            /* Relevant to Fiber config (vif 2) */
+            outbound-interface eth0.2
+            type masquerade
+        }
+    }
+    /* Defaults */
+    ssh {
+        port 22
+        protocol-version v2
+    }
+    /* Next two services are unrelated to Fiber config */
+    ubnt-discover {
+        disable
+    }
+    /* Need to go over the security trade offs here... */
+    upnp2 {
+        acl {
+            rule 10 {
+                action deny
+                local-port 0-1024
+                subnet 0.0.0.0/0
+            }
+            rule 20 {
+                action deny
+                external-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100,9200
+                subnet 0.0.0.0/0
+            }
+            rule 30 {
+                action deny
+                local-port 0-1024,1080,5432,8000,8080,8081,8088,8443,8888,9100,9200
+                subnet 0.0.0.0/0
+            }
+            rule 40 {
+                action allow
+                subnet 10.202.254.0/24
+            }
+            rule 100 {
+                action deny
+                subnet 0.0.0.0/0
+            }
+        }
+        listen-on switch0
+        nat-pmp disable
+        secure-mode enable
+        wan eth0.2
+    }
+}
+system {
+    /* These next two lines are not relevant to the Fiber config */
+    domain-name example.tld
+    host-name ubnt-router.example.tld
+    /* These will always be user specific */
+    login {
+        user admin {
+            authentication {
+                encrypted-password ****************
+                plaintext-password ****************
+            }
+            full-name &#34;Admin User&#34;
+            level admin
+        }
+    }
+    /* While these are not relevant to Google Fiber config it is good to go over */
+    name-server 1.1.1.1
+    name-server 1.0.0.1
+    name-server 2606:4700:4700::1111
+    name-server 2606:4700:4700::1001
+    /* Defaults */
+    ntp {
+        server 0.ubnt.pool.ntp.org {
+        }
+        server 1.ubnt.pool.ntp.org {
+        }
+        server 2.ubnt.pool.ntp.org {
+        }
+        server 3.ubnt.pool.ntp.org {
+        }
+    }
+    offload {
+        /* This is not available on the EdgeRouter PoE */
+        hwnat disable
+        /* These are all worth discussing */
+        ipsec enable
+        ipv4 {
+            forwarding enable
+            vlan enable
+        }
+        ipv6 {
+            forwarding enable
+            vlan enable
+        }
+    }
+    syslog {
+        global {
+            facility all {
+                level notice
+            }
+        }
+        /* Irrelevant to Fiber config */
+        host 2605:a601:4049:c100:afdb:e15f:c174:5f71 {
+            facility all {
+                level info
+            }
+        }
+    }
+    /* Irrelevant to Fiber config */
+    time-zone UTC
+    /* Irrelevant to Fiber config */
+    traffic-analysis {
+        dpi disable
+        export enable
+    }
+}
+</code></pre><p>Refs:</p><ul><li><a href=https://community.ubnt.com/t5/EdgeRouter/Comcast-IPv6-issues-when-hwnat-enabled-on-ER-X/m-p/1850112#U1850112>https://community.ubnt.com/t5/EdgeRouter/Comcast-IPv6-issues-when-hwnat-enabled-on-ER-X/m-p/1850112#U1850112</a></li><li><a href=https://community.ubnt.com/t5/EdgeRouter/Updated-Google-Fiber-EdgeRouter-Lite-PoE-IPv4-amp-IPv6-config/td-p/1790440>https://community.ubnt.com/t5/EdgeRouter/Updated-Google-Fiber-EdgeRouter-Lite-PoE-IPv4-amp-IPv6-config/td-p/1790440</a></li><li><a href=https://community.ubnt.com/t5/EdgeRouter/IPv6-DHCPv6-and-DHCPv6-PD/td-p/1115361>https://community.ubnt.com/t5/EdgeRouter/IPv6-DHCPv6-and-DHCPv6-PD/td-p/1115361</a></li><li><a href=https://kazoo.ga/dhcpv6-pd-for-native-ipv6/>https://kazoo.ga/dhcpv6-pd-for-native-ipv6/</a></li><li><a href=https://community.ubnt.com/t5/EdgeRouter/The-generation-of-etc-radvd-conf-is-missing-my-configuration/td-p/1355531>https://community.ubnt.com/t5/EdgeRouter/The-generation-of-etc-radvd-conf-is-missing-my-configuration/td-p/1355531</a></li><li><a href=https://community.ubnt.com/t5/EdgeRouter/ERlite-1-5-upnp2-secure-mode/td-p/923222>https://community.ubnt.com/t5/EdgeRouter/ERlite-1-5-upnp2-secure-mode/td-p/923222</a></li><li><a href=https://flyovercountry.org/2014/02/google-fiber-gigabit-speeds-your-router-part-1-vlans/>https://flyovercountry.org/2014/02/google-fiber-gigabit-speeds-your-router-part-1-vlans/</a></li><li><a href=http://itnutt.com/how-to-bypass-google-fibers-network-box/>http://itnutt.com/how-to-bypass-google-fibers-network-box/</a></li><li><a href=https://netswat.com/blog/google-fiber-ubiquitis-edgerouter/>https://netswat.com/blog/google-fiber-ubiquitis-edgerouter/</a></li><li><a href=https://netswat.com/blog/wp-content/uploads/2016/07/Edge-Setup-Interfacesv3.txt>https://netswat.com/blog/wp-content/uploads/2016/07/Edge-Setup-Interfacesv3.txt</a></li><li><a href=https://netswat.com/blog/wp-content/uploads/2016/07/EdgeRouter-TVScript6.txt>https://netswat.com/blog/wp-content/uploads/2016/07/EdgeRouter-TVScript6.txt</a></li></ul></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/network/>network</a></span>
+<span class=tag><a href=https://stelfox.net/tags/ubiquiti/>ubiquiti</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

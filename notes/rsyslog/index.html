@@ -1,427 +1,211 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
-Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/rsyslog/" />
-
-
-    <title>
-        
-            RSyslog :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="RSyslog">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/rsyslog/><title>RSyslog :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="RSyslog"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
-Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more.">
-
-<meta itemprop="wordCount" content="1861">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="RSyslog"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."><meta itemprop=wordCount content="1861"><meta name=twitter:card content="summary"><meta name=twitter:title content="RSyslog"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
-Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."/>
-
-
-
-    <meta property="og:title" content="RSyslog" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
-Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/rsyslog/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/rsyslog/">RSyslog</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/rsyslog/>RSyslog</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<h1 id="rsyslog">RSyslog</h1>
-<p>RSyslog is a more advanced replacement for the aging klogd and syslogd. It
+until I get around to updating it.</strong></em></p><h1 id=rsyslog>RSyslog</h1><p>RSyslog is a more advanced replacement for the aging klogd and syslogd. It
 supports useful features such as attribute filtering, multiple protocol
-support, and logging to databases.</p>
-<h2 id="security-notes">Security Notes</h2>
-<p>RSyslog can log some sensitive information or very useful information for any
+support, and logging to databases.</p><h2 id=security-notes>Security Notes</h2><p>RSyslog can log some sensitive information or very useful information for any
 potential intruder including service names, versions, valid usernames, logon
-times and quite a bit more.</p>
-<p>Attempts are usually made to alter or destroy logs by various malicious actors
+times and quite a bit more.</p><p>Attempts are usually made to alter or destroy logs by various malicious actors
 to cover their tracks. As such it is highly recommended that logs are sent to a
 central hardened host that can maintain a backup of any logs in case a server
 is compromised as well as providing a central place for logs to be processed
-and manipulated.</p>
-<p>Other software will need to be used to handle the correlation of logs, RSyslog
-itself only provides mechanisms for aggregations.</p>
-<h2 id="firewall-adjustments">Firewall Adjustments</h2>
-<p>By default RSyslog doesn&rsquo;t need any ports opened. If you intend to send your
+and manipulated.</p><p>Other software will need to be used to handle the correlation of logs, RSyslog
+itself only provides mechanisms for aggregations.</p><h2 id=firewall-adjustments>Firewall Adjustments</h2><p>By default RSyslog doesn&rsquo;t need any ports opened. If you intend to send your
 logs over the network, it will depend on how you&rsquo;re doing it. UDP is the most
 error prone but the least processor intensive, you could also use UDP across a
-one-way data path which can be valuable in some high security situations.</p>
-<p>TCP is more reliable but does require more processing and memory as connections
+one-way data path which can be valuable in some high security situations.</p><p>TCP is more reliable but does require more processing and memory as connections
 need to be tracked. This overhead is usually trivial amounts in small to medium
-logging situations and can probably be safely ignored in most cases.</p>
-<p>RSyslog also provides a mechanism to encrypt syslog messages over TCP using
-TLS. This however requires there to be a trusted <a href="https://stelfox.net/notes/building-a-certificate-authority/">Certificate_Authority</a> to
-create and sign certificates. You could potentially use <a href="https://www.startssl.com/">StartSSL</a>
+logging situations and can probably be safely ignored in most cases.</p><p>RSyslog also provides a mechanism to encrypt syslog messages over TCP using
+TLS. This however requires there to be a trusted <a href=https://stelfox.net/notes/certificate_authority/>Certificate_Authority</a> to
+create and sign certificates. You could potentially use <a href=https://www.startssl.com/>StartSSL</a>
 certificates but using others could do the same thing and correctly
 authenticate to your log server. There would be an audit trail linking someone
 to the offending certificate, getting access to that information would require
-assistance from the issuing authority in the event of a breach.</p>
-<p>Many network appliances, switches, and routers don&rsquo;t support TCP or TLS syslog
+assistance from the issuing authority in the event of a breach.</p><p>Many network appliances, switches, and routers don&rsquo;t support TCP or TLS syslog
 reporting. This frequently means you&rsquo;ll want to operate in a mixed mode setup,
 providing a secure connection to clients that support it while still allowing
-older clients to send you logs over UDP.</p>
-<p>These logs generally travel unencrypted over the network unless configured to
-do otherwise.</p>
-<h2 id="firewall-adjustments-1">Firewall Adjustments</h2>
-<p>If you&rsquo;re sending or receiving log messages between machines you&rsquo;ll need to
+older clients to send you logs over UDP.</p><p>These logs generally travel unencrypted over the network unless configured to
+do otherwise.</p><h2 id=firewall-adjustments-1>Firewall Adjustments</h2><p>If you&rsquo;re sending or receiving log messages between machines you&rsquo;ll need to
 adjust your firewall rules to allow the traffic. Syslog has an IANA assigned
-port number of <em>514</em> for both TCP and UDP.</p>
-<p>It is common and more widely supported by endpoint devices to support UDP as it
+port number of <em>514</em> for both TCP and UDP.</p><p>It is common and more widely supported by endpoint devices to support UDP as it
 requires less processing but is more prone to message loss. TCP is
 significantly more reliable for message delivery, at the cost of having more
-processing overhead.</p>
-<p>RSyslog also supports a homegrown protocol referred to as RELP (the &ldquo;Reliable
+processing overhead.</p><p>RSyslog also supports a homegrown protocol referred to as RELP (the &ldquo;Reliable
 Event Logging Protocol&rdquo;). This does not have an IANA standard port assigned to
-it but defaults to port <em>2514/tcp</em>.</p>
-<p>It is a good idea to limit the hosts that can send log messages to your central
+it but defaults to port <em>2514/tcp</em>.</p><p>It is a good idea to limit the hosts that can send log messages to your central
 log servers or implement a form of authentication to prevent malicious
-attackers from flooding / overloading your log server.</p>
-<h2 id="forwarding-windows-events">Forwarding Windows Events</h2>
-<p>There is a handy service that can forward syslog events from the Windows Event
+attackers from flooding / overloading your log server.</p><h2 id=forwarding-windows-events>Forwarding Windows Events</h2><p>There is a handy service that can forward syslog events from the Windows Event
 subsystem built into windows to a syslog server. It&rsquo;s called
-<a href="http://code.google.com/p/eventlog-to-syslog/">eventlog-to-syslog</a> and seems to be under active development (good thing).</p>
-<h2 id="modular-configuration">Modular Configuration</h2>
-<p>Modular configuration of services has become increasingly important with the
+<a href=http://code.google.com/p/eventlog-to-syslog/>eventlog-to-syslog</a> and seems to be under active development (good thing).</p><h2 id=modular-configuration>Modular Configuration</h2><p>Modular configuration of services has become increasingly important with the
 rise of configuration management systems. By making use of the modular imports,
 configuration of systems can be mostly standardized with only the variations
 based on the system&rsquo;s role adding or removing individual files without worrying
-about the state of others.</p>
-<p>I&rsquo;ve updated my example configurations for RSyslog to make full use of the
-modular configuration mechanism.</p>
-<p><em><strong>Compatibility warning:</strong></em> I&rsquo;ve switched from using the &ldquo;legacy&rdquo; syslog.conf
+about the state of others.</p><p>I&rsquo;ve updated my example configurations for RSyslog to make full use of the
+modular configuration mechanism.</p><p><em><strong>Compatibility warning:</strong></em> I&rsquo;ve switched from using the &ldquo;legacy&rdquo; syslog.conf
 syntax to RSyslog&rsquo;s &ldquo;RainerScript&rdquo; as much as possible. This sample
 configuration works at version 7.4.8 of RSyslog on Fedora 20. I&rsquo;ve had serious
 compatibility issues going to new and older minor releases of RSyslog with
 certain subsets of the new syntax, all of which I&rsquo;ve left out of these examples
-to the best of my abilities.</p>
-<p>My base <code>/etc/rsyslog.conf</code> file.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>module(load=&#34;imuxsock&#34;)
-</span></span><span style="display:flex;"><span>module(load=&#34;imjournal&#34; statefile=&#34;imjournal.state&#34;)
-</span></span><span style="display:flex;"><span>module(load=&#34;imklog&#34;)
-</span></span><span style="display:flex;"><span>module(load=&#34;immark&#34; interval=&#34;3600&#34;)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>$WorkDirectory /var/lib/rsyslog
-</span></span><span style="display:flex;"><span>$IncludeConfig /etc/rsyslog.d/*.conf
-</span></span></code></pre></div><p>If you prefer not to have time based mark messages periodically added to your
+to the best of my abilities.</p><p>My base <code>/etc/rsyslog.conf</code> file.</p><pre tabindex=0><code>module(load=&#34;imuxsock&#34;)
+module(load=&#34;imjournal&#34; statefile=&#34;imjournal.state&#34;)
+module(load=&#34;imklog&#34;)
+module(load=&#34;immark&#34; interval=&#34;3600&#34;)
+
+$WorkDirectory /var/lib/rsyslog
+$IncludeConfig /etc/rsyslog.d/*.conf
+</code></pre><p>If you prefer not to have time based mark messages periodically added to your
 log files you&rsquo;ll want to remove or comment out that line or change the interval
-that they&rsquo;re logged at (I&rsquo;ve found hourly to be pretty balanced and useful).</p>
-<p>The first important modular configuration file is for logging messages to local
+that they&rsquo;re logged at (I&rsquo;ve found hourly to be pretty balanced and useful).</p><p>The first important modular configuration file is for logging messages to local
 files. All my systems get this file which I place at
-<code>/etc/rsyslog.d/local_logging.conf</code>.</p>
-<p>There is one weird condition on only logging to local files if the log message
+<code>/etc/rsyslog.d/local_logging.conf</code>.</p><p>There is one weird condition on only logging to local files if the log message
 itself didn&rsquo;t come from a file, the reason for this will become apparent later
-on.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>if $inputname != &#39;imfile&#39; then {
-</span></span><span style="display:flex;"><span>  local7.*                                  action(type=&#34;omfile&#34; file=&#34;/var/log/boot.log&#34;)
-</span></span><span style="display:flex;"><span>  cron.*                                    action(type=&#34;omfile&#34; file=&#34;/var/log/cron&#34;)
-</span></span><span style="display:flex;"><span>  mail.*                                    action(type=&#34;omfile&#34; file=&#34;/var/log/maillog&#34;)
-</span></span><span style="display:flex;"><span>  *.info;mail.none;authpriv.none;cron.none  action(type=&#34;omfile&#34; file=&#34;/var/log/messages&#34;)
-</span></span><span style="display:flex;"><span>  authpriv.*                                action(type=&#34;omfile&#34; file=&#34;/var/log/secure&#34;)
-</span></span><span style="display:flex;"><span>  uucp,news.crit                            action(type=&#34;omfile&#34; file=&#34;/var/log/spooler&#34;)
-</span></span><span style="display:flex;"><span>  *.emerg                                   action(type=&#34;omusrmsg&#34; users=&#34;*&#34;)
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>You can stop at this point if you&rsquo;re not going to send your logs to a central
+on.</p><pre tabindex=0><code>if $inputname != &#39;imfile&#39; then {
+  local7.*                                  action(type=&#34;omfile&#34; file=&#34;/var/log/boot.log&#34;)
+  cron.*                                    action(type=&#34;omfile&#34; file=&#34;/var/log/cron&#34;)
+  mail.*                                    action(type=&#34;omfile&#34; file=&#34;/var/log/maillog&#34;)
+  *.info;mail.none;authpriv.none;cron.none  action(type=&#34;omfile&#34; file=&#34;/var/log/messages&#34;)
+  authpriv.*                                action(type=&#34;omfile&#34; file=&#34;/var/log/secure&#34;)
+  uucp,news.crit                            action(type=&#34;omfile&#34; file=&#34;/var/log/spooler&#34;)
+  *.emerg                                   action(type=&#34;omusrmsg&#34; users=&#34;*&#34;)
+}
+</code></pre><p>You can stop at this point if you&rsquo;re not going to send your logs to a central
 location. On the systems that will be receiving logs you&rsquo;ll want to add the
-following configuration file at <code>/etc/rsyslog.d/server.conf</code>.</p>
-<p>This is one of the places where I couldn&rsquo;t find a RainerScript equivalent
+following configuration file at <code>/etc/rsyslog.d/server.conf</code>.</p><p>This is one of the places where I couldn&rsquo;t find a RainerScript equivalent
 (around the definition of templates). The RELP module also doesn&rsquo;t support the
 &lsquo;ruleset&rsquo; attribute, otherwise, I&rsquo;d probably include the module just for
-completeness.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>module(load=&#34;imudp&#34;)
-</span></span><span style="display:flex;"><span>module(load=&#34;imtcp&#34;)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>$template remoteAudit,    &#34;/var/log/remote/%fromhost-ip%/audit.log&#34;
-</span></span><span style="display:flex;"><span>$template remoteBoot,     &#34;/var/log/remote/%fromhost-ip%/boot.log&#34;
-</span></span><span style="display:flex;"><span>$template remoteCron,     &#34;/var/log/remote/%fromhost-ip%/cron&#34;
-</span></span><span style="display:flex;"><span>$template remoteMail,     &#34;/var/log/remote/%fromhost-ip%/maillog&#34;
-</span></span><span style="display:flex;"><span>$template remoteMessages, &#34;/var/log/remote/%fromhost-ip%/messages&#34;
-</span></span><span style="display:flex;"><span>$template remoteSecure,   &#34;/var/log/remote/%fromhost-ip%/secure&#34;
-</span></span><span style="display:flex;"><span>$template remoteSpooler,  &#34;/var/log/remote/%fromhost-ip%/spooler&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>$template auditFormat, &#34;%msg%\n&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>ruleset(name=&#34;remote&#34;) {
-</span></span><span style="display:flex;"><span>  if $pri-text == &#39;local6.info&#39; and $programname == &#39;auditd-sender&#39; then {
-</span></span><span style="display:flex;"><span>    local6.info   action(type=&#34;omfile&#34; dynaFile=&#34;remoteAudit&#34; template=&#34;auditFormat&#34;)
-</span></span><span style="display:flex;"><span>  } else {
-</span></span><span style="display:flex;"><span>    local7.*                                  action(type=&#34;omfile&#34; dynaFile=&#34;remoteBoot&#34;)
-</span></span><span style="display:flex;"><span>    cron.*                                    action(type=&#34;omfile&#34; dynaFile=&#34;remoteCron&#34;)
-</span></span><span style="display:flex;"><span>    mail.*                                    action(type=&#34;omfile&#34; dynaFile=&#34;remoteMail&#34; sync=&#34;off&#34;)
-</span></span><span style="display:flex;"><span>    *.info;mail.none;authpriv.none;cron.none  action(type=&#34;omfile&#34; dynaFile=&#34;remoteMessages&#34;)
-</span></span><span style="display:flex;"><span>    authpriv.*                                action(type=&#34;omfile&#34; dynaFile=&#34;remoteSecure&#34;)
-</span></span><span style="display:flex;"><span>    uucp,news.crit                            action(type=&#34;omfile&#34; dynaFile=&#34;remoteSpooler&#34;)
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>input(type=&#34;imudp&#34; port=&#34;514&#34; ruleset=&#34;remote&#34;)
-</span></span><span style="display:flex;"><span>input(type=&#34;imtcp&#34; port=&#34;514&#34; ruleset=&#34;remote&#34;)
-</span></span></code></pre></div><p>This will maintain indepedant log file for each client that sends the server
+completeness.</p><pre tabindex=0><code>module(load=&#34;imudp&#34;)
+module(load=&#34;imtcp&#34;)
+
+$template remoteAudit,    &#34;/var/log/remote/%fromhost-ip%/audit.log&#34;
+$template remoteBoot,     &#34;/var/log/remote/%fromhost-ip%/boot.log&#34;
+$template remoteCron,     &#34;/var/log/remote/%fromhost-ip%/cron&#34;
+$template remoteMail,     &#34;/var/log/remote/%fromhost-ip%/maillog&#34;
+$template remoteMessages, &#34;/var/log/remote/%fromhost-ip%/messages&#34;
+$template remoteSecure,   &#34;/var/log/remote/%fromhost-ip%/secure&#34;
+$template remoteSpooler,  &#34;/var/log/remote/%fromhost-ip%/spooler&#34;
+
+$template auditFormat, &#34;%msg%\n&#34;
+
+ruleset(name=&#34;remote&#34;) {
+  if $pri-text == &#39;local6.info&#39; and $programname == &#39;auditd-sender&#39; then {
+    local6.info   action(type=&#34;omfile&#34; dynaFile=&#34;remoteAudit&#34; template=&#34;auditFormat&#34;)
+  } else {
+    local7.*                                  action(type=&#34;omfile&#34; dynaFile=&#34;remoteBoot&#34;)
+    cron.*                                    action(type=&#34;omfile&#34; dynaFile=&#34;remoteCron&#34;)
+    mail.*                                    action(type=&#34;omfile&#34; dynaFile=&#34;remoteMail&#34; sync=&#34;off&#34;)
+    *.info;mail.none;authpriv.none;cron.none  action(type=&#34;omfile&#34; dynaFile=&#34;remoteMessages&#34;)
+    authpriv.*                                action(type=&#34;omfile&#34; dynaFile=&#34;remoteSecure&#34;)
+    uucp,news.crit                            action(type=&#34;omfile&#34; dynaFile=&#34;remoteSpooler&#34;)
+  }
+}
+
+input(type=&#34;imudp&#34; port=&#34;514&#34; ruleset=&#34;remote&#34;)
+input(type=&#34;imtcp&#34; port=&#34;514&#34; ruleset=&#34;remote&#34;)
+</code></pre><p>This will maintain indepedant log file for each client that sends the server
 logs broken down by IP address in the <code>/var/log/remote</code> directory. Each
 directory will match the one you&rsquo;d expect to see on that systems <code>/var/log</code>
-directory.</p>
-<p>If you look closely you can see that I&rsquo;ve got some special logic in place for
+directory.</p><p>If you look closely you can see that I&rsquo;ve got some special logic in place for
 handling one special type of log, the output of &lsquo;auditd&rsquo;. We&rsquo;ll get to that
-soon.</p>
-<p>We need to now configure our clients to send the logs to our server. On all
+soon.</p><p>We need to now configure our clients to send the logs to our server. On all
 machines (I do this on the log servers as well) I add the following
-configuration file at <code>/etc/rsyslog.d/remote.conf</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>*.* action(
-</span></span><span style="display:flex;"><span>  type=&#34;omfwd&#34;
-</span></span><span style="display:flex;"><span>  target=&#34;logserver.example.tld&#34;
-</span></span><span style="display:flex;"><span>  port=&#34;514&#34;
-</span></span><span style="display:flex;"><span>  protocol=&#34;tcp&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  action.resumeretrycount=&#34;-1&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  queue.filename=&#34;log01&#34;
-</span></span><span style="display:flex;"><span>  queue.size=&#34;1g&#34;
-</span></span><span style="display:flex;"><span>  queue.type=&#34;LinkedList&#34;
-</span></span><span style="display:flex;"><span>  queue.saveonshutdown=&#34;on&#34;
-</span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><p>You&rsquo;ll want to replace the value of the target attribute with the name of your
+configuration file at <code>/etc/rsyslog.d/remote.conf</code>.</p><pre tabindex=0><code>*.* action(
+  type=&#34;omfwd&#34;
+  target=&#34;logserver.example.tld&#34;
+  port=&#34;514&#34;
+  protocol=&#34;tcp&#34;
+
+  action.resumeretrycount=&#34;-1&#34;
+
+  queue.filename=&#34;log01&#34;
+  queue.size=&#34;1g&#34;
+  queue.type=&#34;LinkedList&#34;
+  queue.saveonshutdown=&#34;on&#34;
+)
+</code></pre><p>You&rsquo;ll want to replace the value of the target attribute with the name of your
 logserver. I&rsquo;ve never had issues with using hostnames though generally the best
 practice for logging is to use IP addresses. This name will only be looked up
-when the configuration is evaluated.</p>
-<p>I have two separate log servers that I send logs to for redundancy, this does
+when the configuration is evaluated.</p><p>I have two separate log servers that I send logs to for redundancy, this does
 make log processing later on a smidge more difficult due to duplicaitons but
-I&rsquo;ve found the benefits far outweigh the added effort.</p>
-<p>The final link in this log chain is sending our audit log files to the central
+I&rsquo;ve found the benefits far outweigh the added effort.</p><p>The final link in this log chain is sending our audit log files to the central
 server. This is why I&rsquo;ve added a conditional statement to the local logging as
 rsyslog isn&rsquo;t responsible for generating or locally logging this data and why
 the server file has conditions for dealing with the audit log. I keep this
-configuration in <code>/etc/rsyslog.d/audit_input.conf</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>module(load=&#34;imfile&#34;)
-</span></span><span style="display:flex;"><span>input(type=&#34;imfile&#34;
-</span></span><span style="display:flex;"><span>      file=&#34;/var/log/audit/audit.log&#34;
-</span></span><span style="display:flex;"><span>      statefile=&#34;imfile-state:-var-log-audit-audit.log&#34;
-</span></span><span style="display:flex;"><span>      tag=&#34;auditd-sender&#34;
-</span></span><span style="display:flex;"><span>      severity=&#34;info&#34;
-</span></span><span style="display:flex;"><span>      facility=&#34;local6&#34;)
-</span></span></code></pre></div><p>Ensure you restart the syslog server after making these changes:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl restart rsyslog.service
-</span></span></code></pre></div><h2 id="log-rotation-for-servers">Log Rotation for Servers</h2>
-<p>The last component in the log server is too ensure log files are regularly
+configuration in <code>/etc/rsyslog.d/audit_input.conf</code>.</p><pre tabindex=0><code>module(load=&#34;imfile&#34;)
+input(type=&#34;imfile&#34;
+      file=&#34;/var/log/audit/audit.log&#34;
+      statefile=&#34;imfile-state:-var-log-audit-audit.log&#34;
+      tag=&#34;auditd-sender&#34;
+      severity=&#34;info&#34;
+      facility=&#34;local6&#34;)
+</code></pre><p>Ensure you restart the syslog server after making these changes:</p><pre tabindex=0><code>systemctl restart rsyslog.service
+</code></pre><h2 id=log-rotation-for-servers>Log Rotation for Servers</h2><p>The last component in the log server is too ensure log files are regularly
 rotated and compressed. My per server log volume is relatively small so I
-rotate my logs weekly and keep a years worth for each machine.</p>
-<p>I stick the following configuration file at
+rotate my logs weekly and keep a years worth for each machine.</p><p>I stick the following configuration file at
 <code>/etc/logrotate.d/rsyslog_server.conf</code>. This assumes you already have
-<a href="https://stelfox.net/notes/logrotate/">logrotate</a> configured.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/var/log/remote/*/audit.log
-</span></span><span style="display:flex;"><span>/var/log/remote/*/boot.log
-</span></span><span style="display:flex;"><span>/var/log/remote/*/cron
-</span></span><span style="display:flex;"><span>/var/log/remote/*/maillog
-</span></span><span style="display:flex;"><span>/var/log/remote/*/messages
-</span></span><span style="display:flex;"><span>/var/log/remote/*/secure
-</span></span><span style="display:flex;"><span>/var/log/remote/*/spooler {
-</span></span><span style="display:flex;"><span>  # Keep three years worth of logs (52 weeks * 3 years)
-</span></span><span style="display:flex;"><span>  weekly
-</span></span><span style="display:flex;"><span>  rotate 52
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # If the file is missing, or empty just skip it and don&#39;t bother creating a
-</span></span><span style="display:flex;"><span>  # file if it&#39;s missing, rsyslog can handle it.
-</span></span><span style="display:flex;"><span>  missingok
-</span></span><span style="display:flex;"><span>  notifempty
-</span></span><span style="display:flex;"><span>  nocreate
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Append the date to any rotated log files instead of an arbitrary number and
-</span></span><span style="display:flex;"><span>  # compress any rotated logs (with the exception of the most recent one).
-</span></span><span style="display:flex;"><span>  compress
-</span></span><span style="display:flex;"><span>  delaycompress
-</span></span><span style="display:flex;"><span>  dateext
-</span></span><span style="display:flex;"><span>  dateformat .%Y%m%d
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # When all the logs are done being rotated notify Rsyslog that it needs to
-</span></span><span style="display:flex;"><span>  # reopen all it&#39;s file descriptors.
-</span></span><span style="display:flex;"><span>  sharedscripts
-</span></span><span style="display:flex;"><span>  postrotate
-</span></span><span style="display:flex;"><span>    [ -s /var/run/syslogd.pid ] &amp;&amp; kill -HUP $(cat /var/run/syslogd.pid) &amp;&gt; /dev/null || true
-</span></span><span style="display:flex;"><span>  endscript
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="relp">RELP</h2>
-<p>RELP is a custom log protocol created by the maintainers of RSyslog attempting
+<a href=https://stelfox.net/notes/logrotate/>logrotate</a> configured.</p><pre tabindex=0><code>/var/log/remote/*/audit.log
+/var/log/remote/*/boot.log
+/var/log/remote/*/cron
+/var/log/remote/*/maillog
+/var/log/remote/*/messages
+/var/log/remote/*/secure
+/var/log/remote/*/spooler {
+  # Keep three years worth of logs (52 weeks * 3 years)
+  weekly
+  rotate 52
+
+  # If the file is missing, or empty just skip it and don&#39;t bother creating a
+  # file if it&#39;s missing, rsyslog can handle it.
+  missingok
+  notifempty
+  nocreate
+
+  # Append the date to any rotated log files instead of an arbitrary number and
+  # compress any rotated logs (with the exception of the most recent one).
+  compress
+  delaycompress
+  dateext
+  dateformat .%Y%m%d
+
+  # When all the logs are done being rotated notify Rsyslog that it needs to
+  # reopen all it&#39;s file descriptors.
+  sharedscripts
+  postrotate
+    [ -s /var/run/syslogd.pid ] &amp;&amp; kill -HUP $(cat /var/run/syslogd.pid) &amp;&gt; /dev/null || true
+  endscript
+}
+</code></pre><h2 id=relp>RELP</h2><p>RELP is a custom log protocol created by the maintainers of RSyslog attempting
 to ensure logs are reliably delivered to particular servers. In practice I&rsquo;ve
 had significant issues RELP, mostly around it&rsquo;s reliability (ironically) at
-sending logs when all systems are operating normally and at low volumes.</p>
-<p>RELP was never able to pass any of my deployment tests reliably enough for me
+sending logs when all systems are operating normally and at low volumes.</p><p>RELP was never able to pass any of my deployment tests reliably enough for me
 to be able to make use of it in production and I highly encourage it not be
-used.</p>
-<h2 id="signature-providers">Signature Providers</h2>
-<p>RSyslog has integrated <a href="http://www.rsyslog.com/doc/sigprov_gt.html">signature provider support</a> through a third party
-service called <a href="http://guardtime.com/">GuardTime</a>. The Rsyslog developers have claimed other
+used.</p><h2 id=signature-providers>Signature Providers</h2><p>RSyslog has integrated <a href=http://www.rsyslog.com/doc/sigprov_gt.html>signature provider support</a> through a third party
+service called <a href=http://guardtime.com/>GuardTime</a>. The Rsyslog developers have claimed other
 signature provider modules will be provided in the future but give no
-indications on possible timelines or how they might be implemented.</p>
-<p>GuardTime itself as a service isn&rsquo;t well documented, their entire site being a
+indications on possible timelines or how they might be implemented.</p><p>GuardTime itself as a service isn&rsquo;t well documented, their entire site being a
 shrine to abstract meaningless buzz words. What I have been able to gather is
 that they implement some form of a block chain (it is unclear whether it is
 public or not) and they use the aggregated signatures of everyone requesting
 signatures of hashes as part of this block chain. I could be <em>way</em> off on this
 as the documentation is very sparse, old and is largely based off of jumps of
-intuition.</p>
-<p>GuardTime itself seems to have been having issues. They shut down their API due
+intuition.</p><p>GuardTime itself seems to have been having issues. They shut down their API due
 to DoS attacks now requiring an account. It also requires trusting them as a
 third party, even though they claim this is not the case (they provide no
-technical information backing this claim).</p>
-<p>Signing logs is not an easy problem. Systemd is also attempting to solve the
+technical information backing this claim).</p><p>Signing logs is not an easy problem. Systemd is also attempting to solve the
 problem in their own way, but there is a lot of criticism and valid arguments
-over their implementation.</p>
-<p>I work in environments that by definition don&rsquo;t trust third parties, so until
+over their implementation.</p><p>I work in environments that by definition don&rsquo;t trust third parties, so until
 there is a self-hosted solution for providing signatures, I can&rsquo;t recommend
-this.</p>
-<h2 id="personal-views">Personal Views</h2>
-<p>I use RSyslog because it is IMHO the best open source log daemon available. I
+this.</p><h2 id=personal-views>Personal Views</h2><p>I use RSyslog because it is IMHO the best open source log daemon available. I
 am appalled by the developers compatibility breaking changes between minor
-versions that I&rsquo;ve experienced, the self-aggrandizing (&lsquo;RainerScript&rsquo;&hellip;),
-inconsistent documentation, and general lack of support that I&rsquo;ve witnessed.</p>
-<p>That being said, I have yet to see even a commercial offering that works as
+versions that I&rsquo;ve experienced, the self-aggrandizing (&lsquo;RainerScript&rsquo;&mldr;),
+inconsistent documentation, and general lack of support that I&rsquo;ve witnessed.</p><p>That being said, I have yet to see even a commercial offering that works as
 well as RSyslog. The developers are continuing to develop in a security
 concious way (such as integrating encryption, and third party message
-signatures) and stability (such as log queues).</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+signatures) and stability (such as log queues).</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

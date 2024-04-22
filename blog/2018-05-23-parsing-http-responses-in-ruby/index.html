@@ -1,0 +1,106 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Normally handling HTTP responses in Ruby is rather straight forward. There is a native library in Ruby that handles HTTP requests which parses the responses into a neat data structure that you can then operate on. What if you want to work on stored HTTP responses outside of a connection though? This was the situation I found myself in and thanks to a series of unusual decisions in the Ruby core library I found myself left out in the cold."><meta name=keywords content=",ruby,tips"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2018-05-23-parsing-http-responses-in-ruby/><title>Parsing HTTP Responses in Ruby :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Parsing HTTP Responses in Ruby"><meta itemprop=description content="Normally handling HTTP responses in Ruby is rather straight forward. There is a native library in Ruby that handles HTTP requests which parses the responses into a neat data structure that you can then operate on. What if you want to work on stored HTTP responses outside of a connection though? This was the situation I found myself in and thanks to a series of unusual decisions in the Ruby core library I found myself left out in the cold."><meta itemprop=datePublished content="2018-05-23T07:53:19-06:00"><meta itemprop=dateModified content="2018-05-23T07:53:19-06:00"><meta itemprop=wordCount content="915"><meta itemprop=keywords content="Ruby,Tips"><meta name=twitter:card content="summary"><meta name=twitter:title content="Parsing HTTP Responses in Ruby"><meta name=twitter:description content="Normally handling HTTP responses in Ruby is rather straight forward. There is a native library in Ruby that handles HTTP requests which parses the responses into a neat data structure that you can then operate on. What if you want to work on stored HTTP responses outside of a connection though? This was the situation I found myself in and thanks to a series of unusual decisions in the Ruby core library I found myself left out in the cold."><meta property="article:published_time" content="2018-05-23 07:53:19 -0600 -0600"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2018-05-23-parsing-http-responses-in-ruby/>Parsing HTTP Responses in Ruby</a></h2><div class=post-content><p>Normally handling HTTP responses in Ruby is rather straight forward. There is a
+native library in Ruby that handles HTTP requests which parses the responses
+into a neat data structure that you can then operate on. What if you want to
+work on stored HTTP responses outside of a connection though? This was the
+situation I found myself in and thanks to a series of unusual decisions in the
+Ruby core library I found myself left out in the cold.</p><p>For reference this is in the latest stable Ruby as of this writing (2.5.1).</p><p>Let&rsquo;s start with a very small HTTP response stored in a variable for us to test
+on:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>raw_http_body <span style=color:#f92672>=</span> <span style=color:#e6db74>&lt;&lt;-BODY.rstrip
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span><span style=color:#66d9ef>Just</span> the body<span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>BODY</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>raw_http_response <span style=color:#f92672>=</span> <span style=color:#e6db74>&lt;&lt;-RESP.rstrip
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span><span style=color:#66d9ef>HTTP</span><span style=color:#f92672>/</span><span style=color:#ae81ff>1</span><span style=color:#f92672>.</span><span style=color:#ae81ff>1</span> <span style=color:#ae81ff>200</span> <span style=color:#66d9ef>Ok</span>\r
+</span></span><span style=display:flex><span><span style=color:#e6db74>Connection</span>: close\r
+</span></span><span style=display:flex><span><span style=color:#66d9ef>Content</span><span style=color:#f92672>-</span><span style=color:#e6db74>Length</span>: <span style=color:#75715e>#{raw_http_body.bytesize}\r</span>
+</span></span><span style=display:flex><span>\r
+</span></span><span style=display:flex><span><span style=color:#75715e>#{raw_http_body}</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>RESP</span>
+</span></span></code></pre></div><p>The above is a little bit weird but is a minimum reasonable HTTP response. All
+lines are approprietly terminated with both a carriage return (explicit) and
+a newline (implicit in how the strings are defined). The <code>Content-Length</code>
+header is the exact number of bytes present in the body (thus the two <code>#rstrip</code>
+calls). The <code>Date</code> header was omitted due to this line in <a href=https://tools.ietf.org/html/rfc7231#section-7.1.1.2>RFC7231</a></p><blockquote><p>An origin server MUST NOT send a Date header field if it does not have a
+clock capable of providing a reasonable approximation of the current instance
+in Coordinated Universal Time.</p></blockquote><p>&mldr;Which the content of this static site does not have.</p><p>With our minimal response out of the way how do we go about parsing it? The
+<a href=https://ruby-doc.org/stdlib-2.5.1/libdoc/net/http/rdoc/Net/HTTPResponse.html>Ruby 2.5.1 stdlib documentation</a> doesn&rsquo;t specify how it can be created by
+end users which usually means it isn&rsquo;t intended for use by users of the
+language directly and digging through the Ruby source, you&rsquo;ll see this is
+precisely the case. Which means <em><strong>Ruby does not have a HTTP response parser
+available in it&rsquo;s standard library</strong></em>. This is pretty frustrating, but maybe it
+can be worked around.</p><p>How does the <code>Net::HTTP</code> library make use of it? Even if the methods aren&rsquo;t
+listed for public documentation they&rsquo;re still public APIs on the class and
+should be able to be used without monkey patching right? The response is setup
+in <a href=https://github.com/ruby/ruby/blob/v2_5_1/lib/net/http.rb#L958>the connect method of Net::HTTP</a> and it comes down to a few relevant
+lines that can be summarized as:</p><ol><li>Open a socket to the webserver</li><li>Write the formatted request to the socket</li><li>Pass the socket to <code>HTTPResponse#read_new</code></li></ol><p>So we need a socket like object containing our response, which we can do with
+<code>StringIO</code> and pass it to the appropriate method. Let&rsquo;s see what happens:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>require <span style=color:#e6db74>&#39;net/http&#39;</span>
+</span></span><span style=display:flex><span>require <span style=color:#e6db74>&#39;stringio&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>resp_io <span style=color:#f92672>=</span> <span style=color:#66d9ef>StringIO</span><span style=color:#f92672>.</span>new(raw_http_response)
+</span></span><span style=display:flex><span>response <span style=color:#f92672>=</span> <span style=color:#66d9ef>Net</span><span style=color:#f92672>::</span><span style=color:#66d9ef>HTTPResponse</span><span style=color:#f92672>.</span>read_new(resp_io)
+</span></span></code></pre></div><p>We get a raised exception:</p><blockquote><p>Net::HTTPBadResponse: wrong status line: &ldquo;HTTP/1.1 200 Ok\r\n&rdquo;</p></blockquote><p>That is definitely a valid status line, so what is going on here? Back to
+Ruby&rsquo;s source code&mldr; <code>Net::HTTPResponse#read_new</code> starts off by calling
+<code>Net::HTTPResponse#read_status_line</code> which uses this regex for extracting and
+checking the validity of the status line:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#e6db74>/\AHTTP(?:\/(\d+\.\d+))?\s+(\d\d\d)(?:\s+(.*))?\z/in</span>
+</span></span></code></pre></div><p>I had never seen the <code>/n</code> modifier for Ruby&rsquo;s regular expressions and it seems
+to be completely undocumented. This turned out to be a red herring as it simply
+sets <code>Regexp::NOENCODING</code> (had to dig into the
+<a href=https://github.com/ruby/ruby/blob/3527c05a8f4e189772cdac17f166bd9626c24661/spec/ruby/core/regexp/options_spec.rb>spec/ruby/core/regexp/options_spec.rb</a> file to figure that one out).</p><p>So why isn&rsquo;t that regular expression matching? Spoiler: It&rsquo;s the newline (the
+carriage return is fine). That is a violation of the HTTP spec, but it is
+working normally for Ruby&rsquo;s HTTP requests so what gives? Apparently we have to
+go deeper&mldr;</p><p>It&rsquo;s getting the header string by calling <code>#readline</code> which on standard <a href=http://ruby-doc.org/core-2.5.1/IO.html#method-i-readline>IO</a>
+objects returns the newline (The <code>IO</code> class if the base for <code>StringIO</code>, and
+<code>Socket</code> objects in addition to many others). In <a href=https://blog.bigbinary.com/2017/03/07/io-readlines-now-accepts-chomp-flag-as-an-argument.html>Ruby 2.4</a> and later there
+is a chomp flag that changes this behavior but it isn&rsquo;t being used in this
+case, and it would take the carriage return with it if it was.</p><p>So&mldr; We must not be operating on an actual <code>IO</code> subclass&mldr; And sure enough,
+<code>Net::HTTP#connect</code> after getting the raw socket wraps it in a
+<code>Net::BufferedIO</code> object which is another internal hidden class. You can see
+the definition <a href=https://github.com/ruby/ruby/blob/v2_5_1/lib/net/protocol.rb#L81>of it here</a> and here is its <code>#readline</code> method:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>readline</span>
+</span></span><span style=display:flex><span>  readuntil(<span style=color:#e6db74>&#34;</span><span style=color:#ae81ff>\n</span><span style=color:#e6db74>&#34;</span>)<span style=color:#f92672>.</span>chop
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
+</span></span></code></pre></div><p>Yep, for some reason this one private internal API has decided to complicate a
+Ruby standard API convention and strip off the trailing carriage return and new
+line. Wrapping our <code>StringIO</code> object in a <code>BufferedIO</code> object does solve this
+problem but there is no reason for these complications&mldr;</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>resp_io <span style=color:#f92672>=</span> <span style=color:#66d9ef>StringIO</span><span style=color:#f92672>.</span>new(raw_http_response)
+</span></span><span style=display:flex><span>buf_io <span style=color:#f92672>=</span> <span style=color:#66d9ef>Net</span><span style=color:#f92672>::</span><span style=color:#66d9ef>BufferedIO</span><span style=color:#f92672>.</span>new(resp_io)
+</span></span><span style=display:flex><span>response <span style=color:#f92672>=</span> <span style=color:#66d9ef>Net</span><span style=color:#f92672>::</span><span style=color:#66d9ef>HTTPResponse</span><span style=color:#f92672>.</span>read_new(buf_io)
+</span></span></code></pre></div><p>Or does it?</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>response<span style=color:#f92672>.</span>body
+</span></span><span style=display:flex><span><span style=color:#75715e># NoMethodError: undefined method `closed?&#39; for nil:NilClass</span>
+</span></span></code></pre></div><p>We need to pull one more trick from the <code>Net::HTTP#transport_request</code> to get
+the body. The first line actually returns the body, but we want to treat this
+like a normal HTTPResponse so we want to make sure the <code>#body</code> method works:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>response<span style=color:#f92672>.</span>reading_body(buf_io, <span style=color:#66d9ef>true</span>) { <span style=color:#66d9ef>yield</span> res <span style=color:#66d9ef>if</span> block_given? }
+</span></span><span style=display:flex><span>response<span style=color:#f92672>.</span>body
+</span></span></code></pre></div><p>There are a couple of differences still from a normal response body. The only
+one of particular note to me is that normally the response get it&rsquo;s <code>#uri</code> data
+from the request. This isn&rsquo;t available with the response alone but can be set
+pretty easily:</p><pre tabindex=0><code>require &#39;uri&#39;
+response.uri = URI.parse(&#39;http://example.tld&#39;)
+</code></pre><p>Altogether this is what it looks like:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span>require <span style=color:#e6db74>&#39;net/http&#39;</span>
+</span></span><span style=display:flex><span>require <span style=color:#e6db74>&#39;stringio&#39;</span>
+</span></span><span style=display:flex><span>require <span style=color:#e6db74>&#39;uri&#39;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>raw_http_body <span style=color:#f92672>=</span> <span style=color:#e6db74>&lt;&lt;-BODY.rstrip
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span><span style=color:#66d9ef>Just</span> the body<span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>BODY</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>raw_http_response <span style=color:#f92672>=</span> <span style=color:#e6db74>&lt;&lt;-RESP.rstrip
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span><span style=color:#66d9ef>HTTP</span><span style=color:#f92672>/</span><span style=color:#ae81ff>1</span><span style=color:#f92672>.</span><span style=color:#ae81ff>1</span> <span style=color:#ae81ff>200</span> <span style=color:#66d9ef>Ok</span>\r
+</span></span><span style=display:flex><span><span style=color:#e6db74>Connection</span>: close\r
+</span></span><span style=display:flex><span><span style=color:#66d9ef>Content</span><span style=color:#f92672>-</span><span style=color:#e6db74>Length</span>: <span style=color:#75715e>#{raw_http_body.bytesize}\r</span>
+</span></span><span style=display:flex><span>\r
+</span></span><span style=display:flex><span><span style=color:#75715e>#{raw_http_body}</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>RESP</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>resp_io <span style=color:#f92672>=</span> <span style=color:#66d9ef>StringIO</span><span style=color:#f92672>.</span>new(raw_http_response)
+</span></span><span style=display:flex><span>buf_io <span style=color:#f92672>=</span> <span style=color:#66d9ef>Net</span><span style=color:#f92672>::</span><span style=color:#66d9ef>BufferedIO</span><span style=color:#f92672>.</span>new(resp_io)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>response <span style=color:#f92672>=</span> <span style=color:#66d9ef>Net</span><span style=color:#f92672>::</span><span style=color:#66d9ef>HTTPResponse</span><span style=color:#f92672>.</span>read_new(buf_io)
+</span></span><span style=display:flex><span>response<span style=color:#f92672>.</span>reading_body(buf_io, <span style=color:#66d9ef>true</span>) { <span style=color:#66d9ef>yield</span> res <span style=color:#66d9ef>if</span> block_given? }
+</span></span><span style=display:flex><span>response<span style=color:#f92672>.</span>uri <span style=color:#f92672>=</span> <span style=color:#66d9ef>URI</span><span style=color:#f92672>.</span>parse(<span style=color:#e6db74>&#39;http://example.tld&#39;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># You now have a valid Net::HTTPResponse object</span>
+</span></span></code></pre></div></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/ruby/>ruby</a></span>
+<span class=tag><a href=https://stelfox.net/tags/tips/>tips</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

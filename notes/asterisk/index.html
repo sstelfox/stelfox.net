@@ -1,846 +1,631 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/asterisk/" />
-
-
-    <title>
-        
-            Asterisk :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Asterisk">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services.">
-
-<meta itemprop="wordCount" content="4455">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Asterisk"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services."/>
-
-
-
-    <meta property="og:title" content="Asterisk" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/asterisk/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/asterisk/">Asterisk</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/asterisk/><title>Asterisk :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Asterisk"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services."><meta itemprop=wordCount content="4455"><meta name=twitter:card content="summary"><meta name=twitter:title content="Asterisk"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/asterisk/>Asterisk</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>Asterisk is a software implementation of a telephone private branch exchange
+until I get around to updating it.</strong></em></p><p>Asterisk is a software implementation of a telephone private branch exchange
 (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it
 allows attached telephones to make calls to one another, and to connect to
 other telephone services including the public switched telephone network (PSTN)
 and Voice over Internet Protocol (VoIP) services. Its name comes from the
-asterisk symbol, “*”.</p>
-<p>NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for
+asterisk symbol, “*”.</p><p>NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for
 the Linksys SPA3000 as well as ZRTP and SRTP support. It might be wise to look
 into using kamailio as a front end SIP router though this doesn&rsquo;t seem to be
 necessary unless we want to start handling multi-thousands of calls
-concurrently.</p>
-<p>A few <a href="http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/">references</a> for help when building FreeSWITCH.</p>
-<h2 id="previous-reasoning">Previous Reasoning</h2>
-<p>This was setup on my private network to provide a land line phone to my office
+concurrently.</p><p>A few <a href=http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/>references</a> for help when building FreeSWITCH.</p><h2 id=previous-reasoning>Previous Reasoning</h2><p>This was setup on my private network to provide a land line phone to my office
 using our existing internet connection. I wanted to go about doing this without
-having to pay for the services as I don&rsquo;t expect this to get a lot of use.</p>
-<p>This Asterisk setup involves the use of <a href="http://google.com/voice">Google Voice</a> and <a href="http://www.sipgate.com/">SIPGate</a>.
+having to pay for the services as I don&rsquo;t expect this to get a lot of use.</p><p>This Asterisk setup involves the use of <a href=http://google.com/voice>Google Voice</a> and <a href=http://www.sipgate.com/>SIPGate</a>.
 SIPGate provides a single phone number, SIP connectivity and call forwarding.
 Google Voice doesn&rsquo;t provide services to receive phone calls, however, it can
 be setup as an intermediary that will call you and then connect to another
-number on your behalf, while also providing call forwarding.</p>
-<p>Combining the three will get free incoming and outgoing to anywhere in the US
+number on your behalf, while also providing call forwarding.</p><p>Combining the three will get free incoming and outgoing to anywhere in the US
 and Canada. Incoming calls will come from Google Voice, which will forward the
 call to the SIPGate phone number, which the Asterisk PBX will be tied to and
-we&rsquo;ll in turn be able to receive the call.</p>
-<p>Outgoing calls are a bit more tricky. Implemented using <a href="http://code.google.com/p/pygooglevoice/">pygooglevoice</a>, the
+we&rsquo;ll in turn be able to receive the call.</p><p>Outgoing calls are a bit more tricky. Implemented using <a href=http://code.google.com/p/pygooglevoice/>pygooglevoice</a>, the
 Asterisk box will actually connect to Google Voice&rsquo;s APIs to dial the number
 and call back (making it an incoming call and thus free) to make the outgoing
-call.</p>
-<h2 id="links">Links</h2>
-<ul>
-<li><a href="http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html">http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html</a></li>
-<li><a href="http://www.asteriskdocs.org/">http://www.asteriskdocs.org/</a></li>
-<li><a href="http://www.voip-info.org/">http://www.voip-info.org/</a></li>
-<li><a href="http://nerdvittles.com/index.php?p=65">http://nerdvittles.com/index.php?p=65</a></li>
-<li><a href="http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP">http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP</a></li>
-<li><a href="http://download.ag-projects.com/">http://download.ag-projects.com/</a></li>
-</ul>
-<h2 id="security-notes">Security Notes</h2>
-<p>Asterisk/SIP are going to be a significant security hole in the network if I
+call.</p><h2 id=links>Links</h2><ul><li><a href=http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html>http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html</a></li><li><a href=http://www.asteriskdocs.org/>http://www.asteriskdocs.org/</a></li><li><a href=http://www.voip-info.org/>http://www.voip-info.org/</a></li><li><a href="http://nerdvittles.com/index.php?p=65">http://nerdvittles.com/index.php?p=65</a></li><li><a href="http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP">http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP</a></li><li><a href=http://download.ag-projects.com/>http://download.ag-projects.com/</a></li></ul><h2 id=security-notes>Security Notes</h2><p>Asterisk/SIP are going to be a significant security hole in the network if I
 allow outside access to the SIP services (In case I want to say be able to pick
 up the phone from my laptop while at a cafe or from my office). I intend to
 research making this considerably more secure before allowing this kind of
-setup and will document it here.</p>
-<p>One of the things for me to note ahead of time is to not put incoming calls
+setup and will document it here.</p><p>One of the things for me to note ahead of time is to not put incoming calls
 into the same context as my dial plans. This alone will be a significant
-increase in any kind of security.</p>
-<h3 id="encryption">Encryption</h3>
-<p>The configurations provided have TLS enabled BUT it won&rsquo;t do any good until the
+increase in any kind of security.</p><h3 id=encryption>Encryption</h3><p>The configurations provided have TLS enabled BUT it won&rsquo;t do any good until the
 server has a certificate. A normal webserver certificate in PKCS12 format. FOR
 TESTING ONLY you can generate a self signed certificate. You&rsquo;ll need both the
-certificate authority&rsquo;s cert and the key/cert pair for the server.</p>
-<p>You can use the following to create a self-signed one:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# openssl genrsa -out ca.key 4096
-</span></span><span style="display:flex;"><span>[root@localhost ~]# openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
-</span></span><span style="display:flex;"><span>[root@localhost ~]# openssl genrsa -des3 -out pbx.key 4096
-</span></span><span style="display:flex;"><span>[root@localhost ~]# openssl req -new -key argus.key -out pbx.csr
-</span></span><span style="display:flex;"><span>[root@localhost ~]# openssl x509 -req -days 3650 -in pbx.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out pbx.crt
-</span></span><span style="display:flex;"><span>[root@localhost ~]# openssl rsa -in pbx.key -out pbx.key.insecure
-</span></span><span style="display:flex;"><span>[root@localhost ~]# cat pbx.crt &gt; pbx.pem
-</span></span><span style="display:flex;"><span>[root@localhost ~]# cat pbx.key.insecure &gt;&gt; pbx.pem
-</span></span><span style="display:flex;"><span>[root@localhost ~]# mv pbx.pem ca.crt /var/lib/asterisk/
-</span></span><span style="display:flex;"><span>[root@localhost ~]# restorecon -R /var/lib/asterisk/
-</span></span><span style="display:flex;"><span>[root@localhost ~]# chown asterisk:asterisk /var/lib/asterisk
-</span></span></code></pre></div><h3 id="firewall-adjustments">Firewall Adjustments</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Allow incoming SIP calls from the local network
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -s 10.13.37.0/24 -m udp -p udp --dport 5060 -j ACCEPT
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -s 10.13.37.0/24 -m tcp -p tcp --dport 5060:5061 -j ACCEPT
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Log and allow SIP traffic from other people
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -m state --state NEW -m udp -p udp --dport 5060 -j LOG --log-prefix &#34;SIP Traffic &#34;
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -m state --state NEW -m tcp -p tcp --dport 5060:5061 -j LOG --log-prefix &#34;SIP Traffic &#34;
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -m udp -p udp --dport 5060 -j ACCEPT
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -m tcp -p tcp --dport 5060:5061 -j ACCEPT
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Allow incoming RTP traffic from the local network
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -s 10.13.37.0/24 -m udp -p udp --dport 10000:10100 -j ACCEPT
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Log and allow RTP traffic from other people
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -m state --state NEW -m udp -p udp --dport 10000:10100 -j LOG --log-prefix &#34;RTP Traffic &#34;
-</span></span><span style="display:flex;"><span>-A PRIMARYSERVICES -m udp -p udp --dport 10000:10100 -j ACCEPT
-</span></span></code></pre></div><h3 id="fail2ban">Fail2Ban</h3>
-<p>Due to the overwhelmingly large number of attackers trying to exploit unsecured
-Asterisk boxes, configuring <a href="https://stelfox.net/notes/festival/">Fail2Ban</a> with Asterisk is HIGHLY recommended.
+certificate authority&rsquo;s cert and the key/cert pair for the server.</p><p>You can use the following to create a self-signed one:</p><pre tabindex=0><code>[root@localhost ~]# openssl genrsa -out ca.key 4096
+[root@localhost ~]# openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
+[root@localhost ~]# openssl genrsa -des3 -out pbx.key 4096
+[root@localhost ~]# openssl req -new -key argus.key -out pbx.csr
+[root@localhost ~]# openssl x509 -req -days 3650 -in pbx.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out pbx.crt
+[root@localhost ~]# openssl rsa -in pbx.key -out pbx.key.insecure
+[root@localhost ~]# cat pbx.crt &gt; pbx.pem
+[root@localhost ~]# cat pbx.key.insecure &gt;&gt; pbx.pem
+[root@localhost ~]# mv pbx.pem ca.crt /var/lib/asterisk/
+[root@localhost ~]# restorecon -R /var/lib/asterisk/
+[root@localhost ~]# chown asterisk:asterisk /var/lib/asterisk
+</code></pre><h3 id=firewall-adjustments>Firewall Adjustments</h3><pre tabindex=0><code># Allow incoming SIP calls from the local network
+-A PRIMARYSERVICES -s 10.13.37.0/24 -m udp -p udp --dport 5060 -j ACCEPT
+-A PRIMARYSERVICES -s 10.13.37.0/24 -m tcp -p tcp --dport 5060:5061 -j ACCEPT
+
+# Log and allow SIP traffic from other people
+-A PRIMARYSERVICES -m state --state NEW -m udp -p udp --dport 5060 -j LOG --log-prefix &#34;SIP Traffic &#34;
+-A PRIMARYSERVICES -m state --state NEW -m tcp -p tcp --dport 5060:5061 -j LOG --log-prefix &#34;SIP Traffic &#34;
+-A PRIMARYSERVICES -m udp -p udp --dport 5060 -j ACCEPT
+-A PRIMARYSERVICES -m tcp -p tcp --dport 5060:5061 -j ACCEPT
+
+# Allow incoming RTP traffic from the local network
+-A PRIMARYSERVICES -s 10.13.37.0/24 -m udp -p udp --dport 10000:10100 -j ACCEPT
+
+# Log and allow RTP traffic from other people
+-A PRIMARYSERVICES -m state --state NEW -m udp -p udp --dport 10000:10100 -j LOG --log-prefix &#34;RTP Traffic &#34;
+-A PRIMARYSERVICES -m udp -p udp --dport 10000:10100 -j ACCEPT
+</code></pre><h3 id=fail2ban>Fail2Ban</h3><p>Due to the overwhelmingly large number of attackers trying to exploit unsecured
+Asterisk boxes, configuring <a href=https://stelfox.net/notes/festival/>Fail2Ban</a> with Asterisk is HIGHLY recommended.
 I&rsquo;m updating the regular expressions in that template as I see attacks, and in
-some cases where I intentionally generate the logs myself.</p>
-<h2 id="config-files">Config Files</h2>
-<p>There are a significant number of configuration files created when asterisk is
+some cases where I intentionally generate the logs myself.</p><h2 id=config-files>Config Files</h2><p>There are a significant number of configuration files created when asterisk is
 installed, these all reside in <code>/etc/asterisk</code>. I&rsquo;ll go over the ones that I
 made modifications too including full source (without the comments that come
 included, there are a lot of them). I copied the original files to *.conf.o and
-blew away most of the files I edited (including the stock comments).</p>
-<h3 id="etcasteriskasteriskconf">/etc/asterisk/asterisk.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Asterisk&#39;s Primary Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[directories](!)
-</span></span><span style="display:flex;"><span>  astetcdir <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; /etc/asterisk                ; The Asterisk configuration files
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astmoddir =&gt; /usr/lib64/asterisk/modules  ; The loadable modules
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astvarlibdir =&gt; /usr/share/asterisk       ; The base location for variable state information used by
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; various parts of Asterisk. This includes items that are
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; written out by Asterisk at runtime
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astdbdir =&gt; /var/spool/asterisk           ; Asterisk will store its internal database in this directory
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; as a file called astdb
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astkeydir =&gt; /var/lib/asterisk            ; Asterisk will use a subdirectory called keys in this
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; directory as the default location for loading keys for
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; encryption
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astdatadir =&gt; /usr/share/asterisk         ; This is the base directory for system-provided data, such as
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; the sound files that come with Asterisk
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astagidir =&gt; /usr/share/asterisk/agi-bin  ; Asterisk will use a subdirectory called agi-bin in this
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; directory as the default location for loading AGI scripts
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astspooldir =&gt; /var/spool/asterisk        ; The Asterisk spool directory, where voicemail, call
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; recordings, and the call origination spool are stored.
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astrundir =&gt; /var/run/asterisk            ; The location where Asterisk will write out it&#39;s unix control
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                            ; socket as well as it PID file
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astlogdir =&gt; /var/log/asterisk            ; The asterisk log directory</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[options]</span>
-</span></span><span style="display:flex;"><span>  verbose <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3                     ; Sets the default verbose setting for the Asterisk logger
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  timestamp = yes                 ; Adds timestamps to all output except output from a CLI command
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  initcrypto = yes                ; Load keys from the astkeydir at startup
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  systemname = jeeves             ; The name of the PBX, yeah ours is called Jeeves, what you going to do about
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                  ; it?
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  maxload = 0.8                   ; Sets a maximum load average. If the load average is at or above this
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                  ; threshold, Asterisk will not accept new calls.
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  minmemfree = 10                 ; Sets the minimum number of megabytes of free memory required for Asterisk to
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                  ; continue accepting calls.
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  cache_record_files = yes        ; When doing recording, stores the file in record_cache_dir until recording is
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                  ; complete.
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  runuser = asterisk              ; Run Asterisk under the user specified
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  rungroup = asterisk             ; Run Asterisk under the group specified
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  defaultlanguage = en            ; Set the default language
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  documentation_language = en_US  ; Set the preferred language for the command help</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[files]</span>
-</span></span><span style="display:flex;"><span>  astctlpermissions <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0660  ; Sets the permissions for the Asterisk control socket
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astctlowner = root        ; Sets the owner for the Asterisk control socket
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astctlgroup = asterisk    ; Sets the group for the Asterisk control socket
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  astctl = asterisk.ctl     ; Sets the filename for the Asterisk control socket</span>
-</span></span></code></pre></div><h3 id="etcasteriskccssconf">/etc/asterisk/ccss.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Call Completion Supplementary Services ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[general]</span>
-</span></span><span style="display:flex;"><span>  cc_max_requests <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">20  ; Global limit on the number of CC requests that may be in the Asterisk
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                        ; system at any one time.</span>
-</span></span></code></pre></div><h3 id="etcasteriskcdr_adaptive_odbcconf">/etc/asterisk/cdr_adaptive_odbc.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- ODBC Database CDR storage ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[default]</span>
-</span></span><span style="display:flex;"><span>  connection <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">gentlemen  ; Name of the connections (references res_odbc.conf)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  table = asterisk        ; Name of the table in the database
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  usegmtime = yes         ; Use Greenwich Mean Time in the database</span>
-</span></span></code></pre></div><h3 id="etcasteriskcdrconf">/etc/asterisk/cdr.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Asterisk Call Detail Record Engine Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[general]</span>
-</span></span><span style="display:flex;"><span>  batch <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">yes
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  enable = yes
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  safeshutdown = yes
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  scheduleronly = no
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  size = 100
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  time = 300
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  unanswered = yes</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[csv]</span>
-</span></span><span style="display:flex;"><span>  accountlogs <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">yes   ; Create separate log file for each account code
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  loguniqueid = yes   ; Log uniqueid for the call
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  loguserfield = yes  ; Log user field
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  usegmtime = yes     ; Log date and time in GMT</span>
-</span></span></code></pre></div><h3 id="etcasteriskcdr_syslogconf">/etc/asterisk/cdr_syslog.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Asterisk Call Detail Records (CDR) - Syslog Backend ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This line needs to be added to /etc/rsyslog.conf:</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; local4.info                   /var/log/asterisk-cdr.log</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[cdr]</span>
-</span></span><span style="display:flex;"><span>  facility<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">local4
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  priority=info</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; High Resolution Time for billsec and duration fields</span>
-</span></span><span style="display:flex;"><span>  template <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#39;${CDR(clid)}&#39;,&#39;${CDR(src)}&#39;,&#39;${CDR(dst)}&#39;,&#39;${CDR(dcontext)}&#39;,&#39;${CDR(channel)}&#39;,&#39;${CDR(dstchannel)}&#39;,&#39;${CDR(lastapp)}&#39;,&#39;${CDR(lastdata)}&#39;,&#39;${CDR(start)}&#39;,&#39;${CDR(answer)}&#39;,&#39;${CDR(end)}&#39;,&#39;${CDR(duration,f)}&#39;,&#39;${CDR(billsec,f)}&#39;,&#39;${CDR(disposition)}&#39;,&#39;${CDR(amaflags)}&#39;,&#39;${CDR(accountcode)}&#39;,&#39;${CDR(uniqueid)}&#39;,&#39;${CDR(userfield)}&#39;</span>
-</span></span></code></pre></div><h3 id="etcasteriskextensionsconf">/etc/asterisk/extensions.conf</h3>
-<p>The only thing that I have changed in the below configuration is that where it
+blew away most of the files I edited (including the stock comments).</p><h3 id=etcasteriskasteriskconf>/etc/asterisk/asterisk.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Asterisk&#39;s Primary Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[directories](!)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>astetcdir</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; /etc/asterisk                ; The Asterisk configuration files
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astmoddir =&gt; /usr/lib64/asterisk/modules  ; The loadable modules
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astvarlibdir =&gt; /usr/share/asterisk       ; The base location for variable state information used by
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; various parts of Asterisk. This includes items that are
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; written out by Asterisk at runtime
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astdbdir =&gt; /var/spool/asterisk           ; Asterisk will store its internal database in this directory
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; as a file called astdb
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astkeydir =&gt; /var/lib/asterisk            ; Asterisk will use a subdirectory called keys in this
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; directory as the default location for loading keys for
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; encryption
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astdatadir =&gt; /usr/share/asterisk         ; This is the base directory for system-provided data, such as
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; the sound files that come with Asterisk
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astagidir =&gt; /usr/share/asterisk/agi-bin  ; Asterisk will use a subdirectory called agi-bin in this
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; directory as the default location for loading AGI scripts
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astspooldir =&gt; /var/spool/asterisk        ; The Asterisk spool directory, where voicemail, call
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; recordings, and the call origination spool are stored.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astrundir =&gt; /var/run/asterisk            ; The location where Asterisk will write out it&#39;s unix control
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                            ; socket as well as it PID file
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astlogdir =&gt; /var/log/asterisk            ; The asterisk log directory</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[options]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>verbose</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>3                     ; Sets the default verbose setting for the Asterisk logger
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  timestamp = yes                 ; Adds timestamps to all output except output from a CLI command
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  initcrypto = yes                ; Load keys from the astkeydir at startup
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  systemname = jeeves             ; The name of the PBX, yeah ours is called Jeeves, what you going to do about
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                  ; it?
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  maxload = 0.8                   ; Sets a maximum load average. If the load average is at or above this
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                  ; threshold, Asterisk will not accept new calls.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  minmemfree = 10                 ; Sets the minimum number of megabytes of free memory required for Asterisk to
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                  ; continue accepting calls.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  cache_record_files = yes        ; When doing recording, stores the file in record_cache_dir until recording is
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                  ; complete.
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  runuser = asterisk              ; Run Asterisk under the user specified
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  rungroup = asterisk             ; Run Asterisk under the group specified
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  defaultlanguage = en            ; Set the default language
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  documentation_language = en_US  ; Set the preferred language for the command help</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[files]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>astctlpermissions</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>0660  ; Sets the permissions for the Asterisk control socket
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astctlowner = root        ; Sets the owner for the Asterisk control socket
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astctlgroup = asterisk    ; Sets the group for the Asterisk control socket
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  astctl = asterisk.ctl     ; Sets the filename for the Asterisk control socket</span>
+</span></span></code></pre></div><h3 id=etcasteriskccssconf>/etc/asterisk/ccss.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Call Completion Supplementary Services ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[general]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>cc_max_requests</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>20  ; Global limit on the number of CC requests that may be in the Asterisk
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                        ; system at any one time.</span>
+</span></span></code></pre></div><h3 id=etcasteriskcdr_adaptive_odbcconf>/etc/asterisk/cdr_adaptive_odbc.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- ODBC Database CDR storage ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[default]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>connection</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>gentlemen  ; Name of the connections (references res_odbc.conf)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  table = asterisk        ; Name of the table in the database
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  usegmtime = yes         ; Use Greenwich Mean Time in the database</span>
+</span></span></code></pre></div><h3 id=etcasteriskcdrconf>/etc/asterisk/cdr.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Asterisk Call Detail Record Engine Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[general]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>batch</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  enable = yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  safeshutdown = yes
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  scheduleronly = no
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  size = 100
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  time = 300
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  unanswered = yes</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[csv]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>accountlogs</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>yes   ; Create separate log file for each account code
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  loguniqueid = yes   ; Log uniqueid for the call
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  loguserfield = yes  ; Log user field
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  usegmtime = yes     ; Log date and time in GMT</span>
+</span></span></code></pre></div><h3 id=etcasteriskcdr_syslogconf>/etc/asterisk/cdr_syslog.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Asterisk Call Detail Records (CDR) - Syslog Backend ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; This line needs to be added to /etc/rsyslog.conf:</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; local4.info                   /var/log/asterisk-cdr.log</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[cdr]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>facility</span><span style=color:#f92672>=</span><span style=color:#e6db74>local4
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  priority=info</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; High Resolution Time for billsec and duration fields</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>template</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;${CDR(clid)}&#39;,&#39;${CDR(src)}&#39;,&#39;${CDR(dst)}&#39;,&#39;${CDR(dcontext)}&#39;,&#39;${CDR(channel)}&#39;,&#39;${CDR(dstchannel)}&#39;,&#39;${CDR(lastapp)}&#39;,&#39;${CDR(lastdata)}&#39;,&#39;${CDR(start)}&#39;,&#39;${CDR(answer)}&#39;,&#39;${CDR(end)}&#39;,&#39;${CDR(duration,f)}&#39;,&#39;${CDR(billsec,f)}&#39;,&#39;${CDR(disposition)}&#39;,&#39;${CDR(amaflags)}&#39;,&#39;${CDR(accountcode)}&#39;,&#39;${CDR(uniqueid)}&#39;,&#39;${CDR(userfield)}&#39;</span>
+</span></span></code></pre></div><h3 id=etcasteriskextensionsconf>/etc/asterisk/extensions.conf</h3><p>The only thing that I have changed in the below configuration is that where it
 says &lsquo;SPA3000&rsquo; in the variables I used the MAC address of the actual SPA3000
 device as it is defined in sip.conf (this has also been changed there). This
-will allow it to remain unique even if another is added.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Asterisk Extension Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Global variables to be used in the rest of the dial plan</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[globals]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Area information</span>
-</span></span><span style="display:flex;"><span>  LOCALAREACODE<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">802</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; User extensions</span>
-</span></span><span style="display:flex;"><span>  U1<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">SIP/user1
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  U2=SIP/user2
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  U3=SIP/user3</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Device extensions</span>
-</span></span><span style="display:flex;"><span>  PSTNOUT<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">SIP/SPA3000_PSTNOUT
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  PSTNIN=SIP/SPA3000_PSTNIN
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  LANDLINE=SIP/SPA3000_LINE</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This context contains the menu for callers coming in over the PSTN line</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[pstnmenu]</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; s,1,Verbose(3,${CALLERID(all)})  ; Print the Caller ID to the console if it&#39;s available
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">           same =&gt; n,GoTo(debug,echo,1)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">           same =&gt; n,Answer()
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">           same =&gt; n,HangUp()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; i,1,GoTo(s,1)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This context is where unauthenticated SIP clients from the internet are going</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; to end up This will provide a certain measure of spam and robot protection by</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; requiring the user to answer a simple math question generated on the fly</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[unauthenticated]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; If we allow numeric extension calls from the internet:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;       exten =&gt; _XXX,1,GoTo(internal-public,1,${EXTEN})</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; If we allow alpha extension calls from the internet (assumes all extensions are lower case)</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;       exten =&gt; _X.,1,Set(SAFE_EXTEN=${FILTER(a-z,${EXTEN})})</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;               same =&gt; n,GoTo(internal-public,1,${SAFE_EXTEN})</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Catch any unknown or unallowed extensions and give them a &#34;Network out of order&#34; response</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; This might trip up some brute force tools, and is better than not passing a reason</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; i,1,HangUp(38)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Our trunk lines should never be making calls into the system, by putting them into this context</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; if anyone manages to collect a valid username/password set from one of our trunk they will not be</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; able to make calls through our system. This trunk should never have any dialplan in it beyonds &#39;hang up&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[from-trunk]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Catch any unknown or unallowed extensions and give them a &#34;Network out of order&#34; response</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; This might trip up some brute force tools, and is better than not passing a reason</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; i,1,HangUp(38)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This is by far the most dangerous context. This one makes outgoing calls from</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[callout]</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; _NXXNXXXXXX,1,Dial(${PSTNOUT}/1${EXTEN})     ; 10-digit pattern match for NANP
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  exten =&gt; _9NXXNXXXXXX,1,Dial(${PSTNOUT}/1${EXTEN:1})  ; 10-digit pattern match for NANP (9 first)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; _NXXXXXX,1,Dial(${PSTNOUT}/${LOCALAREACODE}${EXTEN})     ; 7-digit pattern match for NANP
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  exten =&gt; _9NXXXXXX,1,Dial(${PSTNOUT}/${LOCALAREACODE}${EXTEN:1})  ; 7-digit pattern match for NANP
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                                                    ; (9 first)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;exten =&gt; _1NXXNXXXXXX,1,Dial(${PSTNOUT}/${EXTEN})     ; Long-distance pattern match for NANP</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;exten =&gt; _91NXXNXXXXXX,1,Dial(${PSTNOUT}/${EXTEN:1})  ; Long-distance pattern match for NANP (9 first)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;exten =&gt; _011.,1,HangUp(63)   ; Deny the International pattern match for calls made from NANP</span>
-</span></span><span style="display:flex;"><span>                                 <span style="color:#8b949e;font-style:italic">; with &#39;Service or option unavailable&#39;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;exten =&gt; _9011.,1,HangUp(63)  ; Deny the International pattern match for calls made from NANP</span>
-</span></span><span style="display:flex;"><span>                                 <span style="color:#8b949e;font-style:italic">; with &#39;Service or option unavailable&#39; (9 first)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; The number they&#39;re reaching doesn&#39;t match anything we know about, deny it</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; i,1,HangUp()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[internal]</span>
-</span></span><span style="display:flex;"><span>  include <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; callout          ; Allow internal phones to call out
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  include =&gt; internal-public  ; Include public extensions (user extensions should only be defined once,
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                              ; either here or there)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; 600,1,GoTo(debug,echo,1)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This context holds the private internal extensions that will be available publicly either</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; through a PSTN line or through anonymous SIP connections from the internet. These lines</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; will be directly dialable from the internal context</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[internal-public]</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; 301,1,Dial(${U1})
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  exten =&gt; user1,1,Dial(${U1})</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; 302,1,Dial(${U2})
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  exten =&gt; user2,1,Dial(${U2})</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; 303,1,Dial(${U3})
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  exten =&gt; user3,1,Dial(${U3})</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; 304,1,Dial(${LANDLINE})
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  exten =&gt; landline,1,Dial(${LANDLINE})</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Various extensions that can be used to debug troublesome clients</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[debug]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; This channel will echo back whatever sounds this server receives from the client</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; including DTMF tones until they hangup or they press #</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; echo,1,Answer()
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,Playback(silence/1)   ; Prevent the beginning of our audio from getting cut off
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,Playback(demo-echotest)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,Echo()
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,Playback(demo-echodone)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,Playback(vm-goodbye)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,Playback(silence/1)   ; Prevent the end of our audio from getting cut off
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,HangUp()</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; This can be used anywhere in any other dialplan through the GoSub() routine like so:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;       exten =&gt; example,1,GoSub(debug,log,1(1,[${CHANNEL}] This is the message))</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; By default all logging is off, to turn it on you need to execute the following commands</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; at the asterisk console:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;       *CLI&gt; core set verbose 0</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;       *CLI&gt; database put Log all 1</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; You can optionally only turn on logging for a single channel by running the following</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; command in place of the latter command (this example is for the &#34;incoming&#34; channel)</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;       *CLI&gt; database put Log/channel/incoming 1</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;</span>
-</span></span><span style="display:flex;"><span>  exten <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; log,1,GotoIf($[${DB_EXISTS(Log/all)} = 0]?checkchan1)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,GotoIf($[${ARG1} &lt;= ${DB(Log/all)}]?log)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n(checkchan1),Set(KEY=Log/channel/${CHANNEL})
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,GotoIf($[${DB_EXISTS(${KEY})} = 0]?checkchan2)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,GotoIf($[${ARG1} &lt;= ${DB(${KEY})}]?log)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n(checkchan2),Set(KEY=Log/channel/${CUT(CHANNEL,-,1)})
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,GotoIf($[${DB_EXISTS(${KEY})} = 0]?return)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,GotoIf($[${ARG1} &lt;= ${DB(${KEY})}]?log)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n(return),Return()              ; Logging is not turned on return without doing anything
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n(log),Verbose(0,${ARG2})       ; Log the message to the console
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">    same =&gt; n,Return()</span>
-</span></span></code></pre></div><h3 id="etcasteriskfeaturesconf">/etc/asterisk/features.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Asterisk Call Features (parking, transfer, etc) Configuration</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[general]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Nothing has been configured yet</span>
-</span></span></code></pre></div><h3 id="etcasteriskindicationsconf">/etc/asterisk/indications.conf</h3>
-<p>I never got around to configuring this file, I left the section here as the
+will allow it to remain unique even if another is added.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Asterisk Extension Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Global variables to be used in the rest of the dial plan</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[globals]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Area information</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>LOCALAREACODE</span><span style=color:#f92672>=</span><span style=color:#e6db74>802</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; User extensions</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>U1</span><span style=color:#f92672>=</span><span style=color:#e6db74>SIP/user1
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  U2=SIP/user2
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  U3=SIP/user3</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Device extensions</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>PSTNOUT</span><span style=color:#f92672>=</span><span style=color:#e6db74>SIP/SPA3000_PSTNOUT
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  PSTNIN=SIP/SPA3000_PSTNIN
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  LANDLINE=SIP/SPA3000_LINE</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; This context contains the menu for callers coming in over the PSTN line</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[pstnmenu]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; s,1,Verbose(3,${CALLERID(all)})  ; Print the Caller ID to the console if it&#39;s available
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>           same =&gt; n,GoTo(debug,echo,1)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>           same =&gt; n,Answer()
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>           same =&gt; n,HangUp()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; i,1,GoTo(s,1)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; This context is where unauthenticated SIP clients from the internet are going</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; to end up This will provide a certain measure of spam and robot protection by</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; requiring the user to answer a simple math question generated on the fly</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[unauthenticated]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; If we allow numeric extension calls from the internet:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;       exten =&gt; _XXX,1,GoTo(internal-public,1,${EXTEN})</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; If we allow alpha extension calls from the internet (assumes all extensions are lower case)</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;       exten =&gt; _X.,1,Set(SAFE_EXTEN=${FILTER(a-z,${EXTEN})})</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;               same =&gt; n,GoTo(internal-public,1,${SAFE_EXTEN})</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Catch any unknown or unallowed extensions and give them a &#34;Network out of order&#34; response</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; This might trip up some brute force tools, and is better than not passing a reason</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; i,1,HangUp(38)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Our trunk lines should never be making calls into the system, by putting them into this context</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; if anyone manages to collect a valid username/password set from one of our trunk they will not be</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; able to make calls through our system. This trunk should never have any dialplan in it beyonds &#39;hang up&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[from-trunk]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Catch any unknown or unallowed extensions and give them a &#34;Network out of order&#34; response</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; This might trip up some brute force tools, and is better than not passing a reason</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; i,1,HangUp(38)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; This is by far the most dangerous context. This one makes outgoing calls from</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[callout]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; _NXXNXXXXXX,1,Dial(${PSTNOUT}/1${EXTEN})     ; 10-digit pattern match for NANP
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  exten =&gt; _9NXXNXXXXXX,1,Dial(${PSTNOUT}/1${EXTEN:1})  ; 10-digit pattern match for NANP (9 first)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; _NXXXXXX,1,Dial(${PSTNOUT}/${LOCALAREACODE}${EXTEN})     ; 7-digit pattern match for NANP
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  exten =&gt; _9NXXXXXX,1,Dial(${PSTNOUT}/${LOCALAREACODE}${EXTEN:1})  ; 7-digit pattern match for NANP
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                                                    ; (9 first)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;exten =&gt; _1NXXNXXXXXX,1,Dial(${PSTNOUT}/${EXTEN})     ; Long-distance pattern match for NANP</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;exten =&gt; _91NXXNXXXXXX,1,Dial(${PSTNOUT}/${EXTEN:1})  ; Long-distance pattern match for NANP (9 first)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;exten =&gt; _011.,1,HangUp(63)   ; Deny the International pattern match for calls made from NANP</span>
+</span></span><span style=display:flex><span>                                 <span style=color:#75715e>; with &#39;Service or option unavailable&#39;</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;exten =&gt; _9011.,1,HangUp(63)  ; Deny the International pattern match for calls made from NANP</span>
+</span></span><span style=display:flex><span>                                 <span style=color:#75715e>; with &#39;Service or option unavailable&#39; (9 first)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; The number they&#39;re reaching doesn&#39;t match anything we know about, deny it</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; i,1,HangUp()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[internal]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>include</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; callout          ; Allow internal phones to call out
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  include =&gt; internal-public  ; Include public extensions (user extensions should only be defined once,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                              ; either here or there)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; 600,1,GoTo(debug,echo,1)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; This context holds the private internal extensions that will be available publicly either</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; through a PSTN line or through anonymous SIP connections from the internet. These lines</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; will be directly dialable from the internal context</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[internal-public]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; 301,1,Dial(${U1})
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  exten =&gt; user1,1,Dial(${U1})</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; 302,1,Dial(${U2})
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  exten =&gt; user2,1,Dial(${U2})</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; 303,1,Dial(${U3})
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  exten =&gt; user3,1,Dial(${U3})</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; 304,1,Dial(${LANDLINE})
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  exten =&gt; landline,1,Dial(${LANDLINE})</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Various extensions that can be used to debug troublesome clients</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[debug]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; This channel will echo back whatever sounds this server receives from the client</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; including DTMF tones until they hangup or they press #</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; echo,1,Answer()
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,Playback(silence/1)   ; Prevent the beginning of our audio from getting cut off
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,Playback(demo-echotest)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,Echo()
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,Playback(demo-echodone)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,Playback(vm-goodbye)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,Playback(silence/1)   ; Prevent the end of our audio from getting cut off
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,HangUp()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; This can be used anywhere in any other dialplan through the GoSub() routine like so:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;       exten =&gt; example,1,GoSub(debug,log,1(1,[${CHANNEL}] This is the message))</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; By default all logging is off, to turn it on you need to execute the following commands</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; at the asterisk console:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;       *CLI&gt; core set verbose 0</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;       *CLI&gt; database put Log all 1</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; You can optionally only turn on logging for a single channel by running the following</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; command in place of the latter command (this example is for the &#34;incoming&#34; channel)</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;       *CLI&gt; database put Log/channel/incoming 1</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exten</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; log,1,GotoIf($[${DB_EXISTS(Log/all)} = 0]?checkchan1)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,GotoIf($[${ARG1} &lt;= ${DB(Log/all)}]?log)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n(checkchan1),Set(KEY=Log/channel/${CHANNEL})
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,GotoIf($[${DB_EXISTS(${KEY})} = 0]?checkchan2)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,GotoIf($[${ARG1} &lt;= ${DB(${KEY})}]?log)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n(checkchan2),Set(KEY=Log/channel/${CUT(CHANNEL,-,1)})
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,GotoIf($[${DB_EXISTS(${KEY})} = 0]?return)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,GotoIf($[${ARG1} &lt;= ${DB(${KEY})}]?log)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n(return),Return()              ; Logging is not turned on return without doing anything
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n(log),Verbose(0,${ARG2})       ; Log the message to the console
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    same =&gt; n,Return()</span>
+</span></span></code></pre></div><h3 id=etcasteriskfeaturesconf>/etc/asterisk/features.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; Asterisk Call Features (parking, transfer, etc) Configuration</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[general]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Nothing has been configured yet</span>
+</span></span></code></pre></div><h3 id=etcasteriskindicationsconf>/etc/asterisk/indications.conf</h3><p>I never got around to configuring this file, I left the section here as the
 default asterisk install adds this file in. For now you&rsquo;re on your own in
-configuring indications.</p>
-<h3 id="etcasteriskloggerconf">/etc/asterisk/logger.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Logging Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[general]</span>
-</span></span><span style="display:flex;"><span>  rotatestrategy <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">rotate
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  exec_after_rotate=gzip -9 ${filename}.2</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[logfiles]</span>
-</span></span><span style="display:flex;"><span>  console <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; notice,warning,error,dtmf
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  ;full =&gt; notice,warning,error,debug,verbose,dtmf,fax
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  ;verbose =&gt; notice,warning,error,verbose
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  messages =&gt; notice,warning,error</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  syslog.local4 <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; notice,warning,error</span>
-</span></span></code></pre></div><h3 id="etcasteriskmanagerconf">/etc/asterisk/manager.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- AMI - The Asterisk Manager Interface Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[general]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;bindaddr = 10.13.37.17</span>
-</span></span><span style="display:flex;"><span>  enabled <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">no
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  ;port = 5038
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  webenabled = no</span>
-</span></span></code></pre></div><h3 id="etcasteriskmodulesconf">/etc/asterisk/modules.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Module Loader configuration file ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[modules]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; I much prefer the whitelist approach of loading modules as I won&#39;t get anything that I don&#39;t need,</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; security through simplicity</span>
-</span></span><span style="display:flex;"><span>  autoload<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">no</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Uncomment the following if you wish to use the Speech Recognition API</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;preload =&gt; res_speech.so</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Essential modules needed for basic operations</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; app_dial.so           ; Used to connection channels together (i.e., make phone calls)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; app_stack.so          ; Provides GoSub(), GoSubIf(), Return(), StackPop(), LOCAL(),
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                ; and LOCAL_PEEK()
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; chan_sip.so           ; Session Initiation Protocol channel driver
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; pbx_config.so         ; This is the traditional, and most popular, dialplan language
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                ; for Asterisk. Without this module, Asterisk cannot read
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                ; extensions.conf
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; res_rtp_asterisk.so   ; Provides RTP</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Security Modules</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; cdr_adaptive_odbc.so  ; Writes CDRs through ODBC framework to a database
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; cdr_csv.so            ; Write CDRs to a CSV file
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; cdr_syslog.so         ; Writes CDRs to syslog
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; res_security_log.so   ; Enables security logging</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Audio Codecs</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Recommended Order:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;       ulaw, alaw, gsm, g722, g726, speex</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Description:          A-law PCM codec used all over the world (except Canada/USA) on the PSTN</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Codec:                G.711 (alaw)</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Nominal Bandwidth:    64 kbit/s</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Algorithmic Latency:  0.125ms</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Mean Opinion Score:   4.2</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Fax Capable:          Yes</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Video Capable:        No</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; codec_alaw.so</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Description:          Global System for Mobile Communications (GSM) codec</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Codec:                GSM-FR</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Nominal Bandwidth:    13 kbit/s</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Algorithmic Latency:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Mean Opinion Score:   3.7</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Fax Capable:          No</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Video Capable:        No</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; codec_gsm.so</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Description:          Wideband audio codec</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Codec:                G.722</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Nominal Bandwidth:    64 kbit/s</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Algorithmic Latency:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Mean Opinion Score:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Fax Capable:          Maybe</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Video Capable:        No</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; codec_g722.so</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Description:          Flavor of ADPCM</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Codec:                G.726</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Nominal Bandwidth:    16-40 kbit/s</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Algorithmic Latency:  0.125ms</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Mean Opinion Score:   3.85</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Fax Capable:          No</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Video Capable:        No</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; codec_g726.so</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Open source speech codec</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Codec:                Speex</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Nominal Bandwidth:    2.15-22.4 kbit/s</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Algorithmic Latency:  30-34ms</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Mean Opinion Score:</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Fax Capable:          No</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Video Capable:        No</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; codec_speex.so</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Description:          Mu-law PCM codec used in Canada/USA on PSTN</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Codec:                G.711 (ulaw)</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Nominal Bandwidth:    64 kbit/s</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Algorithmic Latency:  0.125ms</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Mean Opinion Score:   4.2</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Fax Capable:          Yes</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Video Capable:        No</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; codec_ulaw.so</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Audio Codec Converters</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; codec_resample.so  ; Re-samples between 8-bit and 16-bit signed linear
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; codec_a_mu.so      ; A-law to mu-law direct converter</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Format Interpreters (used to read audio files from the disk)</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; format_ogg_vorbis.so  ; Play ogg vorbis files
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; format_wav.so         ; Play WAV files</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Resources &amp; Function Modules</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; func_cdr.so         ; Used by cdr_syslog module to format it&#39;s output
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; func_strings.so     ; Used for security reasons on incoming calls from the PSTN lines
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; res_adsi.so         ; Used by voicemail
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; res_odbc.so         ; Used by the cdr_adaptive_odbc module
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; res_musiconhold.so  ; Provides music on hold resources</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Voicemail</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; app_voicemail_plain.so  ; Stores voicemails in files</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Production Debug Tools</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; app_echo.so     ; Used in the echo channel to ensure two way audio is working
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; app_verbose.so  ; Used in the various channels to send messages to the console and logs</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Used in various dialplans</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; app_playback.so  ; Plays back a pre-recorded audio file</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; For Caller ID information</span>
-</span></span><span style="display:flex;"><span>  load <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; app_setcallerid.so
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  load =&gt; func_callerid.so</span>
-</span></span></code></pre></div><h3 id="etcasteriskmusiconholdconf">/etc/asterisk/musiconhold.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- Music on Hold Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[default]</span>
-</span></span><span style="display:flex;"><span>  directory <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">moh  ; Directory relative to the astdatadir that has the music on hold files
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  mode = files     ; Read files from the configured directory
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  sort = random    ; Sort the files in random order</span>
-</span></span></code></pre></div><h3 id="etcasteriskres_odbcconf">/etc/asterisk/res_odbc.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- ODBC Configuration File ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This &#39;context&#39; name is the name that other files will reference this by</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[gentlemen]</span>
-</span></span><span style="display:flex;"><span>  enabled <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&gt; yes                    ; Not strictly necessary but a quick way to remind myself this can
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                    ; be disabled without deleting or commenting out the whole thing
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  dsn =&gt; asterisk-gentlemen         ; This value should match an entry in /etc/odbc.ini
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  username =&gt; databaseuser          ; The username used to connect to the database
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  password =&gt; databasepass          ; Password for connecting to the database
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  pre-connect =&gt; yes                ; Open a connection as soon as asterisk starts
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  idlecheck =&gt; 3600                 ; How often should we check that the database connection is still
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                    ; open? (in seconds)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  share_connections =&gt; yes          ; Allow connections to be shared, this reduces overhead but doesn&#39;t
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                    ; work on all databases
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  limit =&gt; 5                        ; What is the maximum number of database connections we can have open
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                    ; at any one time?
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  connect_timeout =&gt; 5              ; How long should we attempt to connect before considering the
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                    ; connection dead?
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  negative_connection_cache =&gt; 300  ; When a connection fails, how long should we cache that information
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                                    ; before we attempt another connection?</span>
-</span></span></code></pre></div><h3 id="etcasteriskrtpconf">/etc/asterisk/rtp.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- RTP Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[general]</span>
-</span></span><span style="display:flex;"><span>  rtpstart<span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">10000
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  rtpend=10100</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;rtpchecksums=no</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;dtmftimeout=3000</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;rtcpinterval = 5000    ; Milliseconds between rtcp reports</span>
-</span></span><span style="display:flex;"><span>                          <span style="color:#8b949e;font-style:italic">;(min 500, max 60000, default 5000)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Enable strict RTP protection. This will drop RTP packets that</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; do not come from the source of the RTP stream. This option is</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; disabled by default.</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">;strictrtp=yes</span>
-</span></span></code></pre></div><h3 id="etcasterisksipconf">/etc/asterisk/sip.conf</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; --- SIP Configuration ---</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Gentlemen</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">[general]</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Features/SIP Defaults</span>
-</span></span><span style="display:flex;"><span>  allowguest <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">no            ; Disable unauthenticated call
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  alwaysauthreject = yes     ; Always respond as if every extension is valid, this makes brute force
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                             ; scanning of extensions pointless
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  canreinvite = no           ; Force all calls to be relayed through asterisk since SIP clients
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                             ; outside the firewall won&#39;t be able to directly talk to internal extensions
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  context = unauthenticated  ; Default context for incoming calls
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  dtmfmode = auto            ; Automatically detect the DTMF tranmission type
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  srvlookup = no             ; Disable DNS SRV record lookup on outbound calls
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  videosupport = yes         ; May be useful later when setting up video calls</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Network options</span>
-</span></span><span style="display:flex;"><span>  bindport <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">5060                      ; Explicitely bind to the default SIP port
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  externip = x.x.x.x                   ; The current external IP address of The Gentlemens Lounge
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  localnet = 10.13.37.0/255.255.255.0  ; Our internal subnet
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  tcpenable = yes                      ; We&#39;ll allow incoming connections via TCP as well
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  udpbindaddr = 10.13.37.xx            ; Listen for UDP requests on the primary interface</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Encryption settings</span>
-</span></span><span style="display:flex;"><span>  tlsenable <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">yes                          ; Turn encryption support on
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  tlsbindbindaddr = 10.13.37.xx            ; Listen for encrypted calls on the primary interface
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  tlscafile = /var/lib/asterisk/ca.crt     ; Certificate authority&#39;s cert
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  tlscertfile = /var/lib/asterisk/pbx.pem  ; This server&#39;s private key and certificate</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Clear the list of codecs</span>
-</span></span><span style="display:flex;"><span>  disallow <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">all</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Set a default order for our codecs, providing all of them will increase compatibility with other</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; internet clients. Notes on the quality tradeoff can be found in the module.conf file where these</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; codecs are loaded</span>
-</span></span><span style="display:flex;"><span>  allow <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">ulaw
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  allow = alaw
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  allow = gsm
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  allow = g722
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  allow = g726
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  allow = speex
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  allow = g729</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Template to restrict SIP users to only the local network</span>
-</span></span><span style="display:flex;"><span>[localonly](!)
-</span></span><span style="display:flex;"><span>  <span style="color:#8b949e;font-style:italic">; Start by denying everyone</span>
-</span></span><span style="display:flex;"><span>  deny <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">0.0.0.0/0.0.0.0
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  ; Allow connetion that originate from 10.13.37.X to attempt to authenticate against this account
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  permit = 10.13.37.0/255.255.255.0</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; A template for VoIP extensions that might connect from the outside</span>
-</span></span><span style="display:flex;"><span>[sipclient](!)
-</span></span><span style="display:flex;"><span>  context <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">internal  ; They should be in our internal context
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  host = dynamic      ; The clients will not be static (they could be anywhere)
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  type = friend       ; User type
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  qualify = yes       ; Talk to them frequently to make sure they&#39;re still there (and too hold
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">                      ; firewall connections open)</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Slight adjustment of the sipclient template to adjust that these extensions will be connecting from the outside</span>
-</span></span><span style="display:flex;"><span>[roadwarrior](!,sipclient)
-</span></span><span style="display:flex;"><span>  nat <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">yes  ; Yes, they&#39;re probably on the other side of our NAT</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; This is specifically for my SPA-3000, I&#39;ve found that even though my device has a static addresses</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; I should leave the host type as dynamic as registrations cause errors in the asterisk log, I suppose it</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; would be possible to configure the LINE and PSTNIN as peers and turn off registrations in the Sipura&#39;s</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; configuration, which might be the better route to go. I will have to investigate this in the future but</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; this works for now.</span>
-</span></span><span style="display:flex;"><span>[atadevice](!,sipclient,localonly)
-</span></span><span style="display:flex;"><span>  nat <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">never  ; These devices should never be outside our NAT</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Configuration for internal POTS line on the Linksys SPA-3000</span>
-</span></span><span style="display:flex;"><span>[SPA3000_LINE](atadevice)
-</span></span><span style="display:flex;"><span>  context <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">internal
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  port = 5060
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  secret = setyourownpassword</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Configuration for incoming phone calls from the POTS line through the SPA-3000</span>
-</span></span><span style="display:flex;"><span>[SPA3000_PSTNIN](atadevice)
-</span></span><span style="display:flex;"><span>  context <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">pstnmenu
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  secret = setyourownpassword</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; Configuration for incoming telephone line on the Linksys SPA-3000</span>
-</span></span><span style="display:flex;"><span>[SPA3000_PSTNOUT](atadevice)
-</span></span><span style="display:flex;"><span>  context <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">from-trunk
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  default-user = from-pbx
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  host = 10.13.37.xx
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  port = 5061
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  secret = setyourownpassword</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; SIP Users, these should have especially strong passwords. I use the following to generate</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; passwords for them:</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;      dd if=/dev/random count=2 bs=8 2&gt;/dev/null | base64 | sed -e &#39;s/=*$//&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">; It will create passwords like:</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;      9VkLRZz0s9GNFcAica0ONA</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;      SOhiPwA0pTupjFx/QCu7BA</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">;      5Zw+5B8435lrMLKvsSNVpQ</span>
-</span></span><span style="display:flex;"><span>[user1](roadwarrior)
-</span></span><span style="display:flex;"><span>  callerid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;User 1&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  secret = setyourownpassword</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[user2](roadwarrior)
-</span></span><span style="display:flex;"><span>  callerid <span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;User 2&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  secret = setyourownpassword</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[user3](roadwarrior)
-</span></span><span style="display:flex;"><span>  callerid <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">&#34;User 3&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#a5d6ff">  secret = setyourownpassword</span>
-</span></span></code></pre></div><h3 id="etcodbcini">/etc/odbc.ini</h3>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#ff7b72">[asterisk-gentlemen]</span>
-</span></span><span style="display:flex;"><span>Description <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Database driver for Asterisk call logs</span>
-</span></span><span style="display:flex;"><span>Trace       <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">Off</span>
-</span></span><span style="display:flex;"><span>TraceFile   <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">stderr</span>
-</span></span><span style="display:flex;"><span>Driver      <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">MySQL</span>
-</span></span><span style="display:flex;"><span>SERVER      <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">mysqlserver.localhost</span>
-</span></span><span style="display:flex;"><span>PORT        <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">3306</span>
-</span></span><span style="display:flex;"><span>DATABASE    <span style="color:#ff7b72;font-weight:bold">=</span> <span style="color:#a5d6ff">gentlemen</span>
-</span></span></code></pre></div><p>Here is the schema for the table that I use:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">--
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">-- Database: `gentlemen`
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">--
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">-- --------------------------------------------------------
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#8b949e;font-style:italic">--
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">-- Table structure for table `asterisk`
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic">--
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span><span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">DROP</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">TABLE</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">IF</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">EXISTS</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">`</span>asterisk<span style="color:#ff7b72;font-weight:bold">`</span>;<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span><span style="color:#ff7b72">CREATE</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">TABLE</span><span style="color:#6e7681"> </span><span style="color:#ff7b72;font-weight:bold">`</span>asterisk<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>(<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>call_id<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>int(<span style="color:#a5d6ff">10</span>)<span style="color:#6e7681"> </span>unsigned<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span>AUTO_INCREMENT,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>accountcode<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">DEFAULT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;An account ID. This field is user-defined and is empty by default.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>src<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The calling party’s caller ID number. It is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>dst<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The destination extension for the call. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>dcontext<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The destination context for the call. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>clid<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The full caller ID, including the name, of the calling party. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>channel<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The calling party’s channel. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>dstchannel<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The called party’s channel. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>lastapp<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The last dialplan application that was executed. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>lastdata<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The arguments passed to the lastapp. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#ff7b72">start</span><span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The start time of the call. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>answer<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The answered time of the call. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#ff7b72">end</span><span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The end time of the call. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>duration<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The number of seconds between the start and end times for the call. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>billsec<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The number of seconds between the answer and end times for the call. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>disposition<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;An indication of what happened to the call. This may be NO ANSWER, FAILED, BUSY, ANSWERED, or UNKNOWN.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>amaflags<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The Automatic Message Accounting (AMA) flag associated with this call. This may be one of the following: OMIT, BILLING, DOCUMENTATION, or Unknown.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>userfield<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">DEFAULT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;A general-purpose user field. This field is empty by default and can be set to a user-defined string.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72;font-weight:bold">`</span>uniqueid<span style="color:#ff7b72;font-weight:bold">`</span><span style="color:#6e7681"> </span>varchar(<span style="color:#a5d6ff">255</span>)<span style="color:#6e7681"> </span><span style="color:#ff7b72">NOT</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">NULL</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">COMMENT</span><span style="color:#6e7681"> </span><span style="color:#a5d6ff">&#39;The unique ID for the src channel. This field is set automatically and is read-only.&#39;</span>,<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681">  </span><span style="color:#ff7b72">PRIMARY</span><span style="color:#6e7681"> </span><span style="color:#ff7b72">KEY</span><span style="color:#6e7681"> </span>(<span style="color:#ff7b72;font-weight:bold">`</span>call_id<span style="color:#ff7b72;font-weight:bold">`</span>)<span style="color:#6e7681">
-</span></span></span><span style="display:flex;"><span><span style="color:#6e7681"></span>)<span style="color:#6e7681"> </span>ENGINE<span style="color:#ff7b72;font-weight:bold">=</span>MyISAM<span style="color:#6e7681">  </span><span style="color:#ff7b72">DEFAULT</span><span style="color:#6e7681"> </span>CHARSET<span style="color:#ff7b72;font-weight:bold">=</span>latin1<span style="color:#6e7681"> </span>;<span style="color:#6e7681">
-</span></span></span></code></pre></div><h2 id="music-on-hold">Music On Hold</h2>
-<p>The way that music on hold is configured in the dial plan on this page it will
+configuring indications.</p><h3 id=etcasteriskloggerconf>/etc/asterisk/logger.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Logging Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[general]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>rotatestrategy</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>rotate
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  exec_after_rotate=gzip -9 ${filename}.2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[logfiles]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>console</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; notice,warning,error,dtmf
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  ;full =&gt; notice,warning,error,debug,verbose,dtmf,fax
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  ;verbose =&gt; notice,warning,error,verbose
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  messages =&gt; notice,warning,error</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>syslog.local4</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; notice,warning,error</span>
+</span></span></code></pre></div><h3 id=etcasteriskmanagerconf>/etc/asterisk/manager.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- AMI - The Asterisk Manager Interface Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[general]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;bindaddr = 10.13.37.17</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>enabled</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>no
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  ;port = 5038
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  webenabled = no</span>
+</span></span></code></pre></div><h3 id=etcasteriskmodulesconf>/etc/asterisk/modules.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Module Loader configuration file ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[modules]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; I much prefer the whitelist approach of loading modules as I won&#39;t get anything that I don&#39;t need,</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; security through simplicity</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>autoload</span><span style=color:#f92672>=</span><span style=color:#e6db74>no</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Uncomment the following if you wish to use the Speech Recognition API</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;preload =&gt; res_speech.so</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Essential modules needed for basic operations</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; app_dial.so           ; Used to connection channels together (i.e., make phone calls)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; app_stack.so          ; Provides GoSub(), GoSubIf(), Return(), StackPop(), LOCAL(),
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                ; and LOCAL_PEEK()
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; chan_sip.so           ; Session Initiation Protocol channel driver
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; pbx_config.so         ; This is the traditional, and most popular, dialplan language
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                ; for Asterisk. Without this module, Asterisk cannot read
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                ; extensions.conf
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; res_rtp_asterisk.so   ; Provides RTP</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Security Modules</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; cdr_adaptive_odbc.so  ; Writes CDRs through ODBC framework to a database
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; cdr_csv.so            ; Write CDRs to a CSV file
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; cdr_syslog.so         ; Writes CDRs to syslog
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; res_security_log.so   ; Enables security logging</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Audio Codecs</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Recommended Order:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;       ulaw, alaw, gsm, g722, g726, speex</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Description:          A-law PCM codec used all over the world (except Canada/USA) on the PSTN</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Codec:                G.711 (alaw)</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Nominal Bandwidth:    64 kbit/s</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Algorithmic Latency:  0.125ms</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Mean Opinion Score:   4.2</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Fax Capable:          Yes</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Video Capable:        No</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; codec_alaw.so</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Description:          Global System for Mobile Communications (GSM) codec</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Codec:                GSM-FR</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Nominal Bandwidth:    13 kbit/s</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Algorithmic Latency:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Mean Opinion Score:   3.7</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Fax Capable:          No</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Video Capable:        No</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; codec_gsm.so</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Description:          Wideband audio codec</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Codec:                G.722</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Nominal Bandwidth:    64 kbit/s</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Algorithmic Latency:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Mean Opinion Score:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Fax Capable:          Maybe</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Video Capable:        No</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; codec_g722.so</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Description:          Flavor of ADPCM</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Codec:                G.726</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Nominal Bandwidth:    16-40 kbit/s</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Algorithmic Latency:  0.125ms</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Mean Opinion Score:   3.85</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Fax Capable:          No</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Video Capable:        No</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; codec_g726.so</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Open source speech codec</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Codec:                Speex</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Nominal Bandwidth:    2.15-22.4 kbit/s</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Algorithmic Latency:  30-34ms</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Mean Opinion Score:</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Fax Capable:          No</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Video Capable:        No</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; codec_speex.so</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Description:          Mu-law PCM codec used in Canada/USA on PSTN</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Codec:                G.711 (ulaw)</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Nominal Bandwidth:    64 kbit/s</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Algorithmic Latency:  0.125ms</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Mean Opinion Score:   4.2</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Fax Capable:          Yes</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Video Capable:        No</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; codec_ulaw.so</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Audio Codec Converters</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; codec_resample.so  ; Re-samples between 8-bit and 16-bit signed linear
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; codec_a_mu.so      ; A-law to mu-law direct converter</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Format Interpreters (used to read audio files from the disk)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; format_ogg_vorbis.so  ; Play ogg vorbis files
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; format_wav.so         ; Play WAV files</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Resources &amp; Function Modules</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; func_cdr.so         ; Used by cdr_syslog module to format it&#39;s output
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; func_strings.so     ; Used for security reasons on incoming calls from the PSTN lines
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; res_adsi.so         ; Used by voicemail
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; res_odbc.so         ; Used by the cdr_adaptive_odbc module
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; res_musiconhold.so  ; Provides music on hold resources</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Voicemail</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; app_voicemail_plain.so  ; Stores voicemails in files</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Production Debug Tools</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; app_echo.so     ; Used in the echo channel to ensure two way audio is working
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; app_verbose.so  ; Used in the various channels to send messages to the console and logs</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Used in various dialplans</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; app_playback.so  ; Plays back a pre-recorded audio file</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; For Caller ID information</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>load</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; app_setcallerid.so
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  load =&gt; func_callerid.so</span>
+</span></span></code></pre></div><h3 id=etcasteriskmusiconholdconf>/etc/asterisk/musiconhold.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- Music on Hold Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[default]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>moh  ; Directory relative to the astdatadir that has the music on hold files
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  mode = files     ; Read files from the configured directory
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  sort = random    ; Sort the files in random order</span>
+</span></span></code></pre></div><h3 id=etcasteriskres_odbcconf>/etc/asterisk/res_odbc.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- ODBC Configuration File ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; This &#39;context&#39; name is the name that other files will reference this by</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[gentlemen]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>enabled</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&gt; yes                    ; Not strictly necessary but a quick way to remind myself this can
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                    ; be disabled without deleting or commenting out the whole thing
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  dsn =&gt; asterisk-gentlemen         ; This value should match an entry in /etc/odbc.ini
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  username =&gt; databaseuser          ; The username used to connect to the database
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  password =&gt; databasepass          ; Password for connecting to the database
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  pre-connect =&gt; yes                ; Open a connection as soon as asterisk starts
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  idlecheck =&gt; 3600                 ; How often should we check that the database connection is still
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                    ; open? (in seconds)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  share_connections =&gt; yes          ; Allow connections to be shared, this reduces overhead but doesn&#39;t
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                    ; work on all databases
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  limit =&gt; 5                        ; What is the maximum number of database connections we can have open
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                    ; at any one time?
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  connect_timeout =&gt; 5              ; How long should we attempt to connect before considering the
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                    ; connection dead?
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  negative_connection_cache =&gt; 300  ; When a connection fails, how long should we cache that information
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                                    ; before we attempt another connection?</span>
+</span></span></code></pre></div><h3 id=etcasteriskrtpconf>/etc/asterisk/rtp.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- RTP Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[general]</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>rtpstart</span><span style=color:#f92672>=</span><span style=color:#e6db74>10000
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  rtpend=10100</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;rtpchecksums=no</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;dtmftimeout=3000</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;rtcpinterval = 5000    ; Milliseconds between rtcp reports</span>
+</span></span><span style=display:flex><span>                          <span style=color:#75715e>;(min 500, max 60000, default 5000)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Enable strict RTP protection. This will drop RTP packets that</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; do not come from the source of the RTP stream. This option is</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; disabled by default.</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>;strictrtp=yes</span>
+</span></span></code></pre></div><h3 id=etcasterisksipconf>/etc/asterisk/sip.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#75715e>; --- SIP Configuration ---</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Gentlemen</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[general]</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Features/SIP Defaults</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>allowguest</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>no            ; Disable unauthenticated call
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  alwaysauthreject = yes     ; Always respond as if every extension is valid, this makes brute force
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                             ; scanning of extensions pointless
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  canreinvite = no           ; Force all calls to be relayed through asterisk since SIP clients
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                             ; outside the firewall won&#39;t be able to directly talk to internal extensions
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  context = unauthenticated  ; Default context for incoming calls
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  dtmfmode = auto            ; Automatically detect the DTMF tranmission type
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  srvlookup = no             ; Disable DNS SRV record lookup on outbound calls
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  videosupport = yes         ; May be useful later when setting up video calls</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Network options</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>bindport</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>5060                      ; Explicitely bind to the default SIP port
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  externip = x.x.x.x                   ; The current external IP address of The Gentlemens Lounge
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  localnet = 10.13.37.0/255.255.255.0  ; Our internal subnet
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  tcpenable = yes                      ; We&#39;ll allow incoming connections via TCP as well
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  udpbindaddr = 10.13.37.xx            ; Listen for UDP requests on the primary interface</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Encryption settings</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>tlsenable</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>yes                          ; Turn encryption support on
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  tlsbindbindaddr = 10.13.37.xx            ; Listen for encrypted calls on the primary interface
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  tlscafile = /var/lib/asterisk/ca.crt     ; Certificate authority&#39;s cert
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  tlscertfile = /var/lib/asterisk/pbx.pem  ; This server&#39;s private key and certificate</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Clear the list of codecs</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>disallow</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>all</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Set a default order for our codecs, providing all of them will increase compatibility with other</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; internet clients. Notes on the quality tradeoff can be found in the module.conf file where these</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; codecs are loaded</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>allow</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>ulaw
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  allow = alaw
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  allow = gsm
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  allow = g722
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  allow = g726
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  allow = speex
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  allow = g729</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Template to restrict SIP users to only the local network</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[localonly](!)</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; Start by denying everyone</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>deny</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>0.0.0.0/0.0.0.0
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  ; Allow connetion that originate from 10.13.37.X to attempt to authenticate against this account
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  permit = 10.13.37.0/255.255.255.0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; A template for VoIP extensions that might connect from the outside</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[sipclient](!)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>context</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>internal  ; They should be in our internal context
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  host = dynamic      ; The clients will not be static (they could be anywhere)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  type = friend       ; User type
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  qualify = yes       ; Talk to them frequently to make sure they&#39;re still there (and too hold
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>                      ; firewall connections open)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Slight adjustment of the sipclient template to adjust that these extensions will be connecting from the outside</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[roadwarrior](!,sipclient)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>nat</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>yes  ; Yes, they&#39;re probably on the other side of our NAT</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; This is specifically for my SPA-3000, I&#39;ve found that even though my device has a static addresses</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; I should leave the host type as dynamic as registrations cause errors in the asterisk log, I suppose it</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; would be possible to configure the LINE and PSTNIN as peers and turn off registrations in the Sipura&#39;s</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; configuration, which might be the better route to go. I will have to investigate this in the future but</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; this works for now.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[atadevice](!,sipclient,localonly)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>nat</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>never  ; These devices should never be outside our NAT</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Configuration for internal POTS line on the Linksys SPA-3000</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[SPA3000_LINE](atadevice)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>context</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>internal
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  port = 5060
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  secret = setyourownpassword</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Configuration for incoming phone calls from the POTS line through the SPA-3000</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[SPA3000_PSTNIN](atadevice)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>context</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>pstnmenu
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  secret = setyourownpassword</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; Configuration for incoming telephone line on the Linksys SPA-3000</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[SPA3000_PSTNOUT](atadevice)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>context</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>from-trunk
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  default-user = from-pbx
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  host = 10.13.37.xx
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  port = 5061
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  secret = setyourownpassword</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; SIP Users, these should have especially strong passwords. I use the following to generate</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; passwords for them:</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>;      dd if=/dev/random count=2 bs=8 2&gt;/dev/null | base64 | sed -e &#39;s/=*$//&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>; It will create passwords like:</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>;      9VkLRZz0s9GNFcAica0ONA</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>;      SOhiPwA0pTupjFx/QCu7BA</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>;      5Zw+5B8435lrMLKvsSNVpQ</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[user1](roadwarrior)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>callerid</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;User 1&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  secret = setyourownpassword</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[user2](roadwarrior)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>callerid</span> <span style=color:#f92672>=</span><span style=color:#e6db74>&#34;User 2&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  secret = setyourownpassword</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>[user3](roadwarrior)</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>callerid</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;User 3&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>  secret = setyourownpassword</span>
+</span></span></code></pre></div><h3 id=etcodbcini>/etc/odbc.ini</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#66d9ef>[asterisk-gentlemen]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>Description</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Database driver for Asterisk call logs</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>Trace</span>       <span style=color:#f92672>=</span> <span style=color:#e6db74>Off</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>TraceFile</span>   <span style=color:#f92672>=</span> <span style=color:#e6db74>stderr</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>Driver</span>      <span style=color:#f92672>=</span> <span style=color:#e6db74>MySQL</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>SERVER</span>      <span style=color:#f92672>=</span> <span style=color:#e6db74>mysqlserver.localhost</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>PORT</span>        <span style=color:#f92672>=</span> <span style=color:#e6db74>3306</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>DATABASE</span>    <span style=color:#f92672>=</span> <span style=color:#e6db74>gentlemen</span>
+</span></span></code></pre></div><p>Here is the schema for the table that I use:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sql data-lang=sql><span style=display:flex><span><span style=color:#75715e>--
+</span></span></span><span style=display:flex><span><span style=color:#75715e>-- Database: `gentlemen`
+</span></span></span><span style=display:flex><span><span style=color:#75715e>--
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e>-- --------------------------------------------------------
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e>--
+</span></span></span><span style=display:flex><span><span style=color:#75715e>-- Table structure for table `asterisk`
+</span></span></span><span style=display:flex><span><span style=color:#75715e>--
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>DROP</span> <span style=color:#66d9ef>TABLE</span> <span style=color:#66d9ef>IF</span> <span style=color:#66d9ef>EXISTS</span> <span style=color:#f92672>`</span>asterisk<span style=color:#f92672>`</span>;
+</span></span><span style=display:flex><span><span style=color:#66d9ef>CREATE</span> <span style=color:#66d9ef>TABLE</span> <span style=color:#f92672>`</span>asterisk<span style=color:#f92672>`</span> (
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>call_id<span style=color:#f92672>`</span> int(<span style=color:#ae81ff>10</span>) unsigned <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> AUTO_INCREMENT,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>accountcode<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>DEFAULT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;An account ID. This field is user-defined and is empty by default.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>src<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The calling party’s caller ID number. It is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>dst<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The destination extension for the call. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>dcontext<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The destination context for the call. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>clid<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The full caller ID, including the name, of the calling party. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>channel<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The calling party’s channel. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>dstchannel<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The called party’s channel. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>lastapp<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The last dialplan application that was executed. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>lastdata<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The arguments passed to the lastapp. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span><span style=color:#66d9ef>start</span><span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The start time of the call. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>answer<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The answered time of the call. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span><span style=color:#66d9ef>end</span><span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The end time of the call. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>duration<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The number of seconds between the start and end times for the call. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>billsec<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The number of seconds between the answer and end times for the call. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>disposition<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;An indication of what happened to the call. This may be NO ANSWER, FAILED, BUSY, ANSWERED, or UNKNOWN.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>amaflags<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The Automatic Message Accounting (AMA) flag associated with this call. This may be one of the following: OMIT, BILLING, DOCUMENTATION, or Unknown.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>userfield<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>DEFAULT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;A general-purpose user field. This field is empty by default and can be set to a user-defined string.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>`</span>uniqueid<span style=color:#f92672>`</span> varchar(<span style=color:#ae81ff>255</span>) <span style=color:#66d9ef>NOT</span> <span style=color:#66d9ef>NULL</span> <span style=color:#66d9ef>COMMENT</span> <span style=color:#e6db74>&#39;The unique ID for the src channel. This field is set automatically and is read-only.&#39;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>PRIMARY</span> <span style=color:#66d9ef>KEY</span> (<span style=color:#f92672>`</span>call_id<span style=color:#f92672>`</span>)
+</span></span><span style=display:flex><span>) ENGINE<span style=color:#f92672>=</span>MyISAM  <span style=color:#66d9ef>DEFAULT</span> CHARSET<span style=color:#f92672>=</span>latin1 ;
+</span></span></code></pre></div><h2 id=music-on-hold>Music On Hold</h2><p>The way that music on hold is configured in the dial plan on this page it will
 look for files in the directory <code>/usr/share/asterisk/moh/</code>. Files will be
 chosen at random from this directory as long as asterisk can read them (that is
 it has a codec for the audio file loaded). I strongly suggest the music be in
-<code>ogg</code> format.</p>
-<h2 id="text-to-speech">Text to Speech</h2>
-<p>Please refer to my notes on <a href="https://stelfox.net/notes/festival/">Festival</a> for more information on text to
-speech with asterisk.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+<code>ogg</code> format.</p><h2 id=text-to-speech>Text to Speech</h2><p>Please refer to my notes on <a href=https://stelfox.net/notes/festival/>Festival</a> for more information on text to
+speech with asterisk.</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

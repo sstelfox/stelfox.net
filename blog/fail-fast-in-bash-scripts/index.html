@@ -1,0 +1,44 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash function error_handler() { echo &amp;#34;Error occurred in script at line: ${1}."><meta name=keywords content=",linux,tips"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/fail-fast-in-bash-scripts/><title>Fail Fast in Bash Scripts :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Fail Fast in Bash Scripts"><meta itemprop=description content='I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash function error_handler() { echo "Error occurred in script at line: ${1}.'><meta itemprop=datePublished content="2013-11-26T15:19:40-05:00"><meta itemprop=dateModified content="2013-11-26T15:19:40-05:00"><meta itemprop=wordCount content="319"><meta itemprop=keywords content="Linux,Tips"><meta name=twitter:card content="summary"><meta name=twitter:title content="Fail Fast in Bash Scripts"><meta name=twitter:description content='I found myself writing another bash script that should exit should any of the few commands within it fail to run. As I began writing some error handling after each command, and isolating the sections into bash functions I figured there had to be a better way. After a little Googling and a trip through the bash man pages sure enough:
+#!/bin/bash function error_handler() { echo "Error occurred in script at line: ${1}.'><meta property="article:published_time" content="2013-11-26 15:19:40 -0500 EST"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/fail-fast-in-bash-scripts/>Fail Fast in Bash Scripts</a></h2><div class=post-content><p>I found myself writing another bash script that should exit should any of the
+few commands within it fail to run. As I began writing some error handling
+after each command, and isolating the sections into bash functions I figured
+there had to be a better way. After a little Googling and a trip through the
+bash man pages sure enough:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>function</span> error_handler<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  echo <span style=color:#e6db74>&#34;Error occurred in script at line: </span><span style=color:#e6db74>${</span>1<span style=color:#e6db74>}</span><span style=color:#e6db74>.&#34;</span>
+</span></span><span style=display:flex><span>  echo <span style=color:#e6db74>&#34;Line exited with status: </span><span style=color:#e6db74>${</span>2<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>trap <span style=color:#e6db74>&#39;error_handler ${LINENO} $?&#39;</span> ERR
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>set -o errexit
+</span></span><span style=display:flex><span>set -o errtrace
+</span></span><span style=display:flex><span>set -o errpipe
+</span></span><span style=display:flex><span>set -o nounset
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Everything is running fine...&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># A command outside of a conditional that will always return a exit code of 1</span>
+</span></span><span style=display:flex><span>test <span style=color:#ae81ff>1</span> -eq <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;This will never run, as a command has failed&#34;</span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Using unset variable </span><span style=color:#e6db74>${</span>TEST<span style=color:#e6db74>}</span><span style=color:#e6db74> will also cause this script to exit&#34;</span>
+</span></span></code></pre></div><p>The first piece of that is setting up an error handler that will get run
+whenever an error condition occurs with the script. You can use this section to
+roll back any changes or cleanup your environment as well as give you some
+debug information about the failure.</p><p>I&rsquo;m then setting a few bash options, The following is a description taken more
+or less directly from the bash man pages:</p><blockquote><p>-o errexit: Exit immediately if a pipeline (which may consist of a single
+simple command), a subshell command enclosed in parentheses, or one of the
+commands executed as part of a command list enclosed by braces exits with a
+non-zero status.</p><p>-o errtrace: If set, any trap on ERR is inherited by shell functions, command
+substitutions, and commands execute in a subshell environment.</p><p>-o nounset: Treat unset variables and parameters other than the special
+parameters &ldquo;@&rdquo; and &ldquo;*&rdquo; as an error when performing parameter expansion.</p></blockquote><p>If anything goes wrong in the script it will fail once, fail fast, and let you
+know where it died.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/tips/>tips</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

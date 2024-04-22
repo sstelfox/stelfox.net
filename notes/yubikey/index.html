@@ -1,237 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
 NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t= This will hit the API with a URL like:
 https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh The API can then return a token that for accessing additional functionality.
 Resetting This will wipe all keys, user, and admin pins on the card.
-This requires scdaemon and gpg-agent to be working and able to connect to the smartcard." />
-<meta name="keywords" content="blog, programming, linux, systems, personal, linux, security" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/yubikey/" />
-
-
-    <title>
-        
-            Yubikey :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Yubikey">
-<meta itemprop="description" content="NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
+This requires scdaemon and gpg-agent to be working and able to connect to the smartcard."><meta name=keywords content=",linux,security"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/yubikey/><title>Yubikey :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Yubikey"><meta itemprop=description content="NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
 NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t= This will hit the API with a URL like:
 https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh The API can then return a token that for accessing additional functionality.
 Resetting This will wipe all keys, user, and admin pins on the card.
-This requires scdaemon and gpg-agent to be working and able to connect to the smartcard."><meta itemprop="datePublished" content="2017-10-10T00:28:32+00:00" />
-<meta itemprop="dateModified" content="2017-10-10T00:28:32+00:00" />
-<meta itemprop="wordCount" content="361">
-<meta itemprop="keywords" content="linux,security," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Yubikey"/>
-<meta name="twitter:description" content="NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
+This requires scdaemon and gpg-agent to be working and able to connect to the smartcard."><meta itemprop=datePublished content="2017-10-10T00:28:32+00:00"><meta itemprop=dateModified content="2017-10-10T00:28:32+00:00"><meta itemprop=wordCount content="361"><meta itemprop=keywords content="Linux,Security"><meta name=twitter:card content="summary"><meta name=twitter:title content="Yubikey"><meta name=twitter:description content="NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
 NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t= This will hit the API with a URL like:
 https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh The API can then return a token that for accessing additional functionality.
 Resetting This will wipe all keys, user, and admin pins on the card.
-This requires scdaemon and gpg-agent to be working and able to connect to the smartcard."/>
-
-
-
-    <meta property="og:title" content="Yubikey" />
-<meta property="og:description" content="NEO dnf install ykpers -y ykpersonalize -m82 Unplug and replug it back in and it should be usable as a smartcard.
-NFC / HTTP Auth dnf install ykpers -y ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t= This will hit the API with a URL like:
-https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh The API can then return a token that for accessing additional functionality.
-Resetting This will wipe all keys, user, and admin pins on the card.
-This requires scdaemon and gpg-agent to be working and able to connect to the smartcard." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/yubikey/" /><meta property="article:section" content="notes" />
-<meta property="article:published_time" content="2017-10-10T00:28:32+00:00" />
-<meta property="article:modified_time" content="2017-10-10T00:28:32+00:00" />
-
-
-
-
-
-
-    <meta property="article:published_time" content="2017-10-10 00:28:32 &#43;0000 UTC" />
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/yubikey/">Yubikey</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <h2 id="neo">NEO</h2>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>dnf install ykpers -y
-</span></span><span style="display:flex;"><span>ykpersonalize -m82
-</span></span></code></pre></div><p>Unplug and replug it back in and it should be usable as a smartcard.</p>
-<h2 id="nfc--http-auth">NFC / HTTP Auth</h2>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>dnf install ykpers -y
-</span></span><span style="display:flex;"><span>ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=
-</span></span></code></pre></div><p>This will hit the API with a URL like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
-</span></span></code></pre></div><p>The API can then return a token that for accessing additional functionality.</p>
-<h2 id="resetting">Resetting</h2>
-<p>This will wipe all keys, user, and admin pins on the card.</p>
-<p>This requires scdaemon and gpg-agent to be working and able to connect to the
+This requires scdaemon and gpg-agent to be working and able to connect to the smartcard."><meta property="article:published_time" content="2017-10-10 00:28:32 +0000 UTC"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/yubikey/>Yubikey</a></h2><div class=post-content><h2 id=neo>NEO</h2><pre tabindex=0><code>dnf install ykpers -y
+ykpersonalize -m82
+</code></pre><p>Unplug and replug it back in and it should be usable as a smartcard.</p><h2 id=nfc--http-auth>NFC / HTTP Auth</h2><pre tabindex=0><code>dnf install ykpers -y
+ykpersonalize -n https://api.stelfox.net/sessions/yknfc?t=
+</code></pre><p>This will hit the API with a URL like:</p><pre tabindex=0><code>https://api.stelfox.net/session/yknfc?t=ccccccuddclhrkuvurcufviveulljleihvreukifegjh
+</code></pre><p>The API can then return a token that for accessing additional functionality.</p><h2 id=resetting>Resetting</h2><p>This will wipe all keys, user, and admin pins on the card.</p><p>This requires scdaemon and gpg-agent to be working and able to connect to the
 smartcard. It needs to be plugged into the computer and requires GPG version
 2.0.22 or later. On yubikeys prior to the YubiKey4 check the version and
-confirm it&rsquo;s version 1.0.6 or later using the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>gpg-connect-agent --hex &#34;scd apdu 00 f1 00 00&#34; /bye
-</span></span></code></pre></div><p>You&rsquo;ll get back a line that looks like:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>D[0000]  01 00 06 90 00
-</span></span></code></pre></div><p>Indicating version 1.0.6. To reset the applet create a file with the following
-contents:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/hex
-</span></span><span style="display:flex;"><span>scd serialno
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
-</span></span><span style="display:flex;"><span>scd apdu 00 e6 00 00
-</span></span><span style="display:flex;"><span>scd apdu 00 44 00 00
-</span></span><span style="display:flex;"><span>/echo Card has been successfully reset.
-</span></span><span style="display:flex;"><span>/bye
-</span></span></code></pre></div><p>And cat it into <code>gpg-connect-agent</code> like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cat FILE | gpg-connect-agent
-</span></span></code></pre></div><h2 id="using-as-a-rng-source">Using as a RNG source</h2>
-<p>This may allow me to use the yubikey&rsquo;s hardware RNG to generate entropy on my
-host:</p>
-<p><a href="https://github.com/infincia/TokenTools">https://github.com/infincia/TokenTools</a></p>
-<h2 id="vulnerability">Vulnerability</h2>
-<p>A vulnerability was published around YubiKey NEOs use as smartcards and
-<a href="https://developers.yubico.com/ykneo-openpgp/SecurityAdvisory%202015-04-14.html">Yubico&rsquo;s</a> response is top notch. I recommend following the steps in
-checking on your key to see if you&rsquo;re affected.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/security/">security</a></span>
-        
-    </p>
-
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+confirm it&rsquo;s version 1.0.6 or later using the following command:</p><pre tabindex=0><code>gpg-connect-agent --hex &#34;scd apdu 00 f1 00 00&#34; /bye
+</code></pre><p>You&rsquo;ll get back a line that looks like:</p><pre tabindex=0><code>D[0000]  01 00 06 90 00
+</code></pre><p>Indicating version 1.0.6. To reset the applet create a file with the following
+contents:</p><pre tabindex=0><code>/hex
+scd serialno
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 81 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 20 00 83 08 40 40 40 40 40 40 40 40
+scd apdu 00 e6 00 00
+scd apdu 00 44 00 00
+/echo Card has been successfully reset.
+/bye
+</code></pre><p>And cat it into <code>gpg-connect-agent</code> like so:</p><pre tabindex=0><code>cat FILE | gpg-connect-agent
+</code></pre><h2 id=using-as-a-rng-source>Using as a RNG source</h2><p>This may allow me to use the yubikey&rsquo;s hardware RNG to generate entropy on my
+host:</p><p><a href=https://github.com/infincia/TokenTools>https://github.com/infincia/TokenTools</a></p><h2 id=vulnerability>Vulnerability</h2><p>A vulnerability was published around YubiKey NEOs use as smartcards and
+<a href=https://developers.yubico.com/ykneo-openpgp/SecurityAdvisory%202015-04-14.html>Yubico&rsquo;s</a> response is top notch. I recommend following the steps in
+checking on your key to see if you&rsquo;re affected.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/security/>security</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

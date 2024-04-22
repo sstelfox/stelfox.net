@@ -1,0 +1,434 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Once upon a time there was a single AWS account. In this AWS account was several regions but a single VPC. To make sure expansions into other regions was possible this VPC chose to use the largest private subnet which just so happened to also be the default (10.0.0.0/8).
+Another AWS account enter the picture and while they were single they came to the same conclusion and followed the best practices and defaults to their heart&amp;rsquo;s content."><meta name=keywords content=",aws,ipsec,linux,networking"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2019-03-27-merging-overlapping-subnets/><title>Merging Overlapping Subnets :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Merging Overlapping Subnets"><meta itemprop=description content="Once upon a time there was a single AWS account. In this AWS account was several regions but a single VPC. To make sure expansions into other regions was possible this VPC chose to use the largest private subnet which just so happened to also be the default (10.0.0.0/8).
+Another AWS account enter the picture and while they were single they came to the same conclusion and followed the best practices and defaults to their heart&rsquo;s content."><meta itemprop=datePublished content="2019-03-27T19:11:30-04:00"><meta itemprop=dateModified content="2019-03-27T19:11:30-04:00"><meta itemprop=wordCount content="5089"><meta itemprop=keywords content="Aws,Ipsec,Linux,Networking"><meta name=twitter:card content="summary"><meta name=twitter:title content="Merging Overlapping Subnets"><meta name=twitter:description content="Once upon a time there was a single AWS account. In this AWS account was several regions but a single VPC. To make sure expansions into other regions was possible this VPC chose to use the largest private subnet which just so happened to also be the default (10.0.0.0/8).
+Another AWS account enter the picture and while they were single they came to the same conclusion and followed the best practices and defaults to their heart&rsquo;s content."><meta property="article:published_time" content="2019-03-27 19:11:30 -0400 EDT"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2019-03-27-merging-overlapping-subnets/>Merging Overlapping Subnets</a></h2><div class=post-content><p>Once upon a time there was a single AWS account. In this AWS account was
+several regions but a single VPC. To make sure expansions into other regions
+was possible this VPC chose to use the largest private subnet which just so
+happened to also be the default (<code>10.0.0.0/8</code>).</p><p>Another AWS account enter the picture and while they were single they came to
+the same conclusion and followed the best practices and defaults to their
+heart&rsquo;s content. Normally this wouldn&rsquo;t be a problem for either of them, but
+they found each other and tied the knot and were happily together for the rest
+of time&mldr;</p><p>But in this story there is a darkness looming. Communication was not everything
+either of them desired. There were secret things that couldn&rsquo;t be said in
+public forums of the internet but they both desperately wanted share. There was
+a solution&mldr; But it involved dark magicks.</p><p>I found myself in a situation where two AWS VPCs needed to communicate
+sensitive data between the two, but they were using overlapping IP address
+spaces. There was a lot of room available in both, but even some individual IPs
+overlapped and renumbering would prove problematic and time consuming.
+Eventually these two VPCs were intended to be merged anyway, but business
+requirements needed a basic level of communication sooner.</p><p>The solution I came up with may be useful for others in a pinch; Two layers of
+1:1 NAT were employed allowing each to communicate with what each side seemed
+to believe were unique IPs. To do this we need to have a usable IP address that
+we can map into without potentially wrecking havoc on access to random sites on
+the internet.</p><p>I was lucky in that all the hosts that need to talk to each other had addresses
+on both sides below <code>10.7.0.x</code>. This is more addresses than are available to
+the <code>192.168.0.0/16</code> private address space but covers only about 25% of the
+<code>172.16.0.0/16</code> space. If you&rsquo;re in a worse situation where hosts are properly
+scattered all over the <code>10.0.0.0/8</code> address you can still use this technique
+but it will require a bit more manual configuration mapping allocating either
+/24 to route or in the most extreme case individual host addresses.</p><p>Before we go any further, I definitely consider this technique to be a band-aid
+for the issue. For longer term connectivity some form of migration should be
+planned and executed on. This makes a GREAT and stable band-aid though.</p><p>If you&rsquo;d like to follow along you&rsquo;ll need two VPCs, each with two EC2 instances
+to work as the tunnel hosts and likely two more to be test hosts to make use of
+the tunnels.</p><p>This part is easy, we&rsquo;ll use CentOS 7 hosts as a base. You&rsquo;ll need to
+additionally install the following software:</p><ul><li>iptables-services</li><li>libreswan</li><li>tcpdump (optional but invaluable to diagnose issues)</li></ul><p>If you&rsquo;re not on AWS you&rsquo;ll also want to make sure that NetworkManager and
+firewalld are both <em><strong>removed from the system</strong></em>. They will break the
+configurations you put in place if left to their own machinations. If you
+remove NetworkManager remember to enable the network service. For good measure
+here is a minimal DHCP config you can use to configure <code>eth0</code> on your system:</p><pre tabindex=0><code># /etc/sysconfig/network-scripts/ifcfg-eth0
+
+DEVICE=&#34;eth0&#34;
+NM_CONTROLLED=&#34;no&#34;
+ONBOOT=&#34;yes&#34;
+TYPE=&#34;Ethernet&#34;
+
+BOOTPROTO=&#34;dhcp&#34;
+IPV4_FAILURE_FATAL=&#34;yes&#34;
+</code></pre><p>Let&rsquo;s also start with a minimal IPTables ruleset. This is pretty close to the
+defaults, but it&rsquo;s good to be sure that we&rsquo;re all on the same page:</p><pre tabindex=0><code># /etc/sysconfig/iptables
+
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+# NAT rules will be added here
+
+COMMIT
+
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+
+-A INPUT -m tcp -p tcp --dport 22 -j ACCEPT
+
+# Filter rules will be added here
+
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+
+COMMIT
+</code></pre><p>Place the contents of that file in <code>/etc/sysconfig/iptables</code> as the header
+indicates. The differences from the default are mostly in that we have also
+defined the <code>nat</code> table and switched the default action on the <code>INPUT</code> and
+<code>FORWARD</code> chains to drop. Both the default and this one will reject the traffic
+anyways so this doesn&rsquo;t actually change the behavior of the firewall.</p><p>Defining the <code>nat</code> table doesn&rsquo;t change any behavior either, but I&rsquo;ll be
+referencing it later on in the post and you should add the rules where
+indicated by the comment. If you get confused by any of my instructions around
+adding the firewall rules, there is a complete ruleset at the end of the post
+you can reference directly.</p><p>Finally let&rsquo;s make sure the firewall is enabled and running:</p><pre tabindex=0><code>systemctl enable iptables.service
+systemctl start iptables.service
+</code></pre><h2 id=basic-connectivity>Basic Connectivity</h2><p>From this point on it is going to become important to distinguish the two
+networks I&rsquo;ll be bridging. This method is very symmetric (all the firewalls and
+configs should effectively be the same on the two tunnel instances) but there
+are a few places where the remote IP and local IPs need to be referenced. Going
+forward I&rsquo;m going to refer to the two networks as <code>east</code> and <code>west</code> but these
+are arbitrary labels.</p><p>You&rsquo;ll need to collect the public IP from the AWS console for your tunnel hosts
+in both the <code>east</code> and <code>west</code>. For me I&rsquo;m going to use <code>5.5.5.5</code> for the <code>west</code>
+IP and <code>7.7.7.7</code> for the <code>east</code> IP. If you see these in the configs you&rsquo;ll want
+to replace them with the appropriate values for your networks. If you expect
+this to last a long time or will be a business critical tunnel I highly
+recommend using an Elastic IP on each of these hosts.</p><p>You&rsquo;ll need to setup a dedicated security group for each of the tunnel hosts.
+To avoid bouncing back and forth between these the security groups as we
+progress through the guide I&rsquo;m going to put all the rules we&rsquo;re going to need
+in the following table. These are inbound rules only and can be hardened a bit
+(but I&rsquo;ll get to that later), let&rsquo;s focus on getting this up and running first.</p><table><thead><tr><th style=text-align:center>Type</th><th style=text-align:center>Protocol</th><th style=text-align:center>Port Range</th><th style=text-align:center>Source</th><th style=text-align:center>Description</th></tr></thead><tbody><tr><td style=text-align:center>SSH</td><td style=text-align:center>TCP</td><td style=text-align:center>22</td><td style=text-align:center>0.0.0.0/0</td><td style=text-align:center>SSH Access</td></tr><tr><td style=text-align:center>Custom Protocol</td><td style=text-align:center>ESP (50)</td><td style=text-align:center>All</td><td style=text-align:center>{other public IP}/32</td><td style=text-align:center>IPSec Encapsulated Packets</td></tr><tr><td style=text-align:center>Custom UDP Rule</td><td style=text-align:center>UDP</td><td style=text-align:center>500</td><td style=text-align:center>{other public IP}/32</td><td style=text-align:center>IPSec Key Management</td></tr><tr><td style=text-align:center>Custom ICMP Rule - IPv4</td><td style=text-align:center>Echo Request</td><td style=text-align:center>N/A</td><td style=text-align:center>0.0.0.0/0</td><td style=text-align:center>Connectivity Checking</td></tr><tr><td style=text-align:center>All TCP</td><td style=text-align:center>TCP</td><td style=text-align:center>0-65535</td><td style=text-align:center>10.0.0.0/8</td><td style=text-align:center>Internal TCP Traffic</td></tr><tr><td style=text-align:center>All UDP</td><td style=text-align:center>UDP</td><td style=text-align:center>0-65535</td><td style=text-align:center>10.0.0.0/8</td><td style=text-align:center>Internal UDP Traffic</td></tr></tbody></table><p>You&rsquo;ll want to replace <code>{other public IP}</code> with the public IP of the tunnel
+host in the opposite network. For example if this is the security group for the
+<code>west</code> tunnel host, you&rsquo;d be allowing the traffic from <code>7.7.7.7</code>.</p><p>If you&rsquo;re doing this in another environment you may also need <code>UDP/4500</code> from
+the other public IP when NAT traversal is required. AWS EC2 instances are NAT&rsquo;d
+<a href=/blog/2019-03-17-aws-elastic-ip-details/>but we can work around that</a> and will include that later on.</p><p>With the security groups in place, and the local firewalls configured make sure
+each host can ping each other. If they can great! If not, double check all the
+IPs, security group rules, and iptables rules all match what I have documented
+here.</p><h2 id=the-ipsec-tunnel>The IPSec Tunnel</h2><p>This tunnel provides strong authentication and encryption for all the traffic
+that will be exchanged between the two networks. We&rsquo;ve already installed the
+required packages we just need to configure the various pieces to get it
+running.</p><p>First let&rsquo;s handle the firewall. In the <code>/etc/sysconfig/iptables</code> file we
+standardized on earlier we need to add a couple of rules to each tunnel host
+for the IPSec traffic. Add these just after the note for adding filter rules
+and before the <code>REJECT</code> rules:</p><pre tabindex=0><code>-A INPUT -p esp -j ACCEPT
+-A INPUT -m udp -p udp --sport 500 --dport 500 -j ACCEPT
+#-A INPUT -m udp -p udp --sport 4500 --dport 4500 -j ACCEPT
+</code></pre><p>This will allow tunneled packets and key exchange through the firewall. If
+you&rsquo;re not on AWS when setting this up you may need to uncomment that third
+rule for NAT traversal packets.</p><p>These rules are pretty unrestricted, but we have already narrowed down who will
+be able to connect using the security group for these machines. By leaving a
+more refined specification out of our definition here our IPTables rules can
+remain symmetric on both hosts making automated management through a devops
+tool simpler.</p><p>Next up there are some specific sysctl settings that need to be adjusted for
+the tunneled packets to not be rejected by the kernel. The reason behind the
+sysctl settings is pretty well <a href=https://libreswan.org/wiki/FAQ>documented on LibreSwan&rsquo;s FAQ</a> if you&rsquo;re
+curious for why they&rsquo;re needed.</p><p>You&rsquo;ll want to append the following to <code>/etc/sysctl.conf</code> on both tunnel hosts:</p><pre tabindex=0><code>net.ipv4.conf.default.accept_redirects = 0
+net.ipv4.conf.default.send_redirects = 0
+net.ipv4.conf.default.rp_filter = 0
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.send_redirects = 0
+net.ipv4.conf.all.rp_filter = 0
+
+# Annoyingly, this seems to ignore the defaults set above. This should be
+# interface that libreswan will be receiving the IPSec connections on
+net.ipv4.conf.eth0.rp_filter = 0
+</code></pre><p>With that in place run <code>sysctl -p</code> to apply the new settings and <code>systemctl restart iptables.service</code> to update the firewall rules.</p><p>We&rsquo;ll quickly do a global IPSec config to make sure we&rsquo;re on the same page.
+Replace the contents of <code>/etc/ipsec.conf</code> on each tunnel host with the
+following:</p><pre tabindex=0><code># /etc/ipsec.conf
+
+config setup
+  protostack=netkey
+
+include /etc/ipsec.d/*.conf
+</code></pre><p>IPSec has a couple of ways of handling authentication. The most secure is
+asymmetric encryption using RSA keys which requires each host to have a private
+key and knowledge of the other host&rsquo;s public key. To these keys on each tunnel
+host run the following commands:</p><pre tabindex=0><code>sudo ipsec initnss
+sudo ipsec newhostkey --output /etc/ipsec.secrets
+</code></pre><p>Similar to our <code>west</code> and <code>east</code> analogy, IPSec has the concept of <code>left</code> and
+<code>right</code> hosts on either side of a tunnel. We&rsquo;re going to map them the same way
+but need to get the public keys of each host first so they can verify each
+other.</p><p>On our <code>west</code> host, which will be our <code>left</code> host for the IPSec config retrieve
+the public key with the following two commands. The output will be one very
+long line that begins with <code>leftrsasigkey=</code> record this entire output.</p><pre tabindex=0><code>CKAID=&#34;$(sudo ipsec showhostkey --list | head -n 1 | awk &#39;{ print $NF }&#39;)&#34;
+sudo ipsec showhostkey --left --ckaid ${CKAID} | tail -n 1
+</code></pre><p>A bit of an explanation of those two commands. The first one extracts the
+unique key identifier for the first key present (there shouldn&rsquo;t be any
+others), while the second gets the actual public key for that identifier. We&rsquo;ll
+need to repeat the process on our <code>east</code> host slightly modified which will be
+our <code>right</code> host:</p><pre tabindex=0><code>CKAID=&#34;$(sudo ipsec showhostkey --list | head -n 1 | awk &#39;{ print $NF }&#39;)&#34;
+sudo ipsec showhostkey --right --ckaid ${CKAID} | tail -n 1
+</code></pre><p>This will also output another long line that this time will begin with
+<code>rightrsasigkey=</code> which you should also record. On both hosts you&rsquo;ll want to
+place the following IPSec tunnel config at <code>/etc/ipsec.d/vpc-link-tunnel.conf</code>:</p><pre tabindex=0><code>conn vpc-link-tunnel
+  auto=start
+  pfs=yes
+  type=transport
+
+  leftid=@west_tunnel_server
+  rightid=@east_tunnel_server
+  left={west external ip}
+  right={east external ip}
+
+  authby=rsasig
+  leftrsasigkey={left/west sig key}
+  rightrsasigkey={right/east sig key}
+</code></pre><p>Be sure to replace the <code>{west external ip}</code> with the external IP address of our
+<code>west</code> server and likewise the <code>{east external ip}</code> with the external IP
+address of our <code>east</code> server. Be sure to replace the last two lines with the
+output of the two keys we got from our <code>west</code> and <code>east</code> tunnel hosts.</p><p>That&rsquo;s it for the IPSec configuration, let&rsquo;s start the daemon up and verify
+that it&rsquo;s working on both tunnel servers:</p><pre tabindex=0><code>sudo systemctl enable ipsec.service
+sudo systemctl start ipsec.service
+</code></pre><p>Let&rsquo;s check the IPSec status to make sure it&rsquo;s happy:</p><pre tabindex=0><code>sudo ipsec status
+</code></pre><p>There will be quite a bit of output but what you&rsquo;re looking for is a line that
+looks like this:</p><pre tabindex=0><code>000 Total IPsec connections: loaded 1, active 1
+</code></pre><p>If the loaded count is 0, double check the presence and file names as well as
+the global config. If you&rsquo;ve properly loaded the config but it isn&rsquo;t coming up
+as active, review the contents of <code>/var/log/secure</code> for any IPSec error
+messages. If there is an authentication error, most likely the public keys got
+copied incorrectly. Make sure that both keys exist in both configs and match
+the outputs from the key extraction commands earlier on.</p><p>If there are connection issues there are quite a few other bits that could have
+gone wrong. Review the firewalls, security groups, and IPSec configs to make
+sure the addresses are correct and the protocols are allowed through.</p><p>Once the details have been worked out and the tunnel is up, all the traffic
+between the two hosts should now be encrypted. This can be verified using
+<code>tcpdump</code> and sending a couple pings at the other host. When IPSec is flowing
+the traffic will look something along the lines of:</p><pre tabindex=0><code>21:51:02.807688 IP 10.0.1.156 &gt; 7.7.7.7: ESP(spi=0x171f19e9,seq=0xe), length 116
+</code></pre><p>Make sure this is working, everything beyond this depends on the IPSec tunnel
+up and running correctly.</p><h2 id=the-gre-tunnel>The GRE Tunnel</h2><p>The GRE overlay isn&rsquo;t required for this to work and does add 24 bytes of
+overhead to each packet but it provides us some benefits.</p><p>The first and probably most important is that each end will have a fixed
+private IP address as it&rsquo;s routing target. If the GRE tunnel is down for any
+reason the tunnel host won&rsquo;t attempt to send any forwarded traffic to a public
+IP address. This provides a layer of security against other misconfigurations.</p><p>Since all of the traffic will only be routed to the tunnel endpoint if the GRE
+tunnel is up and will always travel over the GRE tunnel we can simplify our
+firewall policy around enforcement of encrypted traffic. If we guarantee all
+GRE traffic is encrypted over the IPSec tunnel, all traffic using the GRE
+tunnel will be encrypted with only a single universal firewall rule.</p><p>One final benefit with the firewall is that we get a separate interface we can
+use to identify the direction traffic is traveling through our tunnels without
+worrying about the details of IP addresses (which will be changing in unusual
+ways later on).</p><p>If these benefits don&rsquo;t justify the 24 byte per packet overhead to you, you&rsquo;re
+welcome to skip this section but you&rsquo;ll need to figure out the changes to the
+firewall rules and routing tables on your own later on.</p><p>Let&rsquo;s start the setup with a safety net. We need to allow the GRE traffic
+through the firewall on the tunnel hosts, but we want to make sure that we only
+pass if it has been properly encrypted with the IPSec. We can use the iptables
+<code>policy</code> module. Add the following rules to the filter section of each of our
+firewalls:</p><pre tabindex=0><code>-A INPUT -m policy --dir in --pol ipsec --proto esp -p gre -j ACCEPT
+-A OUTPUT -m policy --dir out --pol ipsec --proto esp -p gre -j ACCEPT
+-A OUTPUT -p gre -j DROP
+</code></pre><p>These three lines are all that is required to enforce that all of our traffic
+being routed between the two networks will always be encrypted if they have any
+hope of making it.</p><p>Restart the firewall so the change can take effect:</p><pre tabindex=0><code>sudo systemctl restart iptables.service
+</code></pre><p>Configuring a GRE tunnel on a CentOS box is very simple on each host create a
+new file <code>/etc/sysconfig/network-scripts/ifcfg-tun0</code> with the following
+contents:</p><pre tabindex=0><code># /etc/sysconfig/network-scripts/ifcfg-tun0
+
+DEVICE=tun0
+BOOTPROTO=none
+ONBOOT=yes
+TYPE=GRE
+
+MY_INNER_IPADDR=10.255.254.1
+#MY_OUTER_IPADDR={current side external IP}
+
+PEER_INNER_IPADDR=10.255.254.2
+PEER_OUTER_IPADDR={opposing side external IP}
+
+# Not needed since we only have one tunnel. Can be any 32 bit numerical value
+#KEY=12345678
+EOF
+</code></pre><p>For completeness I&rsquo;ve included <code>MY_OUTER_IPADDR</code> and <code>KEY</code> commented out as
+they may be useful for other GRE tunnels but not necessary for this one. For
+the <code>west</code> server <code>{current side external IP}</code> should be replaced by the <code>west</code>
+tunnel server&rsquo;s external IP and <code>{opposing side external IP}</code> with the east
+tunnel server&rsquo;s external IP. Reverse the settings on the east tunnel server.</p><p>On each tunnel host bring the tunnel up:</p><pre tabindex=0><code>sudo ifup tun0
+</code></pre><p>The state of the tunnel can be checked with <code>sudo ip addr show tun0</code> which will
+have an output similar to the following:</p><pre tabindex=0><code>5: tun0@NONE: &lt;POINTOPOINT,NOARP,UP,LOWER_UP&gt; mtu 8977 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/gre 0.0.0.0 peer 7.7.7.7
+    inet 10.255.254.1 peer 10.255.254.2/32 scope global tun0
+       valid_lft forever preferred_lft forever
+</code></pre><p>You&rsquo;re specifically looking for the <code>UP</code> and <code>LOWER_UP</code> flags. You can double
+check the tunnel is functioning by pinging <code>10.255.254.1</code> and <code>10.255.254.2</code>
+from the <code>east</code> and <code>west</code> tunnel host respectively.</p><p>We now have a private encrypted layer 2 tunnel between the two VPC tunnel
+hosts, next up is to get other traffic in the VPC passing across the tunnel.</p><h2 id=tunnel-host-routing-and-rewriting>Tunnel Host Routing and Rewriting</h2><p>Up to this point everything has been setting up pretty standard tunnels between
+Linux hosts. This is where the magic needs to start happening. Each network
+needs to see the other network with a different IP space. I&rsquo;ve already
+discussed that I&rsquo;ll be using <code>172.16.0.0/12</code> as our mapping network.</p><p>Since we&rsquo;re going to start forwarding traffic between networks we need to
+enable it in the kernel. On both tunnel hosts the following line needs to be
+added to <code>/etc/sysctl.conf</code> and <code>sysctl -p</code> run again to apply the change:</p><pre tabindex=0><code>net.ipv4.ip_forward = 1
+</code></pre><p>We need to ensure each tunnel server routes our mapping network to the other
+one. This should be added / removed based on the status of our GRE tunnel so
+we&rsquo;ll add it as a static route in <code>/etc/sysconfig/network-scripts/route-tun0</code>.</p><p>For our <code>west</code> tunnel server the contents of the file should be:</p><pre tabindex=0><code>172.16.0.0/12 via 10.255.254.2
+</code></pre><p>For our east tunnel server the contents of the file should be:</p><pre tabindex=0><code>172.16.0.0/12 via 10.255.254.1
+</code></pre><p>Restart the network (again dealing with a minor disruption) and check the
+routing table with the following commands:</p><pre tabindex=0><code>sudo systemctl restart network.service
+sudo ip -4 route
+</code></pre><p>You should see the new route present in the routing table, but now we have a
+problem. If the firewalls allowed us to forward traffic right now, any traffic
+either tunnel host received with a destination of <code>172.16.0.0/12</code> would ping
+pong back and forth across the tunnel until it&rsquo;s TTL expired. This would end up
+being a nasty traffic amplification issue if we allowed it.</p><p>Handling this requires us to rewrite the packet destination received from the
+tunnel to the VPC&rsquo;s network before the kernel can make a routing decision on
+it and thus we use our first firewall incantation in the <code>nat</code> table. On each
+tunnel host add the following rule:</p><pre tabindex=0><code>-A PREROUTING -i tun0 -d 172.16.0.0/12 -j NETMAP --to 10.0.0.0/12
+</code></pre><p>Side note: It&rsquo;s not documented very well but when the <code>NETMAP</code> is used in the
+<code>PREROUTING</code> chain it only effects the destination network. When used in the
+<code>POSTROUTING</code> chain it only effects the source address (which we&rsquo;ll make use of
+later).</p><p>While we&rsquo;re updating our firewall we should also allow our forwarded traffic.
+The following two rules need to be added to the <code>filter</code> section of each tunnel
+host:</p><pre tabindex=0><code>-A FORWARD -i eth0 -o tun0 -s 10.0.0.0/12 -d 172.16.0.0/12 -j ACCEPT
+-A FORWARD -i tun0 -o eth0 -s 172.16.0.0/12 -d 10.0.0.0/12 -j ACCEPT
+</code></pre><p>You may notice that I&rsquo;m specifying <code>10.0.0.0/12</code> instead of <code>10.0.0.0/8</code>. This
+is a limitation I mentioned at the beginning of this article which worked in my
+instance. You can&rsquo;t uniquely map a larger network into a smaller network. If
+your hosts are more scattered this is where you&rsquo;ll need to start duplicating
+rules and using smaller subnet masks for targeted groups of hosts. There will
+be other rules coming up shortly you&rsquo;ll need to update as well.</p><p>As part of this our rules won&rsquo;t forward traffic coming from our tunnel hosts
+subnet of <code>10.255.254.0/30</code> as it is way outside of <code>10.0.0.0/12</code>. Simply
+allowing this subnet won&rsquo;t allow us to receive the responses to any traffic
+leaving our tunnel hosts for the opposite network as the source address will
+appear local to the VPC. We can reserve two more addresses within the range of
+<code>172.16.0.0/12</code> to work as our tunnel endpoints. This isn&rsquo;t strictly necessary
+if you really need the two addresses but they make diagnostics significantly
+simpler.</p><p>We can map our two addresses appropriately using the fixed 1:1 NAT mapping in
+the kernel by adding the following rules in the <code>nat</code> section of each tunnel
+hosts firewall:</p><pre tabindex=0><code>-A PREROUTING -i tun0 -d 172.31.254.1 -j DNAT --to-destination 10.255.254.1
+-A PREROUTING -i tun0 -d 172.31.254.2 -j DNAT --to-destination 10.255.254.2
+
+-A POSTROUTING -o tun0 -d 10.255.254.1 -j SNAT --to-source 172.31.254.1
+-A POSTROUTING -o tun0 -d 10.255.254.2 -j SNAT --to-source 172.31.254.2
+</code></pre><p>Only half of these rules apply to each tunnel host, but it doesn&rsquo;t hurt having
+both sets on both hosts and it keeps us symmetrical. You should be able to ping
+each of the tunnel hosts equivalent <code>172.31.254.0/30</code> address at this point (if
+you restart the firewall).</p><p>Right now if a client host added a route pointing at either of the tunnel host
+for the mapped network it would make it out the opposite tunnel host&rsquo;s <code>eth0</code>
+interface but it would still have a <code>10.0.0.0/12</code> source address and the packet
+would never return to the tunnel host, much less the host on the other network.</p><p>This is a bit tricky as we only want to rewrite the source address (requiring a
+<code>POSTROUTING</code> rule) but only want it to effect mapped traffic addresses coming
+in from a normal VPC network, and <code>POSTROUTING</code> can&rsquo;t match on source
+interface. We want to handle this rewriting before any other changes have
+occurred which requires us to do the source address rewriting happen on the
+source tunnel host.</p><p>To handle this we can use a combination of traffic markers and our handy
+<code>NETMAP</code> target. On both of the tunnel hosts add the following two rules to the
+<code>nat</code> section:</p><pre tabindex=0><code>-A PREROUTING -i tun0 -d 172.16.0.0/12 -s 10.0.0.0/12 -j MARK --set-mark 0x01
+-A POSTROUTING -o tun0 -m mark --mark 0x01 -s 10.0.0.0/12 -j NETMAP --to 172.16.0.0/12
+</code></pre><p>Let&rsquo;s restart the firewall again to make sure all the rules have been properly
+applied:</p><pre tabindex=0><code>sudo systemctl restart iptables.service
+</code></pre><p>That&rsquo;s the last of the changes we need to make to the tunnel hosts, now the
+other hosts need to learn how to send their traffic to the other side&mldr;</p><h2 id=vpc-routing>VPC Routing</h2><p>Hosts inside a VPC will directly send traffic to any other host within it&rsquo;s
+defined network. For networks beyond their VPC subnet (such as our
+<code>172.16.0.0/12</code>) network will send their traffic to their default gateway which
+is the VPC router. These routers are configurable within the AWS web console by
+going to the <code>VPC</code> section, finding the relevant VPC you&rsquo;re using and clicking
+on the link to your <code>Main Route Table</code>.</p><p>Under the <code>Routes</code> sub-tab on the selected Route Table, click on the <code>Edit routes</code> button. Add <code>172.16.0.0/12</code> as a destination to the routes. Click on
+the <code>Target</code> drop down, choose <code>Instance</code> and find your VPC tunnel host in the
+list. Click <code>Save Routes</code> and allow a minute or two for the route to update.</p><p>There is a sneaky potential issue here. If you&rsquo;ve gone and done some deep
+customization to your VPC, you may have created and specified additional route
+tables for specific subnets. You&rsquo;ll want to evaluate each of the potential
+route tables and add the same route to each one.</p><p>There is one final thing generally stopping our traffic from flowing freely. By
+default every single EC2 instance drops any traffic that reaches an EC2
+instance with a source or destination address that doesn&rsquo;t match the IP that
+has been assigned to that instance. This is generally a very useful protection,
+but we&rsquo;ll be shooting out packets with source addresses in the <code>172.16.0.0/12</code>
+range so need to disable this protection on each of tunnel hosts.</p><p>Find your tunnel host in the list of your EC2 instances. Right click on the
+instance, go to the <code>Networking</code> sub-menu, and choose <code>Change Source/Dest. Check</code>. It will pop up a confirmation, confirm it by clicking on <code>Yes, Disable</code>.</p><p>Now the only thing preventing hosts in each VPC from talking to each other is
+their respective inbound security groups but the traffic should flow freely.
+We&rsquo;re effectively done and everything should be happy.</p><p>It may not be immediately obvious but you will have to do some math to convert
+the IP addresses of the remote subnet into the mapping network. Specifically
+you&rsquo;ll need to replace the first octet (<code>10</code>) with the mapping network&rsquo;s first
+octet (<code>172</code>), then add <code>16</code> to the second octet. If the resulting second octet
+is greater than <code>31</code> it won&rsquo;t be able to traverse the network. The remaining
+two octets are left unchanged.</p><p>Some examples of what this translation looks like:</p><ul><li><code>10.0.0.2</code> becomes <code>172.16.0.2</code></li><li><code>10.4.1.80</code> becomes <code>172.20.1.80</code></li><li><code>10.30.56.100</code> becomes <code>172.46.56.100</code> and is unroutable</li></ul><p>No matter which side of the tunnel you&rsquo;re on the other side&rsquo;s addresses will
+always be mapped this way.</p><h2 id=hardening>Hardening</h2><p>We have some fairly wide open firewall rules for passing traffic on the
+tunneling hosts themselves and in the security groups on them. These can
+certainly be tightened further and I&rsquo;ll even cover some situations in a bit
+about when you might want to do that. As it stands right now the internal
+private IP addresses of the tunnel host&rsquo;s and clients haven&rsquo;t matter beyond
+whether or not they were in the routable range.</p><p>If you use ephemeral containers or autoscaling IP addresses are going to change
+frequently. To harden the rules on the tunnel hosts themselves would need to be
+updated whenever these addresses change which removes a lot of benefits. Since
+we&rsquo;re already using a dedicated security group for our tunnel hosts, we can
+instead have other security groups reference it directly.</p><p>To allow traffic from the opposite VPC side, allow the relevant port&rsquo;s traffic
+from the tunnel host&rsquo;s security group and bam problem solved. This is still
+somewhat course granularity of firewalling as you are effectively granting the
+entire other VPC access to that service port. In a lot of cases that will be
+enough and additional network controls such as inter-service authentication
+will be sufficient to mitigating additional issues.</p><p>If you do need finer granularity you can start by limiting traffic on the VPC
+tunnel&rsquo;s inbound security group from the opposite side. If that is not fine
+grained enough you can eventually resort to firewall rules in the <code>FORWARD</code>
+chain itself.</p><p>There is one additional benefit of putting the rules in the forward chain if
+your addresses are sufficiently static to deploy rules through it. With
+security groups alone, the traffic will traverse the tunnel before being
+dropped by the opposing side&rsquo;s security group. Likely your service will retry
+the connection. These little bits of traffic do add up and will take time.</p><p>If you instead firewall with reject packets as they enter the tunnel, a service
+will get immediate feedback the traffic won&rsquo;t flow. No additional bandwidth is
+wasted and the latency will be very small. You can also log these packets with
+a <code>LOG</code> target before rejecting them so you can audit and diagnose traffic that
+doesn&rsquo;t make it through the tunnel.</p><p>For those reasons I do prefer to firewall at the tunnel hosts themselves for
+sufficiently static services.</p><h2 id=troubleshooting>Troubleshooting</h2><p>I&rsquo;ve tried to include basic diagnostics for each piece that we&rsquo;ve built up but
+if you&rsquo;re still having issues getting traffic flowing here is a checklist to
+look over that might help diagnose the source of the issue:</p><ul><li>Restart the tunnel host&rsquo;s network</li><li>Verify the tunnel host&rsquo;s firewalls match the final reference firewall below</li><li>Restart the tunnel host&rsquo;s firewalls</li><li>Make sure each tunnel host can ping the other one</li><li>Ensure <code>libreswan</code> service is up and running (<code>/var/log/secure</code> will have
+any errors it encounters if the tunnel isn&rsquo;t coming up</li><li>Verify the GRE tunnel is up by pinging the other end&rsquo;s tunnel IP</li><li>Check the routing table on both tunnel hosts</li><li>Ensure source and destination hosts are within the <code>10.0.0.0/12</code> range</li><li>Make sure the source / destination checking is disabled on the tunnel host&rsquo;s
+EC2 instances</li><li>Check to make sure the VPC routing tables include <code>172.16.0.0/12</code> pointing at
+the tunnel hosts in both networks.</li><li>Check the relevant security groups to make sure all other traffic is allowed
+to/from the tunnel hosts in each security group</li></ul><p>If all else fails sniff the traffic on the interfaces you expect for the
+packets in each place to make sure they&rsquo;re going where you expect. Usually this
+makes it pretty clear to me whether packets are even getting to the tunnel
+hosts and which interface they either stop or aren&rsquo;t being manipulated at.</p><h2 id=conclusion>Conclusion</h2><p>This post was quite a wild ride for me to write up and is probably my longest
+post to date. If you&rsquo;ve made it this far I&rsquo;m incredibly flattered. I hope this
+helps other people out there and I would especially love to hear from anyone
+that makes use of this information or finds an issue with anything in the post.</p><p>Either <a href=mailto:sam@stelfox.net>send me an email</a> or <a href=https://github.com/sstelfox/stelfox.net/issues/new>open an issue</a> for my website&rsquo;s public
+repository. Cheers!</p><h2 id=reference-firewall>Reference Firewall</h2><p>If you had issues following along with incrementally building up our firewall
+(I&rsquo;m sorry!) the final firewall you should end up with (comments removed)
+should like the following:</p><pre tabindex=0><code># /etc/sysconfig/iptables
+
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+
+-A PREROUTING -i tun0 -d 172.31.254.1 -j DNAT --to-destination 10.255.254.1
+-A PREROUTING -i tun0 -d 172.31.254.2 -j DNAT --to-destination 10.255.254.2
+
+-A POSTROUTING -o tun0 -d 10.255.254.1 -j SNAT --to-source 172.31.254.1
+-A POSTROUTING -o tun0 -d 10.255.254.2 -j SNAT --to-source 172.31.254.2
+
+-A PREROUTING -i tun0 -d 172.16.0.0/12 -j NETMAP --to 10.0.0.0/12
+-A PREROUTING -i tun0 -d 172.16.0.0/12 -s 10.0.0.0/12 -j MARK --set-mark 0x01
+-A POSTROUTING -o tun0 -m mark --mark 0x01 -s 10.0.0.0/12 -j NETMAP --to 172.16.0.0/12
+
+COMMIT
+
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -i lo -j ACCEPT
+
+-A INPUT -m tcp -p tcp --dport 22 -j ACCEPT
+
+-A INPUT -p esp -j ACCEPT
+-A INPUT -m udp -p udp --sport 500 --dport 500 -j ACCEPT
+
+-A INPUT -m policy --dir in --pol ipsec --proto esp -p gre -j ACCEPT
+-A OUTPUT -m policy --dir out --pol ipsec --proto esp -p gre -j ACCEPT
+-A OUTPUT -p gre -j DROP
+
+-A FORWARD -i eth0 -o tun0 -s 10.0.0.0/12 -d 172.16.0.0/12 -j ACCEPT
+-A FORWARD -i tun0 -o eth0 -s 172.16.0.0/12 -d 10.0.0.0/12 -j ACCEPT
+
+-A INPUT -j REJECT --reject-with icmp-host-prohibited
+-A FORWARD -j REJECT --reject-with icmp-host-prohibited
+
+COMMIT
+</code></pre></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/aws/>aws</a></span>
+<span class=tag><a href=https://stelfox.net/tags/ipsec/>ipsec</a></span>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/networking/>networking</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

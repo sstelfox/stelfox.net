@@ -1,0 +1,84 @@
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="If you&amp;rsquo;ve already implemented the SSH keys for authentication and have a password on your key then you&amp;rsquo;ve already achieved multi-factor authentication to a certain degree.
+The gatekeeper script is something that I haven&amp;rsquo;t come across on any other systems that other people administer. Perhaps it&amp;rsquo;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
+A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&amp;rsquo;t secure, asking the user random questions after authentication couldn&amp;rsquo;t hurt security."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/sshd_gatekeeper/><title>Gatekeeper Script for SSH :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Gatekeeper Script for SSH"><meta itemprop=description content="If you&rsquo;ve already implemented the SSH keys for authentication and have a password on your key then you&rsquo;ve already achieved multi-factor authentication to a certain degree.
+The gatekeeper script is something that I haven&rsquo;t come across on any other systems that other people administer. Perhaps it&rsquo;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
+A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&rsquo;t secure, asking the user random questions after authentication couldn&rsquo;t hurt security."><meta itemprop=wordCount content="584"><meta name=twitter:card content="summary"><meta name=twitter:title content="Gatekeeper Script for SSH"><meta name=twitter:description content="If you&rsquo;ve already implemented the SSH keys for authentication and have a password on your key then you&rsquo;ve already achieved multi-factor authentication to a certain degree.
+The gatekeeper script is something that I haven&rsquo;t come across on any other systems that other people administer. Perhaps it&rsquo;s too much trouble for them without much gain. I had the idea for this while watching a James Bond movie.
+A Russian systems engineer put riddles on one of his machines that you had to go through in order to access the system, while this alone isn&rsquo;t secure, asking the user random questions after authentication couldn&rsquo;t hurt security."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/sshd_gatekeeper/>Gatekeeper Script for SSH</a></h2><div class=post-content><p>If you&rsquo;ve already implemented the SSH keys for authentication and have a
+password on your key then you&rsquo;ve already achieved multi-factor authentication
+to a certain degree.</p><p>The gatekeeper script is something that I haven&rsquo;t come across on any other
+systems that other people administer. Perhaps it&rsquo;s too much trouble for them
+without much gain. I had the idea for this while watching a James Bond movie.</p><p>A Russian systems engineer put riddles on one of his machines that you had to
+go through in order to access the system, while this alone isn&rsquo;t secure, asking
+the user random questions after authentication couldn&rsquo;t hurt security. I highly
+recommend using some logic that changes periodically, but the client can
+remotely deduce.</p><p>First we need to make a script to handle the additional authentication. Please
+note that the following script is just an example, most of the security is in
+place but you&rsquo;ll want to implement your own logic for the questions and
+answers.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/sh
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e># gatekeeper.sh - Post-login access question script</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># In the event that a user tries to get crafty and Ctrl-C out of the script</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># we&#39;ll just kill the connection</span>
+</span></span><span style=display:flex><span>trap jail INT
+</span></span><span style=display:flex><span>jail<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>  kill -9 $PPID
+</span></span><span style=display:flex><span>  exit <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Once a user logs in, check to see if they just wanted a shell.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># SSH_ORIGINAL_COMMAND will be null (-z) if they did</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -z <span style=color:#e6db74>&#34;</span>$SSH_ORIGINAL_COMMAND<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># The answer the user needs to know, a function or call to another script</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># could be used to generate this answer based on any number of resources</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># available to the system. This could include querying an internal web</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># script to get a daily password user&#39;s of a site have access to (and</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># perhaps are supposed to be checking)</span>
+</span></span><span style=display:flex><span>  local CORRECT_ANSWER<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;muffins&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># Message displayed to the user before being prompted, I&#39;m going to assume</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># the user knows the question in this case what&#39;s the admin&#39;s favorite</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># breakfast</span>
+</span></span><span style=display:flex><span>  echo -n <span style=color:#e6db74>&#34;Gatekeeper token authentication required: &#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># Get the user&#39;s answer. If the answer is correct execute the command.</span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># If the answer is wrong, log the attempt and kill the connection.</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>while</span> read -s inputline; <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>    RESPONSE<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$inputline<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>    echo
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> $CORRECT_ANSWER <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>RESPONSE<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>      echo <span style=color:#e6db74>&#34;Gatekeeper authentication accepted.&#34;</span>
+</span></span><span style=display:flex><span>      $SHELL -l
+</span></span><span style=display:flex><span>      exit <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>      logger <span style=color:#e6db74>&#34;Gatekeeper: </span>$USER<span style=color:#e6db74> login failed from </span>$SSH_CLIENT<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>      kill -9 $PPID
+</span></span><span style=display:flex><span>      exit <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>done</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This command will bypass the gatekeeper script if the user tries to rsync as</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># this script will break rsync. It creates a fresh shell just for good measure.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#if [ `echo $SSH_ORIGINAL_COMMAND | awk &#39;{print $1}&#39;` = rsync ]; then</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#  $SHELL -c &#34;$SSH_ORIGINAL_COMMAND&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#  exit 0</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># If a user tried to execute something other than an &#39;approved&#39; command just</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># kill the session. This will prevent SCP and SFTP unless they are configured</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># to bypass the script.</span>
+</span></span><span style=display:flex><span>kill -9 $PPID
+</span></span><span style=display:flex><span>exit <span style=color:#ae81ff>0</span>
+</span></span></code></pre></div><p>Put this script in <code>/etc/ssh/gatekeeper.sh</code> and change it&rsquo;s permissions to 755
+with the owner being root. To make the SSH server pass off control to the
+Gatekeeper script once it&rsquo;s done authenticating a user, we&rsquo;ll use the
+&lsquo;ForceCommand&rsquo; command in SSHd&rsquo;s config file (<code>/etc/ssh/sshd_config</code>). Add the
+following line to the end of the config and restart the SSH daemon.</p><pre tabindex=0><code>ForceCommand /etc/ssh/gatekeeper.sh
+</code></pre><p>Assuming everything went according to plan, when you SSH into the remote server
+once your done authenticating it&rsquo;ll ask for the token. Putting in &lsquo;muffins&rsquo;
+should get you to your shell, while anything else will kill the connection.</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

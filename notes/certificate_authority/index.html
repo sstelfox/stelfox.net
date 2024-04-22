@@ -1,6 +1,252 @@
-<!doctype html>
-<meta charset="utf-8">
-<link rel="canonical" href="https://stelfox.net/notes/certificates/">
-<meta http-equiv="refresh" content="0; url=https://stelfox.net/notes/certificates/">
-<title>Redirect</title>
-<p><a href="https://stelfox.net/notes/certificates/">Click here</a> to be redirected.</p>
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+This page goes through how to create a local PKI infrastructure for use with all the other components listed in my notes and many may not mention it at all. It uses OpenSSL and provides scripts, information about choices made during the process and where to go next."><meta name=keywords content><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/certificate_authority/><title>Building a Certificate Authority :: Sam Stelfox
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Building a Certificate Authority"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+This page goes through how to create a local PKI infrastructure for use with all the other components listed in my notes and many may not mention it at all. It uses OpenSSL and provides scripts, information about choices made during the process and where to go next."><meta itemprop=wordCount content="1446"><meta name=twitter:card content="summary"><meta name=twitter:title content="Building a Certificate Authority"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+This page goes through how to create a local PKI infrastructure for use with all the other components listed in my notes and many may not mention it at all. It uses OpenSSL and provides scripts, information about choices made during the process and where to go next."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/certificate_authority/>Building a Certificate Authority</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+also changed dramatically since this was written. It is here as a reference
+until I get around to updating it.</strong></em></p><p>This page goes through how to create a local PKI infrastructure for use with
+all the other components listed in my notes and many may not mention it at all.
+It uses OpenSSL and provides scripts, information about choices made during the
+process and where to go next.</p><h2 id=security-notes>Security Notes</h2><p>There are varying levels of security that need to be taken into account
+throughout this process. The first and most important certificate is the &lsquo;root&rsquo;
+certificate authority&rsquo;s certificate. If the private key for this is compromised
+everything else will need to be done by scratch. Additionally the private key
+needs to be generated from a true random source. This is important as a little
+bit of predictability will impair all future operations done with this
+certificate and thus all encrypted operations done from certificates at the
+heart of this system.</p><p>Second level certificate authorities should still be protected with utmost
+caution, but these are for secondary services such as one for the [Linux/389
+Directory Server] to hand out certificates, another for [Linux/OpenVPN]
+certificates, one for websites and perhaps even another for personal
+certificates for email and code signing. If one of these gets compromised the
+root certificate can issue a CRL automatically invalidating all certificates
+from that authority and limits the damage done.</p><h2 id=root-ca>Root CA</h2><p>Caution needs to be taken when working with the root certificate from the get
+go. It should be generated on a clean machine disconnected from the network.</p><h3 id=support-structure>Support Structure</h3><p>The following set of commands builds a directory structure in the current
+user&rsquo;s home drive in a folder called pki. It adjusts the permissions on the
+folders to ensure that it is somewhat protected (though not protected from the
+root user). Once again this should be performed on a trusted machine.</p><pre tabindex=0><code>mkdir -p ~/pki/root/{certs,crl,newcerts,private}
+chown -R `id -u`:`id -g` ~/pki
+chmod -R 700 ~/pki
+</code></pre><h3 id=create-the-configuration-file>Create the Configuration File</h3><p>Create a file in the root CA&rsquo;s directory named openssl.cnf with the following
+contents:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#a6e22e>HOME</span>                    <span style=color:#f92672>=</span> <span style=color:#e6db74>.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>RANDFILE</span>                <span style=color:#f92672>=</span> <span style=color:#e6db74>$ENV::HOME/.rnd</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>oid_section</span>             <span style=color:#f92672>=</span> <span style=color:#e6db74>new_oids</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ new_oids ]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ ca ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>default_ca</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>CA_default</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ CA_default ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>dir</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/home/sstelfox/pki             # The root directory</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>certs</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/certs                   # Where the issued certs are kept</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>crl_dir</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/crl                   # Where the issued crl are kept</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>database</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/index.txt            # Database index file.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>unique_subject</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>yes</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>new_certs_dir</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/newcerts        # Default place for new certs.</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>certificate</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/cacert.pem        # The CA certificate</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>serial</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/serial                 # The current serial number</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>crlnumber</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/crlnumber           # The current crl number</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>crl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/crl.pem                   # The current CRL</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>private_key</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/private/ca.key # The private key</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>RANDFILE</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$dir/private/.rand        # Private random number file</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>x509_extensions</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>usr_cert           # The extentions to add to the cert</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>name_opt</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>ca_default                # Subject Name options</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>cert_opt</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>ca_default                # Certificate field options</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>crl_extensions</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>crl_ext</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>default_days</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>365                   # How long to certify for</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>default_crl_days</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>7                 # How long before next CRL</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>default_md</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>sha256                  # Use sha256 for the hash</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>preserve</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>no                        # Keep passed DN ordering</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>policy</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>policy_match</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># For the CA policy</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ policy_match ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>countryName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>match</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stateOrProvinceName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>match</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>organizationName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>match</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>organizationalUnitName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>commonName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>supplied</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>emailAddress</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ policy_anything ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>countryName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stateOrProvinceName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>localityName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>organizationName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>organizationalUnitName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>commonName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>supplied</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>emailAddress</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>optional</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>###################### CA Request Defaults ##########################</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ req ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>default_bits</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>4096</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>default_md</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>sha256</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>default_keyfile</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>priv.key</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>distinguished_name</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>req_distinguished_name</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>attributes</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>req_attributes</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>x509_extensions</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>v3_ca # The extentions to add to the self signed cert</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>string_mask</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>utf8only</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ req_distinguished_name ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>countryName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Country Name</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>countryName_default</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>AC</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>countryName_min</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>2</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>countryName_max</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>2</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stateOrProvinceName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>State or Province Name (full name)</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>stateOrProvinceName_default</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>YmVkcm9vbXByb2dyYW1tZXJzLm5ldA==</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>localityName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Locality Name</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>localityName_default</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>dHJ1ZWR1YWxpdHk=</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>0.organizationName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Organization Name</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>0.organizationName_default</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>QmVkcm9vbSBQcm9ncmFtbWVycyAtIENvZGUgVGhlIFBsYW5ldA==</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>organizationalUnitName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Organizational Unit Name (eg, section)</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>organizationalUnitName_default</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>QWRtaW5pc3RyYXRpb24=</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>commonName</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>Common Name (User\&#39;s name the server\&#39;s hostname)</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>commonName_max</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>64</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>emailAddress</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Email Address</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>emailAddress_max</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>64</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ req_attributes ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>challengePassword</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>A challenge password</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>challengePassword_min</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>4</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>challengePassword_max</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>24</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ usr_cert ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>basicConstraints</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>CA:false</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># These two are the only expected use cases at the time for this CA. If it is</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># omitted the certificate can be used for anything *except* object signing.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nsCertType = server</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nsCertType = client, email, objsign</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This is typical in keyUsage for a client certificate.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># keyUsage = nonRepudiation, digitalSignature, keyEncipherment</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsComment</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;Certificate issued by BedroomProgrammers.net&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># PKIX recommendations harmless if included in all certificates.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>subjectKeyIdentifier</span><span style=color:#f92672>=</span><span style=color:#e6db74>hash</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>authorityKeyIdentifier</span><span style=color:#f92672>=</span><span style=color:#e6db74>keyid,issuer</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This stuff is for subjectAltName and issuerAltname.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Import the email address.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># subjectAltName=email:copy</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># An alternative to produce certificates that aren&#39;t</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># deprecated according to PKIX.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># subjectAltName=email:move</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Location of the public cert</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>issuerAltName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>URI:http://bedroomprogrammers.net/bpca.crt</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Information about the certificates</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsCaRevocationUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/bpca.crl</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsBaseUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsRevocationUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/revoke/?</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsRenewalUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/renew/?</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsCaPolicyUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/policy/</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This is required for TSA certificates.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># extendedKeyUsage = critical,timeStamping</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ v3_req ]</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Extensions to add to a certificate request</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>basicConstraints</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>CA:false</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>keyUsage</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>nonRepudiation, digitalSignature, keyEncipherment</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ v3_ca ]</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Extensions for a typical CA</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># PKIX recommendation.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>subjectKeyIdentifier</span><span style=color:#f92672>=</span><span style=color:#e6db74>hash</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>authorityKeyIdentifier</span><span style=color:#f92672>=</span><span style=color:#e6db74>keyid:always,issuer</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This may break some older clients</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>basicConstraints</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>critical,CA:true</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># If this happens the certificate will have to be remade using this option:</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#basicConstraints = CA:true</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Some might want this also</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nsCertType = sslCA, emailCA</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Include email address in subject alt name: another PKIX recommendation</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># subjectAltName=email:copy</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Copy issuer details</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>issuerAltName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>URI:http://bedroomprogrammers.net/bpca.crt</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ crl_ext ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>issuerAltName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>URI:http://bedroomprogrammers.net/bpca.crt</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>authorityKeyIdentifier</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>keyid:always</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>[ proxy_cert_ext ]</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>basicConstraints</span><span style=color:#f92672>=</span><span style=color:#e6db74>CA:false</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nsCertType = server</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nsCertType = objsign</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nsCertType = client, email</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># nsCertType = client, email, objsign</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This is typical in keyUsage for a client certificate.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># keyUsage = nonRepudiation, digitalSignature, keyEncipherment</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsComment</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;Certificate issued by BedroomProgrammers.net&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># PKIX recommendations harmless if included in all certificates.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>subjectKeyIdentifier</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>hash</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>authorityKeyIdentifier</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>keyid,issuer</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Copy subject details</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>issuerAltName</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>issuer:copy</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsCaRevocationUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/bpca.crl</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsBaseUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsRevocationUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/revoke/?</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsRenewalUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/renew/?</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nsCaPolicyUrl</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>http://bedroomprogrammers.net/ssl/policy/</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This really needs to be in place for it to be a proxy certificate.</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>proxyCertInfo</span><span style=color:#f92672>=</span><span style=color:#e6db74>critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo</span>
+</span></span></code></pre></div><h3 id=create-ca-key--certificate>Create CA Key & Certificate</h3><p>This section creates the CA private key, public certificate, and serial file
+using the <code>openssl.cnf</code> file above.</p><pre tabindex=0><code>openssl req -new -keyout private/ca.key -out ca.csr -config openssl.cnf
+openssl ca -create_serial -config ./openssl.cnf -out ca.crt -days 1095 -batch \
+  -keyfile private/ca.key -selfsign -extensions v3_ca -infiles ca.csr
+</code></pre><p>You will now want to distribute &ldquo;ca.crt&rdquo; to any client that will use a service
+with your CA.</p><h2 id=common-tasks>Common Tasks</h2><h3 id=simple-client-certificate-creation>Simple Client Certificate Creation</h3><p>First we&rsquo;ll need to create a key for client, this should be done on the client
+itself. It may be easier if the CA config (openssl.cnf) was distributed as well
+as there are some strict signing requirements in the above configuration where
+the country, state, and org name need to match exactly.</p><pre tabindex=0><code>openssl genrsa 2048 &gt; host.example.org.key
+openssl req -new -key host.example.org.key -out host.example.org.csr \
+  -extensions v3_req
+</code></pre><p>Once the CSR has been generated transfer it to the host containing the CA, this
+assumes you have placed the file (and are currently within) the CA&rsquo;s directory.</p><pre tabindex=0><code>openssl ca -config ./openssl.cnf -out host.example.org.crt -days 365 -batch \
+  -keyfile private/ca.key -cert ca.crt -infiles host.example.org.csr
+</code></pre><h3 id=advanced-client-certificate-creation>Advanced Client Certificate Creation</h3><p>Creating a certificate with multiple domains requires one extra step, create a
+key and certificate as normal but create an additional file
+<code>test.domain.net.cnf</code> that includes something along the following lines:</p><pre tabindex=0><code>subjectAltName=DNS:www.test.domain.net,DNS:*.test.domain.net,DNS:other.domain.net
+</code></pre><p>When you sign the key you&rsquo;ll need to add the flag <code>-extfile</code> and specify the
+file with the above contents. This will append those domains to the
+certificate. An example way to sign the CSR:</p><pre tabindex=0><code>openssl ca -config ./openssl.cnf -out test.domain.net.crt -days 365 -batch \
+  -keyfile private/ca.key -cert ca.crt -infiles test.domain.net.csr \
+  -extfile test.domain.net.cnf
+</code></pre><h3 id=convert-a-certificate-for-microsoft-certificate-store>Convert a Certificate for Microsoft Certificate Store</h3><p>This will convert a standard OpenSSL certificate/key pair into a pfx for use by
+Microsoft products (fuck them for being different).</p><pre tabindex=0><code>openssl pkcs12 -export -out keycert.pfx -inkey priv.key -in cert.crt
+</code></pre><h3 id=view-the-contents-of-a-certificate>View the Contents of a Certificate</h3><p>To view the text content of a certificate you can use the following command:</p><pre tabindex=0><code>openssl x509 -text -noout -in cert.crt
+</code></pre><p>You can also view the contents of a signing request using:</p><pre tabindex=0><code>openssl req -text -noout -in cert.csr
+</code></pre><h2 id=quick-self-signed-cert>Quick Self Signed Cert</h2><pre tabindex=0><code>openssl req -new -x509 -newkey rsa:4096 -keyout server.key -nodes -days 365 \
+  -out server.crt
+</code></pre><h2 id=add--change-a-password-on-a-keyfile>Add / Change a Password on a Keyfile</h2><pre tabindex=0><code>openssl rsa -des -in unprotected.key -out encrypted.key
+</code></pre></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
