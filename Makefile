@@ -1,5 +1,5 @@
 build:
-	@hugo --environment production --logLevel info --printI18nWarnings --printPathWarnings
+	@hugo --environment production --logLevel info --minify --printI18nWarnings --printPathWarnings
 
 clean:
 	@rm -rf public/*
@@ -7,7 +7,7 @@ clean:
 logo: static/favicon.ico static/apple-touch-icon.png static/logo.png
 
 server:
-	hugo server --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings
+	hugo server --baseURL http://127.0.0.1:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings
 
 static/favicon.ico: logo_src/stelfox_favicon.svg Makefile
 	convert -scale 16x16 logo_src/stelfox_favicon.svg static/favicon.ico
