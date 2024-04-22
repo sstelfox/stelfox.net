@@ -4,21 +4,22 @@ build:
 clean:
 	@rm -rf public/*
 
-logo: static/favicon.ico static/apple-touch-icon.png static/logo.png
+logo: static/favicon.ico static/favicon-32x32.png static/apple-touch-icon.png static/logo.png
 
 server:
 	hugo server --baseURL http://127.0.0.1:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings
 
-static/favicon.ico: logo_src/stelfox_favicon.svg Makefile
+static/favicon.ico: logo_src/stelfox_favicon.svg
 	convert -scale 16x16 logo_src/stelfox_favicon.svg static/favicon.ico
 
-static/apple-touch-icon.png: logo_src/stelfox_favicon.svg Makefile
+static/favicon-32x32.png: logo_src/stelfox_favicon.svg
+	convert -scale 32x32 logo_src/stelfox_favicon.svg static/favicon-32x32.png
+
+static/apple-touch-icon.png: logo_src/stelfox_favicon.svg
 	convert -scale 60x60 logo_src/stelfox_favicon.svg static/apple-touch-icon.png
 
-static/logo.png: logo_src/stelfox_clean_icon.svg Makefile
+static/logo.png: logo_src/stelfox_clean_icon.svg
 	convert -alpha on -quality 85 -scale 192x192 -transparent white logo_src/stelfox_clean_icon.svg static/logo.png
 
 .PHONY: build clean depends logo server
 .DEFAULT_GOAL := build
-
-# vim: set ts=2 sw=2 noexpandtab ai :
