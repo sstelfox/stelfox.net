@@ -9,6 +9,11 @@ logo: static/favicon.ico static/favicon-32x32.png static/apple-touch-icon.png st
 server:
 	hugo server --baseURL http://127.0.0.1:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings
 
+setup:
+	git submodule init
+	git submodule update
+	git submodule sync
+
 static/favicon.ico: logo_src/stelfox_favicon.svg
 	convert -scale 16x16 logo_src/stelfox_favicon.svg static/favicon.ico
 
