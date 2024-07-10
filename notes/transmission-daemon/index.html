@@ -1,378 +1,171 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Configuration First install the transmission-daemon like so:
-[root@localhost ~]# yum install transmission-daemon -y The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you&amp;rsquo;ll need to edit the init file to point at the binary as it should be doing in the first place." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/transmission-daemon/" />
-
-
-    <title>
-        
-            Transmission Daemon :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Transmission Daemon">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+[root@localhost ~]# yum install transmission-daemon -y The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you&amp;rsquo;ll need to edit the init file to point at the binary as it should be doing in the first place."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/transmission-daemon/><title>Transmission Daemon :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Transmission Daemon"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Configuration First install the transmission-daemon like so:
-[root@localhost ~]# yum install transmission-daemon -y The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you&rsquo;ll need to edit the init file to point at the binary as it should be doing in the first place.">
-
-<meta itemprop="wordCount" content="1270">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Transmission Daemon"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+[root@localhost ~]# yum install transmission-daemon -y The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you’ll need to edit the init file to point at the binary as it should be doing in the first place."><meta itemprop=wordCount content="1270"><meta name=twitter:card content="summary"><meta name=twitter:title content="Transmission Daemon"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Configuration First install the transmission-daemon like so:
-[root@localhost ~]# yum install transmission-daemon -y The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you&rsquo;ll need to edit the init file to point at the binary as it should be doing in the first place."/>
-
-
-
-    <meta property="og:title" content="Transmission Daemon" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Configuration First install the transmission-daemon like so:
-[root@localhost ~]# yum install transmission-daemon -y The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you&rsquo;ll need to edit the init file to point at the binary as it should be doing in the first place." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/transmission-daemon/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/transmission-daemon/">Transmission Daemon</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+[root@localhost ~]# yum install transmission-daemon -y The init script that comes with transmission-daemon uses the utility which which is not in the minimal install. As such you’ll need to edit the init file to point at the binary as it should be doing in the first place."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/transmission-daemon/>Transmission Daemon</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<h2 id="configuration">Configuration</h2>
-<p>First install the transmission-daemon like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# yum install transmission-daemon -y
-</span></span></code></pre></div><p>The init script that comes with transmission-daemon uses the utility <code>which</code>
+until I get around to updating it.</strong></em></p><h2 id=configuration>Configuration</h2><p>First install the transmission-daemon like so:</p><pre tabindex=0><code>[root@localhost ~]# yum install transmission-daemon -y
+</code></pre><p>The init script that comes with transmission-daemon uses the utility <code>which</code>
 which is not in the minimal install. As such you&rsquo;ll need to edit the init file
 to point at the binary as it should be doing in the first place. Find the
-following line:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>DAEMON=$(which $NAME)
-</span></span></code></pre></div><p>Replace it with:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>DAEMON=/usr/bin/transmission-daemon
-</span></span></code></pre></div><p>Open up <code>/etc/sysconfig/transmission-daemon</code>. We&rsquo;re going to make a few changes
+following line:</p><pre tabindex=0><code>DAEMON=$(which $NAME)
+</code></pre><p>Replace it with:</p><pre tabindex=0><code>DAEMON=/usr/bin/transmission-daemon
+</code></pre><p>Open up <code>/etc/sysconfig/transmission-daemon</code>. We&rsquo;re going to make a few changes
 here. First off the defaults listed in this file are not actually the defaults
 that the transmission-daemon will start up with. I don&rsquo;t like ambiguity so
-we&rsquo;re going to replace them with the real values.</p>
-<p>The tranmission-daemon runs as user &ldquo;tranmission&rdquo; and it&rsquo;s home directory is
-<code>/var/lib/transmission</code>. We want to prefer encryption whenever it is available.</p>
-<p>I don&rsquo;t like defining configuration information through the service startup
+we&rsquo;re going to replace them with the real values.</p><p>The tranmission-daemon runs as user &ldquo;tranmission&rdquo; and it&rsquo;s home directory is
+<code>/var/lib/transmission</code>. We want to prefer encryption whenever it is available.</p><p>I don&rsquo;t like defining configuration information through the service startup
 unless they don&rsquo;t have an equivalent setting (encryption preferred - you can
 turn encryption support on in the config but not the &lsquo;prefer&rsquo; part) so we get
-rid of the blacklist setting.</p>
-<p>With those changes the file should look like the following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>TRANSMISSION_HOME=/var/lib/transmission
-</span></span><span style="display:flex;"><span>DAEMON_USER=&#34;transmission&#34;
-</span></span><span style="display:flex;"><span>DAEMON_ARGS=&#34;-ep -g $TRANSMISSION_HOME/.config/transmission-daemon&#34;
-</span></span></code></pre></div><p>The install doesn&rsquo;t set up a default configuration, so we need to quickly start
-and stop the daemon so one is generated for us to edit like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# service transmission-daemon start
-</span></span><span style="display:flex;"><span>Starting transmission-daemon (via systemctl):              [  OK  ]
-</span></span><span style="display:flex;"><span>[root@localhost ~]# service transmission-daemon stop
-</span></span><span style="display:flex;"><span>Stopping transmission-daemon (via systemctl):              [  OK  ]
-</span></span></code></pre></div><p>Alright now that we have a config lets open it up and make some changes, it can
-be found at <code>/var/lib/transmission/.config/transmission-daemon/settings.json</code>.</p>
-<p>Provided below is my configuration file AFTER I&rsquo;ve made changes to the
-defaults.</p>
-<p>Note to self: This isn&rsquo;t cleaned up and is not fit for public consumption. The
+rid of the blacklist setting.</p><p>With those changes the file should look like the following:</p><pre tabindex=0><code>TRANSMISSION_HOME=/var/lib/transmission
+DAEMON_USER=&#34;transmission&#34;
+DAEMON_ARGS=&#34;-ep -g $TRANSMISSION_HOME/.config/transmission-daemon&#34;
+</code></pre><p>The install doesn&rsquo;t set up a default configuration, so we need to quickly start
+and stop the daemon so one is generated for us to edit like so:</p><pre tabindex=0><code>[root@localhost ~]# service transmission-daemon start
+Starting transmission-daemon (via systemctl):              [  OK  ]
+[root@localhost ~]# service transmission-daemon stop
+Stopping transmission-daemon (via systemctl):              [  OK  ]
+</code></pre><p>Alright now that we have a config lets open it up and make some changes, it can
+be found at <code>/var/lib/transmission/.config/transmission-daemon/settings.json</code>.</p><p>Provided below is my configuration file AFTER I&rsquo;ve made changes to the
+defaults.</p><p>Note to self: This isn&rsquo;t cleaned up and is not fit for public consumption. The
 only change that has been made is the removal of the contents of rpc-password
-hash.</p>
-<p>After entering a password into the rpc-password field, start and stop the
+hash.</p><p>After entering a password into the rpc-password field, start and stop the
 service again to have it in hashed form. Also note that I&rsquo;ve picked a random
 but static port in this case 37288. Make sure that it is allowed through the
-firewall and forwarded.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  &#34;alt-speed-down&#34;: 200, 
-</span></span><span style="display:flex;"><span>  &#34;alt-speed-enabled&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;alt-speed-time-begin&#34;: 540, 
-</span></span><span style="display:flex;"><span>  &#34;alt-speed-time-day&#34;: 127, 
-</span></span><span style="display:flex;"><span>  &#34;alt-speed-time-enabled&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;alt-speed-time-end&#34;: 1020, 
-</span></span><span style="display:flex;"><span>  &#34;alt-speed-up&#34;: 200, 
-</span></span><span style="display:flex;"><span>  &#34;bind-address-ipv4&#34;: &#34;0.0.0.0&#34;,
-</span></span><span style="display:flex;"><span>  &#34;bind-address-ipv6&#34;: &#34;::&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;blocklist-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;blocklist-url&#34;: &#34;http://list.iblocklist.com/?list=bt_level1&amp;fileformat=p2p&amp;archiveformat=gz&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;cache-size-mb&#34;: 10, 
-</span></span><span style="display:flex;"><span>  &#34;dht-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;download-dir&#34;: &#34;/media/storage/Torrents/Downloads/&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;encryption&#34;: 1, 
-</span></span><span style="display:flex;"><span>  &#34;idle-seeding-limit&#34;: 30, 
-</span></span><span style="display:flex;"><span>  &#34;idle-seeding-limit-enabled&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;incomplete-dir&#34;: &#34;/media/storage/Torrents/Incomplete&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;incomplete-dir-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;lazy-bitfield-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;lpd-enabled&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;message-level&#34;: 2, 
-</span></span><span style="display:flex;"><span>  &#34;open-file-limit&#34;: 32, 
-</span></span><span style="display:flex;"><span>  &#34;peer-congestion-algorithm&#34;: &#34;&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;peer-limit-global&#34;: 240, 
-</span></span><span style="display:flex;"><span>  &#34;peer-limit-per-torrent&#34;: 60, 
-</span></span><span style="display:flex;"><span>  &#34;peer-port&#34;: 37288, 
-</span></span><span style="display:flex;"><span>  &#34;peer-port-random-high&#34;: 65535, 
-</span></span><span style="display:flex;"><span>  &#34;peer-port-random-low&#34;: 49152, 
-</span></span><span style="display:flex;"><span>  &#34;peer-port-random-on-start&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;peer-socket-tos&#34;: &#34;default&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;pex-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;port-forwarding-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;preallocation&#34;: 0, 
-</span></span><span style="display:flex;"><span>  &#34;prefetch-enabled&#34;: 1, 
-</span></span><span style="display:flex;"><span>  &#34;ratio-limit&#34;: 15, 
-</span></span><span style="display:flex;"><span>  &#34;ratio-limit-enabled&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;rename-partial-files&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-authentication-required&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-bind-address&#34;: &#34;10.13.37.52&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-password&#34;: &#34;&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-port&#34;: 9091, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-url&#34;: &#34;/transmission/&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-username&#34;: &#34;torrentadmin&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-whitelist&#34;: &#34;127.0.0.1,10.13.37.*&#34;, 
-</span></span><span style="display:flex;"><span>  &#34;rpc-whitelist-enabled&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;script-torrent-done-enabled&#34;: true,
-</span></span><span style="display:flex;"><span>  &#34;script-torrent-done-filename&#34;: &#34;/var/lib/transmission/.config/transmission-daemon/torrent-completed.sh&#34;,
-</span></span><span style="display:flex;"><span>  &#34;speed-limit-down&#34;: 100, 
-</span></span><span style="display:flex;"><span>  &#34;speed-limit-down-enabled&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;speed-limit-up&#34;: 100, 
-</span></span><span style="display:flex;"><span>  &#34;speed-limit-up-enabled&#34;: false, 
-</span></span><span style="display:flex;"><span>  &#34;start-added-torrents&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;trash-original-torrent-files&#34;: true, 
-</span></span><span style="display:flex;"><span>  &#34;umask&#34;: 18, 
-</span></span><span style="display:flex;"><span>  &#34;upload-slots-per-torrent&#34;: 14,
-</span></span><span style="display:flex;"><span>  &#34;watch-dir&#34;: &#34;/media/storage/Dropbox/TorrentDrop&#34;,
-</span></span><span style="display:flex;"><span>  &#34;watch-dir-enabled&#34;: true
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>With the config above I&rsquo;ve configured it too run a script
+firewall and forwarded.</p><pre tabindex=0><code>{
+  &#34;alt-speed-down&#34;: 200, 
+  &#34;alt-speed-enabled&#34;: false, 
+  &#34;alt-speed-time-begin&#34;: 540, 
+  &#34;alt-speed-time-day&#34;: 127, 
+  &#34;alt-speed-time-enabled&#34;: false, 
+  &#34;alt-speed-time-end&#34;: 1020, 
+  &#34;alt-speed-up&#34;: 200, 
+  &#34;bind-address-ipv4&#34;: &#34;0.0.0.0&#34;,
+  &#34;bind-address-ipv6&#34;: &#34;::&#34;, 
+  &#34;blocklist-enabled&#34;: true, 
+  &#34;blocklist-url&#34;: &#34;http://list.iblocklist.com/?list=bt_level1&amp;fileformat=p2p&amp;archiveformat=gz&#34;, 
+  &#34;cache-size-mb&#34;: 10, 
+  &#34;dht-enabled&#34;: true, 
+  &#34;download-dir&#34;: &#34;/media/storage/Torrents/Downloads/&#34;, 
+  &#34;encryption&#34;: 1, 
+  &#34;idle-seeding-limit&#34;: 30, 
+  &#34;idle-seeding-limit-enabled&#34;: false, 
+  &#34;incomplete-dir&#34;: &#34;/media/storage/Torrents/Incomplete&#34;, 
+  &#34;incomplete-dir-enabled&#34;: true, 
+  &#34;lazy-bitfield-enabled&#34;: true, 
+  &#34;lpd-enabled&#34;: false, 
+  &#34;message-level&#34;: 2, 
+  &#34;open-file-limit&#34;: 32, 
+  &#34;peer-congestion-algorithm&#34;: &#34;&#34;, 
+  &#34;peer-limit-global&#34;: 240, 
+  &#34;peer-limit-per-torrent&#34;: 60, 
+  &#34;peer-port&#34;: 37288, 
+  &#34;peer-port-random-high&#34;: 65535, 
+  &#34;peer-port-random-low&#34;: 49152, 
+  &#34;peer-port-random-on-start&#34;: false, 
+  &#34;peer-socket-tos&#34;: &#34;default&#34;, 
+  &#34;pex-enabled&#34;: true, 
+  &#34;port-forwarding-enabled&#34;: true, 
+  &#34;preallocation&#34;: 0, 
+  &#34;prefetch-enabled&#34;: 1, 
+  &#34;ratio-limit&#34;: 15, 
+  &#34;ratio-limit-enabled&#34;: false, 
+  &#34;rename-partial-files&#34;: true, 
+  &#34;rpc-authentication-required&#34;: true, 
+  &#34;rpc-bind-address&#34;: &#34;10.13.37.52&#34;, 
+  &#34;rpc-enabled&#34;: true, 
+  &#34;rpc-password&#34;: &#34;&#34;, 
+  &#34;rpc-port&#34;: 9091, 
+  &#34;rpc-url&#34;: &#34;/transmission/&#34;, 
+  &#34;rpc-username&#34;: &#34;torrentadmin&#34;, 
+  &#34;rpc-whitelist&#34;: &#34;127.0.0.1,10.13.37.*&#34;, 
+  &#34;rpc-whitelist-enabled&#34;: true, 
+  &#34;script-torrent-done-enabled&#34;: true,
+  &#34;script-torrent-done-filename&#34;: &#34;/var/lib/transmission/.config/transmission-daemon/torrent-completed.sh&#34;,
+  &#34;speed-limit-down&#34;: 100, 
+  &#34;speed-limit-down-enabled&#34;: false, 
+  &#34;speed-limit-up&#34;: 100, 
+  &#34;speed-limit-up-enabled&#34;: false, 
+  &#34;start-added-torrents&#34;: true, 
+  &#34;trash-original-torrent-files&#34;: true, 
+  &#34;umask&#34;: 18, 
+  &#34;upload-slots-per-torrent&#34;: 14,
+  &#34;watch-dir&#34;: &#34;/media/storage/Dropbox/TorrentDrop&#34;,
+  &#34;watch-dir-enabled&#34;: true
+}
+</code></pre><p>With the config above I&rsquo;ve configured it too run a script
 <code>/var/lib/transmission/.config/transmission-daemon/torrent-completed.sh</code>
 whenever a torrent finishes downloading. This file needs to at least exist and
 be executable if you don&rsquo;t turn it off above. You can do this with the
-following commands:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# touch /var/lib/transmission/.config/transmission-daemon/torrent-completed.sh
-</span></span><span style="display:flex;"><span>[root@localhost ~]# chmod +x /var/lib/transmission/.config/transmission-daemon/torrent-completed.sh
-</span></span></code></pre></div><p>I&rsquo;ve personally set it up to email me whenever a torrent completes by putting
-the following script in that file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/bash
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Transmission populates the following variables for use in the script:</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># TR_APP_VERSION</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># TR_TIME_LOCALTIME</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># TR_TORRENT_DIR</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># TR_TORRENT_HASH</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># TR_TORRENT_ID</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># TR_TORRENT_NAME</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Setup the message to be sent</span>
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">TO_ADDR</span><span style="color:#ff7b72;font-weight:bold">=</span>admin@example.com
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">SUBJECT</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;Torrent Completed&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">FROM_ADDR</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;transmission@example.com&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">BODY</span><span style="color:#ff7b72;font-weight:bold">=</span><span style="color:#a5d6ff">&#34;Transmission finished downloading \&#34;</span><span style="color:#79c0ff">$TR_TORRENT_NAME</span><span style="color:#a5d6ff">\&#34; on </span><span style="color:#79c0ff">$TR_TIME_LOCALTIME</span><span style="color:#a5d6ff">&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"># Send the email</span>
-</span></span><span style="display:flex;"><span>echo <span style="color:#79c0ff">$BODY</span> | mailx -s <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$SUBJECT</span><span style="color:#a5d6ff">&#34;</span> -r <span style="color:#a5d6ff">&#34;</span><span style="color:#79c0ff">$FROM_ADDR</span><span style="color:#a5d6ff">&#34;</span> <span style="color:#79c0ff">$TO_ADDR</span>
-</span></span></code></pre></div><p>Alright now this part is strange. If for some reason transmission doesn&rsquo;t close
+following commands:</p><pre tabindex=0><code>[root@localhost ~]# touch /var/lib/transmission/.config/transmission-daemon/torrent-completed.sh
+[root@localhost ~]# chmod +x /var/lib/transmission/.config/transmission-daemon/torrent-completed.sh
+</code></pre><p>I&rsquo;ve personally set it up to email me whenever a torrent completes by putting
+the following script in that file:</p><pre tabindex=0><code>#!/bin/bash
+
+# Transmission populates the following variables for use in the script:
+# TR_APP_VERSION
+# TR_TIME_LOCALTIME
+# TR_TORRENT_DIR
+# TR_TORRENT_HASH
+# TR_TORRENT_ID
+# TR_TORRENT_NAME
+
+# Setup the message to be sent
+TO_ADDR=admin@example.com
+SUBJECT=&#34;Torrent Completed&#34;
+FROM_ADDR=&#34;transmission@example.com&#34;
+BODY=&#34;Transmission finished downloading \&#34;$TR_TORRENT_NAME\&#34; on $TR_TIME_LOCALTIME&#34;
+
+# Send the email
+echo $BODY | mailx -s &#34;$SUBJECT&#34; -r &#34;$FROM_ADDR&#34; $TO_ADDR
+</code></pre><p>Alright now this part is strange. If for some reason transmission doesn&rsquo;t close
 properly or some other funniness happens, it DELETES it&rsquo;s config file and
 resets it back to the defaults. To prevent this we&rsquo;re going to remove
 tranmissions ability to change it&rsquo;s config file. The catch with this is that it
 starts up with root privileges and will just rewrite the config file with
-read/write permissions so you need to make the file immutable like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# chattr +i /var/lib/transmission/.config/transmission-daemon/settings.json
-</span></span></code></pre></div><p>Ensure that transmission&rsquo;s group has write privileges over it&rsquo;s Download,
-Incomplete, and TorrentDrop directory.</p>
-<p>Now lets start it up for real and make sure it starts up correctly on boot:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# chkconfig transmission-daemon on
-</span></span><span style="display:flex;"><span>[root@localhost ~]# service transmission-daemon start
-</span></span></code></pre></div><p>You can then use the utility transmission-remote to check on the status of
-transmission like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# transmission-remote transmission-server.example.com -l
-</span></span><span style="display:flex;"><span>ID     Done       Have  ETA           Up    Down  Ratio  Status       Name
-</span></span><span style="display:flex;"><span>Sum:           Unknown               0.0     0.0
-</span></span></code></pre></div><h2 id="making-torrents-from-the-command-line">Making Torrents from the Command Line</h2>
-<p>First you need to install the utility &ldquo;mktorrent&rdquo; like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# yum install mktorrent -y
-</span></span></code></pre></div><p>I use a private tracker so these instructions are going to be specific for
-them.</p>
-<p>First things first we&rsquo;re going to figure out the best size for the pieces in
+read/write permissions so you need to make the file immutable like so:</p><pre tabindex=0><code>[root@localhost ~]# chattr +i /var/lib/transmission/.config/transmission-daemon/settings.json
+</code></pre><p>Ensure that transmission&rsquo;s group has write privileges over it&rsquo;s Download,
+Incomplete, and TorrentDrop directory.</p><p>Now lets start it up for real and make sure it starts up correctly on boot:</p><pre tabindex=0><code>[root@localhost ~]# chkconfig transmission-daemon on
+[root@localhost ~]# service transmission-daemon start
+</code></pre><p>You can then use the utility transmission-remote to check on the status of
+transmission like so:</p><pre tabindex=0><code>[root@localhost ~]# transmission-remote transmission-server.example.com -l
+ID     Done       Have  ETA           Up    Down  Ratio  Status       Name
+Sum:           Unknown               0.0     0.0
+</code></pre><h2 id=making-torrents-from-the-command-line>Making Torrents from the Command Line</h2><p>First you need to install the utility &ldquo;mktorrent&rdquo; like so:</p><pre tabindex=0><code>[root@localhost ~]# yum install mktorrent -y
+</code></pre><p>I use a private tracker so these instructions are going to be specific for
+them.</p><p>First things first we&rsquo;re going to figure out the best size for the pieces in
 the torrent. Generally I default to 512Kb (2^19), if the torrent is around the
 size of a DVD I&rsquo;ll increase the size of the pieces to 1Mb (2^20). Anything
 larger than that probably doesn&rsquo;t belong in a single torrent. We need to know
 this as the exponent is one of the flags passed (specifically -l) so for my
-default I&rsquo;ll use the flag &ldquo;-l 19&rdquo;.</p>
-<p>Since I use a private tracker I need to set the private flag (-p). You should
+default I&rsquo;ll use the flag &ldquo;-l 19&rdquo;.</p><p>Since I use a private tracker I need to set the private flag (-p). You should
 really give the torrent a meaningful name with the &ldquo;-n&rdquo; flag. Additionally a
-comment on the torrent is usually welcome with &ldquo;-c&rdquo;.</p>
-<p>With my current private tracker when creating a torrent you get a unique
-tracker link that looks something like <code>http://tracker.&lt;site&gt;.org:34000/&lt;Your private 32 character ID string&gt;/announce</code>, so you need to get that before you
-can finish setting up the torrent. Pass it as an option to the &ldquo;-a&rdquo; flag</p>
-<p>Make sure all the files you want in the torrent are in the same directory
-(we&rsquo;re going to use <code>/media/example/MySpecialTorrent/</code>) in this example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# mktorrent -l 19 -p -n &#34;My Special Torrent&#34; -c &#34;A very special torrent that I&#39;m using as an example&#34; \
-</span></span><span style="display:flex;"><span>&gt; -a &#34;&lt;tracker address&gt;&#34; \
-</span></span><span style="display:flex;"><span>&gt; /media/example/MySpecialTorrent/*
-</span></span><span style="display:flex;"><span>mktorrent 1.0 (c) 2007, 2009 Emil Renner Berthing
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>Hashed 40 of 40 pieces.
-</span></span><span style="display:flex;"><span>Writing metainfo file... done.
-</span></span></code></pre></div><p>You will then have a .torrent file in your current directory named after what
-you gave mktorrent with the -n flag.</p>
-<h2 id="security-notes">Security Notes</h2>
-<ul>
-<li>The transmission-daemon doesn&rsquo;t support multiple users, so either a shared
+comment on the torrent is usually welcome with &ldquo;-c&rdquo;.</p><p>With my current private tracker when creating a torrent you get a unique
+tracker link that looks something like <code>http://tracker.&lt;site>.org:34000/&lt;Your private 32 character ID string>/announce</code>, so you need to get that before you
+can finish setting up the torrent. Pass it as an option to the &ldquo;-a&rdquo; flag</p><p>Make sure all the files you want in the torrent are in the same directory
+(we&rsquo;re going to use <code>/media/example/MySpecialTorrent/</code>) in this example:</p><pre tabindex=0><code>[root@localhost ~]# mktorrent -l 19 -p -n &#34;My Special Torrent&#34; -c &#34;A very special torrent that I&#39;m using as an example&#34; \
+&gt; -a &#34;&lt;tracker address&gt;&#34; \
+&gt; /media/example/MySpecialTorrent/*
+mktorrent 1.0 (c) 2007, 2009 Emil Renner Berthing
+
+Hashed 40 of 40 pieces.
+Writing metainfo file... done.
+</code></pre><p>You will then have a .torrent file in your current directory named after what
+you gave mktorrent with the -n flag.</p><h2 id=security-notes>Security Notes</h2><ul><li>The transmission-daemon doesn&rsquo;t support multiple users, so either a shared
 password needs to be provided, none configured or a reverse proxy needs to be
-setup in front of it that has basic authentication.
-<ul>
-<li>A lot of the clients can support basic authentication by using the format:
-<code>http://username:password@torrentbox.local/</code> for the &ldquo;host&rdquo;.</li>
-<li>A reverse proxy can also be used to provide HTTPS access to the interface</li>
-<li>A reverse proxy can safely make the interface available to the outside
-world by putting restrictions on it</li>
-</ul>
-</li>
-<li>The transmission daemon can restrict access to certain things based on IP
-masks, these should be configured appropriately</li>
-<li>Blocklists can be used to eliminate potential corporation spies that&rsquo;ll do
-bad things to you</li>
-<li>I strongly encourage preferring or enforcing encryption as it will reduce
-what is visible to ISPs</li>
-<li>All of the torrent traffic could potentially be pushed through an anonymising
-VPN such as that provided by xerobank.com</li>
-</ul>
-<h2 id="firewall-adjustments">Firewall Adjustments</h2>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Allow other torrenter&#39;s to connect to us
-</span></span><span style="display:flex;"><span>-A SERVICE -m tcp -p tcp --dport 37288 -j ACCEPT
-</span></span><span style="display:flex;"><span># Allow local access to the web interface
-</span></span><span style="display:flex;"><span>-A SERVICE -s 10.13.37.0/24 -m tcp -p tcp --dport 9091 -j ACCEPT
-</span></span></code></pre></div>
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+setup in front of it that has basic authentication.<ul><li>A lot of the clients can support basic authentication by using the format:
+<code>http://username:password@torrentbox.local/</code> for the &ldquo;host&rdquo;.</li><li>A reverse proxy can also be used to provide HTTPS access to the interface</li><li>A reverse proxy can safely make the interface available to the outside
+world by putting restrictions on it</li></ul></li><li>The transmission daemon can restrict access to certain things based on IP
+masks, these should be configured appropriately</li><li>Blocklists can be used to eliminate potential corporation spies that&rsquo;ll do
+bad things to you</li><li>I strongly encourage preferring or enforcing encryption as it will reduce
+what is visible to ISPs</li><li>All of the torrent traffic could potentially be pushed through an anonymising
+VPN such as that provided by xerobank.com</li></ul><h2 id=firewall-adjustments>Firewall Adjustments</h2><pre tabindex=0><code># Allow other torrenter&#39;s to connect to us
+-A SERVICE -m tcp -p tcp --dport 37288 -j ACCEPT
+# Allow local access to the web interface
+-A SERVICE -s 10.13.37.0/24 -m tcp -p tcp --dport 9091 -j ACCEPT
+</code></pre></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

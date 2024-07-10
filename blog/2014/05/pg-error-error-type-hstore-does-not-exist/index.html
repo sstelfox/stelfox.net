@@ -1,233 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="I&amp;rsquo;ve been using the PostgreSQL&amp;rsquo;s hstore extension in a Rails application lately and kept encountering the error that is this post&amp;rsquo;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="I&amp;rsquo;ve been using the PostgreSQL&amp;rsquo;s hstore extension in a Rails application lately and kept encountering the error that is this post&amp;rsquo;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
 It seems that while Rails 4 supports the HStore datatype, it doesn&amp;rsquo;t enable the extension itself. I&amp;rsquo;ve found two ways too solve this issue in wildly different ways.
-First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue." />
-<meta name="keywords" content="blog, programming, linux, systems, personal, postgres, ruby" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/blog/2014/05/pg-error-error-type-hstore-does-not-exist/" />
-
-
-    <title>
-        
-            PG::Error: ERROR: Type &#39;Hstore&#39; Does Not Exist :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="PG::Error: ERROR: Type &#39;Hstore&#39; Does Not Exist">
-<meta itemprop="description" content="I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately and kept encountering the error that is this post&rsquo;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
-It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the extension itself. I&rsquo;ve found two ways too solve this issue in wildly different ways.
-First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue."><meta itemprop="datePublished" content="2014-05-28T18:00:55-04:00" />
-<meta itemprop="dateModified" content="2014-05-28T18:00:55-04:00" />
-<meta itemprop="wordCount" content="438">
-<meta itemprop="keywords" content="postgres,ruby," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="PG::Error: ERROR: Type &#39;Hstore&#39; Does Not Exist"/>
-<meta name="twitter:description" content="I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately and kept encountering the error that is this post&rsquo;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
-It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the extension itself. I&rsquo;ve found two ways too solve this issue in wildly different ways.
-First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue."/>
-
-
-
-    <meta property="og:title" content="PG::Error: ERROR: Type &#39;Hstore&#39; Does Not Exist" />
-<meta property="og:description" content="I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately and kept encountering the error that is this post&rsquo;s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
-It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the extension itself. I&rsquo;ve found two ways too solve this issue in wildly different ways.
-First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/blog/2014/05/pg-error-error-type-hstore-does-not-exist/" /><meta property="article:section" content="blog" />
-<meta property="article:published_time" content="2014-05-28T18:00:55-04:00" />
-<meta property="article:modified_time" content="2014-05-28T18:00:55-04:00" />
-
-
-
-
-
-
-    <meta property="article:published_time" content="2014-05-28 18:00:55 -0400 EDT" />
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/blog/2014/05/pg-error-error-type-hstore-does-not-exist/">PG::Error: ERROR: Type &lsquo;Hstore&rsquo; Does Not Exist</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p>I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately
+First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,postgres,ruby"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2014/05/pg-error-error-type-hstore-does-not-exist/><title>PG::Error: ERROR: Type 'Hstore' Does Not Exist :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="PG::Error: ERROR: Type 'Hstore' Does Not Exist"><meta itemprop=description content="I’ve been using the PostgreSQL’s hstore extension in a Rails application lately and kept encountering the error that is this post’s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
+It seems that while Rails 4 supports the HStore datatype, it doesn’t enable the extension itself. I’ve found two ways too solve this issue in wildly different ways.
+First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue."><meta itemprop=datePublished content="2014-05-28T18:00:55-04:00"><meta itemprop=dateModified content="2014-05-28T18:00:55-04:00"><meta itemprop=wordCount content="438"><meta itemprop=keywords content="Postgres,Ruby"><meta name=twitter:card content="summary"><meta name=twitter:title content="PG::Error: ERROR: Type 'Hstore' Does Not Exist"><meta name=twitter:description content="I’ve been using the PostgreSQL’s hstore extension in a Rails application lately and kept encountering the error that is this post’s namesake. It would specifically happen when a database had been dropped, recreated and I freshly ran the migrations.
+It seems that while Rails 4 supports the HStore datatype, it doesn’t enable the extension itself. I’ve found two ways too solve this issue in wildly different ways.
+First Solution: Enable HStore by Default This is the common solution that is recommended too solve this issue."><meta property="article:published_time" content="2014-05-28 18:00:55 -0400 EDT"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2014/05/pg-error-error-type-hstore-does-not-exist/>PG::Error: ERROR: Type &lsquo;Hstore&rsquo; Does Not Exist</a></h2><div class=post-content><p>I&rsquo;ve been using the PostgreSQL&rsquo;s hstore extension in a Rails application lately
 and kept encountering the error that is this post&rsquo;s namesake. It would
 specifically happen when a database had been dropped, recreated and I freshly
-ran the migrations.</p>
-<p>It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the
+ran the migrations.</p><p>It seems that while Rails 4 supports the HStore datatype, it doesn&rsquo;t enable the
 extension itself. I&rsquo;ve found two ways too solve this issue in wildly different
-ways.</p>
-<h2 id="first-solution-enable-hstore-by-default">First Solution: Enable HStore by Default</h2>
-<p>This is the common solution that is recommended too solve this issue. It
+ways.</p><h2 id=first-solution-enable-hstore-by-default>First Solution: Enable HStore by Default</h2><p>This is the common solution that is recommended too solve this issue. It
 enables the HStore extension by default on all newly created databases. Too
-understand this you need to know a bit about PostgreSQL&rsquo;s behavior.</p>
-<p>When a new database is created, PostgreSQL creates a copy of a special
+understand this you need to know a bit about PostgreSQL&rsquo;s behavior.</p><p>When a new database is created, PostgreSQL creates a copy of a special
 pre-existing database named <code>template1</code> by default. Anything done too this
-database will be reflected in all new databases, including enabling extensions.</p>
-<p>Too enable the HStore extension on the <code>template1</code> database you can execute the
+database will be reflected in all new databases, including enabling extensions.</p><p>Too enable the HStore extension on the <code>template1</code> database you can execute the
 following command (generally as the <code>postgres</code> user or with your authentication
-of choice).</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>psql -d template1 -c &#39;CREATE EXTENSION hstore;&#39;
-</span></span></code></pre></div><h2 id="second-solution-rails-migration">Second Solution: Rails Migration</h2>
-<p>The above solution doesn&rsquo;t sit well with me. While it&rsquo;s uncommon for any
+of choice).</p><pre tabindex=0><code>psql -d template1 -c &#39;CREATE EXTENSION hstore;&#39;
+</code></pre><h2 id=second-solution-rails-migration>Second Solution: Rails Migration</h2><p>The above solution doesn&rsquo;t sit well with me. While it&rsquo;s uncommon for any
 individual PostgreSQL server to be shared among different applications with
 different databases, the possibility is there. Perhaps the application will get
 decommissioned and the DBA will simply drop the associated database and roles
-instead of setting up a new one.</p>
-<p>Disconnecting the requirements of the application from the application itself
-always seems to lead too trouble.</p>
-<p>Rails already has a mechanism too handle modifications too the database
+instead of setting up a new one.</p><p>Disconnecting the requirements of the application from the application itself
+always seems to lead too trouble.</p><p>Rails already has a mechanism too handle modifications too the database
 overtime, migrations. They&rsquo;re solid, well tested, and encapsulate not only how
 to get the database to a particular state but also how to return it back to
-it&rsquo;s prior state (generally).</p>
-<p>We can also do this without using raw SQL which now also seems a bit&hellip; Off to
+it&rsquo;s prior state (generally).</p><p>We can also do this without using raw SQL which now also seems a bit&mldr; Off to
 me. The following is a sample Rails migration that will both enable and disable
-the extension:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ruby" data-lang="ruby"><span style="display:flex;"><span><span style="color:#ff7b72">class</span> <span style="color:#f0883e;font-weight:bold">ManageHstore</span> <span style="color:#ff7b72;font-weight:bold">&lt;</span> <span style="color:#79c0ff;font-weight:bold">ActiveRecord</span><span style="color:#ff7b72;font-weight:bold">::</span><span style="color:#79c0ff;font-weight:bold">Migration</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">def</span> <span style="color:#d2a8ff;font-weight:bold">change</span>
-</span></span><span style="display:flex;"><span>    reversible <span style="color:#ff7b72">do</span> <span style="color:#ff7b72;font-weight:bold">|</span>op<span style="color:#ff7b72;font-weight:bold">|</span>
-</span></span><span style="display:flex;"><span>      op<span style="color:#ff7b72;font-weight:bold">.</span>up { enable_extension <span style="color:#a5d6ff">&#39;hstore&#39;</span> }
-</span></span><span style="display:flex;"><span>      op<span style="color:#ff7b72;font-weight:bold">.</span>down { disable_extension <span style="color:#a5d6ff">&#39;hstore&#39;</span> }
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">end</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">end</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72">end</span>
+the extension:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ruby data-lang=ruby><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ManageHstore</span> <span style=color:#f92672>&lt;</span> <span style=color:#66d9ef>ActiveRecord</span><span style=color:#f92672>::</span><span style=color:#66d9ef>Migration</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>change</span>
+</span></span><span style=display:flex><span>    reversible <span style=color:#66d9ef>do</span> <span style=color:#f92672>|</span>op<span style=color:#f92672>|</span>
+</span></span><span style=display:flex><span>      op<span style=color:#f92672>.</span>up { enable_extension <span style=color:#e6db74>&#39;hstore&#39;</span> }
+</span></span><span style=display:flex><span>      op<span style=color:#f92672>.</span>down { disable_extension <span style=color:#e6db74>&#39;hstore&#39;</span> }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>end</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>end</span>
 </span></span></code></pre></div><p>Now the biggest problem with this migration is that too use it, you need too
 plan ahead of time too use the extension or not worry about freshly running all
 the migrations (generally because you dropped and created the database). This
 migration needs to be named so it alphabetically comes before any migration in
-your application that makes use of the HStore datatype.</p>
-<p>ActiveRecord uses timestamps at the beginning of the migration names to handle
+your application that makes use of the HStore datatype.</p><p>ActiveRecord uses timestamps at the beginning of the migration names to handle
 this alphabetic sorting, and such you&rsquo;ll want to fake this in before you used
-the HStore datatype.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="https://stelfox.net/tags/postgres/">postgres</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/ruby/">ruby</a></span>
-        
-    </p>
-
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+the HStore datatype.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/postgres/>postgres</a></span>
+<span class=tag><a href=https://stelfox.net/tags/ruby/>ruby</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

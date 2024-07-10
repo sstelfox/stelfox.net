@@ -1,1039 +1,841 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Squid Guard is officially a &amp;ldquo;URL Rewrite Program&amp;rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/squid-guard/" />
-
-
-    <title>
-        
-            Squid Guard :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Squid Guard">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator.">
-
-<meta itemprop="wordCount" content="3818">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Squid Guard"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."/>
-
-
-
-    <meta property="og:title" content="Squid Guard" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/squid-guard/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/squid-guard/">Squid Guard</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Squid Guard is officially a &amp;ldquo;URL Rewrite Program&amp;rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/squid-guard/><title>Squid Guard :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Squid Guard"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Squid Guard is officially a “URL Rewrite Program”. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."><meta itemprop=wordCount content="3818"><meta name=twitter:card content="summary"><meta name=twitter:title content="Squid Guard"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Squid Guard is officially a “URL Rewrite Program”. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/squid-guard/>Squid Guard</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<p>Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about
+until I get around to updating it.</strong></em></p><p>Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about
 the requested page coming in and checks it against a series of ACLs,
 blacklists, and whitelists in an order specified by the administrator. The
 administrator can redirect offending pages to a block page (which has to be a
-hosted site outside of squid).</p>
-<h2 id="installation">Installation</h2>
-<p>Don&rsquo;t use the &ldquo;squidGuard&rdquo; service, it is incorrectly defined, looking
+hosted site outside of squid).</p><h2 id=installation>Installation</h2><p>Don&rsquo;t use the &ldquo;squidGuard&rdquo; service, it is incorrectly defined, looking
 for non-existant files, and is poorly implemented. Call squidGuard directly
-from the squid config (see <a href="https://stelfox.net/notes/squid/">Squid</a>).</p>
-<p>NOTICE: To use squid guard at all you need to have a web server setup to
+from the squid config (see <a href=https://stelfox.net/notes/squid/>Squid</a>).</p><p>NOTICE: To use squid guard at all you need to have a web server setup to
 redirect sites that are denied. For this purpose I decided to install apache,
 create a folder &ldquo;guard&rdquo; and within it a file named blocked.php that simply
 prints out the contents of the $_GET variable. With the config provided this
 will show the client&rsquo;s address, name, username, group, category of the
 offending URL and the URL itself. This can be used to properly display an error
-message. I am quite annoyed by how this works&hellip; I&rsquo;d much prefer to just deny
-the requests&hellip;</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install squidGuard -y
-</span></span></code></pre></div><h3 id="black--white-lists">Black &amp; White Lists</h3>
-<p>Remove the default blacklist file as we&rsquo;re going to use another one. This is a
+message. I am quite annoyed by how this works&mldr; I&rsquo;d much prefer to just deny
+the requests&mldr;</p><pre tabindex=0><code>yum install squidGuard -y
+</code></pre><h3 id=black--white-lists>Black & White Lists</h3><p>Remove the default blacklist file as we&rsquo;re going to use another one. This is a
 necessary step to continue using the rest of these instructions. If you don&rsquo;t
 wan to use the Shalla Lists, you&rsquo;ll have to adapt to the instructions given
-however they shouldn&rsquo;t differ much between different lists.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# rm -f /var/squidGuard/blacklists.tar.gz
-</span></span><span style="display:flex;"><span>[root@localhost ~]# mkdir -p /var/squidGuard/blacklists
-</span></span><span style="display:flex;"><span>[root@localhost ~]# mkdir -p /var/squidGuard/whitelists/custom/
-</span></span><span style="display:flex;"><span>[root@localhost ~]# touch /var/squidGuard/whitelists/custom/domains
-</span></span><span style="display:flex;"><span>[root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls
-</span></span></code></pre></div><p>Download a blacklist file, <a href="http://www.shallalist.de/">Shalla List</a> seems to be the defacto/good one.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2&gt;/dev/null
-</span></span><span style="display:flex;"><span>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz.md5 -o /var/squidGuard/blacklists/shallalist.tar.gz.md5 2&gt; /dev/null
-</span></span><span style="display:flex;"><span>[root@localhost ~]# cat /var/squidGuard/blacklists/shallalist.tar.gz.md5 &amp;&amp; md5sum /var/squidGuard/blacklists/shallalist.tar.gz
-</span></span><span style="display:flex;"><span>c50fdc59593bc3e5c5863e2b120f6fed  shallalist.tar.gz
-</span></span><span style="display:flex;"><span>c50fdc59593bc3e5c5863e2b120f6fed  /var/squidGuard/blacklists/shallalist.tar.gz
-</span></span></code></pre></div><p>Note: the md5sums are the same (we received an intact download, the sums will
-be different everytime it updates).</p>
-<p>Now that we&rsquo;ve verified the blacklists lets extract them.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# cd /var/squidGuard
-</span></span><span style="display:flex;"><span>[root@localhost squidGuard]# tar -xzvf shallalist.tar.gz --strip-components 1
-</span></span><span style="display:flex;"><span>[root@localhost squidGuard]# chown -R squid:squid /var/squidGuard/
-</span></span></code></pre></div><h2 id="configuration">Configuration</h2>
-<p>By default, squidGuard tries to store it&rsquo;s logfiles in <code>/var/log/squidGuard</code>,
+however they shouldn&rsquo;t differ much between different lists.</p><pre tabindex=0><code>[root@localhost ~]# rm -f /var/squidGuard/blacklists.tar.gz
+[root@localhost ~]# mkdir -p /var/squidGuard/blacklists
+[root@localhost ~]# mkdir -p /var/squidGuard/whitelists/custom/
+[root@localhost ~]# touch /var/squidGuard/whitelists/custom/domains
+[root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls
+</code></pre><p>Download a blacklist file, <a href=http://www.shallalist.de/>Shalla List</a> seems to be the defacto/good one.</p><pre tabindex=0><code>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2&gt;/dev/null
+[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz.md5 -o /var/squidGuard/blacklists/shallalist.tar.gz.md5 2&gt; /dev/null
+[root@localhost ~]# cat /var/squidGuard/blacklists/shallalist.tar.gz.md5 &amp;&amp; md5sum /var/squidGuard/blacklists/shallalist.tar.gz
+c50fdc59593bc3e5c5863e2b120f6fed  shallalist.tar.gz
+c50fdc59593bc3e5c5863e2b120f6fed  /var/squidGuard/blacklists/shallalist.tar.gz
+</code></pre><p>Note: the md5sums are the same (we received an intact download, the sums will
+be different everytime it updates).</p><p>Now that we&rsquo;ve verified the blacklists lets extract them.</p><pre tabindex=0><code>[root@localhost ~]# cd /var/squidGuard
+[root@localhost squidGuard]# tar -xzvf shallalist.tar.gz --strip-components 1
+[root@localhost squidGuard]# chown -R squid:squid /var/squidGuard/
+</code></pre><h2 id=configuration>Configuration</h2><p>By default, squidGuard tries to store it&rsquo;s logfiles in <code>/var/log/squidGuard</code>,
 however, since squid starts up squidGuard, squidGuard will be running under the
 squid user. This is important as the squid user won&rsquo;t have permission to
 <code>/var/log/squidGuard</code>. We should switch it too <code>/var/log/squid</code>, and ensure
-that <code>/var/squidGuard/blacklists</code> are owned by squid with the squid group.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># Configure locations for the rest of squidGuard&#39;s files
-</span></span><span style="display:flex;"><span>dbhome /var/squidGuard
-</span></span><span style="display:flex;"><span>logdir /var/log/squid
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Time aliases
-</span></span><span style="display:flex;"><span># s = sun, m = mon, t =tue, w = wed, h = thu, f = fri, a = sat
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Hours during the work day
-</span></span><span style="display:flex;"><span>time workhours {
-</span></span><span style="display:flex;"><span>  weekly mtwhf 08:00 - 12:00
-</span></span><span style="display:flex;"><span>  weekly mtwhf 13:00 - 16:30
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Source ACLs
-</span></span><span style="display:flex;"><span>src localnets {
-</span></span><span style="display:flex;"><span>  ip 155.42.89.0/24
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Destination whitelists (overrides)
-</span></span><span style="display:flex;"><span>dest whitelists_custom {
-</span></span><span style="display:flex;"><span>  domainlist  whitelists/custom/domains
-</span></span><span style="display:flex;"><span>  urllist   whitelists/custom/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Destination blacklists - Descriptions from shallalist.de
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All about advertising: This includes sites offering banners and banner
-</span></span><span style="display:flex;"><span># creation as well as sites delivering banners to be shown in webpages.
-</span></span><span style="display:flex;"><span># Advertising companies are listed, too.
-</span></span><span style="display:flex;"><span>dest adv {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/adv/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/adv/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of obvious aggressive content. This coveres hate speech and all
-</span></span><span style="display:flex;"><span># kinds of racism.
-</span></span><span style="display:flex;"><span>dest aggressive {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/aggressive/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/aggressive/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of breweries, wineries and destilleries. This category also covers
-</span></span><span style="display:flex;"><span># sites that explain howto make beer, wines and spirits.
-</span></span><span style="display:flex;"><span>dest alchohol {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/alcohol/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/alcohol/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># This category covers sites providing vpn services to the public. The
-</span></span><span style="display:flex;"><span># focus is on vpn sites used to hide the origin of the traffic like
-</span></span><span style="display:flex;"><span># tor nodes. The category does not include company vpn accesses.
-</span></span><span style="display:flex;"><span>dest anonvpn {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/anonvpn/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/anonvpn/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All around motorcycles. Included are vendor sites, resellers, fan and
-</span></span><span style="display:flex;"><span># hobby pages as well as and suppliers. Scooters included.
-</span></span><span style="display:flex;"><span>dest automobile_bikes {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/automobile/bikes/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/automobile/bikes/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All around motorboats. Included are vendor sites, resellers, fan and
-</span></span><span style="display:flex;"><span># hobby pages as well as and suppliers. Not included are travel tips
-</span></span><span style="display:flex;"><span># (this can be found in recreation/travel).
-</span></span><span style="display:flex;"><span>dest automobile_boats {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/automobile/boats/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/automobile/boats/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All around cars. Included are automobile companies and automotive
-</span></span><span style="display:flex;"><span># suppliers.
-</span></span><span style="display:flex;"><span>dest automobile_cars {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/automobile/cars/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/automobile/cars/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All around planes ranging from small one and two seaters up to the
-</span></span><span style="display:flex;"><span># large traffic planes, old and new, private, commercial and military.
-</span></span><span style="display:flex;"><span># Vendors and supplier are included (airports are not). Helicopter
-</span></span><span style="display:flex;"><span># sites are included as well.
-</span></span><span style="display:flex;"><span>dest automobile_planes {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/automobile/planes/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/automobile/planes/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites for realtime chatting and instant messaging. Everything that
-</span></span><span style="display:flex;"><span># is not realtime is included in -&gt; forum.
-</span></span><span style="display:flex;"><span>dest chat {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/chat/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/chat/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that lure with free of charge services but then give you a
-</span></span><span style="display:flex;"><span># costly abbonement (written somewhere in tiny letters nearly
-</span></span><span style="display:flex;"><span># unreadable).
-</span></span><span style="display:flex;"><span>dest costtraps {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/costtraps/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/costtraps/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites to contact people for love and live together. He seeks her,
-</span></span><span style="display:flex;"><span># she seeks him and so on.
-</span></span><span style="display:flex;"><span>dest dating {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/dating/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/dating/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># This covers mostly filesharing, p2p and torrent sites. Other
-</span></span><span style="display:flex;"><span># download sites (for software, wallpapers, ..) are included as well.
-</span></span><span style="display:flex;"><span>dest downloads {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/downloads/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/downloads/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites offering drugs or explain how to make drugs (legal and non
-</span></span><span style="display:flex;"><span># legal). Covers tabacco as well as viagra and similar substances.
-</span></span><span style="display:flex;"><span>dest drugs {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/drugs/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/drugs/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All domains where people log in from one obtaining a dynmic IP
-</span></span><span style="display:flex;"><span># address. Dynamic sites can be most harmless as well as carry
-</span></span><span style="display:flex;"><span># redirecting proxies to bypass the webfilter or porn, games or
-</span></span><span style="display:flex;"><span># anything else why may be inappropiate.
-</span></span><span style="display:flex;"><span>dest dynamic {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/dynamic/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/dynamic/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Home pages of schools, colleges and universities.
-</span></span><span style="display:flex;"><span>dest education {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/education/schools/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/education/schools/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Home page of banking companies are listed here. This is not
-</span></span><span style="display:flex;"><span># restricted to online banking.
-</span></span><span style="display:flex;"><span>dest finance_banking {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/finance/banking/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/finance/banking/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of insurance companies, about information about insurances
-</span></span><span style="display:flex;"><span># and link collections concering this subject.
-</span></span><span style="display:flex;"><span>dest finance_insurance {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/finance/insurance/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/finance/insurance/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites one can apply for loans and mortgages or can obtain
-</span></span><span style="display:flex;"><span># information about this business.
-</span></span><span style="display:flex;"><span>dest finance_moneylending {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/finance/moneylending/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/finance/moneylending/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about all types of realestate, bying and selling homes,
-</span></span><span style="display:flex;"><span># finding appartments for rent and selling.
-</span></span><span style="display:flex;"><span>dest finance_realestate {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/finance/realestate/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/finance/realestate/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about the stock exchange market, trading of stocks and stock
-</span></span><span style="display:flex;"><span># options as well as sites related to this subject.
-</span></span><span style="display:flex;"><span>dest finance_trading {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/finance/trading/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/finance/trading/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All financial pages that do not fit in the financial categories
-</span></span><span style="display:flex;"><span># above.
-</span></span><span style="display:flex;"><span>dest finance_other {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/finance/other/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/finance/other/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All sites about astrology, horoscopes, numerology, palm reading
-</span></span><span style="display:flex;"><span># and so on; sites that offer services to forsay the future.
-</span></span><span style="display:flex;"><span>dest fortunetelling {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/fortunetelling/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/fortunetelling/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Discussion sites. Covered explicit forum sites and some blogs.
-</span></span><span style="display:flex;"><span># Sites where people can discuss and share information in a non
-</span></span><span style="display:flex;"><span># interactive/realtime way. Realtime discussions are covered with
-</span></span><span style="display:flex;"><span># chat.
-</span></span><span style="display:flex;"><span>dest forum {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/forum/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/forum/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites offering the possibility to win money. Poker, Casino,
-</span></span><span style="display:flex;"><span># Bingo and other chance games as well as betting sites. Differs
-</span></span><span style="display:flex;"><span># from -&gt; hobby/games in the aspect of winning or loosing money
-</span></span><span style="display:flex;"><span># or being lured to do so.
-</span></span><span style="display:flex;"><span>dest gamble {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/gamble/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/gamble/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites belonging to the goverment of a country, county or city.
-</span></span><span style="display:flex;"><span>dest government {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/government/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/government/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites with information and discussions about security weaknesses
-</span></span><span style="display:flex;"><span># and how to exploit them. Sites offering exploits are listed as
-</span></span><span style="display:flex;"><span># well as sites distributing programs that help to find security
-</span></span><span style="display:flex;"><span># leaks.
-</span></span><span style="display:flex;"><span>dest hacking {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/hacking/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/hacking/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites concering food and food preparation.
-</span></span><span style="display:flex;"><span>dest hobby_cooking {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/hobby/cooking/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/hobby/cooking/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites related to games. This includes descriptions, news and
-</span></span><span style="display:flex;"><span># general information about games. No gamble sites.
-</span></span><span style="display:flex;"><span>dest hobby_games-misc {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/hobby/games-misc/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/hobby/games-misc/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about online games (all kinds of browserbased games). The
-</span></span><span style="display:flex;"><span># games are for fun only (no gamble).
-</span></span><span style="display:flex;"><span>dest hobby_games-online {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/hobby/games-online/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/hobby/games-online/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about gardening, grewing plants, fighting bugs and
-</span></span><span style="display:flex;"><span># everything else related to gardening.
-</span></span><span style="display:flex;"><span>dest hobby_gardening {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/hobby/gardening/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/hobby/gardening/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about all topics concerning pets: description, raise,
-</span></span><span style="display:flex;"><span># food, looks, fairs, favorite pet stories and so on.
-</span></span><span style="display:flex;"><span>dest hobby_pets {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/hobby/pets/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/hobby/pets/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about everything required to create a cozy home (interior
-</span></span><span style="display:flex;"><span># design and assesoirs).
-</span></span><span style="display:flex;"><span>dest homestyle {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/homestyle/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/homestyle/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of hospitals and medical facilities.
-</span></span><span style="display:flex;"><span>dest hospitals {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/hospitals/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/hospitals/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites specialized on hosting images, photogalleries and so on.
-</span></span><span style="display:flex;"><span>dest imagehosting {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/imagehosting/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/imagehosting/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Home pages of Internet Service Providers. Site of companies
-</span></span><span style="display:flex;"><span># offering webspace only are now being added, too.
-</span></span><span style="display:flex;"><span>dest isp {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/isp/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/isp/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Portals for job offers and job seekers as well as the career
-</span></span><span style="display:flex;"><span># and work-for-us pages of companies.
-</span></span><span style="display:flex;"><span>dest jobsearch {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/jobsearch/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/jobsearch/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Online libraries and sites where you can obtain and/or read
-</span></span><span style="display:flex;"><span># e-books. Book shops are not listed here but under shopping.
-</span></span><span style="display:flex;"><span>dest library {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/library/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/library/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of military facilites or related to the armed forces.
-</span></span><span style="display:flex;"><span>dest military {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/military/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/military/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Model agency, model and supermodel fan pages and other model
-</span></span><span style="display:flex;"><span># sites presenting model photos. No porn pictures.
-</span></span><span style="display:flex;"><span>dest models {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/models/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/models/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites offering cinema programs, information about movies and actors.
-</span></span><span style="display:flex;"><span># Sites for downloading video clips/movies (as long it is legal) are
-</span></span><span style="display:flex;"><span># included as well.
-</span></span><span style="display:flex;"><span>dest movies {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/movies/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/movies/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that offer the download of music, information about music
-</span></span><span style="display:flex;"><span># groups or music in general.
-</span></span><span style="display:flex;"><span>dest music {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/music/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/music/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites presenting news. Homepages from newspapers, magazines and
-</span></span><span style="display:flex;"><span># journals as well as some blogs.
-</span></span><span style="display:flex;"><span>dest news {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/news/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/news/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites offering podcasts or podcast services.
-</span></span><span style="display:flex;"><span>dest podcasts {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/podcasts/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/podcasts/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of political parties, political organisations and associations;
-</span></span><span style="display:flex;"><span># sites with political discussions.
-</span></span><span style="display:flex;"><span>dest politics {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/politics/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/politics/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about all kinds of sexual content ranging from bare bosoms to
-</span></span><span style="display:flex;"><span># hardcore porn and sm.
-</span></span><span style="display:flex;"><span>dest porn {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/porn/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/porn/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Domains and urls of TV and radio stations, regardless whether they
-</span></span><span style="display:flex;"><span># offer any programs on the site or just displaying a static page. The
-</span></span><span style="display:flex;"><span># sites offering streams are still collected in webradio and webtv,
-</span></span><span style="display:flex;"><span># respectively.
-</span></span><span style="display:flex;"><span>dest radiotv {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/radiotv/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/radiotv/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Humorous pages, comic strips, funny stories, everything which makes
-</span></span><span style="display:flex;"><span># people laugh.
-</span></span><span style="display:flex;"><span>dest recreation_humor {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/recreation/humor/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/recreation/humor/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites dedicated to martial arts such karate, kung fu, taek won do as
-</span></span><span style="display:flex;"><span># well as fighting sports sites like ufc. All site listed in this
-</span></span><span style="display:flex;"><span># category are also part of sports. This category is meant for users
-</span></span><span style="display:flex;"><span># who wish to allow sports but no &#34;aggressive&#34; kind of sports.
-</span></span><span style="display:flex;"><span>dest recreation_martialarts {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/recreation/humor/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/recreation/humor/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of restaurants as well as restaurant descriptions and
-</span></span><span style="display:flex;"><span># comentaries.
-</span></span><span style="display:flex;"><span>dest recreation_restaurants {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/recreation/humor/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/recreation/humor/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># All about sports: sports teams, sport discussions as well as
-</span></span><span style="display:flex;"><span># information about sports people and the varios sports themselves.
-</span></span><span style="display:flex;"><span>dest recreation_sports {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/recreation/humor/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/recreation/humor/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites with information about foreign countries, travel companies,
-</span></span><span style="display:flex;"><span># travel fares, accomondations and everything else that has to do
-</span></span><span style="display:flex;"><span># with travel including travel blogs.
-</span></span><span style="display:flex;"><span>dest recreation_travel {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/recreation/humor/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/recreation/humor/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about treatments for feeling internally and externally healthy
-</span></span><span style="display:flex;"><span># and beautiful again.
-</span></span><span style="display:flex;"><span>dest recreation_wellness {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/recreation/wellness/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/recreation/wellness/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that actively help to bypass url filters by accepting urls via
-</span></span><span style="display:flex;"><span># webform and play a proxing and redirecting role.
-</span></span><span style="display:flex;"><span>dest redirector {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/redirector/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/redirector/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites with religious content: all kind of churches, sects, religious
-</span></span><span style="display:flex;"><span># interpretations and so on.
-</span></span><span style="display:flex;"><span>dest religion {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/religion/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/religion/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites offering the service to remotely access computers, expecially (but not
-</span></span><span style="display:flex;"><span># limited to going) through firewalls. This includes using a third party
-</span></span><span style="display:flex;"><span># computer. Traditional VPN is not covered.
-</span></span><span style="display:flex;"><span>dest remotecontrol {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/remotecontrol/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/remotecontrol/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that offer the download of ringtones or present other informations
-</span></span><span style="display:flex;"><span># about ringtones.
-</span></span><span style="display:flex;"><span>dest ringtones {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/ringtones/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/ringtones/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of institutions as well as of amateurs about all topics of astronomy.
-</span></span><span style="display:flex;"><span>dest science_astronomy {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/science/astronomy/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/science/astronomy/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites of institutions as well as of amateurs about all topics of chemistry.
-</span></span><span style="display:flex;"><span>dest science_chemistry {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/science/chemistry/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/science/chemistry/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Collection of seach engines and directory sites.
-</span></span><span style="display:flex;"><span>dest searchengines {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/searchengines/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/searchengines/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites explaining the biological functions of the body concerning sexuality
-</span></span><span style="display:flex;"><span># as well as sexual health; this, too, covers sites for teenagers with
-</span></span><span style="display:flex;"><span># questions about firstlove, first sex, and subjects related to this topics.
-</span></span><span style="display:flex;"><span># This category does not cover porn.
-</span></span><span style="display:flex;"><span>dest sex_education {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/sex/education/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/sex/education/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites selling and presenting sexy lingerie or lingerie in a sexy manner.
-</span></span><span style="display:flex;"><span>dest sex_lingerie {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/sex/lingerie/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/sex/lingerie/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites offering online shopping and price comparisons.
-</span></span><span style="display:flex;"><span>dest shopping {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/shopping/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/shopping/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites bringing people together (social networking) be it for friendship
-</span></span><span style="display:flex;"><span># or for business.
-</span></span><span style="display:flex;"><span>dest socialnet {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/socialnet/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/socialnet/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that tries to actively try to install software (or lure the user
-</span></span><span style="display:flex;"><span># in doing so) in order to spy the surfig behaviour (or worse). This
-</span></span><span style="display:flex;"><span># category includes trojan and phishing sites. The homecalling site
-</span></span><span style="display:flex;"><span># where the collecting information is sent are listed, too.
-</span></span><span style="display:flex;"><span>dest spyware {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/spyware/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/spyware/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Site keeping an eye on where you surf and what you do in a passive. Covers
-</span></span><span style="display:flex;"><span># web bugs, counters and other tracking mechanism in web pages that do not
-</span></span><span style="display:flex;"><span># interfere with the local computer yet collecting information about the
-</span></span><span style="display:flex;"><span># surfing person for later analysis. Sites actively spying out the surfer
-</span></span><span style="display:flex;"><span># by installing software or calling home sites are not covered with tracker
-</span></span><span style="display:flex;"><span># but with -&gt; spyware.
-</span></span><span style="display:flex;"><span>dest trackers {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/tracker/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/tracker/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Kind of white list to allow necessary downloads from vendors. Thought as
-</span></span><span style="display:flex;"><span># a correction to the downloads category.
-</span></span><span style="display:flex;"><span>dest updatesites {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/updatesites/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/updatesites/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Domains that can be used to shorten long URLs. The orginal (long) URL will
-</span></span><span style="display:flex;"><span># be accessed after the the short URL has been requested from the shortener.
-</span></span><span style="display:flex;"><span># This distinguishes this category from redirector where the orginal URL is
-</span></span><span style="display:flex;"><span># never accessed directly.
-</span></span><span style="display:flex;"><span>dest urlshortener {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/urlshortener/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/urlshortener/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites about killing and harming people. Covers anything about brutality
-</span></span><span style="display:flex;"><span># and beastiality.
-</span></span><span style="display:flex;"><span>dest violence {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/violence/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/violence/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Collection of sites offering programs to break licence keys, licence
-</span></span><span style="display:flex;"><span># keys themselves, cracked software and other copyrighted material.
-</span></span><span style="display:flex;"><span>dest warez {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/warez/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/warez/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites offering all kinds of weapons or accessories for weapons: Firearms,
-</span></span><span style="display:flex;"><span># knifes, swords, bows,... . Armory shops are included as well as sites
-</span></span><span style="display:flex;"><span># holding general information about arms (manufacturing, usage).
-</span></span><span style="display:flex;"><span>dest weapons {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/weapons/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/weapons/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that offer web-based email services.
-</span></span><span style="display:flex;"><span>dest webmail {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/webmail/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/webmail/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that enable user to phone via Internet/WWW. Any site where users
-</span></span><span style="display:flex;"><span># can voice-chat with each other (normal chat sites, where users type their
-</span></span><span style="display:flex;"><span># messages are part of chat, not webphone).
-</span></span><span style="display:flex;"><span>dest webphone {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/webphone/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/webphone/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Sites that offer listening to music and radiostreams.
-</span></span><span style="display:flex;"><span>dest webradio {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/webradio/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/webradio/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span># Collection of site offering TV streams via world wide web.
-</span></span><span style="display:flex;"><span>dest webtv {
-</span></span><span style="display:flex;"><span>  domainlist  blacklists/webtv/domains
-</span></span><span style="display:flex;"><span>  urllist   blacklists/webtv/urls
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>acl {
-</span></span><span style="display:flex;"><span>  localnets within workhours {
-</span></span><span style="display:flex;"><span>    pass whitelists_custom !adv !aggressive !alchohol !anonvpn !automobile_bikes !automobile_boats !automobile_cars !automobile_planes !chat !costtraps !dating !downloads !drugs !dynamic !fortunetelling !gamble !hobby_games-misc !hobby_games-online !hobby_gardening !hobby_pets !homestyle !hospitals !in-addr !imagehosting !isp !models !movies !music !podcasts !politics !porn !radiotv !recreation_humor !recreation_martialarts !recreation_restaurants !recreation_sports !recreation_travel !recreation_wellness !redirector !religion !remotecontrol !ringtones !sex_education !sex_lingerie !socialnet !spyware !trackers !violence !warez !weapons !webphone !webtv all
-</span></span><span style="display:flex;"><span>    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
-</span></span><span style="display:flex;"><span>  } else {
-</span></span><span style="display:flex;"><span>    pass whitelists_custom !adv !costtraps !in-addr !redirector !ringtones !spyware !trackers all
-</span></span><span style="display:flex;"><span>    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  default {
-</span></span><span style="display:flex;"><span>    pass updatesites none
-</span></span><span style="display:flex;"><span>    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="live-config-changes">Live Config Changes</h2>
-<p>The squid command &ldquo;squid -k reconfigure&rdquo; DOES re-evaluate squidGuard config
+that <code>/var/squidGuard/blacklists</code> are owned by squid with the squid group.</p><pre tabindex=0><code># Configure locations for the rest of squidGuard&#39;s files
+dbhome /var/squidGuard
+logdir /var/log/squid
+
+# Time aliases
+# s = sun, m = mon, t =tue, w = wed, h = thu, f = fri, a = sat
+
+# Hours during the work day
+time workhours {
+  weekly mtwhf 08:00 - 12:00
+  weekly mtwhf 13:00 - 16:30
+}
+
+# Source ACLs
+src localnets {
+  ip 155.42.89.0/24
+}
+
+# Destination whitelists (overrides)
+dest whitelists_custom {
+  domainlist  whitelists/custom/domains
+  urllist   whitelists/custom/urls
+}
+
+# Destination blacklists - Descriptions from shallalist.de
+
+# All about advertising: This includes sites offering banners and banner
+# creation as well as sites delivering banners to be shown in webpages.
+# Advertising companies are listed, too.
+dest adv {
+  domainlist  blacklists/adv/domains
+  urllist   blacklists/adv/urls
+}
+
+# Sites of obvious aggressive content. This coveres hate speech and all
+# kinds of racism.
+dest aggressive {
+  domainlist  blacklists/aggressive/domains
+  urllist   blacklists/aggressive/urls
+}
+
+# Sites of breweries, wineries and destilleries. This category also covers
+# sites that explain howto make beer, wines and spirits.
+dest alchohol {
+  domainlist  blacklists/alcohol/domains
+  urllist   blacklists/alcohol/urls
+}
+
+# This category covers sites providing vpn services to the public. The
+# focus is on vpn sites used to hide the origin of the traffic like
+# tor nodes. The category does not include company vpn accesses.
+dest anonvpn {
+  domainlist  blacklists/anonvpn/domains
+  urllist   blacklists/anonvpn/urls
+}
+
+# All around motorcycles. Included are vendor sites, resellers, fan and
+# hobby pages as well as and suppliers. Scooters included.
+dest automobile_bikes {
+  domainlist  blacklists/automobile/bikes/domains
+  urllist   blacklists/automobile/bikes/urls
+}
+
+# All around motorboats. Included are vendor sites, resellers, fan and
+# hobby pages as well as and suppliers. Not included are travel tips
+# (this can be found in recreation/travel).
+dest automobile_boats {
+  domainlist  blacklists/automobile/boats/domains
+  urllist   blacklists/automobile/boats/urls
+}
+
+# All around cars. Included are automobile companies and automotive
+# suppliers.
+dest automobile_cars {
+  domainlist  blacklists/automobile/cars/domains
+  urllist   blacklists/automobile/cars/urls
+}
+
+# All around planes ranging from small one and two seaters up to the
+# large traffic planes, old and new, private, commercial and military.
+# Vendors and supplier are included (airports are not). Helicopter
+# sites are included as well.
+dest automobile_planes {
+  domainlist  blacklists/automobile/planes/domains
+  urllist   blacklists/automobile/planes/urls
+}
+
+# Sites for realtime chatting and instant messaging. Everything that
+# is not realtime is included in -&gt; forum.
+dest chat {
+  domainlist  blacklists/chat/domains
+  urllist   blacklists/chat/urls
+}
+
+# Sites that lure with free of charge services but then give you a
+# costly abbonement (written somewhere in tiny letters nearly
+# unreadable).
+dest costtraps {
+  domainlist  blacklists/costtraps/domains
+  urllist   blacklists/costtraps/urls
+}
+
+# Sites to contact people for love and live together. He seeks her,
+# she seeks him and so on.
+dest dating {
+  domainlist  blacklists/dating/domains
+  urllist   blacklists/dating/urls
+}
+
+# This covers mostly filesharing, p2p and torrent sites. Other
+# download sites (for software, wallpapers, ..) are included as well.
+dest downloads {
+  domainlist  blacklists/downloads/domains
+  urllist   blacklists/downloads/urls
+}
+
+# Sites offering drugs or explain how to make drugs (legal and non
+# legal). Covers tabacco as well as viagra and similar substances.
+dest drugs {
+  domainlist  blacklists/drugs/domains
+  urllist   blacklists/drugs/urls
+}
+
+# All domains where people log in from one obtaining a dynmic IP
+# address. Dynamic sites can be most harmless as well as carry
+# redirecting proxies to bypass the webfilter or porn, games or
+# anything else why may be inappropiate.
+dest dynamic {
+  domainlist  blacklists/dynamic/domains
+  urllist   blacklists/dynamic/urls
+}
+
+# Home pages of schools, colleges and universities.
+dest education {
+  domainlist  blacklists/education/schools/domains
+  urllist   blacklists/education/schools/urls
+}
+
+# Home page of banking companies are listed here. This is not
+# restricted to online banking.
+dest finance_banking {
+  domainlist  blacklists/finance/banking/domains
+  urllist   blacklists/finance/banking/urls
+}
+
+# Sites of insurance companies, about information about insurances
+# and link collections concering this subject.
+dest finance_insurance {
+  domainlist  blacklists/finance/insurance/domains
+  urllist   blacklists/finance/insurance/urls
+}
+
+# Sites one can apply for loans and mortgages or can obtain
+# information about this business.
+dest finance_moneylending {
+  domainlist  blacklists/finance/moneylending/domains
+  urllist   blacklists/finance/moneylending/urls
+}
+
+# Sites about all types of realestate, bying and selling homes,
+# finding appartments for rent and selling.
+dest finance_realestate {
+  domainlist  blacklists/finance/realestate/domains
+  urllist   blacklists/finance/realestate/urls
+}
+
+# Sites about the stock exchange market, trading of stocks and stock
+# options as well as sites related to this subject.
+dest finance_trading {
+  domainlist  blacklists/finance/trading/domains
+  urllist   blacklists/finance/trading/urls
+}
+
+# All financial pages that do not fit in the financial categories
+# above.
+dest finance_other {
+  domainlist  blacklists/finance/other/domains
+  urllist   blacklists/finance/other/urls
+}
+
+# All sites about astrology, horoscopes, numerology, palm reading
+# and so on; sites that offer services to forsay the future.
+dest fortunetelling {
+  domainlist  blacklists/fortunetelling/domains
+  urllist   blacklists/fortunetelling/urls
+}
+
+# Discussion sites. Covered explicit forum sites and some blogs.
+# Sites where people can discuss and share information in a non
+# interactive/realtime way. Realtime discussions are covered with
+# chat.
+dest forum {
+  domainlist  blacklists/forum/domains
+  urllist   blacklists/forum/urls
+}
+
+# Sites offering the possibility to win money. Poker, Casino,
+# Bingo and other chance games as well as betting sites. Differs
+# from -&gt; hobby/games in the aspect of winning or loosing money
+# or being lured to do so.
+dest gamble {
+  domainlist  blacklists/gamble/domains
+  urllist   blacklists/gamble/urls
+}
+
+# Sites belonging to the goverment of a country, county or city.
+dest government {
+  domainlist  blacklists/government/domains
+  urllist   blacklists/government/urls
+}
+
+# Sites with information and discussions about security weaknesses
+# and how to exploit them. Sites offering exploits are listed as
+# well as sites distributing programs that help to find security
+# leaks.
+dest hacking {
+  domainlist  blacklists/hacking/domains
+  urllist   blacklists/hacking/urls
+}
+
+# Sites concering food and food preparation.
+dest hobby_cooking {
+  domainlist  blacklists/hobby/cooking/domains
+  urllist   blacklists/hobby/cooking/urls
+}
+
+# Sites related to games. This includes descriptions, news and
+# general information about games. No gamble sites.
+dest hobby_games-misc {
+  domainlist  blacklists/hobby/games-misc/domains
+  urllist   blacklists/hobby/games-misc/urls
+}
+
+# Sites about online games (all kinds of browserbased games). The
+# games are for fun only (no gamble).
+dest hobby_games-online {
+  domainlist  blacklists/hobby/games-online/domains
+  urllist   blacklists/hobby/games-online/urls
+}
+
+# Sites about gardening, grewing plants, fighting bugs and
+# everything else related to gardening.
+dest hobby_gardening {
+  domainlist  blacklists/hobby/gardening/domains
+  urllist   blacklists/hobby/gardening/urls
+}
+
+# Sites about all topics concerning pets: description, raise,
+# food, looks, fairs, favorite pet stories and so on.
+dest hobby_pets {
+  domainlist  blacklists/hobby/pets/domains
+  urllist   blacklists/hobby/pets/urls
+}
+
+# Sites about everything required to create a cozy home (interior
+# design and assesoirs).
+dest homestyle {
+  domainlist  blacklists/homestyle/domains
+  urllist   blacklists/homestyle/urls
+}
+
+# Sites of hospitals and medical facilities.
+dest hospitals {
+  domainlist  blacklists/hospitals/domains
+  urllist   blacklists/hospitals/urls
+}
+
+# Sites specialized on hosting images, photogalleries and so on.
+dest imagehosting {
+  domainlist  blacklists/imagehosting/domains
+  urllist   blacklists/imagehosting/urls
+}
+
+# Home pages of Internet Service Providers. Site of companies
+# offering webspace only are now being added, too.
+dest isp {
+  domainlist  blacklists/isp/domains
+  urllist   blacklists/isp/urls
+}
+
+# Portals for job offers and job seekers as well as the career
+# and work-for-us pages of companies.
+dest jobsearch {
+  domainlist  blacklists/jobsearch/domains
+  urllist   blacklists/jobsearch/urls
+}
+
+# Online libraries and sites where you can obtain and/or read
+# e-books. Book shops are not listed here but under shopping.
+dest library {
+  domainlist  blacklists/library/domains
+  urllist   blacklists/library/urls
+}
+
+# Sites of military facilites or related to the armed forces.
+dest military {
+  domainlist  blacklists/military/domains
+  urllist   blacklists/military/urls
+}
+
+# Model agency, model and supermodel fan pages and other model
+# sites presenting model photos. No porn pictures.
+dest models {
+  domainlist  blacklists/models/domains
+  urllist   blacklists/models/urls
+}
+
+# Sites offering cinema programs, information about movies and actors.
+# Sites for downloading video clips/movies (as long it is legal) are
+# included as well.
+dest movies {
+  domainlist  blacklists/movies/domains
+  urllist   blacklists/movies/urls
+}
+
+# Sites that offer the download of music, information about music
+# groups or music in general.
+dest music {
+  domainlist  blacklists/music/domains
+  urllist   blacklists/music/urls
+}
+
+# Sites presenting news. Homepages from newspapers, magazines and
+# journals as well as some blogs.
+dest news {
+  domainlist  blacklists/news/domains
+  urllist   blacklists/news/urls
+}
+
+# Sites offering podcasts or podcast services.
+dest podcasts {
+  domainlist  blacklists/podcasts/domains
+  urllist   blacklists/podcasts/urls
+}
+
+# Sites of political parties, political organisations and associations;
+# sites with political discussions.
+dest politics {
+  domainlist  blacklists/politics/domains
+  urllist   blacklists/politics/urls
+}
+
+# Sites about all kinds of sexual content ranging from bare bosoms to
+# hardcore porn and sm.
+dest porn {
+  domainlist  blacklists/porn/domains
+  urllist   blacklists/porn/urls
+}
+
+# Domains and urls of TV and radio stations, regardless whether they
+# offer any programs on the site or just displaying a static page. The
+# sites offering streams are still collected in webradio and webtv,
+# respectively.
+dest radiotv {
+  domainlist  blacklists/radiotv/domains
+  urllist   blacklists/radiotv/urls
+}
+
+# Humorous pages, comic strips, funny stories, everything which makes
+# people laugh.
+dest recreation_humor {
+  domainlist  blacklists/recreation/humor/domains
+  urllist   blacklists/recreation/humor/urls
+}
+
+# Sites dedicated to martial arts such karate, kung fu, taek won do as
+# well as fighting sports sites like ufc. All site listed in this
+# category are also part of sports. This category is meant for users
+# who wish to allow sports but no &#34;aggressive&#34; kind of sports.
+dest recreation_martialarts {
+  domainlist  blacklists/recreation/humor/domains
+  urllist   blacklists/recreation/humor/urls
+}
+
+# Sites of restaurants as well as restaurant descriptions and
+# comentaries.
+dest recreation_restaurants {
+  domainlist  blacklists/recreation/humor/domains
+  urllist   blacklists/recreation/humor/urls
+}
+
+# All about sports: sports teams, sport discussions as well as
+# information about sports people and the varios sports themselves.
+dest recreation_sports {
+  domainlist  blacklists/recreation/humor/domains
+  urllist   blacklists/recreation/humor/urls
+}
+
+# Sites with information about foreign countries, travel companies,
+# travel fares, accomondations and everything else that has to do
+# with travel including travel blogs.
+dest recreation_travel {
+  domainlist  blacklists/recreation/humor/domains
+  urllist   blacklists/recreation/humor/urls
+}
+
+# Sites about treatments for feeling internally and externally healthy
+# and beautiful again.
+dest recreation_wellness {
+  domainlist  blacklists/recreation/wellness/domains
+  urllist   blacklists/recreation/wellness/urls
+}
+
+# Sites that actively help to bypass url filters by accepting urls via
+# webform and play a proxing and redirecting role.
+dest redirector {
+  domainlist  blacklists/redirector/domains
+  urllist   blacklists/redirector/urls
+}
+
+# Sites with religious content: all kind of churches, sects, religious
+# interpretations and so on.
+dest religion {
+  domainlist  blacklists/religion/domains
+  urllist   blacklists/religion/urls
+}
+
+# Sites offering the service to remotely access computers, expecially (but not
+# limited to going) through firewalls. This includes using a third party
+# computer. Traditional VPN is not covered.
+dest remotecontrol {
+  domainlist  blacklists/remotecontrol/domains
+  urllist   blacklists/remotecontrol/urls
+}
+
+# Sites that offer the download of ringtones or present other informations
+# about ringtones.
+dest ringtones {
+  domainlist  blacklists/ringtones/domains
+  urllist   blacklists/ringtones/urls
+}
+
+# Sites of institutions as well as of amateurs about all topics of astronomy.
+dest science_astronomy {
+  domainlist  blacklists/science/astronomy/domains
+  urllist   blacklists/science/astronomy/urls
+}
+
+# Sites of institutions as well as of amateurs about all topics of chemistry.
+dest science_chemistry {
+  domainlist  blacklists/science/chemistry/domains
+  urllist   blacklists/science/chemistry/urls
+}
+
+# Collection of seach engines and directory sites.
+dest searchengines {
+  domainlist  blacklists/searchengines/domains
+  urllist   blacklists/searchengines/urls
+}
+
+# Sites explaining the biological functions of the body concerning sexuality
+# as well as sexual health; this, too, covers sites for teenagers with
+# questions about firstlove, first sex, and subjects related to this topics.
+# This category does not cover porn.
+dest sex_education {
+  domainlist  blacklists/sex/education/domains
+  urllist   blacklists/sex/education/urls
+}
+
+# Sites selling and presenting sexy lingerie or lingerie in a sexy manner.
+dest sex_lingerie {
+  domainlist  blacklists/sex/lingerie/domains
+  urllist   blacklists/sex/lingerie/urls
+}
+
+# Sites offering online shopping and price comparisons.
+dest shopping {
+  domainlist  blacklists/shopping/domains
+  urllist   blacklists/shopping/urls
+}
+
+# Sites bringing people together (social networking) be it for friendship
+# or for business.
+dest socialnet {
+  domainlist  blacklists/socialnet/domains
+  urllist   blacklists/socialnet/urls
+}
+
+# Sites that tries to actively try to install software (or lure the user
+# in doing so) in order to spy the surfig behaviour (or worse). This
+# category includes trojan and phishing sites. The homecalling site
+# where the collecting information is sent are listed, too.
+dest spyware {
+  domainlist  blacklists/spyware/domains
+  urllist   blacklists/spyware/urls
+}
+
+# Site keeping an eye on where you surf and what you do in a passive. Covers
+# web bugs, counters and other tracking mechanism in web pages that do not
+# interfere with the local computer yet collecting information about the
+# surfing person for later analysis. Sites actively spying out the surfer
+# by installing software or calling home sites are not covered with tracker
+# but with -&gt; spyware.
+dest trackers {
+  domainlist  blacklists/tracker/domains
+  urllist   blacklists/tracker/urls
+}
+
+# Kind of white list to allow necessary downloads from vendors. Thought as
+# a correction to the downloads category.
+dest updatesites {
+  domainlist  blacklists/updatesites/domains
+  urllist   blacklists/updatesites/urls
+}
+
+# Domains that can be used to shorten long URLs. The orginal (long) URL will
+# be accessed after the the short URL has been requested from the shortener.
+# This distinguishes this category from redirector where the orginal URL is
+# never accessed directly.
+dest urlshortener {
+  domainlist  blacklists/urlshortener/domains
+  urllist   blacklists/urlshortener/urls
+}
+
+# Sites about killing and harming people. Covers anything about brutality
+# and beastiality.
+dest violence {
+  domainlist  blacklists/violence/domains
+  urllist   blacklists/violence/urls
+}
+
+# Collection of sites offering programs to break licence keys, licence
+# keys themselves, cracked software and other copyrighted material.
+dest warez {
+  domainlist  blacklists/warez/domains
+  urllist   blacklists/warez/urls
+}
+
+# Sites offering all kinds of weapons or accessories for weapons: Firearms,
+# knifes, swords, bows,... . Armory shops are included as well as sites
+# holding general information about arms (manufacturing, usage).
+dest weapons {
+  domainlist  blacklists/weapons/domains
+  urllist   blacklists/weapons/urls
+}
+
+# Sites that offer web-based email services.
+dest webmail {
+  domainlist  blacklists/webmail/domains
+  urllist   blacklists/webmail/urls
+}
+
+# Sites that enable user to phone via Internet/WWW. Any site where users
+# can voice-chat with each other (normal chat sites, where users type their
+# messages are part of chat, not webphone).
+dest webphone {
+  domainlist  blacklists/webphone/domains
+  urllist   blacklists/webphone/urls
+}
+
+# Sites that offer listening to music and radiostreams.
+dest webradio {
+  domainlist  blacklists/webradio/domains
+  urllist   blacklists/webradio/urls
+}
+
+# Collection of site offering TV streams via world wide web.
+dest webtv {
+  domainlist  blacklists/webtv/domains
+  urllist   blacklists/webtv/urls
+}
+
+
+acl {
+  localnets within workhours {
+    pass whitelists_custom !adv !aggressive !alchohol !anonvpn !automobile_bikes !automobile_boats !automobile_cars !automobile_planes !chat !costtraps !dating !downloads !drugs !dynamic !fortunetelling !gamble !hobby_games-misc !hobby_games-online !hobby_gardening !hobby_pets !homestyle !hospitals !in-addr !imagehosting !isp !models !movies !music !podcasts !politics !porn !radiotv !recreation_humor !recreation_martialarts !recreation_restaurants !recreation_sports !recreation_travel !recreation_wellness !redirector !religion !remotecontrol !ringtones !sex_education !sex_lingerie !socialnet !spyware !trackers !violence !warez !weapons !webphone !webtv all
+    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
+  } else {
+    pass whitelists_custom !adv !costtraps !in-addr !redirector !ringtones !spyware !trackers all
+    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
+  }
+
+  default {
+    pass updatesites none
+    redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
+  }
+}
+</code></pre><h2 id=live-config-changes>Live Config Changes</h2><p>The squid command &ldquo;squid -k reconfigure&rdquo; DOES re-evaluate squidGuard config
 changes as well. This make it very easy to quickly adjust things all over the
-server without a significant service interruption.</p>
-<h2 id="testing-and-diagnostics">Testing and Diagnostics</h2>
-<p>So what I&rsquo;ve found in my experimentation is that if there is an issue with
+server without a significant service interruption.</p><h2 id=testing-and-diagnostics>Testing and Diagnostics</h2><p>So what I&rsquo;ve found in my experimentation is that if there is an issue with
 squidGuard starting up squid will still success and there will probably not be
 any errors anywhere, it will simply not block anything. This is obviously not
 an ideal situation. To test and make sure that your configuration is good (or
 possibly see the errors that may be preventing the filtering from working) run
-the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# squidGuard -c /etc/squid/squidGuard.conf -C all
-</span></span></code></pre></div><p>It will go through and build the database files for every category defined in
+the following command:</p><pre tabindex=0><code>[root@localhost ~]# squidGuard -c /etc/squid/squidGuard.conf -C all
+</code></pre><p>It will go through and build the database files for every category defined in
 the configuration then verify that everything is in order. If an error does
-occur you&rsquo;ll see the message:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>2011-09-20 12:15:50 [7140] Going into emergency mode
-</span></span></code></pre></div><p>Look on the line above it and it you&rsquo;ll have to figure out the issue based on
-that message.</p>
-<p>NOTE: After performing this command all of the database files will be owned by
-root! This won&rsquo;t work, fix the issue running the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# chown -R squid:squid /var/squidGuard/*
-</span></span></code></pre></div><p>Additional permission issues can (usually) be resolved with the following
-commands:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# chown -R root:squid /etc/squid
-</span></span><span style="display:flex;"><span>[root@localhost ~]# chmod 640 /etc/squid/*
-</span></span></code></pre></div><p>To test individual rules to make sure things are being redirected or blocked
-correctly you can test squidGuard with something along the following lines:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>[root@localhost ~]# su squid -s /bin/bash -
-</span></span><span style="display:flex;"><span>bash-4.2$ echo &#34;http://porn.com 10.0.0.1/ - - GET&#34; | squidGuard -d -c /etc/squid/squidGuard.conf
-</span></span></code></pre></div><p>It will either return nothing (passes the check) or return a URL to redirect
+occur you&rsquo;ll see the message:</p><pre tabindex=0><code>2011-09-20 12:15:50 [7140] Going into emergency mode
+</code></pre><p>Look on the line above it and it you&rsquo;ll have to figure out the issue based on
+that message.</p><p>NOTE: After performing this command all of the database files will be owned by
+root! This won&rsquo;t work, fix the issue running the following command:</p><pre tabindex=0><code>[root@localhost ~]# chown -R squid:squid /var/squidGuard/*
+</code></pre><p>Additional permission issues can (usually) be resolved with the following
+commands:</p><pre tabindex=0><code>[root@localhost ~]# chown -R root:squid /etc/squid
+[root@localhost ~]# chmod 640 /etc/squid/*
+</code></pre><p>To test individual rules to make sure things are being redirected or blocked
+correctly you can test squidGuard with something along the following lines:</p><pre tabindex=0><code>[root@localhost ~]# su squid -s /bin/bash -
+bash-4.2$ echo &#34;http://porn.com 10.0.0.1/ - - GET&#34; | squidGuard -d -c /etc/squid/squidGuard.conf
+</code></pre><p>It will either return nothing (passes the check) or return a URL to redirect
 the user too (failed the check). You can replace the 10.0.0.1 with an IP of a
-machine you&rsquo;d like to test the rules with.</p>
-<h2 id="security-notes">Security Notes</h2>
-<p>squidGuard is an additional layer of protection against known bad sites. It can
+machine you&rsquo;d like to test the rules with.</p><h2 id=security-notes>Security Notes</h2><p>squidGuard is an additional layer of protection against known bad sites. It can
 not possibly catch all of the bad sites but it does help. For any general
 browsing that you don&rsquo;t want to restrict the content of, I strongly suggest
 including the following groups as exclusions. They will help promote anonymous
-safe browsing.</p>
-<ul>
-<li>adv</li>
-<li>costtraps</li>
-<li>in-addr</li>
-<li>redirector</li>
-<li>ringtones</li>
-<li>spyware</li>
-<li>trackers</li>
-</ul>
-<p>The only one that may cause issues is the &ldquo;in-addr&rdquo; one which blocks going to
+safe browsing.</p><ul><li>adv</li><li>costtraps</li><li>in-addr</li><li>redirector</li><li>ringtones</li><li>spyware</li><li>trackers</li></ul><p>The only one that may cause issues is the &ldquo;in-addr&rdquo; one which blocks going to
 IP addresses directly. I personally get around this by including the sites I
-want to access directly in my whitelist file.</p>
-<h2 id="sample-error-page">Sample Error Page</h2>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-php" data-lang="php"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">&lt;?</span>php
-</span></span><span style="display:flex;"><span>  <span style="color:#ff7b72">function</span> <span style="color:#d2a8ff;font-weight:bold">uuid</span>() {
-</span></span><span style="display:flex;"><span>    <span style="color:#ff7b72">return</span> sprintf( <span style="color:#a5d6ff">&#39;%04x%04x-%04x-%04x-%04x-%04x%04x%04x&#39;</span>,
-</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// 32 bits for &#34;time_low&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0xffff</span> ), mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0xffff</span> ),
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// 16 bits for &#34;time_mid&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0xffff</span> ),
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// 16 bits for &#34;time_hi_and_version&#34;,
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#8b949e;font-style:italic">// four most significant bits holds version number 4
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0x0fff</span> ) <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#a5d6ff">0x4000</span>,
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// 16 bits, 8 bits for &#34;clk_seq_hi_res&#34;,
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#8b949e;font-style:italic">// 8 bits for &#34;clk_seq_low&#34;,
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      <span style="color:#8b949e;font-style:italic">// two most significant bits holds zero and one for variant DCE1.1
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0x3fff</span> ) <span style="color:#ff7b72;font-weight:bold">|</span> <span style="color:#a5d6ff">0x8000</span>,
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      <span style="color:#8b949e;font-style:italic">// 48 bits for &#34;node&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-style:italic"></span>      mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0xffff</span> ), mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0xffff</span> ), mt_rand( <span style="color:#a5d6ff">0</span>, <span style="color:#a5d6ff">0xffff</span> )
-</span></span><span style="display:flex;"><span>    );
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">?&gt;</span><span style="color:#f85149">
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">&lt;!DOCTYPE&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">&lt;html&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">  &lt;head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">    &lt;title&gt;This Site Has Been Blocked&lt;/title&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">    &lt;style type=&#34;text/css&#34;&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      @font-face {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-family: &#39;Tangerine&#39;;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        src: local(&#39;Tangerine&#39;), url(&#39;http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf&#39;) format(&#39;truetype&#39;);
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      body {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-family: serif;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        background: #FFF8DC;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      #page {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        border: 1px solid #CC9;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        border-top: 0px;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        position: relative;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        width: 960px;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin: auto;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        background: #FFF;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        height: 95%;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        box-shadow: 0 0 2em #CC9;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        overflow: hidden;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        border-bottom-left-radius: 1em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        border-bottom-right-radius: 1em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      #main {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        position: relative;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        overflow: hidden;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      #content {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        overflow: auto;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding: 1em 2em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        box-shadow: inset 0 0 0.5em #CC9;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        height: 100%;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      header {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        background: #CFC;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-family: &#39;Tangerine&#39;, serif;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-size: 2em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        max-height: 80px;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding-top: 0.25em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      header h1,h4 {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin-left: 1.0em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        display: inline-block;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        text-decoration: underline;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      footer {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        background: #CFC;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        border-bottom-left-radius: 1em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        border-bottom-right-radius: 1em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding: 0.3em 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-size: 0.7em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        position: absolute;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        width: 100%;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        bottom: 0px;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        text-align: center;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      nav p {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin-bottom: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      nav {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        background: #CFC;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding: 0 0 0 1em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-size: 0.8em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        width: 16%;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        height: 100%;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        float: left;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        box-shadow: 0 4px 6px 0 #CC9;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      nav ul {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        list-style: none;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding: 0;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      nav ul li {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        padding-left: 1em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      nav ul li a {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        color: #552;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        text-decoration: none;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      nav ul li a:hover {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        text-decoration: underline;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      table {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        margin: auto;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-size: 0.8em;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-family: sans-serif;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      th {
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        text-align: left;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        vertical-align: top;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        width: 100px;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        font-weight: normal;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      }
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">    &lt;/style&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">  &lt;/head&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">  &lt;body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">    &lt;div id=&#39;page&#39;&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      &lt;header&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        &lt;h1&gt;BedroomProgrammers.net&lt;/h1&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        &lt;h4&gt;Intricacy requires well rested minds&lt;/h4&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      &lt;/header&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      &lt;div id=&#34;main&#34;&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        &lt;nav&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;p&gt;Informative Links:&lt;/p&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;ul&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">            &lt;li&gt;- &lt;a href=&#34;#&#34;&gt;Acceptable Use Policy&lt;/a&gt;&lt;/li&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;/ul&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        &lt;/nav&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        &lt;div id=&#34;content&#34;&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;section&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">            &lt;h2&gt;This Page Has Been Blocked&lt;/h2&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">            &lt;p&gt;This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.&lt;/p&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">            &lt;p&gt;If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.&lt;/p&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">            &lt;p&gt;Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn&#39;t take holidays... neither does this system.&lt;/p&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;/section&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;hr /&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;section&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">            &lt;table&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;Timestamp&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo date(DATE_W3C); ?&gt;&lt;/td&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;Request ID&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo uuid(); ?&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;IP Address&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo $_GET[&#39;clientaddr&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;Hostname&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo $_GET[&#39;clientname&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;User&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo $_GET[&#39;clientuser&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;Client Group&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo $_GET[&#39;clientgroup&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;URL Group&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo $_GET[&#39;targetgroup&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;th&gt;Blacklisted URL&lt;/th&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">                &lt;td&gt;&lt;?php echo $_GET[&#39;url&#39;] . $_GET[&#39;uri&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">              &lt;/tr&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">            &lt;/table&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">          &lt;/section&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">        &lt;/div&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      &lt;/div&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">      &lt;footer&gt;&amp;copy 2011 Me!&lt;/footer&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">    &lt;/div&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">  &lt;/body&gt;
-</span></span></span><span style="display:flex;"><span><span style="color:#f85149">&lt;/html&gt;
-</span></span></span></code></pre></div>
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+want to access directly in my whitelist file.</p><h2 id=sample-error-page>Sample Error Page</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=display:flex><span><span style=color:#f92672>&lt;?</span><span style=color:#a6e22e>php</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>uuid</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>sprintf</span>( <span style=color:#e6db74>&#39;%04x%04x-%04x-%04x-%04x-%04x%04x%04x&#39;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 32 bits for &#34;time_low&#34;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ), <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 16 bits for &#34;time_mid&#34;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ),
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 16 bits for &#34;time_hi_and_version&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#75715e>// four most significant bits holds version number 4
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0x0fff</span> ) <span style=color:#f92672>|</span> <span style=color:#ae81ff>0x4000</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 16 bits, 8 bits for &#34;clk_seq_hi_res&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#75715e>// 8 bits for &#34;clk_seq_low&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#75715e>// two most significant bits holds zero and one for variant DCE1.1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0x3fff</span> ) <span style=color:#f92672>|</span> <span style=color:#ae81ff>0x8000</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 48 bits for &#34;node&#34;
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ), <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ), <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> )
+</span></span><span style=display:flex><span>    );
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span><span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>&lt;!DOCTYPE&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>&lt;html&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;head&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;title&gt;This Site Has Been Blocked&lt;/title&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;style type=&#34;text/css&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      @font-face {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: &#39;Tangerine&#39;;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        src: local(&#39;Tangerine&#39;), url(&#39;http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf&#39;) format(&#39;truetype&#39;);
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      body {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: serif;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #FFF8DC;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      #page {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border: 1px solid #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-top: 0px;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        position: relative;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 960px;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: auto;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #FFF;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        height: 95%;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        box-shadow: 0 0 2em #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        overflow: hidden;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-left-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-right-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      #main {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        position: relative;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        overflow: hidden;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      #content {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        overflow: auto;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 1em 2em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        box-shadow: inset 0 0 0.5em #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        height: 100%;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      header {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #CFC;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: &#39;Tangerine&#39;, serif;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 2em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        max-height: 80px;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding-top: 0.25em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      header h1,h4 {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin-left: 1.0em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        display: inline-block;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-decoration: underline;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      footer {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #CFC;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-left-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-right-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0.3em 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 0.7em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        position: absolute;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 100%;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        bottom: 0px;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-align: center;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav p {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin-bottom: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #CFC;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0 0 0 1em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 0.8em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 16%;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        height: 100%;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        float: left;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        box-shadow: 0 4px 6px 0 #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        list-style: none;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul li {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding-left: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul li a {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        color: #552;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-decoration: none;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul li a:hover {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-decoration: underline;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      table {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: auto;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 0.8em;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: sans-serif;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      th {
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-align: left;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        vertical-align: top;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 100px;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-weight: normal;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;/style&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;/head&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;body&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;div id=&#39;page&#39;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;header&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;h1&gt;BedroomProgrammers.net&lt;/h1&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;h4&gt;Intricacy requires well rested minds&lt;/h4&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;/header&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;div id=&#34;main&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;nav&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;p&gt;Informative Links:&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;ul&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;li&gt;- &lt;a href=&#34;#&#34;&gt;Acceptable Use Policy&lt;/a&gt;&lt;/li&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;/ul&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;/nav&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;div id=&#34;content&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;h2&gt;This Page Has Been Blocked&lt;/h2&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;p&gt;This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;p&gt;If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;p&gt;Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn&#39;t take holidays... neither does this system.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;/section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;hr /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;table&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Timestamp&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo date(DATE_W3C); ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Request ID&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo uuid(); ?&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;IP Address&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientaddr&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Hostname&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientname&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;User&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientuser&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Client Group&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientgroup&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;URL Group&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;targetgroup&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Blacklisted URL&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;url&#39;] . $_GET[&#39;uri&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;/table&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;/section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;footer&gt;&amp;copy 2011 Me!&lt;/footer&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;/body&gt;
+</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>&lt;/html&gt;
+</span></span></span></code></pre></div></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

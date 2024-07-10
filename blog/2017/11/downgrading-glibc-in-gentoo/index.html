@@ -1,218 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
-* Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2." />
-<meta name="keywords" content="blog, programming, linux, systems, personal, linux, gentoo, tips" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/" />
-
-
-    <title>
-        
-            Downgrading Glibc in Gentoo :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Downgrading Glibc in Gentoo">
-<meta itemprop="description" content="While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
-* Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2."><meta itemprop="datePublished" content="2017-11-15T12:27:45+00:00" />
-<meta itemprop="dateModified" content="2017-11-15T12:27:45+00:00" />
-<meta itemprop="wordCount" content="310">
-<meta itemprop="keywords" content="linux,gentoo,tips," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Downgrading Glibc in Gentoo"/>
-<meta name="twitter:description" content="While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
-* Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2."/>
-
-
-
-    <meta property="og:title" content="Downgrading Glibc in Gentoo" />
-<meta property="og:description" content="While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
-* Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/" /><meta property="article:section" content="blog" />
-<meta property="article:published_time" content="2017-11-15T12:27:45+00:00" />
-<meta property="article:modified_time" content="2017-11-15T12:27:45+00:00" />
-
-
-
-
-
-
-    <meta property="article:published_time" content="2017-11-15 12:27:45 &#43;0000 UTC" />
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/">Downgrading Glibc in Gentoo</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p>While refining some automated setup scripts at some point I upgraded to a
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
+* Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,linux,gentoo,tips"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/><title>Downgrading Glibc in Gentoo :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Downgrading Glibc in Gentoo"><meta itemprop=description content="While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
+* Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2."><meta itemprop=datePublished content="2017-11-15T12:27:45+00:00"><meta itemprop=dateModified content="2017-11-15T12:27:45+00:00"><meta itemprop=wordCount content="310"><meta itemprop=keywords content="Linux,Gentoo,Tips"><meta name=twitter:card content="summary"><meta name=twitter:title content="Downgrading Glibc in Gentoo"><meta name=twitter:description content="While refining some automated setup scripts at some point I upgraded to a testing/unstable version of glibc. When I attempted to get the box back on to the stable version I hit a solid protection mechanism built into the portage scripts that prevents downgrading glibc. Attempts will give you the following error message:
+* Sanity check to keep you from breaking your system: * Downgrading glibc is not supported and a sure way to destruction * ERROR: sys-libs/glibc-2."><meta property="article:published_time" content="2017-11-15 12:27:45 +0000 UTC"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2017/11/downgrading-glibc-in-gentoo/>Downgrading Glibc in Gentoo</a></h2><div class=post-content><p>While refining some automated setup scripts at some point I upgraded to a
 testing/unstable version of glibc. When I attempted to get the box back on to
 the stable version I hit a solid protection mechanism built into the portage
 scripts that prevents downgrading glibc. Attempts will give you the following
-error message:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> * Sanity check to keep you from breaking your system:
-</span></span><span style="display:flex;"><span> *  Downgrading glibc is not supported and a sure way to destruction
-</span></span><span style="display:flex;"><span> * ERROR: sys-libs/glibc-2.25-r9::gentoo failed (pretend phase):
-</span></span><span style="display:flex;"><span> *   aborting to save your system
-</span></span></code></pre></div><p>It is correct in that this is a very dangerous thing to do. For my use case
+error message:</p><pre tabindex=0><code> * Sanity check to keep you from breaking your system:
+ *  Downgrading glibc is not supported and a sure way to destruction
+ * ERROR: sys-libs/glibc-2.25-r9::gentoo failed (pretend phase):
+ *   aborting to save your system
+</code></pre><p>It is correct in that this is a very dangerous thing to do. For my use case
 this was a non-production system that I was using to test various
 configurations and hardening procedures so didn&rsquo;t particularly care if the
 packages all became corrupt. I was also confident that my method would be
-relatively safe (fully bootstrapping the system).</p>
-<p>To disable this check (you should seriously understand what you&rsquo;re doing and/or
+relatively safe (fully bootstrapping the system).</p><p>To disable this check (you should seriously understand what you&rsquo;re doing and/or
 not care about the system you perform this on if you continue) you need to edit
 the appropriate eclass file which exists at
 <code>/usr/portage/eclass/toolchain-glibc.eclass</code>. Locate the following line and
-disable it by prefixing it with a hash sign (#).</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>die &#34;aborting to save your system&#34;
-</span></span></code></pre></div><p>For the version I was editing it was line 507.</p>
-<p>To do this downgrade safely I performed the following steps (this will take a
-while as it fully boostraps your entire system):</p>
-<ul>
-<li>Review all use flags and accept keywords to ensure you&rsquo;ll be in the state you
-want to</li>
-<li>Sync the repository metadata (<code>emerge --sync</code>)</li>
-<li>Disable the glibc safety check documented above</li>
-<li>Run the following commands to re-bootstrap the system and undo the safety
-check modification by resyncing:</li>
-</ul>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>/usr/portage/scripts/bootstrap.sh
-</span></span><span style="display:flex;"><span>emerge --emptytree --with-bdeps=y @world
-</span></span><span style="display:flex;"><span>emerge --depclean
-</span></span><span style="display:flex;"><span>emerge --sync
-</span></span></code></pre></div><p>Reboot to ensure all running programs are on the correct versions and the
-system should be back in a happy state.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/gentoo/">gentoo</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/tips/">tips</a></span>
-        
-    </p>
-
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+disable it by prefixing it with a hash sign (#).</p><pre tabindex=0><code>die &#34;aborting to save your system&#34;
+</code></pre><p>For the version I was editing it was line 507.</p><p>To do this downgrade safely I performed the following steps (this will take a
+while as it fully boostraps your entire system):</p><ul><li>Review all use flags and accept keywords to ensure you&rsquo;ll be in the state you
+want to</li><li>Sync the repository metadata (<code>emerge --sync</code>)</li><li>Disable the glibc safety check documented above</li><li>Run the following commands to re-bootstrap the system and undo the safety
+check modification by resyncing:</li></ul><pre tabindex=0><code>/usr/portage/scripts/bootstrap.sh
+emerge --emptytree --with-bdeps=y @world
+emerge --depclean
+emerge --sync
+</code></pre><p>Reboot to ensure all running programs are on the correct versions and the
+system should be back in a happy state.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/gentoo/>gentoo</a></span>
+<span class=tag><a href=https://stelfox.net/tags/tips/>tips</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

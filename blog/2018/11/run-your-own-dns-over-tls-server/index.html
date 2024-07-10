@@ -1,444 +1,253 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing &amp;lsquo;free wifi&amp;rsquo; to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development." />
-<meta name="keywords" content="blog, programming, linux, systems, personal, linux, nginx, security" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/" />
-
-
-    <title>
-        
-            Run Your Own DNS-over-TLS Server :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Run Your Own DNS-over-TLS Server">
-<meta itemprop="description" content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing &lsquo;free wifi&rsquo; to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta itemprop="datePublished" content="2018-11-02T15:09:02-06:00" />
-<meta itemprop="dateModified" content="2018-11-02T15:09:02-06:00" />
-<meta itemprop="wordCount" content="1380">
-<meta itemprop="keywords" content="linux,nginx,security," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Run Your Own DNS-over-TLS Server"/>
-<meta name="twitter:description" content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing &lsquo;free wifi&rsquo; to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."/>
-
-
-
-    <meta property="og:title" content="Run Your Own DNS-over-TLS Server" />
-<meta property="og:description" content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing &lsquo;free wifi&rsquo; to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/" /><meta property="article:section" content="blog" />
-<meta property="article:published_time" content="2018-11-02T15:09:02-06:00" />
-<meta property="article:modified_time" content="2018-11-02T15:09:02-06:00" />
-
-
-
-
-
-
-    <meta property="article:published_time" content="2018-11-02 15:09:02 -0600 -0600" />
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/">Run Your Own DNS-over-TLS Server</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p>DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing &amp;lsquo;free wifi&amp;rsquo; to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,linux,nginx,security"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/><title>Run Your Own DNS-over-TLS Server :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Run Your Own DNS-over-TLS Server"><meta itemprop=description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing ‘free wifi’ to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta itemprop=datePublished content="2018-11-02T15:09:02-06:00"><meta itemprop=dateModified content="2018-11-02T15:09:02-06:00"><meta itemprop=wordCount content="1380"><meta itemprop=keywords content="Linux,Nginx,Security"><meta name=twitter:card content="summary"><meta name=twitter:title content="Run Your Own DNS-over-TLS Server"><meta name=twitter:description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing ‘free wifi’ to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta property="article:published_time" content="2018-11-02 15:09:02 -0600 -0600"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/>Run Your Own DNS-over-TLS Server</a></h2><div class=post-content><p>DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all
 of your DNS requests to a trusted server. In an age when airports, and coffee
 shops are outsourcing &lsquo;free wifi&rsquo; to corporate entities that are likely
 harvesting as much data as they can this is a nice addition. I largely use VPNs
 when connected to these access points which provides at least as good
 protection as DNS-over-TLS which has caused me to largely overlook this
-development.</p>
-<p>When I found out that Android 9 natively supports this through the &lsquo;Private
+development.</p><p>When I found out that Android 9 natively supports this through the &lsquo;Private
 DNS&rsquo; feature I got significantly more interested. I&rsquo;ve always wanted to dictate
 what DNS server my phone used, not for privacy reasons but rather to provide
 another layer of security when not connected to my VPN. When you&rsquo;re in control
 of your DNS server you can blacklist known malicious domains and as an added
-bonus the worst of the ad and tracking networks.</p>
-<p>Turns out DNS-over-TLS is incredibly simple. It makes no changes to normal DNS
+bonus the worst of the ad and tracking networks.</p><p>Turns out DNS-over-TLS is incredibly simple. It makes no changes to normal DNS
 packets, it just wraps the TCP queries in a TLS tunnel with a preconfigured
-server address for certificate validation.</p>
-<p>I use unbound for my DNS server of choice which natively supports exposing a
+server address for certificate validation.</p><p>I use unbound for my DNS server of choice which natively supports exposing a
 TLS protected port, but with a very limited config. My preferred choice of
 dealing with this is instead to use Nginx to proxy locally to unbound, allowing
 me to ensure the TLS config matches current best practices and limits access to
-the servers TLS private key to a single service.</p>
-<p>The downside of using Nginx is that you lose the ability to log which internet
+the servers TLS private key to a single service.</p><p>The downside of using Nginx is that you lose the ability to log which internet
 addresses are making requests (as the stream access_log directive doesn&rsquo;t seem
 to be working for the packaged Nginx server). Since this is an unauthenticated
 service I&rsquo;m slightly concerned about anonymous use and abuse but will address
-that if it ever becomes an issue.</p>
-<p>First off we need to ensure we have a working local resolver on our host. I&rsquo;ll
+that if it ever becomes an issue.</p><p>First off we need to ensure we have a working local resolver on our host. I&rsquo;ll
 use unbound here as its my preference but this will work just as well with Bind
 or any other DNS resolver that supports TCP queries. If you want to use another
-server, just skip past the unbound config to the Nginx section.</p>
-<h2 id="unbound">Unbound</h2>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>dnf install unbound -y
-</span></span></code></pre></div><p>I clear out some of the garbage default files that ship with the package, and
-perform the automated control key creation:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>rm -f /etc/unbound/{conf.d,keys.d,local.d}/*
-</span></span><span style="display:flex;"><span>unbound-control-setup
-</span></span></code></pre></div><p>I then drop in my config to <code>/etc/unbound/unbound.conf</code>. I&rsquo;ve included comments
-in the config around options that aren&rsquo;t immediately obvious from their names.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span># /etc/unbound/unbound.conf
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>server:
-</span></span><span style="display:flex;"><span>  verbosity: 1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  interface-automatic: no
-</span></span><span style="display:flex;"><span>  num-threads: 4
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Disable statistics collection
-</span></span><span style="display:flex;"><span>  statistics-interval: 0
-</span></span><span style="display:flex;"><span>  statistics-cumulative: no
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Reserve this many ports per-thread to prevent conflicts
-</span></span><span style="display:flex;"><span>  outgoing-range: 4096
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Restrict the ports being used to match a tighter SELinux policy
-</span></span><span style="display:flex;"><span>  outgoing-port-avoid: 0-32767
-</span></span><span style="display:flex;"><span>  outgoing-port-permit: 32768-60999
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Per-thread limits for active TCP connections
-</span></span><span style="display:flex;"><span>  outgoing-num-tcp: 100
-</span></span><span style="display:flex;"><span>  incoming-num-tcp: 100
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Bind to port with SO_REUSEPORT so queries can be distributed over threads
-</span></span><span style="display:flex;"><span>  so-reuseport: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Maximum UDP response size, this can prevent some fragmentation issues
-</span></span><span style="display:flex;"><span>  max-udp-size: 3072
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # For our TCP clients, allow us to still use UDP to make upstream requests.
-</span></span><span style="display:flex;"><span>  # All of the TLS requests will come in over TLS even if they&#39;d happily be
-</span></span><span style="display:flex;"><span>  # served in a single UDP packet.
-</span></span><span style="display:flex;"><span>  udp-upstream-without-downstream: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  access-control: 127.0.0.1 allow
-</span></span><span style="display:flex;"><span>  access-control: ::1 allow
-</span></span><span style="display:flex;"><span>  access-control: 0.0.0.0/0 deny
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  chroot: &#34;&#34;
-</span></span><span style="display:flex;"><span>  directory: &#34;/etc/unbound&#34;
-</span></span><span style="display:flex;"><span>  username: &#34;unbound&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  use-syslog: yes
-</span></span><span style="display:flex;"><span>  log-time-ascii: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  pidfile: &#34;/var/run/unbound/unbound.pid&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  hide-identity: yes
-</span></span><span style="display:flex;"><span>  hide-version: yes
-</span></span><span style="display:flex;"><span>  hide-trustanchor: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Perform various hardening on queries
-</span></span><span style="display:flex;"><span>  harden-short-bufsize: yes
-</span></span><span style="display:flex;"><span>  harden-large-queries: yes
-</span></span><span style="display:flex;"><span>  harden-glue: yes
-</span></span><span style="display:flex;"><span>  harden-dnssec-stripped: yes
-</span></span><span style="display:flex;"><span>  harden-below-nxdomain: yes
-</span></span><span style="display:flex;"><span>  harden-referral-path: yes
-</span></span><span style="display:flex;"><span>  harden-algo-downgrade: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Perform some upstream privacy protection (and in some cases performance
-</span></span><span style="display:flex;"><span>  # improvements) on our queries
-</span></span><span style="display:flex;"><span>  qname-minimisation: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Aggressive NSEC uses the DNSSEC NSEC chain to synthesize NXDOMAIN and other
-</span></span><span style="display:flex;"><span>  # denials, using information from previous NXDOMAINs answers.
-</span></span><span style="display:flex;"><span>  aggressive-nsec: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Use 0x20-encoded random bits in the query to foil spoof attempts. This
-</span></span><span style="display:flex;"><span>  # feature is an experimental implementation of draft dns-0x20.
-</span></span><span style="display:flex;"><span>  use-caps-for-id: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Enforce privacy of these addresses. Strips them away from answers to
-</span></span><span style="display:flex;"><span>  # protect against potential rebind attacks at the expense of potential DNSSEC
-</span></span><span style="display:flex;"><span>  # validation failures. Since we&#39;re directly serving clients this shouldn&#39;t be
-</span></span><span style="display:flex;"><span>  # an issue.
-</span></span><span style="display:flex;"><span>  private-address: 10.0.0.0/8
-</span></span><span style="display:flex;"><span>  private-address: 172.16.0.0/12
-</span></span><span style="display:flex;"><span>  private-address: 192.168.0.0/16
-</span></span><span style="display:flex;"><span>  private-address: 169.254.0.0/16
-</span></span><span style="display:flex;"><span>  private-address: fd00::/8
-</span></span><span style="display:flex;"><span>  private-address: fe80::/10
-</span></span><span style="display:flex;"><span>  private-address: ::ffff:0:0/96
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # In the event this server gets unwanted replies, it will clear the cache as
-</span></span><span style="display:flex;"><span>  # a safety measure to flush potential poisonings out of it
-</span></span><span style="display:flex;"><span>  unwanted-reply-threshold: 10000
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Don&#39;t allow this server to... query this server...
-</span></span><span style="display:flex;"><span>  do-not-query-localhost: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Don&#39;t prefetch cache entries that are about to expire
-</span></span><span style="display:flex;"><span>  prefetch: no
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Round-robin returned RRSET queries
-</span></span><span style="display:flex;"><span>  rrset-roundrobin: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  minimal-responses: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  module-config: &#34;validator iterator&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Perform tests automatically to make sure this resolver is ready for root
-</span></span><span style="display:flex;"><span>  # key rollovers
-</span></span><span style="display:flex;"><span>  root-key-sentinel: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  val-clean-additional: yes
-</span></span><span style="display:flex;"><span>  val-log-level: 2
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Serve expired responses from cache, with TTL 0 in the response,
-</span></span><span style="display:flex;"><span>  # and then attempt to fetch the data afresh.
-</span></span><span style="display:flex;"><span>  serve-expired: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Enable pulling updated anchor trusts automatically
-</span></span><span style="display:flex;"><span>  auto-trust-anchor-file: &#34;/var/lib/unbound/root.key&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Trust anchor signaling sends a RFC8145 key tag query after priming.
-</span></span><span style="display:flex;"><span>  trust-anchor-signaling: yes
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # Instruct the auto-trust-anchor-file probing to avoid changes to anchors
-</span></span><span style="display:flex;"><span>  # using 30 days hold down
-</span></span><span style="display:flex;"><span>  add-holddown: 2592000
-</span></span><span style="display:flex;"><span>  del-holddown: 2592000
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>remote-control:
-</span></span><span style="display:flex;"><span>  control-enable: yes
-</span></span><span style="display:flex;"><span>  control-interface: ::1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  server-key-file: &#34;/etc/unbound/unbound_server.key&#34;
-</span></span><span style="display:flex;"><span>  server-cert-file: &#34;/etc/unbound/unbound_server.pem&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  control-key-file: &#34;/etc/unbound/unbound_control.key&#34;
-</span></span><span style="display:flex;"><span>  control-cert-file: &#34;/etc/unbound/unbound_control.pem&#34;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>auth-zone:
-</span></span><span style="display:flex;"><span>  name: &#34;.&#34;
-</span></span><span style="display:flex;"><span>  for-downstream: no
-</span></span><span style="display:flex;"><span>  for-upstream: yes
-</span></span><span style="display:flex;"><span>  fallback-enabled: yes
-</span></span><span style="display:flex;"><span>  master: b.root-servers.net
-</span></span><span style="display:flex;"><span>  master: c.root-servers.net
-</span></span><span style="display:flex;"><span>  master: e.root-servers.net
-</span></span><span style="display:flex;"><span>  master: f.root-servers.net
-</span></span><span style="display:flex;"><span>  master: g.root-servers.net
-</span></span><span style="display:flex;"><span>  master: k.root-servers.net
-</span></span></code></pre></div><p>I always need to stress changes like these should be understood before being
-blindly used. Make sure you start and enable the service:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl start unbound.service
-</span></span><span style="display:flex;"><span>systemctl enable unbound.service
-</span></span></code></pre></div><p>Perform various queries against the service to ensure it&rsquo;s working as intended:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>dig +tcp google.com @::1
-</span></span><span style="display:flex;"><span>dig +tcp reddit.com @::1
-</span></span><span style="display:flex;"><span>dig +tcp stelfox.net @::1
-</span></span></code></pre></div><p>If you get reasonable responses from those queries then we have a working
-resolver. The next step is to add our TLS layer with Nginx.</p>
-<h2 id="nginx">Nginx</h2>
-<p>With a resolver setup the next bit is to setup Nginx to proxy requests to the
+server, just skip past the unbound config to the Nginx section.</p><h2 id=unbound>Unbound</h2><pre tabindex=0><code>dnf install unbound -y
+</code></pre><p>I clear out some of the garbage default files that ship with the package, and
+perform the automated control key creation:</p><pre tabindex=0><code>rm -f /etc/unbound/{conf.d,keys.d,local.d}/*
+unbound-control-setup
+</code></pre><p>I then drop in my config to <code>/etc/unbound/unbound.conf</code>. I&rsquo;ve included comments
+in the config around options that aren&rsquo;t immediately obvious from their names.</p><pre tabindex=0><code># /etc/unbound/unbound.conf
+
+server:
+  verbosity: 1
+
+  interface-automatic: no
+  num-threads: 4
+
+  # Disable statistics collection
+  statistics-interval: 0
+  statistics-cumulative: no
+
+  # Reserve this many ports per-thread to prevent conflicts
+  outgoing-range: 4096
+
+  # Restrict the ports being used to match a tighter SELinux policy
+  outgoing-port-avoid: 0-32767
+  outgoing-port-permit: 32768-60999
+
+  # Per-thread limits for active TCP connections
+  outgoing-num-tcp: 100
+  incoming-num-tcp: 100
+
+  # Bind to port with SO_REUSEPORT so queries can be distributed over threads
+  so-reuseport: yes
+
+  # Maximum UDP response size, this can prevent some fragmentation issues
+  max-udp-size: 3072
+
+  # For our TCP clients, allow us to still use UDP to make upstream requests.
+  # All of the TLS requests will come in over TLS even if they&#39;d happily be
+  # served in a single UDP packet.
+  udp-upstream-without-downstream: yes
+
+  access-control: 127.0.0.1 allow
+  access-control: ::1 allow
+  access-control: 0.0.0.0/0 deny
+
+  chroot: &#34;&#34;
+  directory: &#34;/etc/unbound&#34;
+  username: &#34;unbound&#34;
+
+  use-syslog: yes
+  log-time-ascii: yes
+
+  pidfile: &#34;/var/run/unbound/unbound.pid&#34;
+
+  hide-identity: yes
+  hide-version: yes
+  hide-trustanchor: yes
+
+  # Perform various hardening on queries
+  harden-short-bufsize: yes
+  harden-large-queries: yes
+  harden-glue: yes
+  harden-dnssec-stripped: yes
+  harden-below-nxdomain: yes
+  harden-referral-path: yes
+  harden-algo-downgrade: yes
+
+  # Perform some upstream privacy protection (and in some cases performance
+  # improvements) on our queries
+  qname-minimisation: yes
+
+  # Aggressive NSEC uses the DNSSEC NSEC chain to synthesize NXDOMAIN and other
+  # denials, using information from previous NXDOMAINs answers.
+  aggressive-nsec: yes
+
+  # Use 0x20-encoded random bits in the query to foil spoof attempts. This
+  # feature is an experimental implementation of draft dns-0x20.
+  use-caps-for-id: yes
+
+  # Enforce privacy of these addresses. Strips them away from answers to
+  # protect against potential rebind attacks at the expense of potential DNSSEC
+  # validation failures. Since we&#39;re directly serving clients this shouldn&#39;t be
+  # an issue.
+  private-address: 10.0.0.0/8
+  private-address: 172.16.0.0/12
+  private-address: 192.168.0.0/16
+  private-address: 169.254.0.0/16
+  private-address: fd00::/8
+  private-address: fe80::/10
+  private-address: ::ffff:0:0/96
+
+  # In the event this server gets unwanted replies, it will clear the cache as
+  # a safety measure to flush potential poisonings out of it
+  unwanted-reply-threshold: 10000
+
+  # Don&#39;t allow this server to... query this server...
+  do-not-query-localhost: yes
+
+  # Don&#39;t prefetch cache entries that are about to expire
+  prefetch: no
+
+  # Round-robin returned RRSET queries
+  rrset-roundrobin: yes
+
+  minimal-responses: yes
+
+  module-config: &#34;validator iterator&#34;
+
+  # Perform tests automatically to make sure this resolver is ready for root
+  # key rollovers
+  root-key-sentinel: yes
+
+  val-clean-additional: yes
+  val-log-level: 2
+
+  # Serve expired responses from cache, with TTL 0 in the response,
+  # and then attempt to fetch the data afresh.
+  serve-expired: yes
+
+  # Enable pulling updated anchor trusts automatically
+  auto-trust-anchor-file: &#34;/var/lib/unbound/root.key&#34;
+
+  # Trust anchor signaling sends a RFC8145 key tag query after priming.
+  trust-anchor-signaling: yes
+
+  # Instruct the auto-trust-anchor-file probing to avoid changes to anchors
+  # using 30 days hold down
+  add-holddown: 2592000
+  del-holddown: 2592000
+
+remote-control:
+  control-enable: yes
+  control-interface: ::1
+
+  server-key-file: &#34;/etc/unbound/unbound_server.key&#34;
+  server-cert-file: &#34;/etc/unbound/unbound_server.pem&#34;
+
+  control-key-file: &#34;/etc/unbound/unbound_control.key&#34;
+  control-cert-file: &#34;/etc/unbound/unbound_control.pem&#34;
+
+auth-zone:
+  name: &#34;.&#34;
+  for-downstream: no
+  for-upstream: yes
+  fallback-enabled: yes
+  master: b.root-servers.net
+  master: c.root-servers.net
+  master: e.root-servers.net
+  master: f.root-servers.net
+  master: g.root-servers.net
+  master: k.root-servers.net
+</code></pre><p>I always need to stress changes like these should be understood before being
+blindly used. Make sure you start and enable the service:</p><pre tabindex=0><code>systemctl start unbound.service
+systemctl enable unbound.service
+</code></pre><p>Perform various queries against the service to ensure it&rsquo;s working as intended:</p><pre tabindex=0><code>dig +tcp google.com @::1
+dig +tcp reddit.com @::1
+dig +tcp stelfox.net @::1
+</code></pre><p>If you get reasonable responses from those queries then we have a working
+resolver. The next step is to add our TLS layer with Nginx.</p><h2 id=nginx>Nginx</h2><p>With a resolver setup the next bit is to setup Nginx to proxy requests to the
 resolver. You need to have a trusted TLS certificate and key for your server&rsquo;s
 domain name. Let&rsquo;s Encrypt works great for this and I use both an ECDSA
 cert/key pair and an RSA cert/key pair but you can use one or the other if that
 is your preference. I&rsquo;ll cover requesting these certificates in a future post,
-in the mean time there are plenty of existing Let&rsquo;s Encrypt tutorials.</p>
-<p>This can be a bit tricky as anyone reading this might have an Nginx config in
+in the mean time there are plenty of existing Let&rsquo;s Encrypt tutorials.</p><p>This can be a bit tricky as anyone reading this might have an Nginx config in
 place already. It&rsquo;ll be up to you to merge this config with yours. To assist
 with this merging I&rsquo;ve kept the Nginx config as minimal while still being
 completely functional as possible and avoided using includes to increase the
-clarity of the config.</p>
-<p>On Fedora 28 you&rsquo;ll need both the <code>nginx</code> and the <code>nginx-mod-stream</code> package.
+clarity of the config.</p><p>On Fedora 28 you&rsquo;ll need both the <code>nginx</code> and the <code>nginx-mod-stream</code> package.
 After installing them both you&rsquo;ll want to place the following config to
-<code>/etc/nginx/nginx.conf</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-v" data-lang="v"><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">etc</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span>.<span style="color:#79c0ff">conf</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">error_log</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">var</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">log</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#ff7b72">error</span>.<span style="color:#79c0ff">log</span> <span style="color:#79c0ff">warn</span>;
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">user</span> <span style="color:#79c0ff">nginx</span>;
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">worker_processes</span> <span style="color:#79c0ff">auto</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">events</span> {
-</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff">worker_connections</span> <span style="color:#a5d6ff">1024</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">Needs</span> <span style="color:#79c0ff">to</span> <span style="color:#79c0ff">be</span> <span style="color:#79c0ff">loaded</span> <span style="color:#79c0ff">before</span> <span style="color:#79c0ff">the</span> <span style="color:#79c0ff">http</span> <span style="color:#ff7b72">or</span> <span style="color:#79c0ff">stream</span> <span style="color:#79c0ff">blocks</span> <span style="color:#79c0ff">are</span> <span style="color:#79c0ff">used</span>
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">load_module</span> <span style="color:#a5d6ff">&#34;/usr/lib64/nginx/modules/ngx_stream_module.so&#34;</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span> <span style="color:#f0883e;font-weight:bold">This</span> <span style="color:#ff7b72">is</span> <span style="color:#79c0ff">where</span> <span style="color:#79c0ff">your</span> <span style="color:#79c0ff">normal</span> <span style="color:#79c0ff">http</span> <span style="color:#79c0ff">block</span> <span style="color:#79c0ff">would</span> <span style="color:#79c0ff">live</span>
-</span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#http {</span>
-</span></span><span style="display:flex;"><span><span style="color:#ff7b72;font-weight:bold">#</span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#79c0ff">stream</span> {
-</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff">upstream</span> <span style="color:#79c0ff">dns_tcp_servers</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">server</span> [::<span style="color:#a5d6ff">1</span>]:<span style="color:#a5d6ff">53</span>;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#79c0ff">server</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">listen</span> <span style="color:#a5d6ff">853</span> <span style="color:#79c0ff">ssl</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">proxy_pass</span> <span style="color:#79c0ff">dns_tcp_servers</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_certificate</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">etc</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span>.<span style="color:#79c0ff">ec</span>.<span style="color:#79c0ff">crt</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_certificate_key</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">etc</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span>.<span style="color:#79c0ff">ec</span>.<span style="color:#79c0ff">key</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_certificate</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">etc</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span>.<span style="color:#79c0ff">rsa</span>.<span style="color:#79c0ff">crt</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_certificate_key</span> <span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">etc</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span><span style="color:#ff7b72;font-weight:bold">/</span><span style="color:#79c0ff">nginx</span>.<span style="color:#79c0ff">rsa</span>.<span style="color:#79c0ff">key</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_handshake_timeout</span> <span style="color:#a5d6ff">30</span><span style="color:#79c0ff">s</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_session_cache</span> <span style="color:#ff7b72">shared</span>:<span style="color:#f0883e;font-weight:bold">DNSTCP</span>:<span style="color:#a5d6ff">50</span><span style="color:#79c0ff">m</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_session_tickets</span> <span style="color:#79c0ff">off</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_session_timeout</span> <span style="color:#a5d6ff">1</span><span style="color:#79c0ff">h</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_protocols</span> <span style="color:#f0883e;font-weight:bold">TLSv1</span><span style="color:#a5d6ff">.2</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_ciphers</span> <span style="color:#a5d6ff">&#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256&#39;</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#79c0ff">ssl_prefer_server_ciphers</span> <span style="color:#79c0ff">on</span>;
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The SSL configuration is largely what Mozilla currently recommends for a
+<code>/etc/nginx/nginx.conf</code>.</p><pre tabindex=0><code># /etc/nginx/nginx.conf
+
+error_log /var/log/nginx/error.log warn;
+user nginx;
+worker_processes auto;
+
+events {
+  worker_connections 1024;
+}
+
+# Needs to be loaded before the http or stream blocks are used
+load_module &#34;/usr/lib64/nginx/modules/ngx_stream_module.so&#34;;
+
+# This is where your normal http block would live
+#http {
+#}
+
+stream {
+  upstream dns_tcp_servers {
+    server [::1]:53;
+  }
+
+  server {
+    listen 853 ssl;
+    proxy_pass dns_tcp_servers;
+
+    ssl_certificate /etc/nginx/nginx.ec.crt;
+    ssl_certificate_key /etc/nginx/nginx.ec.key;
+
+    ssl_certificate /etc/nginx/nginx.rsa.crt;
+    ssl_certificate_key /etc/nginx/nginx.rsa.key;
+
+    ssl_handshake_timeout 30s;
+    ssl_session_cache shared:DNSTCP:50m;
+    ssl_session_tickets off;
+    ssl_session_timeout 1h;
+
+    ssl_protocols TLSv1.2;
+    ssl_ciphers &#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256&#39;;
+    ssl_prefer_server_ciphers on;
+  }
+}
+</code></pre><p>The SSL configuration is largely what Mozilla currently recommends for a
 &lsquo;Modern&rsquo; config. Any client that supports DNS-over-TLS is new enough that
 they&rsquo;ll have access to modern queries. You&rsquo;ll need to put your key and
-certificates in the appropriate locations for that config.</p>
-<p>With that in place start up the server:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl start nginx.service
-</span></span><span style="display:flex;"><span>systemctl enable nginx.service
-</span></span></code></pre></div><p>You&rsquo;ll need to allow <code>953/tcp</code> through your firewall and will likely need to
-make changes to your SELinux policy to allow Nginx to listen on that port.</p>
-<p>I haven&rsquo;t found a good way to directly test the resolver using command line
+certificates in the appropriate locations for that config.</p><p>With that in place start up the server:</p><pre tabindex=0><code>systemctl start nginx.service
+systemctl enable nginx.service
+</code></pre><p>You&rsquo;ll need to allow <code>953/tcp</code> through your firewall and will likely need to
+make changes to your SELinux policy to allow Nginx to listen on that port.</p><p>I haven&rsquo;t found a good way to directly test the resolver using command line
 clients but by configuring my Android phone towards my server and temporarily
 adding the following to my unbound server config I can that queries being made
-and responded to appropriately:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>log-queries: yes
-</span></span><span style="display:flex;"><span>log-replies: yes
-</span></span></code></pre></div><p>The next steps are on you. Configure unbound with your domain blacklists of
+and responded to appropriately:</p><pre tabindex=0><code>log-queries: yes
+log-replies: yes
+</code></pre><p>The next steps are on you. Configure unbound with your domain blacklists of
 choice and voila additional privacy and security for those times when VPNs are
-to power hungry.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/nginx/">nginx</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/security/">security</a></span>
-        
-    </p>
-
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+to power hungry.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/nginx/>nginx</a></span>
+<span class=tag><a href=https://stelfox.net/tags/security/>security</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

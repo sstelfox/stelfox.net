@@ -1,225 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&amp;rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
-I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only." />
-<meta name="keywords" content="blog, programming, linux, systems, personal, gentoo, linux, tips" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/blog/2017/11/gentoo-fstab-failure/" />
-
-
-    <title>
-        
-            Gentoo Fstab Failure :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Gentoo Fstab Failure">
-<meta itemprop="description" content="I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
-I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only."><meta itemprop="datePublished" content="2017-11-01T11:12:34-04:00" />
-<meta itemprop="dateModified" content="2017-11-01T11:12:34-04:00" />
-<meta itemprop="wordCount" content="446">
-<meta itemprop="keywords" content="gentoo,linux,tips," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Gentoo Fstab Failure"/>
-<meta name="twitter:description" content="I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
-I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only."/>
-
-
-
-    <meta property="og:title" content="Gentoo Fstab Failure" />
-<meta property="og:description" content="I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
-I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/blog/2017/11/gentoo-fstab-failure/" /><meta property="article:section" content="blog" />
-<meta property="article:published_time" content="2017-11-01T11:12:34-04:00" />
-<meta property="article:modified_time" content="2017-11-01T11:12:34-04:00" />
-
-
-
-
-
-
-    <meta property="article:published_time" content="2017-11-01 11:12:34 -0400 EDT" />
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/blog/2017/11/gentoo-fstab-failure/">Gentoo Fstab Failure</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p>I use Gentoo with OpenRC quite a bit both for my personal servers and as a
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I&amp;rsquo;ve been using for quite some time that handle setting up a hardened, fairly minimal install.
+I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,gentoo,linux,tips"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2017/11/gentoo-fstab-failure/><title>Gentoo Fstab Failure :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Gentoo Fstab Failure"><meta itemprop=description content="I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I’ve been using for quite some time that handle setting up a hardened, fairly minimal install.
+I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only."><meta itemprop=datePublished content="2017-11-01T11:12:34-04:00"><meta itemprop=dateModified content="2017-11-01T11:12:34-04:00"><meta itemprop=wordCount content="446"><meta itemprop=keywords content="Gentoo,Linux,Tips"><meta name=twitter:card content="summary"><meta name=twitter:title content="Gentoo Fstab Failure"><meta name=twitter:description content="I use Gentoo with OpenRC quite a bit both for my personal servers and as a compilation test bed for new software since I can control the dependency versions very tightly. I have a set of scripts I’ve been using for quite some time that handle setting up a hardened, fairly minimal install.
+I recently encountered a weird issue with them that resulted in an esoteric error that prevented my host from fully booting and leaving the root filesystem read-only."><meta property="article:published_time" content="2017-11-01 11:12:34 -0400 EDT"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2017/11/gentoo-fstab-failure/>Gentoo Fstab Failure</a></h2><div class=post-content><p>I use Gentoo with OpenRC quite a bit both for my personal servers and as a
 compilation test bed for new software since I can control the dependency
-versions very tightly.  I have a set of scripts I&rsquo;ve been using for quite some
-time that handle setting up a hardened, fairly minimal install.</p>
-<p>I recently encountered a weird issue with them that resulted in an esoteric
+versions very tightly. I have a set of scripts I&rsquo;ve been using for quite some
+time that handle setting up a hardened, fairly minimal install.</p><p>I recently encountered a weird issue with them that resulted in an esoteric
 error that prevented my host from fully booting and leaving the root filesystem
 read-only. There also didn&rsquo;t seem to be much reliable information on the
-problem so I&rsquo;m documenting it here in hopes it may help someone else.</p>
-<p>In addition to the read-only filesystem, none of the system services would
+problem so I&rsquo;m documenting it here in hopes it may help someone else.</p><p>In addition to the read-only filesystem, none of the system services would
 start up leaving me with the kernel&rsquo;s default hostname of <code>(none)</code>. This
 includes networking so I had to diagnose this directly via the console. I was
 able to login as a user but unable to use <code>sudo</code> to switch to a new user
-(though I could still use it to execute commands with elevated privileges).</p>
-<p>I was able to verify all the OpenRC services had not started with by executing:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo rc-status
-</span></span></code></pre></div><p>I attempted to start the SSH daemon (though any networked service should behave
-the same) using the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo service sshd start
-</span></span></code></pre></div><p>This was the first time any error had directly presented itself to my screen
+(though I could still use it to execute commands with elevated privileges).</p><p>I was able to verify all the OpenRC services had not started with by executing:</p><pre tabindex=0><code>sudo rc-status
+</code></pre><p>I attempted to start the SSH daemon (though any networked service should behave
+the same) using the following command:</p><pre tabindex=0><code>sudo service sshd start
+</code></pre><p>This was the first time any error had directly presented itself to my screen
 (and since my filesystems were read-only, and my logger was stopped I had no on
 disk logs to go off from). The error that was repeated over my screen was the
-following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span> * Checking local filesystems  .../sbin/fsck.xfs: XFS file system.
-</span></span><span style="display:flex;"><span>fsck.fat 4.0 (2016-05-06)
-</span></span><span style="display:flex;"><span>open: No such file or directory
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span> * Filesystems couldn&#39;t be fixed
-</span></span><span style="display:flex;"><span>                                         [ !! ]
-</span></span><span style="display:flex;"><span> * ERROR: fsck failed to start
-</span></span><span style="display:flex;"><span> * ERROR: cannot start root as fsck would not start
-</span></span></code></pre></div><p>This was quite confusing and more than a little concerning as XFS doesn&rsquo;t use
+following:</p><pre tabindex=0><code> * Checking local filesystems  .../sbin/fsck.xfs: XFS file system.
+fsck.fat 4.0 (2016-05-06)
+open: No such file or directory
+
+ * Filesystems couldn&#39;t be fixed
+                                         [ !! ]
+ * ERROR: fsck failed to start
+ * ERROR: cannot start root as fsck would not start
+</code></pre><p>This was quite confusing and more than a little concerning as XFS doesn&rsquo;t use
 <code>fsck</code>, instead it uses <code>xfs_repair</code>. There was also the &ldquo;No such file or
-directory&rdquo; error which also didn&rsquo;t seem to make sense.</p>
-<p>Ultimately, after reviewing the <code>fsck</code> init script I found the culprit. There
+directory&rdquo; error which also didn&rsquo;t seem to make sense.</p><p>Ultimately, after reviewing the <code>fsck</code> init script I found the culprit. There
 was a bad line in my <code>/etc/fstab</code> file pointing at a device that didn&rsquo;t exist.
 I was able to remount my root filesystem read-write and edit my fstab to fix
-the device name in my fstab file:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>sudo mount -o remount,rw /
-</span></span><span style="display:flex;"><span>sudoedit /etc/fstab
-</span></span></code></pre></div><p>Tracing things back, this was ultimately caused by the Gentoo installation
+the device name in my fstab file:</p><pre tabindex=0><code>sudo mount -o remount,rw /
+sudoedit /etc/fstab
+</code></pre><p>Tracing things back, this was ultimately caused by the Gentoo installation
 medium detecting it&rsquo;s only disk as <code>/dev/sda</code> while the kernel I use exposed it
 as <code>/dev/vda</code>. Since I was already using a GPT filesystem I was able to adjust
 my scripts so they reference this particular partition by UUID instead of
-directly by device name.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="https://stelfox.net/tags/gentoo/">gentoo</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/tips/">tips</a></span>
-        
-    </p>
-
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+directly by device name.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/gentoo/>gentoo</a></span>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/tips/>tips</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

@@ -1,201 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
-I was specifically trying to bootstrap an OpenLDAP server, with it&amp;rsquo;s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior." />
-<meta name="keywords" content="blog, programming, linux, systems, personal, openldap, linux, tips" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/" />
-
-
-    <title>
-        
-            Including LDIF Files in OpenLDAP :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Including LDIF Files in OpenLDAP">
-<meta itemprop="description" content="While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
-I was specifically trying to bootstrap an OpenLDAP server, with it&rsquo;s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior."><meta itemprop="datePublished" content="2018-03-24T20:20:22-06:00" />
-<meta itemprop="dateModified" content="2018-03-24T20:20:22-06:00" />
-<meta itemprop="wordCount" content="208">
-<meta itemprop="keywords" content="openldap,linux,tips," />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Including LDIF Files in OpenLDAP"/>
-<meta name="twitter:description" content="While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
-I was specifically trying to bootstrap an OpenLDAP server, with it&rsquo;s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior."/>
-
-
-
-    <meta property="og:title" content="Including LDIF Files in OpenLDAP" />
-<meta property="og:description" content="While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
-I was specifically trying to bootstrap an OpenLDAP server, with it&rsquo;s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/" /><meta property="article:section" content="blog" />
-<meta property="article:published_time" content="2018-03-24T20:20:22-06:00" />
-<meta property="article:modified_time" content="2018-03-24T20:20:22-06:00" />
-
-
-
-
-
-
-    <meta property="article:published_time" content="2018-03-24 20:20:22 -0600 -0600" />
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/">Including LDIF Files in OpenLDAP</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p>While setting up and OpenLDAP server I found my distribution shipped with a
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
+I was specifically trying to bootstrap an OpenLDAP server, with it&amp;rsquo;s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,openldap,linux,tips"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/><title>Including LDIF Files in OpenLDAP :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Including LDIF Files in OpenLDAP"><meta itemprop=description content="While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
+I was specifically trying to bootstrap an OpenLDAP server, with it’s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior."><meta itemprop=datePublished content="2018-03-24T20:20:22-06:00"><meta itemprop=dateModified content="2018-03-24T20:20:22-06:00"><meta itemprop=wordCount content="208"><meta itemprop=keywords content="Openldap,Linux,Tips"><meta name=twitter:card content="summary"><meta name=twitter:title content="Including LDIF Files in OpenLDAP"><meta name=twitter:description content="While setting up and OpenLDAP server I found my distribution shipped with a couple of schema files, but no equivalent LDIF files. I found ways to convert the file using slapcat and slaptest and the files were valid on their own.
+I was specifically trying to bootstrap an OpenLDAP server, with it’s schema, from scratch for a CI/CD system to test against. To accomplish this I was making use of the include directive in a configuration LDIF file and saw some very odd behavior."><meta property="article:published_time" content="2018-03-24 20:20:22 -0600 -0600"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2018/03/including-ldif-files-in-openldap/>Including LDIF Files in OpenLDAP</a></h2><div class=post-content><p>While setting up and OpenLDAP server I found my distribution shipped with a
 couple of schema files, but no equivalent LDIF files. I found ways to convert
-the file using <code>slapcat</code> and <code>slaptest</code> and the files were valid on their own.</p>
-<p>I was specifically trying to bootstrap an OpenLDAP server, with it&rsquo;s schema,
+the file using <code>slapcat</code> and <code>slaptest</code> and the files were valid on their own.</p><p>I was specifically trying to bootstrap an OpenLDAP server, with it&rsquo;s schema,
 from scratch for a CI/CD system to test against. To accomplish this I was
 making use of the <code>include</code> directive in a configuration LDIF file and saw some
-very odd behavior.</p>
-<p>When I included the LDIF schema files that shipped with the software, I could
-include multiple of them back to back like so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>include: file:///etc/openldap/schema/core.ldif
-</span></span><span style="display:flex;"><span>include: file:///etc/openldap/schema/cosine.ldif
-</span></span><span style="display:flex;"><span>include: file:///etc/openldap/schema/inetorgperson.ldif
-</span></span></code></pre></div><p>When I included my converted file, it would successfully apply it, then just
-stop&hellip; I assumed at first that there was a syntax error, but there was no
+very odd behavior.</p><p>When I included the LDIF schema files that shipped with the software, I could
+include multiple of them back to back like so:</p><pre tabindex=0><code>include: file:///etc/openldap/schema/core.ldif
+include: file:///etc/openldap/schema/cosine.ldif
+include: file:///etc/openldap/schema/inetorgperson.ldif
+</code></pre><p>When I included my converted file, it would successfully apply it, then just
+stop&mldr; I assumed at first that there was a syntax error, but there was no
 error. Everything contained in the included LDIF was present in the DIT. It had
-simply stopped.</p>
-<p>After many frustrating attempts, and hours Googling, the result came down to&hellip;
+simply stopped.</p><p>After many frustrating attempts, and hours Googling, the result came down to&mldr;
 there was an empty line at the end of the file. I couldn&rsquo;t find any
 documentation about this behavior and identified it through dumb luck. For
-anyone that comes across this I hope this solves your issue as well.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-    <p>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7" y2="7"></line></svg>
-
-        <span class="tag"><a href="https://stelfox.net/tags/openldap/">openldap</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/linux/">linux</a></span>
-        <span class="tag"><a href="https://stelfox.net/tags/tips/">tips</a></span>
-        
-    </p>
-
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+anyone that comes across this I hope this solves your issue as well.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/openldap/>openldap</a></span>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/tips/>tips</a></span></p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

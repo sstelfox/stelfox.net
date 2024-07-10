@@ -1,408 +1,217 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="author" content="sam@stelfox.net Sam Stelfox ">
-<meta name="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Keepalived My VMs each have three interfaces, eth0 is the &amp;lsquo;public&amp;rsquo; network network, eth1 is the &amp;lsquo;synchronization&amp;rsquo; network, and eth2 is the &amp;lsquo;internal&amp;rsquo; network. This sample configuration will be making use of two directors and two &amp;ldquo;real servers&amp;rdquo;." />
-<meta name="keywords" content="blog, programming, linux, systems, personal" />
-<meta name="robots" content="noodp" />
-<meta name="theme-color" content="" />
-<link rel="canonical" href="https://stelfox.net/notes/linux-virtual-servers/" />
-
-
-    <title>
-        
-            Linux Virtual Servers :: Sam Stelfox 
-        
-    </title>
-
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css" integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-
-
-<link rel="stylesheet" href="/main.2a064c455b0ecbd6b1481b3bf9df2441e95838691022f40a5338c2cb1244f075.css" integrity="sha256-KgZMRVsOy9axSBs7&#43;d8kQelYOGkQIvQKUzjCyxJE8HU=">
-
-
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="msapplication-TileColor" content="">
-
-
-<meta itemprop="name" content="Linux Virtual Servers">
-<meta itemprop="description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Keepalived My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1 is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This sample configuration will be making use of two directors and two &ldquo;real servers&rdquo;.">
-
-<meta itemprop="wordCount" content="1039">
-<meta itemprop="keywords" content="" />
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Linux Virtual Servers"/>
-<meta name="twitter:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Keepalived My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1 is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This sample configuration will be making use of two directors and two &ldquo;real servers&rdquo;."/>
-
-
-
-    <meta property="og:title" content="Linux Virtual Servers" />
-<meta property="og:description" content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Keepalived My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1 is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This sample configuration will be making use of two directors and two &ldquo;real servers&rdquo;." />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://stelfox.net/notes/linux-virtual-servers/" /><meta property="article:section" content="notes" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    </head>
-
-    
-        <body>
-    
-    
-        <div class="container">
-            <header class="header">
-    <span class="header__inner">
-        <a href="/" style="text-decoration: none;">
-    <div class="logo">
-        
-            <span class="logo__mark">></span>
-            <span class="logo__text ">
-                ./Sam_Stelfox.sh</span>
-            <span class="logo__cursor" style=
-                  "
-                   
-                   ">
-            </span>
-        
-    </div>
-</a>
-
-
-        <span class="header__right">
-            
-                <nav class="menu">
-    <ul class="menu__inner"><li><a href="/about/">About</a></li><li><a href="/blog/">Blog Posts</a></li><li><a href="/notes/">Various Notes</a></li>
-    </ul>
-</nav>
-
-                <span class="menu-trigger">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
-                    </svg>
-                </span>
-            
-        </span>
-    </span>
-</header>
-
-
-            <div class="content">
-                
-    <main class="post">
-
-        <div class="post-info">
-            
-            </p>
-        </div>
-
-        <article>
-            <h2 class="post-title"><a href="https://stelfox.net/notes/linux-virtual-servers/">Linux Virtual Servers</a></h2>
-
-            
-            
-            
-
-            <div class="post-content">
-                <p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Keepalived My VMs each have three interfaces, eth0 is the &amp;lsquo;public&amp;rsquo; network network, eth1 is the &amp;lsquo;synchronization&amp;rsquo; network, and eth2 is the &amp;lsquo;internal&amp;rsquo; network. This sample configuration will be making use of two directors and two &amp;ldquo;real servers&amp;rdquo;."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/linux-virtual-servers/><title>Linux Virtual Servers :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Linux Virtual Servers"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Keepalived My VMs each have three interfaces, eth0 is the ‘public’ network network, eth1 is the ‘synchronization’ network, and eth2 is the ‘internal’ network. This sample configuration will be making use of two directors and two “real servers”."><meta itemprop=wordCount content="1039"><meta name=twitter:card content="summary"><meta name=twitter:title content="Linux Virtual Servers"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Keepalived My VMs each have three interfaces, eth0 is the ‘public’ network network, eth1 is the ‘synchronization’ network, and eth2 is the ‘internal’ network. This sample configuration will be making use of two directors and two “real servers”."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/linux-virtual-servers/>Linux Virtual Servers</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p>
-<h2 id="keepalived">Keepalived</h2>
-<p>My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1
+until I get around to updating it.</strong></em></p><h2 id=keepalived>Keepalived</h2><p>My VMs each have three interfaces, eth0 is the &lsquo;public&rsquo; network network, eth1
 is the &lsquo;synchronization&rsquo; network, and eth2 is the &lsquo;internal&rsquo; network. This
 sample configuration will be making use of two directors and two &ldquo;real
-servers&rdquo;.</p>
-<p>The directors have hostnames &lsquo;director-01.i.0x378.net&rsquo; and
+servers&rdquo;.</p><p>The directors have hostnames &lsquo;director-01.i.0x378.net&rsquo; and
 &lsquo;director-02.i.0x378.net&rsquo;. &lsquo;director-01&rsquo; will have device/IP pairs of (eth0,
 192.168.122.141), (eth1, 10.10.10.10), and (eth2, 10.0.0.2). &lsquo;director-02&rsquo; will
 have device/IP pairs of (eth0, 192.168.122.142), (eth1, 10.10.10.11), and
-(eth2, 10.0.0.3).</p>
-<p>There are two virtual IP addresses that will need to be failed over,
-&lsquo;192.168.122.140&rsquo; on the &lsquo;public&rsquo; network and &lsquo;10.0.0.1&rsquo;  on the &lsquo;internal&rsquo;
-network.</p>
-<p>These need to be failed over simulatenously.</p>
-<p>First we need to install the packages:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install ipvsadm keepalived -y
-</span></span></code></pre></div><p>If the directors are running within an LXC environment, keepalived won&rsquo;t be
+(eth2, 10.0.0.3).</p><p>There are two virtual IP addresses that will need to be failed over,
+&lsquo;192.168.122.140&rsquo; on the &lsquo;public&rsquo; network and &lsquo;10.0.0.1&rsquo; on the &lsquo;internal&rsquo;
+network.</p><p>These need to be failed over simulatenously.</p><p>First we need to install the packages:</p><pre tabindex=0><code>yum install ipvsadm keepalived -y
+</code></pre><p>If the directors are running within an LXC environment, keepalived won&rsquo;t be
 able to load the kernel module it needs for the services. From the host machine
 you&rsquo;ll need to run the following command before attempting to start the
-keepalived services.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>modprobe ip_vs
-</span></span></code></pre></div><p>This can be done automatically by creating <code>/etc/rc.d/rc.local</code> and marking it
-as executable with the following contents.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic">#!/bin/sh
-</span></span></span><span style="display:flex;"><span><span style="color:#8b949e;font-weight:bold;font-style:italic"></span>
-</span></span><span style="display:flex;"><span>modprobe ip_vs
-</span></span></code></pre></div><p>Edit the <code>/etc/keepalived/keepalived.conf</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>global_defs {
-</span></span><span style="display:flex;"><span>  notification_email_from failover@example.tld
-</span></span><span style="display:flex;"><span>  notification_email {
-</span></span><span style="display:flex;"><span>    admin+failover@example.tld
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  router_id LVS_DIRECTOR_01
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  smtp_connect_timeout 5
-</span></span><span style="display:flex;"><span>  smtp_server          127.0.0.1
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>vrrp_sync_group gateway_group_1 {
-</span></span><span style="display:flex;"><span>  group {
-</span></span><span style="display:flex;"><span>    external_network_1
-</span></span><span style="display:flex;"><span>    internal_network_1
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  smtp_alert
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>vrrp_instance external_network_1 {
-</span></span><span style="display:flex;"><span>  interface eth0
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  state BACKUP
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  advert_int        1
-</span></span><span style="display:flex;"><span>  garp_master_delay 1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  priority          100
-</span></span><span style="display:flex;"><span>  virtual_router_id 20
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  nopreempt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  unicast_peer {
-</span></span><span style="display:flex;"><span>    # IP address of the other director&#39;s eth0 interface
-</span></span><span style="display:flex;"><span>    192.168.122.40
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # You&#39;ll want to change this password...
-</span></span><span style="display:flex;"><span>  authentication {
-</span></span><span style="display:flex;"><span>    auth_type PASS
-</span></span><span style="display:flex;"><span>    auth_pass password
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  virtual_ipaddress {
-</span></span><span style="display:flex;"><span>    192.168.122.140/24 dev eth0
-</span></span><span style="display:flex;"><span>    #2001:db8:15:7::100/64 dev eth0
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>vrrp_instance internal_network_1 {
-</span></span><span style="display:flex;"><span>  interface eth2
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  state BACKUP
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  advert_int        1
-</span></span><span style="display:flex;"><span>  garp_master_delay 1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  priority          100
-</span></span><span style="display:flex;"><span>  virtual_router_id 21
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  nopreempt
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  unicast_peer {
-</span></span><span style="display:flex;"><span>    # IP address of the other director&#39;s eth2 interface
-</span></span><span style="display:flex;"><span>    10.0.0.11
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  # You&#39;ll want to change this password...
-</span></span><span style="display:flex;"><span>  authentication {
-</span></span><span style="display:flex;"><span>    auth_type PASS
-</span></span><span style="display:flex;"><span>    auth_pass password
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  virtual_ipaddress {
-</span></span><span style="display:flex;"><span>    10.0.0.1/24 dev eth2
-</span></span><span style="display:flex;"><span>    #2001:db8:16:10::100/64 dev eth2
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>For &lsquo;director-02&rsquo; the <code>router_id</code> should be set to &lsquo;LVS_DIRECTOR_02&rsquo;. You&rsquo;ll
+keepalived services.</p><pre tabindex=0><code>modprobe ip_vs
+</code></pre><p>This can be done automatically by creating <code>/etc/rc.d/rc.local</code> and marking it
+as executable with the following contents.</p><pre tabindex=0><code>#!/bin/sh
+
+modprobe ip_vs
+</code></pre><p>Edit the <code>/etc/keepalived/keepalived.conf</code>:</p><pre tabindex=0><code>global_defs {
+  notification_email_from failover@example.tld
+  notification_email {
+    admin+failover@example.tld
+  }
+
+  router_id LVS_DIRECTOR_01
+
+  smtp_connect_timeout 5
+  smtp_server          127.0.0.1
+}
+
+vrrp_sync_group gateway_group_1 {
+  group {
+    external_network_1
+    internal_network_1
+  }
+
+  smtp_alert
+}
+
+vrrp_instance external_network_1 {
+  interface eth0
+
+  state BACKUP
+
+  advert_int        1
+  garp_master_delay 1
+
+  priority          100
+  virtual_router_id 20
+
+  nopreempt
+
+  unicast_peer {
+    # IP address of the other director&#39;s eth0 interface
+    192.168.122.40
+  }
+
+  # You&#39;ll want to change this password...
+  authentication {
+    auth_type PASS
+    auth_pass password
+  }
+
+  virtual_ipaddress {
+    192.168.122.140/24 dev eth0
+    #2001:db8:15:7::100/64 dev eth0
+  }
+}
+
+vrrp_instance internal_network_1 {
+  interface eth2
+
+  state BACKUP
+
+  advert_int        1
+  garp_master_delay 1
+
+  priority          100
+  virtual_router_id 21
+
+  nopreempt
+
+  unicast_peer {
+    # IP address of the other director&#39;s eth2 interface
+    10.0.0.11
+  }
+
+  # You&#39;ll want to change this password...
+  authentication {
+    auth_type PASS
+    auth_pass password
+  }
+
+  virtual_ipaddress {
+    10.0.0.1/24 dev eth2
+    #2001:db8:16:10::100/64 dev eth2
+  }
+}
+</code></pre><p>For &lsquo;director-02&rsquo; the <code>router_id</code> should be set to &lsquo;LVS_DIRECTOR_02&rsquo;. You&rsquo;ll
 also want to update the unicast peer addresses for the individual interfaces as
 well. Since we&rsquo;ve disabled <code>preempt</code> failover and are starting the servers in
-the BACKUP state, adjusting the priority between the directors doesn&rsquo;t matter.</p>
-<p>We now need to ensure we have the firewall rules in place to allow both LVS
+the BACKUP state, adjusting the priority between the directors doesn&rsquo;t matter.</p><p>We now need to ensure we have the firewall rules in place to allow both LVS
 instances to communicate their keepalive messages to each other. Add the
-following firewall rules:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>-A SERVICES -i eth0 -p vrrp -s 192.168.122.0/24 -j ACCEPT
-</span></span><span style="display:flex;"><span>-A SERVICES -i eth2 -p vrrp -s 10.0.0.0/24 -j ACCEPT
-</span></span><span style="display:flex;"><span>-A OUTPUT -o eth0 -p vrrp -d 192.168.122.0/24 -j ACCEPT
-</span></span><span style="display:flex;"><span>-A OUTPUT -o eth2 -p vrrp -d 10.0.0.0/24 -j ACCEPT
-</span></span></code></pre></div><p>At this point we can start up keepalived on both directors and test their
-failover. Run the following two commands on both directors.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl enable keepalived.service
-</span></span><span style="display:flex;"><span>systemctl start keepalived.service
-</span></span></code></pre></div><p>You can check the IP addresses of each nodes using <code>ip addr</code>. One of them will
+following firewall rules:</p><pre tabindex=0><code>-A SERVICES -i eth0 -p vrrp -s 192.168.122.0/24 -j ACCEPT
+-A SERVICES -i eth2 -p vrrp -s 10.0.0.0/24 -j ACCEPT
+-A OUTPUT -o eth0 -p vrrp -d 192.168.122.0/24 -j ACCEPT
+-A OUTPUT -o eth2 -p vrrp -d 10.0.0.0/24 -j ACCEPT
+</code></pre><p>At this point we can start up keepalived on both directors and test their
+failover. Run the following two commands on both directors.</p><pre tabindex=0><code>systemctl enable keepalived.service
+systemctl start keepalived.service
+</code></pre><p>You can check the IP addresses of each nodes using <code>ip addr</code>. One of them will
 have both of the virtual IP addresses. Shutdown the keepalive daemon on the
 other one and you should see it failover and grab the virtual IP addresses
-within a second.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl stop keepalived.service
-</span></span><span style="display:flex;"><span>sleep 2
-</span></span><span style="display:flex;"><span>systemctl start keepalived.service
-</span></span></code></pre></div><p>As much as I tried I couldn&rsquo;t get keepalived to make use of the synchronization
+within a second.</p><pre tabindex=0><code>systemctl stop keepalived.service
+sleep 2
+systemctl start keepalived.service
+</code></pre><p>As much as I tried I couldn&rsquo;t get keepalived to make use of the synchronization
 interface to send it&rsquo;s VRRP packets. At the same time for my uses multicast
 isn&rsquo;t an option which I why I chose unicast synchronization. If you have more
 than two directors unicast will increase the amount of traffic required for the
-synchronization.</p>
-<h2 id="conntrackd-tools">Conntrackd Tools</h2>
-<p>To allow us to use state based rules we&rsquo;ll also need to synchronize the known
+synchronization.</p><h2 id=conntrackd-tools>Conntrackd Tools</h2><p>To allow us to use state based rules we&rsquo;ll also need to synchronize the known
 connection states between the two machines for the event of failover. There is
-a convenient system to do this. Enter <code>conntrackd</code>.</p>
-<p>First we&rsquo;ll need to install the package that has the synchronization daemon.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>yum install conntrack-tools -y
-</span></span></code></pre></div><p>We&rsquo;ll need to throw a configuration into place at
-<code>/etc/conntrackd/conntrackd.conf</code>. The following is for director-01:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>Sync {
-</span></span><span style="display:flex;"><span>  Mode FTFW {
-</span></span><span style="display:flex;"><span>    DisableExternalCache Off
-</span></span><span style="display:flex;"><span>    PurgeTimeout 5
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  Multicast {
-</span></span><span style="display:flex;"><span>    IPv4_address 225.0.0.50
-</span></span><span style="display:flex;"><span>    Group 3780
-</span></span><span style="display:flex;"><span>    IPv4_interface 10.10.10.10
-</span></span><span style="display:flex;"><span>    Interface eth1
-</span></span><span style="display:flex;"><span>    SndSocketBuffer 1249280
-</span></span><span style="display:flex;"><span>    RcvSocketBuffer 1249280
-</span></span><span style="display:flex;"><span>    Checksum on
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>General {
-</span></span><span style="display:flex;"><span>  Nice -20
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  HashSize 32768
-</span></span><span style="display:flex;"><span>  HashLimit 131072
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  Syslog on
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  LockFile /var/lock/conntrack.lock
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  UNIX {
-</span></span><span style="display:flex;"><span>    Path /var/run/conntrackd.ctl
-</span></span><span style="display:flex;"><span>    Backlog 20
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  NetlinkBufferSize 2097152
-</span></span><span style="display:flex;"><span>  NetlinkBufferSizeMaxGrowth 8388608
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  Filter From Userspace {
-</span></span><span style="display:flex;"><span>    Protocol Accept {
-</span></span><span style="display:flex;"><span>      #DCCP
-</span></span><span style="display:flex;"><span>      ICMP
-</span></span><span style="display:flex;"><span>      IPv6-ICMP
-</span></span><span style="display:flex;"><span>      #SCTP
-</span></span><span style="display:flex;"><span>      TCP
-</span></span><span style="display:flex;"><span>      UDP
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    Address Ignore {
-</span></span><span style="display:flex;"><span>      # Loopback addresses
-</span></span><span style="display:flex;"><span>      IPv4_address 127.0.0.1
-</span></span><span style="display:flex;"><span>      IPv6_address ::1
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      # The director IP addresses
-</span></span><span style="display:flex;"><span>      IPv4_address 10.0.0.10
-</span></span><span style="display:flex;"><span>      IPv4_address 10.0.0.11
-</span></span><span style="display:flex;"><span>      IPv4_address 192.168.122.40
-</span></span><span style="display:flex;"><span>      IPv4_address 192.168.122.41
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      # The keepalive network
-</span></span><span style="display:flex;"><span>      IPv4_address 10.10.10.0/24
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>      # The virtual IP addresses
-</span></span><span style="display:flex;"><span>      IPv4_address 192.168.122.140
-</span></span><span style="display:flex;"><span>      IPv4_address 10.0.0.5
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>The only change for director-02 is to change the <code>IPv4_interface</code> to
-<code>10.10.10.11</code>.</p>
-<p>You&rsquo;ll notice that I am using multicast here. There is an option in conntrackd
+a convenient system to do this. Enter <code>conntrackd</code>.</p><p>First we&rsquo;ll need to install the package that has the synchronization daemon.</p><pre tabindex=0><code>yum install conntrack-tools -y
+</code></pre><p>We&rsquo;ll need to throw a configuration into place at
+<code>/etc/conntrackd/conntrackd.conf</code>. The following is for director-01:</p><pre tabindex=0><code>Sync {
+  Mode FTFW {
+    DisableExternalCache Off
+    PurgeTimeout 5
+  }
+
+  Multicast {
+    IPv4_address 225.0.0.50
+    Group 3780
+    IPv4_interface 10.10.10.10
+    Interface eth1
+    SndSocketBuffer 1249280
+    RcvSocketBuffer 1249280
+    Checksum on
+  }
+}
+
+General {
+  Nice -20
+
+  HashSize 32768
+  HashLimit 131072
+
+  Syslog on
+
+  LockFile /var/lock/conntrack.lock
+
+  UNIX {
+    Path /var/run/conntrackd.ctl
+    Backlog 20
+  }
+
+  NetlinkBufferSize 2097152
+  NetlinkBufferSizeMaxGrowth 8388608
+
+  Filter From Userspace {
+    Protocol Accept {
+      #DCCP
+      ICMP
+      IPv6-ICMP
+      #SCTP
+      TCP
+      UDP
+    }
+
+    Address Ignore {
+      # Loopback addresses
+      IPv4_address 127.0.0.1
+      IPv6_address ::1
+
+      # The director IP addresses
+      IPv4_address 10.0.0.10
+      IPv4_address 10.0.0.11
+      IPv4_address 192.168.122.40
+      IPv4_address 192.168.122.41
+
+      # The keepalive network
+      IPv4_address 10.10.10.0/24
+
+      # The virtual IP addresses
+      IPv4_address 192.168.122.140
+      IPv4_address 10.0.0.5
+    }
+  }
+}
+</code></pre><p>The only change for director-02 is to change the <code>IPv4_interface</code> to
+<code>10.10.10.11</code>.</p><p>You&rsquo;ll notice that I am using multicast here. There is an option in conntrackd
 to use unicast as well, and I&rsquo;ll need to come back and reconfigure it to make
-use of it. For now though this should work in my environment.</p>
-<p>Add the firewall rules needed for the synchronization process on both machines:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>-A INPUT -i eth1 -m udp -p udp -s 10.10.10.0/24 -d 225.0.0.50 --dport 3780 -j ACCEPT
-</span></span><span style="display:flex;"><span>-A OUTPUT -o eth1 -m udp -p udp -d 225.0.0.50 --dport 3780 -j ACCEPT
-</span></span></code></pre></div><p>For most services I would also include connection tracking state information,
-but given the nature of this service I decided against it.</p>
-<p>Enable and start the service:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>systemctl enable conntrackd.service
-</span></span><span style="display:flex;"><span>systemctl start conntrackd.service
-</span></span></code></pre></div><p>There is some work that conntrackd will need to do whenever keepalive changes
+use of it. For now though this should work in my environment.</p><p>Add the firewall rules needed for the synchronization process on both machines:</p><pre tabindex=0><code>-A INPUT -i eth1 -m udp -p udp -s 10.10.10.0/24 -d 225.0.0.50 --dport 3780 -j ACCEPT
+-A OUTPUT -o eth1 -m udp -p udp -d 225.0.0.50 --dport 3780 -j ACCEPT
+</code></pre><p>For most services I would also include connection tracking state information,
+but given the nature of this service I decided against it.</p><p>Enable and start the service:</p><pre tabindex=0><code>systemctl enable conntrackd.service
+systemctl start conntrackd.service
+</code></pre><p>There is some work that conntrackd will need to do whenever keepalive changes
 it&rsquo;s cluster state. A script is provided with the <code>conntrack-tools</code> package, we
-can just copy it into the appropriate place with the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>cp /usr/share/doc/conntrack-tools-1.4.2/doc/sync/primary-backup.sh /etc/conntrackd/
-</span></span></code></pre></div><p>Now we need to tell keepalived to call the script when it&rsquo;s state changes, if
+can just copy it into the appropriate place with the following command:</p><pre tabindex=0><code>cp /usr/share/doc/conntrack-tools-1.4.2/doc/sync/primary-backup.sh /etc/conntrackd/
+</code></pre><p>Now we need to tell keepalived to call the script when it&rsquo;s state changes, if
 you&rsquo;re following along with this page you&rsquo;ll need to add the following to the
-section named <code>vrrp_sync_group gateway_group_1</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#c9d1d9;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>notify_backup &#34;/etc/conntrackd/primary-backup.sh backup&#34;
-</span></span><span style="display:flex;"><span>notify_fault  &#34;/etc/conntrackd/primary-backup.sh fault&#34;
-</span></span><span style="display:flex;"><span>notify_master &#34;/etc/conntrackd/primary-backup.sh primary&#34;
-</span></span></code></pre></div><p>Make sure you restart keepalived on both machines.</p>
-<p>At this point we have everything in place we need to perform our two target
+section named <code>vrrp_sync_group gateway_group_1</code>.</p><pre tabindex=0><code>notify_backup &#34;/etc/conntrackd/primary-backup.sh backup&#34;
+notify_fault  &#34;/etc/conntrackd/primary-backup.sh fault&#34;
+notify_master &#34;/etc/conntrackd/primary-backup.sh primary&#34;
+</code></pre><p>Make sure you restart keepalived on both machines.</p><p>At this point we have everything in place we need to perform our two target
 tasks. Having a gateway on the local network that can failover in the event the
 other machine dies, and provide highly availability to multiple services behind
-them.</p>
-
-            </div>
-        </article>
-
-        <hr />
-
-        <div class="post-info">
-            
-            
-  		</div>
-    </main>
-
-            </div>
-
-            
-                <footer class="footer">
-    
-    
-</footer>
-
-            
-        </div>
-
-        
-
-
-
-<script type="text/javascript" src="/bundle.min.c90b8161416b87c69a8e02683b54ddd6edb90aea699648bf655e6cbc45b419b8e465d196e715772463dba35a6faf5decb2eb247480d38680484d54645b434570.js" integrity="sha512-yQuBYUFrh8aajgJoO1Td1u25Cupplki/ZV5svEW0GbjkZdGW5xV3JGPbo1pvr13ssuskdIDThoBITVRkW0NFcA=="></script>
-
-
-
-    </body>
-</html>
+them.</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
