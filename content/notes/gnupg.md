@@ -16,7 +16,7 @@ document.
 For simplicity I wanted to clear out the GnuPG configuration that starts out in
 place. Makes things a lot nicer later on.
 
-```
+```console
 rm -rf ~/.gnupg/*
 ```
 
@@ -24,7 +24,7 @@ I pulled in the .gnupg/gpg.conf from my dotfiles by hand.
 
 And begin the key generation process
 
-```
+```console
 gpg --expert --gen-key
 ```
 
@@ -37,13 +37,13 @@ Set the personal attributes appropriately, a passphrase and let the key
 generation happen. Once done, sub-keys need to be generated. We need to edit
 the existing key to create more keys.
 
-```
+```console
 gpg --expert --edit-key <email used in key>
 ```
 
 Add any additional email addresses you might need to the key.
 
-```
+```console
 gpg> adduid
 gpg> uid 1
 gpg> primary
@@ -51,7 +51,7 @@ gpg> primary
 
 Generate the sub keys:
 
-```
+```console
 gpg> addkey
 ```
 
@@ -71,13 +71,13 @@ tutorial.
 
 Turns out the size can be up to 240x288...
 
-```
+```console
 gpg> addphoto
 ```
 
 And follow the prompts. When everything is good save the changes made:
 
-```
+```console
 gpg> save
 ```
 
@@ -86,7 +86,7 @@ displaced. We need to backup the keyrings, a raw copy of the master private
 key, a revocation certificate just in case, then the public key.  Backup and
 export ~/.gnupg/secring.gpg and ~/.gnupg/pubring.gpg
 
-```
+```console
 mkdir ~/gpg_backups
 cp ~/.gnupg/{sec,pub}ring.gpg ~/gpg_backups/
 gpg -a --export-secret-key sstelfox@bedroomprogrammers.net > ~/gpg_backups/secret_key.gpg
@@ -99,7 +99,7 @@ description, as that is the intended usage for this particular CRL.
 
 We also want a `paperkey` backup file of the private key.
 
-```
+```console
 gpg --export-secret-key sstelfox@bedroomprogrammers.net | paperkey > ~/gpg_backups/paperkey.bak
 ```
 
@@ -109,7 +109,7 @@ scenario, this needs to be hand typed back into a text file. Once done
 restoration can be done by pulling in your public key and the typed file like
 the following:
 
-```
+```console
 paperkey --pubring ~/gpg_backups/publickey.gpg \
   --secrets ~/gpg_backups/paperkey.bak --output ~/recovered_secret.gpg
 ```
@@ -119,33 +119,33 @@ non-obvious practice.
 
 Take out the subkeys:
 
-```
+```console
 gpg -a --export-secret-subkeys sstelfox@bedroomprogrammers.net \
   > ~/gpg_backups/subkey_secrets.gpg
 ```
 
 Delete the secret keys:
 
-```
+```console
 gpg --delete-secret-keys sstelfox@bedroomprogrammers.net
 ```
 
 You'll need to double confirm the deletion. We now have all the public keys we
 want and no secret keys... We need to now import back in just the subkeys.
 
-```
+```console
 gpg --import ~/gpg_backups/subkey_secrets.gpg
 ```
 
 You should see just the subkeys in the the secret ring:
 
-```
+```console
 gpg -K
 ```
 
 We can then export just the 'laptop' keys.
 
-```
+```console
 gpg -a --export-secret-keys sstelfox@bedroomprogrammers.net > ~/gpg_backup/laptop_keys_secret.gpg
 gpg -a --export sstelfox@bedroomprogrammers.net > ~/gpg_backup/laptop_keys_public.gpg
 ```
@@ -153,7 +153,7 @@ gpg -a --export sstelfox@bedroomprogrammers.net > ~/gpg_backup/laptop_keys_publi
 These two files need are what will be transferred to the laptop and other
 machines that they are needed. To import the two files:
 
-```
+```console
 gpg --import laptop_keys_public.gpg
 gpg --import laptop_keys_secret.gpg
 ```
@@ -219,7 +219,7 @@ timeout windows then touch for every action. This has the benefit of being a
 much easier workflow while preventing an attacker from using the key without a
 physical presence. This can be done with the following commands:
 
-```
+```console
 ykman openpgp touch sig on
 ykman openpgp touch aut on
 ykman openpgp touch enc on
@@ -230,14 +230,14 @@ The above requires having a YubiKey 4 or later.
 Exit out and open up the gpg --edit-key view again. We need to add the subkeys.
 First we need to switch to the private key view:
 
-```
+```console
 > toggle
 ```
 
 For the three keys (numbered 1-3) you want to transfer them using the following
 commands:
 
-```
+```console
 > key 1
 > keytocard
 > key 1
@@ -250,7 +250,7 @@ left with just stubs of the keys in the secret keyring.
 On new machines that need to have the stubs added we can perform the following
 status:
 
-```
+```console
 gpg --card-edit
 > fetch
 > quit
@@ -258,7 +258,7 @@ gpg --card-edit
 
 You should be able to view the stubs and their presence on the card with:
 
-```
+```console
 gpg -K
 gpg --card-status
 ```
@@ -266,7 +266,7 @@ gpg --card-status
 Should be able to test that the card is working by encrypting a message and
 then decrypting it with smartcard.
 
-```
+```console
 cat << EOF > message.txt
 Just a secret test message...
 EOF
@@ -277,7 +277,7 @@ gpg -esar sstelfox@bedroomprogrammers.net message.txt
 It should ask you for your pin before continuing. Decrypting can be done using
 the following:
 
-```
+```console
 gpg -d message.txt.asc
 ```
 
@@ -285,14 +285,14 @@ That confirms that the signing key & encryption key are both working. The
 authentication key is for using the GPG agent as an SSH agent. To test this one
 we need to run the gpg-agent with it's SSH compatibility layer like so:
 
-```
+```console
 gpg-agent --enable-ssh-support
 source ~/.gpg-agent-info
 ```
 
 Test to make sure a card is showing up:
 
-```
+```console
 ssh-add -l
 ```
 
