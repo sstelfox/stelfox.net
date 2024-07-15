@@ -11,6 +11,8 @@ slug: blender-loop-select-in-cinnamon
 title: Blender Loop Select in Cinnamon
 ---
 
+# Blender Loop Select in Cinnamon
+
 I've recently been playing around with Blender (following [this tutorial series](https://www.youtube.com/playlist?list=PLjEaoINr3zgEq0u2MzVgAaHEBt--xLB6U)). In Part 4 of the Level 1 series, the host Andrew Price is teaching about loop selects which very simply is holding down Alt while clicking on a vertex. The issue wasn't working for me though I found quite a few other users experiencing the issue.
 
 The most common fix was when people had three button mouse emulation enabled (a common setting people turn on when using laptops or Macs). I checked this and it wasn't my issue.

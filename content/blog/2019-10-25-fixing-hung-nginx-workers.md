@@ -11,6 +11,8 @@ slug: fixing-hung-nginx-workers
 title: Fixing Hung Nginx Workers
 ---
 
+# Fixing Hung Nginx Workers
+
 While cleaning up some tech debt, a curious issue cropped up. Nginx was running in an alpine container as a front end load balancer. It had a dynamic config that got periodically updated by a sidecar, and had filebeat shipping logs out to a central collector but otherwise was just a very simple Nginx config.
 
 Every now and then the container would crash, it would automatically recover fast enough no alarms were lost and the clients would just resend their requests. No data was lost, everything failed gracefully, but it's still a pretty crazy thing to leave happening.

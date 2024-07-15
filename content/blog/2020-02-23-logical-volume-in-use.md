@@ -9,6 +9,8 @@ slug: logical-volume-in-use
 title: Logical Volume in Use
 ---
 
+# Logical Volume in Use
+
 While attempting to automate some filesystem creation that involved LVM I kept running into an issue occasionally with some holding open the logical volumes. I would attempt to disable the volume using the following command:
 
 ```console

@@ -9,6 +9,8 @@ slug: extracting-dracut-initramfs
 title: Extracting Dracut Built initramfs
 ---
 
+# Extracting Dracut Built initramfs
+
 It's been a hot second since I've dived into the lands of initramfs and as is the way of things, it has gotten a tad more complicated. The simple way that used to work wonders (and is still required) to start with, was to identify if the file is compressed:
 
 ```console

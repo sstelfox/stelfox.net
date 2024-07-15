@@ -10,6 +10,8 @@ slug: fixing-dark-input-boxes-in-firefox
 title: Fixing Dark Input Boxes in Firefox
 ---
 
+# Fixing Dark Input Boxes in Firefox
+
 I recently began trying out [Cinnamon](https://github.com/linuxmint/Cinnamon) as my desktop environment and I've been thoroughly enjoying it. The only issue I was having was occasionally a page's form input fields would have a dark background while still having dark text making it impossible to read, and very difficult to write.
 
 It wasn't happening everywhere, and I couldn't track down what about a website would cause the issue. Most prominently for me was when this showed up in AWS's interface.
