@@ -5,8 +5,8 @@ evergreen: false
 tags:
   - dracut
   - linux
-slug: extracting-dracut-initramfs
 title: Extracting Dracut Built initramfs
+slug: extracting-dracut-initramfs
 ---
 
 # Extracting Dracut Built initramfs

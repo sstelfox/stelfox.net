@@ -7,8 +7,8 @@ tags:
   - cinnamon
   - linux
   - tips
-slug: blender-loop-select-in-cinnamon
 title: Blender Loop Select in Cinnamon
+slug: blender-loop-select-in-cinnamon
 ---
 
 # Blender Loop Select in Cinnamon

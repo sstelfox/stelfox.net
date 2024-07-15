@@ -5,8 +5,8 @@ evergreen: true
 tags:
   - linux
   - lvm
-slug: logical-volume-in-use
 title: Logical Volume in Use
+slug: logical-volume-in-use
 ---
 
 # Logical Volume in Use

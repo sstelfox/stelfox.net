@@ -7,8 +7,8 @@ tags:
   - nginx
   - operations
   - diagnostics
-slug: fixing-hung-nginx-workers
 title: Fixing Hung Nginx Workers
+slug: fixing-hung-nginx-workers
 ---
 
 # Fixing Hung Nginx Workers
@@ -34,7 +34,7 @@ In any event, not all container clusters solution allow external execution (look
 I chose to modify the container to log the data I needed instead. I setup a wrapper that started and backgrounded the following script:
 
 ```bash
-#!/bin/sh
+#!/bin/bash
 
 while [ 1 ]; do
   # This generates a JSON output that can be pulled via the ECS logs of the top

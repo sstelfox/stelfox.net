@@ -6,8 +6,8 @@ tags:
   - linux
   - firefox
   - tips
-slug: fixing-dark-input-boxes-in-firefox
 title: Fixing Dark Input Boxes in Firefox
+slug: fixing-dark-input-boxes-in-firefox
 ---
 
 # Fixing Dark Input Boxes in Firefox
