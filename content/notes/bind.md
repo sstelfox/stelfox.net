@@ -1,26 +1,29 @@
 ---
+created_at: 2013-01-01T00:00:01-0000
+evergreen: false
+public: true
+tags:
+  - linux
+  - operations
+  - security
 title: Bind
+slug: bind
 ---
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+# Bind
 
 ## Firewall Adjustments
 
-A DNS server isn't very good unless other machines are able to query it. The
-following allows incoming DNS queries universally.
+A DNS server isn't very good unless other machines are able to query it. The following allows incoming DNS queries universally.
 
-```
+```iptables
 -A INPUT -p udp -m udp --dport 53 -j ACCEPT
 -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT
 ```
 
-If you're running named in a chroot you'll also need to add the following line
-to rsyslog's configuration file so that the chroot doesn't break named's
-logging.
+If you're running named in a chroot you'll also need to add the following line to rsyslog's configuration file so that the chroot doesn't break named's logging.
 
-```
+```text
 $AddUnixListenSocket /var/named/chroot/dev/log
 ```
 
@@ -28,7 +31,7 @@ $AddUnixListenSocket /var/named/chroot/dev/log
 
 ### /etc/named.conf
 
-```
+```text
 include "/etc/named.root.key";
 
 // Allow no zone transfers. Any slaves should be added here.
@@ -205,28 +208,23 @@ view "bind-chaos" chaos {
 
 ### /etc/rndc.conf
 
-This needs to be generated on your own which can be done using the following
-command:
+This needs to be generated on your own which can be done using the following command:
 
-```
-rndc-confgen -b 512 > /etc/rndc.conf
+```console
+$ rndc-confgen -b 512 > /etc/rndc.conf
 ```
 
-The commented out code belongs in `/etc/named.conf`, just replace the following
-comment with the code:
+The commented out code belongs in "/etc/named.conf", just replace the following comment with the code:
 
-```
+```text
 ## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##
 ```
 
-512 is unfortunately the strongest bit size available for authentication so it
-is strongly recommended to firewall off and limit the IP addresses the control
-channel is running on. By default this is exclusively the IPv4 loopback
-address.
+512 is unfortunately the strongest bit size available for authentication so it is strongly recommended to firewall off and limit the IP addresses the control channel is running on. By default this is exclusively the IPv4 loopback address.
 
 ### /var/named/db.bind
 
-```
+```text
 $TTL 86400
 @   CHAOS    SOA   @   rname.invalid.  (
     0   ; serial
@@ -244,7 +242,7 @@ authors.bind.   CHAOS TXT "Nom de plume"
 
 ### /var/named/data/internal/1057.name.zone.db
 
-```
+```text
 $TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2012080801  ; Serial number YYYYMMDDNN
@@ -262,7 +260,7 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
 
 ### /var/named/data/internal/19.87.10.in-addr.arpa.zone.db
 
-```
+```text
 $TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -279,7 +277,7 @@ $TTL 86400
 
 ### /var/named/data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db
 
-```
+```text
 $TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -296,7 +294,7 @@ $TTL 86400
 
 ### /var/named/data/public/1057.name.zone.db
 
-```
+```text
 $TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2012080801  ; Serial number YYYYMMDDNN
@@ -314,7 +312,7 @@ ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
 
 ### /var/named/data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db
 
-```
+```text
 $TTL 86400
 @   IN    SOA   ns1.1057.name.    dns.1057.name.  (
   2013020801  ; Serial number YYYYMMDDNN
@@ -331,12 +329,9 @@ $TTL 86400
 
 ## LDAP Backend
 
-Using the package `bind-dyndb-ldap`, an ldap backend can be used either
-exclusively or in addition to other zones. Configuring a simple authenticated
-ldap lookup can be done with something along the line of the following
-configuration:
+Using the package "bind-dyndb-ldap", an ldap backend can be used either exclusively or in addition to other zones. Configuring a simple authenticated ldap lookup can be done with something along the line of the following configuration:
 
-```
+```text
 dynamic-db "my_db_name" {
   library "ldap.so";
   arg "uri ldap://ldap.example.com";
@@ -346,31 +341,19 @@ dynamic-db "my_db_name" {
 };
 ```
 
-With this configuration, the LDAP back-end will try to connect to server
-ldap.example.com with simple authentication, without any password. It will then
-do an LDAP subtree search in the `cn=dns,dc=example,dc=com` base for entries
-with object class idnsZone, for which the idnsZoneActive attribute is set to
-True.
+With this configuration, the LDAP back-end will try to connect to server ldap.example.com with simple authentication, without any password. It will then do an LDAP subtree search in the "cn=dns,dc=example,dc=com" base for entries with object class idnsZone, for which the idnsZoneActive attribute is set to True.
 
-For each entry it will find, it will register a new zone with BIND. The LDAP
-back-end will keep each record it gets from LDAP in its cache for 5 minutes.
+For each entry it will find, it will register a new zone with BIND. The LDAP back-end will keep each record it gets from LDAP in its cache for 5 minutes.
 
-It also supports SASL authentication methods which means we can use encrypted
-authentication and/or kerberos.
+It also supports SASL authentication methods which means we can use encrypted authentication and/or kerberos.
 
 ## IPv6 Slow down
 
-If there is a local IPv6 network but it is unrouted bind will regularily
-attempt to contact other nameservers using IPv6 and doesn't seem to cache
-whether it was able to reach them or not.
+If there is a local IPv6 network but it is unrouted bind will regularily attempt to contact other nameservers using IPv6 and doesn't seem to cache whether it was able to reach them or not.
 
-This has a dramatically visible impact on the time it takes to query for a
-name. To prevent this there are really only two options, the first is to make
-the IPv6 network routeable, and the second is to put bind in IPv4 only mode.
-Neither solution is good, but the latter is the only feasible one (This does
-mean it won't even listen on an IPv6 port).
+This has a dramatically visible impact on the time it takes to query for a name. To prevent this there are really only two options, the first is to make the IPv6 network routeable, and the second is to put bind in IPv4 only mode. Neither solution is good, but the latter is the only feasible one (This does mean it won't even listen on an IPv6 port).
 
-```
-echo 'OPTIONS="-4"' >> /etc/sysconfig/named
-service named restart
+```console
+$ echo 'OPTIONS="-4"' >> /etc/sysconfig/named
+$ service named restart
 ```
