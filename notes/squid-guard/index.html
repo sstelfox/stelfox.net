@@ -1,10 +1,10 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Squid Guard is officially a &amp;ldquo;URL Rewrite Program&amp;rdquo;. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/squid-guard/><title>Squid Guard :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Squid Guard"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Squid Guard is officially a “URL Rewrite Program”. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."><meta itemprop=wordCount content="3818"><meta name=twitter:card content="summary"><meta name=twitter:title content="Squid Guard"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Squid Guard"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Squid Guard is officially a “URL Rewrite Program”. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."><meta itemprop=datePublished content="2018-10-30T20:24:15-04:00"><meta itemprop=dateModified content="2018-10-30T20:24:15-04:00"><meta itemprop=wordCount content="3994"><meta name=twitter:card content="summary"><meta name=twitter:title content="Squid Guard"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Squid Guard is officially a “URL Rewrite Program”. It takes information about the requested page coming in and checks it against a series of ACLs, blacklists, and whitelists in an order specified by the administrator."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/squid-guard/>Squid Guard</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/squid-guard/>Squid Guard</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.</strong></em></p><p>Squid Guard is officially a &ldquo;URL Rewrite Program&rdquo;. It takes information about
 the requested page coming in and checks it against a series of ACLs,
@@ -19,25 +19,21 @@ prints out the contents of the $_GET variable. With the config provided this
 will show the client&rsquo;s address, name, username, group, category of the
 offending URL and the URL itself. This can be used to properly display an error
 message. I am quite annoyed by how this works&mldr; I&rsquo;d much prefer to just deny
-the requests&mldr;</p><pre tabindex=0><code>yum install squidGuard -y
-</code></pre><h3 id=black--white-lists>Black & White Lists</h3><p>Remove the default blacklist file as we&rsquo;re going to use another one. This is a
+the requests&mldr;</p><pre tabindex=0><code>yum install squidGuard -y</code></pre><h3 id=black--white-lists>Black & White Lists</h3><p>Remove the default blacklist file as we&rsquo;re going to use another one. This is a
 necessary step to continue using the rest of these instructions. If you don&rsquo;t
 wan to use the Shalla Lists, you&rsquo;ll have to adapt to the instructions given
 however they shouldn&rsquo;t differ much between different lists.</p><pre tabindex=0><code>[root@localhost ~]# rm -f /var/squidGuard/blacklists.tar.gz
 [root@localhost ~]# mkdir -p /var/squidGuard/blacklists
 [root@localhost ~]# mkdir -p /var/squidGuard/whitelists/custom/
 [root@localhost ~]# touch /var/squidGuard/whitelists/custom/domains
-[root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls
-</code></pre><p>Download a blacklist file, <a href=http://www.shallalist.de/>Shalla List</a> seems to be the defacto/good one.</p><pre tabindex=0><code>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2&gt;/dev/null
+[root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls</code></pre><p>Download a blacklist file, <a href=http://www.shallalist.de/>Shalla List</a> seems to be the defacto/good one.</p><pre tabindex=0><code>[root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2&gt;/dev/null
 [root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz.md5 -o /var/squidGuard/blacklists/shallalist.tar.gz.md5 2&gt; /dev/null
 [root@localhost ~]# cat /var/squidGuard/blacklists/shallalist.tar.gz.md5 &amp;&amp; md5sum /var/squidGuard/blacklists/shallalist.tar.gz
 c50fdc59593bc3e5c5863e2b120f6fed  shallalist.tar.gz
-c50fdc59593bc3e5c5863e2b120f6fed  /var/squidGuard/blacklists/shallalist.tar.gz
-</code></pre><p>Note: the md5sums are the same (we received an intact download, the sums will
+c50fdc59593bc3e5c5863e2b120f6fed  /var/squidGuard/blacklists/shallalist.tar.gz</code></pre><p>Note: the md5sums are the same (we received an intact download, the sums will
 be different everytime it updates).</p><p>Now that we&rsquo;ve verified the blacklists lets extract them.</p><pre tabindex=0><code>[root@localhost ~]# cd /var/squidGuard
 [root@localhost squidGuard]# tar -xzvf shallalist.tar.gz --strip-components 1
-[root@localhost squidGuard]# chown -R squid:squid /var/squidGuard/
-</code></pre><h2 id=configuration>Configuration</h2><p>By default, squidGuard tries to store it&rsquo;s logfiles in <code>/var/log/squidGuard</code>,
+[root@localhost squidGuard]# chown -R squid:squid /var/squidGuard/</code></pre><h2 id=configuration>Configuration</h2><p>By default, squidGuard tries to store it&rsquo;s logfiles in <code>/var/log/squidGuard</code>,
 however, since squid starts up squidGuard, squidGuard will be running under the
 squid user. This is important as the squid user won&rsquo;t have permission to
 <code>/var/log/squidGuard</code>. We should switch it too <code>/var/log/squid</code>, and ensure
@@ -617,28 +613,22 @@ acl {
     pass updatesites none
     redirect http://127.0.0.1/guard/blocked.php?clientaddr=%a&amp;clientdomain=%n&amp;clientuser=%i&amp;clientgroup=%s&amp;targetgroup=%t&amp;url=%u&amp;uri=%p
   }
-}
-</code></pre><h2 id=live-config-changes>Live Config Changes</h2><p>The squid command &ldquo;squid -k reconfigure&rdquo; DOES re-evaluate squidGuard config
+}</code></pre><h2 id=live-config-changes>Live Config Changes</h2><p>The squid command &ldquo;squid -k reconfigure&rdquo; DOES re-evaluate squidGuard config
 changes as well. This make it very easy to quickly adjust things all over the
 server without a significant service interruption.</p><h2 id=testing-and-diagnostics>Testing and Diagnostics</h2><p>So what I&rsquo;ve found in my experimentation is that if there is an issue with
 squidGuard starting up squid will still success and there will probably not be
 any errors anywhere, it will simply not block anything. This is obviously not
 an ideal situation. To test and make sure that your configuration is good (or
 possibly see the errors that may be preventing the filtering from working) run
-the following command:</p><pre tabindex=0><code>[root@localhost ~]# squidGuard -c /etc/squid/squidGuard.conf -C all
-</code></pre><p>It will go through and build the database files for every category defined in
+the following command:</p><pre tabindex=0><code>[root@localhost ~]# squidGuard -c /etc/squid/squidGuard.conf -C all</code></pre><p>It will go through and build the database files for every category defined in
 the configuration then verify that everything is in order. If an error does
-occur you&rsquo;ll see the message:</p><pre tabindex=0><code>2011-09-20 12:15:50 [7140] Going into emergency mode
-</code></pre><p>Look on the line above it and it you&rsquo;ll have to figure out the issue based on
+occur you&rsquo;ll see the message:</p><pre tabindex=0><code>2011-09-20 12:15:50 [7140] Going into emergency mode</code></pre><p>Look on the line above it and it you&rsquo;ll have to figure out the issue based on
 that message.</p><p>NOTE: After performing this command all of the database files will be owned by
-root! This won&rsquo;t work, fix the issue running the following command:</p><pre tabindex=0><code>[root@localhost ~]# chown -R squid:squid /var/squidGuard/*
-</code></pre><p>Additional permission issues can (usually) be resolved with the following
+root! This won&rsquo;t work, fix the issue running the following command:</p><pre tabindex=0><code>[root@localhost ~]# chown -R squid:squid /var/squidGuard/*</code></pre><p>Additional permission issues can (usually) be resolved with the following
 commands:</p><pre tabindex=0><code>[root@localhost ~]# chown -R root:squid /etc/squid
-[root@localhost ~]# chmod 640 /etc/squid/*
-</code></pre><p>To test individual rules to make sure things are being redirected or blocked
+[root@localhost ~]# chmod 640 /etc/squid/*</code></pre><p>To test individual rules to make sure things are being redirected or blocked
 correctly you can test squidGuard with something along the following lines:</p><pre tabindex=0><code>[root@localhost ~]# su squid -s /bin/bash -
-bash-4.2$ echo &#34;http://porn.com 10.0.0.1/ - - GET&#34; | squidGuard -d -c /etc/squid/squidGuard.conf
-</code></pre><p>It will either return nothing (passes the check) or return a URL to redirect
+bash-4.2$ echo &#34;http://porn.com 10.0.0.1/ - - GET&#34; | squidGuard -d -c /etc/squid/squidGuard.conf</code></pre><p>It will either return nothing (passes the check) or return a URL to redirect
 the user too (failed the check). You can replace the 10.0.0.1 with an IP of a
 machine you&rsquo;d like to test the rules with.</p><h2 id=security-notes>Security Notes</h2><p>squidGuard is an additional layer of protection against known bad sites. It can
 not possibly catch all of the bad sites but it does help. For any general
@@ -646,196 +636,388 @@ browsing that you don&rsquo;t want to restrict the content of, I strongly sugges
 including the following groups as exclusions. They will help promote anonymous
 safe browsing.</p><ul><li>adv</li><li>costtraps</li><li>in-addr</li><li>redirector</li><li>ringtones</li><li>spyware</li><li>trackers</li></ul><p>The only one that may cause issues is the &ldquo;in-addr&rdquo; one which blocks going to
 IP addresses directly. I personally get around this by including the sites I
-want to access directly in my whitelist file.</p><h2 id=sample-error-page>Sample Error Page</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=display:flex><span><span style=color:#f92672>&lt;?</span><span style=color:#a6e22e>php</span>
-</span></span><span style=display:flex><span>  <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>uuid</span>() {
-</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>sprintf</span>( <span style=color:#e6db74>&#39;%04x%04x-%04x-%04x-%04x-%04x%04x%04x&#39;</span>,
-</span></span><span style=display:flex><span>      <span style=color:#75715e>// 32 bits for &#34;time_low&#34;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ), <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ),
+want to access directly in my whitelist file.</p><h2 id=sample-error-page>Sample Error Page</h2><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-1><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-1>  1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-2><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-2>  2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-3><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-3>  3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-4><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-4>  4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-5><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-5>  5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-6><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-6>  6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-7><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-7>  7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-8><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-8>  8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-9><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-9>  9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-10><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-10> 10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-11><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-11> 11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-12><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-12> 12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-13><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-13> 13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-14><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-14> 14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-15><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-15> 15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-16><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-16> 16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-17><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-17> 17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-18><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-18> 18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-19><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-19> 19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-20><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-20> 20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-21><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-21> 21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-22><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-22> 22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-23><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-23> 23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-24><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-24> 24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-25><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-25> 25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-26><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-26> 26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-27><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-27> 27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-28><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-28> 28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-29><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-29> 29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-30><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-30> 30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-31><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-31> 31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-32><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-32> 32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-33><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-33> 33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-34><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-34> 34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-35><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-35> 35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-36><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-36> 36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-37><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-37> 37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-38><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-38> 38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-39><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-39> 39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-40><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-40> 40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-41><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-41> 41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-42><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-42> 42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-43><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-43> 43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-44><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-44> 44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-45><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-45> 45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-46><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-46> 46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-47><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-47> 47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-48><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-48> 48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-49><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-49> 49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-50><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-50> 50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-51><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-51> 51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-52><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-52> 52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-53><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-53> 53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-54><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-54> 54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-55><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-55> 55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-56><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-56> 56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-57><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-57> 57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-58><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-58> 58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-59><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-59> 59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-60><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-60> 60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-61><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-61> 61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-62><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-62> 62</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-63><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-63> 63</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-64><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-64> 64</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-65><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-65> 65</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-66><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-66> 66</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-67><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-67> 67</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-68><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-68> 68</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-69><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-69> 69</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-70><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-70> 70</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-71><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-71> 71</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-72><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-72> 72</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-73><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-73> 73</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-74><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-74> 74</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-75><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-75> 75</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-76><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-76> 76</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-77><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-77> 77</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-78><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-78> 78</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-79><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-79> 79</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-80><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-80> 80</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-81><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-81> 81</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-82><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-82> 82</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-83><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-83> 83</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-84><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-84> 84</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-85><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-85> 85</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-86><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-86> 86</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-87><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-87> 87</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-88><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-88> 88</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-89><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-89> 89</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-90><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-90> 90</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-91><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-91> 91</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-92><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-92> 92</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-93><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-93> 93</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-94><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-94> 94</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-95><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-95> 95</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-96><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-96> 96</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-97><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-97> 97</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-98><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-98> 98</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-99><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-99> 99</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-100><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-100>100</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-101><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-101>101</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-102><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-102>102</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-103><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-103>103</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-104><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-104>104</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-105><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-105>105</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-106><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-106>106</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-107><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-107>107</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-108><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-108>108</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-109><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-109>109</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-110><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-110>110</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-111><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-111>111</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-112><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-112>112</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-113><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-113>113</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-114><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-114>114</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-115><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-115>115</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-116><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-116>116</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-117><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-117>117</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-118><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-118>118</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-119><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-119>119</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-120><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-120>120</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-121><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-121>121</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-122><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-122>122</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-123><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-123>123</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-124><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-124>124</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-125><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-125>125</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-126><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-126>126</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-127><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-127>127</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-128><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-128>128</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-129><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-129>129</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-130><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-130>130</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-131><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-131>131</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-132><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-132>132</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-133><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-133>133</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-134><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-134>134</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-135><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-135>135</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-136><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-136>136</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-137><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-137>137</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-138><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-138>138</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-139><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-139>139</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-140><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-140>140</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-141><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-141>141</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-142><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-142>142</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-143><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-143>143</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-144><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-144>144</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-145><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-145>145</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-146><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-146>146</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-147><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-147>147</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-148><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-148>148</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-149><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-149>149</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-150><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-150>150</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-151><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-151>151</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-152><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-152>152</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-153><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-153>153</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-154><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-154>154</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-155><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-155>155</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-156><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-156>156</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-157><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-157>157</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-158><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-158>158</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-159><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-159>159</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-160><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-160>160</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-161><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-161>161</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-162><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-162>162</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-163><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-163>163</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-164><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-164>164</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-165><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-165>165</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-166><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-166>166</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-167><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-167>167</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-168><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-168>168</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-169><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-169>169</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-170><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-170>170</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-171><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-171>171</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-172><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-172>172</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-173><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-173>173</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-174><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-174>174</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-175><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-175>175</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-176><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-176>176</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-177><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-177>177</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-178><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-178>178</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-179><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-179>179</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-180><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-180>180</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-181><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-181>181</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-182><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-182>182</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-183><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-183>183</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-184><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-184>184</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-185><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-185>185</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-186><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-186>186</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-187><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-187>187</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-188><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-188>188</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-189><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-189>189</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-190><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-190>190</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-191><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-191>191</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cfda26b-192><a style=outline:none;text-decoration:none;color:inherit href=#code-cfda26b-192>192</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-php data-lang=php><span style=display:flex><span><span style=color:#ff7b72;font-weight:700>&lt;?</span>php
+</span></span><span style=display:flex><span>  <span style=color:#ff7b72>function</span> <span style=color:#d2a8ff;font-weight:700>uuid</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#ff7b72>return</span> sprintf( <span style=color:#a5d6ff>&#39;%04x%04x-%04x-%04x-%04x-%04x%04x%04x&#39;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#8b949e;font-style:italic>// 32 bits for &#34;time_low&#34;
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0xffff</span> ), mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0xffff</span> ),
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>      <span style=color:#75715e>// 16 bits for &#34;time_mid&#34;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ),
+</span></span><span style=display:flex><span>      <span style=color:#8b949e;font-style:italic>// 16 bits for &#34;time_mid&#34;
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0xffff</span> ),
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>      <span style=color:#75715e>// 16 bits for &#34;time_hi_and_version&#34;,
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#75715e>// four most significant bits holds version number 4
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0x0fff</span> ) <span style=color:#f92672>|</span> <span style=color:#ae81ff>0x4000</span>,
+</span></span><span style=display:flex><span>      <span style=color:#8b949e;font-style:italic>// 16 bits for &#34;time_hi_and_version&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      <span style=color:#8b949e;font-style:italic>// four most significant bits holds version number 4
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0x0fff</span> ) <span style=color:#ff7b72;font-weight:700>|</span> <span style=color:#a5d6ff>0x4000</span>,
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>      <span style=color:#75715e>// 16 bits, 8 bits for &#34;clk_seq_hi_res&#34;,
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#75715e>// 8 bits for &#34;clk_seq_low&#34;,
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#75715e>// two most significant bits holds zero and one for variant DCE1.1
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0x3fff</span> ) <span style=color:#f92672>|</span> <span style=color:#ae81ff>0x8000</span>,
+</span></span><span style=display:flex><span>      <span style=color:#8b949e;font-style:italic>// 16 bits, 8 bits for &#34;clk_seq_hi_res&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      <span style=color:#8b949e;font-style:italic>// 8 bits for &#34;clk_seq_low&#34;,
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      <span style=color:#8b949e;font-style:italic>// two most significant bits holds zero and one for variant DCE1.1
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0x3fff</span> ) <span style=color:#ff7b72;font-weight:700>|</span> <span style=color:#a5d6ff>0x8000</span>,
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>      <span style=color:#75715e>// 48 bits for &#34;node&#34;
-</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ), <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> ), <span style=color:#a6e22e>mt_rand</span>( <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>0xffff</span> )
+</span></span><span style=display:flex><span>      <span style=color:#8b949e;font-style:italic>// 48 bits for &#34;node&#34;
+</span></span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic></span>      mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0xffff</span> ), mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0xffff</span> ), mt_rand( <span style=color:#a5d6ff>0</span>, <span style=color:#a5d6ff>0xffff</span> )
 </span></span><span style=display:flex><span>    );
 </span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span><span style=color:#75715e>?&gt;</span><span style=color:#960050;background-color:#1e0010>
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>&lt;!DOCTYPE&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>&lt;html&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;head&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;title&gt;This Site Has Been Blocked&lt;/title&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;style type=&#34;text/css&#34;&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      @font-face {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: &#39;Tangerine&#39;;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        src: local(&#39;Tangerine&#39;), url(&#39;http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf&#39;) format(&#39;truetype&#39;);
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      body {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: serif;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #FFF8DC;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      #page {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border: 1px solid #CC9;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-top: 0px;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        position: relative;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 960px;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: auto;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #FFF;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        height: 95%;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        box-shadow: 0 0 2em #CC9;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        overflow: hidden;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-left-radius: 1em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-right-radius: 1em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      #main {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        position: relative;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        overflow: hidden;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      #content {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        overflow: auto;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 1em 2em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        box-shadow: inset 0 0 0.5em #CC9;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        height: 100%;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      header {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #CFC;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: &#39;Tangerine&#39;, serif;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 2em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        max-height: 80px;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding-top: 0.25em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      header h1,h4 {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin-left: 1.0em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        display: inline-block;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-decoration: underline;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      footer {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #CFC;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-left-radius: 1em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        border-bottom-right-radius: 1em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0.3em 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 0.7em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        position: absolute;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 100%;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        bottom: 0px;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-align: center;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav p {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin-bottom: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        background: #CFC;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0 0 0 1em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 0.8em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 16%;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        height: 100%;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        float: left;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        box-shadow: 0 4px 6px 0 #CC9;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        list-style: none;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding: 0;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul li {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        padding-left: 1em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul li a {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        color: #552;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-decoration: none;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      nav ul li a:hover {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-decoration: underline;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      table {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        margin: auto;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-size: 0.8em;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-family: sans-serif;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      th {
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        text-align: left;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        vertical-align: top;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        width: 100px;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        font-weight: normal;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      }
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;/style&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;/head&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;body&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;div id=&#39;page&#39;&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;header&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;h1&gt;BedroomProgrammers.net&lt;/h1&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;h4&gt;Intricacy requires well rested minds&lt;/h4&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;/header&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;div id=&#34;main&#34;&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;nav&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;p&gt;Informative Links:&lt;/p&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;ul&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;li&gt;- &lt;a href=&#34;#&#34;&gt;Acceptable Use Policy&lt;/a&gt;&lt;/li&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;/ul&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;/nav&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;div id=&#34;content&#34;&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;section&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;h2&gt;This Page Has Been Blocked&lt;/h2&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;p&gt;This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.&lt;/p&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;p&gt;If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.&lt;/p&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;p&gt;Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn&#39;t take holidays... neither does this system.&lt;/p&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;/section&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;hr /&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;section&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;table&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Timestamp&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo date(DATE_W3C); ?&gt;&lt;/td&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Request ID&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo uuid(); ?&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;IP Address&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientaddr&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Hostname&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientname&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;User&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientuser&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Client Group&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientgroup&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;URL Group&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;targetgroup&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;th&gt;Blacklisted URL&lt;/th&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>                &lt;td&gt;&lt;?php echo $_GET[&#39;url&#39;] . $_GET[&#39;uri&#39;]; ?&gt;&lt;/td&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>              &lt;/tr&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>            &lt;/table&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>          &lt;/section&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>        &lt;/div&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;/div&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>      &lt;footer&gt;&amp;copy 2011 Me!&lt;/footer&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>    &lt;/div&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>  &lt;/body&gt;
-</span></span></span><span style=display:flex><span><span style=color:#960050;background-color:#1e0010>&lt;/html&gt;
-</span></span></span></code></pre></div></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-weight:700;font-style:italic>?&gt;</span><span style=color:#f85149>
+</span></span></span><span style=display:flex><span><span style=color:#f85149>&lt;!DOCTYPE&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>&lt;html&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>  &lt;head&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>    &lt;title&gt;This Site Has Been Blocked&lt;/title&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAeRtNANCRtwCwXowA0Z66ANSZvQD00eUA9dbrAP/7/wCpT4QAlzttAKpShACoVYQA9N/rAKZbhACrVocApl2KAOzF3QCxW40A4q7PAHEEQAC1Z5YAjSRgAOzC3gDuwt4AjiVjAK9aiwD86PUAsl+RAH4ZUgCzX5EA0Zq5AJQzaQDHgKsA//T+AJcybwCFHlgAplSDAMiErgD41u0Aq1KGAKtVhgDcpcgAmUVyAL5woAC+c6AAeBRNAM6StABnBzkA0pS6AHwhUADDgaYAoVJ+ALdjlQDHgqkAplWHAMiHrwCnV4QAjBxcAOq92gCbQnMArFyKAKBAdgDOk7gAijNiANGTuAB6HU4A78zjAKBKeQCDGVQAtGiTAJUzawD10ekAqFCCAJg3bgCFJV0AhSdaANunxwD54/IAvXWfAN+oygDCdqIAjjBjAIIVUgCjS30Axn6oAPTQ5wCEHFUAt2aXAMiCqwDIhq4AuXaaAL9yoACOJmEAjydkAKFEewCeTHgAoEd7AJAwZAC3ZZUAlTVqANabwACnUYcAqVaEAHgLSADJj68A+N/xALh4oQDcqcYAzY61AJAmYgCgQnYAr1+NAMJ5pADjr88As2OQAIEbVACSNGgA5LbSANedvgCnT4IA99PpAJk0cQDbo8cAyoywAL96nwDDeaUA/er4AOKxzQCCGFUAtmSUANWavwD+9PsA1p2/ANaewgD20+oAxYerALdrlwCHHVsAyYWuAMiIrgD41+0At3WaAOnB2QB3EEcA3abIAIwoYQCfP3gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXW5vDy8gVx0AAAAAAAAAKBYfaQSEaYgkUwAAAAAAOmF1OQ59DY5gTDAuAAAAAGhFZFQrNHMDQDKQFAAAAF6BAVt4RHBcInwzPSVLAACKklI8bHGLj4A1SWJ0IwAAGUopDIlDfyoFTWMKQnoAAJM+Z0YFBwg7coOMC0dmAAA3X4ImUFaHjQY4LRpPAAAAABWFdhtIJ3kTWkE2HAAAAAAQEllOahgXezF+CQAAAAAAAGtYd22REWVRHgAAAAAAAAAAAIYsIVUCPwAAAAAAAAAAAAAAAAAAAAAAAAAAAP//AAD//wAA8A8AAOAHAADAAwAAwAMAAIABAACAAQAAgAEAAIABAACAAwAAwAMAAMAHAADgDwAA+B8AAP//AAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>    &lt;link href=&#34;data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAABNOB4ATzobAH5kNABSORgAUTobALl+SgBSOhsAUjwYAFA8IQBUPBgATj4nAFY8GACyilMAWD0bAIZmOgBZQR4AW0AbAEEuEwBCLxYAXUMbAFxEHgDounUAX0QeAGRIGABLNxwASjgfAPDCewBPORkATzocAJxsQwBTPBkAVDwZAFU8GQBWPBkAhGY7AMikawBaQBwA/cl+AFlCIgBFMhcAoYFVAF9IIgBfRiUASDMaAIpyTQBJNhoATjkaAE46HQBQORoAUTkaAFI5GgBPOyAAaUwuAFI8GgBkUTQAUj0dAFM9HQBVPBoAVjwaAFQ9HQCbekoAWT8aAF5HIABeRSMASjYbAEs2GwBKNx4ATDgYAHteNwBNOBgATzgYAE45GwBOOh4AUDkbAE86HgBRORsAUjsYAMuWXgD0xX0A27JyAFM9HgBUPR4AWj4YAFk/GwBaPxsAVkEhAFhCJACKZEAAVUQqAFpEIQBeQx4ARDEWAGFFGwBiRh4AYUgkANesagBNOBkATzkcAE46HwBTOxkAVDsZAFY+GQBWPxwAblQtAFVBIgD7y34AVkEiALKPXQBbQxYAV0EiAJZrFwBcRCIA6b15AEg1GgBLOBoAZU4lAEs6IABSOxoAUzsaAIBmNgBpUCsAVDsaAFM8HQBWOxoAVz4aAFY/HQBYPhoA+Mt/AFo+GgD8yH8AhGk/AFtBGgBCMBUAQzAVAEQwFQCHa0UAYkYXAEg0GABMNxgAtHtHAEk5HgBKOR4ATDgbAEs5HgBMOR4AUToYAFE7GwBSOxsAhl46AFc9GAD3yIAAWkAYAFxBGwBcQh4AXkkhAEczFgB5Vy8ARzQZAEo0GQBMNxkAfGIsAE05HwB9YDgAUDoZAFE6GQBSOhkAUzoZAFM9GQBQPiUA+Md+AFc9GQCyj1cAbVQwAOmzcABcQRwAW0QcAFpDIgBGMxcAY0YZAEczFwBeRisAZUkZAEs5IABJOyYATjkgAFA6GgBROhoAUjoaAFU9GgBWPRoAVz0aAFg9GgBZQBoA4bd0AFZAIwCXahgAQS8VAEMvFQBbRSAAYEMaAFxDIwCecBgAlmY5AHpiLgBMNhgASjgeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtkKQAIzNobiPjUpIYi9ICLESgqKJhpeItRfGPpopWY4rxSJ/FXhsw27JoHcCy3OfnYTErKmWZ1KVslwUwK81QXEnW4U8JXAtEZteDqtrcmFAs7OzRIFpGl9PwSMst55HN7m5YAxOKDZYqHQcJL8efTe6MS6thwEDpR9MHlMQIWZQpDGcTTMEMLqmCWM6VJgPerlJyldLkrm6uh8LeXvHWlG5RYu0pLkGk5N1vb5jgF07uYoFGTGjk6c1k3ZUVFNaOLpDHRikuZMHZGQgOYOumTu5zJQbMrkxuzoNfr2qE1p6o0Y0kTG6MQZkvHx8ZT0WVm1qCmhVwlVtJrBvP2/IKgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=&#34; rel=&#34;icon&#34; type=&#34;image/x-icon&#34; /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>    &lt;style type=&#34;text/css&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      @font-face {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-family: &#39;Tangerine&#39;;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        src: local(&#39;Tangerine&#39;), url(&#39;http://themes.googleusercontent.com/static/fonts/tangerine/v1/HGfsyCL5WASpHOFnouG-RKCWcynf_cDxXwCLxiixG1c.ttf&#39;) format(&#39;truetype&#39;);
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      body {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-family: serif;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        background: #FFF8DC;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      #page {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        border: 1px solid #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        border-top: 0px;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        position: relative;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        width: 960px;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin: auto;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        background: #FFF;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        height: 95%;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        box-shadow: 0 0 2em #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        overflow: hidden;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        border-bottom-left-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        border-bottom-right-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      #main {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        position: relative;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        overflow: hidden;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      #content {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        overflow: auto;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding: 1em 2em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        box-shadow: inset 0 0 0.5em #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        height: 100%;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      header {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        background: #CFC;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-family: &#39;Tangerine&#39;, serif;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-size: 2em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        max-height: 80px;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding-top: 0.25em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      header h1,h4 {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin-left: 1.0em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        display: inline-block;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        text-decoration: underline;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      footer {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        background: #CFC;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        border-bottom-left-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        border-bottom-right-radius: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding: 0.3em 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-size: 0.7em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        position: absolute;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        width: 100%;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        bottom: 0px;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        text-align: center;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      nav p {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin-bottom: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      nav {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        background: #CFC;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding: 0 0 0 1em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-size: 0.8em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        width: 16%;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        height: 100%;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        float: left;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        box-shadow: 0 4px 6px 0 #CC9;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      nav ul {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        list-style: none;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding: 0;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      nav ul li {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        padding-left: 1em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      nav ul li a {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        color: #552;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        text-decoration: none;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      nav ul li a:hover {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        text-decoration: underline;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      table {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        margin: auto;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-size: 0.8em;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-family: sans-serif;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      th {
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        text-align: left;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        vertical-align: top;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        width: 100px;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        font-weight: normal;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      }
+</span></span></span><span style=display:flex><span><span style=color:#f85149>    &lt;/style&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>  &lt;/head&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>  &lt;body&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>    &lt;div id=&#39;page&#39;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      &lt;header&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        &lt;h1&gt;BedroomProgrammers.net&lt;/h1&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        &lt;h4&gt;Intricacy requires well rested minds&lt;/h4&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      &lt;/header&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      &lt;div id=&#34;main&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        &lt;nav&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;p&gt;Informative Links:&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;ul&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>            &lt;li&gt;- &lt;a href=&#34;#&#34;&gt;Acceptable Use Policy&lt;/a&gt;&lt;/li&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;/ul&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        &lt;/nav&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        &lt;div id=&#34;content&#34;&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>            &lt;h2&gt;This Page Has Been Blocked&lt;/h2&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>            &lt;p&gt;This could have happened because it is currently business hours and you are trying to get too a site that is in our business hours blacklist, it could have been blocked for safety reasons (for example the site is known to host malware or attempt to phish information from unsuspecting users), or it could be a mistake.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>            &lt;p&gt;If this is a mistake and you feel that this site should be removed from the blacklist, please email the administrator with the information provided below. Please note how urgent the access is required as it can take up to 48 hours for a request to be processed. The administrator reserves the right to reject requests for removal if they deem the site should not be accessed or information is missing from the request.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>            &lt;p&gt;Please note, that business hours are Monday-Friday 8:00am to 4:30pm. The business hours blacklist is disabled automatically during lunch time (12:00pm to 1:00pm) and outside of business hours. IT doesn&#39;t take holidays... neither does this system.&lt;/p&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;/section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;hr /&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>            &lt;table&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;Timestamp&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo date(DATE_W3C); ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;Request ID&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo uuid(); ?&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;IP Address&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientaddr&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;Hostname&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientname&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;User&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientuser&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;Client Group&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo $_GET[&#39;clientgroup&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;URL Group&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo $_GET[&#39;targetgroup&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;th&gt;Blacklisted URL&lt;/th&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>                &lt;td&gt;&lt;?php echo $_GET[&#39;url&#39;] . $_GET[&#39;uri&#39;]; ?&gt;&lt;/td&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>              &lt;/tr&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>            &lt;/table&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>          &lt;/section&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>        &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>      &lt;footer&gt;&amp;copy 2011 Me!&lt;/footer&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>    &lt;/div&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>  &lt;/body&gt;
+</span></span></span><span style=display:flex><span><span style=color:#f85149>&lt;/html&gt;
+</span></span></span></code></pre></td></tr></table></div></div></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=73f7e533ca46dadf707b92cf4c86a28caf5eac1a target=_blank rel=noopener>73f7e533</a> @ 2018-10-30</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

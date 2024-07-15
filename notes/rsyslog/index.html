@@ -1,15 +1,15 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
-Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/rsyslog/><title>RSyslog :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="RSyslog"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
-Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."><meta itemprop=wordCount content="1861"><meta name=twitter:card content="summary"><meta name=twitter:title content="RSyslog"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-RSyslog RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
-Security Notes RSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
+Security NotesRSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/rsyslog/><title>RSyslog :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="RSyslog"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
+Security NotesRSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."><meta itemprop=datePublished content="2018-10-30T20:24:15-04:00"><meta itemprop=dateModified content="2018-10-30T20:24:15-04:00"><meta itemprop=wordCount content="1844"><meta name=twitter:card content="summary"><meta name=twitter:title content="RSyslog"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+RSyslog is a more advanced replacement for the aging klogd and syslogd. It supports useful features such as attribute filtering, multiple protocol support, and logging to databases.
+Security NotesRSyslog can log some sensitive information or very useful information for any potential intruder including service names, versions, valid usernames, logon times and quite a bit more."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/rsyslog/>RSyslog</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/rsyslog/>RSyslog</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p><h1 id=rsyslog>RSyslog</h1><p>RSyslog is a more advanced replacement for the aging klogd and syslogd. It
+until I get around to updating it.</strong></em></p><p>RSyslog is a more advanced replacement for the aging klogd and syslogd. It
 supports useful features such as attribute filtering, multiple protocol
 support, and logging to databases.</p><h2 id=security-notes>Security Notes</h2><p>RSyslog can log some sensitive information or very useful information for any
 potential intruder including service names, versions, valid usernames, logon
@@ -60,8 +60,7 @@ module(load=&#34;imklog&#34;)
 module(load=&#34;immark&#34; interval=&#34;3600&#34;)
 
 $WorkDirectory /var/lib/rsyslog
-$IncludeConfig /etc/rsyslog.d/*.conf
-</code></pre><p>If you prefer not to have time based mark messages periodically added to your
+$IncludeConfig /etc/rsyslog.d/*.conf</code></pre><p>If you prefer not to have time based mark messages periodically added to your
 log files you&rsquo;ll want to remove or comment out that line or change the interval
 that they&rsquo;re logged at (I&rsquo;ve found hourly to be pretty balanced and useful).</p><p>The first important modular configuration file is for logging messages to local
 files. All my systems get this file which I place at
@@ -75,8 +74,7 @@ on.</p><pre tabindex=0><code>if $inputname != &#39;imfile&#39; then {
   authpriv.*                                action(type=&#34;omfile&#34; file=&#34;/var/log/secure&#34;)
   uucp,news.crit                            action(type=&#34;omfile&#34; file=&#34;/var/log/spooler&#34;)
   *.emerg                                   action(type=&#34;omusrmsg&#34; users=&#34;*&#34;)
-}
-</code></pre><p>You can stop at this point if you&rsquo;re not going to send your logs to a central
+}</code></pre><p>You can stop at this point if you&rsquo;re not going to send your logs to a central
 location. On the systems that will be receiving logs you&rsquo;ll want to add the
 following configuration file at <code>/etc/rsyslog.d/server.conf</code>.</p><p>This is one of the places where I couldn&rsquo;t find a RainerScript equivalent
 (around the definition of templates). The RELP module also doesn&rsquo;t support the
@@ -108,8 +106,7 @@ ruleset(name=&#34;remote&#34;) {
 }
 
 input(type=&#34;imudp&#34; port=&#34;514&#34; ruleset=&#34;remote&#34;)
-input(type=&#34;imtcp&#34; port=&#34;514&#34; ruleset=&#34;remote&#34;)
-</code></pre><p>This will maintain indepedant log file for each client that sends the server
+input(type=&#34;imtcp&#34; port=&#34;514&#34; ruleset=&#34;remote&#34;)</code></pre><p>This will maintain indepedant log file for each client that sends the server
 logs broken down by IP address in the <code>/var/log/remote</code> directory. Each
 directory will match the one you&rsquo;d expect to see on that systems <code>/var/log</code>
 directory.</p><p>If you look closely you can see that I&rsquo;ve got some special logic in place for
@@ -128,8 +125,7 @@ configuration file at <code>/etc/rsyslog.d/remote.conf</code>.</p><pre tabindex=
   queue.size=&#34;1g&#34;
   queue.type=&#34;LinkedList&#34;
   queue.saveonshutdown=&#34;on&#34;
-)
-</code></pre><p>You&rsquo;ll want to replace the value of the target attribute with the name of your
+)</code></pre><p>You&rsquo;ll want to replace the value of the target attribute with the name of your
 logserver. I&rsquo;ve never had issues with using hostnames though generally the best
 practice for logging is to use IP addresses. This name will only be looked up
 when the configuration is evaluated.</p><p>I have two separate log servers that I send logs to for redundancy, this does
@@ -144,9 +140,7 @@ input(type=&#34;imfile&#34;
       statefile=&#34;imfile-state:-var-log-audit-audit.log&#34;
       tag=&#34;auditd-sender&#34;
       severity=&#34;info&#34;
-      facility=&#34;local6&#34;)
-</code></pre><p>Ensure you restart the syslog server after making these changes:</p><pre tabindex=0><code>systemctl restart rsyslog.service
-</code></pre><h2 id=log-rotation-for-servers>Log Rotation for Servers</h2><p>The last component in the log server is too ensure log files are regularly
+      facility=&#34;local6&#34;)</code></pre><p>Ensure you restart the syslog server after making these changes:</p><pre tabindex=0><code>systemctl restart rsyslog.service</code></pre><h2 id=log-rotation-for-servers>Log Rotation for Servers</h2><p>The last component in the log server is too ensure log files are regularly
 rotated and compressed. My per server log volume is relatively small so I
 rotate my logs weekly and keep a years worth for each machine.</p><p>I stick the following configuration file at
 <code>/etc/logrotate.d/rsyslog_server.conf</code>. This assumes you already have
@@ -180,8 +174,7 @@ rotate my logs weekly and keep a years worth for each machine.</p><p>I stick the
   postrotate
     [ -s /var/run/syslogd.pid ] &amp;&amp; kill -HUP $(cat /var/run/syslogd.pid) &amp;&gt; /dev/null || true
   endscript
-}
-</code></pre><h2 id=relp>RELP</h2><p>RELP is a custom log protocol created by the maintainers of RSyslog attempting
+}</code></pre><h2 id=relp>RELP</h2><p>RELP is a custom log protocol created by the maintainers of RSyslog attempting
 to ensure logs are reliably delivered to particular servers. In practice I&rsquo;ve
 had significant issues RELP, mostly around it&rsquo;s reliability (ironically) at
 sending logs when all systems are operating normally and at low volumes.</p><p>RELP was never able to pass any of my deployment tests reliably enough for me
@@ -208,4 +201,4 @@ versions that I&rsquo;ve experienced, the self-aggrandizing (&lsquo;RainerScript
 inconsistent documentation, and general lack of support that I&rsquo;ve witnessed.</p><p>That being said, I have yet to see even a commercial offering that works as
 well as RSyslog. The developers are continuing to develop in a security
 concious way (such as integrating encryption, and third party message
-signatures) and stability (such as log queues).</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+signatures) and stability (such as log queues).</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=73f7e533ca46dadf707b92cf4c86a28caf5eac1a target=_blank rel=noopener>73f7e533</a> @ 2018-10-30</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

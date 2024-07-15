@@ -1,103 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
-
-    <title>Sam Stelfox&#x27;s Thoughts &amp; Notes</title>
-    <link rel="stylesheet" href="https://stelfox.net/colors-dark.css">
-
-    
-
-    
-    
-  </head>
-  <body>
-    <header id="header">
-      <h1><a href="https:&#x2F;&#x2F;stelfox.net">Sam Stelfox&#x27;s Thoughts &amp; Notes</a></h1>
-      <p>Thought&#x27;s from a software engineer, systems architect, and Linux gubernāre.</p>
-    </header>
-    <div id="page">
-      <div id="sidebar">
-        
-          
-          <nav>
-            <ul class="nav">
-              
-                
-                  <li>
-                    <a href="&#x2F;"><span>Home</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;about&#x2F;"><span>About</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;blog&#x2F;"><span>Blog</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;projects&#x2F;"><span>Projects</span></a>
-                  </li>
-                
-                  <li>
-                    <a href="&#x2F;notes&#x2F;"><span>Various Notes</span></a>
-                  </li>
-                
-              
-            </ul>
-          </nav>
-          
-        
-      </div>
-      <div id="content">
-        
-<article class="post">
-  <h1>Wireless Troubleshouting</h1><div class="post-content"><h2 id="bcm4311">BCM4311</h2>
-<p>There is a known issue with Fedora 15+ and BCM4311 wireless cards where the
-wireless will connect, stay connected for a few minutes, then disconnect until
-either the machine is rebooted or wpa_supplicant and NetworkManager are
-rebooted. The latter does not always solve the problem. I've personally
-observed this issue being more prominent when large file transfers are taking
-place.</p>
-<p>Before taking these steps you should verify that you do indeed have a Broadcom
-BCM4311 wireless card. This can be done with the following command:</p>
-<pre><code>lspci | grep -i bcm4311
-</code></pre>
-<p>You should see something along the following if you have the card:</p>
-<pre><code>0c:00.0 Network controller: Broadcom Corporation BCM4311 802.11b/g WLAN (rev 01)
-</code></pre>
-<p>Ensure you have a wired connection as you will lose access to the wireless card
-during this process. You have been warned :). Please also note that the
-following commands (with the exception of the reboots) won't do anything unless
-you have the RPMFusion repository installed.</p>
-<p>As root install the akmod-wl package and reboot like so:</p>
-<pre><code>yum install akmod-wl -y
-reboot
-</code></pre>
-<p>Once the system has finished rebooting, perform a system update which will grab
-a few additional packages, and reboot once again:</p>
-<pre><code>yum update -y
-reboot
-</code></pre>
-<p>If you are unable to see the wireless card then this solution probably hasn't
-worked for you. You can bring the card back online by running the following as
-root:</p>
-<pre><code>modprobe b43
-</code></pre>
-</div>
-</article>
-
-      </div>
-      <footer id="footer">
-        <p class="copyright">
-          
-          &copy; 2011 &ndash; 2021 Sam Stelfox | <a href="https://stelfox.net/licenses/">Site Content Licenses</a>
-          
-        </p>
-      </footer>
-    </div>
-  </body>
-</html>
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="BCM4311There is a known issue with Fedora 15+ and BCM4311 wireless cards where the wireless will connect, stay connected for a few minutes, then disconnect until either the machine is rebooted or wpa_supplicant and NetworkManager are rebooted. The latter does not always solve the problem. I&amp;rsquo;ve personally observed this issue being more prominent when large file transfers are taking place.
+Before taking these steps you should verify that you do indeed have a Broadcom BCM4311 wireless card."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,linux,fedora,wireless"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/wireless-troubleshooting/><title>Wireless Troubleshooting :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Wireless Troubleshooting"><meta itemprop=description content="BCM4311There is a known issue with Fedora 15+ and BCM4311 wireless cards where the wireless will connect, stay connected for a few minutes, then disconnect until either the machine is rebooted or wpa_supplicant and NetworkManager are rebooted. The latter does not always solve the problem. I’ve personally observed this issue being more prominent when large file transfers are taking place.
+Before taking these steps you should verify that you do indeed have a Broadcom BCM4311 wireless card."><meta itemprop=datePublished content="2012-07-17T00:00:00+00:00"><meta itemprop=dateModified content="2012-07-17T00:00:00+00:00"><meta itemprop=wordCount content="243"><meta itemprop=keywords content="Linux,Fedora,Wireless"><meta name=twitter:card content="summary"><meta name=twitter:title content="Wireless Troubleshooting"><meta name=twitter:description content="BCM4311There is a known issue with Fedora 15+ and BCM4311 wireless cards where the wireless will connect, stay connected for a few minutes, then disconnect until either the machine is rebooted or wpa_supplicant and NetworkManager are rebooted. The latter does not always solve the problem. I’ve personally observed this issue being more prominent when large file transfers are taking place.
+Before taking these steps you should verify that you do indeed have a Broadcom BCM4311 wireless card."><meta property="article:published_time" content="2012-07-17 00:00:00 +0000 UTC"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>./Sam_Stelfox.sh</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/wireless-troubleshooting/>Wireless Troubleshooting</a></h2><div class=post-content><h2 id=bcm4311>BCM4311</h2><p>There is a known issue with Fedora 15+ and BCM4311 wireless cards where the wireless will connect, stay connected for a few minutes, then disconnect until either the machine is rebooted or wpa_supplicant and NetworkManager are rebooted. The latter does not always solve the problem. I&rsquo;ve personally observed this issue being more prominent when large file transfers are taking place.</p><p>Before taking these steps you should verify that you do indeed have a Broadcom BCM4311 wireless card. This can be done with the following command:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ba4f68-1><a style=outline:none;text-decoration:none;color:inherit href=#code-4ba4f68-1>1</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#8b949e>$</span> lspci | grep -i bcm4311
+</span></span></code></pre></td></tr></table></div></div><p>You should see something along the following if you have the card:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4e96dad-1><a style=outline:none;text-decoration:none;color:inherit href=#code-4e96dad-1>1</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#8b949e>0c:00.0 Network controller: Broadcom Corporation BCM4311 802.11b/g WLAN (rev 01)
+</span></span></span></code></pre></td></tr></table></div></div><p>Ensure you have a wired connection as you will lose access to the wireless card during this process. You have been warned :). Please also note that the following commands (with the exception of the reboots) won&rsquo;t do anything unless you have the RPMFusion repository installed.</p><p>As root install the akmod-wl package and reboot like so:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27f9324-1><a style=outline:none;text-decoration:none;color:inherit href=#code-27f9324-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27f9324-2><a style=outline:none;text-decoration:none;color:inherit href=#code-27f9324-2>2</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#8b949e>$</span> yum install akmod-wl -y
+</span></span><span style=display:flex><span><span style=color:#8b949e>$</span> reboot
+</span></span></code></pre></td></tr></table></div></div><p>Once the system has finished rebooting, perform a system update which will grab a few additional packages, and reboot once again:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-a3acc22-1><a style=outline:none;text-decoration:none;color:inherit href=#code-a3acc22-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-a3acc22-2><a style=outline:none;text-decoration:none;color:inherit href=#code-a3acc22-2>2</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#8b949e>$</span> yum update -y
+</span></span><span style=display:flex><span><span style=color:#8b949e>$</span> reboot
+</span></span></code></pre></td></tr></table></div></div><p>If you are unable to see the wireless card then this solution probably hasn&rsquo;t worked for you. You can bring the card back online by running the following as root:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-186ccb8-1><a style=outline:none;text-decoration:none;color:inherit href=#code-186ccb8-1>1</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-console data-lang=console><span style=display:flex><span><span style=color:#8b949e>#</span> modprobe b43
+</span></span></code></pre></td></tr></table></div></div></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/fedora/>fedora</a></span>
+<span class=tag><a href=https://stelfox.net/tags/wireless/>wireless</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=bd9e1ab3269fdee0856f80854c902432ef10f201 target=_blank rel=noopener>bd9e1ab3</a> @ 2024-07-14</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

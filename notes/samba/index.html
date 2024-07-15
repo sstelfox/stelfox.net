@@ -1,106 +1,182 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
-SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/samba/><title>Samba :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Samba"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+SELinux AdjustmentsSELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/samba/><title>Samba :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Samba"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
-SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share."><meta itemprop=wordCount content="481"><meta name=twitter:card content="summary"><meta name=twitter:title content="Samba"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+SELinux AdjustmentsSELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share."><meta itemprop=datePublished content="2017-10-09T18:17:08-04:00"><meta itemprop=dateModified content="2017-10-09T18:17:08-04:00"><meta itemprop=wordCount content="554"><meta name=twitter:card content="summary"><meta name=twitter:title content="Samba"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.
-SELinux Adjustments SELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+SELinux AdjustmentsSELinux hates Samba and with good reason. To allow authenticated clients to access the contents of a samba share you need to label the share."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/samba/>Samba</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/samba/>Samba</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.</strong></em></p><p>FEAR FOR THOSE WHO TREAD THESE WATERS FOR THEY ARE DEEP AND EVIL.</p><h2 id=selinux-adjustments>SELinux Adjustments</h2><p>SELinux hates Samba and with good reason. To allow authenticated clients to
 access the contents of a samba share you need to label the share. The easiest
 way to make this persistent is by adjusting the targeted SELinux config. In the
-following example the only samba share is location at /media/sharing.</p><p>Add this to <code>/etc/selinux/targeted/contexts/files/file_contexts</code>:</p><pre tabindex=0><code>/media/storage(/.*)?    system_u:object_r:samba_share_t:s0
-</code></pre><p>Then run this command:</p><pre tabindex=0><code>[root@localhost ~]# restorecon -R /media/storage
-</code></pre><h2 id=on-anonymous-access>On Anonymous Access</h2><p>If you intend to allow anonymous browsing of shares and/or access to a share,
+following example the only samba share is location at /media/sharing.</p><p>Add this to <code>/etc/selinux/targeted/contexts/files/file_contexts</code>:</p><pre tabindex=0><code>/media/storage(/.*)?    system_u:object_r:samba_share_t:s0</code></pre><p>Then run this command:</p><pre tabindex=0><code>[root@localhost ~]# restorecon -R /media/storage</code></pre><h2 id=on-anonymous-access>On Anonymous Access</h2><p>If you intend to allow anonymous browsing of shares and/or access to a share,
 you will need to create a &rsquo;nobody&rsquo; user with no password and add a few lines to
 the configuration file. Add the user by following the instructions in &lsquo;Managing
 Users&rsquo;</p><h2 id=managing-users>Managing Users</h2><p>To add a samba user make sure they have an account on the local machine, and
-run the command:</p><pre tabindex=0><code>[root@localhost ~]# pdbedit -a &lt;username&gt;
-</code></pre><p>To list samba users:</p><pre tabindex=0><code>[root@localhost ~]# pdbedit -L
-</code></pre><p>To delete a samba user:</p><pre tabindex=0><code>[root@localhost ~]# pdbedit -x &lt;username&gt;
-</code></pre><h2 id=configuration>Configuration</h2><h3 id=etcsambasmbconf>/etc/samba/smb.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#66d9ef>[global]</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># ----------------------- Network-Related Options -------------------------</span>
+run the command:</p><pre tabindex=0><code>[root@localhost ~]# pdbedit -a &lt;username&gt;</code></pre><p>To list samba users:</p><pre tabindex=0><code>[root@localhost ~]# pdbedit -L</code></pre><p>To delete a samba user:</p><pre tabindex=0><code>[root@localhost ~]# pdbedit -x &lt;username&gt;</code></pre><h2 id=configuration>Configuration</h2><h3 id=etcsambasmbconf>/etc/samba/smb.conf</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-1><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-2><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-3><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-4><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-5><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-6><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-7><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-8><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-9><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-10><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-11><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-12><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-13><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-14><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-15><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-16><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-17><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-18><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-19><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-20><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-21><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-22><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-23><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-24><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-25><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-26><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-27><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-28><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-29><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-30><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-31><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-32><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-33><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-34><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-35><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-36><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-37><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-38><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-39><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-40><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-41><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-42><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-42>42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-43><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-43>43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-44><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-44>44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-45><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-45>45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-46><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-46>46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-47><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-47>47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-48><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-48>48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-49><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-49>49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-50><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-50>50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-51><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-51>51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-52><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-52>52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-53><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-53>53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-54><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-54>54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-55><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-55>55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-56><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-56>56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-57><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-57>57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-58><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-58>58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-59><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-59>59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-60><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-60>60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-61><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-61>61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-62><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-62>62</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-63><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-63>63</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-64><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-64>64</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-65><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-65>65</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-66><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-66>66</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-67><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-67>67</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-68><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-68>68</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-69><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-69>69</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-70><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-70>70</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-71><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-71>71</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-72><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-72>72</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-73><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-73>73</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-74><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-74>74</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-75><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-75>75</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-76><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-76>76</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-77><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-77>77</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-78><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-78>78</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-79><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-79>79</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-80><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-80>80</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-81><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-81>81</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-788f48e-82><a style=outline:none;text-decoration:none;color:inherit href=#code-788f48e-82>82</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#ff7b72>[global]</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ----------------------- Network-Related Options -------------------------</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>workgroup</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Pantheon
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        server string = For Sexual Favors
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        netbios name = Moirae
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        interfaces = eth0:0
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        bind interfaces only = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        hosts allow = 10.13.37.0/24
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        guest account = nobody
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        map to guest = bad user
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        force directory mode = 0777
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        force create mode = 0666</span>
+</span></span><span style=display:flex><span>        workgroup <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>Pantheon
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        server string = For Sexual Favors
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        netbios name = Moirae
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        interfaces = eth0:0
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        bind interfaces only = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        hosts allow = 10.13.37.0/24
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        guest account = nobody
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        map to guest = bad user
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        force directory mode = 0777
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        force create mode = 0666</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#75715e># Force master browser elections to choose this server</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>domain master</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        local master = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        preferred master = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        os level = 60</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># Force master browser elections to choose this server</span>
+</span></span><span style=display:flex><span>        domain master <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        local master = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        preferred master = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        os level = 60</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>socket options</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>TCP_NODELAY
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        read raw = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        write raw = yes</span>
+</span></span><span style=display:flex><span>        socket options <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>TCP_NODELAY
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        read raw = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        write raw = yes</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>security</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>user
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        passdb backend = tdbsam</span>
+</span></span><span style=display:flex><span>        security <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>user
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        passdb backend = tdbsam</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># --------------------------- Logging Options -----------------------------</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># --------------------------- Logging Options -----------------------------</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#75715e># log files split per-machine:</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log file</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/var/log/samba/log.%m</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># log files split per-machine:</span>
+</span></span><span style=display:flex><span>        log file <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/var/log/samba/log.%m</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#75715e># maximum size of 50KB per log file, then rotate:</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>max log size</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>50</span>
+</span></span><span style=display:flex><span>        <span style=color:#8b949e;font-style:italic># maximum size of 50KB per log file, then rotate:</span>
+</span></span><span style=display:flex><span>        max log size <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>50</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># --------------------------- Printing Options -----------------------------</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Disable printing altogether</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># --------------------------- Printing Options -----------------------------</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Disable printing altogether</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>load printers</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        printcap name = /dev/null
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        printing = bsd
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        disable spoolss = yes</span>
+</span></span><span style=display:flex><span>        load printers <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        printcap name = /dev/null
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        printing = bsd
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        disable spoolss = yes</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># --------------------------- File System Options ---------------------------</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># --------------------------- File System Options ---------------------------</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>;       map archive = no</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>;       map hidden = no</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>;       map read only = no</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>;       map system = no</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>;       store dos attributes = yes</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>;       map archive = no</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>;       map hidden = no</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>;       map read only = no</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>;       map system = no</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>;       store dos attributes = yes</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#============================ Share Definitions ==============================</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#============================ Share Definitions ==============================</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>[Hidden]</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>comment</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>I&#39;m a secret!
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        browsable = no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        path = /media/storage/Dropbox
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        public = no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        writable = no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        printable = no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        write list = @users
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        guest ok = no</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>[Hidden]</span>
+</span></span><span style=display:flex><span>        comment <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>I&#39;m a secret!
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        browsable = no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        path = /media/storage/Dropbox
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        public = no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        writable = no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        printable = no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        write list = @users
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        guest ok = no</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>[Anonymous Dropbox]</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>comment</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Public File Drop Be Nice
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        browsable = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        path = /media/storage/Dropbox
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        public = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        writable = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        printable = no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        guest ok = yes</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>[Anonymous Dropbox]</span>
+</span></span><span style=display:flex><span>        comment <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>Public File Drop Be Nice
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        browsable = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        path = /media/storage/Dropbox
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        public = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        writable = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        printable = no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        guest ok = yes</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>[Media]</span>
-</span></span><span style=display:flex><span>        <span style=color:#a6e22e>comment</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>Public Media Shares
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        browsable = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        path = /media/storage/Media
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        public = yes
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        writable = no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        printable = no
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        write list = @users
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>        guest ok = yes</span>
-</span></span></code></pre></div></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>[Media]</span>
+</span></span><span style=display:flex><span>        comment <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>Public Media Shares
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        browsable = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        path = /media/storage/Media
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        public = yes
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        writable = no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        printable = no
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        write list = @users
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>        guest ok = yes</span></span></span></code></pre></td></tr></table></div></div></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=9bad4ea2b62af1c26178ab3b0ece01423151c12d target=_blank rel=noopener>9bad4ea2</a> @ 2017-10-09</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

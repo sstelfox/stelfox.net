@@ -1,265 +1,504 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/ http://gofedora.com/how-to-configure-squid-proxy-server/ http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos http://wiki.squid-cache.org/Features/NegotiateAuthentication http://www.squid-cache.org/Versions/v3/3.2/cfgman/ For URL filtering please refer to the SquidGuard page.
-yum install squid -y Before configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/squid/><title>Squid :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Squid"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+yum install squid -yBefore configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/squid/><title>Squid :: Sam Stelfox — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Squid"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/ http://gofedora.com/how-to-configure-squid-proxy-server/ http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos http://wiki.squid-cache.org/Features/NegotiateAuthentication http://www.squid-cache.org/Versions/v3/3.2/cfgman/ For URL filtering please refer to the SquidGuard page.
-yum install squid -y Before configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package."><meta itemprop=wordCount content="1803"><meta name=twitter:card content="summary"><meta name=twitter:title content="Squid"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+yum install squid -yBefore configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package."><meta itemprop=datePublished content="2018-10-30T20:24:15-04:00"><meta itemprop=dateModified content="2018-10-30T20:24:15-04:00"><meta itemprop=wordCount content="2033"><meta name=twitter:card content="summary"><meta name=twitter:title content="Squid"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/ http://gofedora.com/how-to-configure-squid-proxy-server/ http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos http://wiki.squid-cache.org/Features/NegotiateAuthentication http://www.squid-cache.org/Versions/v3/3.2/cfgman/ For URL filtering please refer to the SquidGuard page.
-yum install squid -y Before configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+yum install squid -yBefore configuring squid we mind as well get the authentication credentials in place. To do this we make use of the htpasswd utility which can be installed through the httpd-tools package."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/squid/>Squid</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/squid/>Squid</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p><ul><li><a href=http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/>http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/</a></li><li><a href=http://gofedora.com/how-to-configure-squid-proxy-server/>http://gofedora.com/how-to-configure-squid-proxy-server/</a></li><li><a href=http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html>http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html</a></li><li><a href=http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos>http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos</a></li><li><a href=http://wiki.squid-cache.org/Features/NegotiateAuthentication>http://wiki.squid-cache.org/Features/NegotiateAuthentication</a></li><li><a href=http://www.squid-cache.org/Versions/v3/3.2/cfgman/>http://www.squid-cache.org/Versions/v3/3.2/cfgman/</a></li></ul><p>For URL filtering please refer to the <a href=https://stelfox.net/notes/squid-guard/>SquidGuard</a> page.</p><pre tabindex=0><code>yum install squid -y
-</code></pre><p>Before configuring squid we mind as well get the authentication credentials in
+until I get around to updating it.</strong></em></p><ul><li><a href=http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/>http://klaubert.wordpress.com/2008/01/09/squid-kerberos-authentication-and-ldap-authorization-in-active-directory/</a></li><li><a href=http://gofedora.com/how-to-configure-squid-proxy-server/>http://gofedora.com/how-to-configure-squid-proxy-server/</a></li><li><a href=http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html>http://rosincore.blogspot.com/2010/01/dansguardian-content-filtering-with-ad.html</a></li><li><a href=http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos>http://eu.squid-cache.org/ConfigExamples/Authenticate/Kerberos</a></li><li><a href=http://wiki.squid-cache.org/Features/NegotiateAuthentication>http://wiki.squid-cache.org/Features/NegotiateAuthentication</a></li><li><a href=http://www.squid-cache.org/Versions/v3/3.2/cfgman/>http://www.squid-cache.org/Versions/v3/3.2/cfgman/</a></li></ul><p>For URL filtering please refer to the <a href=https://stelfox.net/notes/squid-guard/>SquidGuard</a> page.</p><pre tabindex=0><code>yum install squid -y</code></pre><p>Before configuring squid we mind as well get the authentication credentials in
 place. To do this we make use of the <code>htpasswd</code> utility which can be installed
-through the <code>httpd-tools</code> package.</p><p>For the first account:</p><pre tabindex=0><code>htpasswd -b -c /etc/squid/accounts username password
-</code></pre><p>And subsequent accounts:</p><pre tabindex=0><code>htpasswd -b /etc/squid/accounts username2 password2
-</code></pre><p>Lets drop the config into place, this is fairly generic there are just a few IP
+through the <code>httpd-tools</code> package.</p><p>For the first account:</p><pre tabindex=0><code>htpasswd -b -c /etc/squid/accounts username password</code></pre><p>And subsequent accounts:</p><pre tabindex=0><code>htpasswd -b /etc/squid/accounts username2 password2</code></pre><p>Lets drop the config into place, this is fairly generic there are just a few IP
 addresses, networks, and emails to change. It should live at
-<code>/etc/squid/squid.conf</code>.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#75715e># Configuration reference:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># http://www.squid-cache.org/Versions/v3/3.2/cfgman/</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># https://calomel.org/squid.html</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Note to self search for &#34;TODO&#34; and &#34;TEST&#34;</span>
+<code>/etc/squid/squid.conf</code>.</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-1><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-1>  1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-2><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-2>  2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-3><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-3>  3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-4><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-4>  4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-5><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-5>  5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-6><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-6>  6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-7><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-7>  7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-8><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-8>  8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-9><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-9>  9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-10><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-10> 10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-11><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-11> 11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-12><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-12> 12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-13><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-13> 13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-14><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-14> 14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-15><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-15> 15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-16><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-16> 16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-17><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-17> 17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-18><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-18> 18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-19><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-19> 19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-20><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-20> 20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-21><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-21> 21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-22><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-22> 22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-23><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-23> 23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-24><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-24> 24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-25><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-25> 25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-26><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-26> 26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-27><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-27> 27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-28><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-28> 28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-29><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-29> 29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-30><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-30> 30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-31><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-31> 31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-32><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-32> 32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-33><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-33> 33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-34><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-34> 34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-35><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-35> 35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-36><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-36> 36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-37><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-37> 37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-38><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-38> 38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-39><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-39> 39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-40><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-40> 40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-41><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-41> 41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-42><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-42> 42</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-43><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-43> 43</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-44><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-44> 44</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-45><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-45> 45</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-46><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-46> 46</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-47><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-47> 47</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-48><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-48> 48</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-49><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-49> 49</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-50><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-50> 50</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-51><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-51> 51</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-52><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-52> 52</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-53><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-53> 53</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-54><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-54> 54</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-55><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-55> 55</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-56><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-56> 56</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-57><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-57> 57</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-58><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-58> 58</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-59><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-59> 59</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-60><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-60> 60</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-61><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-61> 61</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-62><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-62> 62</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-63><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-63> 63</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-64><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-64> 64</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-65><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-65> 65</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-66><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-66> 66</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-67><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-67> 67</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-68><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-68> 68</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-69><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-69> 69</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-70><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-70> 70</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-71><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-71> 71</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-72><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-72> 72</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-73><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-73> 73</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-74><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-74> 74</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-75><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-75> 75</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-76><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-76> 76</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-77><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-77> 77</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-78><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-78> 78</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-79><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-79> 79</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-80><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-80> 80</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-81><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-81> 81</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-82><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-82> 82</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-83><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-83> 83</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-84><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-84> 84</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-85><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-85> 85</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-86><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-86> 86</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-87><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-87> 87</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-88><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-88> 88</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-89><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-89> 89</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-90><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-90> 90</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-91><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-91> 91</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-92><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-92> 92</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-93><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-93> 93</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-94><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-94> 94</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-95><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-95> 95</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-96><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-96> 96</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-97><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-97> 97</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-98><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-98> 98</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-99><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-99> 99</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-100><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-100>100</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-101><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-101>101</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-102><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-102>102</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-103><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-103>103</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-104><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-104>104</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-105><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-105>105</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-106><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-106>106</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-107><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-107>107</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-108><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-108>108</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-109><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-109>109</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-110><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-110>110</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-111><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-111>111</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-112><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-112>112</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-113><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-113>113</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-114><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-114>114</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-115><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-115>115</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-116><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-116>116</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-117><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-117>117</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-118><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-118>118</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-119><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-119>119</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-120><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-120>120</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-121><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-121>121</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-122><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-122>122</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-123><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-123>123</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-124><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-124>124</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-125><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-125>125</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-126><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-126>126</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-127><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-127>127</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-128><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-128>128</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-129><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-129>129</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-130><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-130>130</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-131><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-131>131</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-132><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-132>132</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-133><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-133>133</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-134><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-134>134</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-135><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-135>135</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-136><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-136>136</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-137><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-137>137</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-138><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-138>138</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-139><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-139>139</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-140><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-140>140</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-141><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-141>141</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-142><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-142>142</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-143><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-143>143</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-144><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-144>144</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-145><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-145>145</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-146><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-146>146</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-147><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-147>147</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-148><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-148>148</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-149><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-149>149</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-150><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-150>150</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-151><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-151>151</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-152><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-152>152</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-153><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-153>153</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-154><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-154>154</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-155><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-155>155</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-156><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-156>156</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-157><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-157>157</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-158><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-158>158</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-159><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-159>159</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-160><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-160>160</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-161><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-161>161</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-162><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-162>162</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-163><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-163>163</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-164><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-164>164</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-165><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-165>165</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-166><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-166>166</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-167><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-167>167</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-168><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-168>168</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-169><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-169>169</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-170><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-170>170</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-171><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-171>171</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-172><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-172>172</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-173><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-173>173</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-174><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-174>174</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-175><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-175>175</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-176><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-176>176</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-177><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-177>177</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-178><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-178>178</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-179><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-179>179</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-180><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-180>180</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-181><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-181>181</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-182><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-182>182</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-183><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-183>183</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-184><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-184>184</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-185><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-185>185</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-186><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-186>186</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-187><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-187>187</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-188><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-188>188</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-189><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-189>189</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-190><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-190>190</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-191><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-191>191</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-192><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-192>192</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-193><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-193>193</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-194><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-194>194</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-195><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-195>195</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-196><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-196>196</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-197><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-197>197</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-198><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-198>198</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-199><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-199>199</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-200><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-200>200</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-201><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-201>201</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-202><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-202>202</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-203><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-203>203</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-204><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-204>204</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-205><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-205>205</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-206><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-206>206</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-207><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-207>207</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-208><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-208>208</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-209><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-209>209</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-210><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-210>210</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-211><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-211>211</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-212><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-212>212</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-213><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-213>213</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-214><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-214>214</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-215><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-215>215</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-216><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-216>216</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-217><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-217>217</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-218><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-218>218</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-219><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-219>219</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-220><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-220>220</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-221><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-221>221</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-222><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-222>222</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-223><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-223>223</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-224><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-224>224</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-225><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-225>225</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-226><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-226>226</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-227><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-227>227</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-228><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-228>228</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-229><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-229>229</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-230><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-230>230</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-231><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-231>231</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-232><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-232>232</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-233><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-233>233</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-234><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-234>234</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-235><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-235>235</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-236><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-236>236</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-237><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-237>237</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-238><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-238>238</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-239><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-239>239</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-240><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-240>240</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-241><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-241>241</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-242><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-242>242</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-11bb27a-243><a style=outline:none;text-decoration:none;color:inherit href=#code-11bb27a-243>243</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sh data-lang=sh><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Configuration reference:</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># http://www.squid-cache.org/Versions/v3/3.2/cfgman/</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># https://calomel.org/squid.html</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Note to self search for &#34;TODO&#34; and &#34;TEST&#34;</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Bind to the standard squid part (3128)</span>
-</span></span><span style=display:flex><span>http_port <span style=color:#f92672>[</span>::<span style=color:#f92672>]</span>:3128
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Bind to the standard squid part (3128)</span>
+</span></span><span style=display:flex><span>http_port <span style=color:#ff7b72;font-weight:700>[</span>::<span style=color:#ff7b72;font-weight:700>]</span>:3128
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### GENERAL CONFIGURATION</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### GENERAL CONFIGURATION</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Email address of the local cache manager in case an issue crops up. This will</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># also show up in error messages.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Email address of the local cache manager in case an issue crops up. This will</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># also show up in error messages.</span>
 </span></span><span style=display:flex><span>cache_mgr cache-admin@proxy-01.i.0x378.net
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># For security and stability reasons Squid can check hostnames for Internet</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># standard RFC compliance.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># For security and stability reasons Squid can check hostnames for Internet</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># standard RFC compliance.</span>
 </span></span><span style=display:flex><span>check_hostnames on
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Leave coredumps in the base cache directory</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Leave coredumps in the base cache directory</span>
 </span></span><span style=display:flex><span>coredump_dir /var/spool/squid
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Automatically close broken persistent connections</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Automatically close broken persistent connections</span>
 </span></span><span style=display:flex><span>detect_broken_pconn on
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Using the transparent option prevent squid from manipulating this header,</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># turning it off just sets the client&#39;s address do &#34;unknown&#34;.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Using the transparent option prevent squid from manipulating this header,</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># turning it off just sets the client&#39;s address do &#34;unknown&#34;.</span>
 </span></span><span style=display:flex><span>forwarded_for transparent
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Prevent Squid from announcing it&#39;s version information</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Prevent Squid from announcing it&#39;s version information</span>
 </span></span><span style=display:flex><span>httpd_suppress_version_string on
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Minimum umask to be enforced for all written files, generally this should be</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># public information (cached content) but it can&#39;t hurt to  restrict it.</span>
-</span></span><span style=display:flex><span>umask <span style=color:#ae81ff>027</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Minimum umask to be enforced for all written files, generally this should be</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># public information (cached content) but it can&#39;t hurt to  restrict it.</span>
+</span></span><span style=display:flex><span>umask <span style=color:#a5d6ff>027</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Hostname that is visible in error messages, and if used in a cluster used to</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># detect forwarding loops. If your cluster needs to use the same</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># visible_hostname investigate the related option unique_hostname.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Hostname that is visible in error messages, and if used in a cluster used to</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># detect forwarding loops. If your cluster needs to use the same</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># visible_hostname investigate the related option unique_hostname.</span>
 </span></span><span style=display:flex><span>visible_hostname proxy-01.internal.private.web
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### TIMEOUTS</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### TIMEOUTS</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># How long to wait for TCP connect to a requested server or peer to complete</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># before Squid should attempt to find another path to forward the request.</span>
-</span></span><span style=display:flex><span>connect_timeout <span style=color:#ae81ff>5</span> second
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># How long to wait for TCP connect to a requested server or peer to complete</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># before Squid should attempt to find another path to forward the request.</span>
+</span></span><span style=display:flex><span>connect_timeout <span style=color:#a5d6ff>5</span> second
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># If no response is received to a DNS query within this time all DNS servers</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># for the queried domain are assumed to be unavailable. This may cause</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># transient resolution errors to be cached but I haven&#39;t verified that.</span>
-</span></span><span style=display:flex><span>dns_timeout <span style=color:#ae81ff>5</span> second
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># If no response is received to a DNS query within this time all DNS servers</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># for the queried domain are assumed to be unavailable. This may cause</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># transient resolution errors to be cached but I haven&#39;t verified that.</span>
+</span></span><span style=display:flex><span>dns_timeout <span style=color:#a5d6ff>5</span> second
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Max length of time Squid should attempt to find a forwarding path for a</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># request before giving up.</span>
-</span></span><span style=display:flex><span>forward_timeout <span style=color:#ae81ff>10</span> second
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Max length of time Squid should attempt to find a forwarding path for a</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># request before giving up.</span>
+</span></span><span style=display:flex><span>forward_timeout <span style=color:#a5d6ff>10</span> second
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># How long to wait for complete HTTP request headers after initial connection</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># establishment.</span>
-</span></span><span style=display:flex><span>request_timeout <span style=color:#ae81ff>10</span> second
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># How long to wait for complete HTTP request headers after initial connection</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># establishment.</span>
+</span></span><span style=display:flex><span>request_timeout <span style=color:#a5d6ff>10</span> second
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### AUTHENTICATION</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### AUTHENTICATION</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Ensure usernames are case sensitive</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Ensure usernames are case sensitive</span>
 </span></span><span style=display:flex><span>auth_param basic casesensitive on
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Length of time to consider credentials authenticated through the external</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># program valid.</span>
-</span></span><span style=display:flex><span>auth_param basic credentialsttl <span style=color:#ae81ff>2</span> hours
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Length of time to consider credentials authenticated through the external</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># program valid.</span>
+</span></span><span style=display:flex><span>auth_param basic credentialsttl <span style=color:#a5d6ff>2</span> hours
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Use basic htpasswd style files to handle authentication.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Use basic htpasswd style files to handle authentication.</span>
 </span></span><span style=display:flex><span>auth_param basic program /usr/lib64/squid/basic_ncsa_auth /etc/squid/accounts
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The realm to display to any inquistive clients</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The realm to display to any inquistive clients</span>
 </span></span><span style=display:flex><span>auth_param basic realm Proxy Access Requires Authentication
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### CACHE CONFIGURATION</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### CACHE CONFIGURATION</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># &lt;store type&gt; &lt;store location&gt; &lt;cache size in MB&gt; &lt;# of first level</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># directories&gt; &lt;# of second level directories&gt; aufs is the non-blocking disk</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># storage option</span>
-</span></span><span style=display:flex><span>cache_dir aufs /var/spool/squid <span style=color:#ae81ff>1024</span> <span style=color:#ae81ff>16</span> <span style=color:#ae81ff>256</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># &lt;store type&gt; &lt;store location&gt; &lt;cache size in MB&gt; &lt;# of first level</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># directories&gt; &lt;# of second level directories&gt; aufs is the non-blocking disk</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># storage option</span>
+</span></span><span style=display:flex><span>cache_dir aufs /var/spool/squid <span style=color:#a5d6ff>1024</span> <span style=color:#a5d6ff>16</span> <span style=color:#a5d6ff>256</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># This represents the maximum amount of ram that squid will utilize to keep</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># cached objects in memory. Squid requires about 100Mb of RAM per Gb of cache</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># storage. If you have a 10gb cache, Squid will use ~1Gb just to handle that.</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Make sure that cache_mem + (cache_dir size limit * 100Mb) is less than your</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># available RAM.</span>
-</span></span><span style=display:flex><span>cache_mem <span style=color:#ae81ff>192</span> MB
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># This represents the maximum amount of ram that squid will utilize to keep</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># cached objects in memory. Squid requires about 100Mb of RAM per Gb of cache</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># storage. If you have a 10gb cache, Squid will use ~1Gb just to handle that.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Make sure that cache_mem + (cache_dir size limit * 100Mb) is less than your</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># available RAM.</span>
+</span></span><span style=display:flex><span>cache_mem <span style=color:#a5d6ff>192</span> MB
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Least Frequently Used with Dynamic Aging (keeps popular objects in cache</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># regardless of their size and thus optimizes byte hit rate at the expense of</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># hit rate since one large, popular object will prevent many smaller, slightly</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># less popular objects from being cached.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Least Frequently Used with Dynamic Aging (keeps popular objects in cache</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># regardless of their size and thus optimizes byte hit rate at the expense of</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># hit rate since one large, popular object will prevent many smaller, slightly</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># less popular objects from being cached.</span>
 </span></span><span style=display:flex><span>cache_replacement_policy heap LFUDA
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Limit the size of file to hold in the cache, 10 MB is about the largest file</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># I expect multiple of my client to pull down.</span>
-</span></span><span style=display:flex><span>maximum_object_size <span style=color:#ae81ff>10</span> MB
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Limit the size of file to hold in the cache, 10 MB is about the largest file</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># I expect multiple of my client to pull down.</span>
+</span></span><span style=display:flex><span>maximum_object_size <span style=color:#a5d6ff>10</span> MB
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Tell squid to release memory it&#39;s not using</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Tell squid to release memory it&#39;s not using</span>
 </span></span><span style=display:flex><span>memory_pools off
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Cacheing rules for content that doesn&#39;t have an explicit expire time.</span>
-</span></span><span style=display:flex><span>refresh_pattern ^ftp:             <span style=color:#ae81ff>1440</span> 20%    <span style=color:#ae81ff>10080</span>
-</span></span><span style=display:flex><span>refresh_pattern -i <span style=color:#f92672>(</span>/cgi-bin/|<span style=color:#ae81ff>\?</span><span style=color:#f92672>)</span> <span style=color:#ae81ff>0</span>    0%     <span style=color:#ae81ff>0</span>
-</span></span><span style=display:flex><span>refresh_pattern .                 <span style=color:#ae81ff>0</span>    20%    <span style=color:#ae81ff>4320</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Cacheing rules for content that doesn&#39;t have an explicit expire time.</span>
+</span></span><span style=display:flex><span>refresh_pattern ^ftp:             <span style=color:#a5d6ff>1440</span> 20%    <span style=color:#a5d6ff>10080</span>
+</span></span><span style=display:flex><span>refresh_pattern -i <span style=color:#ff7b72;font-weight:700>(</span>/cgi-bin/|<span style=color:#79c0ff>\?</span><span style=color:#ff7b72;font-weight:700>)</span> <span style=color:#a5d6ff>0</span>    0%     <span style=color:#a5d6ff>0</span>
+</span></span><span style=display:flex><span>refresh_pattern .                 <span style=color:#a5d6ff>0</span>    20%    <span style=color:#a5d6ff>4320</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Specifies how long squid should wait when it&#39;s service is asked to stop.</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Generally this to allow client requests to complete, but I find it more</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># useful to make this fast.</span>
-</span></span><span style=display:flex><span>shutdown_lifetime <span style=color:#ae81ff>1</span> second
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Specifies how long squid should wait when it&#39;s service is asked to stop.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Generally this to allow client requests to complete, but I find it more</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># useful to make this fast.</span>
+</span></span><span style=display:flex><span>shutdown_lifetime <span style=color:#a5d6ff>1</span> second
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># This normally evaluate how much data is left in a transfer when a client</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># disconnects before it&#39;s completed, and if the remaining data falls in the</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># configured range, Squid will finish downloading the file and cache it anyway.</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># This is cool but not useful in my environment.</span>
-</span></span><span style=display:flex><span>quick_abort_min <span style=color:#ae81ff>0</span> KB
-</span></span><span style=display:flex><span>quick_abort_max <span style=color:#ae81ff>0</span> KB
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># This normally evaluate how much data is left in a transfer when a client</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># disconnects before it&#39;s completed, and if the remaining data falls in the</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># configured range, Squid will finish downloading the file and cache it anyway.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># This is cool but not useful in my environment.</span>
+</span></span><span style=display:flex><span>quick_abort_min <span style=color:#a5d6ff>0</span> KB
+</span></span><span style=display:flex><span>quick_abort_max <span style=color:#a5d6ff>0</span> KB
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### SSL BUMP</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### SSL BUMP</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># TODO: This is exactly worst practices in most cases, however, for a highly</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># restricted network of servers using this as their only means of accessing the</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># internet... It can be an important security measure.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># TODO: This is exactly worst practices in most cases, however, for a highly</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># restricted network of servers using this as their only means of accessing the</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># internet... It can be an important security measure.</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### CUSTOM ERROR MESSAGES</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### CUSTOM ERROR MESSAGES</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># TODO: Useful for client facing servers</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># TODO: Useful for client facing servers</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### SQUIDGUARD CONFIG</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### SQUIDGUARD CONFIG</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#url_rewrite_program /usr/bin/squidGuard -c /etc/squid/squidGuard.conf</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#url_rewrite_bypass off</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#url_rewrite_program /usr/bin/squidGuard -c /etc/squid/squidGuard.conf</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#url_rewrite_bypass off</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### LOGGING</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### LOGGING</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># &lt;Client IP&gt; &lt;Username&gt; [&lt;Local Time&gt;] &#34;&lt;Request Method&gt; &lt;Request URL&gt;</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># HTTP/&lt;Protocol Version&gt; &lt;Response Status Code&gt; &lt;Sent reply size (with</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># headers)&gt; &lt;Referer&gt; &lt;User Agent&gt; &lt;Squid Request Status&gt;:&lt;Squid Hierarchy</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Status&gt;</span>
-</span></span><span style=display:flex><span>logformat        combined %&gt;a %un <span style=color:#f92672>[</span>%tl<span style=color:#f92672>]</span> <span style=color:#e6db74>&#34;%rm %ru HTTP/%rv&#34;</span> %&gt;Hs %&lt;st <span style=color:#e6db74>&#34;%{Referer}&gt;h&#34;</span> <span style=color:#e6db74>&#34;%{User-Agent}&gt;h&#34;</span> %Ss:%Sh
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># &lt;Client IP&gt; &lt;Username&gt; [&lt;Local Time&gt;] &#34;&lt;Request Method&gt; &lt;Request URL&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># HTTP/&lt;Protocol Version&gt; &lt;Response Status Code&gt; &lt;Sent reply size (with</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># headers)&gt; &lt;Referer&gt; &lt;User Agent&gt; &lt;Squid Request Status&gt;:&lt;Squid Hierarchy</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Status&gt;</span>
+</span></span><span style=display:flex><span>logformat        combined %&gt;a %un <span style=color:#ff7b72;font-weight:700>[</span>%tl<span style=color:#ff7b72;font-weight:700>]</span> <span style=color:#a5d6ff>&#34;%rm %ru HTTP/%rv&#34;</span> %&gt;Hs %&lt;st <span style=color:#a5d6ff>&#34;%{Referer}&gt;h&#34;</span> <span style=color:#a5d6ff>&#34;%{User-Agent}&gt;h&#34;</span> %Ss:%Sh
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># &lt;Client IP&gt; &lt;Username&gt; [&lt;Local Time&gt;] &#34;&lt;Sent Headers&gt;&#34; &#34;&lt;Reply Headers&gt;&#34;</span>
-</span></span><span style=display:flex><span>logformat        debugheaders %&gt;a %un <span style=color:#f92672>[</span>%tl<span style=color:#f92672>]</span> <span style=color:#e6db74>&#34;%&gt;h&#34;</span> <span style=color:#e6db74>&#34;%&lt;h&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># &lt;Client IP&gt; &lt;Username&gt; [&lt;Local Time&gt;] &#34;&lt;Sent Headers&gt;&#34; &#34;&lt;Reply Headers&gt;&#34;</span>
+</span></span><span style=display:flex><span>logformat        debugheaders %&gt;a %un <span style=color:#ff7b72;font-weight:700>[</span>%tl<span style=color:#ff7b72;font-weight:700>]</span> <span style=color:#a5d6ff>&#34;%&gt;h&#34;</span> <span style=color:#a5d6ff>&#34;%&lt;h&#34;</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Send our neat logs through to the local syslog server</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Send our neat logs through to the local syslog server</span>
 </span></span><span style=display:flex><span>access_log       syslog:local3.info combined
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Useful for debugging</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#access_log      syslog:local3.debug debugheaders</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#access_log      stdio:/var/log/squid/headers.log debugheaders</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#cache_store_log stdio:/var/log/squid/store.log</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#cache_log       stdio:/var/log/squid/cache.log</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#logfile_rotate  3</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Useful for debugging</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#access_log      syslog:local3.debug debugheaders</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#access_log      stdio:/var/log/squid/headers.log debugheaders</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#cache_store_log stdio:/var/log/squid/store.log</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#cache_log       stdio:/var/log/squid/cache.log</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#logfile_rotate  3</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### BEGIN ACL ALIASES</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### BEGIN ACL ALIASES</span>
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>acl CONNECT method CONNECT
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># An ACL to match authenticated users</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># An ACL to match authenticated users</span>
 </span></span><span style=display:flex><span>acl authenticated_user proxy_auth REQUIRED
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># ACL covering clients allowed to use this proxy</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ACL covering clients allowed to use this proxy</span>
 </span></span><span style=display:flex><span>acl allowed_hosts src 10.0.0.0/24
-</span></span><span style=display:flex><span>acl allowed_hosts src fc00::/7       <span style=color:#75715e># RFC 4193 local private network range</span>
-</span></span><span style=display:flex><span>acl allowed_hosts src fe80::/10      <span style=color:#75715e># RFC 4291 link-local (directly plugged) machines</span>
+</span></span><span style=display:flex><span>acl allowed_hosts src fc00::/7       <span style=color:#8b949e;font-style:italic># RFC 4193 local private network range</span>
+</span></span><span style=display:flex><span>acl allowed_hosts src fe80::/10      <span style=color:#8b949e;font-style:italic># RFC 4291 link-local (directly plugged) machines</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># ACLs covering restricted destinations</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># ACLs covering restricted destinations</span>
 </span></span><span style=display:flex><span>acl to_local_network dst 10.0.0.0/24
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Limit individual matching hosts to 500 connections</span>
-</span></span><span style=display:flex><span>acl proxy_connection_limit maxconn <span style=color:#ae81ff>500</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Limit individual matching hosts to 500 connections</span>
+</span></span><span style=display:flex><span>acl proxy_connection_limit maxconn <span style=color:#a5d6ff>500</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Which ports to allow raw connects too (For SSL mostly)</span>
-</span></span><span style=display:flex><span>acl SSL_ports port <span style=color:#ae81ff>443</span> 	        <span style=color:#75715e># https</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Which ports to allow raw connects too (For SSL mostly)</span>
+</span></span><span style=display:flex><span>acl SSL_ports port <span style=color:#a5d6ff>443</span> 	        <span style=color:#8b949e;font-style:italic># https</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Which ports to allow regular unencrypted procols to connect to</span>
-</span></span><span style=display:flex><span>acl allowed_ports port <span style=color:#ae81ff>80</span>          <span style=color:#75715e># http</span>
-</span></span><span style=display:flex><span>acl allowed_ports port <span style=color:#ae81ff>21</span>          <span style=color:#75715e># ftp</span>
-</span></span><span style=display:flex><span>acl allowed_ports port <span style=color:#ae81ff>443</span>         <span style=color:#75715e># https</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#acl allowed_ports port 1025-65535  # unregistered ports</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Which ports to allow regular unencrypted procols to connect to</span>
+</span></span><span style=display:flex><span>acl allowed_ports port <span style=color:#a5d6ff>80</span>          <span style=color:#8b949e;font-style:italic># http</span>
+</span></span><span style=display:flex><span>acl allowed_ports port <span style=color:#a5d6ff>21</span>          <span style=color:#8b949e;font-style:italic># ftp</span>
+</span></span><span style=display:flex><span>acl allowed_ports port <span style=color:#a5d6ff>443</span>         <span style=color:#8b949e;font-style:italic># https</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#acl allowed_ports port 1025-65535  # unregistered ports</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### BEGIN ACLS</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### BEGIN ACLS</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Only allow cachemgr access from localhost</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Only allow cachemgr access from localhost</span>
 </span></span><span style=display:flex><span>http_access allow manager localhost
 </span></span><span style=display:flex><span>http_access deny manager
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Access to local web based services should be explictely and directly allowed.</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Deny access to them through this proxy.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Access to local web based services should be explictely and directly allowed.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Deny access to them through this proxy.</span>
 </span></span><span style=display:flex><span>http_access deny to_local_network
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Deny requests from clients that go over the connection limits</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Deny requests from clients that go over the connection limits</span>
 </span></span><span style=display:flex><span>http_access deny proxy_connection_limit
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Allow CONNECT to only the explicitely allowed ports</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Allow CONNECT to only the explicitely allowed ports</span>
 </span></span><span style=display:flex><span>http_access allow CONNECT SSL_ports
 </span></span><span style=display:flex><span>http_access deny CONNECT
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Deny requests to any port we haven&#39;t whitelisted</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Deny requests to any port we haven&#39;t whitelisted</span>
 </span></span><span style=display:flex><span>http_access deny !allowed_ports
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Allow access to this squid server from our local whitelisted network... as</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># long as they&#39;re authenticated.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Allow access to this squid server from our local whitelisted network... as</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># long as they&#39;re authenticated.</span>
 </span></span><span style=display:flex><span>http_access allow allowed_hosts authenticated_user
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Deny any requests we haven&#39;t allowed by this point</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Deny any requests we haven&#39;t allowed by this point</span>
 </span></span><span style=display:flex><span>http_access deny all
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>### PRIVACY / REQUEST MANGLING</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>### PRIVACY / REQUEST MANGLING</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># TODO: Client information can leak out through headers including information</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># about services and OS&#39;s running inside the network. Mangling the requests and</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># responses and whitelisting the various headers of value can help mitigate</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># this, and provide meaningful dis-information.</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># TODO: Client information can leak out through headers including information</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># about services and OS&#39;s running inside the network. Mangling the requests and</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># responses and whitelisting the various headers of value can help mitigate</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># this, and provide meaningful dis-information.</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_replace User-Agent Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_replace Accept */*</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_replace Accept-Encoding gzip # May cause issues should TEST</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_replace Accept-Language en</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>## Some of these should be reply_header_access</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Accept allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Accept-Encoding allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Accept-Language allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Authorization allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Cache-Control allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>##request_header_access Content-Disposition allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Content-Encoding allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Content-Length allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>##request_header_access Content-Location allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Content-Range allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Content-Type allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Cookie allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Expires allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Host allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access If-Modified-Since allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>##request_header_access Location allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Range allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Referer allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access Set-Cookie allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access User-Agent deny all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access WWW-Authenticate allow all</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#request_header_access All deny all</span>
-</span></span></code></pre></div><p>To enable syslog logging we need to add the <code>-s</code> flag to <code>SQUID_OPTS</code> in
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_replace User-Agent Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.3) Gecko/20090824 Firefox/3.5.3 (.NET CLR 3.5.30729)</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_replace Accept */*</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_replace Accept-Encoding gzip # May cause issues should TEST</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_replace Accept-Language en</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>## Some of these should be reply_header_access</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Accept allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Accept-Encoding allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Accept-Language allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Authorization allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Cache-Control allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>##request_header_access Content-Disposition allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Content-Encoding allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Content-Length allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>##request_header_access Content-Location allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Content-Range allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Content-Type allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Cookie allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Expires allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Host allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access If-Modified-Since allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>##request_header_access Location allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Range allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Referer allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access Set-Cookie allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access User-Agent deny all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access WWW-Authenticate allow all</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#request_header_access All deny all</span></span></span></code></pre></td></tr></table></div></div><p>To enable syslog logging we need to add the <code>-s</code> flag to <code>SQUID_OPTS</code> in
 <code>/etc/sysconfig/squid</code>.</p><pre tabindex=0><code># Squid options (additionally log to syslog)
 SQUID_OPTS=&#34;-s&#34;
 
@@ -268,10 +507,8 @@ SQUID_OPTS=&#34;-s&#34;
 SQUID_SHUTDOWN_TIMEOUT=100
 
 # default squid conf file
-SQUID_CONF=&#34;/etc/squid/squid.conf&#34;
-</code></pre><p>Enable and start the service:</p><pre tabindex=0><code>systemctl enable squid.service
-systemctl start squid.service
-</code></pre><h2 id=firewall>Firewall</h2><p>Allow access to the squid proxy from within the airlock, and the normal ports
+SQUID_CONF=&#34;/etc/squid/squid.conf&#34;</code></pre><p>Enable and start the service:</p><pre tabindex=0><code>systemctl enable squid.service
+systemctl start squid.service</code></pre><h2 id=firewall>Firewall</h2><p>Allow access to the squid proxy from within the airlock, and the normal ports
 outbound.</p><pre tabindex=0><code># Allow access to the local squid proxy server (mostly for updates)
 -A INPUT  -m tcp -p tcp --dport 3128 -s 10.0.0.0/24 -j ACCEPT
 
@@ -279,22 +516,17 @@ outbound.</p><pre tabindex=0><code># Allow access to the local squid proxy serve
 # the network
 -A OUTPUT -m tcp -p tcp --dport 21  -j ACCEPT
 -A OUTPUT -m tcp -p tcp --dport 80  -j ACCEPT
--A OUTPUT -m tcp -p tcp --dport 443 -j ACCEPT
-</code></pre><p>Other clients on the network will need to be able to talk to the squid port.</p><pre tabindex=0><code>-A OUTPUT -m tcp -p tcp --dport 3128 -d 10.0.0.170 -j ACCEPT
-</code></pre><h2 id=a-note-on-non-standard-ports>A Note on Non-Standard Ports</h2><p>It is highly recommended to run squid on a non-standard port if it is going to
+-A OUTPUT -m tcp -p tcp --dport 443 -j ACCEPT</code></pre><p>Other clients on the network will need to be able to talk to the squid port.</p><pre tabindex=0><code>-A OUTPUT -m tcp -p tcp --dport 3128 -d 10.0.0.170 -j ACCEPT</code></pre><h2 id=a-note-on-non-standard-ports>A Note on Non-Standard Ports</h2><p>It is highly recommended to run squid on a non-standard port if it is going to
 be exposed to the internet. The catch is that this will throw SELinux for a
 loop. The following command will tell SELinux to be ok with squid running on
-port 11637.</p><pre tabindex=0><code>[root@localhost ~]# semanage port -a -t http_cache_port_t -p tcp 11637
-</code></pre><p>This may be necessary if squid needs to listen on multiple ports (for example
+port 11637.</p><pre tabindex=0><code>[root@localhost ~]# semanage port -a -t http_cache_port_t -p tcp 11637</code></pre><p>This may be necessary if squid needs to listen on multiple ports (for example
 for dansGuardian with kerberos authentication).</p><h2 id=viewing-statistics>Viewing Statistics</h2><p>On the squid server you can run a report to see the status of squid with the
-&ldquo;squidclient&rdquo; command like so:</p><pre tabindex=0><code>squidclient -h 127.0.0.1 mgr:info
-</code></pre><h2 id=testing>Testing</h2><p>You can confirm the squid works like so:</p><pre tabindex=0><code>curl -x 10.0.0.170:3128 https://www.google.com/
-</code></pre><p>With authentication:</p><pre tabindex=0><code>curl --proxy-basic --proxy-user user:pass -x 10.0.0.170:3128 https://www.google.com/
-</code></pre><p>To get yum working with the proxy add the following line to the <code>[main]</code>
-section of /etc/yum.conf file.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#a6e22e>proxy</span><span style=color:#f92672>=</span><span style=color:#e6db74>http://10.0.0.170:3128</span>
-</span></span></code></pre></div><p>If authentication is required the two following lines can always be added:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#a6e22e>proxy_username</span><span style=color:#f92672>=</span><span style=color:#e6db74>username</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>proxy_password</span><span style=color:#f92672>=</span><span style=color:#e6db74>password</span>
-</span></span></code></pre></div><p>To setup general proxy use on the system for various command line utilities
+&ldquo;squidclient&rdquo; command like so:</p><pre tabindex=0><code>squidclient -h 127.0.0.1 mgr:info</code></pre><h2 id=testing>Testing</h2><p>You can confirm the squid works like so:</p><pre tabindex=0><code>curl -x 10.0.0.170:3128 https://www.google.com/</code></pre><p>With authentication:</p><pre tabindex=0><code>curl --proxy-basic --proxy-user user:pass -x 10.0.0.170:3128 https://www.google.com/</code></pre><p>To get yum working with the proxy add the following line to the <code>[main]</code>
+section of /etc/yum.conf file.</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-a1f1434-1><a style=outline:none;text-decoration:none;color:inherit href=#code-a1f1434-1>1</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span>proxy<span style=color:#ff7b72;font-weight:700>=</span><span style=color:#a5d6ff>http://10.0.0.170:3128</span></span></span></code></pre></td></tr></table></div></div><p>If authentication is required the two following lines can always be added:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-6002eab-1><a style=outline:none;text-decoration:none;color:inherit href=#code-6002eab-1>1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-6002eab-2><a style=outline:none;text-decoration:none;color:inherit href=#code-6002eab-2>2</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span>proxy_username<span style=color:#ff7b72;font-weight:700>=</span><span style=color:#a5d6ff>username</span>
+</span></span><span style=display:flex><span>proxy_password<span style=color:#ff7b72;font-weight:700>=</span><span style=color:#a5d6ff>password</span></span></span></code></pre></td></tr></table></div></div><p>To setup general proxy use on the system for various command line utilities
 like <code>wget</code>, <code>curl</code>, and <code>lynx</code>, there are a set of common environment variable
 to set. I created a file <code>/etc/profile.d/proxy.sh</code> with the following contents
 and make it executable.</p><pre tabindex=0><code># General proxy configuration for system tools
@@ -303,6 +535,5 @@ export https_proxy=squid.local.tld:3128
 export ftp_proxy=squid.local.tld:3128
 export ALL_PROXY=squid.local.tld:3128
 export no_proxy=.i.0x378.net
-export NO_PROXY=.i.0x378.net
-</code></pre><p>You can include credentials by prepending the <code>user:pass@</code> to the hosts of the
-protocols above.</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+export NO_PROXY=.i.0x378.net</code></pre><p>You can include credentials by prepending the <code>user:pass@</code> to the hosts of the
+protocols above.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=73f7e533ca46dadf707b92cf4c86a28caf5eac1a target=_blank rel=noopener>73f7e533</a> @ 2018-10-30</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

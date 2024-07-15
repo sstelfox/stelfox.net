@@ -1,13 +1,13 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was written with security in mind.
 Something that would be good to port over to Fedora/Postfix with a nice Stelfox spin, and it&amp;rsquo;s follow up."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/postfix/><title>Postfix :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Postfix"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Postfix"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was written with security in mind.
-Something that would be good to port over to Fedora/Postfix with a nice Stelfox spin, and it’s follow up."><meta itemprop=wordCount content="2380"><meta name=twitter:card content="summary"><meta name=twitter:title content="Postfix"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+Something that would be good to port over to Fedora/Postfix with a nice Stelfox spin, and it’s follow up."><meta itemprop=datePublished content="2017-10-09T18:00:59-04:00"><meta itemprop=dateModified content="2017-10-09T18:00:59-04:00"><meta itemprop=wordCount content="2410"><meta name=twitter:card content="summary"><meta name=twitter:title content="Postfix"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 By default Fedora/CentOS come with sendmail. Postfix is preferable as it was written with security in mind.
 Something that would be good to port over to Fedora/Postfix with a nice Stelfox spin, and it’s follow up."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/postfix/>Postfix</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/postfix/>Postfix</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.</strong></em></p><p>By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
 written with security in mind.</p><p><a href=https://grepular.com/Automatically_Encrypting_all_Incoming_Email>Something that would be good</a> to port over to Fedora/Postfix with a nice
@@ -19,92 +19,157 @@ is my ideal client. My next alternative would be the <a href=http://wiki.dovecot
 filter spam and was done fast so there are probably problems in the
 configuration that were missed. Proceed with caution. A tool that was
 invaluable to me in diagnosing queueing issues was <code>qshape</code> which is part of
-the package <code>postfix-perl-scripts</code> in Fedora 15.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#a6e22e>myhostname</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>mailrelay.example.org</span>
+the package <code>postfix-perl-scripts</code> in Fedora 15.</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-1><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-2><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-3><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-4><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-5><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-6><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-7><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-8><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-9><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-10><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-11><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-12><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-13><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-14><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-15><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-16><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-17><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-18><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-19><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-20><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-21><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-22><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-23><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-24><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-25><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-26><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-27><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-28><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-29><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-30><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-31><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-32><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-33><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-34><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-35><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-36><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-37><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-37>37</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-38><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-38>38</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-39><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-39>39</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-40><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-40>40</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-41><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-41>41</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-1ba63a3-42><a style=outline:none;text-decoration:none;color:inherit href=#code-1ba63a3-42>42</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span>myhostname <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>mailrelay.example.org</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>command_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/sbin</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>daemon_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/libexec/postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>data_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/var/lib/postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>queue_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/var/spool/postfix</span>
+</span></span><span style=display:flex><span>command_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/sbin</span>
+</span></span><span style=display:flex><span>daemon_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/libexec/postfix</span>
+</span></span><span style=display:flex><span>data_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/var/lib/postfix</span>
+</span></span><span style=display:flex><span>queue_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/var/spool/postfix</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mail_owner</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>default_privs</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>nobody</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>setgid_group</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>postdrop</span>
+</span></span><span style=display:flex><span>mail_owner <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>postfix</span>
+</span></span><span style=display:flex><span>default_privs <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>nobody</span>
+</span></span><span style=display:flex><span>setgid_group <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>postdrop</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>allow_percent_hack</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>no</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>disable_vrfy_command</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>yes</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>smtpd_helo_required</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>yes</span>
+</span></span><span style=display:flex><span>allow_percent_hack <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>no</span>
+</span></span><span style=display:flex><span>disable_vrfy_command <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>yes</span>
+</span></span><span style=display:flex><span>smtpd_helo_required <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>yes</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>inet_interfaces</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>all</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>inet_protocols</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>all</span>
+</span></span><span style=display:flex><span>inet_interfaces <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>all</span>
+</span></span><span style=display:flex><span>inet_protocols <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>all</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mydestination</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$myhostname</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>unknown_local_recipient_reject_code</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>550</span>
+</span></span><span style=display:flex><span>mydestination <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>$myhostname</span>
+</span></span><span style=display:flex><span>unknown_local_recipient_reject_code <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>550</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mynetworks_style</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>subnet</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mynetworks</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>10.15.0.0/16, 127.0.0.0/8</span>
+</span></span><span style=display:flex><span>mynetworks_style <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>subnet</span>
+</span></span><span style=display:flex><span>mynetworks <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>10.15.0.0/16, 127.0.0.0/8</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>relay_domains</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>example.org, example.com</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>relayhost</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>[10.15.1.65]</span>
+</span></span><span style=display:flex><span>relay_domains <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>example.org, example.com</span>
+</span></span><span style=display:flex><span>relayhost <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>[10.15.1.65]</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>in_flow_delay</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>0</span>
+</span></span><span style=display:flex><span>in_flow_delay <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>alias_maps</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>hash:/etc/aliases</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>alias_database</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>hash:/etc/aliases</span>
+</span></span><span style=display:flex><span>alias_maps <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>hash:/etc/aliases</span>
+</span></span><span style=display:flex><span>alias_database <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>hash:/etc/aliases</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>fast_flush_domains</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$relay_domains</span>
+</span></span><span style=display:flex><span>fast_flush_domains <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>$relay_domains</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>smtpd_banner</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$myhostname ESMTP</span>
+</span></span><span style=display:flex><span>smtpd_banner <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>$myhostname ESMTP</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>local_destination_concurrency_limit</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>2</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>default_destination_concurrency_limit</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>20</span>
+</span></span><span style=display:flex><span>local_destination_concurrency_limit <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>2</span>
+</span></span><span style=display:flex><span>default_destination_concurrency_limit <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>20</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>sendmail_path</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/sbin/sendmail.postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>newaliases_path</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/bin/newaliases.postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mailq_path</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/bin/mailq.postfix</span>
-</span></span></code></pre></div><h2 id=full-local-client-mta-w-relaying>Full Local Client MTA w/ Relaying</h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#a6e22e>queue_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/var/spool/postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>command_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/sbin</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>daemon_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/libexec/postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>data_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/var/lib/postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mail_owner</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>inet_interfaces</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>localhost</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>inet_protocols</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>all</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mydestination</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>$myhostname, localhost</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>local_recipient_maps</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>unix:passwd.byname $alias_maps</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>unknown_local_recipient_reject_code</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>550</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mynetworks_style</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>host</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mynetworks</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>127.0.0.0/8</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>relayhost</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>0x378.net</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#relayhost = [mail-01.i.0x378.net]</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>alias_maps</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>hash:/etc/aliases</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>alias_database</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>hash:/etc/aliases</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>debug_peer_level</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>2</span>
+</span></span><span style=display:flex><span>sendmail_path <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/sbin/sendmail.postfix</span>
+</span></span><span style=display:flex><span>newaliases_path <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/bin/newaliases.postfix</span>
+</span></span><span style=display:flex><span>mailq_path <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/bin/mailq.postfix</span></span></span></code></pre></td></tr></table></div></div><h2 id=full-local-client-mta-w-relaying>Full Local Client MTA w/ Relaying</h2><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-1><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-2><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-3><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-4><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-5><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-6><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-7><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-8><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-9><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-10><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-11><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-12><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-13><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-14><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-15><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-16><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-17><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-18><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-19><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-20><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-21><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-22><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-23><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-24><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-25><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-26><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-27><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-28><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-29><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-30><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-2f7c855-31><a style=outline:none;text-decoration:none;color:inherit href=#code-2f7c855-31>31</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span>queue_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/var/spool/postfix</span>
+</span></span><span style=display:flex><span>command_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/sbin</span>
+</span></span><span style=display:flex><span>daemon_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/libexec/postfix</span>
+</span></span><span style=display:flex><span>data_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/var/lib/postfix</span>
+</span></span><span style=display:flex><span>mail_owner <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>postfix</span>
+</span></span><span style=display:flex><span>inet_interfaces <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>localhost</span>
+</span></span><span style=display:flex><span>inet_protocols <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>all</span>
+</span></span><span style=display:flex><span>mydestination <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>$myhostname, localhost</span>
+</span></span><span style=display:flex><span>local_recipient_maps <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>unix:passwd.byname $alias_maps</span>
+</span></span><span style=display:flex><span>unknown_local_recipient_reject_code <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>550</span>
+</span></span><span style=display:flex><span>mynetworks_style <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>host</span>
+</span></span><span style=display:flex><span>mynetworks <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>127.0.0.0/8</span>
+</span></span><span style=display:flex><span>relayhost <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>0x378.net</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#relayhost = [mail-01.i.0x378.net]</span>
+</span></span><span style=display:flex><span>alias_maps <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>hash:/etc/aliases</span>
+</span></span><span style=display:flex><span>alias_database <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>hash:/etc/aliases</span>
+</span></span><span style=display:flex><span>debug_peer_level <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>2</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>debugger_command</span> <span style=color:#f92672>=</span><span style=color:#e6db74>
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>         ddd $daemon_directory/$process_name $process_id &amp; sleep 5</span>
+</span></span><span style=display:flex><span>debugger_command <span style=color:#ff7b72;font-weight:700>=</span><span style=color:#a5d6ff>
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>         ddd $daemon_directory/$process_name $process_id &amp; sleep 5</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>sendmail_path</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/sbin/sendmail.postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>newaliases_path</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/bin/newaliases.postfix</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>mailq_path</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/bin/mailq.postfix</span>
+</span></span><span style=display:flex><span>sendmail_path <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/sbin/sendmail.postfix</span>
+</span></span><span style=display:flex><span>newaliases_path <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/bin/newaliases.postfix</span>
+</span></span><span style=display:flex><span>mailq_path <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/bin/mailq.postfix</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>setgid_group</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>postdrop</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>html_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>no</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>manpage_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/share/man</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>sample_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/share/doc/postfix-2.10.2/samples</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>readme_directory</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>/usr/share/doc/postfix-2.10.2/README_FILES</span>
-</span></span></code></pre></div><p>You&rsquo;ll also want to append an administrator&rsquo;s email to the aliases table:</p><pre tabindex=0><code>echo &#34;root:  admin+$(hostname -s)@i.0x378.net&#34; &gt;&gt; /etc/aliases
-newaliases
-</code></pre><p>And enable/start the service:</p><pre tabindex=0><code>systemctl enable postfix.service
-systemctl start postfix.service
-</code></pre><h2 id=creating-a-catch-all>Creating a catch-all</h2><pre tabindex=0><code>yum install postfix -y
-</code></pre><p>Edit <code>/etc/postfix/main.cf</code></p><p>Created lines:</p><pre tabindex=0><code>disable_vrfy_command = yes
+</span></span><span style=display:flex><span>setgid_group <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>postdrop</span>
+</span></span><span style=display:flex><span>html_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>no</span>
+</span></span><span style=display:flex><span>manpage_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/share/man</span>
+</span></span><span style=display:flex><span>sample_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/share/doc/postfix-2.10.2/samples</span>
+</span></span><span style=display:flex><span>readme_directory <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/usr/share/doc/postfix-2.10.2/README_FILES</span></span></span></code></pre></td></tr></table></div></div><p>You&rsquo;ll also want to append an administrator&rsquo;s email to the aliases table:</p><pre tabindex=0><code>echo &#34;root:  admin+$(hostname -s)@i.0x378.net&#34; &gt;&gt; /etc/aliases
+newaliases</code></pre><p>And enable/start the service:</p><pre tabindex=0><code>systemctl enable postfix.service
+systemctl start postfix.service</code></pre><h2 id=creating-a-catch-all>Creating a catch-all</h2><pre tabindex=0><code>yum install postfix -y</code></pre><p>Edit <code>/etc/postfix/main.cf</code></p><p>Created lines:</p><pre tabindex=0><code>disable_vrfy_command = yes
 myhostname = mail-01.i.0x378.net
 home_mailbox = Maildir/
 local_recipient_maps = unix:passwd.byname $alias_maps
-virtual_alias_maps = regexp:/etc/postfix/virtual_aliases
-</code></pre><p>Changed lines:</p><pre tabindex=0><code>inet_interfaces = all
-</code></pre><p>Make sure <code>mydestination</code> is unset</p><p>Created the file <code>/etc/postfix/virtual_aliases</code> with the following contents:</p><pre tabindex=0><code>/.*/  root
-</code></pre><p>Opened port <code>25/tcp</code> on the firewall.</p><p>Since the root account is going to be receiving mail for all accounts and all
+virtual_alias_maps = regexp:/etc/postfix/virtual_aliases</code></pre><p>Changed lines:</p><pre tabindex=0><code>inet_interfaces = all</code></pre><p>Make sure <code>mydestination</code> is unset</p><p>Created the file <code>/etc/postfix/virtual_aliases</code> with the following contents:</p><pre tabindex=0><code>/.*/  root</code></pre><p>Opened port <code>25/tcp</code> on the firewall.</p><p>Since the root account is going to be receiving mail for all accounts and all
 domains make sure that root is not being redirected to another email address in
 the <code>/etc/aliases</code> file. Make sure to run <code>newaliases</code> if you make a change to
 the file.</p><p>Great success! The local root account is now receiving emails to literally any
@@ -112,8 +177,7 @@ address. In production this probably shouldn&rsquo;t be the root user&mldr;.</p>
   openssh-server -y
 
 systemctl enable sshd.service
-systemctl start sshd.service
-</code></pre><p>Temporarily allow HTTPS for gem installation&mldr;</p><p>On development box&mldr;</p><pre tabindex=0><code>rails new parcel_pot --skip-test-unit --skip-bundle
+systemctl start sshd.service</code></pre><p>Temporarily allow HTTPS for gem installation&mldr;</p><p>On development box&mldr;</p><pre tabindex=0><code>rails new parcel_pot --skip-test-unit --skip-bundle
 cd parcel_pot
 
 cat &gt; Gemfile &lt;&lt;-EOS
@@ -153,40 +217,28 @@ require &#39;capistrano/rails/assets&#39;
 require &#39;capistrano/rails/migrations&#39;
 
 Dir.glob(&#39;lib/capistrano/tasks/*.cap&#39;).each { |r| import r } 
-EOS
-</code></pre><h2 id=potentially-useful-links>Potentially Useful Links</h2><ul><li><a href=http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby>http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby</a></li></ul><h2 id=diagnosing-mail-issues>Diagnosing Mail Issues</h2><p>To check the current state of the mail queue on a server you can run the
-following command:</p><pre tabindex=0><code>postqueue -p
-</code></pre><p>or:</p><pre tabindex=0><code>mailq
-</code></pre><p>The error messages often indicate what the problem is allowing you to find mail
-routing issues.</p><p>To immediately flush the queue (attempt to resent all the mail:</p><pre tabindex=0><code>postqueue -f
-</code></pre><p>Alternatively you can just delete all the deferred mail in the queue or all
+EOS</code></pre><h2 id=potentially-useful-links>Potentially Useful Links</h2><ul><li><a href=http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby>http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby</a></li></ul><h2 id=diagnosing-mail-issues>Diagnosing Mail Issues</h2><p>To check the current state of the mail queue on a server you can run the
+following command:</p><pre tabindex=0><code>postqueue -p</code></pre><p>or:</p><pre tabindex=0><code>mailq</code></pre><p>The error messages often indicate what the problem is allowing you to find mail
+routing issues.</p><p>To immediately flush the queue (attempt to resent all the mail:</p><pre tabindex=0><code>postqueue -f</code></pre><p>Alternatively you can just delete all the deferred mail in the queue or all
 mail in the queue with one of the following two commands:</p><pre tabindex=0><code>postsuper -d ALL deferred
-postsuper -d ALL
-</code></pre><h2 id=authenticated-mail-relay>Authenticated Mail Relay</h2><ul><li><a href=http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/>http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/</a></li></ul><h2 id=greylisting>Greylisting</h2><ul><li>milter-greylist</li><li>sqlgrey</li></ul><h2 id=ssl>SSL</h2><pre tabindex=0><code>yum install cyrus-sasl -y
-</code></pre><p>Create the SSL certificate</p><pre tabindex=0><code>cd /etc/postfix
+postsuper -d ALL</code></pre><h2 id=authenticated-mail-relay>Authenticated Mail Relay</h2><ul><li><a href=http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/>http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/</a></li></ul><h2 id=greylisting>Greylisting</h2><ul><li>milter-greylist</li><li>sqlgrey</li></ul><h2 id=ssl>SSL</h2><pre tabindex=0><code>yum install cyrus-sasl -y</code></pre><p>Create the SSL certificate</p><pre tabindex=0><code>cd /etc/postfix
 openssl req -new -x509 -newkey rsa:4096 -keyout key.pem -nodes -days 365 -out cert.pem
-chmod 0600 *.pem
-</code></pre><p>Enable TLS on the SMTP server by adding the following set of commands:</p><pre tabindex=0><code>smtpd_use_tls = yes
+chmod 0600 *.pem</code></pre><p>Enable TLS on the SMTP server by adding the following set of commands:</p><pre tabindex=0><code>smtpd_use_tls = yes
 tls_random_source = dev:/dev/urandom
 smtpd_tls_cert_file = /etc/postfix/cert.pem
-smtpd_tls_key_file = /etc/postfix/key.pem
-</code></pre><h2 id=anti-virus--spam-filtering>Anti-Virus & Spam Filtering</h2><pre tabindex=0><code>yum install amavisd-new spamassassin clamav clamav-update \
-  clamav-server-sysvinit -y
-</code></pre><p>I opened up <code>/etc/sysconfig/freshclam</code> and commented out the last line.</p><p>Edited <code>$mydomain</code> variable in <code>/etc/amavisd/amavisd.conf</code> to be <code>0x378.net</code>
+smtpd_tls_key_file = /etc/postfix/key.pem</code></pre><h2 id=anti-virus--spam-filtering>Anti-Virus & Spam Filtering</h2><pre tabindex=0><code>yum install amavisd-new spamassassin clamav clamav-update \
+  clamav-server-sysvinit -y</code></pre><p>I opened up <code>/etc/sysconfig/freshclam</code> and commented out the last line.</p><p>Edited <code>$mydomain</code> variable in <code>/etc/amavisd/amavisd.conf</code> to be <code>0x378.net</code>
 and finally enable and start the services.</p><pre tabindex=0><code>systemctl enable amavisd.service
 systemctl enable clamd.amavisd.service
 systemctl enable spamassassin.service
 systemctl start amavisd.service
 systemctl start clamd.amavisd.service
-systemctl start spamassassin.service
-</code></pre><p>Additional things to consider:</p><ul><li>bogofilter</li><li>spambayes</li><li>spamprobe</li><li>dspam</li></ul><h2 id=dkim>DKIM</h2><p>There are two postfix DKIM milters available, <code>opendkim</code>, and <code>dkim-milter</code>.
+systemctl start spamassassin.service</code></pre><p>Additional things to consider:</p><ul><li>bogofilter</li><li>spambayes</li><li>spamprobe</li><li>dspam</li></ul><h2 id=dkim>DKIM</h2><p>There are two postfix DKIM milters available, <code>opendkim</code>, and <code>dkim-milter</code>.
 The former is a fork of the latter, has fewer bugs, and is under a much tighter
-release schedule.</p><pre tabindex=0><code>yum install opendkim -y
-</code></pre><h2 id=dmarc>DMARC</h2><h2 id=spf-validation>SPF Validation</h2><p>There are two postfix SPF filters available as well. The first one is
+release schedule.</p><pre tabindex=0><code>yum install opendkim -y</code></pre><h2 id=dmarc>DMARC</h2><h2 id=spf-validation>SPF Validation</h2><p>There are two postfix SPF filters available as well. The first one is
 <code>perl-Mail-SPF</code> and the other is <code>pypolicyd-spf</code>. From what I can tell the
 latter is significantly more sophisticated and it provides a saner set of
-defaults so thats the choice I&rsquo;m going with.</p><p>The following is a set of the valid SPF keywords and their modifiers.</p><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>v=spf1</td><td>Specifies this is an SPF record, and we&rsquo;re using version 1 of it.</td></tr><tr><td>all</td><td>Matches everything not specifically matched.</td></tr><tr><td>a</td><td>Match the A record of the domain by default, additionally an other domain can be specified, and a CIDR network prefix can be applied to the resolved address. (ex: a a:other.tld a/24 a:test.tld/24)</td></tr><tr><td>mx</td><td>Match the MX records of the domain by default, additional domains and CIDR suffixes can be applied like the a record. (ex: mx mx:other.tld mx/28 mx:something.tld/24)</td></tr><tr><td>ip4</td><td>IPv4 address or network (CIDR format) (ex: ip4:192.168.0.0/24)</td></tr><tr><td>ip6</td><td>IPv6 address or network (CIDR format) (ex: ip6:2001:51b2:200C::/64)</td></tr><tr><td>ptr</td><td>ptr, without an argument this validates that at least one of the domains resolved by looking up the client&rsquo;s IP address resolves back to the current domain. When a domain is provided it validates the reverse lookups match that domain instead.</td></tr><tr><td>exists</td><td>Matches successfully if the provided domain successfully resolves to an address (it doesn&rsquo;t matter what address). This is valuable for use with macros, allowing RBL-style reversed-IP lookups.</td></tr><tr><td>include</td><td>Additionally add the SPF record from another domain. If that other domain doesn&rsquo;t include an SPF record the result will be a PermError. (ex: include:example.com).</td></tr><tr><td>redirect</td><td>ignore this SPF record and use the SPF record at the provided domain instead. If the provided domain doesn&rsquo;t have an spf record the result is unknown. (ex: redirect=example.com)</td></tr><tr><td>exp</td><td>If an SMTP receiver rejects a message, it can direct non-conforming users to a web page that provides further instructions. When the domain is expanded; a TXT lookup is performed, the result of the TXT query is then macro expanded and shown to the sender (ex: exp=explain._spf.%{d})</td></tr></tbody></table><p>Expressions:</p><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>-</td><td>Fail</td></tr><tr><td>~</td><td>Soft-fail (accept but mark)</td></tr><tr><td>+</td><td>Pass</td></tr><tr><td>?</td><td>Neutral</td></tr></tbody></table><p>Install SPF stuff:</p><pre tabindex=0><code>yum install pypolicyd-spf -y
-</code></pre><h2 id=senderid>SenderID</h2><p>This is the Microsoft specific version of SPF. It&rsquo;s confusing as they have
+defaults so thats the choice I&rsquo;m going with.</p><p>The following is a set of the valid SPF keywords and their modifiers.</p><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>v=spf1</td><td>Specifies this is an SPF record, and we&rsquo;re using version 1 of it.</td></tr><tr><td>all</td><td>Matches everything not specifically matched.</td></tr><tr><td>a</td><td>Match the A record of the domain by default, additionally an other domain can be specified, and a CIDR network prefix can be applied to the resolved address. (ex: a a:other.tld a/24 a:test.tld/24)</td></tr><tr><td>mx</td><td>Match the MX records of the domain by default, additional domains and CIDR suffixes can be applied like the a record. (ex: mx mx:other.tld mx/28 mx:something.tld/24)</td></tr><tr><td>ip4</td><td>IPv4 address or network (CIDR format) (ex: ip4:192.168.0.0/24)</td></tr><tr><td>ip6</td><td>IPv6 address or network (CIDR format) (ex: ip6:2001:51b2:200C::/64)</td></tr><tr><td>ptr</td><td>ptr, without an argument this validates that at least one of the domains resolved by looking up the client&rsquo;s IP address resolves back to the current domain. When a domain is provided it validates the reverse lookups match that domain instead.</td></tr><tr><td>exists</td><td>Matches successfully if the provided domain successfully resolves to an address (it doesn&rsquo;t matter what address). This is valuable for use with macros, allowing RBL-style reversed-IP lookups.</td></tr><tr><td>include</td><td>Additionally add the SPF record from another domain. If that other domain doesn&rsquo;t include an SPF record the result will be a PermError. (ex: include:example.com).</td></tr><tr><td>redirect</td><td>ignore this SPF record and use the SPF record at the provided domain instead. If the provided domain doesn&rsquo;t have an spf record the result is unknown. (ex: redirect=example.com)</td></tr><tr><td>exp</td><td>If an SMTP receiver rejects a message, it can direct non-conforming users to a web page that provides further instructions. When the domain is expanded; a TXT lookup is performed, the result of the TXT query is then macro expanded and shown to the sender (ex: exp=explain._spf.%{d})</td></tr></tbody></table><p>Expressions:</p><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>-</td><td>Fail</td></tr><tr><td>~</td><td>Soft-fail (accept but mark)</td></tr><tr><td>+</td><td>Pass</td></tr><tr><td>?</td><td>Neutral</td></tr></tbody></table><p>Install SPF stuff:</p><pre tabindex=0><code>yum install pypolicyd-spf -y</code></pre><h2 id=senderid>SenderID</h2><p>This is the Microsoft specific version of SPF. It&rsquo;s confusing as they have
 similar syntax. SenderID is obsolete but occasionally still causes issues when
 broken SenderID implementations attempt to validate a SPF record. There was
 some mention in the articles I read that SPF and SenderID operate at different
@@ -204,8 +256,7 @@ remote mail server, it additionally sends a copy to static address. This is
 useful for monitoring for abuse from mail clients that are compromised (large
 number of bounce messages probably indicate a spam blast).</p><p>To send these too the address &lsquo;<a href=mailto:sent-bounces@example.tld>sent-bounces@example.tld</a>&rsquo; you&rsquo;ll want to add the
 following lines too your postfix configuration:</p><pre tabindex=0><code>notify_classes = resource, software, bounce
-bounce_notice_recipient = sent-bounces@example.tld
-</code></pre><p>The first line adds the &lsquo;bounce&rsquo; class of messages to the standard messages
+bounce_notice_recipient = sent-bounces@example.tld</code></pre><p>The first line adds the &lsquo;bounce&rsquo; class of messages to the standard messages
 sent too the postmaster for delivery issues related too the software or server.
 The second line redirects those specific messages to the email address shown
 above.</p><h3 id=verp>VERP</h3><p>This is a pretty nifty trick that has <a href=http://cr.yp.to/proto/verp.txt>been standardized</a> too a certain
@@ -238,14 +289,12 @@ and I haven&rsquo;t found a solution for it yet.</p><p>For receipt of these VERP
 I can pass too a script for processing such as &lsquo;<a href=mailto:bounce@example.tld>bounce@example.tld</a>&rsquo;. Make sure
 this address exists if before taking the following actions.</p><p>This method makes use of postfix transports too handle bounces speciality.
 After the address has been created ensure you have the recipient delimiter
-option configured in your <code>main.cf</code> file like so:</p><pre tabindex=0><code>recipient_delimiter = +
-</code></pre><p>We&rsquo;ll need to define a new transport, which will send the mail through the
+option configured in your <code>main.cf</code> file like so:</p><pre tabindex=0><code>recipient_delimiter = +</code></pre><p>We&rsquo;ll need to define a new transport, which will send the mail through the
 script or software that will be handling the bounce messages. This will receive
 the messages via STDIN, and can take any arguments you want too provide. I use
 the bounce extension as the only argument too my script which results in an
 addition to my &lsquo;master.cf&rsquo; file that looks like the following:</p><pre tabindex=0><code>bounce   unix  -       n       n       -       -       pipe
-  flags=RX user=nobody argv=/srv/scripts/mail_bounce_handler ${extension}
-</code></pre><p>The &lsquo;R&rsquo; flag ensures that a &lsquo;Return-Path&rsquo; message header is added too the
+  flags=RX user=nobody argv=/srv/scripts/mail_bounce_handler ${extension}</code></pre><p>The &lsquo;R&rsquo; flag ensures that a &lsquo;Return-Path&rsquo; message header is added too the
 message before passing it into the script. The &lsquo;X&rsquo; flag is used specifically by
 me for my script, this flag indicates that this transport performs final
 delivery of the message. If you want to additionally have these bounce messages
@@ -254,9 +303,6 @@ will be executed as the nobody user with the extension passed as the sole
 parameter too the script. You&rsquo;ll want too change the path of argv too the path
 of your script.</p><p>If you don&rsquo;t already have a transports map (otherwise just add this tranport
 and remap it if it&rsquo;s a hash type), create the file &lsquo;/etc/postfix/transport&rsquo; and
-add the following contents:</p><pre tabindex=0><code>bounce@example.tld    bounce:
-</code></pre><p>And build the hash map:</p><pre tabindex=0><code>postmap /etc/postfix/transport
-</code></pre><p>Finally make sure postfix is aware of your transport map (the following line
-should be in your &lsquo;main.cf&rsquo; file).</p><pre tabindex=0><code>transport_maps = hash:/etc/postfix/transport
-</code></pre><p>Reload your postfix configuration and your script should now be handling all
-mail sent too &lsquo;<a href=mailto:bounce@example.tld>bounce@example.tld</a>&rsquo;.</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+add the following contents:</p><pre tabindex=0><code>bounce@example.tld    bounce:</code></pre><p>And build the hash map:</p><pre tabindex=0><code>postmap /etc/postfix/transport</code></pre><p>Finally make sure postfix is aware of your transport map (the following line
+should be in your &lsquo;main.cf&rsquo; file).</p><pre tabindex=0><code>transport_maps = hash:/etc/postfix/transport</code></pre><p>Reload your postfix configuration and your script should now be handling all
+mail sent too &lsquo;<a href=mailto:bounce@example.tld>bounce@example.tld</a>&rsquo;.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=3e75bcb473b00978813d59113edbef5994406111 target=_blank rel=noopener>3e75bcb4</a> @ 2017-10-09</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>

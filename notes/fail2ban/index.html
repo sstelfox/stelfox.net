@@ -1,13 +1,13 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 fail2ban provides a vital service of blocking troublesome IPs from attempting brute force logins.
 My immediate issue is that it requires a few packages off the bat that I do not want on my system."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/fail2ban/><title>fail2ban :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="fail2ban"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="fail2ban"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 fail2ban provides a vital service of blocking troublesome IPs from attempting brute force logins.
-My immediate issue is that it requires a few packages off the bat that I do not want on my system."><meta itemprop=wordCount content="2045"><meta name=twitter:card content="summary"><meta name=twitter:title content="fail2ban"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+My immediate issue is that it requires a few packages off the bat that I do not want on my system."><meta itemprop=datePublished content="2018-10-30T20:24:15-04:00"><meta itemprop=dateModified content="2018-10-30T20:24:15-04:00"><meta itemprop=wordCount content="2125"><meta name=twitter:card content="summary"><meta name=twitter:title content="fail2ban"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 fail2ban provides a vital service of blocking troublesome IPs from attempting brute force logins.
 My immediate issue is that it requires a few packages off the bat that I do not want on my system."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/blog/>Blog Posts</a></li><li><a href=/notes/>Various Notes</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/fail2ban/>fail2ban</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/fail2ban/>fail2ban</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.</strong></em></p><p>fail2ban provides a vital service of blocking troublesome IPs from attempting
 brute force logins.</p><p>My immediate issue is that it requires a few packages off the bat that I do not
@@ -19,26 +19,21 @@ failures.</p><h2 id=installation>Installation</h2><p>So what&rsquo;s my solution
 through yum, force the old packages out using rpm, and exclude fail2ban from
 updating (and preventing those damn packages from coming back). This is done
 using the following commands:</p><pre tabindex=0><code>[root@localhost ~]# yum install fail2ban -y
-[root@localhost ~]# rpm -v --nodeps -e shorewall tcp_wrappers
-</code></pre><p>Finally add this line to <code>/etc/yum.conf</code>.</p><pre tabindex=0><code>exclude=fail2ban shorewall tcp_wrappers
-</code></pre><p>There are of course security implication too not updating a package (in this
+[root@localhost ~]# rpm -v --nodeps -e shorewall tcp_wrappers</code></pre><p>Finally add this line to <code>/etc/yum.conf</code>.</p><pre tabindex=0><code>exclude=fail2ban shorewall tcp_wrappers</code></pre><p>There are of course security implication too not updating a package (in this
 case fail2ban won&rsquo;t ever get updated) however it&rsquo;s an exception that I&rsquo;m
 willing to make to get fail2ban and not have the shitty shittiness of shorewall
 and tcp_wrappers on my systems.</p><h2 id=firewall-modifications>Firewall Modifications</h2><p>There are some small changes that need to be made to the firewall script that
 should probably be merged with the default as they can&rsquo;t hurt and having
 fail2ban easily available to my default config would be a significant benefit.</p><p>The changes are specifically:</p><ul><li>Add an &ldquo;OFFENDINGIPS&rdquo; chain</li><li>Push all incoming traffic through the OFFENDINGIPS chain before continuing
 through the INPUT chain</li><li>Add a rule to the OFFENDINGIPS chain to prevent ongoing attacks from getting
-through for the duration of the attack</li></ul><p>The chain definition (near the top) should look like this:</p><pre tabindex=0><code>:OFFENDINGIPS - [0:0]
-</code></pre><p>Push all the traffic through the chain looks like this (this belongs above all other INPUT chain rules):</p><pre tabindex=0><code># [DEF-RULESET] Pass all traffic through the OFFENDINGIPS table to block
+through for the duration of the attack</li></ul><p>The chain definition (near the top) should look like this:</p><pre tabindex=0><code>:OFFENDINGIPS - [0:0]</code></pre><p>Push all the traffic through the chain looks like this (this belongs above all other INPUT chain rules):</p><pre tabindex=0><code># [DEF-RULESET] Pass all traffic through the OFFENDINGIPS table to block
 # any hosts that have been caught being malicious in some way
--A INPUT -j OFFENDINGIPS
-</code></pre><p>Rule to prevent ongoing attacks:</p><pre tabindex=0><code># [DEF-RULESET] If something keeps trying to connect after we have marked
+-A INPUT -j OFFENDINGIPS</code></pre><p>Rule to prevent ongoing attacks:</p><pre tabindex=0><code># [DEF-RULESET] If something keeps trying to connect after we have marked
 # them as an attacker, keep blocking them until they stop for a full hour.
 # When fail2ban is adding IPs to this table, it will initially mark them
 # as an ATTACKER and they will be banned for a minimum of the fail2ban time,
 # but it will be indefinite as long as they keep trying 
--A OFFENDINGIPS -m recent --name ATTACKER --update --seconds 3600 -j DROP
-</code></pre><h2 id=configuration>Configuration</h2><p>I&rsquo;ve noticed that the documentation on the actual raw config files for fail2ban
+-A OFFENDINGIPS -m recent --name ATTACKER --update --seconds 3600 -j DROP</code></pre><h2 id=configuration>Configuration</h2><p>I&rsquo;ve noticed that the documentation on the actual raw config files for fail2ban
 is really poor. Most of the documentation I&rsquo;ve found is drop in files for
 specific services but completely unable to find coherent documentation on all
 the options in the actions files. Sure signs of amateur work which disheartens
@@ -49,37 +44,64 @@ loglevel = 3
 # Log to syslog
 logtarget = SYSLOG
 
-socket = /var/run/fail2ban/fail2ban.sock
-</code></pre><h3 id=etcfail2banjailconf>/etc/fail2ban/jail.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#66d9ef>[DEFAULT]</span>
+socket = /var/run/fail2ban/fail2ban.sock</code></pre><h3 id=etcfail2banjailconf>/etc/fail2ban/jail.conf</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-1><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-2><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-3><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-4><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-5><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-6><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-7><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-8><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-9><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-10><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-11><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-12><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-13><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-14><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-15><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-16><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-17><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-18><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-19><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-20><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-21><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-22><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-23><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-24><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-25><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-26><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-27><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-28><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b38c7df-29><a style=outline:none;text-decoration:none;color:inherit href=#code-b38c7df-29>29</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#ff7b72>[DEFAULT]</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Never ban localhost or the internal network</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>ignoreip</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>127.0.0.1 10.13.37.0/24</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Never ban localhost or the internal network</span>
+</span></span><span style=display:flex><span>ignoreip <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>127.0.0.1 10.13.37.0/24</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Number of seconds that a host is banned by default (12 Hours)</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>bantime</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>43200</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Number of seconds that a host is banned by default (12 Hours)</span>
+</span></span><span style=display:flex><span>bantime  <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>43200</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The time period to look for number of failed attempts</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>findtime</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>600</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The time period to look for number of failed attempts</span>
+</span></span><span style=display:flex><span>findtime <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>600</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The number of failures before a host get banned</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>maxretry</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>5</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The number of failures before a host get banned</span>
+</span></span><span style=display:flex><span>maxretry <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>5</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Pick the best backend based on what&#39;s available on the system</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>backend</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>auto</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Pick the best backend based on what&#39;s available on the system</span>
+</span></span><span style=display:flex><span>backend  <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>auto</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>[ssh-iptables]</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>enabled</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>true</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>filter</span>   <span style=color:#f92672>=</span> <span style=color:#e6db74>sshd</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>action</span>   <span style=color:#f92672>=</span> <span style=color:#e6db74>iptables</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>logpath</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>/var/log/secure</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>[ssh-iptables]</span>
+</span></span><span style=display:flex><span>enabled  <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>true</span>
+</span></span><span style=display:flex><span>filter   <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>sshd</span>
+</span></span><span style=display:flex><span>action   <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>iptables</span>
+</span></span><span style=display:flex><span>logpath  <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/var/log/secure</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># If asterisk is installed on this machine turn this on. The log path assumes you&#39;ve followed the configuration in the FKAM wiki.</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>[asterisk-iptables]</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>enabled</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>false</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>filter</span>   <span style=color:#f92672>=</span> <span style=color:#e6db74>asterisk</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>action</span>   <span style=color:#f92672>=</span> <span style=color:#e6db74>iptables</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>logpath</span>  <span style=color:#f92672>=</span> <span style=color:#e6db74>/var/log/asterisk.log</span>
-</span></span></code></pre></div><h3 id=etcfail2banfilterdsshdconf>/etc/fail2ban/filter.d/sshd.conf</h3><pre tabindex=0><code>[INCLUDES]
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># If asterisk is installed on this machine turn this on. The log path assumes you&#39;ve followed the configuration in the FKAM wiki.</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>[asterisk-iptables]</span>
+</span></span><span style=display:flex><span>enabled  <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>false</span>
+</span></span><span style=display:flex><span>filter   <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>asterisk</span>
+</span></span><span style=display:flex><span>action   <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>iptables</span>
+</span></span><span style=display:flex><span>logpath  <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>/var/log/asterisk.log</span></span></span></code></pre></td></tr></table></div></div><h3 id=etcfail2banfilterdsshdconf>/etc/fail2ban/filter.d/sshd.conf</h3><pre tabindex=0><code>[INCLUDES]
 # Include common.conf before this file
 before = common.conf
 
@@ -97,47 +119,78 @@ failregex = ^%(__prefix_line)s(?:error: PAM: )?Authentication failure for .* fro
             ^%(__prefix_line)sAddress &lt;HOST&gt; .* POSSIBLE BREAK-IN ATTEMPT!*\s*$
             ^%(__prefix_line)sUser \S+ from &lt;HOST&gt; not allowed because none of user&#39;s groups are listed in AllowGroups$
 
-ignoreregex =
-</code></pre><h3 id=etcfail2banfilterdasteriskconf>/etc/fail2ban/filter.d/asterisk.conf</h3><p>This file required a bit of special attention, I noticed that the one set of
+ignoreregex =</code></pre><h3 id=etcfail2banfilterdasteriskconf>/etc/fail2ban/filter.d/asterisk.conf</h3><p>This file required a bit of special attention, I noticed that the one set of
 regular expressions that have been copied and pasted everywhere DIDN&rsquo;T MATCH
 actual logs. They didn&rsquo;t take into account the port, and frankly I like
 matching the whole line rather than just part of it. I modified the expressions
 which are now below. They are perfectly backwards compatible with older
 versions of asterisk that may not include the port and as a bonus will match
-against syslog output if you are logging to syslog as well.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#66d9ef>[INCLUDES]</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>before</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>common.conf</span>
+against syslog output if you are logging to syslog as well.</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-1><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-2><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-3><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-4><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-5><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-6><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-7><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-8><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-9><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-10><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-11><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-12><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-13><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-14><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-15><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-16><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-17><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-18><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-19><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-20><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-21><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-22><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-23><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-24><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-25><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-26><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-27><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-28><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-29><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-30><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-31><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-32><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-155cc69-33><a style=outline:none;text-decoration:none;color:inherit href=#code-155cc69-33>33</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#ff7b72>[INCLUDES]</span>
+</span></span><span style=display:flex><span>before <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>common.conf</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>[Definition]</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>_daemon</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>asterisk</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>[Definition]</span>
+</span></span><span style=display:flex><span>_daemon <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>asterisk</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># These are the regular expressions that will trigger fail2ban into blocking an</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># IP address for an asterisk 1.8 installation. The first regular expression</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># should match against the following line taken directly from a misconfigured</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># client:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Nov  9 18:47:21 pbx asterisk[3432]: NOTICE[3445]: chan_sip.c:24331 in handle_request_register: Registration from &#39;INCOMING CALL &lt;sip:SPA3000_PSTN@10.13.37.102&gt;&#39; failed for &#39;10.13.37.101:5061&#39; - No matching peer found</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>failregex</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_register: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - No matching peer found\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The following should match against the following line log taken directly from</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># an attack:</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># Nov 14 06:32:16 pbx asterisk: NOTICE[1640]: chan_sip.c:21975 in handle_request_invite: Sending fake auth rejection for device &#34;sip&#34; &lt;sip:sip@91.226.97.107&gt;;tag=L7922NDHSn</span>
-</span></span><span style=display:flex><span>            <span style=color:#a6e22e>^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_invite: Sending fake auth rejection for device &#34;.*&#34; &lt;sip:.*@&lt;HOST&gt;&gt;;tag</span><span style=color:#f92672>=</span><span style=color:#e6db74>[a-zA-Z0-9]+\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The following regexes were provided through an asterisk forum, they are a bit</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># sloppy and might be outdated. I&#39;ve already updated one (the first one above)</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># to reflect what I actually see in my logs. The rest will be updated as</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># I see the attacks</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Wrong Password\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Username/auth name mismatch\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Device does not match ACL\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#           ^%(__prefix_line)s?NOTICE.* &lt;HOST&gt;(:[0-9]+)? failed to authenticate as &#39;.*&#39;\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#           ^%(__prefix_line)s?NOTICE.*: No registration for peer &#39;.*&#39; \(from &lt;HOST&gt;(:[0-9]+)?\)\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#           ^%(__prefix_line)s?NOTICE.*: Host &lt;HOST&gt;(:[0-9]+)? failed MD5 authentication for &#39;.*&#39; (.*)\s*$</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#           ^%(__prefix_line)s?NOTICE.*: Failed to authenticate user .*@&lt;HOST&gt;(:[0-9]+)?.*\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># These are the regular expressions that will trigger fail2ban into blocking an</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># IP address for an asterisk 1.8 installation. The first regular expression</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># should match against the following line taken directly from a misconfigured</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># client:</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Nov  9 18:47:21 pbx asterisk[3432]: NOTICE[3445]: chan_sip.c:24331 in handle_request_register: Registration from &#39;INCOMING CALL &lt;sip:SPA3000_PSTN@10.13.37.102&gt;&#39; failed for &#39;10.13.37.101:5061&#39; - No matching peer found</span>
+</span></span><span style=display:flex><span>failregex <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_register: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - No matching peer found\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The following should match against the following line log taken directly from</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># an attack:</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># Nov 14 06:32:16 pbx asterisk: NOTICE[1640]: chan_sip.c:21975 in handle_request_invite: Sending fake auth rejection for device &#34;sip&#34; &lt;sip:sip@91.226.97.107&gt;;tag=L7922NDHSn</span>
+</span></span><span style=display:flex><span>            ^%(__prefix_line)s?NOTICE\[[0-9]+\]: chan_sip.c:[0-9]+ in handle_request_invite: Sending fake auth rejection for device &#34;.*&#34; &lt;sip:.*@&lt;HOST&gt;&gt;;tag<span style=color:#ff7b72;font-weight:700>=</span><span style=color:#a5d6ff>[a-zA-Z0-9]+\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The following regexes were provided through an asterisk forum, they are a bit</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># sloppy and might be outdated. I&#39;ve already updated one (the first one above)</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># to reflect what I actually see in my logs. The rest will be updated as</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># I see the attacks</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Wrong Password\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Username/auth name mismatch\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#           ^%(__prefix_line)s?NOTICE.*: Registration from &#39;.*&#39; failed for &#39;&lt;HOST&gt;(:[0-9]+)?&#39; - Device does not match ACL\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#           ^%(__prefix_line)s?NOTICE.* &lt;HOST&gt;(:[0-9]+)? failed to authenticate as &#39;.*&#39;\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#           ^%(__prefix_line)s?NOTICE.*: No registration for peer &#39;.*&#39; \(from &lt;HOST&gt;(:[0-9]+)?\)\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#           ^%(__prefix_line)s?NOTICE.*: Host &lt;HOST&gt;(:[0-9]+)? failed MD5 authentication for &#39;.*&#39; (.*)\s*$</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#           ^%(__prefix_line)s?NOTICE.*: Failed to authenticate user .*@&lt;HOST&gt;(:[0-9]+)?.*\s*$</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>ignoreregex</span> <span style=color:#f92672>=</span>
-</span></span></code></pre></div><p>Some notes on this specific file. I found &lsquo;pre-made&rsquo; asterisk configurations
+</span></span><span style=display:flex><span>ignoreregex <span style=color:#ff7b72;font-weight:700>=</span></span></span></code></pre></td></tr></table></div></div><p>Some notes on this specific file. I found &lsquo;pre-made&rsquo; asterisk configurations
 for fail2ban on the internet and found them to be very lacking. The did not
 deal with an attack log I saw actually hitting my server the &lsquo;Sending fake
 auth rejection&rsquo; log specifically.</p><p>I was also greatly displeased by their performance. By making the regular
@@ -154,48 +207,82 @@ sys     0m0.049s
 
 real    0m0.367s
 user    0m0.298s
-sys     0m0.047s
-</code></pre><h3 id=etcfail2banactionsdiptablesconf>/etc/fail2ban/actions.d/iptables.conf</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#66d9ef>[Init]</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The following had defaults that I wasn&#39;t happy with, but now they&#39;re not being</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># used anyways as I don&#39;t want offending hosts talking to *any* service on this</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># server until the ban expires. IF you just want to block access to the offending</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># service these SHOULD NOT have defaults, the triggering rule should apply them</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># so they actually block just that service rather than mess up whatever the default</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># is</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#name =</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#port =</span>
-</span></span><span style=display:flex><span><span style=color:#75715e>#protocol =</span>
+sys     0m0.047s</code></pre><h3 id=etcfail2banactionsdiptablesconf>/etc/fail2ban/actions.d/iptables.conf</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-1><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-1> 1</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-2><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-2> 2</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-3><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-3> 3</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-4><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-4> 4</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-5><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-5> 5</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-6><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-6> 6</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-7><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-7> 7</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-8><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-8> 8</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-9><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-9> 9</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-10><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-10>10</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-11><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-11>11</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-12><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-12>12</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-13><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-13>13</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-14><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-14>14</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-15><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-15>15</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-16><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-16>16</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-17><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-17>17</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-18><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-18>18</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-19><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-19>19</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-20><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-20>20</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-21><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-21>21</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-22><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-22>22</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-23><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-23>23</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-24><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-24>24</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-25><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-25>25</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-26><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-26>26</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-27><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-27>27</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-28><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-28>28</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-29><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-29>29</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-30><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-30>30</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-31><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-31>31</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-32><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-32>32</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-33><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-33>33</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-34><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-34>34</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-35><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-35>35</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-36><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-36>36</a>
+</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-cf19e34-37><a style=outline:none;text-decoration:none;color:inherit href=#code-cf19e34-37>37</a>
+</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#ff7b72>[Init]</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The following had defaults that I wasn&#39;t happy with, but now they&#39;re not being</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># used anyways as I don&#39;t want offending hosts talking to *any* service on this</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># server until the ban expires. IF you just want to block access to the offending</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># service these SHOULD NOT have defaults, the triggering rule should apply them</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># so they actually block just that service rather than mess up whatever the default</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># is</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#name =</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#port =</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic>#protocol =</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># This is the manual table that I setup to handle blocked hosts</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>table</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>OFFENDINGIPS</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># This is the manual table that I setup to handle blocked hosts</span>
+</span></span><span style=display:flex><span>table <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>OFFENDINGIPS</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>[Definition]</span>
+</span></span><span style=display:flex><span><span style=color:#ff7b72>[Definition]</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The commands that get executed when fail2ban starts up</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># We don&#39;t need to do anything since I take care of this manually and permanently</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>actionstart</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The commands that get executed when fail2ban starts up</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># We don&#39;t need to do anything since I take care of this manually and permanently</span>
+</span></span><span style=display:flex><span>actionstart <span style=color:#ff7b72;font-weight:700>=</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># The commands that get executed when fail2ban shuts down</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># We don&#39;t need to do anything since I take care of this manually and permanently</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>actionstop</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># The commands that get executed when fail2ban shuts down</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># We don&#39;t need to do anything since I take care of this manually and permanently</span>
+</span></span><span style=display:flex><span>actionstop <span style=color:#ff7b72;font-weight:700>=</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># There doesn&#39;t really seem to be any documentation on what this actually does,</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># I&#39;ve modified it so it will look at the appropriate table and it appears that</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># it&#39;s just checking to make sure that the INPUT table is properly redirecting</span>
-</span></span><span style=display:flex><span><span style=color:#75715e># to the table that has the offending hosts in it</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>actioncheck</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>iptables -n -L INPUT | grep -q &lt;table&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># There doesn&#39;t really seem to be any documentation on what this actually does,</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># I&#39;ve modified it so it will look at the appropriate table and it appears that</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># it&#39;s just checking to make sure that the INPUT table is properly redirecting</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># to the table that has the offending hosts in it</span>
+</span></span><span style=display:flex><span>actioncheck <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>iptables -n -L INPUT | grep -q &lt;table&gt;</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># This command bans the offending IP and marks them as an attacker</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>actionban</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>iptables -A &lt;table&gt; -s &lt;ip&gt; -j LOG --log-prefix &#34;Attacker&#39;s Back &#34;
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>            iptables -A &lt;table&gt; -s &lt;ip&gt; -m recent --set --name ATTACKER -j DROP</span>
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># This command bans the offending IP and marks them as an attacker</span>
+</span></span><span style=display:flex><span>actionban <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>iptables -A &lt;table&gt; -s &lt;ip&gt; -j LOG --log-prefix &#34;Attacker&#39;s Back &#34;
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>            iptables -A &lt;table&gt; -s &lt;ip&gt; -m recent --set --name ATTACKER -j DROP</span>
 </span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#75715e># This command removes an IP from the ban-list</span>
-</span></span><span style=display:flex><span><span style=color:#a6e22e>actionunban</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>iptables -D &lt;table&gt; -s &lt;ip&gt; -j LOG --log-prefix &#34;Attacker&#39;s Back &#34;
-</span></span></span><span style=display:flex><span><span style=color:#e6db74>              iptables -D &lt;table&gt; -s &lt;ip&gt; -j DROP</span>
-</span></span></code></pre></div><h2 id=testing-matchesregexesbans-without-making-the-system-live>Testing Matches/Regexes/Bans Without Making the System Live</h2><h3 id=validation-configuration>Validation Configuration</h3><p>Using the following command you can verify that the configuration is valid and
+</span></span><span style=display:flex><span><span style=color:#8b949e;font-style:italic># This command removes an IP from the ban-list</span>
+</span></span><span style=display:flex><span>actionunban <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>iptables -D &lt;table&gt; -s &lt;ip&gt; -j LOG --log-prefix &#34;Attacker&#39;s Back &#34;
+</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>              iptables -D &lt;table&gt; -s &lt;ip&gt; -j DROP</span></span></span></code></pre></td></tr></table></div></div><h2 id=testing-matchesregexesbans-without-making-the-system-live>Testing Matches/Regexes/Bans Without Making the System Live</h2><h3 id=validation-configuration>Validation Configuration</h3><p>Using the following command you can verify that the configuration is valid and
 that fail2ban will be happy with what you told it. It&rsquo;s output isn&rsquo;t very
-friendly but it&rsquo;ll do in a pinch.</p><pre tabindex=0><code>[root@localhost ~]# fail2ban-client -d
-</code></pre><h3 id=validation-regular-expressions>Validation Regular Expressions</h3><p>First off you&rsquo;ll need a sample of the log that your going to be matching
+friendly but it&rsquo;ll do in a pinch.</p><pre tabindex=0><code>[root@localhost ~]# fail2ban-client -d</code></pre><h3 id=validation-regular-expressions>Validation Regular Expressions</h3><p>First off you&rsquo;ll need a sample of the log that your going to be matching
 against. If the message is already in your log more power to you, you can use
 that logfile as the input (and it&rsquo;s what I did).</p><p>As for the regex, the tool supports passing the full thing on the command line
 HOWEVER it doesn&rsquo;t expand fail2ban REGEX variables beyond (that is those
@@ -280,6 +367,5 @@ Date template hits:
 Success, the total number of match is 75
 
 However, look at the above section &#39;Running tests&#39; which could contain
-important information.
-</code></pre><p>The above shows that I have 75 matches and the IPs (removed) that matched
-against which rule.</p></div></article><hr><div class=post-info></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+important information.</code></pre><p>The above shows that I have 75 matches and the IPs (removed) that matched
+against which rule.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=73f7e533ca46dadf707b92cf4c86a28caf5eac1a target=_blank rel=noopener>73f7e533</a> @ 2018-10-30</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
