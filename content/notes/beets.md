@@ -1,25 +1,29 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+evergreen: false
+public: true
+tags:
+  - linux
+  - music
 title: Beets
+slug: beets
 ---
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+***Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.***
 
-[Documentation][1]
+* [Official Documentation](http://readthedocs.org/docs/beets/en/1.0b12/index.html)
 
 ## Installation
 
-```
-sudo yum install python-pip chromaprint-tools -y
-sudo pip-python install beets
-sudo pip-python install pyacoustid
-sudo pip-python install rgain
-sudo pip-python install pylast
+```console
+$ sudo yum install python-pip chromaprint-tools -y
+$ sudo pip-python install beets
+$ sudo pip-python install pyacoustid
+$ sudo pip-python install rgain
+$ sudo pip-python install pylast
 ```
 
-Configure ~/.beetsconfig like so:
+Configure "~/.beetsconfig" like so:
 
 ```ini
 [beets]
@@ -46,29 +50,22 @@ overwrite: yes
 
 ## Usage
 
-The following command will import music from the given path and copy it into
-the directory specified in the configuration file.
+The following command will import music from the given path and copy it into the directory specified in the configuration file.
 
-```
-beet import /path/to/music
-```
-
-Adding the `-C` will do the same thing but will update the files in place
-rather than copying them elsewhere:
-
-```
-beet import -C /path/to/music
+```console
+$ beet import /path/to/music
 ```
 
-And finally if you want the metadata to only exist in the database (not update
-the files) you can pass it the `-W` flag like so:
+Adding the "-C" will do the same thing but will update the files in place rather than copying them elsewhere:
 
+```console
+$ beet import -C /path/to/music
 ```
-beet import -W /path/to/music
+
+And finally if you want the metadata to only exist in the database (not update the files) you can pass it the "-W" flag like so:
+
+```console
+$ beet import -W /path/to/music
 ```
 
-The `-A` flag will import the music without checking the tags. And finally the
-`-q` will suppress the prompts and only import the files that have a 95% chance
-of matching.
-
-[1]: http://readthedocs.org/docs/beets/en/1.0b12/index.html
+The "-A" flag will import the music without checking the tags. And finally the "-q" will suppress the prompts and only import the files that have a 95% chance of matching.
