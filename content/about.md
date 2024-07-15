@@ -2,6 +2,7 @@
 evergreen: true
 public: true
 title: About Myself
+kind: page
 slug: about
 ---
 
@@ -19,6 +20,6 @@ I'd kindly like recruiters, and those looking to sell me goods or services to re
 
 ## Like my Work?
 
-All of the open source stuff I work on is usually licensed MIT or APLv2 and I almost always include license information in the root of my repository. Detailed license information [for this site]({{< ref "licenses" >}}) is also available.
+All of the open source stuff I work on is usually licensed MIT or APLv2 and I almost always include license information in the root of my repository. Detailed license information [for this site](licenses) is also available.
 
 I currently don't accept donations for any of my work as I see it as my contribution to the betterment of the internet but reach out if you'd like to sponsor a project or work together on something.

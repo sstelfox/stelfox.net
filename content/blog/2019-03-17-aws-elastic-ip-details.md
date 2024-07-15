@@ -18,9 +18,9 @@ Amazon attaches public IP address to EC2 instances (and likely other of their ho
 
 In most cases this isn't an issue, the traffic ends up at your instance and is properly changed to the internal address so your system responds without any additional configuration work.
 
-The first issue is tunneled traffic. I [experienced this]({{< relref "2019-03-14-fighting-with-ipsec" >}}) in my last post with IPSec. The tunneled traffic is not modified by going through a 1:1 NAT and your host will not recognize the external address inside the tunnel, which in most cases will result in silently dropped packets (the "oh this isn't for me" syndrome).
+The first issue is tunneled traffic. I [experienced this](2019-03-14-fighting-with-ipsec) in my last post with IPSec. The tunneled traffic is not modified by going through a 1:1 NAT and your host will not recognize the external address inside the tunnel, which in most cases will result in silently dropped packets (the "oh this isn't for me" syndrome).
 
-There are ways to get your system to respond to tunneled packets with other IP addresses such as treating it like a high-availability shared virtual server IP address but I have yet to find a clean way to deal with responding to the address. IPSec had a way to deal with this built in directly and I'd refer you back to [my other post]({{< relref "2019-03-14-fighting-with-ipsec" >}}) to read about that.
+There are ways to get your system to respond to tunneled packets with other IP addresses such as treating it like a high-availability shared virtual server IP address but I have yet to find a clean way to deal with responding to the address. IPSec had a way to deal with this built in directly and I'd refer you back to [my other post](2019-03-14-fighting-with-ipsec) to read about that.
 
 Usually sniffing the tunneled traffic is enough to diagnose these issues. What is a bit more pernicious, is when a server changes its behavior when it detects a NAT in place. This requires deeper understanding of the protocol in use and in some cases the specific server implementation. Once again this post is ultimately about IPSec (and specifically libreswan).
 

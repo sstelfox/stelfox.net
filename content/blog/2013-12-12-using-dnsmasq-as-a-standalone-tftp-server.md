@@ -9,7 +9,7 @@ slug: using-dnsmasq-as-a-standalone-tftp-server
 
 # Using Dnsmasq as a Standalone TFTP Server
 
-*If you've come across this blog post with the intention of setting up TFTP on an modern version of OpenWRT I have a [more recent blog post]({{< relref "2014-07-01-using-openwrts-dnsmasq-as-a-tftp-server.md" >}}) detailing how too configure your system.*
+*If you've come across this blog post with the intention of setting up TFTP on an modern version of OpenWRT I have a [more recent blog post](2014-07-01-using-openwrts-dnsmasq-as-a-tftp-server) detailing how too configure your system.*
 
 I found myself in need of a TFTP server but wanted to avoid having all of the xinet.d packages and services on my system (even if they were disabled). While looking for alternatives I found out that "dnsmasq" has a built-in read-only TFTP server.
 

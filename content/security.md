@@ -5,7 +5,7 @@ title: Security Acknowledgements
 slug: security
 ---
 
-Thank you for taking the time to consider the security of other people! If you've found a security vulnerability with any of my infrastructure, I'd greatly appreciate an [email](mailto:sam@stelfox.net). If the vulnerability is sensitive enough, please consider encrypting the contents with my [public key](/publickey.gpg) (Key ID 0x30856D4EA0FFBA8F).
+Thank you for taking the time to consider the security of other people! If you've found a security vulnerability with any of my infrastructure, I'd greatly appreciate an [email](mailto:sam@stelfox.net). If the vulnerability is sensitive enough, please consider encrypting the contents with my [public key](publickey.gpg) (Key ID 0x30856D4EA0FFBA8F).
 
 As soon as I receive any reports, I'll respond as soon as possible then begin confirming it myself. Once I've addressed the issue I'll publish both an acknowledgement on this page and write a post on addressing the vulnerability. You're welcome (and I encourage you) to publish your analysis and I will happily link to it in both places.
 

@@ -10,7 +10,7 @@ title: Vulnerable Smart Cards
 
 # Vulnerable Smart Cards
 
-In addition to the [WiFi vulnerability]({{< ref "./2017-10-16-a-krack-in-the-defenses.md" >}}) a much more limited vulnerability was [announced](https://crocs.fi.muni.cz/public/papers/rsa_ccs17) around private GPG keys that were generated using [Infineon's RSA Library version v1.02.013](https://www.commoncriteriaportal.org/files/epfiles/0782V2a_pdf.pdf).
+In addition to the [WiFi vulnerability](2017-10-16-a-krack-in-the-defenses) a much more limited vulnerability was [announced](https://crocs.fi.muni.cz/public/papers/rsa_ccs17) around private GPG keys that were generated using [Infineon's RSA Library version v1.02.013](https://www.commoncriteriaportal.org/files/epfiles/0782V2a_pdf.pdf).
 
 The vulnerability lies in shortcuts taken to speed up the key generation using the library. The performance increase makes the private key vulnerable to factorization attacks using an extension to [Coppersmith's attack](https://en.wikipedia.org/wiki/Coppersmith%27s_attack).
 

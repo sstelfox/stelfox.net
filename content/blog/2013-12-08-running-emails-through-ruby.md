@@ -15,7 +15,7 @@ slug: running-emails-through-ruby
 
 # Running Emails Through Ruby
 
-Following up on my [earlier post]({{< ref "./2013-11-19-backing-up-gmail-with-fetchmail.md" >}}) where I covered how to backup your Gmail account using "fetchmail" and "procmail"; I wanted to cover how I was additionally processing received mail through ruby.
+Following up on my [earlier post](2013-11-19-backing-up-gmail-with-fetchmail) where I covered how to backup your Gmail account using "fetchmail" and "procmail"; I wanted to cover how I was additionally processing received mail through ruby.
 
 This was part of a larger project where I was doing statistical analysis on my email while evaluating various data stores. To get the emails into the various data stores, I used the ruby script to parse, process and store the emails as they came in.
 

@@ -19,7 +19,7 @@ After much Googling and confirming those two points, I came across [other](http:
 
 One thing I will say ahead of time. I'm not adventuring into the TV service as I don't have it. From the messages I read, if you want this a cheap Gigabit switch between your router and the fiber jack that you can additionally plug the TV box into will do the trick (but you want to avoid powering the jack with PoE if you go this route).
 
-There was some discussion from an official Google representative in one of the many threads that made a passing mention they would switch to untagged traffic so I wanted to verify what was happening. For this I [became the wire]({{< ref "2018-05-13-quick-and-silent-gigabit-packet-interception" >}}) and sniffed the traffic directly. The settings on the wire matched the contents of a deleted post from a Google representative early on in [this thread](https://productforums.google.com/forum/#!msg/fiber/AbNh8ij72Mw/l0quYBiiCJ8J) reproduced here for future reference:
+There was some discussion from an official Google representative in one of the many threads that made a passing mention they would switch to untagged traffic so I wanted to verify what was happening. For this I [became the wire](2018-05-13-quick-and-silent-gigabit-packet-interception) and sniffed the traffic directly. The settings on the wire matched the contents of a deleted post from a Google representative early on in [this thread](https://productforums.google.com/forum/#!msg/fiber/AbNh8ij72Mw/l0quYBiiCJ8J) reproduced here for future reference:
 
 > Here's the gory details if you really want to use your own router:
 >
@@ -44,11 +44,11 @@ The first task was to get basic IPv4 connectivity going. When I started the conf
 
 The basic connectivity just requires tagging outbound traffic with VLAN 2, to get the full speed the packets additionally need to have the correct 802.1q QoS tags. The one bonus we'll add that is totally unecessary is powering the jack with PoE since we're already going to messing with that interface.
 
-*Sidenote: If you want to play with egress values, changing after the fact requires editing of the [config on disk and a full restart]({{< relref "#changing-the-egress-qos-value" >}}). It's kind of a pain to go through a bunch of different options.*
+*Sidenote: If you want to play with egress values, changing after the fact requires editing of the [config on disk and a full restart](#changing-the-egress-qos-value). It's kind of a pain to go through a bunch of different options.*
 
 The EdgeRouter PoE doesn't seem to be able to adjust QoS settings based on the protocol (I could be wrong I didn't look into this too deeply, maybe the advanced traffic control stuff?), but since I don't have the TV service, I don't have the IGMP traffic to worry about. That just leaves DHCPv4 packets.
 
-I confirmed that DHCPv4 will get an address when tagged with a QoS value of 3 (which is what the bulk traffic should be tagged with). Later on, I go into detail [about an issue]({{< relref "#initial-connectivity-time" >}}) that I think could be potentially related to this but I haven't done additional testing.
+I confirmed that DHCPv4 will get an address when tagged with a QoS value of 3 (which is what the bulk traffic should be tagged with). Later on, I go into detail [about an issue](#initial-connectivity-time) that I think could be potentially related to this but I haven't done additional testing.
 
 I tried several mapping values for different types of traffic and settled on mapping everything to a QoS value of 3 (option 3 below). The mappings that I tried are:
 

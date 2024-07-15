@@ -113,7 +113,7 @@ You'll need to setup a dedicated security group for each of the tunnel hosts. To
 
 You'll want to replace "{other public IP}" with the public IP of the tunnel host in the opposite network. For example if this is the security group for the "west" tunnel host, you'd be allowing the traffic from "7.7.7.7".
 
-If you're doing this in another environment you may also need "UDP/4500" from the other public IP when NAT traversal is required. AWS EC2 instances are NAT'd [but we can work around that]({{< relref "2019-03-17-aws-elastic-ip-details" >}}) and will include that later on.
+If you're doing this in another environment you may also need "UDP/4500" from the other public IP when NAT traversal is required. AWS EC2 instances are NAT'd [but we can work around that](2019-03-17-aws-elastic-ip-details) and will include that later on.
 
 With the security groups in place, and the local firewalls configured make sure each host can ping each other. If they can great! If not, double check all the IPs, security group rules, and iptables rules all match what I have documented here.
 
