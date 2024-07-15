@@ -18,19 +18,7 @@ if [ "${DEBUG:-}" = "true" ]; then
   set -o xtrace
 fi
 
-# Blow away anything that doesn't belong
-pushd public/ &>/dev/null
-git add -A
-git reset --hard
-popd &>/dev/null
-
-# Ensure public matches upstream
-git submodule sync
-git submodule update --remote
-
-pushd public/ &>/dev/null
-git pull origin gh-pages
-popd &>/dev/null
+./bin/reset_public.sh
 
 # Build the site
 make build
