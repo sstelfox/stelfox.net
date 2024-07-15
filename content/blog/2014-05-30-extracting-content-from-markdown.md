@@ -1,9 +1,9 @@
 ---
-date: 2014-05-30 18:34:29 -0400
-slug: extracting-content-from-markdown
+created_at: 2014-05-30T18:34:29-0400
 tags:
-- development
-- tips
+  - development
+  - tips
+slug: extracting-content-from-markdown
 title: Extracting Content From Markdown
 ---
 

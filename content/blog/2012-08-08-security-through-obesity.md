@@ -1,11 +1,14 @@
 ---
-date: 2012-08-08 15:06:56+00:00
-slug: security-through-obesity
+created_at: 2012-08-08T15:06:56+0000
 tags:
-- development
-- ruby
+  - development
+  - ruby
+  - security
+slug: security-through-obesity
 title: Security Through Obesity
 ---
+
+# Security Through Obesity
 
 Jeremy Spilman recently [proposed changes][1] to how user's hashes are stored
 in website's and companies databases. This post was originally going to look at

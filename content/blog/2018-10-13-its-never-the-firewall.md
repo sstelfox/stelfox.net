@@ -1,11 +1,11 @@
 ---
-date: 2018-10-14T13:36:09-06:00
+created_at: 2018-10-14T13:36:09-0600
 title: It's Never the Firewall
 tags:
-- firewall
-- iptables
-- linux
-- security
+  - firewall
+  - iptables
+  - linux
+  - security
 ---
 
 This last Thursday I had the privilege of giving a talk at our local Linux User

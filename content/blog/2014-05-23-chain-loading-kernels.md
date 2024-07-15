@@ -1,8 +1,8 @@
 ---
-date: 2014-05-23 11:39:16 -0400
-slug: chain-loading-kernels
+created_at: 2014-05-23T11:39:16-0400
 tags:
-- linux
+  - linux
+slug: chain-loading-kernels
 title: Chain Loading Kernels
 ---
 

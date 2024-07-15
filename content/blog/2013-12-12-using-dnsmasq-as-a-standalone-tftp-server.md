@@ -1,11 +1,13 @@
 ---
-date: 2013-12-12 18:29:46 -0500
-slug: using-dnsmasq-as-a-standalone-tftp-server
+created_at: 2013-12-12T18:29:46-0500
 tags:
-- linux
-- tips
+  - linux
+  - tips
+slug: using-dnsmasq-as-a-standalone-tftp-server
 title: Using Dnsmasq as a Standalone TFTP Server
 ---
+
+# Using Dnsmasq as a Standalone TFTP Server
 
 *If you've come across this blog post with the intention of setting up TFTP on
 an modern version of OpenWRT I have a [more recent blog post][1] detailing how

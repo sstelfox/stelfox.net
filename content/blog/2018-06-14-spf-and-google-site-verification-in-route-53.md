@@ -1,10 +1,10 @@
 ---
-date: 2018-06-14T11:36:09-06:00
+created_at: 2018-06-14T11:36:09-0600
 title: SPF and Google Site Verification in Route 53
 tags:
-- aws
-- dns
-- tips
+  - aws
+  - dns
+  - tips
 ---
 
 Route53 doesn't allow multiple definitions of the same name/type pair of DNS

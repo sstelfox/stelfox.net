@@ -1,15 +1,17 @@
 ---
-date: 2023-04-21 20:30:22+00:00
+created_at: 2023-04-21T20:30:22-0000
+updated_at: 2024-07-14T17:05:37-0500
+draft: true
+menu: main
+searchable: false
 title: Design Reference
 ---
+
+# Design Reference
 
 I use this page to test how [GitHub Flavored Markdown](https://github.github.com/gfm/)
 gets rendered with my site's current design. This contains samples of all the
 various features I use.
-
-## Headers
-
-# H1
 
 ## H2
 

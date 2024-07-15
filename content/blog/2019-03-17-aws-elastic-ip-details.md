@@ -1,8 +1,8 @@
 ---
-date: 2019-03-17 16:26:30-05:00
+created_at: 2019-03-17T16:26:30-0500
 tags:
-- aws
-- networking
+  - aws
+  - networking
 title: AWS Elastic IP Details
 ---
 

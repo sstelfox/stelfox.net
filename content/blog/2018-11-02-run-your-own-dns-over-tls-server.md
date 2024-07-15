@@ -1,9 +1,9 @@
 ---
-date: 2018-11-02T15:09:02-06:00
+created_at: 2018-11-02T15:09:02-0600
 tags:
-- linux
-- nginx
-- security
+  - linux
+  - nginx
+  - security
 title: Run Your Own DNS-over-TLS Server
 ---
 

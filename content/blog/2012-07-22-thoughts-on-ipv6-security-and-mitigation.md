@@ -1,11 +1,16 @@
 ---
-date: 2012-07-22 03:07:42+00:00
-stub: thoughts-on-ipv6-security-and-mitigation
+created_at: 2012-07-22T03:07:42+0000
+evergreen: true
+public: false
 tags:
-- networking
-- security
+  - ipv6
+  - networking
+  - security
+stub: thoughts-on-ipv6-security-and-mitigation
 title: Thoughts on IPv6 Security and Mitigation
 ---
+
+# Thoughts on IPv6 Security and Mitigation
 
 I setup IPv6 on my home network with an OpenWRT router and Hurricane Electric
 and now I suddenly have an opinion on the state of IPv6 security. This is

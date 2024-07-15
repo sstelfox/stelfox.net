@@ -1,11 +1,13 @@
 ---
-date: 2013-11-25 15:10:46 -0500
-slug: using-vim-as-your-password-manager
+created_at: 2013-11-25T15:10:46-0500
 tags:
-- linux
-- security
+  - linux
+  - security
+slug: using-vim-as-your-password-manager
 title: Using VIM as Your Password Manager
 ---
+
+# Using VIM as Your Password Manager
 
 There are all kinds of password managers out there. Everything from web
 services that are quite solid and respectable, to [native][1] [desktop][2]

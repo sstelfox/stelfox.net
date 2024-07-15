@@ -1,10 +1,10 @@
 ---
-date: 2019-03-27 19:11:30-04:00
+created_at: 2019-03-27T19:11:30-0400
 tags:
-- aws
-- ipsec
-- linux
-- networking
+  - aws
+  - ipsec
+  - linux
+  - networking
 title: Merging Overlapping Subnets
 ---
 

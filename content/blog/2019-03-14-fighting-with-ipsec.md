@@ -1,9 +1,9 @@
 ---
-date: 2019-03-14 21:26:30-04:00
+created_at: 2019-03-14T21:26:30-0400
 tags:
-- ipsec
-- linux
-- networking
+  - ipsec
+  - linux
+  - networking
 title: Fighting IPSec on AWS
 ---
 

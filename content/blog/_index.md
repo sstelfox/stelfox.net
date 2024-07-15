@@ -1,9 +1,5 @@
 ---
-menu: main
 title: Blog Posts
 ---
 
-Here I've collected my thoughts over time. If you find anything particularly
-useful, or in error I hope you'll take the time to [send me an email][1].
-
-[1]: mailto:sam@stelfox.net
+I periodically post various thoughts, tips, and frustrations with software. My writing style has changed over time, for the better I believe, so please forgive my younger self. Frequently the topics are related to errors that may no longer be present in the software that provoked my ire so I recommend double checking the content with official documentation where possible.

@@ -1,10 +1,10 @@
 ---
-date: 2018-10-21T22:36:09-06:00
+created_at: 2018-10-21T22:36:09-0600
 title: Weird CloudFlare Behavior
 tags:
-- nginx
-- linux
-- cloudflare
+  - nginx
+  - linux
+  - cloudflare
 ---
 
 While working on a replacement webserver, I encountered some odd behavior which

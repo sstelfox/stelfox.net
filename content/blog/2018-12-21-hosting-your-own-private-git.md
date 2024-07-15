@@ -1,8 +1,8 @@
 ---
-date: 2018-12-21 18:53:30+00:00
+created_at: 2018-12-21T18:53:30+0000
 tags:
-- linux
-- tips
+  - linux
+  - tips
 title: Hosting Your Own Private Git Repo
 ---
 

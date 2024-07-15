@@ -1,17 +1,20 @@
 ---
-date: 2023-04-13T20:51:02-04:00
+created_at: 2023-04-13T20:51:02-0400
+public: true
+evergreen: false
 tags:
-- rust
-- programming
-- tracing
+  - rust
+  - programming
+  - tracing
+slug: chained-tracing-subscribers
 title: Combining "Subscribers" in Rust's Tracing Library
 ---
 
-Tracing is a fantastic Rust library that I've found immensely useful, but I feel its documentation and API could still use a bit of polish. At first glance, the distinctions and roles of Subscribers, Layers, Filters, and Writers seem clear and well-documented. But when dealing with less common use cases, understanding their interactions and handling trait-based errors can become challenging.
+Tracing is a fantastic Rust library that I've found immensely useful. At first glance, the distinctions and roles of Subscribers, Layers, Filters, and Writers seem clear and well-documented. But when dealing with less common use cases, understanding their interactions and handling trait-based errors can become challenging.
 
-So, I'm thinking I need multiple "Subscribers" for the various events being traced, right? Well, it turns out the names can be a bit misleading. What I actually need are "Layers". The documentation does mention this in the Layers section, but you kind of need to know that's what you're after in the first place to find it. Filters and Writers, on the other hand, are more straightforward. But I kept running into confusion in StackOverflow posts and example code from closed issues. These sources often refer to an outdated API, with filters chained onto builders, creating a tangled mess and leaving me wondering which subscriber has what filter and which output they'll be writing to.
+Based off the nomenclature alone I would guess multiple "Subscribers" would be needed for outputting the same events to different outputs for the various events being traced. The names are unfortunately a bit misleading. What are actually needed are "Layers". The documentation does mention this in the Layers section, but you kind of need to know that's what you're after in the first place to find it. Filters and Writers, on the other hand, are more straightforward. But I kept running into confusion in StackOverflow posts and example code from closed issues. These sources often refer to an outdated API, with filters chained onto builders, creating a tangled mess and leaving me wondering which subscriber has what filter and which output they'll be writing to.
 
-In my experience, I usually run into this issue when I want to combine `tokio-console` with an existing subscriber for temporary diagnostics. My go-to workaround has been to simply swap them out, perform the diagnostics, and then swap the production one back in. However, I recently took the time to explore a better solution in a personal project. Now, this is my default tracing configuration:
+In my experience, I usually run into this issue when I want to combine tokio-console with an existing subscriber for temporary diagnostics. My go-to workaround has been to simply swap them out, perform the diagnostics, and then swap the production one back in. However, I recently took the time to explore a better solution in a personal project. Now, this is my default tracing configuration:
 
 ```rust
 use std::time::Duration;

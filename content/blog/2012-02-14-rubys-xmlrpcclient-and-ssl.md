@@ -1,10 +1,15 @@
 ---
-date: 2012-02-14 18:08:51+00:00
+created_at: 2012-02-14T18:08:51+0000
+evergreen: false
+public: true
 tags:
-- development
-- ruby
-title: "Ruby's XMLRPC::Client and SSL"
+  - development
+  - ruby
+slug: rubys-xmlrpcclient-and-ssl
+title: Ruby's XMLRPC::Client and SSL
 ---
+
+# Ruby's XMLRPC::Client and SSL
 
 For the past few days I've been working on a Ruby project that needed to
 interact with a remote XMLRPC API. This isn't particularly unusual but it was

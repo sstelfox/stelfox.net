@@ -1,8 +1,8 @@
 ---
-date: 2014-07-01 21:26:45 -0400
-slug: using-openwrts-dnsmasq-as-a-tftp-server
+created_at: 2014-07-01T21:26:45-0400
 tags:
-- linux
+  - linux
+slug: using-openwrts-dnsmasq-as-a-tftp-server
 title: Using OpenWRT's Dnsmasq as a TFTP Server
 ---
 

@@ -1,12 +1,14 @@
 ---
-date: 2013-12-08 09:32:05 -0500
-slug: running-emails-through-ruby
+created_at: 2013-12-08T09:32:05-0500
 tags:
-- linux
-- ruby
-- tips
+  - linux
+  - ruby
+  - tips
+slug: running-emails-through-ruby
 title: Running Emails Through Ruby
 ---
+
+# Running Emails Through Ruby
 
 Following up on my [earlier post][1] where I covered how to backup your Gmail
 account using `fetchmail` and `procmail`; I wanted to cover how I was

@@ -1,38 +1,34 @@
 ---
-date: 2023-05-10T22:41:02-04:00
+created_at: 2023-05-10T22:41:02-0400
+evergreen: false
+public: true
 tags:
-- docker
-- kubernetes
-- linux
-- metalk8s
-- podman
-title: Podman Socket Compatibility for Metalk8s
+  - docker
+  - linux
+  - podman
+slug: podman-socket-compatibility
+title: Podman Socket Compatibility for Docker Tools
 ---
 
-I've long appreciated what a project called [metalk8s][1] has been doing... Making Kubernetes run in an opinionated way for private data centers. I don't agree with all their opinions but it's open source and customizable. There is a problem though...
+While using a tool that unexpectedly was running part of its build using the docker daemon on Linux. I need to quickly come up with a workaround. Most Linux distributions have natively moved away from Docker in favor of the more secure and community maintained "podman" project.
 
-The `docker` binary and daemon are largely being replaced and deprecated in favor of `podman` in the RedHat distros that metalk8s targets. I fully support this change, `podman` is a great open source tool that listens to user feedback and has far outstripped Docker in capabilities and security features.
+The specific error I was seeing was:
 
-I've poked at the project a few times for various reasons, but up to this point I haven't built and deployed a proper cluster using their project. Metalk8s unfortunately still relies on `docker` being installed to build its base ISO images. 
-
-Let me be clear `docker` is a hard requirement the project explicitly lists, but I really don't want to install it and the build will fail quickly without it. Let's see if we can work around it.
-
-After checking out [the repository][1], assuming you have the dependencies installed you should just be able to run `./doit.sh` and get an ISO out that can be used to bootstrap your cluster. Running it without docker will get you fairly far with the output successfully reporting a few images being downloaded... But then `nginx`... You get a long backtrace ending with the following line:
-
-
+```text
 requests.exceptions.ConnectionError: ('Connection aborted.', FileNotFoundError(2, 'No such file or directory'))
 ```
-What an odd error. Connection aborted and file not found together. You only see that combination with unix sockets... Oh... Docker... The running as root service that runs arbitrary code also as root using a unix socket with minimal permission control... Right...
 
-Whelp there is a local override that works as a compatibility shim using `podman` that almost always works. You need to startup a systemd socket service as the user and point anything looking for the Docker daemon at that which is pretty straight forward...
+Connection aborted and file not found together... You generally only see that combination with unix sockets... Which is what tipped me off that this tool was doing something unusual. After a quick use of strace I saw it was trying to access the docker daemon's unix control socket. There is luckily an environment variable that most docker client implementations respect `DOCKER_HOST`, and a podman socket compatibility layer that lets you keep that sweet rootless permission model:
 
-```sh
+```bash
 systemctl --user start podman.socket
 export DOCKER_HOST=http+unix:///run/user/$(id -u)/podman/podman.sock
 ```
 
-For most applications a simple `alias docker=podman` suffices, unfortunately not for this one. And unfortunately this won't 100% solve the problem. The build script will get through pulling all the remote docker images but will fail once it gets to the local ones using the `skopeo` utility as the `metalk8s`project appears to be adding an extra `http://` in front of the socket path that doesn't belong there.
+Some tools are also shelling out to the `docker` executable behind the scenes as well. The creators of podman maintained CLI compatibility with the docker client which very nicely allows us to use a shell alias to replace the last bit of docker. I keep the following alias in user's my shell config:
 
-It's getting late and I'm hitting the end of this diagnostics section. Stay tuned for a PR most likely to `metalk8s`.
+```bash
+alias docker=podman
+```
 
-[1]: https://github.com/scality/metalk8s
+It's not a 100% solution but it handles most cases and the remaining ones tends to be bugs in the software (such as automatically modifying the URL when not the default with an HTTP prefix "to be helpful").

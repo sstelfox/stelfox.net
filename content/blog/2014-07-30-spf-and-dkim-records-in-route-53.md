@@ -1,9 +1,9 @@
 ---
-date: 2014-07-30 10:46:13 -0400
-slug: spf-and-dkim-records-in-route-53
+created_at: 2014-07-30T10:46:13-0400
 tags:
-- aws
-- security
+  - aws
+  - security
+slug: spf-and-dkim-records-in-route-53
 title: SPF & DKIM Records in Route 53
 ---
 

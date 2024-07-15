@@ -1,10 +1,12 @@
 ---
-date: 2014-01-18 22:47:37 -0500
-slug: starting-puppetmaster-on-fedora-19
+created_at: 2014-01-18T22:47:37-0500
 tags:
-- linux
+  - linux
+slug: starting-puppetmaster-on-fedora-19
 title: Starting Puppet Master on Fedora 19
 ---
+
+# Starting Puppet Master on Fedora 19
 
 I was trying to get puppet running out of the box on Fedora 19 and found a bug
 exists in their systemd service file. After installing `puppet` and

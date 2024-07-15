@@ -1,11 +1,13 @@
 ---
-date: 2013-12-16 09:39:02 -0500
-slug: updating-the-bios-on-dell-poweredge-c6100
+created_at: 2013-12-16T09:39:02-0500
 tags:
-- servers
-- tips
+  - servers
+  - tips
+slug: updating-the-bios-on-dell-poweredge-c6100
 title: Updating the BIOS on Dell PowerEdge C6100
 ---
+
+# Updating the BIOS on Dell PowerEdge C6100
 
 The BIOS was quite a bit more complicated and there was a few options that I
 had available to try, all of which require either Windows or DOS environments.

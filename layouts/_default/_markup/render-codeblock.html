@@ -1,0 +1,12 @@
+{{- $options := .Options -}}
+{{- $data := newScratch -}}
+{{- $data.Set "options" dict -}}
+
+{{- range $key, $value := $options -}}
+  {{- $data.SetInMap "options" (lower $key) $value -}}
+{{- end -}}
+
+{{- $uniqCodeId := (printf "code-%s" (substr (crypto.SHA1 .Inner) 0 7)) -}}
+{{- $data.SetInMap "options" "lineanchors" $uniqCodeId -}}
+
+{{- highlight .Inner .Type ($data.Get "options") -}}

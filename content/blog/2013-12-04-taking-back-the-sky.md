@@ -1,8 +1,8 @@
 ---
-date: 2013-12-04 13:18:15 -0500
-slug: taking-back-the-sky
+created_at: 2013-12-04T13:18:15-0500
 tags:
-- news
+  - news
+slug: taking-back-the-sky
 title: Taking Back the Sky
 ---
 

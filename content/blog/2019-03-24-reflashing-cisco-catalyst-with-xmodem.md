@@ -1,8 +1,8 @@
 ---
-date: 2019-03-24 23:26:30-04:00
+created_at: 2019-03-24T23:26:30-0400
 tags:
-- cisco
-- tips
+  - cisco
+  - tips
 title: Reflashing Cisco Catalyst With XMODEM
 ---
 
@@ -17,7 +17,7 @@ I'm doing this on Fedora, but the only thing specific to Fedora is installing
 the packages which can be done with the following command (and are pretty
 standard names):
 
-```
+```console
 dnf install lrzsz screen -y
 ```
 
@@ -26,13 +26,13 @@ with all of the other lights off. I connected up a console cable, the serial
 port showed up as `/dev/ttyUSB0`. We'll connect to the serial port using screen
 with the following command:
 
-```
+```console
 sudo screen /dev/ttyUSB0 9600
 ```
 
 Power cycling the switch gets you the boot messages that show us the issue:
 
-```
+```console
 Using driver version 1 for media type 1
 Base ethernet MAC Address: xx:xx:xx:xx:xx:xx
 Xmodem file system is available.
@@ -67,7 +67,7 @@ switch:
 
 We can confirm this isn't just a badly named file quickly:
 
-```
+```console
 switch: dir flash:/
 Directory of flash://
 
@@ -79,7 +79,7 @@ switch:
 
 If you you get the following error:
 
-```
+```console
 switch: dir flash:
 unable to stat flash:/: invalid argument
 ```
@@ -87,7 +87,7 @@ unable to stat flash:/: invalid argument
 The flash hardware hasn't been enabled yet. We need to initialize it with the
 `flash_init` command which will allow us access to the flash again:
 
-```
+```console
 switch: flash_init
 Initializing Flash...
 flashfs[0]: 0 files, 1 directories
@@ -122,7 +122,7 @@ transfer.
 To speed up the baud rate execute the following command, be aware that your
 terminal is expected to immediately become responsive and this is fine:
 
-```
+```console
 switch: set BAUD 115200
 ```
 
@@ -130,8 +130,8 @@ Kill the screen session by pressing `Ctrl-a` quickly following by a lone `k`.
 It will prompt you to confirm exiting the session, do so with `y` and start a
 new session with the higher baud rate:
 
-```
-sudo screen /dev/ttyUSB0 115200
+```console
+$ sudo screen /dev/ttyUSB0 115200
 ```
 
 Press return and you'll get back to the switch prompt. This next bit is tricky
@@ -139,14 +139,14 @@ as there is about a ten second timeout between starting the copy command and
 needing to being the transfer. If you don't quite make it I've got a tip after
 the command below:
 
-```
+```console
 switch: copy xmodem:/ flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
 ```
 
 Quick press `Ctrl-a` followed by `:`. In the prompt that shows up type in the
 following:
 
-```
+```console
 exec !! sx -b -X c3750-ipservicesk9-mz.150-2.SE10a.bin
 ```
 
@@ -166,21 +166,21 @@ commands.
 When it's complete you're going to want to ensure the `BOOT` variable properly
 matches the filename you just transferred:
 
-```
+```console
 set BOOT flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
 ```
 
 We're going to reset the baud rate back to normal (skip this if you didn't
 update your baud rate) which will cause you to loose the connection again:
 
-```
+```console
 unset BAUD
 ```
 
 Disconnect as we did before and reconnect at the 9600 rate. One final command
 should start the switch and get you back into the good graces of the Cisco CLI:
 
-```
+```console
 switch: boot
 ```
 

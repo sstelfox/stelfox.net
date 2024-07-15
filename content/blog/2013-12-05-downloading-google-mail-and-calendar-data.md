@@ -1,8 +1,8 @@
 ---
-date: 2013-12-05 11:04:18 -0500
-slug: downloading-google-mail-and-calendar-data
+created_at: 2013-12-05T11:04:18-0500
 tags:
-- tips
+  - tips
+slug: downloading-google-mail-and-calendar-data
 title: Downloading Google Mail and Calendar Data
 ---
 

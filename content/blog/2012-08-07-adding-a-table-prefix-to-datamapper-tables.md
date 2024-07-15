@@ -1,11 +1,13 @@
 ---
-date: 2012-08-07 14:09:33+00:00
-slug: adding-a-table-prefix-to-datamapper-tables
+created_at: 2012-08-07T14:09:33+0000
 tags:
-- development
-- ruby
+  - development
+  - ruby
+slug: adding-a-table-prefix-to-datamapper-tables
 title: Adding a Table Prefix to DataMapper Tables
 ---
+
+# Adding a Table Prefix to DataMapper Tables
 
 So I recently encountered a situation where I needed to define a prefix on the
 tables used by the "data_mapper" gem. When I went searching I found quite a bit

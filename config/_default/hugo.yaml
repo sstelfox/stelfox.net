@@ -1,38 +1,37 @@
 title: Sam Stelfox
+
 theme: hello-friend-ng
+#theme: hugo-bearcub
 
 languageCode: en-US
 
+# When building, removes files from the destination directory not found in
+# static directories.
 clearDestinationDir: true
+
+# I'm really not a fan of these brag tags software like to do. It's not actually
+# supporting the software just polluting my HTML.
 disableHugoGeneratorInject: true
 
+# Ten seems like a reasonable amount, I might want to drop the page values down
+# to 5 if I include the full post on my index pages...
 paginate: 10
-rssLimit: 10
-preserveTaxonomyNames: true
+
+# This allows git information to be used in the various timestamps for things
+# like when the frontmatter doesn't contain a relevant date. These are not used
+# as the default in my config, the specific priority is handled in the
+# `frontmatter.yaml` config file.
+enableGitInfo: true
+
+# I generate this by hand and want to keep my own humourous musings though I
+# suppose I could put them into a template or something for it.
+enableRobotsTXT: false
+
+# I don't think I'll ever have these in the slug's of my pages, but just to be
+# sure I want to make sure they're stripped out to plain ASCII characters.
+removePathAccents: true
 
 permalinks:
   blog: /blog/:year/:month/:slug/
   notes: /notes/:slug/
   page: /:slug/
-
-params:
-  contact:
-    email: sam@stelfox.net
-  subtitle: A simple place for my collected thoughts and notes.
-#menu:
-#  main:
-#  - name: "Home"
-#    url: "/"
-#    weight: -100
-
-#outputs:
-#  home:
-#    - html
-#  section:
-#    - html
-#    - rss
-#  taxonomy:
-#    - html
-#  RSS:
-#    mediatype: "application/rss"
-#    baseName: "atom"

@@ -1,10 +1,12 @@
 ---
-date: 2014-03-28 12:56:12 -0400
-slug: preventing-tmux-lockups
+created_at: 2014-03-28T12:56:12-0400
 tags:
-- linux
+  - linux
+slug: preventing-tmux-lockups
 title: Preventing Tmux Lockups
 ---
+
+# Preventing Tmux Lockups
 
 Anyone that has used SSH, Tmux or Screen for a while will have inevitably
 dumped excessive output to their terminal. Depending on the size of the output

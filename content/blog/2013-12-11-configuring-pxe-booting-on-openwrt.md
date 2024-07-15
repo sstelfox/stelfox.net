@@ -1,10 +1,12 @@
 ---
-date: 2013-12-11 08:40:44 -0500
-slug: configuring-pxe-booting-on-openwrt
+created_at: 2013-12-11T08:40:44-0500
 tags:
-- linux
+  - linux
+slug: configuring-pxe-booting-on-openwrt
 title: Configuring PXE Booting on OpenWRT
 ---
+
+# Configuring PXE Booting on OpenWRT
 
 I needed to support PXE booting on my home network. I use OpenWRT as my main
 router and DHCP server and it took me a bit of searching how to configure the

@@ -1,8 +1,8 @@
 ---
-date: 2014-08-12 16:16:14 -0400
-slug: dependency-prelink-issues
+created_at: 2014-08-12T16:16:14-0400
 tags:
-- linux
+  - linux
+slug: dependency-prelink-issues
 title: Dependency Prelink Issues
 ---
 

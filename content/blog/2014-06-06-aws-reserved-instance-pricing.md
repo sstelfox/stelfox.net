@@ -1,8 +1,8 @@
 ---
-date: 2014-06-06 13:28:11 -0400
-slug: aws-reserved-instance-pricing
+created_at: 2014-06-06T13:28:11-0400
 tags:
-- aws
+  - aws
+slug: aws-reserved-instance-pricing
 title: AWS Reserved Instance Pricing
 ---
 

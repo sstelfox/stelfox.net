@@ -1,11 +1,13 @@
 ---
-date: 2013-11-26 15:19:40 -0500
-slug: fail-fast-in-bash-scripts
+created_at: 2013-11-26T15:19:40-0500
 tags:
-- linux
-- tips
+  - linux
+  - tips
+slug: fail-fast-in-bash-scripts
 title: Fail Fast in Bash Scripts
 ---
+
+# Fail Fast in Bash Scripts
 
 I found myself writing another bash script that should exit should any of the
 few commands within it fail to run. As I began writing some error handling

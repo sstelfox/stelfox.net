@@ -1,11 +1,13 @@
 ---
-date: 2014-02-01 13:50:46 -0500
-slug: setting-linux-system-timezone
+created_at: 2014-02-01T13:50:46-0500
 tags:
-- linux
-- tips
+  - linux
+  - tips
+slug: setting-linux-system-timezone
 title: Setting Linux System Timezone
 ---
+
+# Setting Linux System Timezone
 
 I change the timezone on the linux systems so rarely that I almost always have
 to look it up. I'm writing it up here for my own personal reference. With any

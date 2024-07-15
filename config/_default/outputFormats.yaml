@@ -1,0 +1,22 @@
+# Reference docs: https://gohugo.io/templates/output-formats/#output-formats-for-pages
+
+# Minor tweaks to the RSS output type
+rss:
+  mediatype: application/rss
+  basename: atom
+
+# This is a custom output format for generating a trimmed down version of the
+# core site content in a single JSON payload. This is the first stage in
+# producing the search index for the site.
+search_index:
+  basename: search_index
+  mediaType: application/json
+  # While not actually plaintext, this prevents Hugo from using HTML entity
+  # encoding/escaping and similar unwanted transformations on the JSON output.
+  isPlainText: true
+  # We do not want this format to be automatically linked to or associated with
+  # any particular page.
+  notAlternative: true
+  # We only produce one of these representing the entire site and mind as well
+  # place it in the root of our output directory.
+  root: true

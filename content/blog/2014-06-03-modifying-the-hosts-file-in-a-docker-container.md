@@ -1,9 +1,9 @@
 ---
-date: 2014-06-03 11:43:59 -0400
-slug: modifying-the-hosts-file-in-a-docker-container
+created_at: 2014-06-03T11:43:59-0400
 tags:
-- docker
-- linux
+  - docker
+  - linux
+slug: modifying-the-hosts-file-in-a-docker-container
 title: Modifying the Hosts File in a Docker Container
 ---
 

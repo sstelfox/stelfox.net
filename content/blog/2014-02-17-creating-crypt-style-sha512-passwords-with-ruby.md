@@ -1,13 +1,15 @@
 ---
-date: 2014-02-17 15:28:27 -0500
-slug: creating-crypt-style-sha512-passwords-with-ruby
+created_at: 2014-02-17T15:28:27-0500
 tags:
-- development
-- linux
-- ruby
-- security
+  - development
+  - linux
+  - ruby
+  - security
+slug: creating-crypt-style-sha512-passwords-with-ruby
 title: Creating Crypt Style SHA512 Passwords With Ruby
 ---
+
+# Creating Crypt Style SHA512 Passwords With Ruby
 
 I needed to generate crypt-style SHA512 passwords in ruby for an `/etc/shadow`
 file. After a bunch of Googling and messing around with the OpenSSL library I

@@ -1,17 +1,19 @@
 ---
-date: 2017-12-04T22:46:56-05:00
+created_at: 2017-12-04T22:46:56-0500
+evergreen: true
+public: true
 tags:
-- linux
-- tips
+  - linux
+  - tips
 title: Converting CPIO Files to Tarballs
+slug: converting-cpio-files-to-tarballs
 ---
 
-I needed to convert a directory full of CPIO files to tar balls. This quick
-script did the trick for me but didn't preserve the user / group. Running it as
-root will preserve the ownership information but that wasn't important for my
-immediate use case.
+# Converting CPIO Files to Tarballs
 
-```
+I needed to convert a directory full of CPIO files to tar balls. This quick script did the trick for me but didn't preserve the user / group. Running it as root will preserve the ownership information but that wasn't important for my immediate use case.
+
+```bash
 #!/bin/bash
 
 SRC_DIR=$(pwd)

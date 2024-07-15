@@ -1,9 +1,9 @@
 ---
-date: 2014-07-22 21:54:59 -0400
-slug: unregistering-from-whisperpush-after-flashing-a-new-rom
+created_at: 2014-07-22T21:54:59-0400
 tags:
-- android
-- security
+  - android
+  - security
+slug: unregistering-from-whisperpush-after-flashing-a-new-rom
 title: Unregistering From WhisperPush After Flashing a New ROM
 ---
 

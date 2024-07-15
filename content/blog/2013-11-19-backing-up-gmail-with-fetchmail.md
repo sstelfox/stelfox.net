@@ -1,11 +1,13 @@
 ---
-date: 2013-11-19 09:55:40 -0500
-slug: backing-up-gmail-with-fetchmail
+created_at: 2013-11-19T09:55:40-0500
 tags:
-- linux
-- tips
+  - linux
+  - tips
+slug: backing-up-gmail-with-fetchmail
 title: Backing up Gmail with fetchmail
 ---
+
+# Backing up Gmail with fetchmail
 
 This morning I found myself in need of a large set of emails to test a
 particular set of code. Ideally these emails would be broken out into easily

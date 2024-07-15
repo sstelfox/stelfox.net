@@ -1,19 +1,20 @@
 ---
-date: 2017-12-04T11:38:01-05:00
+created_at: 2017-12-04T11:38:01-0500
+evergreen: true
+public: true
 tags:
-- gpg
-- tips
+  - gpg
+  - security
+  - tips
 title: Unusable Secret Key
+slug: unusable-secret-key
 ---
 
-I use a Yubikey NEO to store subkeys used for signing and authentication. I
-started experiencing a weird issue with it. It coincided with me rebuilding my
-system so diagnosing it ended up being harder than normal. The behavior I
-experienced allowed me to use the key to authenticate (SSH'ing worked fine) but
-any attempt to sign new data resulted in an 'Unusuable secret key' error. For
-git this resulted in the following message:
+# Unusable Secret Key
 
-```
+I use a Yubikey NEO to store subkeys used for signing and authentication. I started experiencing a weird issue with it. It coincided with me rebuilding my system so diagnosing it ended up being harder than normal. The behavior I experienced allowed me to use the key to authenticate (SSH'ing worked fine) but any attempt to sign new data resulted in an 'Unusuable secret key' error. For git this resulted in the following message:
+
+```text
 gpg: skipped "Sam Stelfox <sstelfox@bedroomprogrammers.net>": Unusable secret
 key
 gpg: signing failed: Unusable secret key
@@ -21,17 +22,11 @@ error: gpg failed to sign the data
 fatal: failed to write commit object
 ```
 
-There is a second Yubikey I use on occasion that contains my companies software
-signing key. When reviewing my available secret keys, it seemed like GPG was
-listing those private keys as available when they weren't. That was a red
-herring and unrelated (though still likely a bug). After resetting my GPG
-config as well as the agent, and re-importing my key the private keys were not
-be listed at all.
+There is a second Yubikey I use on occasion that contains my companies software signing key. When reviewing my available secret keys, it seemed like GPG was listing those private keys as available when they weren't. That was a red herring and unrelated (though still likely a bug). After resetting my GPG config as well as the agent, and re-importing my key the private keys were not be listed at all.
 
-Ultimate the issue was that all of my subkeys were expired and only became
-visible when I used the following command:
+Ultimate the issue was that all of my subkeys were expired and only became visible when I used the following command:
 
-```
+```console
 $ gpg2 --list-options show-unusable-subkeys --list-keys
 /home/sstelfox/.gnupg/pubring.kbx
 ---------------------------------

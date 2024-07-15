@@ -1,9 +1,9 @@
 ---
-date: 2014-05-28 18:00:55 -0400
-slug: pg-error-error-type-hstore-does-not-exist
+created_at: 2014-05-28T18:00:55-0400
 tags:
-- postgres
-- ruby
+  - postgres
+  - ruby
+slug: pg-error-error-type-hstore-does-not-exist
 title: "PG::Error: ERROR: Type 'Hstore' Does Not Exist"
 ---
 

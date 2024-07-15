@@ -1,11 +1,13 @@
 ---
-date: 2014-02-20 07:48:24 -0500
-slug: finding-ruby-subclasses
+created_at: 2014-02-20T07:48:24-0500
 tags:
-- ruby
-- tips
+  - ruby
+  - tips
+slug: finding-ruby-subclasses
 title: Finding Ruby Subclasses
 ---
+
+# Finding Ruby Subclasses
 
 While working through a problem I found it would be immensely useful to be able
 to enumerate all of the current subclasses of a particular class. After

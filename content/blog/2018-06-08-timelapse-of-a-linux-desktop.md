@@ -1,8 +1,8 @@
 ---
-date: 2018-06-08T16:37:39-06:00
+created_at: 2018-06-08T16:37:39-0600
 tags:
-- linux
-- tips
+  - linux
+  - tips
 title: Timelapse of a Linux Desktop
 ---
 

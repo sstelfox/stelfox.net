@@ -1,0 +1,10 @@
+{{- if eq .Level 1 -}}
+{{- $escaped_title := .Page.Title -}}
+  {{- if ne .Text $escaped_title -}}
+    {{ printf "found top level header in %q that didn't match meta title (%q != %q)" .Page.RelPermalink .Text $escaped_title }}
+  {{- end -}}
+{{- else -}}
+<h{{ .Level }} id="{{ .Anchor }}">
+  {{- .Text | safeHTML -}}
+</h{{ .Level }}>
+{{- end -}}

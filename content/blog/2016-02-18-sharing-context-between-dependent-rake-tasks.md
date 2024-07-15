@@ -1,9 +1,9 @@
 ---
-date: 2016-02-18 15:46:12 -0500
-slug: sharing-context-between-dependent-rake-tasks
+created_at: 2016-02-18T15:46:12-0500
 tags:
-- development
-- ruby
+  - development
+  - ruby
+slug: sharing-context-between-dependent-rake-tasks
 title: Sharing Context Between Dependent Rake Tasks
 ---
 

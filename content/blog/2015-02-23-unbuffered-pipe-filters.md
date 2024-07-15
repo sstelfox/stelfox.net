@@ -1,9 +1,9 @@
 ---
-date: 2015-02-23 12:49:13 -0500
-slug: unbuffered-pipe-filters
+created_at: 2015-02-23T12:49:13-0500
 tags:
-- linux
-- tips
+  - linux
+  - tips
+slug: unbuffered-pipe-filters
 title: Unbuffered Pipe Filters
 ---
 

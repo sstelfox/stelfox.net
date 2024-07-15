@@ -1,10 +1,9 @@
 ---
-date: 2013-12-07 18:20:58 -0500
-slug: access-get-parameters-with-coffeescript
+created_at: 2013-12-07T18:20:58-0500
 tags:
-- development
+  - development
+slug: access-get-parameters-with-coffeescript
 title: Access GET Parameters With Coffeescript
-type: post
 ---
 
 I've been working on a pure javascript based search engine for this static

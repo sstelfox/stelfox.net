@@ -1,8 +1,8 @@
 ---
-date: 2015-04-13 20:47:40 -0400
-slug: creating-an-empty-git-branch
+created_at: 2015-04-13T20:47:40-0400
 tags:
-- tips
+  - tips
+slug: creating-an-empty-git-branch
 title: Creating an Empty Git Branch
 ---
 

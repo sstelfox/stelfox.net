@@ -1,8 +1,8 @@
 ---
-date: 2014-06-30 21:43:02 -0400
-slug: fixing-erratic-bmc-controller-on-poweredge-c6100
+created_at: 2014-06-30T21:43:02-0400
 tags:
-- servers
+  - servers
+slug: fixing-erratic-bmc-controller-on-poweredge-c6100
 title: Fixing Erratic BMC Controller on PowerEdge C6100
 ---
 

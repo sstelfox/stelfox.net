@@ -1,11 +1,13 @@
 ---
-date: 2012-12-02 22:59:00 -0500
-slug: rubys-option-parser-a-more-complete-example
+created_at: 2012-12-02T22:59:00-0500
 tags:
-- development
-- ruby
+  - development
+  - ruby
+slug: rubys-option-parser-a-more-complete-example
 title: Ruby's Option Parser - a More Complete Example
 ---
+
+# Ruby's Option Parser - a More Complete Example
 
 Recently while writing a Ruby program I needed to parse some command line
 options. Helpfully Ruby provides a module named `OptionParser` to make this

@@ -1,11 +1,13 @@
 ---
-date: 2012-08-09 20:00:57+00:00
-slug: carrierwave-s3-and-filenames
+created_at: 2012-08-09T20:00:57+0000
 tags:
-- development
-- ruby
+  - development
+  - ruby
+slug: carrierwave-s3-and-filenames
 title: CarrierWave, S3 and Filenames
 ---
+
+# CarrierWave, S3 and Filenames
 
 This is going to be a real quick post. I'm using the "carrier_wave" gem with
 "fog" for one of my projects and found that when a file is stored on S3 the

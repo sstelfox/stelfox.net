@@ -1,8 +1,8 @@
 ---
-date: 2014-04-14 10:19:23 -0400
-slug: disabling-gnomes-keyring-in-fedora-19
+created_at: 2014-04-14T10:19:23-0400
 tags:
-- linux
+  - linux
+slug: disabling-gnomes-keyring-in-fedora-19
 title: Disabling Gnome's Keyring in Fedora 19
 ---
 

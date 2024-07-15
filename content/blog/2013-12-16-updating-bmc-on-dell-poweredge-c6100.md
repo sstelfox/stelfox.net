@@ -1,11 +1,13 @@
 ---
-date: 2013-12-16 21:26:13 -0500
-slug: updating-bmc-on-dell-poweredge-c6100
+created_at: 2013-12-16T21:26:13-0500
 tags:
-- servers
-- tips
+  - servers
+  - tips
+slug: updating-bmc-on-dell-poweredge-c6100
 title: Updating BMC on Dell PowerEdge C6100
 ---
+
+# Updating BMC on Dell PowerEdge C6100
 
 I just received my Dell PowerEdge C6100 and found it's software quite a bit
 outdated. After searching around quite a bit I found the resources lacking for

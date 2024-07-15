@@ -1,9 +1,9 @@
 --- 
-date: 2015-04-22 16:47:10 -0400
-slug: ruby-code-quality-metrics
+created_at: 2015-04-22T16:47:10-0400
 tags:
-- development
-- ruby
+  - development
+  - ruby
+slug: ruby-code-quality-metrics
 title: Ruby Code Quality Metrics
 ---
 
