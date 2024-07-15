@@ -1,78 +1,57 @@
 ---
+created_at: 2013-01-01T00:00:01-0000
+evergreen: false
+public: true
+tags:
+  - disk
+  - encryption
+  - linux
 title: Trim
+slug: trim
 ---
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+# Trim
 
 ## Configuring
 
-This page is referring to TRIM support for SSDs. To enable it add
-`noatime,discard` to the options on all of the fstab partition entries that
-live on the drive. Be sure to disable any swap partitions that live on that
-drive as well.
+This page is referring to TRIM support for SSDs. To enable it add "noatime,discard" to the options on all of the fstab partition entries that live on the drive. Be sure to disable any swap partitions that live on that drive as well.
 
 ### Note on Encrypted Drives
 
-Turning TRIM support on for an encrypted hard drive will not actually do
-anything. `discard` is a file system level option and full disk encryption
-lives below that. It makes sense that it doesn't work, writing a sector full of
-0s to an encrypted partition will result in a sector of encrypted 0s which will
-look more or less like random garbage.
+Turning TRIM support on for an encrypted hard drive will not actually do anything. "discard" is a file system level option and full disk encryption lives below that. It makes sense that it doesn't work, writing a sector full of 0s to an encrypted partition will result in a sector of encrypted 0s which will look more or less like random garbage.
 
-There is a trick to allow this to work but I'm not will to go that route due to
-the security implications of allowing attackers to see where the data lives on
-my hard drive and where it doesn't, but for completeness, I'm documenting
-(untested) what needs to be done to enable this.
+There is a trick to allow this to work but I'm not will to go that route due to the security implications of allowing attackers to see where the data lives on my hard drive and where it doesn't, but for completeness, I'm documenting (untested) what needs to be done to enable this.
 
-You'll need to replace <your_device> with the DM mapper crypted partition such
-as `/dev/mapper/vg_desktop-lv_root`. You'll want to do this for all of the
-encrypted partitions on the drive.
+You'll need to replace "<your_device>" with the DM mapper crypted partition such as "/dev/mapper/vg_desktop-lv_root". You'll want to do this for all of the encrypted partitions on the drive.
 
-```
-dmsetup table <your_device> --showkeys
-dmsetup load <your_device> --"<line above> 1 allow_discards"
-dmsetup resume <your_device>
+```console
+$ dmsetup table <your_device> --showkeys
+$ dmsetup load <your_device> --"<line above> 1 allow_discards"
+$ dmsetup resume <your_device>
 ```
 
-Even without TRIM support noatime and no swap partitions are still good
-performance improvements.
+Even without TRIM support noatime and no swap partitions are still good performance improvements.
 
 ## Testing
 
-This requires you install the `hdparm` package on Fedora.
+This requires you install the "hdparm" package on Fedora.
 
-To test and make sure that trim support is working, make sure you're in a
-directory that lives on a partition on the SSD, then create a test file like
-so:
+To test and make sure that trim support is working, make sure you're in a directory that lives on a partition on the SSD, then create a test file like so:
 
-```
-seq 1 1000 > trimtest
-sync
-hdparm --fibmap trimtest
-```
-
-You will get output like this:
-
-```
+```console
+$ seq 1 1000 > trimtest
+$ sync
+$ hdparm --fibmap trimtest
 trimtest:
  filesystem blocksize 4096, begins at LBA 0; assuming 512 byte sectors.
  byte_offset  begin_LBA    end_LBA    sectors
            0   25565616   25565623          8
 ```
 
-The important thing to take into account is the `begin_LBA` column make note of
-this number and use it in place in the following commands. You'll need to
-replace `/dev/sda` with the device name matching your SSD.
+The important thing to take into account is the "begin_LBA" column make note of this number and use it in place in the following commands. You'll need to replace "/dev/sda" with the device name matching your SSD.
 
-```
-hdparm --read-sector 25565616 /dev/sda
-```
-
-You'll receive output that looks a lot like the following:
-
-```
+```console
+$ hdparm --read-sector 25565616 /dev/sda
 /dev/sda:
 reading sector 25565616: succeeded
 bb2d 06dc 87c3 6bb6 c43c fab7 a0a9 12db
@@ -111,10 +90,10 @@ f82e b721 631b 3888 bb27 874c 872a 28e0
 
 Now we'll remove the file, sync the filesystem and check that sector again:
 
-```
-rm -f trimtest
-sync
-hdparm --read-sector 25565616 /dev/sda
+```console
+$ rm -f trimtest
+$ sync
+$ hdparm --read-sector 25565616 /dev/sda
 ```
 
 If trim support is working the sector read should be all 0s.

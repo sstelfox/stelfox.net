@@ -33,15 +33,15 @@ Ensure you have a wired connection as you will lose access to the wireless card 
 As root install the akmod-wl package and reboot like so:
 
 ```console
-$ yum install akmod-wl -y
-$ reboot
+# yum install akmod-wl -y
+# reboot
 ```
 
 Once the system has finished rebooting, perform a system update which will grab a few additional packages, and reboot once again:
 
 ```console
-$ yum update -y
-$ reboot
+# yum update -y
+# reboot
 ```
 
 If you are unable to see the wireless card then this solution probably hasn't worked for you. You can bring the card back online by running the following as root:

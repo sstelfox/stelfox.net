@@ -1,95 +1,72 @@
 ---
+created_at: 2013-01-01T00:00:01-0000
+evergreen: false
+public: true
+tags:
+  - linux
+  - operations
+  - telephony
+  - voip
 title: Asterisk
+slug: asterisk
 ---
 
-***Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.***
+# Asterisk
 
-Asterisk is a software implementation of a telephone private branch exchange
-(PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it
-allows attached telephones to make calls to one another, and to connect to
-other telephone services including the public switched telephone network (PSTN)
-and Voice over Internet Protocol (VoIP) services. Its name comes from the
-asterisk symbol, “*”.
+Asterisk is a software implementation of a telephone private branch exchange (PBX) originally created in 1999 by Mark Spencer of Digium. Like any PBX, it allows attached telephones to make calls to one another, and to connect to other telephone services including the public switched telephone network (PSTN) and Voice over Internet Protocol (VoIP) services. Its name comes from the asterisk symbol, “*”.
 
-NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for
-the Linksys SPA3000 as well as ZRTP and SRTP support. It might be wise to look
-into using kamailio as a front end SIP router though this doesn't seem to be
-necessary unless we want to start handling multi-thousands of calls
-concurrently.
+NOTE: FreeSWITCH may be a solid replacement for asterisk as it has support for the Linksys SPA3000 as well as ZRTP and SRTP support. It might be wise to look into using kamailio as a front end SIP router though this doesn't seem to be necessary unless we want to start handling multi-thousands of calls concurrently.
 
-A few [references][2] for help when building FreeSWITCH.
+A few [references](http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/) for help when building FreeSWITCH.
 
 ## Previous Reasoning
 
-This was setup on my private network to provide a land line phone to my office
-using our existing internet connection. I wanted to go about doing this without
-having to pay for the services as I don't expect this to get a lot of use.
+This was setup on my private network to provide a land line phone to my office using our existing internet connection. I wanted to go about doing this without having to pay for the services as I don't expect this to get a lot of use.
 
-This Asterisk setup involves the use of [Google Voice][3] and [SIPGate][4].
-SIPGate provides a single phone number, SIP connectivity and call forwarding.
-Google Voice doesn't provide services to receive phone calls, however, it can
-be setup as an intermediary that will call you and then connect to another
-number on your behalf, while also providing call forwarding.
+This Asterisk setup involves the use of [Google Voice](http://google.com/voice) and [SIPGate](http://www.sipgate.com/). SIPGate provides a single phone number, SIP connectivity and call forwarding. Google Voice doesn't provide services to receive phone calls, however, it can be setup as an intermediary that will call you and then connect to another number on your behalf, while also providing call forwarding.
 
-Combining the three will get free incoming and outgoing to anywhere in the US
-and Canada. Incoming calls will come from Google Voice, which will forward the
-call to the SIPGate phone number, which the Asterisk PBX will be tied to and
-we'll in turn be able to receive the call.
+Combining the three will get free incoming and outgoing to anywhere in the US and Canada. Incoming calls will come from Google Voice, which will forward the call to the SIPGate phone number, which the Asterisk PBX will be tied to and we'll in turn be able to receive the call.
 
-Outgoing calls are a bit more tricky. Implemented using [pygooglevoice][5], the
-Asterisk box will actually connect to Google Voice's APIs to dial the number
-and call back (making it an incoming call and thus free) to make the outgoing
-call.
+Outgoing calls are a bit more tricky. Implemented using [pygooglevoice](http://code.google.com/p/pygooglevoice/), the Asterisk box will actually connect to Google Voice's APIs to dial the number and call back (making it an incoming call and thus free) to make the outgoing call.
 
-## Links ##
+## Links
 
-* http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html
-* http://www.asteriskdocs.org/
-* http://www.voip-info.org/
-* http://nerdvittles.com/index.php?p=65
-* http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP
-* http://download.ag-projects.com/
+* <http://ofps.oreilly.com/titles/9780596517342/asterisk-Arch.html>
+* <http://www.asteriskdocs.org/>
+* <http://www.voip-info.org/>
+* <http://nerdvittles.com/index.php?p=65>
+* <http://www.voip-info.org/wiki/index.php?page=Asterisk+LDAP>
+* <http://download.ag-projects.com/>
 
-## Security Notes ##
+## Security Notes
 
-Asterisk/SIP are going to be a significant security hole in the network if I
-allow outside access to the SIP services (In case I want to say be able to pick
-up the phone from my laptop while at a cafe or from my office). I intend to
-research making this considerably more secure before allowing this kind of
-setup and will document it here.
+Asterisk/SIP are going to be a significant security hole in the network if I allow outside access to the SIP services (In case I want to say be able to pick up the phone from my laptop while at a cafe or from my office). I intend to research making this considerably more secure before allowing this kind of setup and will document it here.
 
-One of the things for me to note ahead of time is to not put incoming calls
-into the same context as my dial plans. This alone will be a significant
-increase in any kind of security.
+One of the things for me to note ahead of time is to not put incoming calls into the same context as my dial plans. This alone will be a significant increase in any kind of security.
 
 ### Encryption
 
-The configurations provided have TLS enabled BUT it won't do any good until the
-server has a certificate. A normal webserver certificate in PKCS12 format. FOR
-TESTING ONLY you can generate a self signed certificate. You'll need both the
-certificate authority's cert and the key/cert pair for the server.
+The configurations provided have TLS enabled BUT it won't do any good until the server has a certificate. A normal webserver certificate in PKCS12 format. FOR TESTING ONLY you can generate a self signed certificate. You'll need both the certificate authority's cert and the key/cert pair for the server.
 
 You can use the following to create a self-signed one:
 
-```
-[root@localhost ~]# openssl genrsa -out ca.key 4096
-[root@localhost ~]# openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
-[root@localhost ~]# openssl genrsa -des3 -out pbx.key 4096
-[root@localhost ~]# openssl req -new -key argus.key -out pbx.csr
-[root@localhost ~]# openssl x509 -req -days 3650 -in pbx.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out pbx.crt
-[root@localhost ~]# openssl rsa -in pbx.key -out pbx.key.insecure
-[root@localhost ~]# cat pbx.crt > pbx.pem
-[root@localhost ~]# cat pbx.key.insecure >> pbx.pem
-[root@localhost ~]# mv pbx.pem ca.crt /var/lib/asterisk/
-[root@localhost ~]# restorecon -R /var/lib/asterisk/
-[root@localhost ~]# chown asterisk:asterisk /var/lib/asterisk
+```console
+# openssl genrsa -out ca.key 4096
+# openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
+# openssl genrsa -des3 -out pbx.key 4096
+# openssl req -new -key argus.key -out pbx.csr
+# openssl x509 -req -days 3650 -in pbx.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out pbx.crt
+# openssl rsa -in pbx.key -out pbx.key.insecure
+# cat pbx.crt > pbx.pem
+# cat pbx.key.insecure >> pbx.pem
+# mv pbx.pem ca.crt /var/lib/asterisk/
+# restorecon -R /var/lib/asterisk/
+# chown asterisk:asterisk /var/lib/asterisk
 ```
 
 ### Firewall Adjustments
 
-```
+```iptables
 # Allow incoming SIP calls from the local network
 -A PRIMARYSERVICES -s 10.13.37.0/24 -m udp -p udp --dport 5060 -j ACCEPT
 -A PRIMARYSERVICES -s 10.13.37.0/24 -m tcp -p tcp --dport 5060:5061 -j ACCEPT
@@ -110,18 +87,11 @@ You can use the following to create a self-signed one:
 
 ### Fail2Ban
 
-Due to the overwhelmingly large number of attackers trying to exploit unsecured
-Asterisk boxes, configuring [Fail2Ban][7] with Asterisk is HIGHLY recommended.
-I'm updating the regular expressions in that template as I see attacks, and in
-some cases where I intentionally generate the logs myself.
+Due to the overwhelmingly large number of attackers trying to exploit unsecured Asterisk boxes, configuring [Fail2Ban](fail2ban) with Asterisk is HIGHLY recommended. I'm updating the regular expressions in that template as I see attacks, and in some cases where I intentionally generate the logs myself.
 
 ## Config Files
 
-There are a significant number of configuration files created when asterisk is
-installed, these all reside in `/etc/asterisk`. I'll go over the ones that I
-made modifications too including full source (without the comments that come
-included, there are a lot of them). I copied the original files to *.conf.o and
-blew away most of the files I edited (including the stock comments). 
+There are a significant number of configuration files created when asterisk is installed, these all reside in "/etc/asterisk". I'll go over the ones that I made modifications too including full source (without the comments that come included, there are a lot of them). I copied the original files to "*.conf.o" and blew away most of the files I edited (including the stock comments).
 
 ### /etc/asterisk/asterisk.conf
 
@@ -238,10 +208,7 @@ blew away most of the files I edited (including the stock comments).
 
 ### /etc/asterisk/extensions.conf
 
-The only thing that I have changed in the below configuration is that where it
-says 'SPA3000' in the variables I used the MAC address of the actual SPA3000
-device as it is defined in sip.conf (this has also been changed there). This
-will allow it to remain unique even if another is added.
+The only thing that I have changed in the below configuration is that where it says 'SPA3000' in the variables I used the MAC address of the actual SPA3000 device as it is defined in sip.conf (this has also been changed there). This will allow it to remain unique even if another is added.
 
 ```ini
 ; --- Asterisk Extension Configuration ---
@@ -386,9 +353,7 @@ will allow it to remain unique even if another is added.
 
 ### /etc/asterisk/indications.conf
 
-I never got around to configuring this file, I left the section here as the
-default asterisk install adds this file in. For now you're on your own in
-configuring indications.
+I never got around to configuring this file, I left the section here as the default asterisk install adds this file in. For now you're on your own in configuring indications.
 
 ### /etc/asterisk/logger.conf
 
@@ -764,20 +729,8 @@ CREATE TABLE `asterisk` (
 
 ## Music On Hold
 
-The way that music on hold is configured in the dial plan on this page it will
-look for files in the directory `/usr/share/asterisk/moh/`. Files will be
-chosen at random from this directory as long as asterisk can read them (that is
-it has a codec for the audio file loaded). I strongly suggest the music be in
-`ogg` format.
+The way that music on hold is configured in the dial plan on this page it will look for files in the directory "/usr/share/asterisk/moh/". Files will be chosen at random from this directory as long as asterisk can read them (that is it has a codec for the audio file loaded). I strongly suggest the music be in "ogg" format.
 
 ## Text to Speech
 
-Please refer to my notes on [Festival][7] for more information on text to
-speech with asterisk.
-
-[2]: http://robsmart.co.uk/2009/06/02/freeswitch_linksys3102/
-[3]: http://google.com/voice
-[4]: http://www.sipgate.com/
-[5]: http://code.google.com/p/pygooglevoice/
-[6]: {{< ref "./fail2ban.md" >}}
-[7]: {{< ref "./festival.md" >}}
+Please refer to my notes on [Festival](festival) for more information on text to speech with asterisk.
