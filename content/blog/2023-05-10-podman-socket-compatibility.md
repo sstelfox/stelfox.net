@@ -10,6 +10,8 @@ slug: podman-socket-compatibility
 title: Podman Socket Compatibility for Docker Tools
 ---
 
+# Podman Socket Compatibility for Docker Tools
+
 While using a tool that unexpectedly was running part of its build using the docker daemon on Linux. I need to quickly come up with a workaround. Most Linux distributions have natively moved away from Docker in favor of the more secure and community maintained "podman" project.
 
 The specific error I was seeing was:

@@ -4,6 +4,7 @@ updated_at: 2024-07-14T17:05:37-0500
 draft: true
 menu: main
 searchable: false
+kind: page
 title: Design Reference
 ---
 

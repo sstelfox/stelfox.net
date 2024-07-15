@@ -7,9 +7,11 @@ tags:
   - cinnamon
   - linux
   - tips
-slug: blender-loop-select-in-cinnamon
 title: Blender Loop Select in Cinnamon
+slug: blender-loop-select-in-cinnamon
 ---
+
+# Blender Loop Select in Cinnamon
 
 I've recently been playing around with Blender (following [this tutorial series](https://www.youtube.com/playlist?list=PLjEaoINr3zgEq0u2MzVgAaHEBt--xLB6U)). In Part 4 of the Level 1 series, the host Andrew Price is teaching about loop selects which very simply is holding down Alt while clicking on a vertex. The issue wasn't working for me though I found quite a few other users experiencing the issue.
 

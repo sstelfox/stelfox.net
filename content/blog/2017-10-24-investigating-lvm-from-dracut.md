@@ -12,7 +12,7 @@ slug: investigating-lvm-from-dracut
 
 # Investigating LVM From Dracut
 
-In my [my last post]({{< ref "2017-10-24-visible-yet-missing-logical-volumes" >}}), I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
+In my [my last post](2017-10-24-visible-yet-missing-logical-volumes), I covered finding logical volumes that were missing from LVM from within a live CD (which is effectively a whole standard environment). Working with dracut is quite a bit more limited.
 
 Turns out that the commands I'm normally used to for operating and inspecting LVM volumes can all be accessed as a second parameter to the "lvm" tool like so:
 

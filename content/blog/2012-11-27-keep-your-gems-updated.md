@@ -3,6 +3,9 @@ created_at: 2012-11-27T14:17:00-0500
 evergreen: true
 public: true
 tags:
+  - dependencies
+  - development
+  - programming
   - ruby
   - security
 slug: keep-your-gems-updated

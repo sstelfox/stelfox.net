@@ -1,33 +1,30 @@
 ---
 created_at: 2019-03-24T23:26:30-0400
+evergreen: true
+public: true
 tags:
   - cisco
+  - networking
+  - operations
   - tips
 title: Reflashing Cisco Catalyst With XMODEM
+slug: reflashing-cisco-catalyst-with-xmodem
 ---
 
-One of the Cisco Catalyst 3750 I had to work on recently had it's flash
-completely wiped. When this happens you can only flash the filesystem using the
-XMODEM serial console. This is a fairly well documented process on Windows. On
-Linux most of the documented ways involve switching between multiple utilities
-and can be tricky. I wanted to documented how I did this and possibly help
-other in the same situation.
+# Reflashing Cisco Catalyst With XMODEM
 
-I'm doing this on Fedora, but the only thing specific to Fedora is installing
-the packages which can be done with the following command (and are pretty
-standard names):
+One of the Cisco Catalyst 3750 I had to work on recently had it's flash completely wiped. When this happens you can only flash the filesystem using the XMODEM serial console. This is a fairly well documented process on Windows. On Linux most of the documented ways involve switching between multiple utilities and can be tricky. I wanted to documented how I did this and possibly help other in the same situation.
+
+I'm doing this on Fedora, but the only thing specific to Fedora is installing the packages which can be done with the following command (and are pretty standard names):
 
 ```console
-dnf install lrzsz screen -y
+$ dnf install lrzsz screen -y
 ```
 
-From an external perspective the switch was rapidly blinking it's `SYST` light
-with all of the other lights off. I connected up a console cable, the serial
-port showed up as `/dev/ttyUSB0`. We'll connect to the serial port using screen
-with the following command:
+From an external perspective the switch was rapidly blinking it's "SYST" light with all of the other lights off. I connected up a console cable, the serial port showed up as "/dev/ttyUSB0". We'll connect to the serial port using screen with the following command:
 
 ```console
-sudo screen /dev/ttyUSB0 9600
+$ sudo screen /dev/ttyUSB0 9600
 ```
 
 Power cycling the switch gets you the boot messages that show us the issue:
@@ -84,8 +81,7 @@ switch: dir flash:
 unable to stat flash:/: invalid argument
 ```
 
-The flash hardware hasn't been enabled yet. We need to initialize it with the
-`flash_init` command which will allow us access to the flash again:
+The flash hardware hasn't been enabled yet. We need to initialize it with the "flash_init" command which will allow us access to the flash again:
 
 ```console
 switch: flash_init
@@ -107,87 +103,56 @@ Directory of flash://
 switch:
 ```
 
-Definitely nothing present. At this point we need to use XMODEM to get the
-firmware file. You'll need to use your support contract to get the latest
-firmware for your model of switch. I made sure this file was in my current
-directory (saves some time in a bit). For me this file was named
-`c3750-ipservicesk9-mz.150-2.SE10a.bin` you'll want to replace this with the
-appropriate filename you pull yourself. Right, carrying on.
+Nothing present. At this point we need to use XMODEM to get the firmware file. You'll need to use your support contract to get the latest firmware for your model of switch. I made sure this file was in my current directory (saves some time in a bit). For me this file was named "c3750-ipservicesk9-mz.150-2.SE10a.bin" you'll want to replace this with the appropriate filename you pull yourself. Right, carrying on.
 
-XMODEM is a very slow process especially when we use the default speed of 9600
-baud. We can speed this process up by 12x by adjusting the baud rate. You can
-skip this bit though if you're willing to wait several hours for the file to
-transfer.
+XMODEM is a very slow process especially when we use the default speed of 9600 baud. We can speed this process up by 12x by adjusting the baud rate. You can skip this bit though if you're willing to wait several hours for the file to transfer.
 
-To speed up the baud rate execute the following command, be aware that your
-terminal is expected to immediately become responsive and this is fine:
+To speed up the baud rate execute the following command, be aware that your terminal is expected to immediately become responsive and this is fine:
 
 ```console
 switch: set BAUD 115200
 ```
 
-Kill the screen session by pressing `Ctrl-a` quickly following by a lone `k`.
-It will prompt you to confirm exiting the session, do so with `y` and start a
-new session with the higher baud rate:
+Kill the screen session by pressing "Ctrl-a" quickly following by a lone "k". It will prompt you to confirm exiting the session, do so with "y" and start a new session with the higher baud rate:
 
 ```console
 $ sudo screen /dev/ttyUSB0 115200
 ```
 
-Press return and you'll get back to the switch prompt. This next bit is tricky
-as there is about a ten second timeout between starting the copy command and
-needing to being the transfer. If you don't quite make it I've got a tip after
-the command below:
+Press return and you'll get back to the switch prompt. This next bit is tricky as there is about a ten second timeout between starting the copy command and needing to being the transfer. If you don't quite make it I've got a tip after the command below:
 
 ```console
 switch: copy xmodem:/ flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
 ```
 
-Quick press `Ctrl-a` followed by `:`. In the prompt that shows up type in the
-following:
+Quick press "Ctrl-a" followed by ":". In the prompt that shows up type in the following:
 
 ```console
 exec !! sx -b -X c3750-ipservicesk9-mz.150-2.SE10a.bin
 ```
 
-If you get an error, it reports as cancelled, it times out just try again. This
-time though after pressing `Ctrl-a` and `:` you can press your up arrow to
-bring up the last run command. Assuming you typed it in correctly this should
-give you enough time to start the transfer. It will show you the progress of
-the transfer which depending on size will take between twenty and thirty
-minutes (or hours if you didn't update the baud rate).
+If you get an error, it reports as cancelled, it times out just try again. This time though after pressing "Ctrl-a" and ":" you can press your up arrow to bring up the last run command. Assuming you typed it in correctly this should give you enough time to start the transfer. It will show you the progress of the transfer which depending on size will take between twenty and thirty minutes (or hours if you didn't update the baud rate).
 
-Site note: One of the benefits of performing the `sx` command through screen is
-that if anything happens to your terminal the transfer will continue. This was
-particularly important for me at the time as I found myself SSH'd into a laptop
-far away from myself over an unstable and shared cell connection running these
-commands.
+Site note: One of the benefits of performing the "sx" command through screen is that if anything happens to your terminal the transfer will continue. This was particularly important for me at the time as I found myself SSH'd into a laptop far away from myself over an unstable and shared cell connection running these commands.
 
-When it's complete you're going to want to ensure the `BOOT` variable properly
-matches the filename you just transferred:
+When it's complete you're going to want to ensure the "BOOT" variable properly matches the filename you just transferred:
 
 ```console
 set BOOT flash:/c3750-ipservicesk9-mz.150-2.SE10a.bin
 ```
 
-We're going to reset the baud rate back to normal (skip this if you didn't
-update your baud rate) which will cause you to loose the connection again:
+We're going to reset the baud rate back to normal (skip this if you didn't update your baud rate) which will cause you to loose the connection again:
 
 ```console
 unset BAUD
 ```
 
-Disconnect as we did before and reconnect at the 9600 rate. One final command
-should start the switch and get you back into the good graces of the Cisco CLI:
+Disconnect as we did before and reconnect at the 9600 rate. One final command should start the switch and get you back into the good graces of the Cisco CLI:
 
 ```console
 switch: boot
 ```
 
-One final tip, if you want to access the boot menu of the switch I had a hell
-of a time trying to figure out how to actually send the break command to
-interrupt the boot menu. None of the recommended combinations of `Ctrl`, `Alt`,
-`Shift`, `b`, `Break`, and `Scroll Lock`. You can instead press the `Mode`
-button on the front of the switch to emulate this break key.
+One final tip, if you want to access the boot menu of the switch I had a hell of a time trying to figure out how to actually send the break command to interrupt the boot menu. None of the recommended combinations of "Ctrl", "Alt", "Shift", "b", "Break", and "Scroll Lock". You can instead press the "Mode" button on the front of the switch to emulate this break key.
 
 Cheers friends. Hope this helps another CLI adventurer.

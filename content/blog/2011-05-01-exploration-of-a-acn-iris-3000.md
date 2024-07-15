@@ -4,6 +4,8 @@ evergreen: true
 public: true
 tags:
   - hardware
+  - reverse-engineering
+  - security
 slug: exploration-of-a-acn-iris-3000
 title: Exploration of an ACN Iris 3000
 ---
@@ -30,16 +32,16 @@ Escape character is '^]'.
 SSH-2.0-dropbear_0.45
 ```
 
-Bingo. SSH it is, and an old version of dropbear at that.  Unfortunately as the one poster I found said the password was neither blank nor 'root'. I suspect that they had an older firmware revision and these 'bugs' were ironed out in a later revision. That's OK though it'll just take a bit more work.
+Bingo. SSH it is, and an old version of Dropbear at that.  Unfortunately as the one poster I found said the password was neither blank nor 'root'. I suspect that they had an older firmware revision and these 'bugs' were ironed out in a later revision. That's OK though it'll just take a bit more work.
 
-As for port 8080 it is definitely running a web configuration interface. All it asks for is a password (which we don't have). The extension for the login page (esp) makes me suspect that the Iris device is running a copy of AppWebServer or something similar and using embedded javascript as the server side processing. For now that doesn't provide much but it could be very useful later on.
+As for port 8080 it is definitely running a web configuration interface. All it asks for is a password (which we don't have). The extension for the login page (esp) makes me suspect that the Iris device is running a copy of AppWebServer or something similar and using embedded JavaScript as the server side processing. For now that doesn't provide much but it could be very useful later on.
 
 ## Attack
 
-So while looking for an exploit for DropBear 0.45 I started up a SSH dictionary attack and encountered by first real problem. The screen started blinking while running three or more threads trying to break in, at first I thought it was kind of funny but then it turned off completely.
+So while looking for an exploit for Dropbear 0.45 I started up a SSH dictionary attack and encountered by first real problem. The screen started blinking while running three or more threads trying to break in, at first I thought it was kind of funny but then it turned off completely.
 
 Turns out the adapter I have for it is only rated for pushing out 500mA and the phone itself takes up to 1500mA, apparently I hit that limit and browned-out the phone. It still seems to work but if I want to take this route I'll need a more robust power supply. Looking around I found a 1500mA supply and after checking the boards for damage I gave it a shot and everything seems to be working OK.
 
-Unfortunately I wasn't able to find any viable exploits for that particular DropBear version as the vulnerabilities that had been found were either DoS vulnerabilities or were only useful with valid credentials.
+Unfortunately I wasn't able to find any viable exploits for that particular Dropbear version as the vulnerabilities that had been found were either DoS vulnerabilities or were only useful with valid credentials.
 
 The basic dictionary attack failed and I started up a more comprehensive one. I could easily start brute forcing this but it would take a very long time, especially if the company realized that a weak password wasn't cutting it.
