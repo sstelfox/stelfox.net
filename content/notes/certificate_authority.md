@@ -1,6 +1,9 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: Building a Certificate Authority
+slug: certificate-authority
+aliases:
+  - certificate_authority
 ---
 
 ***Note: This page is quite old and is likely out of date. My opinions may have
