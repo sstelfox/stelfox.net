@@ -7,7 +7,7 @@ clean:
 logo: static/favicon.ico static/favicon-32x32.png static/apple-touch-icon.png static/logo.png
 
 server:
-	hugo server --baseURL http://127.0.0.1:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings
+	hugo server --baseURL http://127.0.0.1:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --disableFastRender
 
 setup:
 	git submodule init
@@ -26,5 +26,5 @@ static/apple-touch-icon.png: logo_src/stelfox_favicon.svg
 static/logo.png: logo_src/stelfox_clean_icon.svg
 	convert -alpha on -quality 85 -scale 192x192 -transparent white logo_src/stelfox_clean_icon.svg static/logo.png
 
-.PHONY: build clean depends logo server
+.PHONY: build clean logo server
 .DEFAULT_GOAL := build
