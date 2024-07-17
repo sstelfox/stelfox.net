@@ -7,7 +7,7 @@ clean:
 logo: static/favicon.ico static/favicon-32x32.png static/apple-touch-icon.png static/logo.png
 
 server:
-	hugo server --baseURL http://127.0.0.1:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --disableFastRender
+	hugo server --baseURL http://127.0.0.1:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --disableFastRender --disableLiveReload
 
 setup:
 	git submodule init
