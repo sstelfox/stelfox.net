@@ -15,3 +15,8 @@
 
 {{- $deferred_script = $deferred_script | resources.Fingerprint }}
     <script type="text/javascript" src="{{ $deferred_script.RelPermalink }}" integrity="{{ $deferred_script.Data.Integrity }}" defer></script>
+
+{{- if eq hugo.Environment "development" -}}
+  {{- $dev_js := resources.Get "dev-tooling.js" | resources.Fingerprint }}
+    <script type="text/javascript" src="{{ $dev_js.RelPermalink }}" integrity="{{ $dev_js.Data.Integrity }}" defer></script>
+{{ end -}}
