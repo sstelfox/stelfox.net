@@ -1,6 +1,5 @@
 {{ if hugo.IsServer }}
-<button id="parameter-menu" onclick="changeParameterVisibility()"
-    class="w-8 h-8 mb-2 rounded-full text-slate-600 text-sm bg-slate-200 uppercase pointer-events-auto">
+<button id="parameter-menu" class="w-8 h-8 mb-2 rounded-full text-slate-600 text-sm bg-slate-200 uppercase pointer-events-auto">
     <span>P</span>
 </button>
 
@@ -97,30 +96,4 @@
         </tbody>
     </table>
 </div>
-
-<script>
-    function setParameterVisibility(data) {
-        var showParameter = data;
-        var e = document.querySelector("#parameter-area");
-        if (e.classList.contains("hidden") == showParameter) {
-            e.classList.toggle("hidden");
-        }
-        sessionStorage.setItem("showParameter", showParameter);
-    }
-
-    function changeParameterVisibility() {
-        var e = document.querySelector("#parameter-area");
-        var showParameter = e.classList.contains("hidden") ? true : false;
-        setParameterVisibility(showParameter);
-    }
-
-    function setupParameterIndicator() {
-        /* load variables from session storage */
-        var showParameter = sessionStorage.getItem("showParameter") === "true";
-
-        setParameterVisibility(showParameter);
-    }
-
-    window.onload = setupParameterIndicator();
-</script>
 {{ end }}
