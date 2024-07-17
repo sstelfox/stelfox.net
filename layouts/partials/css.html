@@ -1,9 +1,22 @@
-{{- $styles := resources.Get "styles.css" | css.PostCSS -}}
+{{ $styles := resources.Get "styles.css" | css.PostCSS -}}
 
-{{- if hugo.IsProduction }}
-  {{ $styles = $styles | minify | fingerprint | resources.PostProcess }}
-{{ else if hugo.IsServer }}
-  {{ $styles = $styles | resources.ExecuteAsTemplate (printf "styles.dev.%v.css" now.UnixMilli) . }}
+{{- if hugo.IsProduction -}}
+  {{- $styles = $styles | resources.Minify -}}
+{{- end -}}
+
+{{- $styles = $styles | resources.Fingerprint -}}
+
+{{- if not hugo.IsServer -}}
+  {{/*
+        resources.PostProcess is used here as the CSS processing needs to scan
+        the generated output to figure out what classes are needed when not
+        running as a server This is not the case in development.
+  */}}
+  {{- $styles = $styles | resources.PostProcess -}}
+{{- end }}
+    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}">
+
+{{- if eq hugo.Environment "development" -}}
+  {{- $dev_styles := resources.Get "dev-tooling.css" | css.PostCSS | resources.Fingerprint }}
+    <link rel="stylesheet" href="{{ $dev_styles.RelPermalink }}" integrity="{{ $dev_styles.Data.Integrity }}">
 {{ end -}}
-
-<link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}">

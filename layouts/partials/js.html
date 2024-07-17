@@ -1,0 +1,17 @@
+{{ $immediate_script := resources.Get "immediate.js" -}}
+
+{{- if hugo.IsProduction -}}
+  {{- $immediate_script = $immediate_script | resources.Minify -}}
+{{- end -}}
+
+{{- $immediate_script = $immediate_script | resources.Fingerprint }}
+    <script type="text/javascript" src="{{ $immediate_script.RelPermalink }}" integrity="{{ $immediate_script.Data.Integrity }}"></script>
+
+{{- $deferred_script := resources.Get "deferred.js" -}}
+
+{{- if hugo.IsProduction -}}
+  {{- $deferred_script = $deferred_script | resources.Minify -}}
+{{- end -}}
+
+{{- $deferred_script = $deferred_script | resources.Fingerprint }}
+    <script type="text/javascript" src="{{ $deferred_script.RelPermalink }}" integrity="{{ $deferred_script.Data.Integrity }}" defer></script>
