@@ -1,4 +1,4 @@
-{{ $styles := resources.Get "styles.css" | css.PostCSS -}}
+{{- $styles := resources.Get "styles.css" | css.PostCSS -}}
 
 {{- if hugo.IsProduction -}}
   {{- $styles = $styles | resources.Minify -}}
@@ -14,9 +14,10 @@
   */}}
   {{- $styles = $styles | resources.PostProcess -}}
 {{- end }}
-    <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}">
+
+  <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}">
 
 {{- if eq hugo.Environment "development" -}}
   {{- $dev_styles := resources.Get "dev-tooling.css" | css.PostCSS | resources.Fingerprint }}
-    <link rel="stylesheet" href="{{ $dev_styles.RelPermalink }}" integrity="{{ $dev_styles.Data.Integrity }}">
-{{ end -}}
+  <link rel="stylesheet" href="{{ $dev_styles.RelPermalink }}" integrity="{{ $dev_styles.Data.Integrity }}">
+{{- end -}}
