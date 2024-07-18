@@ -3,7 +3,6 @@
       <a href="{{ .Site.Home.Permalink }}" class="flex items-center text-slate-800 dark:text-slate-200 font-bold">{{ .Site.Title }}</a>
 
       <input id="nav-toggle" type=checkbox class="hidden">
-
       <label id="show-button" for="nav-toggle" class="flex items-center sm:hidden text-slate-600 dark:text-slate-400 hover:text-sky-500">
         <svg class="fill-current h-4 w-4" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <title>Menu Open</title>
@@ -19,25 +18,23 @@
       </label>
 
       <ul id="nav-menu" class="sm:flex w-full sm:w-auto hidden mt-2 sm:mt-0 sm:space-x-2">
-        {{ with .Site.GetPage "/about" }}
-        <li>
-          <a href="{{ .Permalink }}" class="hover:text-sky-500 dark:hover:text-sky-500">{{ .Title }}</a>
-        </li>
-        {{ end }}
-        {{ range .Site.Sections }}
-        <li>
-          <a href="{{ .Permalink }}" class="hover:text-sky-500 dark:hover:text-sky-500">{{ .Title }}</a>
-        </li>
-        {{ end }}
+        {{ with .Site.GetPage "/about" -}}
+        <li><a href="{{ .Permalink }}" class="hover:text-sky-500 dark:hover:text-sky-500">{{ .Title }}</a></li>
+        {{- end }}
+        {{ range .Site.Sections -}}
+        <li><a href="{{ .Permalink }}" class="hover:text-sky-500 dark:hover:text-sky-500">{{ .Title }}</a></li>
+        {{ end -}}
         <li>
           <label class="sr-only">Theme</label>
           <button type="button" id="theme-toggle" class="py-1 hover:text-sky-500 dark:hover:text-sky-500">
             <svg id="theme-toggle-dark" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
               <circle cx="16" cy="16" r="15" />
             </svg>
+
             <svg id="theme-toggle-light" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
               <path d="M16,1C24.279,1 31,7.721 31,16C31,24.279 24.279,31 16,31C7.721,31 1,24.279 1,16C1,7.721 7.721,1 16,1ZM16,5C9.929,5 5,9.929 5,16C5,22.071 9.929,27 16,27C22.071,27 27,22.071 27,16C27,9.929 22.071,5 16,5Z" />
             </svg>
+
             <svg id="theme-toggle-system" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
               <g>
                 <path d="M16,1C24.279,1 31,7.721 31,16C31,24.279 24.279,31 16,31C7.721,31 1,24.279 1,16C1,7.721 7.721,1 16,1ZM16,5C9.929,5 5,9.929 5,16C5,22.071 9.929,27 16,27C22.071,27 27,22.071 27,16C27,9.929 22.071,5 16,5Z" />
