@@ -1,4 +1,12 @@
-{{- $styles := resources.Get "styles.css" | css.PostCSS -}}
+{{/*
+
+    should probably leave noMap as false when not in development
+    should use the append and concat functions to only include dev tooling in the bundled css
+    should plan on the core of this moving to a theme, and have one intended for "root" overrides from the theme
+
+  */}}
+{{- $post_css_cfg := dict "inlineImports" true "noMap" true -}}
+{{- $styles := resources.Get "css/core.css" | css.PostCSS $post_css_cfg -}}
 
 {{- if hugo.IsProduction -}}
   {{- $styles = $styles | resources.Minify -}}
@@ -18,6 +26,6 @@
   <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}">
 
 {{- if eq hugo.Environment "development" -}}
-  {{- $dev_styles := resources.Get "dev-tooling.css" | css.PostCSS | resources.Fingerprint }}
+  {{- $dev_styles := resources.Get "css/dev-tooling.css" | css.PostCSS | resources.Fingerprint }}
   <link rel="stylesheet" href="{{ $dev_styles.RelPermalink }}" integrity="{{ $dev_styles.Data.Integrity }}">
 {{- end -}}

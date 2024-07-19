@@ -17,7 +17,7 @@ hosted site outside of squid).
 
 Don't use the "squidGuard" service, it is incorrectly defined, looking
 for non-existant files, and is poorly implemented. Call squidGuard directly
-from the squid config (see [Squid][1]).
+from the squid config (see [Squid](squid)).
 
 NOTICE: To use squid guard at all you need to have a web server setup to
 redirect sites that are denied. For this purpose I decided to install apache,
@@ -47,7 +47,7 @@ however they shouldn't differ much between different lists.
 [root@localhost ~]# touch /var/squidGuard/whitelists/custom/urls
 ```
 
-Download a blacklist file, [Shalla List][2] seems to be the defacto/good one.
+Download a blacklist file, [Shalla List](http://www.shallalist.de/) seems to be the defacto/good one.
 
 ```
 [root@localhost ~]# curl http://www.shallalist.de/Downloads/shallalist.tar.gz -o /var/squidGuard/blacklists/shallalist.tar.gz 2>/dev/null
@@ -929,6 +929,3 @@ want to access directly in my whitelist file.
   </body>
 </html>
 ```
-
-[1]: {{< ref "./squid.md" >}}
-[2]: http://www.shallalist.de/

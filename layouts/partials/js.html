@@ -1,4 +1,4 @@
-{{ $immediate_script := resources.Get "immediate.js" -}}
+{{ $immediate_script := resources.Get "js/immediate.js" -}}
 
 {{- if hugo.IsProduction -}}
   {{- $immediate_script = $immediate_script | resources.Minify -}}
@@ -8,7 +8,7 @@
 
   <script type="text/javascript" src="{{ $immediate_script.RelPermalink }}" integrity="{{ $immediate_script.Data.Integrity }}"></script>
 
-{{- $deferred_script := resources.Get "deferred.js" -}}
+{{- $deferred_script := resources.Get "js/deferred.js" -}}
 
 {{- if hugo.IsProduction -}}
   {{- $deferred_script = $deferred_script | resources.Minify -}}
@@ -18,6 +18,6 @@
   <script type="text/javascript" src="{{ $deferred_script.RelPermalink }}" integrity="{{ $deferred_script.Data.Integrity }}" defer></script>
 
 {{- if eq hugo.Environment "development" -}}
-  {{- $dev_js := resources.Get "dev-tooling.js" | resources.Fingerprint }}
+  {{- $dev_js := resources.Get "js/dev-tooling.js" | resources.Fingerprint }}
   <script type="text/javascript" src="{{ $dev_js.RelPermalink }}" integrity="{{ $dev_js.Data.Integrity }}" defer></script>
 {{- end -}}
