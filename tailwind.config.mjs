@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   content: ['content/**/*.md', 'layouts/**/*.html'],
   darkMode: 'class',
   theme: {
