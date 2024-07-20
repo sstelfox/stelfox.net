@@ -1,3 +1,5 @@
+/* todo(sstelfox): rewrite the theme selection as the persistence isn't working */
+
 var themeDarkIcon = document.getElementById('theme-toggle-dark');
 var themeLightIcon = document.getElementById('theme-toggle-light');
 var themeSystemIcon = document.getElementById('theme-toggle-system');
@@ -62,3 +64,17 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
+/* If the page has mermaid loaded, detect it and set the theme appropriately. */
+if (typeof mermaid !== 'undefined') {
+  var chosenTheme = 'dark';
+
+  /* todo(sstelfox): the theme toggle needs to update the marmaid theme as well... */
+  if (document.documentElement.classList.contains('dark') === false) {
+    chosenTheme = 'default';
+  }
+
+  mermaid.initialize({
+    "startOnLoad": true,
+    "theme": chosenTheme,
+  });
+}

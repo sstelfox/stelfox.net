@@ -1,0 +1,11 @@
+{{- $page_scripts := (default slice .Params.scripts) -}}
+
+{{- if .Store.Get "has_mermaid" }}
+  {{- $page_scripts = $page_scripts | append "js/mermaid-10.9.1.dist.min.js" -}}
+{{ end -}}
+
+{{- range $src := $page_scripts }}
+  {{- $script := resources.Get $src -}}
+  {{- $script = $script | resources.Fingerprint -}}
+  <script type="text/javascript" src="{{ $script.RelPermalink }}" integrity="{{ $script.Data.Integrity }}" defer></script>
+{{- end }}

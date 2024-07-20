@@ -7,17 +7,3 @@
 {{- $immediate_script = $immediate_script | resources.Fingerprint }}
 
   <script type="text/javascript" src="{{ $immediate_script.RelPermalink }}" integrity="{{ $immediate_script.Data.Integrity }}"></script>
-
-{{- $deferred_script := resources.Get "js/deferred.js" -}}
-
-{{- if hugo.IsProduction -}}
-  {{- $deferred_script = $deferred_script | resources.Minify -}}
-{{- end -}}
-
-{{- $deferred_script = $deferred_script | resources.Fingerprint }}
-  <script type="text/javascript" src="{{ $deferred_script.RelPermalink }}" integrity="{{ $deferred_script.Data.Integrity }}" defer></script>
-
-{{- if eq hugo.Environment "development" -}}
-  {{- $dev_js := resources.Get "js/dev-tooling.js" | resources.Fingerprint }}
-  <script type="text/javascript" src="{{ $dev_js.RelPermalink }}" integrity="{{ $dev_js.Data.Integrity }}" defer></script>
-{{- end -}}

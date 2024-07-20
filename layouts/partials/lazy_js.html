@@ -1,0 +1,14 @@
+{{- $deferred_js_scripts := slice (resources.Get "js/deferred.js") -}}
+
+{{- if eq hugo.Environment "development" -}}
+  {{- $deferred_js_scripts = $deferred_js_scripts | append (resources.Get "js/dev-tooling.js") -}}
+{{- end -}}
+
+{{- $script_bundle := $deferred_js_scripts | resources.Concat "js/def.js" -}}
+
+{{- if hugo.IsProduction -}}
+  {{- $script_bundle = $script_bundle | resources.Minify -}}
+{{- end -}}
+
+{{- $script_bundle = $script_bundle | resources.Fingerprint -}}
+  <script type="text/javascript" src="{{ $script_bundle.RelPermalink }}" integrity="{{ $script_bundle.Data.Integrity }}" defer></script>
