@@ -43,7 +43,6 @@ Here there be dragons, the sixth level of the abyss.
 * some ==highlighted text== that may not work
 * A simple molecule using subscript H~2~O
 * A little equation using superscript 2^10^ though I should use [mathjax](#mathjax) for that.
-* Maybe a touch of :joy: for emojis
 
 > blockquote text with some *italic* and **bold** text
 
@@ -123,13 +122,13 @@ But let's throw in a <b>tag</b> to see how HTML is treated.
 
 ## Tables
 
-| Tables        | Are           | Cool    |
-| ------------- |:-------------:| -------:|
-| col 3 is      | right-aligned | \$1600  |
-| col 2 is      | centered      |   \$12  |
-| zebra stripes | are neat      |    \$1  |
-| *Still*         | renders       | **nicely**  |
-| 1             | 2             | 3       |
+| Tables        | Are           | Cool     |
+| ------------- |:-------------:| --------:|
+| col 3 is      | right-aligned | \\$1600  |
+| col 2 is      | centered      |   \\$12  |
+| zebra stripes | are neat      |    \\$1  |
+| *Still*         | renders       | **nicely**   |
+| 1             | 2             | 3        |
 
 ## Blockquotes
 
