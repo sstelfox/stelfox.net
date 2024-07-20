@@ -66,14 +66,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /* If the page has mermaid loaded, detect it and set the theme appropriately. */
 if (typeof mermaid !== 'undefined') {
-  var chosenTheme = 'dark';
+  var isDarkTheme = document.documentElement.classList.contains('dark');
 
   /* todo(sstelfox): the theme toggle needs to update the marmaid theme as well... */
-  if (document.documentElement.classList.contains('dark') === false) {
-    chosenTheme = 'default';
+  if (isDarkTheme) {
+    var chosenTheme = 'dark';
+  } else {
+    var chosenTheme = 'default';
   }
 
+  // Should do a whole lot more in the theming department once I have a color scheme:
+  // * https://mermaid.js.org/config/theming.html
   mermaid.initialize({
+    "darkMode": isDarkTheme,
     "startOnLoad": true,
     "theme": chosenTheme,
   });
