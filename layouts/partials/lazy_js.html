@@ -5,10 +5,12 @@
 {{- end -}}
 
 {{- $script_bundle := $deferred_js_scripts | resources.Concat "js/def.js" -}}
+{{- $build_options := dict }}
 
 {{- if hugo.IsProduction -}}
-  {{- $script_bundle = $script_bundle | resources.Minify -}}
+  {{- $build_options = merge $build_options (dict "minify" true) -}}
 {{- end -}}
 
+{{- $script_bundle = $script_bundle | js.Build $build_options }}
 {{- $script_bundle = $script_bundle | resources.Fingerprint -}}
-  <script type="text/javascript" src="{{ $script_bundle.RelPermalink }}" integrity="{{ $script_bundle.Data.Integrity }}" defer></script>
+  <script type="text/javascript" src="{{ $script_bundle.RelPermalink }}" integrity="{{ $script_bundle.Data.Integrity }}" crossorigin="anonymous" defer></script>

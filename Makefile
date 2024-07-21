@@ -1,4 +1,5 @@
 build:
+	rm -rf public/*
 	@hugo --environment production --logLevel info --minify --printI18nWarnings --printPathWarnings
 
 clean:
