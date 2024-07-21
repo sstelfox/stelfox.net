@@ -1,13 +1,12 @@
 {{ define "main" }}
-  <article class="justify-self-center mx-auto mb-16 px-6 sm:px-4 md:px-0 prose dark:prose-invert prose-slate lg:prose-lg hover:prose-a:text-sky-500">
+  <main class="justify-self-center mx-auto mb-16 px-6 sm:px-4 md:px-0 prose dark:prose-invert prose-slate lg:prose-lg hover:prose-a:text-sky-500">
     <h1>{{ .Title }}</h1>
 
-    {{ if .Content }}
-      <div>{{ .Content }}</div>
-    {{ end }}
+    {{- if .Content }}
+    <article>{{ .Content }}</article>
+    {{ end -}}
 
-
-    {{ $paginator := .Paginate .Data.Pages }}
+    {{- $paginator := .Paginate .Data.Pages }}
       {{ range $paginator.Pages.GroupByDate "2006" }}
       <h2>{{ .Key }}</h2>
       <hr/>
@@ -26,12 +25,12 @@
             <p class="mb-4 font-light">This is a sample paragraph with additional classes I probably can't control from the markdown renderer...</p>
             {{ .Summary }}
           </div>
-      <a href="{{ .RelPermalink }}" class="inline-flex items-center font-medium text-primary-600 hover:text-primary-800 dark:text-primary-500 dark:hover:text-primary-700">Read More >></a>
+          <a href="{{ .RelPermalink }}" class="inline-flex items-center font-medium text-primary-600 hover:text-primary-800 dark:text-primary-500 dark:hover:text-primary-700">Read More >></a>
         </div>
       </section>
       {{ end }}
-    {{ end }}
+    {{ end -}}
 
     {{ partial "pagination-list.html" . }}
-  </article>
+  </main>
 {{ end }}
