@@ -2,6 +2,12 @@
     <article class="justify-self-center mx-auto px-6 mb-16 sm:px-4 md:px-0 prose dark:prose-invert prose-slate lg:prose-lg hover:prose-a:text-sky-500">
       <h1>{{ .Title }}</h1>
 
-      {{ .Content }}
+			{{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+			{{ $dateHuman := .Date | time.Format ":date_long" }}
+			<time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+
+			{{ .Content }}
+
+			{{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
     </article>
 {{- end }}
