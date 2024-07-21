@@ -3,6 +3,7 @@ created_at: 2023-04-21T20:30:22-0000
 updated_at: 2024-07-14T17:05:37-0500
 draft: true
 menu: main
+math: true
 searchable: false
 kind: page
 title: Design Reference
