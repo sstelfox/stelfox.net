@@ -18,12 +18,7 @@
       </label>
 
       <ul id="nav-menu" class="sm:flex w-full sm:w-auto hidden mt-2 sm:mt-0 sm:space-x-2">
-        {{ with .Site.GetPage "/about" -}}
-        <li><a href="{{ .Permalink }}" class="hover:text-sky-500 dark:hover:text-sky-500">{{ .Title }}</a></li>
-        {{- end }}
-        {{ range .Site.Sections -}}
-        <li><a href="{{ .Permalink }}" class="hover:text-sky-500 dark:hover:text-sky-500">{{ .Title }}</a></li>
-        {{ end -}}
+        {{ partial "menu.html" (dict "menu_name" "main" "page" .) }}
         <li>
           <label class="sr-only">Theme</label>
           <button type="button" id="theme-toggle" class="py-1 hover:text-sky-500 dark:hover:text-sky-500">

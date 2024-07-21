@@ -1,0 +1,53 @@
+{{- /*
+
+  Renders a site-wide menu based on the provided menu name reference. This
+  recurisvely walks the menu structure producing unordered lists for each level
+  of the menu. Receives 'active' and 'ancestor' classes for the current page and
+  any hire in the menu tree to the root.
+
+  @context {Page} page The current page.
+  @context {string} menu_name The menu ID.
+
+  @example: {{ partial "menu.html" (dict "menu_name" "main" "page" .) }}
+
+*/}}
+
+{{- $page := .page }}
+{{- $menu_name := .menu_name }}
+
+{{- with index site.Menus $menu_name }}
+  <nav>
+    <ul>
+      {{- partial "inline/menu/walk.html" (dict "page" $page "menu_entries" .) }}
+    </ul>
+  </nav>
+{{- end }}
+
+{{- define "partials/inline/menu/walk.html" }}
+  {{- $page := .page }}
+
+  {{- range .menu_entries }}
+    {{- $attrs := dict "href" .URL }}
+
+    {{- if $page.IsMenuCurrent .Menu . }}
+      {{- $attrs = merge $attrs (dict "class" "active" "aria-current" "page") }}
+    {{- else if $page.HasMenuCurrent .Menu .}}
+      {{- $attrs = merge $attrs (dict "class" "ancestor" "aria-current" "true") }}
+    {{- end }}
+
+    <li>
+      <a
+        {{- range $k, $v := $attrs }}
+          {{- with $v }}
+            {{- printf " %s=%q" $k $v | safeHTMLAttr }}
+          {{- end }}
+        {{- end -}}
+      >{{ .Name }}</a>
+      {{- with .Children }}
+        <ul>
+          {{- partial "inline/menu/walk.html" (dict "page" $page "menu_entries" .) }}
+        </ul>
+      {{- end }}
+    </li>
+  {{- end }}
+{{- end }}
