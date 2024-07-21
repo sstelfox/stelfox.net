@@ -16,11 +16,7 @@
 {{- $menu_name := .menu_name }}
 
 {{- with index site.Menus $menu_name }}
-  <nav>
-    <ul>
-      {{- partial "inline/menu/walk.html" (dict "page" $page "menu_entries" .) }}
-    </ul>
-  </nav>
+  {{- partial "inline/menu/walk.html" (dict "page" $page "menu_entries" .) }}
 {{- end }}
 
 {{- define "partials/inline/menu/walk.html" }}
@@ -36,7 +32,7 @@
     {{- end }}
 
     <li>
-      <a
+      <a class="hover:text-sky-500 dark:hover:text-sky-500"
         {{- range $k, $v := $attrs }}
           {{- with $v }}
             {{- printf " %s=%q" $k $v | safeHTMLAttr }}
