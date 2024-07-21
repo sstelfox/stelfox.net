@@ -41,9 +41,10 @@ Here there be dragons, the sixth level of the abyss.
 * *Italic Text* _two ways_
 * some `inline code` in the middle of sentence
 * a ~~strike through~~ example
-* some ==highlighted text== that may not work
+* some ==highlighted text== (may also be referred to as "marked" text)
 * A simple molecule using subscript H~2~O
 * A little equation using superscript 2^10^ though I should use [mathjax](#mathjax) for that.
+* Some ++inserted text++ and some --deleted text--
 
 > blockquote text with some *italic* and **bold** text
 
@@ -100,21 +101,29 @@ Reference-style:
 
 Inline `code` with some extra text
 
+Rust:
+
 ```rust
 fn main {
   println!("rust syntax highlighting");
 }
 ```
 
+JavaScript:
+
 ```javascript
 var s = "JavaScript syntax highlighting";
 alert(s);
 ```
 
+Python:
+
 ```python
 s = "Python syntax highlighting"
 print s
 ```
+
+No Declaration:
 
 ```
 No language indicated, so no syntax highlighting in Markdown Here.
@@ -151,7 +160,6 @@ As above...
 
 ---
 
-
 ...so below.
 
 ## Beyond Markdown
@@ -167,17 +175,13 @@ Term
 
 They can't be added directly but you can add an image with a link to the video like this:
 
-```no-highlight
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE
 " target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg"
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
-```
 
 Or, in pure Markdown, but losing the image sizing and border:
 
-```no-highlight
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
-```
 
 ### Mathjax
 
