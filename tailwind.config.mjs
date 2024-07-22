@@ -2,7 +2,7 @@ export default {
   // todo(sstelfox): In a production build I want this to only look at the
   // generated public directory so it can tree-shake out CSS styles that aren't
   // actually used anywhere.
-  content: ['content/**/*.md', 'layouts/**/*.html'],
+  content: ['content/**/*.md', 'layouts/**/*.html', 'themes/stelfox-special/layouts/**/*.html'],
   darkMode: 'class',
   theme: {
     extend: {},
