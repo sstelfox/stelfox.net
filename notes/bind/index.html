@@ -1,283 +1,533 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall AdjustmentsA DNS server isn&amp;rsquo;t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
--A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPTIf you&amp;rsquo;re running named in a chroot you&amp;rsquo;ll also need to add the following line to rsyslog&amp;rsquo;s configuration file so that the chroot doesn&amp;rsquo;t break named&amp;rsquo;s logging."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/bind/><title>Bind :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Bind"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall AdjustmentsA DNS server isn’t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
--A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPTIf you’re running named in a chroot you’ll also need to add the following line to rsyslog’s configuration file so that the chroot doesn’t break named’s logging."><meta itemprop=datePublished content="2017-10-09T17:03:25-04:00"><meta itemprop=dateModified content="2017-10-09T17:03:25-04:00"><meta itemprop=wordCount content="1179"><meta name=twitter:card content="summary"><meta name=twitter:title content="Bind"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
-Firewall AdjustmentsA DNS server isn’t very good unless other machines are able to query it. The following allows incoming DNS queries universally.
--A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPTIf you’re running named in a chroot you’ll also need to add the following line to rsyslog’s configuration file so that the chroot doesn’t break named’s logging."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Firewall AdjustmentsA DNS server isn't very good unless other machines are able to query it. The following allows incoming DNS queries universally.
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT If you're running named in a chroot you'll also need to add the following line to rsyslog's configuration file so that the chroot doesn't break named's logging.
+1 $AddUnixListenSocket /var/named/chroot/dev/log Config Files/etc/named."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,linux,operations,security"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/bind/><title>Bind :: ./Sam_Stelfox.sh — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel="shortcut icon" href=/favicon.ico><meta itemprop=name content="Bind"><meta itemprop=description content="Firewall AdjustmentsA DNS server isn't very good unless other machines are able to query it. The following allows incoming DNS queries universally.
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT If you're running named in a chroot you'll also need to add the following line to rsyslog's configuration file so that the chroot doesn't break named's logging.
+1 $AddUnixListenSocket /var/named/chroot/dev/log Config Files/etc/named."><meta itemprop=datePublished content="2013-01-01T00:00:01+00:00"><meta itemprop=dateModified content="2013-01-01T00:00:01+00:00"><meta itemprop=wordCount content="1424"><meta itemprop=keywords content="Linux,Operations,Security"><meta name=twitter:card content="summary"><meta name=twitter:title content="Bind"><meta name=twitter:description content="Firewall AdjustmentsA DNS server isn't very good unless other machines are able to query it. The following allows incoming DNS queries universally.
+-A INPUT -p udp -m udp --dport 53 -j ACCEPT -A INPUT -p tcp -m tcp --dport 53 -j ACCEPT If you're running named in a chroot you'll also need to add the following line to rsyslog's configuration file so that the chroot doesn't break named's logging.
+1 $AddUnixListenSocket /var/named/chroot/dev/log Config Files/etc/named."><meta property="article:published_time" content="2013-01-01 00:00:01 +0000 UTC"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/bind/>Bind</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
-also changed dramatically since this was written. It is here as a reference
-until I get around to updating it.</strong></em></p><h2 id=firewall-adjustments>Firewall Adjustments</h2><p>A DNS server isn&rsquo;t very good unless other machines are able to query it. The
-following allows incoming DNS queries universally.</p><pre tabindex=0><code>-A INPUT -p udp -m udp --dport 53 -j ACCEPT
--A INPUT -p tcp -m tcp --dport 53 -j ACCEPT</code></pre><p>If you&rsquo;re running named in a chroot you&rsquo;ll also need to add the following line
-to rsyslog&rsquo;s configuration file so that the chroot doesn&rsquo;t break named&rsquo;s
-logging.</p><pre tabindex=0><code>$AddUnixListenSocket /var/named/chroot/dev/log</code></pre><h2 id=config-files>Config Files</h2><h3 id=etcnamedconf>/etc/named.conf</h3><pre tabindex=0><code>include &#34;/etc/named.root.key&#34;;
-
-// Allow no zone transfers. Any slaves should be added here.
-acl &#34;xfer&#34; {
-  none;
-};
-
-// This should include any internal and DMZ subnets so intranet and servers
-// can query our internal zones. This also prevents outside hosts from using
-// our name server as a resolver for other domains.
-acl &#34;trusted&#34; {
-  10.87.19.0/24;
-  2001:abcd:ef::/64;
-  fc00::/7;
-  fe80::/10;
-  127.0.0.1;
-  ::1;
-};
-
-key &#34;control-key&#34; {
-  algorithm hmac-md5;
-  secret &#34;##!!pulled-from-rndc.conf-generation!!##&#34;;
-};
-
-controls {
-  inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { &#34;control-key&#34;; };
-};
-
-logging {
-  channel default_syslog {
-    severity debug;
-    syslog local2;
-  };
-
-  channel audit_syslog {
-    severity debug;
-    syslog local3;
-  };
-
-  category default      { default_syslog; };
-
-  category client       { audit_syslog; };
-  category config       { default_syslog; };
-  category dnssec       { audit_syslog; };
-  category general      { default_syslog; };
-  category lame-servers { audit_syslog; };
-  category network      { audit_syslog; };
-  category notify       { audit_syslog; };
-  category queries      { audit_syslog; };
-  category resolver     { audit_syslog; };
-  category security     { audit_syslog; default_syslog; };
-  category update       { audit_syslog; };
-  category xfer-in      { audit_syslog; };
-  category xfer-out     { audit_syslog; };
-};
-
-options {
-  listen-on port 53     { any; };
-  listen-on-v6 port 53  { any; };
-
-  directory           &#34;/var/named&#34;;
-  dump-file           &#34;/var/named/data/cache_dump.db&#34;;
-  statistics-file     &#34;/var/named/data/named_stats.txt&#34;;
-  memstatistics-file  &#34;/var/named/data/named_mem_stats.txt&#34;;
-  zone-statistics     yes;
-
-  // Override the version information to reduce enumeration options
-  version &#34;It&#39;s over 9000&#34;;
-
-  // More efficient zone transfers
-  transfer-format many-answers;
-
-  // Set the maximum time a zone transfer can take. Any zone transfer that
-  // takes longer than 15 minutes is unlikely to ever complete. If there are
-  // HUGE zone files this may become an issue.
-  max-transfer-time-in 15;
-
-  // With no dynamic interfaces, bind doesn&#39;t need to poll for interface state
-  interface-interval 0;
-
-  dnssec-enable     yes;
-  dnssec-validation yes;
-  dnssec-lookaside  auto;
-
-  // ISC DLV key
-  bindkeys-file           &#34;/etc/named.iscdlv.key&#34;;
-  managed-keys-directory  &#34;/var/named/dynamic&#34;;
-
-  // Only accept queries and cached queries from the trusted ACL
-  allow-query       { trusted; };
-  allow-query-cache { trusted; };
-};
-
-// Trusted portion of the split-horizon DNS containing internal domains,
-// private records, as well as allow recursive lookups.
-view &#34;internal-in&#34; in {
-  match-clients { trusted; };
-  recursion yes;
-
-  additional-from-auth yes;
-  additional-from-cache yes;
-
-  // Zone transfers limited to members of the &#34;xfer&#34; ACL
-  allow-transfer { xfer; };
-  zone &#34;.&#34; IN {
-    type hint;
-    file &#34;named.ca&#34;;
-  };
-
-  zone &#34;1057.name&#34; IN {
-    type master;
-    file &#34;data/internal/1057.name.zone.db&#34;;
-    allow-update { none; };
-  };
-
-  zone &#34;19.87.10.in-addr.arpa&#34; IN {
-    type master;
-    file &#34;data/internal/19.87.10.in-addr.arpa.zone.db&#34;;
-    allow-update { none; };
-  };
-
-  zone &#34;0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa&#34; IN {
-    type master;
-    file &#34;data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db&#34;;
-    allow-update { none; };
-  };
-
-  include &#34;/etc/named.rfc1912.zones&#34;;
-};
-
-// Untrusted/External portion of the split-horizon DNS, only allow internal
-view &#34;external-in&#34; in {
-  match-clients { any; };
-  recursion no;
-
-  additional-from-auth no;
-  additional-from-cache no;
-
-  zone &#34;.&#34; IN {
-    type hint;
-    file &#34;named.ca&#34;;
-  };
-
-  zone &#34;1057.name&#34; IN {
-    type master;
-    file &#34;data/public/1057.name.zone.db&#34;;
-    allow-query   { any; };
-    allow-update  { none; };
-  };
-
-  zone &#34;0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa&#34; IN {
-    type master;
-    file &#34;data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db&#34;;
-    allow-query   { any; };
-    allow-update  { none; };
-  };
-};
-
-// View for users attempting to query the server using the CHAOS class. Trusted
-// users can still use this to query for the servers version number.
-view &#34;bind-chaos&#34; chaos {
-  match-clients { any; };
-  recursion no;
-
-  zone &#34;bind&#34; {
-    type master;
-    file &#34;db.bind&#34;;
-
-    allow-query     { trusted; };
-    allow-transfer  { none; };
-  };
-};</code></pre><h3 id=etcrndcconf>/etc/rndc.conf</h3><p>This needs to be generated on your own which can be done using the following
-command:</p><pre tabindex=0><code>rndc-confgen -b 512 &gt; /etc/rndc.conf</code></pre><p>The commented out code belongs in <code>/etc/named.conf</code>, just replace the following
-comment with the code:</p><pre tabindex=0><code>## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##</code></pre><p>512 is unfortunately the strongest bit size available for authentication so it
-is strongly recommended to firewall off and limit the IP addresses the control
-channel is running on. By default this is exclusively the IPv4 loopback
-address.</p><h3 id=varnameddbbind>/var/named/db.bind</h3><pre tabindex=0><code>$TTL 86400
-@   CHAOS    SOA   @   rname.invalid.  (
-    0   ; serial
-    1D  ; refresh
-    1H  ; retry
-    1W  ; expire
-    3H  ; minimum
-)
-
-    NS    @
-
-version.bind.   CHAOS TXT &#34;It&#39;s over 9000&#34;
-authors.bind.   CHAOS TXT &#34;Nom de plume&#34;</code></pre><h3 id=varnameddatainternal1057namezonedb>/var/named/data/internal/1057.name.zone.db</h3><pre tabindex=0><code>$TTL 86400
-@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
-  2012080801  ; Serial number YYYYMMDDNN
-  43200       ; Refresh
-  7200        ; Retry
-  2592000     ; Expire
-  3600        ; Min TTL
-)
-
-      NS          ns1.1057.name.
-
-ns1   IN    A         10.87.19.15
-ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92</code></pre><h3 id=varnameddatainternal198710in-addrarpazonedb>/var/named/data/internal/19.87.10.in-addr.arpa.zone.db</h3><pre tabindex=0><code>$TTL 86400
-@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
-  2013020801  ; Serial number YYYYMMDDNN
-  43200       ; Refresh
-  7200        ; Retry
-  2592000     ; Expire
-  3600        ; Min TTL
-)
-
-      NS          ns1.1057.name.
-
-15     IN    PTR       ns1.1057.name.</code></pre><h3 id=varnameddatainternal0000fe00dcba1002arpazonedb>/var/named/data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3><pre tabindex=0><code>$TTL 86400
-@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
-  2013020801  ; Serial number YYYYMMDDNN
-  43200       ; Refresh
-  7200        ; Retry
-  2592000     ; Expire
-  3600        ; Min TTL
-)
-
-      NS          ns1.1057.name.
-
-2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.</code></pre><h3 id=varnameddatapublic1057namezonedb>/var/named/data/public/1057.name.zone.db</h3><pre tabindex=0><code>$TTL 86400
-@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
-  2012080801  ; Serial number YYYYMMDDNN
-  43200       ; Refresh
-  7200        ; Retry
-  2592000     ; Expire
-  3600        ; Min TTL
-)
-
-      NS          ns1.1057.name.
-
-ns1   IN    A         4.2.2.2
-ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92</code></pre><h3 id=varnameddatapublic0000fe00dcba1002arpazonedb>/var/named/data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3><pre tabindex=0><code>$TTL 86400
-@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
-  2013020801  ; Serial number YYYYMMDDNN
-  43200       ; Refresh
-  7200        ; Retry
-  2592000     ; Expire
-  3600        ; Min TTL
-)
-
-      NS          ns1.1057.name.
-
-2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.</code></pre><h2 id=ldap-backend>LDAP Backend</h2><p>Using the package <code>bind-dyndb-ldap</code>, an ldap backend can be used either
-exclusively or in addition to other zones. Configuring a simple authenticated
-ldap lookup can be done with something along the line of the following
-configuration:</p><pre tabindex=0><code>dynamic-db &#34;my_db_name&#34; {
-  library &#34;ldap.so&#34;;
-  arg &#34;uri ldap://ldap.example.com&#34;;
-  arg &#34;base cn=dns, dc=example, dc=com&#34;;
-  arg &#34;auth_method none&#34;;
-  arg &#34;cache_ttl 300&#34;;
-};</code></pre><p>With this configuration, the LDAP back-end will try to connect to server
-ldap.example.com with simple authentication, without any password. It will then
-do an LDAP subtree search in the <code>cn=dns,dc=example,dc=com</code> base for entries
-with object class idnsZone, for which the idnsZoneActive attribute is set to
-True.</p><p>For each entry it will find, it will register a new zone with BIND. The LDAP
-back-end will keep each record it gets from LDAP in its cache for 5 minutes.</p><p>It also supports SASL authentication methods which means we can use encrypted
-authentication and/or kerberos.</p><h2 id=ipv6-slow-down>IPv6 Slow down</h2><p>If there is a local IPv6 network but it is unrouted bind will regularily
-attempt to contact other nameservers using IPv6 and doesn&rsquo;t seem to cache
-whether it was able to reach them or not.</p><p>This has a dramatically visible impact on the time it takes to query for a
-name. To prevent this there are really only two options, the first is to make
-the IPv6 network routeable, and the second is to put bind in IPv4 only mode.
-Neither solution is good, but the latter is the only feasible one (This does
-mean it won&rsquo;t even listen on an IPv6 port).</p><pre tabindex=0><code>echo &#39;OPTIONS=&#34;-4&#34;&#39; &gt;&gt; /etc/sysconfig/named
-service named restart</code></pre></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=18975b672935782e56fbea83a402cd25a920f056 target=_blank rel=noopener>18975b67</a> @ 2017-10-09</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/notes/>Notes</a></li><li><a href=/blog/>Posts</a></li></ul></nav><span class=menu-trigger><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/bind/>Bind</a></h2><div class=post-content><h2 id=firewall-adjustments>Firewall Adjustments</h2><p>A DNS server isn't very good unless other machines are able to query it. The following allows incoming DNS queries universally.</p><pre tabindex=0><code class=language-iptables data-lang=iptables>-A INPUT -p udp -m udp --dport 53 -j ACCEPT
+-A INPUT -p tcp -m tcp --dport 53 -j ACCEPT
+</code></pre><p>If you're running named in a chroot you'll also need to add the following line to rsyslog's configuration file so that the chroot doesn't break named's logging.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-1-1><a class=lnlinks href=#hl-1-1>1</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>$AddUnixListenSocket /var/named/chroot/dev/log
+</span></span></code></pre></td></tr></table></div></div><h2 id=config-files>Config Files</h2><h3 id=etcnamedconf>/etc/named.conf</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-2-1><a class=lnlinks href=#hl-2-1>  1</a>
+</span><span class=lnt id=hl-2-2><a class=lnlinks href=#hl-2-2>  2</a>
+</span><span class=lnt id=hl-2-3><a class=lnlinks href=#hl-2-3>  3</a>
+</span><span class=lnt id=hl-2-4><a class=lnlinks href=#hl-2-4>  4</a>
+</span><span class=lnt id=hl-2-5><a class=lnlinks href=#hl-2-5>  5</a>
+</span><span class=lnt id=hl-2-6><a class=lnlinks href=#hl-2-6>  6</a>
+</span><span class=lnt id=hl-2-7><a class=lnlinks href=#hl-2-7>  7</a>
+</span><span class=lnt id=hl-2-8><a class=lnlinks href=#hl-2-8>  8</a>
+</span><span class=lnt id=hl-2-9><a class=lnlinks href=#hl-2-9>  9</a>
+</span><span class=lnt id=hl-2-10><a class=lnlinks href=#hl-2-10> 10</a>
+</span><span class=lnt id=hl-2-11><a class=lnlinks href=#hl-2-11> 11</a>
+</span><span class=lnt id=hl-2-12><a class=lnlinks href=#hl-2-12> 12</a>
+</span><span class=lnt id=hl-2-13><a class=lnlinks href=#hl-2-13> 13</a>
+</span><span class=lnt id=hl-2-14><a class=lnlinks href=#hl-2-14> 14</a>
+</span><span class=lnt id=hl-2-15><a class=lnlinks href=#hl-2-15> 15</a>
+</span><span class=lnt id=hl-2-16><a class=lnlinks href=#hl-2-16> 16</a>
+</span><span class=lnt id=hl-2-17><a class=lnlinks href=#hl-2-17> 17</a>
+</span><span class=lnt id=hl-2-18><a class=lnlinks href=#hl-2-18> 18</a>
+</span><span class=lnt id=hl-2-19><a class=lnlinks href=#hl-2-19> 19</a>
+</span><span class=lnt id=hl-2-20><a class=lnlinks href=#hl-2-20> 20</a>
+</span><span class=lnt id=hl-2-21><a class=lnlinks href=#hl-2-21> 21</a>
+</span><span class=lnt id=hl-2-22><a class=lnlinks href=#hl-2-22> 22</a>
+</span><span class=lnt id=hl-2-23><a class=lnlinks href=#hl-2-23> 23</a>
+</span><span class=lnt id=hl-2-24><a class=lnlinks href=#hl-2-24> 24</a>
+</span><span class=lnt id=hl-2-25><a class=lnlinks href=#hl-2-25> 25</a>
+</span><span class=lnt id=hl-2-26><a class=lnlinks href=#hl-2-26> 26</a>
+</span><span class=lnt id=hl-2-27><a class=lnlinks href=#hl-2-27> 27</a>
+</span><span class=lnt id=hl-2-28><a class=lnlinks href=#hl-2-28> 28</a>
+</span><span class=lnt id=hl-2-29><a class=lnlinks href=#hl-2-29> 29</a>
+</span><span class=lnt id=hl-2-30><a class=lnlinks href=#hl-2-30> 30</a>
+</span><span class=lnt id=hl-2-31><a class=lnlinks href=#hl-2-31> 31</a>
+</span><span class=lnt id=hl-2-32><a class=lnlinks href=#hl-2-32> 32</a>
+</span><span class=lnt id=hl-2-33><a class=lnlinks href=#hl-2-33> 33</a>
+</span><span class=lnt id=hl-2-34><a class=lnlinks href=#hl-2-34> 34</a>
+</span><span class=lnt id=hl-2-35><a class=lnlinks href=#hl-2-35> 35</a>
+</span><span class=lnt id=hl-2-36><a class=lnlinks href=#hl-2-36> 36</a>
+</span><span class=lnt id=hl-2-37><a class=lnlinks href=#hl-2-37> 37</a>
+</span><span class=lnt id=hl-2-38><a class=lnlinks href=#hl-2-38> 38</a>
+</span><span class=lnt id=hl-2-39><a class=lnlinks href=#hl-2-39> 39</a>
+</span><span class=lnt id=hl-2-40><a class=lnlinks href=#hl-2-40> 40</a>
+</span><span class=lnt id=hl-2-41><a class=lnlinks href=#hl-2-41> 41</a>
+</span><span class=lnt id=hl-2-42><a class=lnlinks href=#hl-2-42> 42</a>
+</span><span class=lnt id=hl-2-43><a class=lnlinks href=#hl-2-43> 43</a>
+</span><span class=lnt id=hl-2-44><a class=lnlinks href=#hl-2-44> 44</a>
+</span><span class=lnt id=hl-2-45><a class=lnlinks href=#hl-2-45> 45</a>
+</span><span class=lnt id=hl-2-46><a class=lnlinks href=#hl-2-46> 46</a>
+</span><span class=lnt id=hl-2-47><a class=lnlinks href=#hl-2-47> 47</a>
+</span><span class=lnt id=hl-2-48><a class=lnlinks href=#hl-2-48> 48</a>
+</span><span class=lnt id=hl-2-49><a class=lnlinks href=#hl-2-49> 49</a>
+</span><span class=lnt id=hl-2-50><a class=lnlinks href=#hl-2-50> 50</a>
+</span><span class=lnt id=hl-2-51><a class=lnlinks href=#hl-2-51> 51</a>
+</span><span class=lnt id=hl-2-52><a class=lnlinks href=#hl-2-52> 52</a>
+</span><span class=lnt id=hl-2-53><a class=lnlinks href=#hl-2-53> 53</a>
+</span><span class=lnt id=hl-2-54><a class=lnlinks href=#hl-2-54> 54</a>
+</span><span class=lnt id=hl-2-55><a class=lnlinks href=#hl-2-55> 55</a>
+</span><span class=lnt id=hl-2-56><a class=lnlinks href=#hl-2-56> 56</a>
+</span><span class=lnt id=hl-2-57><a class=lnlinks href=#hl-2-57> 57</a>
+</span><span class=lnt id=hl-2-58><a class=lnlinks href=#hl-2-58> 58</a>
+</span><span class=lnt id=hl-2-59><a class=lnlinks href=#hl-2-59> 59</a>
+</span><span class=lnt id=hl-2-60><a class=lnlinks href=#hl-2-60> 60</a>
+</span><span class=lnt id=hl-2-61><a class=lnlinks href=#hl-2-61> 61</a>
+</span><span class=lnt id=hl-2-62><a class=lnlinks href=#hl-2-62> 62</a>
+</span><span class=lnt id=hl-2-63><a class=lnlinks href=#hl-2-63> 63</a>
+</span><span class=lnt id=hl-2-64><a class=lnlinks href=#hl-2-64> 64</a>
+</span><span class=lnt id=hl-2-65><a class=lnlinks href=#hl-2-65> 65</a>
+</span><span class=lnt id=hl-2-66><a class=lnlinks href=#hl-2-66> 66</a>
+</span><span class=lnt id=hl-2-67><a class=lnlinks href=#hl-2-67> 67</a>
+</span><span class=lnt id=hl-2-68><a class=lnlinks href=#hl-2-68> 68</a>
+</span><span class=lnt id=hl-2-69><a class=lnlinks href=#hl-2-69> 69</a>
+</span><span class=lnt id=hl-2-70><a class=lnlinks href=#hl-2-70> 70</a>
+</span><span class=lnt id=hl-2-71><a class=lnlinks href=#hl-2-71> 71</a>
+</span><span class=lnt id=hl-2-72><a class=lnlinks href=#hl-2-72> 72</a>
+</span><span class=lnt id=hl-2-73><a class=lnlinks href=#hl-2-73> 73</a>
+</span><span class=lnt id=hl-2-74><a class=lnlinks href=#hl-2-74> 74</a>
+</span><span class=lnt id=hl-2-75><a class=lnlinks href=#hl-2-75> 75</a>
+</span><span class=lnt id=hl-2-76><a class=lnlinks href=#hl-2-76> 76</a>
+</span><span class=lnt id=hl-2-77><a class=lnlinks href=#hl-2-77> 77</a>
+</span><span class=lnt id=hl-2-78><a class=lnlinks href=#hl-2-78> 78</a>
+</span><span class=lnt id=hl-2-79><a class=lnlinks href=#hl-2-79> 79</a>
+</span><span class=lnt id=hl-2-80><a class=lnlinks href=#hl-2-80> 80</a>
+</span><span class=lnt id=hl-2-81><a class=lnlinks href=#hl-2-81> 81</a>
+</span><span class=lnt id=hl-2-82><a class=lnlinks href=#hl-2-82> 82</a>
+</span><span class=lnt id=hl-2-83><a class=lnlinks href=#hl-2-83> 83</a>
+</span><span class=lnt id=hl-2-84><a class=lnlinks href=#hl-2-84> 84</a>
+</span><span class=lnt id=hl-2-85><a class=lnlinks href=#hl-2-85> 85</a>
+</span><span class=lnt id=hl-2-86><a class=lnlinks href=#hl-2-86> 86</a>
+</span><span class=lnt id=hl-2-87><a class=lnlinks href=#hl-2-87> 87</a>
+</span><span class=lnt id=hl-2-88><a class=lnlinks href=#hl-2-88> 88</a>
+</span><span class=lnt id=hl-2-89><a class=lnlinks href=#hl-2-89> 89</a>
+</span><span class=lnt id=hl-2-90><a class=lnlinks href=#hl-2-90> 90</a>
+</span><span class=lnt id=hl-2-91><a class=lnlinks href=#hl-2-91> 91</a>
+</span><span class=lnt id=hl-2-92><a class=lnlinks href=#hl-2-92> 92</a>
+</span><span class=lnt id=hl-2-93><a class=lnlinks href=#hl-2-93> 93</a>
+</span><span class=lnt id=hl-2-94><a class=lnlinks href=#hl-2-94> 94</a>
+</span><span class=lnt id=hl-2-95><a class=lnlinks href=#hl-2-95> 95</a>
+</span><span class=lnt id=hl-2-96><a class=lnlinks href=#hl-2-96> 96</a>
+</span><span class=lnt id=hl-2-97><a class=lnlinks href=#hl-2-97> 97</a>
+</span><span class=lnt id=hl-2-98><a class=lnlinks href=#hl-2-98> 98</a>
+</span><span class=lnt id=hl-2-99><a class=lnlinks href=#hl-2-99> 99</a>
+</span><span class=lnt id=hl-2-100><a class=lnlinks href=#hl-2-100>100</a>
+</span><span class=lnt id=hl-2-101><a class=lnlinks href=#hl-2-101>101</a>
+</span><span class=lnt id=hl-2-102><a class=lnlinks href=#hl-2-102>102</a>
+</span><span class=lnt id=hl-2-103><a class=lnlinks href=#hl-2-103>103</a>
+</span><span class=lnt id=hl-2-104><a class=lnlinks href=#hl-2-104>104</a>
+</span><span class=lnt id=hl-2-105><a class=lnlinks href=#hl-2-105>105</a>
+</span><span class=lnt id=hl-2-106><a class=lnlinks href=#hl-2-106>106</a>
+</span><span class=lnt id=hl-2-107><a class=lnlinks href=#hl-2-107>107</a>
+</span><span class=lnt id=hl-2-108><a class=lnlinks href=#hl-2-108>108</a>
+</span><span class=lnt id=hl-2-109><a class=lnlinks href=#hl-2-109>109</a>
+</span><span class=lnt id=hl-2-110><a class=lnlinks href=#hl-2-110>110</a>
+</span><span class=lnt id=hl-2-111><a class=lnlinks href=#hl-2-111>111</a>
+</span><span class=lnt id=hl-2-112><a class=lnlinks href=#hl-2-112>112</a>
+</span><span class=lnt id=hl-2-113><a class=lnlinks href=#hl-2-113>113</a>
+</span><span class=lnt id=hl-2-114><a class=lnlinks href=#hl-2-114>114</a>
+</span><span class=lnt id=hl-2-115><a class=lnlinks href=#hl-2-115>115</a>
+</span><span class=lnt id=hl-2-116><a class=lnlinks href=#hl-2-116>116</a>
+</span><span class=lnt id=hl-2-117><a class=lnlinks href=#hl-2-117>117</a>
+</span><span class=lnt id=hl-2-118><a class=lnlinks href=#hl-2-118>118</a>
+</span><span class=lnt id=hl-2-119><a class=lnlinks href=#hl-2-119>119</a>
+</span><span class=lnt id=hl-2-120><a class=lnlinks href=#hl-2-120>120</a>
+</span><span class=lnt id=hl-2-121><a class=lnlinks href=#hl-2-121>121</a>
+</span><span class=lnt id=hl-2-122><a class=lnlinks href=#hl-2-122>122</a>
+</span><span class=lnt id=hl-2-123><a class=lnlinks href=#hl-2-123>123</a>
+</span><span class=lnt id=hl-2-124><a class=lnlinks href=#hl-2-124>124</a>
+</span><span class=lnt id=hl-2-125><a class=lnlinks href=#hl-2-125>125</a>
+</span><span class=lnt id=hl-2-126><a class=lnlinks href=#hl-2-126>126</a>
+</span><span class=lnt id=hl-2-127><a class=lnlinks href=#hl-2-127>127</a>
+</span><span class=lnt id=hl-2-128><a class=lnlinks href=#hl-2-128>128</a>
+</span><span class=lnt id=hl-2-129><a class=lnlinks href=#hl-2-129>129</a>
+</span><span class=lnt id=hl-2-130><a class=lnlinks href=#hl-2-130>130</a>
+</span><span class=lnt id=hl-2-131><a class=lnlinks href=#hl-2-131>131</a>
+</span><span class=lnt id=hl-2-132><a class=lnlinks href=#hl-2-132>132</a>
+</span><span class=lnt id=hl-2-133><a class=lnlinks href=#hl-2-133>133</a>
+</span><span class=lnt id=hl-2-134><a class=lnlinks href=#hl-2-134>134</a>
+</span><span class=lnt id=hl-2-135><a class=lnlinks href=#hl-2-135>135</a>
+</span><span class=lnt id=hl-2-136><a class=lnlinks href=#hl-2-136>136</a>
+</span><span class=lnt id=hl-2-137><a class=lnlinks href=#hl-2-137>137</a>
+</span><span class=lnt id=hl-2-138><a class=lnlinks href=#hl-2-138>138</a>
+</span><span class=lnt id=hl-2-139><a class=lnlinks href=#hl-2-139>139</a>
+</span><span class=lnt id=hl-2-140><a class=lnlinks href=#hl-2-140>140</a>
+</span><span class=lnt id=hl-2-141><a class=lnlinks href=#hl-2-141>141</a>
+</span><span class=lnt id=hl-2-142><a class=lnlinks href=#hl-2-142>142</a>
+</span><span class=lnt id=hl-2-143><a class=lnlinks href=#hl-2-143>143</a>
+</span><span class=lnt id=hl-2-144><a class=lnlinks href=#hl-2-144>144</a>
+</span><span class=lnt id=hl-2-145><a class=lnlinks href=#hl-2-145>145</a>
+</span><span class=lnt id=hl-2-146><a class=lnlinks href=#hl-2-146>146</a>
+</span><span class=lnt id=hl-2-147><a class=lnlinks href=#hl-2-147>147</a>
+</span><span class=lnt id=hl-2-148><a class=lnlinks href=#hl-2-148>148</a>
+</span><span class=lnt id=hl-2-149><a class=lnlinks href=#hl-2-149>149</a>
+</span><span class=lnt id=hl-2-150><a class=lnlinks href=#hl-2-150>150</a>
+</span><span class=lnt id=hl-2-151><a class=lnlinks href=#hl-2-151>151</a>
+</span><span class=lnt id=hl-2-152><a class=lnlinks href=#hl-2-152>152</a>
+</span><span class=lnt id=hl-2-153><a class=lnlinks href=#hl-2-153>153</a>
+</span><span class=lnt id=hl-2-154><a class=lnlinks href=#hl-2-154>154</a>
+</span><span class=lnt id=hl-2-155><a class=lnlinks href=#hl-2-155>155</a>
+</span><span class=lnt id=hl-2-156><a class=lnlinks href=#hl-2-156>156</a>
+</span><span class=lnt id=hl-2-157><a class=lnlinks href=#hl-2-157>157</a>
+</span><span class=lnt id=hl-2-158><a class=lnlinks href=#hl-2-158>158</a>
+</span><span class=lnt id=hl-2-159><a class=lnlinks href=#hl-2-159>159</a>
+</span><span class=lnt id=hl-2-160><a class=lnlinks href=#hl-2-160>160</a>
+</span><span class=lnt id=hl-2-161><a class=lnlinks href=#hl-2-161>161</a>
+</span><span class=lnt id=hl-2-162><a class=lnlinks href=#hl-2-162>162</a>
+</span><span class=lnt id=hl-2-163><a class=lnlinks href=#hl-2-163>163</a>
+</span><span class=lnt id=hl-2-164><a class=lnlinks href=#hl-2-164>164</a>
+</span><span class=lnt id=hl-2-165><a class=lnlinks href=#hl-2-165>165</a>
+</span><span class=lnt id=hl-2-166><a class=lnlinks href=#hl-2-166>166</a>
+</span><span class=lnt id=hl-2-167><a class=lnlinks href=#hl-2-167>167</a>
+</span><span class=lnt id=hl-2-168><a class=lnlinks href=#hl-2-168>168</a>
+</span><span class=lnt id=hl-2-169><a class=lnlinks href=#hl-2-169>169</a>
+</span><span class=lnt id=hl-2-170><a class=lnlinks href=#hl-2-170>170</a>
+</span><span class=lnt id=hl-2-171><a class=lnlinks href=#hl-2-171>171</a>
+</span><span class=lnt id=hl-2-172><a class=lnlinks href=#hl-2-172>172</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>include &#34;/etc/named.root.key&#34;;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// Allow no zone transfers. Any slaves should be added here.
+</span></span><span class=line><span class=cl>acl &#34;xfer&#34; {
+</span></span><span class=line><span class=cl>  none;
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// This should include any internal and DMZ subnets so intranet and servers
+</span></span><span class=line><span class=cl>// can query our internal zones. This also prevents outside hosts from using
+</span></span><span class=line><span class=cl>// our name server as a resolver for other domains.
+</span></span><span class=line><span class=cl>acl &#34;trusted&#34; {
+</span></span><span class=line><span class=cl>  10.87.19.0/24;
+</span></span><span class=line><span class=cl>  2001:abcd:ef::/64;
+</span></span><span class=line><span class=cl>  fc00::/7;
+</span></span><span class=line><span class=cl>  fe80::/10;
+</span></span><span class=line><span class=cl>  127.0.0.1;
+</span></span><span class=line><span class=cl>  ::1;
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>key &#34;control-key&#34; {
+</span></span><span class=line><span class=cl>  algorithm hmac-md5;
+</span></span><span class=line><span class=cl>  secret &#34;##!!pulled-from-rndc.conf-generation!!##&#34;;
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>controls {
+</span></span><span class=line><span class=cl>  inet 127.0.0.1 port 953 allow { 127.0.0.1; } keys { &#34;control-key&#34;; };
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>logging {
+</span></span><span class=line><span class=cl>  channel default_syslog {
+</span></span><span class=line><span class=cl>    severity debug;
+</span></span><span class=line><span class=cl>    syslog local2;
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  channel audit_syslog {
+</span></span><span class=line><span class=cl>    severity debug;
+</span></span><span class=line><span class=cl>    syslog local3;
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  category default      { default_syslog; };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  category client       { audit_syslog; };
+</span></span><span class=line><span class=cl>  category config       { default_syslog; };
+</span></span><span class=line><span class=cl>  category dnssec       { audit_syslog; };
+</span></span><span class=line><span class=cl>  category general      { default_syslog; };
+</span></span><span class=line><span class=cl>  category lame-servers { audit_syslog; };
+</span></span><span class=line><span class=cl>  category network      { audit_syslog; };
+</span></span><span class=line><span class=cl>  category notify       { audit_syslog; };
+</span></span><span class=line><span class=cl>  category queries      { audit_syslog; };
+</span></span><span class=line><span class=cl>  category resolver     { audit_syslog; };
+</span></span><span class=line><span class=cl>  category security     { audit_syslog; default_syslog; };
+</span></span><span class=line><span class=cl>  category update       { audit_syslog; };
+</span></span><span class=line><span class=cl>  category xfer-in      { audit_syslog; };
+</span></span><span class=line><span class=cl>  category xfer-out     { audit_syslog; };
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>options {
+</span></span><span class=line><span class=cl>  listen-on port 53     { any; };
+</span></span><span class=line><span class=cl>  listen-on-v6 port 53  { any; };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  directory           &#34;/var/named&#34;;
+</span></span><span class=line><span class=cl>  dump-file           &#34;/var/named/data/cache_dump.db&#34;;
+</span></span><span class=line><span class=cl>  statistics-file     &#34;/var/named/data/named_stats.txt&#34;;
+</span></span><span class=line><span class=cl>  memstatistics-file  &#34;/var/named/data/named_mem_stats.txt&#34;;
+</span></span><span class=line><span class=cl>  zone-statistics     yes;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // Override the version information to reduce enumeration options
+</span></span><span class=line><span class=cl>  version &#34;It&#39;s over 9000&#34;;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // More efficient zone transfers
+</span></span><span class=line><span class=cl>  transfer-format many-answers;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // Set the maximum time a zone transfer can take. Any zone transfer that
+</span></span><span class=line><span class=cl>  // takes longer than 15 minutes is unlikely to ever complete. If there are
+</span></span><span class=line><span class=cl>  // HUGE zone files this may become an issue.
+</span></span><span class=line><span class=cl>  max-transfer-time-in 15;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // With no dynamic interfaces, bind doesn&#39;t need to poll for interface state
+</span></span><span class=line><span class=cl>  interface-interval 0;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  dnssec-enable     yes;
+</span></span><span class=line><span class=cl>  dnssec-validation yes;
+</span></span><span class=line><span class=cl>  dnssec-lookaside  auto;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // ISC DLV key
+</span></span><span class=line><span class=cl>  bindkeys-file           &#34;/etc/named.iscdlv.key&#34;;
+</span></span><span class=line><span class=cl>  managed-keys-directory  &#34;/var/named/dynamic&#34;;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // Only accept queries and cached queries from the trusted ACL
+</span></span><span class=line><span class=cl>  allow-query       { trusted; };
+</span></span><span class=line><span class=cl>  allow-query-cache { trusted; };
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// Trusted portion of the split-horizon DNS containing internal domains,
+</span></span><span class=line><span class=cl>// private records, as well as allow recursive lookups.
+</span></span><span class=line><span class=cl>view &#34;internal-in&#34; in {
+</span></span><span class=line><span class=cl>  match-clients { trusted; };
+</span></span><span class=line><span class=cl>  recursion yes;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  additional-from-auth yes;
+</span></span><span class=line><span class=cl>  additional-from-cache yes;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  // Zone transfers limited to members of the &#34;xfer&#34; ACL
+</span></span><span class=line><span class=cl>  allow-transfer { xfer; };
+</span></span><span class=line><span class=cl>  zone &#34;.&#34; IN {
+</span></span><span class=line><span class=cl>    type hint;
+</span></span><span class=line><span class=cl>    file &#34;named.ca&#34;;
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  zone &#34;1057.name&#34; IN {
+</span></span><span class=line><span class=cl>    type master;
+</span></span><span class=line><span class=cl>    file &#34;data/internal/1057.name.zone.db&#34;;
+</span></span><span class=line><span class=cl>    allow-update { none; };
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  zone &#34;19.87.10.in-addr.arpa&#34; IN {
+</span></span><span class=line><span class=cl>    type master;
+</span></span><span class=line><span class=cl>    file &#34;data/internal/19.87.10.in-addr.arpa.zone.db&#34;;
+</span></span><span class=line><span class=cl>    allow-update { none; };
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  zone &#34;0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa&#34; IN {
+</span></span><span class=line><span class=cl>    type master;
+</span></span><span class=line><span class=cl>    file &#34;data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db&#34;;
+</span></span><span class=line><span class=cl>    allow-update { none; };
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  include &#34;/etc/named.rfc1912.zones&#34;;
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// Untrusted/External portion of the split-horizon DNS, only allow internal
+</span></span><span class=line><span class=cl>view &#34;external-in&#34; in {
+</span></span><span class=line><span class=cl>  match-clients { any; };
+</span></span><span class=line><span class=cl>  recursion no;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  additional-from-auth no;
+</span></span><span class=line><span class=cl>  additional-from-cache no;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  zone &#34;.&#34; IN {
+</span></span><span class=line><span class=cl>    type hint;
+</span></span><span class=line><span class=cl>    file &#34;named.ca&#34;;
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  zone &#34;1057.name&#34; IN {
+</span></span><span class=line><span class=cl>    type master;
+</span></span><span class=line><span class=cl>    file &#34;data/public/1057.name.zone.db&#34;;
+</span></span><span class=line><span class=cl>    allow-query   { any; };
+</span></span><span class=line><span class=cl>    allow-update  { none; };
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  zone &#34;0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa&#34; IN {
+</span></span><span class=line><span class=cl>    type master;
+</span></span><span class=line><span class=cl>    file &#34;data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db&#34;;
+</span></span><span class=line><span class=cl>    allow-query   { any; };
+</span></span><span class=line><span class=cl>    allow-update  { none; };
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>};
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>// View for users attempting to query the server using the CHAOS class. Trusted
+</span></span><span class=line><span class=cl>// users can still use this to query for the servers version number.
+</span></span><span class=line><span class=cl>view &#34;bind-chaos&#34; chaos {
+</span></span><span class=line><span class=cl>  match-clients { any; };
+</span></span><span class=line><span class=cl>  recursion no;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  zone &#34;bind&#34; {
+</span></span><span class=line><span class=cl>    type master;
+</span></span><span class=line><span class=cl>    file &#34;db.bind&#34;;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    allow-query     { trusted; };
+</span></span><span class=line><span class=cl>    allow-transfer  { none; };
+</span></span><span class=line><span class=cl>  };
+</span></span><span class=line><span class=cl>};
+</span></span></code></pre></td></tr></table></div></div><h3 id=etcrndcconf>/etc/rndc.conf</h3><p>This needs to be generated on your own which can be done using the following command:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-3-1><a class=lnlinks href=#hl-3-1>1</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-console data-lang=console><span class=line><span class=cl><span class=gp>$</span> rndc-confgen -b <span class=m>512</span> &gt; /etc/rndc.conf
+</span></span></code></pre></td></tr></table></div></div><p>The commented out code belongs in "/etc/named.conf", just replace the following comment with the code:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-4-1><a class=lnlinks href=#hl-4-1>1</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##
+</span></span></code></pre></td></tr></table></div></div><p>512 is unfortunately the strongest bit size available for authentication so it is strongly recommended to firewall off and limit the IP addresses the control channel is running on. By default this is exclusively the IPv4 loopback address.</p><h3 id=varnameddbbind>/var/named/db.bind</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-5-1><a class=lnlinks href=#hl-5-1> 1</a>
+</span><span class=lnt id=hl-5-2><a class=lnlinks href=#hl-5-2> 2</a>
+</span><span class=lnt id=hl-5-3><a class=lnlinks href=#hl-5-3> 3</a>
+</span><span class=lnt id=hl-5-4><a class=lnlinks href=#hl-5-4> 4</a>
+</span><span class=lnt id=hl-5-5><a class=lnlinks href=#hl-5-5> 5</a>
+</span><span class=lnt id=hl-5-6><a class=lnlinks href=#hl-5-6> 6</a>
+</span><span class=lnt id=hl-5-7><a class=lnlinks href=#hl-5-7> 7</a>
+</span><span class=lnt id=hl-5-8><a class=lnlinks href=#hl-5-8> 8</a>
+</span><span class=lnt id=hl-5-9><a class=lnlinks href=#hl-5-9> 9</a>
+</span><span class=lnt id=hl-5-10><a class=lnlinks href=#hl-5-10>10</a>
+</span><span class=lnt id=hl-5-11><a class=lnlinks href=#hl-5-11>11</a>
+</span><span class=lnt id=hl-5-12><a class=lnlinks href=#hl-5-12>12</a>
+</span><span class=lnt id=hl-5-13><a class=lnlinks href=#hl-5-13>13</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>$TTL 86400
+</span></span><span class=line><span class=cl>@   CHAOS    SOA   @   rname.invalid.  (
+</span></span><span class=line><span class=cl>    0   ; serial
+</span></span><span class=line><span class=cl>    1D  ; refresh
+</span></span><span class=line><span class=cl>    1H  ; retry
+</span></span><span class=line><span class=cl>    1W  ; expire
+</span></span><span class=line><span class=cl>    3H  ; minimum
+</span></span><span class=line><span class=cl>)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    NS    @
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>version.bind.   CHAOS TXT &#34;It&#39;s over 9000&#34;
+</span></span><span class=line><span class=cl>authors.bind.   CHAOS TXT &#34;Nom de plume&#34;
+</span></span></code></pre></td></tr></table></div></div><h3 id=varnameddatainternal1057namezonedb>/var/named/data/internal/1057.name.zone.db</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-6-1><a class=lnlinks href=#hl-6-1> 1</a>
+</span><span class=lnt id=hl-6-2><a class=lnlinks href=#hl-6-2> 2</a>
+</span><span class=lnt id=hl-6-3><a class=lnlinks href=#hl-6-3> 3</a>
+</span><span class=lnt id=hl-6-4><a class=lnlinks href=#hl-6-4> 4</a>
+</span><span class=lnt id=hl-6-5><a class=lnlinks href=#hl-6-5> 5</a>
+</span><span class=lnt id=hl-6-6><a class=lnlinks href=#hl-6-6> 6</a>
+</span><span class=lnt id=hl-6-7><a class=lnlinks href=#hl-6-7> 7</a>
+</span><span class=lnt id=hl-6-8><a class=lnlinks href=#hl-6-8> 8</a>
+</span><span class=lnt id=hl-6-9><a class=lnlinks href=#hl-6-9> 9</a>
+</span><span class=lnt id=hl-6-10><a class=lnlinks href=#hl-6-10>10</a>
+</span><span class=lnt id=hl-6-11><a class=lnlinks href=#hl-6-11>11</a>
+</span><span class=lnt id=hl-6-12><a class=lnlinks href=#hl-6-12>12</a>
+</span><span class=lnt id=hl-6-13><a class=lnlinks href=#hl-6-13>13</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>$TTL 86400
+</span></span><span class=line><span class=cl>@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
+</span></span><span class=line><span class=cl>  2012080801  ; Serial number YYYYMMDDNN
+</span></span><span class=line><span class=cl>  43200       ; Refresh
+</span></span><span class=line><span class=cl>  7200        ; Retry
+</span></span><span class=line><span class=cl>  2592000     ; Expire
+</span></span><span class=line><span class=cl>  3600        ; Min TTL
+</span></span><span class=line><span class=cl>)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      NS          ns1.1057.name.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>ns1   IN    A         10.87.19.15
+</span></span><span class=line><span class=cl>ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
+</span></span></code></pre></td></tr></table></div></div><h3 id=varnameddatainternal198710in-addrarpazonedb>/var/named/data/internal/19.87.10.in-addr.arpa.zone.db</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-7-1><a class=lnlinks href=#hl-7-1> 1</a>
+</span><span class=lnt id=hl-7-2><a class=lnlinks href=#hl-7-2> 2</a>
+</span><span class=lnt id=hl-7-3><a class=lnlinks href=#hl-7-3> 3</a>
+</span><span class=lnt id=hl-7-4><a class=lnlinks href=#hl-7-4> 4</a>
+</span><span class=lnt id=hl-7-5><a class=lnlinks href=#hl-7-5> 5</a>
+</span><span class=lnt id=hl-7-6><a class=lnlinks href=#hl-7-6> 6</a>
+</span><span class=lnt id=hl-7-7><a class=lnlinks href=#hl-7-7> 7</a>
+</span><span class=lnt id=hl-7-8><a class=lnlinks href=#hl-7-8> 8</a>
+</span><span class=lnt id=hl-7-9><a class=lnlinks href=#hl-7-9> 9</a>
+</span><span class=lnt id=hl-7-10><a class=lnlinks href=#hl-7-10>10</a>
+</span><span class=lnt id=hl-7-11><a class=lnlinks href=#hl-7-11>11</a>
+</span><span class=lnt id=hl-7-12><a class=lnlinks href=#hl-7-12>12</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>$TTL 86400
+</span></span><span class=line><span class=cl>@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
+</span></span><span class=line><span class=cl>  2013020801  ; Serial number YYYYMMDDNN
+</span></span><span class=line><span class=cl>  43200       ; Refresh
+</span></span><span class=line><span class=cl>  7200        ; Retry
+</span></span><span class=line><span class=cl>  2592000     ; Expire
+</span></span><span class=line><span class=cl>  3600        ; Min TTL
+</span></span><span class=line><span class=cl>)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      NS          ns1.1057.name.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>15     IN    PTR       ns1.1057.name.
+</span></span></code></pre></td></tr></table></div></div><h3 id=varnameddatainternal0000fe00dcba1002arpazonedb>/var/named/data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-8-1><a class=lnlinks href=#hl-8-1> 1</a>
+</span><span class=lnt id=hl-8-2><a class=lnlinks href=#hl-8-2> 2</a>
+</span><span class=lnt id=hl-8-3><a class=lnlinks href=#hl-8-3> 3</a>
+</span><span class=lnt id=hl-8-4><a class=lnlinks href=#hl-8-4> 4</a>
+</span><span class=lnt id=hl-8-5><a class=lnlinks href=#hl-8-5> 5</a>
+</span><span class=lnt id=hl-8-6><a class=lnlinks href=#hl-8-6> 6</a>
+</span><span class=lnt id=hl-8-7><a class=lnlinks href=#hl-8-7> 7</a>
+</span><span class=lnt id=hl-8-8><a class=lnlinks href=#hl-8-8> 8</a>
+</span><span class=lnt id=hl-8-9><a class=lnlinks href=#hl-8-9> 9</a>
+</span><span class=lnt id=hl-8-10><a class=lnlinks href=#hl-8-10>10</a>
+</span><span class=lnt id=hl-8-11><a class=lnlinks href=#hl-8-11>11</a>
+</span><span class=lnt id=hl-8-12><a class=lnlinks href=#hl-8-12>12</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>$TTL 86400
+</span></span><span class=line><span class=cl>@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
+</span></span><span class=line><span class=cl>  2013020801  ; Serial number YYYYMMDDNN
+</span></span><span class=line><span class=cl>  43200       ; Refresh
+</span></span><span class=line><span class=cl>  7200        ; Retry
+</span></span><span class=line><span class=cl>  2592000     ; Expire
+</span></span><span class=line><span class=cl>  3600        ; Min TTL
+</span></span><span class=line><span class=cl>)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      NS          ns1.1057.name.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.
+</span></span></code></pre></td></tr></table></div></div><h3 id=varnameddatapublic1057namezonedb>/var/named/data/public/1057.name.zone.db</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-9-1><a class=lnlinks href=#hl-9-1> 1</a>
+</span><span class=lnt id=hl-9-2><a class=lnlinks href=#hl-9-2> 2</a>
+</span><span class=lnt id=hl-9-3><a class=lnlinks href=#hl-9-3> 3</a>
+</span><span class=lnt id=hl-9-4><a class=lnlinks href=#hl-9-4> 4</a>
+</span><span class=lnt id=hl-9-5><a class=lnlinks href=#hl-9-5> 5</a>
+</span><span class=lnt id=hl-9-6><a class=lnlinks href=#hl-9-6> 6</a>
+</span><span class=lnt id=hl-9-7><a class=lnlinks href=#hl-9-7> 7</a>
+</span><span class=lnt id=hl-9-8><a class=lnlinks href=#hl-9-8> 8</a>
+</span><span class=lnt id=hl-9-9><a class=lnlinks href=#hl-9-9> 9</a>
+</span><span class=lnt id=hl-9-10><a class=lnlinks href=#hl-9-10>10</a>
+</span><span class=lnt id=hl-9-11><a class=lnlinks href=#hl-9-11>11</a>
+</span><span class=lnt id=hl-9-12><a class=lnlinks href=#hl-9-12>12</a>
+</span><span class=lnt id=hl-9-13><a class=lnlinks href=#hl-9-13>13</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>$TTL 86400
+</span></span><span class=line><span class=cl>@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
+</span></span><span class=line><span class=cl>  2012080801  ; Serial number YYYYMMDDNN
+</span></span><span class=line><span class=cl>  43200       ; Refresh
+</span></span><span class=line><span class=cl>  7200        ; Retry
+</span></span><span class=line><span class=cl>  2592000     ; Expire
+</span></span><span class=line><span class=cl>  3600        ; Min TTL
+</span></span><span class=line><span class=cl>)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      NS          ns1.1057.name.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>ns1   IN    A         4.2.2.2
+</span></span><span class=line><span class=cl>ns1   IN    AAAA      2001:abcd:ef::1059:afc:5bb:aa92
+</span></span></code></pre></td></tr></table></div></div><h3 id=varnameddatapublic0000fe00dcba1002arpazonedb>/var/named/data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-10-1><a class=lnlinks href=#hl-10-1> 1</a>
+</span><span class=lnt id=hl-10-2><a class=lnlinks href=#hl-10-2> 2</a>
+</span><span class=lnt id=hl-10-3><a class=lnlinks href=#hl-10-3> 3</a>
+</span><span class=lnt id=hl-10-4><a class=lnlinks href=#hl-10-4> 4</a>
+</span><span class=lnt id=hl-10-5><a class=lnlinks href=#hl-10-5> 5</a>
+</span><span class=lnt id=hl-10-6><a class=lnlinks href=#hl-10-6> 6</a>
+</span><span class=lnt id=hl-10-7><a class=lnlinks href=#hl-10-7> 7</a>
+</span><span class=lnt id=hl-10-8><a class=lnlinks href=#hl-10-8> 8</a>
+</span><span class=lnt id=hl-10-9><a class=lnlinks href=#hl-10-9> 9</a>
+</span><span class=lnt id=hl-10-10><a class=lnlinks href=#hl-10-10>10</a>
+</span><span class=lnt id=hl-10-11><a class=lnlinks href=#hl-10-11>11</a>
+</span><span class=lnt id=hl-10-12><a class=lnlinks href=#hl-10-12>12</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>$TTL 86400
+</span></span><span class=line><span class=cl>@   IN    SOA   ns1.1057.name.    dns.1057.name.  (
+</span></span><span class=line><span class=cl>  2013020801  ; Serial number YYYYMMDDNN
+</span></span><span class=line><span class=cl>  43200       ; Refresh
+</span></span><span class=line><span class=cl>  7200        ; Retry
+</span></span><span class=line><span class=cl>  2592000     ; Expire
+</span></span><span class=line><span class=cl>  3600        ; Min TTL
+</span></span><span class=line><span class=cl>)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      NS          ns1.1057.name.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>2.9.1.1.b.b.5.0.c.f.a.0.9.5.0.1    IN    PTR    ns1.1057.name.
+</span></span></code></pre></td></tr></table></div></div><h2 id=ldap-backend>LDAP Backend</h2><p>Using the package "bind-dyndb-ldap", an ldap backend can be used either exclusively or in addition to other zones. Configuring a simple authenticated ldap lookup can be done with something along the line of the following configuration:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-11-1><a class=lnlinks href=#hl-11-1>1</a>
+</span><span class=lnt id=hl-11-2><a class=lnlinks href=#hl-11-2>2</a>
+</span><span class=lnt id=hl-11-3><a class=lnlinks href=#hl-11-3>3</a>
+</span><span class=lnt id=hl-11-4><a class=lnlinks href=#hl-11-4>4</a>
+</span><span class=lnt id=hl-11-5><a class=lnlinks href=#hl-11-5>5</a>
+</span><span class=lnt id=hl-11-6><a class=lnlinks href=#hl-11-6>6</a>
+</span><span class=lnt id=hl-11-7><a class=lnlinks href=#hl-11-7>7</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>dynamic-db &#34;my_db_name&#34; {
+</span></span><span class=line><span class=cl>  library &#34;ldap.so&#34;;
+</span></span><span class=line><span class=cl>  arg &#34;uri ldap://ldap.example.com&#34;;
+</span></span><span class=line><span class=cl>  arg &#34;base cn=dns, dc=example, dc=com&#34;;
+</span></span><span class=line><span class=cl>  arg &#34;auth_method none&#34;;
+</span></span><span class=line><span class=cl>  arg &#34;cache_ttl 300&#34;;
+</span></span><span class=line><span class=cl>};
+</span></span></code></pre></td></tr></table></div></div><p>With this configuration, the LDAP back-end will try to connect to server ldap.example.com with simple authentication, without any password. It will then do an LDAP subtree search in the "cn=dns,dc=example,dc=com" base for entries with object class idnsZone, for which the idnsZoneActive attribute is set to True.</p><p>For each entry it will find, it will register a new zone with BIND. The LDAP back-end will keep each record it gets from LDAP in its cache for 5 minutes.</p><p>It also supports SASL authentication methods which means we can use encrypted authentication and/or kerberos.</p><h2 id=ipv6-slow-down>IPv6 Slow down</h2><p>If there is a local IPv6 network but it is unrouted bind will regularily attempt to contact other nameservers using IPv6 and doesn't seem to cache whether it was able to reach them or not.</p><p>This has a dramatically visible impact on the time it takes to query for a name. To prevent this there are really only two options, the first is to make the IPv6 network routeable, and the second is to put bind in IPv4 only mode. Neither solution is good, but the latter is the only feasible one (This does mean it won't even listen on an IPv6 port).</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-12-1><a class=lnlinks href=#hl-12-1>1</a>
+</span><span class=lnt id=hl-12-2><a class=lnlinks href=#hl-12-2>2</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-console data-lang=console><span class=line><span class=cl><span class=gp>$</span> <span class=nb>echo</span> <span class=s1>&#39;OPTIONS=&#34;-4&#34;&#39;</span> &gt;&gt; /etc/sysconfig/named
+</span></span><span class=line><span class=cl><span class=gp>$</span> service named restart
+</span></span></code></pre></td></tr></table></div></div></div></article><hr><div class=post-info><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+<span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
+<span class=tag><a href=https://stelfox.net/tags/operations/>operations</a></span>
+<span class=tag><a href=https://stelfox.net/tags/security/>security</a></span></p><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=e0ae306a5897bc6892dbaa3e409f62aac8e8d735 target=_blank rel=noopener>e0ae306a</a> @ 2024-07-15</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.e89fda0f29b95d33f6f4224dd9e5cf69d84aff3818be2b0d73e731689cc374261b016d17d46f8381962fb4a1577ba3017b1f23509d894f6e66431f988c00889e.js integrity="sha512-6J/aDym5XTP29CJN2eXPadhK/zgYvisNc+cxaJzDdCYbAW0X1G+DgZYvtKFXe6MBex8jUJ2JT25mQx+YjACIng=="></script></body></html>

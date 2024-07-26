@@ -1,128 +1,145 @@
 <!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Kerberos is a secure network authentication system.
-It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/kerberos/><title>Kerberos :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Kerberos"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/kerberos/><title>Kerberos :: ./Sam_Stelfox.sh — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel="shortcut icon" href=/favicon.ico><meta itemprop=name content="Kerberos"><meta itemprop=description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Kerberos is a secure network authentication system.
-It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync."><meta itemprop=datePublished content="2018-10-30T20:24:15-04:00"><meta itemprop=dateModified content="2018-10-30T20:24:15-04:00"><meta itemprop=wordCount content="680"><meta name=twitter:card content="summary"><meta name=twitter:title content="Kerberos"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
+It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync."><meta itemprop=datePublished content="2013-01-01T00:00:01+00:00"><meta itemprop=dateModified content="2013-01-01T00:00:01+00:00"><meta itemprop=wordCount content="694"><meta name=twitter:card content="summary"><meta name=twitter:title content="Kerberos"><meta name=twitter:description content="Note: This page is quite old and is likely out of date. My opinions may have also changed dramatically since this was written. It is here as a reference until I get around to updating it.
 Kerberos is a secure network authentication system.
-It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync."></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+It is very important that system times are all very close for successful authentication. You should configure NTPd or Chronyd to ensure the systems stay in sync."><meta property="article:published_time" content="2013-01-01 00:00:01 +0000 UTC"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/kerberos/>Kerberos</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/notes/>Notes</a></li><li><a href=/blog/>Posts</a></li></ul></nav><span class=menu-trigger><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/kerberos/>Kerberos</a></h2><div class=post-content><p><em><strong>Note: This page is quite old and is likely out of date. My opinions may have
 also changed dramatically since this was written. It is here as a reference
 until I get around to updating it.</strong></em></p><p>Kerberos is a secure network authentication system.</p><p>It is very important that system times are all very close for successful
 authentication. You should configure <a href=https://stelfox.net/notes/ntpd/>NTPd</a> or <a href=https://stelfox.net/notes/chronyd/>Chronyd</a> to ensure the
 systems stay in sync.</p><h2 id=master-configuration>Master Configuration</h2><p>Edit the configuration files (provided at the bottom).</p><p>Create the initial database for the realm, it will ask for a master password
-for the database. DO NOT FORGET THIS!!</p><pre tabindex=0><code>kdb5_util create -s</code></pre><p>Create an administrator user, it will ask for the password ensure that it is
-strong as this account will be able to create, delete, and see principal&rsquo;s
-keys.</p><pre tabindex=0><code>kadmin.local -q &#34;addprinc &lt;&lt;username&gt;&gt;/admin&#34;</code></pre><p>Set the services to startup automatically and start them up:</p><pre tabindex=0><code>chkconfig krb5kdc on
+for the database. DO NOT FORGET THIS!!</p><pre tabindex=0><code>kdb5_util create -s
+</code></pre><p>Create an administrator user, it will ask for the password ensure that it is
+strong as this account will be able to create, delete, and see principal's
+keys.</p><pre tabindex=0><code>kadmin.local -q &#34;addprinc &lt;&lt;username&gt;&gt;/admin&#34;
+</code></pre><p>Set the services to startup automatically and start them up:</p><pre tabindex=0><code>chkconfig krb5kdc on
 chkconfig kadmin on
 /etc/init.d/krb5kdc start
-/etc/init.d/kadmin start</code></pre><p>After the database has been started you&rsquo;ll need to create at least one normal
+/etc/init.d/kadmin start
+</code></pre><p>After the database has been started you'll need to create at least one normal
 user, it will ask for a password for the account.</p><pre tabindex=0><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
-kadmin:  addprinc &lt;&lt;username&gt;&gt;</code></pre><h3 id=slave>Slave</h3><p>Please note these instructions are untested but they are believed to be
-correct.</p><p>First we&rsquo;ll need to create an ACL file for the replication utility <code>kprop</code>. It
+kadmin:  addprinc &lt;&lt;username&gt;&gt;
+</code></pre><h3 id=slave>Slave</h3><p>Please note these instructions are untested but they are believed to be
+correct.</p><p>First we'll need to create an ACL file for the replication utility <code>kprop</code>. It
 should live <code>/var/Kerberos/krb5kdc/kpropd.acl</code> and have the contents:</p><pre tabindex=0><code>host/kdc1.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET
-host/kdc2.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET</code></pre><p>You&rsquo;ll need to create host keys for each of the kerberos servers if they
-haven&rsquo;t been created already.</p><pre tabindex=0><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
+host/kdc2.home.bedroomprogrammers.net@BEDROOMPROGRAMMERS.NET
+</code></pre><p>You'll need to create host keys for each of the kerberos servers if they
+haven't been created already.</p><pre tabindex=0><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
 kadmin:  addprinc -rand host/kdc1.home.bedroomprogrammers.net
-kadmin:  addprinc -rand host/kdc2.home.bedroomprogrammers.net</code></pre><p>You&rsquo;ll need to add the keys to the local keytab file on the primary KDC.</p><pre tabindex=0><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
+kadmin:  addprinc -rand host/kdc2.home.bedroomprogrammers.net
+</code></pre><p>You'll need to add the keys to the local keytab file on the primary KDC.</p><pre tabindex=0><code>[root@localhost ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
 kadmin:  ktadd host/kdc1.home.bedroomprogrammers.net
-kadmin:  ktadd host/kdc2.home.bedroomprogrammers.net</code></pre><p>Copy the keytab file from the primary KDC to the secondary server using an
-encrypted transfer mechanism such as SCP.</p><pre tabindex=0><code>[root@localhost ~]# scp /etc/krb5.keytab root@krb2.home.bedroomprogrammers.net:/etc/krb5.keytab</code></pre><p>At this point you&rsquo;ll want to restart the master&rsquo;s service and then start up the
+kadmin:  ktadd host/kdc2.home.bedroomprogrammers.net
+</code></pre><p>Copy the keytab file from the primary KDC to the secondary server using an
+encrypted transfer mechanism such as SCP.</p><pre tabindex=0><code>[root@localhost ~]# scp /etc/krb5.keytab root@krb2.home.bedroomprogrammers.net:/etc/krb5.keytab
+</code></pre><p>At this point you'll want to restart the master's service and then start up the
 kdc on the slave server:</p><pre tabindex=0><code>[root@slave ~]# chkconfig krb5kdc start
-[root@slave ~]# /etc/init.d/krb5kdc start</code></pre><p>Once the Slave is setup you&rsquo;ll need to modify the <code>/etc/krb5.conf</code> on the
+[root@slave ~]# /etc/init.d/krb5kdc start
+</code></pre><p>Once the Slave is setup you'll need to modify the <code>/etc/krb5.conf</code> on the
 client machines and the master machine to include the FQDN of the slave in the
 <code>[realms]</code> section for the appropriate domain. The <code>[realms]</code> section would
-then look like:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-e422062-1><a style=outline:none;text-decoration:none;color:inherit href=#code-e422062-1>1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-e422062-2><a style=outline:none;text-decoration:none;color:inherit href=#code-e422062-2>2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-e422062-3><a style=outline:none;text-decoration:none;color:inherit href=#code-e422062-3>3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-e422062-4><a style=outline:none;text-decoration:none;color:inherit href=#code-e422062-4>4</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-e422062-5><a style=outline:none;text-decoration:none;color:inherit href=#code-e422062-5>5</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-e422062-6><a style=outline:none;text-decoration:none;color:inherit href=#code-e422062-6>6</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#ff7b72>[realms]</span>
-</span></span><span style=display:flex><span>  BEDROOMPROGRAMMERS.NET <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>{
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    kdc = kdc1.home.bedroomprogrammers.net
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    kdc = kdc2.home.bedroomprogrammers.net
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    admin_server = kdc1.home.bedroomprogrammers.net
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  }</span></span></span></code></pre></td></tr></table></div></div><h2 id=adding-a-new-host-to-the-domain>Adding a New Host to the Domain</h2><p>Hosts need <code>krb5-workstation</code> and <code>krb5-libs</code> installed. Make sure the client
+then look like:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-9-1><a class=lnlinks href=#hl-9-1>1</a>
+</span><span class=lnt id=hl-9-2><a class=lnlinks href=#hl-9-2>2</a>
+</span><span class=lnt id=hl-9-3><a class=lnlinks href=#hl-9-3>3</a>
+</span><span class=lnt id=hl-9-4><a class=lnlinks href=#hl-9-4>4</a>
+</span><span class=lnt id=hl-9-5><a class=lnlinks href=#hl-9-5>5</a>
+</span><span class=lnt id=hl-9-6><a class=lnlinks href=#hl-9-6>6</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ini data-lang=ini><span class=line><span class=cl><span class=k>[realms]</span>
+</span></span><span class=line><span class=cl>  <span class=na>BEDROOMPROGRAMMERS.NET</span> <span class=o>=</span> <span class=s>{
+</span></span></span><span class=line><span class=cl><span class=s>    kdc = kdc1.home.bedroomprogrammers.net
+</span></span></span><span class=line><span class=cl><span class=s>    kdc = kdc2.home.bedroomprogrammers.net
+</span></span></span><span class=line><span class=cl><span class=s>    admin_server = kdc1.home.bedroomprogrammers.net
+</span></span></span><span class=line><span class=cl><span class=s>  }</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=adding-a-new-host-to-the-domain>Adding a New Host to the Domain</h2><p>Hosts need <code>krb5-workstation</code> and <code>krb5-libs</code> installed. Make sure the client
 firewall rules have been applied.</p><p>Be sure to copy the config file <code>/etc/krb5.conf</code> mentioned on this page to each
 client machine.</p><pre tabindex=0><code>[root@kerb-client ~]# kadmin -p &lt;&lt;username&gt;&gt;/admin
 kadmin:  addprinc -randkey host/&lt;&lt;FQDN&gt;&gt;
-kadmin:  ktadd -k /etc/krb5.keytab host/&lt;&lt;FQDN&gt;&gt;</code></pre><p>You&rsquo;ll need to replace &#171;FQDN&#187; with the domain name of the host you&rsquo;re adding.
+kadmin:  ktadd -k /etc/krb5.keytab host/&lt;&lt;FQDN&gt;&gt;
+</code></pre><p>You'll need to replace &lt;> with the domain name of the host you're adding.
 It will need a DNS entry matching this hostname.</p><h2 id=firewall-configuration>Firewall Configuration</h2><h3 id=server-adjustments>Server Adjustments</h3><pre tabindex=0><code># Allow authentication to the KDC
 -A INPUT -m tcp -p tcp --dport 88 -j ACCEPT
 # Allow remote kerberos administration. This should probably be restricted more
--A INPUT -m tcp -p tcp --dport 749 -j ACCEPT</code></pre><h3 id=client-adjustments>Client Adjustments</h3><pre tabindex=0><code># Allow authentication to the KDC
--A OUTPUT -m tcp -p tcp --dport 88 -j ACCEPT</code></pre><p>Setting up a client machine to talk to the KDC will initially require this rule
+-A INPUT -m tcp -p tcp --dport 749 -j ACCEPT
+</code></pre><h3 id=client-adjustments>Client Adjustments</h3><pre tabindex=0><code># Allow authentication to the KDC
+-A OUTPUT -m tcp -p tcp --dport 88 -j ACCEPT
+</code></pre><p>Setting up a client machine to talk to the KDC will initially require this rule
 as well:</p><pre tabindex=0><code># Temporarily need this to setup the connection with the KDC
--A OUTPUT -m tcp -p tcp --dport 749 -j ACCEPT</code></pre><h2 id=configuration-files>Configuration Files</h2><h3 id=etckrb5conf>/etc/krb5.conf</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-1><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-1> 1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-2><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-2> 2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-3><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-3> 3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-4><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-4> 4</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-5><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-5> 5</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-6><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-6> 6</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-7><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-7> 7</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-8><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-8> 8</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-9><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-9> 9</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-10><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-10>10</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-11><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-11>11</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-12><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-12>12</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-13><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-13>13</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-14><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-14>14</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-15><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-15>15</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-16><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-16>16</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-17><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-17>17</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-18><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-18>18</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-19><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-19>19</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-20><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-20>20</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-21><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-21>21</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-22><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-22>22</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-23><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-23>23</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-c25277f-24><a style=outline:none;text-decoration:none;color:inherit href=#code-c25277f-24>24</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#ff7b72>[logging]</span>
-</span></span><span style=display:flex><span>  default <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>FILE:/var/log/krb5libs.log
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  kdc = FILE:/var/log/krb5kdc.log
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  admin_server = FILE:/var/log/kadmind.log</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#ff7b72>[libdefaults]</span>
-</span></span><span style=display:flex><span>  default_realm <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>BEDROOMPROGRAMMERS.NET
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  dns_lookup_realm = false
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  dns_lookup_kdc = false
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  ticket_lifetime = 24h
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  renew_lifetime = 3d
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  forwardable = true</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#ff7b72>[realms]</span>
-</span></span><span style=display:flex><span>  BEDROOMPROGRAMMERS.NET <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>{
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    kdc = kdc1.home.bedroomprogrammers.net
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    admin_server = kdc1.home.bedroomprogrammers.net
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  }</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#ff7b72>[domain_realm]</span>
-</span></span><span style=display:flex><span>  .bedroomprogrammers.net <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>BEDROOMPROGRAMMERS.NET
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  .home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET</span></span></span></code></pre></td></tr></table></div></div><h3 id=varkerberoskrb5kdckadm5acl>/var/kerberos/krb5kdc/kadm5.acl</h3><pre tabindex=0><code>*/admin@BEDROOMPROGRAMMERS.NET  *</code></pre><h3 id=varkerberoskrb5kdckdcconf>/var/kerberos/krb5kdc/kdc.conf</h3><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-1><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-1> 1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-2><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-2> 2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-3><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-3> 3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-4><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-4> 4</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-5><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-5> 5</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-6><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-6> 6</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-7><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-7> 7</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-8><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-8> 8</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-9><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-9> 9</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-10><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-10>10</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-11><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-11>11</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-b59b262-12><a style=outline:none;text-decoration:none;color:inherit href=#code-b59b262-12>12</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ini data-lang=ini><span style=display:flex><span><span style=color:#ff7b72>[kdcdefaults]</span>
-</span></span><span style=display:flex><span>  kdc_ports <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>88
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  kdc_tcp_ports = 88</span>
-</span></span><span style=display:flex><span>
-</span></span><span style=display:flex><span><span style=color:#ff7b72>[realms]</span>
-</span></span><span style=display:flex><span>  BEDROOMPROGRAMMERS.NET <span style=color:#ff7b72;font-weight:700>=</span> <span style=color:#a5d6ff>{
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    master_key_type = aes256-cts
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    acl_file = /var/kerberos/krb5kdc/kadm5.acl
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    dict_file = /usr/share/dict/words
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>    supported_enctypes = aes256-cts:normal aes128-cts:normal 
-</span></span></span><span style=display:flex><span><span style=color:#a5d6ff>  }</span></span></span></code></pre></td></tr></table></div></div><h2 id=notes-on-cached-client-login>Notes on Cached Client Login</h2><ul><li><a href=http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html>http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html</a></li><li><a href="http://ubuntuforums.org/showthread.php?t=1205604">http://ubuntuforums.org/showthread.php?t=1205604</a></li><li><a href=http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127>http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127</a></li><li><a href=http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html>http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html</a></li></ul></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=73f7e533ca46dadf707b92cf4c86a28caf5eac1a target=_blank rel=noopener>73f7e533</a> @ 2018-10-30</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+-A OUTPUT -m tcp -p tcp --dport 749 -j ACCEPT
+</code></pre><h2 id=configuration-files>Configuration Files</h2><h3 id=etckrb5conf>/etc/krb5.conf</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-14-1><a class=lnlinks href=#hl-14-1> 1</a>
+</span><span class=lnt id=hl-14-2><a class=lnlinks href=#hl-14-2> 2</a>
+</span><span class=lnt id=hl-14-3><a class=lnlinks href=#hl-14-3> 3</a>
+</span><span class=lnt id=hl-14-4><a class=lnlinks href=#hl-14-4> 4</a>
+</span><span class=lnt id=hl-14-5><a class=lnlinks href=#hl-14-5> 5</a>
+</span><span class=lnt id=hl-14-6><a class=lnlinks href=#hl-14-6> 6</a>
+</span><span class=lnt id=hl-14-7><a class=lnlinks href=#hl-14-7> 7</a>
+</span><span class=lnt id=hl-14-8><a class=lnlinks href=#hl-14-8> 8</a>
+</span><span class=lnt id=hl-14-9><a class=lnlinks href=#hl-14-9> 9</a>
+</span><span class=lnt id=hl-14-10><a class=lnlinks href=#hl-14-10>10</a>
+</span><span class=lnt id=hl-14-11><a class=lnlinks href=#hl-14-11>11</a>
+</span><span class=lnt id=hl-14-12><a class=lnlinks href=#hl-14-12>12</a>
+</span><span class=lnt id=hl-14-13><a class=lnlinks href=#hl-14-13>13</a>
+</span><span class=lnt id=hl-14-14><a class=lnlinks href=#hl-14-14>14</a>
+</span><span class=lnt id=hl-14-15><a class=lnlinks href=#hl-14-15>15</a>
+</span><span class=lnt id=hl-14-16><a class=lnlinks href=#hl-14-16>16</a>
+</span><span class=lnt id=hl-14-17><a class=lnlinks href=#hl-14-17>17</a>
+</span><span class=lnt id=hl-14-18><a class=lnlinks href=#hl-14-18>18</a>
+</span><span class=lnt id=hl-14-19><a class=lnlinks href=#hl-14-19>19</a>
+</span><span class=lnt id=hl-14-20><a class=lnlinks href=#hl-14-20>20</a>
+</span><span class=lnt id=hl-14-21><a class=lnlinks href=#hl-14-21>21</a>
+</span><span class=lnt id=hl-14-22><a class=lnlinks href=#hl-14-22>22</a>
+</span><span class=lnt id=hl-14-23><a class=lnlinks href=#hl-14-23>23</a>
+</span><span class=lnt id=hl-14-24><a class=lnlinks href=#hl-14-24>24</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ini data-lang=ini><span class=line><span class=cl><span class=k>[logging]</span>
+</span></span><span class=line><span class=cl>  <span class=na>default</span> <span class=o>=</span> <span class=s>FILE:/var/log/krb5libs.log
+</span></span></span><span class=line><span class=cl><span class=s>  kdc = FILE:/var/log/krb5kdc.log
+</span></span></span><span class=line><span class=cl><span class=s>  admin_server = FILE:/var/log/kadmind.log</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>[libdefaults]</span>
+</span></span><span class=line><span class=cl>  <span class=na>default_realm</span> <span class=o>=</span> <span class=s>BEDROOMPROGRAMMERS.NET
+</span></span></span><span class=line><span class=cl><span class=s>  dns_lookup_realm = false
+</span></span></span><span class=line><span class=cl><span class=s>  dns_lookup_kdc = false
+</span></span></span><span class=line><span class=cl><span class=s>  ticket_lifetime = 24h
+</span></span></span><span class=line><span class=cl><span class=s>  renew_lifetime = 3d
+</span></span></span><span class=line><span class=cl><span class=s>  forwardable = true</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>[realms]</span>
+</span></span><span class=line><span class=cl>  <span class=na>BEDROOMPROGRAMMERS.NET</span> <span class=o>=</span> <span class=s>{
+</span></span></span><span class=line><span class=cl><span class=s>    kdc = kdc1.home.bedroomprogrammers.net
+</span></span></span><span class=line><span class=cl><span class=s>    admin_server = kdc1.home.bedroomprogrammers.net
+</span></span></span><span class=line><span class=cl><span class=s>  }</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>[domain_realm]</span>
+</span></span><span class=line><span class=cl>  <span class=na>.bedroomprogrammers.net</span> <span class=o>=</span> <span class=s>BEDROOMPROGRAMMERS.NET
+</span></span></span><span class=line><span class=cl><span class=s>  bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
+</span></span></span><span class=line><span class=cl><span class=s>  .home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET
+</span></span></span><span class=line><span class=cl><span class=s>  home.bedroomprogrammers.net = BEDROOMPROGRAMMERS.NET</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=varkerberoskrb5kdckadm5acl>/var/kerberos/krb5kdc/kadm5.acl</h3><pre tabindex=0><code>*/admin@BEDROOMPROGRAMMERS.NET  *
+</code></pre><h3 id=varkerberoskrb5kdckdcconf>/var/kerberos/krb5kdc/kdc.conf</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-16-1><a class=lnlinks href=#hl-16-1> 1</a>
+</span><span class=lnt id=hl-16-2><a class=lnlinks href=#hl-16-2> 2</a>
+</span><span class=lnt id=hl-16-3><a class=lnlinks href=#hl-16-3> 3</a>
+</span><span class=lnt id=hl-16-4><a class=lnlinks href=#hl-16-4> 4</a>
+</span><span class=lnt id=hl-16-5><a class=lnlinks href=#hl-16-5> 5</a>
+</span><span class=lnt id=hl-16-6><a class=lnlinks href=#hl-16-6> 6</a>
+</span><span class=lnt id=hl-16-7><a class=lnlinks href=#hl-16-7> 7</a>
+</span><span class=lnt id=hl-16-8><a class=lnlinks href=#hl-16-8> 8</a>
+</span><span class=lnt id=hl-16-9><a class=lnlinks href=#hl-16-9> 9</a>
+</span><span class=lnt id=hl-16-10><a class=lnlinks href=#hl-16-10>10</a>
+</span><span class=lnt id=hl-16-11><a class=lnlinks href=#hl-16-11>11</a>
+</span><span class=lnt id=hl-16-12><a class=lnlinks href=#hl-16-12>12</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-ini data-lang=ini><span class=line><span class=cl><span class=k>[kdcdefaults]</span>
+</span></span><span class=line><span class=cl>  <span class=na>kdc_ports</span> <span class=o>=</span> <span class=s>88
+</span></span></span><span class=line><span class=cl><span class=s>  kdc_tcp_ports = 88</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>[realms]</span>
+</span></span><span class=line><span class=cl>  <span class=na>BEDROOMPROGRAMMERS.NET</span> <span class=o>=</span> <span class=s>{
+</span></span></span><span class=line><span class=cl><span class=s>    master_key_type = aes256-cts
+</span></span></span><span class=line><span class=cl><span class=s>    acl_file = /var/kerberos/krb5kdc/kadm5.acl
+</span></span></span><span class=line><span class=cl><span class=s>    dict_file = /usr/share/dict/words
+</span></span></span><span class=line><span class=cl><span class=s>    admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab
+</span></span></span><span class=line><span class=cl><span class=s>    supported_enctypes = aes256-cts:normal aes128-cts:normal 
+</span></span></span><span class=line><span class=cl><span class=s>  }</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=notes-on-cached-client-login>Notes on Cached Client Login</h2><ul><li><a href=http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html>http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html</a></li><li><a href="http://ubuntuforums.org/showthread.php?t=1205604">http://ubuntuforums.org/showthread.php?t=1205604</a></li><li><a href=http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127>http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127</a></li><li><a href=http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html>http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html</a></li></ul></div></article><hr><div class=post-info><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=e0ae306a5897bc6892dbaa3e409f62aac8e8d735 target=_blank rel=noopener>e0ae306a</a> @ 2024-07-15</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.e89fda0f29b95d33f6f4224dd9e5cf69d84aff3818be2b0d73e731689cc374261b016d17d46f8381962fb4a1577ba3017b1f23509d894f6e66431f988c00889e.js integrity="sha512-6J/aDym5XTP29CJN2eXPadhK/zgYvisNc+cxaJzDdCYbAW0X1G+DgZYvtKFXe6MBex8jUJ2JT25mQx+YjACIng=="></script></body></html>

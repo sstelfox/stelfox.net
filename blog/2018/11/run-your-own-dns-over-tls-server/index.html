@@ -1,16 +1,16 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing &amp;lsquo;free wifi&amp;rsquo; to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,linux,nginx,security"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/><title>Run Your Own DNS-over-TLS Server :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="Run Your Own DNS-over-TLS Server"><meta itemprop=description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing ‘free wifi’ to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta itemprop=datePublished content="2018-11-02T15:09:02-06:00"><meta itemprop=dateModified content="2018-11-02T15:09:02-06:00"><meta itemprop=wordCount content="1370"><meta itemprop=keywords content="Linux,Nginx,Security"><meta name=twitter:card content="summary"><meta name=twitter:title content="Run Your Own DNS-over-TLS Server"><meta name=twitter:description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing ‘free wifi’ to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta property="article:published_time" content="2018-11-02 15:09:02 -0600 -0600"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing 'free wifi' to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,linux,nginx,security"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/><title>Run Your Own DNS-over-TLS Server :: ./Sam_Stelfox.sh — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel="shortcut icon" href=/favicon.ico><meta itemprop=name content="Run Your Own DNS-over-TLS Server"><meta itemprop=description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing 'free wifi' to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta itemprop=datePublished content="2018-11-02T15:09:02-06:00"><meta itemprop=dateModified content="2018-11-02T15:09:02-06:00"><meta itemprop=wordCount content="1378"><meta itemprop=keywords content="Linux,Nginx,Security"><meta name=twitter:card content="summary"><meta name=twitter:title content="Run Your Own DNS-over-TLS Server"><meta name=twitter:description content="DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all of your DNS requests to a trusted server. In an age when airports, and coffee shops are outsourcing 'free wifi' to corporate entities that are likely harvesting as much data as they can this is a nice addition. I largely use VPNs when connected to these access points which provides at least as good protection as DNS-over-TLS which has caused me to largely overlook this development."><meta property="article:published_time" content="2018-11-02 15:09:02 -0600 -0600"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/>Run Your Own DNS-over-TLS Server</a></h2><div class=post-content><p>DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/notes/>Notes</a></li><li><a href=/blog/>Posts</a></li></ul></nav><span class=menu-trigger><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/blog/2018/11/run-your-own-dns-over-tls-server/>Run Your Own DNS-over-TLS Server</a></h2><div class=post-content><p>DNS-over-TLS is a relatively new privacy enhancing protocol that encrypts all
 of your DNS requests to a trusted server. In an age when airports, and coffee
-shops are outsourcing &lsquo;free wifi&rsquo; to corporate entities that are likely
+shops are outsourcing 'free wifi' to corporate entities that are likely
 harvesting as much data as they can this is a nice addition. I largely use VPNs
 when connected to these access points which provides at least as good
 protection as DNS-over-TLS which has caused me to largely overlook this
-development.</p><p>When I found out that Android 9 natively supports this through the &lsquo;Private
-DNS&rsquo; feature I got significantly more interested. I&rsquo;ve always wanted to dictate
+development.</p><p>When I found out that Android 9 natively supports this through the 'Private
+DNS' feature I got significantly more interested. I've always wanted to dictate
 what DNS server my phone used, not for privacy reasons but rather to provide
-another layer of security when not connected to my VPN. When you&rsquo;re in control
+another layer of security when not connected to my VPN. When you're in control
 of your DNS server you can blacklist known malicious domains and as an added
 bonus the worst of the ad and tracking networks.</p><p>Turns out DNS-over-TLS is incredibly simple. It makes no changes to normal DNS
 packets, it just wraps the TCP queries in a TLS tunnel with a preconfigured
@@ -19,16 +19,18 @@ TLS protected port, but with a very limited config. My preferred choice of
 dealing with this is instead to use Nginx to proxy locally to unbound, allowing
 me to ensure the TLS config matches current best practices and limits access to
 the servers TLS private key to a single service.</p><p>The downside of using Nginx is that you lose the ability to log which internet
-addresses are making requests (as the stream access_log directive doesn&rsquo;t seem
+addresses are making requests (as the stream access_log directive doesn't seem
 to be working for the packaged Nginx server). Since this is an unauthenticated
-service I&rsquo;m slightly concerned about anonymous use and abuse but will address
-that if it ever becomes an issue.</p><p>First off we need to ensure we have a working local resolver on our host. I&rsquo;ll
+service I'm slightly concerned about anonymous use and abuse but will address
+that if it ever becomes an issue.</p><p>First off we need to ensure we have a working local resolver on our host. I'll
 use unbound here as its my preference but this will work just as well with Bind
 or any other DNS resolver that supports TCP queries. If you want to use another
-server, just skip past the unbound config to the Nginx section.</p><h2 id=unbound>Unbound</h2><pre tabindex=0><code>dnf install unbound -y</code></pre><p>I clear out some of the garbage default files that ship with the package, and
+server, just skip past the unbound config to the Nginx section.</p><h2 id=unbound>Unbound</h2><pre tabindex=0><code>dnf install unbound -y
+</code></pre><p>I clear out some of the garbage default files that ship with the package, and
 perform the automated control key creation:</p><pre tabindex=0><code>rm -f /etc/unbound/{conf.d,keys.d,local.d}/*
-unbound-control-setup</code></pre><p>I then drop in my config to <code>/etc/unbound/unbound.conf</code>. I&rsquo;ve included comments
-in the config around options that aren&rsquo;t immediately obvious from their names.</p><pre tabindex=0><code># /etc/unbound/unbound.conf
+unbound-control-setup
+</code></pre><p>I then drop in my config to <code>/etc/unbound/unbound.conf</code>. I've included comments
+in the config around options that aren't immediately obvious from their names.</p><pre tabindex=0><code># /etc/unbound/unbound.conf
 
 server:
   verbosity: 1
@@ -171,22 +173,25 @@ auth-zone:
   master: e.root-servers.net
   master: f.root-servers.net
   master: g.root-servers.net
-  master: k.root-servers.net</code></pre><p>I always need to stress changes like these should be understood before being
+  master: k.root-servers.net
+</code></pre><p>I always need to stress changes like these should be understood before being
 blindly used. Make sure you start and enable the service:</p><pre tabindex=0><code>systemctl start unbound.service
-systemctl enable unbound.service</code></pre><p>Perform various queries against the service to ensure it&rsquo;s working as intended:</p><pre tabindex=0><code>dig +tcp google.com @::1
+systemctl enable unbound.service
+</code></pre><p>Perform various queries against the service to ensure it's working as intended:</p><pre tabindex=0><code>dig +tcp google.com @::1
 dig +tcp reddit.com @::1
-dig +tcp stelfox.net @::1</code></pre><p>If you get reasonable responses from those queries then we have a working
+dig +tcp stelfox.net @::1
+</code></pre><p>If you get reasonable responses from those queries then we have a working
 resolver. The next step is to add our TLS layer with Nginx.</p><h2 id=nginx>Nginx</h2><p>With a resolver setup the next bit is to setup Nginx to proxy requests to the
-resolver. You need to have a trusted TLS certificate and key for your server&rsquo;s
-domain name. Let&rsquo;s Encrypt works great for this and I use both an ECDSA
+resolver. You need to have a trusted TLS certificate and key for your server's
+domain name. Let's Encrypt works great for this and I use both an ECDSA
 cert/key pair and an RSA cert/key pair but you can use one or the other if that
-is your preference. I&rsquo;ll cover requesting these certificates in a future post,
-in the mean time there are plenty of existing Let&rsquo;s Encrypt tutorials.</p><p>This can be a bit tricky as anyone reading this might have an Nginx config in
-place already. It&rsquo;ll be up to you to merge this config with yours. To assist
-with this merging I&rsquo;ve kept the Nginx config as minimal while still being
+is your preference. I'll cover requesting these certificates in a future post,
+in the mean time there are plenty of existing Let's Encrypt tutorials.</p><p>This can be a bit tricky as anyone reading this might have an Nginx config in
+place already. It'll be up to you to merge this config with yours. To assist
+with this merging I've kept the Nginx config as minimal while still being
 completely functional as possible and avoided using includes to increase the
-clarity of the config.</p><p>On Fedora 28 you&rsquo;ll need both the <code>nginx</code> and the <code>nginx-mod-stream</code> package.
-After installing them both you&rsquo;ll want to place the following config to
+clarity of the config.</p><p>On Fedora 28 you'll need both the <code>nginx</code> and the <code>nginx-mod-stream</code> package.
+After installing them both you'll want to place the following config to
 <code>/etc/nginx/nginx.conf</code>.</p><pre tabindex=0><code># /etc/nginx/nginx.conf
 
 error_log /var/log/nginx/error.log warn;
@@ -228,18 +233,21 @@ stream {
     ssl_ciphers &#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256&#39;;
     ssl_prefer_server_ciphers on;
   }
-}</code></pre><p>The SSL configuration is largely what Mozilla currently recommends for a
-&lsquo;Modern&rsquo; config. Any client that supports DNS-over-TLS is new enough that
-they&rsquo;ll have access to modern queries. You&rsquo;ll need to put your key and
+}
+</code></pre><p>The SSL configuration is largely what Mozilla currently recommends for a
+'Modern' config. Any client that supports DNS-over-TLS is new enough that
+they'll have access to modern queries. You'll need to put your key and
 certificates in the appropriate locations for that config.</p><p>With that in place start up the server:</p><pre tabindex=0><code>systemctl start nginx.service
-systemctl enable nginx.service</code></pre><p>You&rsquo;ll need to allow <code>953/tcp</code> through your firewall and will likely need to
-make changes to your SELinux policy to allow Nginx to listen on that port.</p><p>I haven&rsquo;t found a good way to directly test the resolver using command line
+systemctl enable nginx.service
+</code></pre><p>You'll need to allow <code>953/tcp</code> through your firewall and will likely need to
+make changes to your SELinux policy to allow Nginx to listen on that port.</p><p>I haven't found a good way to directly test the resolver using command line
 clients but by configuring my Android phone towards my server and temporarily
 adding the following to my unbound server config I can that queries being made
 and responded to appropriately:</p><pre tabindex=0><code>log-queries: yes
-log-replies: yes</code></pre><p>The next steps are on you. Configure unbound with your domain blacklists of
+log-replies: yes
+</code></pre><p>The next steps are on you. Configure unbound with your domain blacklists of
 choice and voila additional privacy and security for those times when VPNs are
-to power hungry.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+to power hungry.</p></div></article><hr><div class=post-info><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
 <span class=tag><a href=https://stelfox.net/tags/linux/>linux</a></span>
 <span class=tag><a href=https://stelfox.net/tags/nginx/>nginx</a></span>
-<span class=tag><a href=https://stelfox.net/tags/security/>security</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=bd9e1ab3269fdee0856f80854c902432ef10f201 target=_blank rel=noopener>bd9e1ab3</a> @ 2024-07-14</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+<span class=tag><a href=https://stelfox.net/tags/security/>security</a></span></p><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=bd9e1ab3269fdee0856f80854c902432ef10f201 target=_blank rel=noopener>bd9e1ab3</a> @ 2024-07-14</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.e89fda0f29b95d33f6f4224dd9e5cf69d84aff3818be2b0d73e731689cc374261b016d17d46f8381962fb4a1577ba3017b1f23509d894f6e66431f988c00889e.js integrity="sha512-6J/aDym5XTP29CJN2eXPadhK/zgYvisNc+cxaJzDdCYbAW0X1G+DgZYvtKFXe6MBex8jUJ2JT25mQx+YjACIng=="></script></body></html>

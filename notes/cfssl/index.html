@@ -1,146 +1,159 @@
-<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I&amp;rsquo;ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
-I&amp;rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,certificates,security"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/cfssl/><title>CFSSL :: Sam Stelfox — A simple place for my collected thoughts and notes.
-</title><link rel=stylesheet href=/main.c8c76086c15b9d686ec1778dcf935d2ad37f3bb9c23165d2bd157ba7b18e5aec.css integrity="sha256-yMdghsFbnWhuwXeNz5NdKtN/O7nCMWXSvRV7p7GOWuw="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/safari-pinned-tab.svg color><link rel="shortcut icon" href=/favicon.ico><meta name=msapplication-TileColor content><meta itemprop=name content="CFSSL"><meta itemprop=description content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I’ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
-I’ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."><meta itemprop=datePublished content="2017-10-24T18:39:22-04:00"><meta itemprop=dateModified content="2018-10-30T20:24:15-04:00"><meta itemprop=wordCount content="776"><meta itemprop=keywords content="Certificates,Security"><meta name=twitter:card content="summary"><meta name=twitter:title content="CFSSL"><meta name=twitter:description content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I’ve personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
-I’ve used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."><meta property="article:published_time" content="2017-10-24 18:39:22 -0400 EDT"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<!doctype html><html lang=en><head><meta charset=UTF-8><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content><meta name=description content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I've personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I've used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."><meta name=keywords content="blog,programming,linux,systems,personal,rust,philosophy,certificates,security"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://stelfox.net/notes/cfssl/><title>CFSSL :: ./Sam_Stelfox.sh — A simple place for my collected thoughts and notes.
+</title><link rel=stylesheet href=/main.949191c1dcc9c4a887997048b240354e47152016d821198f89448496ba42e491.css integrity="sha256-lJGRwdzJxKiHmXBIskA1TkcVIBbYIRmPiUSElrpC5JE="><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><link rel="shortcut icon" href=/favicon.ico><meta itemprop=name content="CFSSL"><meta itemprop=description content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I've personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I've used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."><meta itemprop=datePublished content="2017-10-24T18:39:22-04:00"><meta itemprop=dateModified content="2018-10-30T20:24:15-04:00"><meta itemprop=wordCount content="784"><meta itemprop=keywords content="Certificates,Security"><meta name=twitter:card content="summary"><meta name=twitter:title content="CFSSL"><meta name=twitter:description content="CFSSL is a toolkit of utilities for TLS PKI infrastructures and supports more functionality than I've personally needed. It is a fast and convenient way to setup and manage a multi-layer internal certificate authority.
+I've used it to generate an internal root CA, with sub-CAs for internal only server certificates, and separate CAs for each domain of client certificates (such as VPN, log, mail, and LDAP servers). This allows the root CA to be protected more stringently than specific domains."><meta property="article:published_time" content="2017-10-24 18:39:22 -0400 EDT"></head><body><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
 <span class=logo__text>./Sam_Stelfox.sh</span>
-<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/blog/>Posts</a></li><li><a href=/notes/>Notes</a></li><li><a href=/about/>About Me</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/cfssl/>CFSSL</a></h2><div class=post-content><p><a href=https://github.com/cloudflare/cfssl>CFSSL</a> is a toolkit of utilities for TLS PKI infrastructures and supports
-more functionality than I&rsquo;ve personally needed. It is a fast and convenient way
-to setup and manage a multi-layer internal certificate authority.</p><p>I&rsquo;ve used it to generate an internal root CA, with sub-CAs for internal only
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=/about/>About</a></li><li><a href=/notes/>Notes</a></li><li><a href=/blog/>Posts</a></li></ul></nav><span class=menu-trigger><svg viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info></p></div><article><h2 class=post-title><a href=https://stelfox.net/notes/cfssl/>CFSSL</a></h2><div class=post-content><p><a href=https://github.com/cloudflare/cfssl>CFSSL</a> is a toolkit of utilities for TLS PKI infrastructures and supports
+more functionality than I've personally needed. It is a fast and convenient way
+to setup and manage a multi-layer internal certificate authority.</p><p>I've used it to generate an internal root CA, with sub-CAs for internal only
 server certificates, and separate CAs for each domain of client certificates
 (such as VPN, log, mail, and LDAP servers). This allows the root CA to be
 protected more stringently than specific domains.</p><p>CFSSL supports hardware backed private keys (HSMs), including the <a href=https://stelfox.net/notes/yubikey/>Yubikey
-NEO</a> as long as you don&rsquo;t need > 1 signature/sec (which I definitely don&rsquo;t).
+NEO</a> as long as you don't need > 1 signature/sec (which I definitely don't).
 You could also set it up with a Red October server for private key management,
-which could in turn be HSM backed.</p><p>I haven&rsquo;t settled on software or processes to reliably handle my PKI
+which could in turn be HSM backed.</p><p>I haven't settled on software or processes to reliably handle my PKI
 infrastructure.</p><h2 id=installation>Installation</h2><p>These notes assume you have a working <a href=https://golang.org/>golang</a> installation. To install
-cfssl and the other associated utilities run the following command:</p><pre tabindex=0><code>go get -u github.com/cloudflare/cfssl/cmd/...</code></pre><p>If you have any errors, ensure your golang installation is sane. Some
+cfssl and the other associated utilities run the following command:</p><pre tabindex=0><code>go get -u github.com/cloudflare/cfssl/cmd/...
+</code></pre><p>If you have any errors, ensure your golang installation is sane. Some
 distributions do not have support for all of the available ciphers
 (specifically the eliptic curve variants in Red Hat based distributions) which
 may impact your ability to install and use the tool.</p><h2 id=root-ca-setup>Root CA Setup</h2><p>For the sake of organization I use a fairly simple directory structure which
 can be created with the following command:</p><pre tabindex=0><code>mkdir -p ca/{source,json,output}
-cd ca</code></pre><p>All the configuration is done through JSON files. The config for a root CA may
-look something like the following (which I placed in <code>ca/source/root.json</code>):</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-7968078-1><a style=outline:none;text-decoration:none;color:inherit href=#code-7968078-1>1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-7968078-2><a style=outline:none;text-decoration:none;color:inherit href=#code-7968078-2>2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-7968078-3><a style=outline:none;text-decoration:none;color:inherit href=#code-7968078-3>3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-7968078-4><a style=outline:none;text-decoration:none;color:inherit href=#code-7968078-4>4</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-7968078-5><a style=outline:none;text-decoration:none;color:inherit href=#code-7968078-5>5</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-7968078-6><a style=outline:none;text-decoration:none;color:inherit href=#code-7968078-6>6</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-7968078-7><a style=outline:none;text-decoration:none;color:inherit href=#code-7968078-7>7</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;CN&#34;</span>: <span style=color:#a5d6ff>&#34;Stelfox Root Certificate Authority&#34;</span>,
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;key&#34;</span>: {
-</span></span><span style=display:flex><span>    <span style=color:#7ee787>&#34;algo&#34;</span>: <span style=color:#a5d6ff>&#34;ecdsa&#34;</span>,
-</span></span><span style=display:flex><span>    <span style=color:#7ee787>&#34;size&#34;</span>: <span style=color:#a5d6ff>521</span>
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>}</span></span></code></pre></td></tr></table></div></div><p>If you want to use RSA as your root key, you&rsquo;d replace the <code>algo</code> field with
-<code>rsa</code> and the <code>size</code> field with an appropriately sized key (I&rsquo;d recommend 3072
-or 4096 but you should match it to your security standards.</p><p>To generate the cert/key pair you can use the following command:</p><pre tabindex=0><code>cfssl genkey -initca source/root.json &gt; json/root.json</code></pre><p>You can turn the resulting files into a set of PEM encoded files more familiar
-to day to operation:</p><pre tabindex=0><code>cat json/root.json | cfssljson -bare output/root</code></pre><p>In the output directory you&rsquo;ll find <code>root.csr</code>, <code>root-key.pem</code>, and <code>root.pem</code>
+cd ca
+</code></pre><p>All the configuration is done through JSON files. The config for a root CA may
+look something like the following (which I placed in <code>ca/source/root.json</code>):</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-2-1><a class=lnlinks href=#hl-2-1>1</a>
+</span><span class=lnt id=hl-2-2><a class=lnlinks href=#hl-2-2>2</a>
+</span><span class=lnt id=hl-2-3><a class=lnlinks href=#hl-2-3>3</a>
+</span><span class=lnt id=hl-2-4><a class=lnlinks href=#hl-2-4>4</a>
+</span><span class=lnt id=hl-2-5><a class=lnlinks href=#hl-2-5>5</a>
+</span><span class=lnt id=hl-2-6><a class=lnlinks href=#hl-2-6>6</a>
+</span><span class=lnt id=hl-2-7><a class=lnlinks href=#hl-2-7>7</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;CN&#34;</span><span class=p>:</span> <span class=s2>&#34;Stelfox Root Certificate Authority&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;algo&#34;</span><span class=p>:</span> <span class=s2>&#34;ecdsa&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>521</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>If you want to use RSA as your root key, you'd replace the <code>algo</code> field with
+<code>rsa</code> and the <code>size</code> field with an appropriately sized key (I'd recommend 3072
+or 4096 but you should match it to your security standards.</p><p>To generate the cert/key pair you can use the following command:</p><pre tabindex=0><code>cfssl genkey -initca source/root.json &gt; json/root.json
+</code></pre><p>You can turn the resulting files into a set of PEM encoded files more familiar
+to day to operation:</p><pre tabindex=0><code>cat json/root.json | cfssljson -bare output/root
+</code></pre><p>In the output directory you'll find <code>root.csr</code>, <code>root-key.pem</code>, and <code>root.pem</code>
 which is the effective CSR used to generate the cert, the private key, and the
 cert itself respectively. You can view the contents of the certificate using
-the following command:</p><pre tabindex=0><code>openssl x509 -in output/root.pem -text -noout</code></pre><p>We&rsquo;ll then want to create a <code>config.json</code> file to define who, and how we sign
-future certificates.</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-1><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-1> 1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-2><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-2> 2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-3><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-3> 3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-4><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-4> 4</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-5><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-5> 5</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-6><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-6> 6</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-7><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-7> 7</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-8><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-8> 8</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-9><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-9> 9</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-10><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-10>10</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-11><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-11>11</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-12><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-12>12</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-13><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-13>13</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-4ccd806-14><a style=outline:none;text-decoration:none;color:inherit href=#code-4ccd806-14>14</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;signing&#34;</span>: {
-</span></span><span style=display:flex><span>    <span style=color:#7ee787>&#34;profiles&#34;</span>: {
-</span></span><span style=display:flex><span>      <span style=color:#7ee787>&#34;subca&#34;</span>: {
-</span></span><span style=display:flex><span>        <span style=color:#7ee787>&#34;ca_constraint&#34;</span>: {
-</span></span><span style=display:flex><span>          <span style=color:#7ee787>&#34;is_ca&#34;</span>: <span style=color:#79c0ff>true</span>,
-</span></span><span style=display:flex><span>          <span style=color:#7ee787>&#34;max_path_len&#34;</span>: <span style=color:#a5d6ff>0</span>
-</span></span><span style=display:flex><span>        },
-</span></span><span style=display:flex><span>        <span style=color:#7ee787>&#34;expiry&#34;</span>: <span style=color:#a5d6ff>&#34;8760h&#34;</span>,
-</span></span><span style=display:flex><span>        <span style=color:#7ee787>&#34;usages&#34;</span>: [<span style=color:#a5d6ff>&#34;cert sign&#34;</span>, <span style=color:#a5d6ff>&#34;crl sign&#34;</span>]
-</span></span><span style=display:flex><span>      }
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>}</span></span></code></pre></td></tr></table></div></div><h2 id=generating-a-sub-ca>Generating a Sub-CA</h2><p>We&rsquo;ll generate a CA to handle internal server authentication (my servers to my
-servers). I created the following file in <code>sources/servers.json</code>:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-689bba5-1><a style=outline:none;text-decoration:none;color:inherit href=#code-689bba5-1>1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-689bba5-2><a style=outline:none;text-decoration:none;color:inherit href=#code-689bba5-2>2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-689bba5-3><a style=outline:none;text-decoration:none;color:inherit href=#code-689bba5-3>3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-689bba5-4><a style=outline:none;text-decoration:none;color:inherit href=#code-689bba5-4>4</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-689bba5-5><a style=outline:none;text-decoration:none;color:inherit href=#code-689bba5-5>5</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-689bba5-6><a style=outline:none;text-decoration:none;color:inherit href=#code-689bba5-6>6</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-689bba5-7><a style=outline:none;text-decoration:none;color:inherit href=#code-689bba5-7>7</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;CN&#34;</span>: <span style=color:#a5d6ff>&#34;Stelfox Server Certificate Authority&#34;</span>,
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;key&#34;</span>: {
-</span></span><span style=display:flex><span>    <span style=color:#7ee787>&#34;algo&#34;</span>: <span style=color:#a5d6ff>&#34;ecdsa&#34;</span>,
-</span></span><span style=display:flex><span>    <span style=color:#7ee787>&#34;size&#34;</span>: <span style=color:#a5d6ff>521</span>
-</span></span><span style=display:flex><span>  }
-</span></span><span style=display:flex><span>}</span></span></code></pre></td></tr></table></div></div><p>And generate the servers CA with the following command:</p><pre tabindex=0><code>cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem \
-  -config config.json -profile subca source/servers.json &gt; json/servers.json</code></pre><p>Which can in turn be turned into normal certificates as before with the
-following command:</p><pre tabindex=0><code>cat json/servers.json | cfssljson -bare output/servers</code></pre><p>You&rsquo;ll also want to generate a certificate for your first server using this.
-Before we can we&rsquo;ll want to add another profile to our config. This is up to
-you to merge into your config:</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-f6e5b58-1><a style=outline:none;text-decoration:none;color:inherit href=#code-f6e5b58-1>1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-f6e5b58-2><a style=outline:none;text-decoration:none;color:inherit href=#code-f6e5b58-2>2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-f6e5b58-3><a style=outline:none;text-decoration:none;color:inherit href=#code-f6e5b58-3>3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-f6e5b58-4><a style=outline:none;text-decoration:none;color:inherit href=#code-f6e5b58-4>4</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span><span style=color:#a5d6ff>&#34;server&#34;</span><span style=color:#f85149>:</span> {
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;expiry&#34;</span>: <span style=color:#a5d6ff>&#34;8760h&#34;</span>,
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;usages&#34;</span>: [<span style=color:#a5d6ff>&#34;signing&#34;</span>, <span style=color:#a5d6ff>&#34;key encipherment&#34;</span>, <span style=color:#a5d6ff>&#34;server auth&#34;</span>, <span style=color:#a5d6ff>&#34;client auth&#34;</span>]
-</span></span><span style=display:flex><span>}</span></span></code></pre></td></tr></table></div></div><h2 id=creating-a-server-certificate>Creating a Server Certificate</h2><p>Create a certificate configuration for the server (this one for
+the following command:</p><pre tabindex=0><code>openssl x509 -in output/root.pem -text -noout
+</code></pre><p>We'll then want to create a <code>config.json</code> file to define who, and how we sign
+future certificates.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-6-1><a class=lnlinks href=#hl-6-1> 1</a>
+</span><span class=lnt id=hl-6-2><a class=lnlinks href=#hl-6-2> 2</a>
+</span><span class=lnt id=hl-6-3><a class=lnlinks href=#hl-6-3> 3</a>
+</span><span class=lnt id=hl-6-4><a class=lnlinks href=#hl-6-4> 4</a>
+</span><span class=lnt id=hl-6-5><a class=lnlinks href=#hl-6-5> 5</a>
+</span><span class=lnt id=hl-6-6><a class=lnlinks href=#hl-6-6> 6</a>
+</span><span class=lnt id=hl-6-7><a class=lnlinks href=#hl-6-7> 7</a>
+</span><span class=lnt id=hl-6-8><a class=lnlinks href=#hl-6-8> 8</a>
+</span><span class=lnt id=hl-6-9><a class=lnlinks href=#hl-6-9> 9</a>
+</span><span class=lnt id=hl-6-10><a class=lnlinks href=#hl-6-10>10</a>
+</span><span class=lnt id=hl-6-11><a class=lnlinks href=#hl-6-11>11</a>
+</span><span class=lnt id=hl-6-12><a class=lnlinks href=#hl-6-12>12</a>
+</span><span class=lnt id=hl-6-13><a class=lnlinks href=#hl-6-13>13</a>
+</span><span class=lnt id=hl-6-14><a class=lnlinks href=#hl-6-14>14</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;signing&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;profiles&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;subca&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;ca_constraint&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;is_ca&#34;</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=nt>&#34;max_path_len&#34;</span><span class=p>:</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>        <span class=p>},</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;expiry&#34;</span><span class=p>:</span> <span class=s2>&#34;8760h&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;usages&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;cert sign&#34;</span><span class=p>,</span> <span class=s2>&#34;crl sign&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=generating-a-sub-ca>Generating a Sub-CA</h2><p>We'll generate a CA to handle internal server authentication (my servers to my
+servers). I created the following file in <code>sources/servers.json</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-7-1><a class=lnlinks href=#hl-7-1>1</a>
+</span><span class=lnt id=hl-7-2><a class=lnlinks href=#hl-7-2>2</a>
+</span><span class=lnt id=hl-7-3><a class=lnlinks href=#hl-7-3>3</a>
+</span><span class=lnt id=hl-7-4><a class=lnlinks href=#hl-7-4>4</a>
+</span><span class=lnt id=hl-7-5><a class=lnlinks href=#hl-7-5>5</a>
+</span><span class=lnt id=hl-7-6><a class=lnlinks href=#hl-7-6>6</a>
+</span><span class=lnt id=hl-7-7><a class=lnlinks href=#hl-7-7>7</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;CN&#34;</span><span class=p>:</span> <span class=s2>&#34;Stelfox Server Certificate Authority&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;algo&#34;</span><span class=p>:</span> <span class=s2>&#34;ecdsa&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>521</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>And generate the servers CA with the following command:</p><pre tabindex=0><code>cfssl gencert -ca file:output/root.pem -ca-key file:output/root-key.pem \
+  -config config.json -profile subca source/servers.json &gt; json/servers.json
+</code></pre><p>Which can in turn be turned into normal certificates as before with the
+following command:</p><pre tabindex=0><code>cat json/servers.json | cfssljson -bare output/servers
+</code></pre><p>You'll also want to generate a certificate for your first server using this.
+Before we can we'll want to add another profile to our config. This is up to
+you to merge into your config:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-10-1><a class=lnlinks href=#hl-10-1>1</a>
+</span><span class=lnt id=hl-10-2><a class=lnlinks href=#hl-10-2>2</a>
+</span><span class=lnt id=hl-10-3><a class=lnlinks href=#hl-10-3>3</a>
+</span><span class=lnt id=hl-10-4><a class=lnlinks href=#hl-10-4>4</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=s2>&#34;server&#34;</span><span class=err>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;expiry&#34;</span><span class=p>:</span> <span class=s2>&#34;8760h&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;usages&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;signing&#34;</span><span class=p>,</span> <span class=s2>&#34;key encipherment&#34;</span><span class=p>,</span> <span class=s2>&#34;server auth&#34;</span><span class=p>,</span> <span class=s2>&#34;client auth&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=creating-a-server-certificate>Creating a Server Certificate</h2><p>Create a certificate configuration for the server (this one for
 testhost.stelfox.net with a couple of CNAMEs) store in <code>source/testhost.json</code>.
 If you use the hosts array, be sure to include the CN name as well if it needs
-to be validated as well.</p><div class=highlight><div style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><table style=border-spacing:0;padding:0;margin:0;border:0><tr><td style=vertical-align:top;padding:0;margin:0;border:0><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-1><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-1> 1</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-2><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-2> 2</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-3><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-3> 3</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-4><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-4> 4</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-5><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-5> 5</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-6><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-6> 6</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-7><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-7> 7</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-8><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-8> 8</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-9><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-9> 9</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-10><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-10>10</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-11><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-11>11</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-12><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-12>12</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-13><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-13>13</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-14><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-14>14</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-15><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-15>15</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-16><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-16>16</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-17><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-17>17</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-18><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-18>18</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-19><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-19>19</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-20><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-20>20</a>
-</span><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:.4em;padding:0 .4em;color:#737679" id=code-27293fb-21><a style=outline:none;text-decoration:none;color:inherit href=#code-27293fb-21>21</a>
-</span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#e6edf3;background-color:#0d1117;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;CN&#34;</span>: <span style=color:#a5d6ff>&#34;testhost.stelfox.net&#34;</span>,
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;key&#34;</span>: {
-</span></span><span style=display:flex><span>    <span style=color:#7ee787>&#34;algo&#34;</span>: <span style=color:#a5d6ff>&#34;ecdsa&#34;</span>,
-</span></span><span style=display:flex><span>    <span style=color:#7ee787>&#34;size&#34;</span>: <span style=color:#a5d6ff>521</span>
-</span></span><span style=display:flex><span>  },
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;hosts&#34;</span>: [
-</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;testhost.stelfox.net&#34;</span>,
-</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;tst01.dev.sfa.stelfox.net&#34;</span>,
-</span></span><span style=display:flex><span>    <span style=color:#a5d6ff>&#34;fud01.dev.sfa.stelfox.net&#34;</span>
-</span></span><span style=display:flex><span>  ],
-</span></span><span style=display:flex><span>  <span style=color:#7ee787>&#34;names&#34;</span>: [
-</span></span><span style=display:flex><span>    {
-</span></span><span style=display:flex><span>      <span style=color:#7ee787>&#34;C&#34;</span>: <span style=color:#a5d6ff>&#34;US&#34;</span>,
-</span></span><span style=display:flex><span>      <span style=color:#7ee787>&#34;ST&#34;</span>: <span style=color:#a5d6ff>&#34;No State&#34;</span>,
-</span></span><span style=display:flex><span>      <span style=color:#7ee787>&#34;L&#34;</span>: <span style=color:#a5d6ff>&#34;No Town&#34;</span>,
-</span></span><span style=display:flex><span>      <span style=color:#7ee787>&#34;O&#34;</span>: <span style=color:#a5d6ff>&#34;Stelfox Personal Systems&#34;</span>,
-</span></span><span style=display:flex><span>      <span style=color:#7ee787>&#34;OU&#34;</span>: <span style=color:#a5d6ff>&#34;Research &amp; Development&#34;</span>
-</span></span><span style=display:flex><span>    }
-</span></span><span style=display:flex><span>  ]
-</span></span><span style=display:flex><span>}</span></span></code></pre></td></tr></table></div></div><p>And generate the key and certificate:</p><pre tabindex=0><code>cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem \
+to be validated as well.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt id=hl-11-1><a class=lnlinks href=#hl-11-1> 1</a>
+</span><span class=lnt id=hl-11-2><a class=lnlinks href=#hl-11-2> 2</a>
+</span><span class=lnt id=hl-11-3><a class=lnlinks href=#hl-11-3> 3</a>
+</span><span class=lnt id=hl-11-4><a class=lnlinks href=#hl-11-4> 4</a>
+</span><span class=lnt id=hl-11-5><a class=lnlinks href=#hl-11-5> 5</a>
+</span><span class=lnt id=hl-11-6><a class=lnlinks href=#hl-11-6> 6</a>
+</span><span class=lnt id=hl-11-7><a class=lnlinks href=#hl-11-7> 7</a>
+</span><span class=lnt id=hl-11-8><a class=lnlinks href=#hl-11-8> 8</a>
+</span><span class=lnt id=hl-11-9><a class=lnlinks href=#hl-11-9> 9</a>
+</span><span class=lnt id=hl-11-10><a class=lnlinks href=#hl-11-10>10</a>
+</span><span class=lnt id=hl-11-11><a class=lnlinks href=#hl-11-11>11</a>
+</span><span class=lnt id=hl-11-12><a class=lnlinks href=#hl-11-12>12</a>
+</span><span class=lnt id=hl-11-13><a class=lnlinks href=#hl-11-13>13</a>
+</span><span class=lnt id=hl-11-14><a class=lnlinks href=#hl-11-14>14</a>
+</span><span class=lnt id=hl-11-15><a class=lnlinks href=#hl-11-15>15</a>
+</span><span class=lnt id=hl-11-16><a class=lnlinks href=#hl-11-16>16</a>
+</span><span class=lnt id=hl-11-17><a class=lnlinks href=#hl-11-17>17</a>
+</span><span class=lnt id=hl-11-18><a class=lnlinks href=#hl-11-18>18</a>
+</span><span class=lnt id=hl-11-19><a class=lnlinks href=#hl-11-19>19</a>
+</span><span class=lnt id=hl-11-20><a class=lnlinks href=#hl-11-20>20</a>
+</span><span class=lnt id=hl-11-21><a class=lnlinks href=#hl-11-21>21</a>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;CN&#34;</span><span class=p>:</span> <span class=s2>&#34;testhost.stelfox.net&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;key&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;algo&#34;</span><span class=p>:</span> <span class=s2>&#34;ecdsa&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>521</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;hosts&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;testhost.stelfox.net&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;tst01.dev.sfa.stelfox.net&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;fud01.dev.sfa.stelfox.net&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=p>],</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;names&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;C&#34;</span><span class=p>:</span> <span class=s2>&#34;US&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;ST&#34;</span><span class=p>:</span> <span class=s2>&#34;No State&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;L&#34;</span><span class=p>:</span> <span class=s2>&#34;No Town&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;O&#34;</span><span class=p>:</span> <span class=s2>&#34;Stelfox Personal Systems&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;OU&#34;</span><span class=p>:</span> <span class=s2>&#34;Research &amp; Development&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>And generate the key and certificate:</p><pre tabindex=0><code>cfssl gencert -ca file:output/servers.pem -ca-key file:output/servers-key.pem \
   -config config.json -profile server source/testhost.json &gt; json/testhost.json
-cat json/testhost.json | cfssljson -bare output/testhost</code></pre><h2 id=distributing-trust>Distributing Trust</h2><p>I generally recommend distributing the CA certificate for the specific service
+cat json/testhost.json | cfssljson -bare output/testhost
+</code></pre><h2 id=distributing-trust>Distributing Trust</h2><p>I generally recommend distributing the CA certificate for the specific service
 to the specific service and not make it a generally trusted the system as a
 whole. This is especially true for this program as without a HSM there is no
-protection over any of the private keys.</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
+protection over any of the private keys.</p></div></article><hr><div class=post-info><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg>
 <span class=tag><a href=https://stelfox.net/tags/certificates/>certificates</a></span>
-<span class=tag><a href=https://stelfox.net/tags/security/>security</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=73f7e533ca46dadf707b92cf4c86a28caf5eac1a target=_blank rel=noopener>73f7e533</a> @ 2018-10-30</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.85fad2de4f13fec3bcb3b3cb10430cdb44a7b4a9749b32938241a5c6e77718df7624f1002b880521fdc26e24ec1077fda214bf1cb36ee3045510760d09638cae.js integrity="sha512-hfrS3k8T/sO8s7PLEEMM20SntKl0mzKTgkGlxud3GN92JPEAK4gFIf3CbiTsEHf9ohS/HLNu4wRVEHYNCWOMrg=="></script></body></html>
+<span class=tag><a href=https://stelfox.net/tags/security/>security</a></span></p><p><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/></svg><a href=73f7e533ca46dadf707b92cf4c86a28caf5eac1a target=_blank rel=noopener>73f7e533</a> @ 2018-10-30</p></div></main></div><footer class=footer></footer></div><script type=text/javascript src=/bundle.min.e89fda0f29b95d33f6f4224dd9e5cf69d84aff3818be2b0d73e731689cc374261b016d17d46f8381962fb4a1577ba3017b1f23509d894f6e66431f988c00889e.js integrity="sha512-6J/aDym5XTP29CJN2eXPadhK/zgYvisNc+cxaJzDdCYbAW0X1G+DgZYvtKFXe6MBex8jUJ2JT25mQx+YjACIng=="></script></body></html>
