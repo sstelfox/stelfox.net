@@ -1,0 +1,29 @@
+{{- $search_index := slice -}}
+
+{{- range .Site.RegularPages -}}
+  {{- if (and .IsPage (not .Draft) (default true .Params.public) (default true .Params.searchable)) -}}
+    {{- $search_entry := dict
+          "cid" (sha1 .RawContent)
+
+          "title" .Title
+          "content" .RawContent
+          "type" .Type
+          "path" .RelPermalink
+
+          "created_at" .Date.UTC.Unix
+          "updated_at" .Lastmod.UTC.Unix
+          "published_at" .PublishDate.UTC.Unix
+
+          "fuzzy_word_count" .FuzzyWordCount
+          "word_count" .WordCount
+          "reading_time" .ReadingTime
+
+          "weight" .Weight
+          "tags" .Params.Tags
+     -}}
+
+    {{- $search_index = append $search_entry $search_index -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $search_index | jsonify -}}

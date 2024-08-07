@@ -1,0 +1,15 @@
+  <footer>
+    <p>{{ .Site.Copyright }}</p>
+  </footer>
+
+{{ partial "dev/dev-tools.html" . -}}
+
+{{- /*
+     * The order of the following two is important as is the choice of using
+     * defer'd scripts instead of async ones. The scripts will all be loaded at
+     * once, then executed sequentially after the DOM fully loads.
+     *
+     * I rely on this order to lazily detect and configure Mermaid and MathJax
+     * if the page calls for loading them. */ -}}
+{{ partial "page_specific_js.html" . -}}
+{{ partialCached "lazy_js.html" . -}}

@@ -1,0 +1,9 @@
+{{ $immediate_script := resources.Get "js/immediate.js" -}}
+
+{{- if hugo.IsProduction -}}
+  {{- $immediate_script = $immediate_script | resources.Minify -}}
+{{- end -}}
+
+{{- $immediate_script = $immediate_script | resources.Fingerprint }}
+
+  <script type="text/javascript" src="{{ $immediate_script.RelPermalink }}" integrity="{{ $immediate_script.Data.Integrity }}" crossorigin="anonymous"></script>
