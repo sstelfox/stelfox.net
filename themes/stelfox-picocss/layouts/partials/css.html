@@ -23,9 +23,9 @@
   {{- $styles = $styles | resources.PostProcess -}}
 {{- end }}
 
-  <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous" />
 
 {{- if eq hugo.Environment "development" -}}
   {{- $dev_styles := resources.Get "css/dev-tooling.css" | css.PostCSS | resources.Fingerprint }}
-  <link rel="stylesheet" href="{{ $dev_styles.RelPermalink }}" integrity="{{ $dev_styles.Data.Integrity }}" crossorigin="anonymous">
+  <link rel="stylesheet" href="{{ $dev_styles.RelPermalink }}" integrity="{{ $dev_styles.Data.Integrity }}" crossorigin="anonymous" />
 {{- end -}}

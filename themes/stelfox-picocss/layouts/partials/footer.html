@@ -1,8 +1,8 @@
-  <footer>
-    <p>{{ .Site.Copyright }}</p>
-  </footer>
+  <footer class="container">
+    <center><p>{{ .Site.Copyright }}</p></center>
 
-{{ partial "dev/dev-tools.html" . -}}
+    {{ partial "dev-page-details.html" . -}}
+  </footer>
 
 {{- /*
      * The order of the following two is important as is the choice of using
@@ -11,5 +11,6 @@
      *
      * I rely on this order to lazily detect and configure Mermaid and MathJax
      * if the page calls for loading them. */ -}}
+
 {{ partial "page_specific_js.html" . -}}
 {{ partialCached "lazy_js.html" . -}}
