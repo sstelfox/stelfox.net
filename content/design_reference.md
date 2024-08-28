@@ -299,8 +299,6 @@ A more complete list [can be found](https://github.com/ikatyang/emoji-cheat-shee
 * rocket: :rocket:
 * airplane: :airplane:
 * sunny: :sunny:
-* cresent_moon: :cresent_moon:
 * rainbow: :rainbow:
 * zap: :zap:
 * fire: :fire:
-* godmode: :godmode:
