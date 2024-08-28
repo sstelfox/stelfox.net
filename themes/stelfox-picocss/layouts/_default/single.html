@@ -2,21 +2,28 @@
     <article>
       <h1>{{ .Title }}</h1>
 
-      <div>
-        {{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
-        {{ $dateHuman := .Date | time.Format ":date_long" }}
-        <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+      <ul>
+        <li>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="10" cy="7" r="4"></circle>
+          </svg>
+          Written by {{ .Site.Params.Author }} on 
+          {{ $dateMachine := .Date | time.Format "2006-01-02T15:04:05-07:00" }}
+          {{ $dateHuman := .Date | time.Format ":date_long" }}
+          <time datetime="{{ $dateMachine }}">{{ $dateHuman }}</time>
+        </li>
 
-        <p>
+        <li>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
             <circle cx="12" cy="12" r="10"></circle>
             <polyline points="12 6 12 12 16 14"></polyline>
           </svg>
 
           Takes approximately {{ .Page.ReadingTime }} minutes to read
-        </p>
+        </li>
 
-        <p>
+        <li>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
@@ -26,10 +33,10 @@
           </svg>
 
           Word Count: {{ .Page.WordCount }}
-        </p>
+        </li>
 
-        {{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
-      </div>
+        <li>{{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}</li>
+      </ul>
 
       {{ if .Params.toc }}
         <hr />
@@ -50,8 +57,8 @@
 
       {{ .Content }}
 
-      {{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}
-      <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"></circle><line x1="1.05" y1="12" x2="7" y2="12"></line><line x1="17.01" y1="12" x2="22.96" y2="12"></line></svg><a href="https://github.com/sstelfox/stelfox.net/commit/{{ .GitInfo.Hash }}" target="_blank" rel="noopener">{{ .GitInfo.AbbreviatedHash }}</a> @ {{ if .Site.Params.dateformNum }}{{ dateFormat .Site.Params.dateformNum .GitInfo.AuthorDate.Local }}{{ else }}{{ dateFormat "2006-01-02" .GitInfo.AuthorDate.Local }}{{ end }}</p>
+      <p>{{ partial "terms.html" (dict "taxonomy" "tags" "page" .) }}</p>
+      <p>Page last changed in commit <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-git-commit"><circle cx="12" cy="12" r="4"></circle><line x1="1.05" y1="12" x2="7" y2="12"></line><line x1="17.01" y1="12" x2="22.96" y2="12"></line></svg> <a href="https://github.com/sstelfox/stelfox.net/commit/{{ .GitInfo.Hash }}" target="_blank" rel="noopener">{{ .GitInfo.AbbreviatedHash }}</a> on {{ dateFormat "2006-01-02" .GitInfo.AuthorDate.Local }}</p>
     </article>
 
     {{ partial "pagination-single.html" . }}
