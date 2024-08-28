@@ -2,7 +2,7 @@ function currentElVisibility(id) {
   return document
     .getElementById(id)
     .classList
-    .contains('hidden') ? true : false;
+    .contains('hidden') ? false : true;
 }
 
 function initElVisibility(id) {
@@ -11,10 +11,12 @@ function initElVisibility(id) {
 }
 
 function setElVisibility(id, tgtVisibility) {
-  var tgtEl = document.getElementById(id);
-
   if (currentElVisibility(id) !== tgtVisibility) {
-    tgtEl.classList.toggle('hidden');
+    console.log('Setting visibility of ' + id + ' to ' + tgtVisibility);
+
+    document
+      .getElementById(id)
+      .classList.toggle('hidden');
   }
 
   sessionStorage.setItem('display-' + id, tgtVisibility);
@@ -28,6 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
   initElVisibility('page-details');
 
   document
-    .getElementById('page-details-toggle-btn')
+    .getElementById('page-details-toggle')
     .addEventListener('click', () => toggleElVisibility('page-details'));
 });
