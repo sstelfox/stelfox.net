@@ -7,7 +7,6 @@ tags:
   - ubiquiti
 title: Setting Up EdgeRouter PoE on Google Fiber
 # kind is needed as this is a branch bundle
-kind: page
 slug: edgerouter-poe-for-google-fiber
 ---
 

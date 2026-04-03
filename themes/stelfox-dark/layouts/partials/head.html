@@ -1,0 +1,30 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+<meta name="keywords" content="{{ if .Params.tags }}{{ delimit .Params.tags ", " }}{{ else }}{{ .Site.Params.keywords }}{{ end }}">
+<meta name="author" content="{{ .Site.Params.author }}">
+
+<title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+
+{{- if .Site.Params.favicon }}
+<link rel="icon" type="image/x-icon" href="/{{ .Site.Params.favicon }}">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+{{- end }}
+
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/syntax.css">
+
+{{- if .Params.customCSS }}
+{{- range .Params.customCSS }}
+<link rel="stylesheet" href="{{ . }}">
+{{- end }}
+{{- end }}
+
+{{- with .OutputFormats.Get "rss" }}
+<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+{{- end }}
+
+{{- if .Site.Copyright }}
+<meta name="copyright" content="{{ .Site.Copyright }}">
+{{- end }}

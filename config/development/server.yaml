@@ -1,12 +1,22 @@
 headers:
+  - for: /pagefind/*.pf_meta
+    values:
+      Content-Type: application/json
+      Content-Encoding: gzip
+      Cache-Control: public, max-age=3600
+  - for: /pagefind/*.pagefind
+    values:
+      Content-Type: application/wasm
+      Content-Encoding: gzip
+      Cache-Control: public, max-age=3600
   - for: /**
     values:
       # TODO: I want to figure out integrity hashes or splitting them out
       # without polluting my production environment with them before I put this
       # update in production to avoid CSP issues and maintain my integrity
       # protections.
-      #Content-Security-Policy: script-src 'unsafe-inline' 'self' 127.0.0.1:8000
-      Content-Security-Policy: script-src 'self'
+      # Note: 'wasm-unsafe-eval' is required for Pagefind search to work (uses WebAssembly)
+      Content-Security-Policy: script-src 'self' 'wasm-unsafe-eval'
       Referrer-Policy: strict-origin-when-cross-origin
       X-Content-Type-Options: nosniff
       X-Frame-Options: DENY

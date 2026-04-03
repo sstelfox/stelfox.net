@@ -1,0 +1,29 @@
+{{ define "main" }}
+<div class="container">
+  <section class="home-intro">
+    <h1>{{ .Title }}</h1>
+    {{- if .Site.Params.subtitle }}
+    <p class="subtitle">{{ .Site.Params.subtitle }}</p>
+    {{- end }}
+    {{ .Content }}
+  </section>
+
+  <section class="recent-posts">
+    <h2>Recent Posts</h2>
+    <ul class="post-list">
+      {{- $pages := where .Site.RegularPages "Section" "in" (slice "blog" "projects") }}
+      {{- range first 10 $pages }}
+      <li class="post-item">
+        <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+        <a href="{{ .RelPermalink }}" class="post-link">
+          <span class="post-title">{{ .Title }}</span>
+          {{- if .Params.tags }}
+          <span class="post-tags">{{ delimit .Params.tags ", " }}</span>
+          {{- end }}
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+  </section>
+</div>
+{{ end }}

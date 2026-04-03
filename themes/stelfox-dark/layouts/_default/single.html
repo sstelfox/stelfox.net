@@ -1,0 +1,54 @@
+{{ define "main" }}
+<div class="container">
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+      {{- $isBlogPost := or (eq .Section "blog") (eq .Section "projects") -}}
+      {{- $hasValidDate := and .Date (not (eq (.Date.Format "2006") "0001")) -}}
+      {{- if and $isBlogPost $hasValidDate }}
+      <div class="content-meta">
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 2, 2006" }}</time>
+        {{- if .Params.tags }}
+        <span class="tags">
+          {{- range .Params.tags }}
+          <span class="tag">{{ . }}</span>
+          {{- end }}
+        </span>
+        {{- end }}
+      </div>
+      {{- else if .Params.tags }}
+      <div class="content-meta">
+        <span class="tags">
+          {{- range .Params.tags }}
+          <span class="tag">{{ . }}</span>
+          {{- end }}
+        </span>
+      </div>
+      {{- end }}
+    </header>
+
+    <div class="content-body" data-pagefind-body>
+      {{ .Content }}
+    </div>
+
+    {{- if and $isBlogPost (or .NextInSection .PrevInSection) }}
+    <nav class="content-nav">
+      {{- if .PrevInSection }}
+      <a href="{{ .PrevInSection.RelPermalink }}" class="prev">← {{ .PrevInSection.Title }}</a>
+      {{- end }}
+      {{- if .NextInSection }}
+      <a href="{{ .NextInSection.RelPermalink }}" class="next">{{ .NextInSection.Title }} →</a>
+      {{- end }}
+    </nav>
+    {{- end }}
+  </article>
+</div>
+{{ end }}
+
+{{ define "scripts" }}
+{{- if .Params.customJS }}
+{{- range .Params.customJS }}
+<script src="{{ . }}"></script>
+{{- end }}
+{{- end }}
+{{ end }}

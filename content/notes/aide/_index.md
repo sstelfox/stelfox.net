@@ -2,7 +2,6 @@
 created_at: 2017-10-11T02:19:45-0000
 evergreen: true
 public: false
-kind: page
 tags:
   - linux
   - security

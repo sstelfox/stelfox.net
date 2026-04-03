@@ -1,0 +1,20 @@
+{{- if or .Params.mermaid (findRE "```mermaid" .RawContent 1) }}
+<script type="module">
+  import mermaid from '/js/mermaid-10.9.1.dist.min.js';
+  
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark',
+    themeVariables: {
+      darkMode: true,
+      background: '#0d1117',
+      primaryColor: '#58a6ff',
+      primaryTextColor: '#c9d1d9',
+      primaryBorderColor: '#30363d',
+      lineColor: '#8b949e',
+      secondaryColor: '#21262d',
+      tertiaryColor: '#161b22'
+    }
+  });
+</script>
+{{- end }}

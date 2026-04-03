@@ -2,7 +2,6 @@
 evergreen: true
 public: true
 title: About Myself
-kind: page
 slug: about
 ---
 

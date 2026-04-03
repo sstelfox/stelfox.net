@@ -7,7 +7,6 @@ tags:
   - operations
   - security
 title: Auditd
-kind: page
 slug: auditd
 ---
 

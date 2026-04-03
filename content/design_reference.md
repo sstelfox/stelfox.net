@@ -5,7 +5,6 @@ draft: true
 menu: main
 math: true
 searchable: false
-kind: page
 title: Design Reference
 ---
 

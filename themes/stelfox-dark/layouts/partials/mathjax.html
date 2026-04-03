@@ -1,0 +1,14 @@
+{{- if or .Params.mathjax (findRE "\\$\\$" .RawContent 1) }}
+<script>
+MathJax = {
+  tex: {
+    displayMath: [['$$', '$$']],
+    inlineMath: [['$', '$']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script src="/js/mathjax.tex-svg.dist.min.js"></script>
+{{- end }}
