@@ -1,0 +1,19 @@
+{{- $pages := where .Site.RegularPages "Section" "in" (slice "blog" "notes" "projects") -}}
+[
+{{- range $index, $page := $pages -}}
+{{- if $index }},{{ end }}
+{{- $content := $page.Plain -}}
+{{- $rawContent := $page.RawContent -}}
+{{- $summary := $page.Summary -}}
+{
+  "id": {{ $index }},
+  "title": {{ $page.Title | jsonify }},
+  "url": {{ $page.RelPermalink | jsonify }},
+  "content": {{ $content | jsonify }},
+  "summary": {{ $summary | jsonify }},
+  "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
+  "section": {{ $page.Section | jsonify }},
+  "tags": {{ $page.Params.tags | jsonify }}
+}
+{{- end -}}
+]

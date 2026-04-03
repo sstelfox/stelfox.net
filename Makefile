@@ -1,12 +1,7 @@
 build:
 	rm -rf public/*
 	@hugo --environment production --logLevel info --minify --printI18nWarnings --printPathWarnings
-	@if command -v pagefind > /dev/null 2>&1; then \
-		pagefind --site public --output-subdir pagefind; \
-	else \
-		echo "Warning: pagefind not found. Search will not be available."; \
-		echo "Install with: cargo install pagefind"; \
-	fi
+	@echo "Search index generated at public/search_index.json"
 
 clean:
 	@rm -rf public/*
@@ -36,14 +31,15 @@ static/apple-touch-icon.png: logo_src/stelfox_favicon.svg
 static/logo.png: logo_src/stelfox_clean_icon.svg
 	convert -alpha on -quality 85 -scale 192x192 -transparent white logo_src/stelfox_clean_icon.svg static/logo.png
 
-# Build search index (run after build)
+# Build search index (now handled automatically by Hugo)
 search:
-	@if command -v pagefind > /dev/null 2>&1; then \
-		pagefind --site public --output-subdir pagefind; \
+	@echo "Search index is built automatically during 'make build'"
+	@echo "The search_index.json file is generated at public/search_index.json"
+	@if [ -f public/search_index.json ]; then \
+		echo "✓ Search index exists"; \
+		echo "  Documents indexed: $$(jq length public/search_index.json)"; \
 	else \
-		echo "Error: pagefind not found."; \
-		echo "Install with: cargo install pagefind"; \
-		exit 1; \
+		echo "✗ Search index not found. Run 'make build' first."; \
 	fi
 
 # Build Tailwind CSS (only run when styles change)

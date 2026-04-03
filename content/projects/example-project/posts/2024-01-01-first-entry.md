@@ -1,8 +1,9 @@
 ---
 title: First Project Log Entry
-created_at: 2024-01-01T00:00:00-00:00
+date: 2024-01-01T00:00:00-00:00
 draft: true
 tags: [example, log]
+url: /projects/example-project/posts/2024-01-01-first-entry/
 ---
 
 Example of a project log entry. These are chronological updates about progress, challenges, and discoveries.

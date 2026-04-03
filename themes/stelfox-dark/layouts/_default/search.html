@@ -1,6 +1,5 @@
 {{ define "head_extra" }}
-<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
-<link rel="stylesheet" href="/css/pagefind-dark.css">
+<link rel="stylesheet" href="/css/search.css">
 {{ end }}
 
 {{ define "main" }}
@@ -17,13 +16,33 @@
     {{- end }}
 
     <div class="search-container">
-      <div id="search"></div>
+      <div class="search-input-wrapper">
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Loading search index..."
+          disabled
+          autocomplete="off"
+        >
+        <button id="search-clear" class="search-clear" aria-label="Clear search">×</button>
+      </div>
+
+      <div class="search-filters">
+        <button class="section-filter active" data-section="all">All</button>
+        <button class="section-filter" data-section="blog">Blog</button>
+        <button class="section-filter" data-section="notes">Notes</button>
+        <button class="section-filter" data-section="projects">Projects</button>
+      </div>
+
+      <div id="search-count" class="search-count"></div>
+      <div id="search-results" class="search-results"></div>
     </div>
   </article>
 </div>
 {{ end }}
 
 {{ define "scripts" }}
-<script src="/pagefind/pagefind-ui.js"></script>
-<script src="/js/search-init.js"></script>
+<script src="/js/lunr.min.js"></script>
+<script src="/js/search.js"></script>
 {{ end }}

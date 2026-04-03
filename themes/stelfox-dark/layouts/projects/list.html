@@ -1,0 +1,141 @@
+{{ define "main" }}
+<div class="container">
+  {{- if eq .File.Path "projects/_index.md" }}
+  {{- /* Top-level projects section - show list of all projects */ -}}
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+    </header>
+
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+
+    {{- $projects := where .Pages "Type" "projects" }}
+    {{- if $projects }}
+    <section class="projects-grid">
+      {{- range $projects }}
+      <a href="{{ .RelPermalink }}" class="project-card-link">
+        <article class="project-card">
+          <header class="project-card-header">
+            <h2>{{ .Title }}</h2>
+            {{- if .Params.status }}
+            <span class="project-status status-{{ .Params.status }}">
+              {{ .Params.status | humanize | title }}
+            </span>
+            {{- end }}
+          </header>
+
+          {{- if .Summary }}
+          <div class="project-card-summary">
+            {{ .Summary }}
+          </div>
+          {{- end }}
+
+          {{- if .Params.tech_stack }}
+          <div class="tech-stack">
+            {{- range .Params.tech_stack }}
+            <span class="tech-tag">{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+
+          {{- if or .Params.source_url .Params.demo_url }}
+          <div class="project-links">
+            {{- if .Params.source_url }}
+            <span class="project-link source-link">
+              <span>Source</span>
+            </span>
+            {{- end }}
+            {{- if .Params.demo_url }}
+            <span class="project-link demo-link">
+              <span>Demo</span>
+            </span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </article>
+      </a>
+      {{- end }}
+    </section>
+    {{- end }}
+  </article>
+
+  {{- else }}
+  {{- /* Individual project page */ -}}
+  <article class="content project">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+
+      {{- if .Params.status }}
+      <div class="project-meta">
+        <span class="project-status status-{{ .Params.status }}">
+          {{ .Params.status | humanize | title }}
+        </span>
+
+        {{- if .Params.tech_stack }}
+        <div class="tech-stack">
+          {{- range .Params.tech_stack }}
+          <span class="tech-tag">{{ . }}</span>
+          {{- end }}
+        </div>
+        {{- end }}
+      </div>
+      {{- end }}
+
+      {{- if or .Params.source_url .Params.demo_url }}
+      <div class="project-links">
+        {{- if .Params.source_url }}
+        <a href="{{ .Params.source_url }}" class="project-link source-link" rel="noopener noreferrer" target="_blank">
+          <span>View Source</span>
+        </a>
+        {{- end }}
+        {{- if .Params.demo_url }}
+        <a href="{{ .Params.demo_url }}" class="project-link demo-link" rel="noopener noreferrer" target="_blank">
+          <span>Live Demo</span>
+        </a>
+        {{- end }}
+      </div>
+      {{- end }}
+    </header>
+
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+
+    {{- $postsSection := .GetPage "posts" }}
+    {{- if $postsSection }}
+    {{- $posts := $postsSection.RegularPages }}
+    {{- if $posts }}
+    <section class="project-posts">
+      <h2>Project Log</h2>
+      <ul class="post-list">
+        {{- range $posts.Reverse }}
+        <li class="post-item">
+          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </li>
+        {{- end }}
+      </ul>
+    </section>
+    {{- end }}
+    {{- end }}
+
+    {{- $pagesSection := .GetPage "pages" }}
+    {{- if $pagesSection }}
+    {{- $refPages := $pagesSection.RegularPages }}
+    {{- if $refPages }}
+    <section class="project-pages">
+      <h2>Reference Pages</h2>
+      <ul class="page-list">
+        {{- range $refPages }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        {{- end }}
+      </ul>
+    </section>
+    {{- end }}
+    {{- end }}
+  </article>
+  {{- end }}
+</div>
+{{ end }}
