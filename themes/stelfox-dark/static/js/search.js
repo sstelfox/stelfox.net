@@ -5,13 +5,16 @@
   let searchIndex;
   let searchDocuments;
   let currentSection = 'all';
+  let searchInput;
+  let searchResults;
+  let searchCount;
 
   function initializeSearch() {
     console.log('Initializing Lunr search...');
 
-    const searchInput = document.getElementById('search-input');
-    const searchResults = document.getElementById('search-results');
-    const searchCount = document.getElementById('search-count');
+    searchInput = document.getElementById('search-input');
+    searchResults = document.getElementById('search-results');
+    searchCount = document.getElementById('search-count');
     const searchClear = document.getElementById('search-clear');
     const sectionFilters = document.querySelectorAll('.section-filter');
 
@@ -51,6 +54,9 @@
         console.log(`Search index built with ${documents.length} documents`);
         searchInput.removeAttribute('disabled');
         searchInput.placeholder = 'Search across all posts, notes, and projects...';
+
+        // Check if there's a query parameter to search for
+        checkQueryParameter();
       })
       .catch(error => {
         console.error('Failed to load search index:', error);
@@ -64,10 +70,19 @@
       if (query.length < 2) {
         searchResults.innerHTML = '';
         searchCount.textContent = '';
+        // Clear query parameter
+        const url = new URL(window.location);
+        url.searchParams.delete('q');
+        window.history.replaceState({}, '', url);
         return;
       }
 
       performSearch(query);
+
+      // Update URL with query parameter
+      const url = new URL(window.location);
+      url.searchParams.set('q', query);
+      window.history.replaceState({}, '', url);
     });
 
     // Handle section filters
@@ -103,8 +118,6 @@
   }
 
   function performSearch(query) {
-    const searchResults = document.getElementById('search-results');
-    const searchCount = document.getElementById('search-count');
 
     if (!searchIndex) {
       return;
@@ -274,6 +287,19 @@
     const div = document.createElement('div');
     div.innerHTML = str;
     return div.textContent || div.innerText || '';
+  }
+
+  // Check for query parameter on page load
+  function checkQueryParameter() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    if (query && searchInput) {
+      searchInput.value = query;
+      // Trigger search after index loads
+      if (searchIndex) {
+        performSearch(query);
+      }
+    }
   }
 
   // Initialize when DOM is ready

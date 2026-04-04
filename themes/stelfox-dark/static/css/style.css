@@ -151,12 +151,15 @@ main {
   z-index: 100;
 }
 
+.site-header .container {
+  max-width: 1200px;
+}
+
 .header-content {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: var(--spacing-lg);
   flex-wrap: wrap;
-  gap: var(--spacing-sm);
 }
 
 .site-title {
@@ -164,6 +167,7 @@ main {
   font-weight: 600;
   font-family: var(--font-mono);
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .site-title:hover {
@@ -171,10 +175,17 @@ main {
   color: var(--accent-hover);
 }
 
+.header-right {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-left: auto;
+  align-items: center;
+}
+
 .main-nav {
   display: flex;
   gap: var(--spacing-md);
-  flex-wrap: wrap;
+  align-items: center;
 }
 
 .main-nav a {
@@ -186,6 +197,33 @@ main {
 .main-nav a.active {
   color: var(--accent-primary);
   text-decoration: none;
+}
+
+/* === Header Search === */
+.header-search-input,
+input.header-search-input,
+input[type="text"].header-search-input {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  color: #c9d1d9 !important;
+  padding: 0.4rem 0.6rem !important;
+  font-size: 0.9rem !important;
+  width: 150px !important;
+  border-radius: 6px !important;
+  font-family: var(--font-sans) !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  flex-shrink: 0 !important;
+}
+
+.header-search-input:focus {
+  outline: 2px solid #58a6ff;
+  outline-offset: 2px;
+  border-color: #58a6ff;
+  width: 250px;
+  transition: width 0.2s;
 }
 
 /* === Footer === */
