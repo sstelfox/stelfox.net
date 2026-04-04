@@ -2,14 +2,14 @@
 [
 {{- range $index, $page := $pages -}}
 {{- if $index }},{{ end }}
-{{- $content := $page.Plain -}}
-{{- $rawContent := $page.RawContent -}}
 {{- $summary := $page.Summary -}}
+{{- if gt (len $summary) 500 -}}
+  {{- $summary = slicestr $summary 0 500 -}}
+{{- end -}}
 {
   "id": {{ $index }},
   "title": {{ $page.Title | jsonify }},
   "url": {{ $page.RelPermalink | jsonify }},
-  "content": {{ $content | jsonify }},
   "summary": {{ $summary | jsonify }},
   "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
   "section": {{ $page.Section | jsonify }},

@@ -42,7 +42,6 @@
           this.ref('id');
           this.field('title', { boost: 10 });
           this.field('summary', { boost: 5 });
-          this.field('content', { boost: 3 });
           this.field('tags', { boost: 7 });
           this.field('section');
 
@@ -149,7 +148,7 @@
 
       const resultsHTML = filteredResults.slice(0, 20).map(result => {
         const doc = searchDocuments[result.ref];
-        const excerpt = createExcerpt(doc.summary || doc.content, query, 60);
+        const excerpt = createExcerpt(doc.summary, query, 60);
 
         return `
           <article class="search-result">
