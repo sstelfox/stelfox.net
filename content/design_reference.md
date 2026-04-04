@@ -5,6 +5,8 @@ draft: true
 menu: main
 math: true
 searchable: false
+customCSS:
+  - /css/search.css
 title: Design Reference
 ---
 
@@ -253,6 +255,12 @@ mindmap
 * [x] Complete building a design reference content page
 * [ ] Clean up all my outstanding notes for publication
 * [ ] Profit
+
+### Search Results
+
+The following demonstrates the appearance of search results as rendered by the client-side search. These are static samples for design validation.
+
+{{< search-results-sample >}}
 
 ### Emoji Reference
 
