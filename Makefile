@@ -55,5 +55,10 @@ styles:
 		exit 1; \
 	fi
 
-.PHONY: build clean logo search server styles
+related:
+	@echo "Generating related content data..."
+	@./bin/generate_related.py
+	@echo "Done. Related content written to data/related.json"
+
+.PHONY: build clean logo related search server styles
 .DEFAULT_GOAL := build
