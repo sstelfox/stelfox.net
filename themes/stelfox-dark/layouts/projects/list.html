@@ -41,25 +41,25 @@
           </div>
           {{- end }}
 
-          {{- if or .Params.source_url .Params.demo_url }}
-          <div class="project-links">
-            {{- if .Params.source_url }}
-            <span class="project-link source-link">
-              <span>Source</span>
-            </span>
-            {{- end }}
-            {{- if .Params.demo_url }}
-            <span class="project-link demo-link">
-              <span>Visit</span>
-            </span>
-            {{- end }}
-          </div>
-          {{- end }}
         </article>
       </a>
       {{- end }}
     </section>
     {{- end }}
+
+    <section class="project-search">
+      <p class="project-nudge">Looking for something specific?</p>
+      <form class="project-search-form" action="/search/" method="get">
+        <input type="hidden" name="section" value="projects">
+        <input
+          type="text"
+          name="q"
+          class="project-search-input"
+          placeholder="Search across all projects..."
+          autocomplete="off"
+        >
+      </form>
+    </section>
   </article>
 
   {{- else }}
