@@ -294,7 +294,7 @@ against. If the message is already in your log more power to you, you can use
 that logfile as the input (and it's what I did).
 
 As for the regex, the tool supports passing the full thing on the command line
-HOWEVER it doesn't expand fail2ban REGEX variables beyond <HOST> (that is those
+HOWEVER it doesn't expand fail2ban REGEX variables beyond `<HOST>` (that is those
 defined in the common.conf file) which means you won't get an accurate
 representation on a match.
 

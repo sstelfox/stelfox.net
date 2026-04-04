@@ -122,7 +122,7 @@ kadmin:  addprinc -randkey host/<<FQDN>>
 kadmin:  ktadd -k /etc/krb5.keytab host/<<FQDN>>
 ```
 
-You'll need to replace <<FQDN>> with the domain name of the host you're adding.
+You'll need to replace `<<FQDN>>` with the domain name of the host you're adding.
 It will need a DNS entry matching this hostname.
 
 ## Firewall Configuration
