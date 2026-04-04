@@ -2,9 +2,9 @@
 
 # /// script
 # dependencies = [
-#   "numpy",
-#   "pyyaml",
-#   "sentence-transformers",
+#   "numpy==2.4.4",
+#   "pyyaml==6.0.3",
+#   "sentence-transformers==5.3.0",
 # ]
 # ///
 
@@ -13,6 +13,11 @@
 Uses sentence-transformers to compute embeddings for all content pages, then
 cosine similarity to find related pages. Embeddings are cached locally to avoid
 recomputation on subsequent runs when content hasn't changed.
+
+All non-draft, public content pages are included in the similarity corpus. The
+output maps every page's content path to its most similar neighbors. Which pages
+actually display related content is controlled by the Hugo templates, not this
+script.
 """
 
 import hashlib
@@ -33,8 +38,8 @@ EMBEDDING_MODEL = "all-mpnet-base-v2"
 SIMILARITY_CUTOFF = 0.35
 MAX_RELATED = 5
 
-# Pages that should never be included in the embedding corpus
-EXCLUDED_FILES = {"search.md", "design_reference.md", "_index.md"}
+# Files that should never be included in the corpus (no meaningful content)
+EXCLUDED_FILENAMES = {"search.md", "design_reference.md"}
 
 
 def parse_frontmatter(text):
@@ -51,33 +56,21 @@ def parse_frontmatter(text):
 
 def extract_prose(text):
     """Extract meaningful prose from markdown, stripping code and syntax."""
-    # Remove fenced code blocks (with or without language specifier)
     text = re.sub(r"```[^\n]*\n[\s\S]*?```", " ", text)
-    # Remove indented code blocks (4+ spaces or tab at line start)
     text = re.sub(r"(?m)^(?:    |\t).+$", " ", text)
-    # Remove inline code
     text = re.sub(r"`[^`]+`", " ", text)
-    # Remove Hugo shortcodes
     text = re.sub(r"\{\{[<%].*?[%>]\}\}", " ", text)
-    # Remove HTML tags
     text = re.sub(r"<[^>]+>", " ", text)
-    # Remove markdown images
     text = re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", text)
-    # Convert markdown links to just their text
     text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
-    # Remove bare URLs
     text = re.sub(r"https?://\S+", " ", text)
-    # Remove file paths
     text = re.sub(r"(?<!\w)/[\w./-]+", " ", text)
-    # Remove hex strings and hashes
     text = re.sub(r"\b[0-9a-f]{8,}\b", " ", text)
-    # Strip markdown formatting but keep heading text
     text = re.sub(r"(?m)^#+\s*", "", text)
     text = re.sub(r"\*{1,3}|_{1,3}", "", text)
     text = re.sub(r"(?m)^>\s*", "", text)
     text = re.sub(r"(?m)^[\s]*[-*+]\s+", "", text)
     text = re.sub(r"(?m)^[\s]*\d+\.\s+", "", text)
-    # Collapse whitespace
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
@@ -87,96 +80,48 @@ def content_hash(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
-def should_display_related(content_path, fname):
-    """Determine if a page should display its own related content list.
-
-    Display rules:
-    - Blog leaf pages: yes
-    - Notes leaf pages: yes
-    - Project log posts (posts/*.md but not _index.md): yes
-    - Everything else (root pages, project index, project reference pages,
-      section indexes, _index.md files): no
-    """
-    parts = content_path.split(os.sep)
-    section = parts[0] if parts else ""
-
-    if section == "blog":
-        return fname != "_index.md"
-    elif section == "notes":
-        return fname != "_index.md"
-    elif section == "projects":
-        # Project log posts live under projects/<name>/posts/<file>.md
-        if len(parts) >= 3 and parts[-2] == "posts" and fname != "_index.md":
-            return True
-        return False
-    else:
-        return False
-
-
 def collect_pages():
-    """Walk all content and collect page data for embedding."""
+    """Walk all content and collect every publishable page."""
     pages = []
 
-    # Walk section directories (blog, notes, projects)
-    for section in ["blog", "notes", "projects"]:
-        section_dir = os.path.join(CONTENT_DIR, section)
-        if not os.path.isdir(section_dir):
-            continue
+    for root, _dirs, files in os.walk(CONTENT_DIR):
+        for fname in files:
+            if not fname.endswith(".md"):
+                continue
+            if fname in EXCLUDED_FILENAMES:
+                continue
 
-        for root, _dirs, files in os.walk(section_dir):
-            for fname in files:
-                if not fname.endswith(".md"):
+            filepath = os.path.join(root, fname)
+
+            # Skip section-level _index.md (list pages, not content).
+            # Bundle _index.md files deeper in the tree are real content.
+            if fname == "_index.md":
+                depth = os.path.relpath(root, CONTENT_DIR).count(os.sep)
+                if depth <= 0:
                     continue
 
-                filepath = os.path.join(root, fname)
+            with open(filepath, "r", encoding="utf-8") as f:
+                raw = f.read()
 
-                # Skip section-level _index.md
-                if filepath == os.path.join(section_dir, "_index.md"):
-                    continue
+            fm, body = parse_frontmatter(raw)
 
-                _add_page(pages, filepath, fname)
+            if fm.get("draft", False):
+                continue
+            if fm.get("public") is False:
+                continue
 
-    # Walk root-level pages (about.md, security.md, etc.) as target-only
-    for fname in os.listdir(CONTENT_DIR):
-        if not fname.endswith(".md"):
-            continue
-        if fname in EXCLUDED_FILES:
-            continue
+            title = fm.get("title", "")
+            content_path = os.path.relpath(filepath, CONTENT_DIR)
+            prose = extract_prose(body)
+            embed_text = f"{title}. {prose}" if prose else title
 
-        filepath = os.path.join(CONTENT_DIR, fname)
-        if not os.path.isfile(filepath):
-            continue
-
-        _add_page(pages, filepath, fname)
+            pages.append({
+                "content_path": content_path,
+                "embed_text": embed_text,
+                "hash": content_hash(raw),
+            })
 
     return pages
-
-
-def _add_page(pages, filepath, fname):
-    """Parse a content file and add it to the pages list."""
-    with open(filepath, "r", encoding="utf-8") as f:
-        raw = f.read()
-
-    fm, body = parse_frontmatter(raw)
-
-    if fm.get("draft", False):
-        return
-    if fm.get("public") is False:
-        return
-
-    title = fm.get("title", "")
-    content_path = os.path.relpath(filepath, CONTENT_DIR)
-    prose = extract_prose(body)
-
-    embed_text = f"{title}. {prose}" if prose else title
-
-    pages.append({
-        "content_path": content_path,
-        "title": title,
-        "embed_text": embed_text,
-        "hash": content_hash(raw),
-        "shows_related": should_display_related(content_path, fname),
-    })
 
 
 def load_cached_embeddings():
@@ -198,11 +143,8 @@ def save_cached_embeddings(meta, embeddings):
     """Save embeddings to cache."""
     os.makedirs(CACHE_DIR, exist_ok=True)
 
-    cache_file = os.path.join(CACHE_DIR, "embeddings.npz")
-    meta_file = os.path.join(CACHE_DIR, "meta.json")
-
-    np.savez_compressed(cache_file, embeddings=embeddings)
-    with open(meta_file, "w") as f:
+    np.savez_compressed(os.path.join(CACHE_DIR, "embeddings.npz"), embeddings=embeddings)
+    with open(os.path.join(CACHE_DIR, "meta.json"), "w") as f:
         json.dump(meta, f, indent=2)
 
 
@@ -253,17 +195,13 @@ def compute_embeddings(pages):
 
 
 def compute_related(pages, embeddings):
-    """Compute cosine similarity and select related pages."""
+    """Compute cosine similarity and select related pages for every page."""
     from sklearn.metrics.pairwise import cosine_similarity
 
     sim_matrix = cosine_similarity(embeddings)
-
     related = {}
 
     for i, page in enumerate(pages):
-        if not page["shows_related"]:
-            continue
-
         scores = []
         for j in range(len(pages)):
             if i == j:
@@ -285,9 +223,7 @@ def compute_related(pages, embeddings):
 
 def main():
     pages = collect_pages()
-    display_count = sum(1 for p in pages if p["shows_related"])
-    target_count = len(pages) - display_count
-    print(f"Collected {len(pages)} pages ({display_count} display, {target_count} target-only)")
+    print(f"Collected {len(pages)} pages")
 
     embeddings = compute_embeddings(pages)
     related = compute_related(pages, embeddings)
@@ -298,7 +234,6 @@ def main():
 
     counts = [len(v) for v in related.values()]
     print(f"Wrote {len(related)} entries to {os.path.relpath(OUTPUT_PATH)}")
-    print(f"Display pages with related content: {len(related)}/{display_count}")
     print(f"  3+ related: {sum(1 for c in counts if c >= 3)}")
     print(f"  4+ related: {sum(1 for c in counts if c >= 4)}")
     print(f"  5  related: {sum(1 for c in counts if c >= 5)}")

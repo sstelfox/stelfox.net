@@ -1,4 +1,18 @@
+{{- $showRelated := false -}}
 {{- if .IsPage -}}
+  {{- if or (eq .Section "blog") (eq .Section "notes") -}}
+    {{- $showRelated = true -}}
+  {{- else if eq .Section "projects" -}}
+    {{- $fileParts := split .File.Path "/" -}}
+    {{- if ge (len $fileParts) 3 -}}
+      {{- $subdir := index $fileParts (sub (len $fileParts) 2) -}}
+      {{- if eq $subdir "posts" -}}
+        {{- $showRelated = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- if $showRelated -}}
   {{- $relatedData := index hugo.Data "related" -}}
   {{- $entries := slice -}}
   {{- if $relatedData -}}
