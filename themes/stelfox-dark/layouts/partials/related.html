@@ -1,28 +1,42 @@
 {{- if .IsPage -}}
   {{- $relatedData := index hugo.Data "related" -}}
-  {{- $related := slice -}}
+  {{- $entries := slice -}}
   {{- if $relatedData -}}
-    {{- $paths := index $relatedData .File.Path -}}
-    {{- if $paths -}}
-      {{- range $paths -}}
-        {{- $page := site.GetPage . -}}
+    {{- $pageEntries := index $relatedData .File.Path -}}
+    {{- if $pageEntries -}}
+      {{- range $pageEntries -}}
+        {{- $page := site.GetPage .path -}}
         {{- if $page -}}
-          {{- $related = $related | append $page -}}
+          {{- $entries = $entries | append (dict "page" $page "score" .score) -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
 
-  {{- if ge (len $related) 3 -}}
+  {{- if ge (len $entries) 3 -}}
   <nav class="related-content" aria-label="Related content">
     <h3>Related Content</h3>
     <ul>
-      {{- range $related }}
+      {{- range $entries }}
+      {{- $label := "page" -}}
+      {{- if eq .page.Section "blog" }}{{ $label = "blog" }}
+      {{- else if eq .page.Section "notes" }}{{ $label = "note" }}
+      {{- else if eq .page.Section "projects" }}
+        {{- $label = "project" -}}
+        {{- $fileParts := split .page.File.Path "/" -}}
+        {{- if ge (len $fileParts) 3 -}}
+          {{- $subdir := index $fileParts (sub (len $fileParts) 2) -}}
+          {{- if eq $subdir "posts" }}{{ $label = "project log" }}
+          {{- else if eq $subdir "pages" }}{{ $label = "project page" }}
+          {{- end -}}
+        {{- end -}}
+      {{- end }}
       <li>
-        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-        {{- if ne $.Section .Section }}
-        <span class="related-section">{{ .Section }}</span>
-        {{- end }}
+        <a href="{{ .page.RelPermalink }}">{{ .page.Title }}</a>
+        <span class="related-meta">
+          <span class="related-section">{{ $label }}</span>
+          <span class="related-score">{{ .score }}%</span>
+        </span>
       </li>
       {{- end }}
     </ul>

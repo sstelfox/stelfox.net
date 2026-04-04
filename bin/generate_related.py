@@ -2,34 +2,39 @@
 
 # /// script
 # dependencies = [
-#   "scikit-learn",
+#   "numpy",
 #   "pyyaml",
+#   "sentence-transformers",
 # ]
 # ///
 
-"""Generate related content data for Hugo based on TF-IDF content similarity."""
+"""Generate related content data for Hugo based on semantic similarity.
 
+Uses sentence-transformers to compute embeddings for all content pages, then
+cosine similarity to find related pages. Embeddings are cached locally to avoid
+recomputation on subsequent runs when content hasn't changed.
+"""
+
+import hashlib
 import json
 import os
 import re
-import sys
 
+import numpy as np
 import yaml
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 
-CONTENT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "content")
-OUTPUT_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "related.json")
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
+CONTENT_DIR = os.path.join(PROJECT_DIR, "content")
+OUTPUT_PATH = os.path.join(PROJECT_DIR, "data", "related.json")
+CACHE_DIR = os.path.join(PROJECT_DIR, ".cache", "embeddings")
 
-SECTIONS = ["blog", "notes", "projects"]
-# Sections whose pages should display related content (as opposed to just being
-# linkable targets)
-DISPLAY_SECTIONS = {"blog", "notes"}
-SIMILARITY_CUTOFF = 0.1
-MIN_RELATED = 3
+EMBEDDING_MODEL = "all-mpnet-base-v2"
+SIMILARITY_CUTOFF = 0.35
 MAX_RELATED = 5
-TAG_BONUS_PER_TAG = 0.05
-TAG_BONUS_CAP = 0.15
+
+# Pages that should never be included in the embedding corpus
+EXCLUDED_FILES = {"search.md", "design_reference.md", "_index.md"}
 
 
 def parse_frontmatter(text):
@@ -44,46 +49,76 @@ def parse_frontmatter(text):
     return fm, match.group(2)
 
 
-def clean_body(text):
-    """Strip code blocks and markdown syntax to get plain-ish text."""
-    # Remove fenced code blocks
-    text = re.sub(r"```[\s\S]*?```", " ", text)
+def extract_prose(text):
+    """Extract meaningful prose from markdown, stripping code and syntax."""
+    # Remove fenced code blocks (with or without language specifier)
+    text = re.sub(r"```[^\n]*\n[\s\S]*?```", " ", text)
+    # Remove indented code blocks (4+ spaces or tab at line start)
+    text = re.sub(r"(?m)^(?:    |\t).+$", " ", text)
     # Remove inline code
     text = re.sub(r"`[^`]+`", " ", text)
+    # Remove Hugo shortcodes
+    text = re.sub(r"\{\{[<%].*?[%>]\}\}", " ", text)
+    # Remove HTML tags
+    text = re.sub(r"<[^>]+>", " ", text)
     # Remove markdown images
     text = re.sub(r"!\[[^\]]*\]\([^)]+\)", " ", text)
     # Convert markdown links to just their text
     text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
-    # Remove HTML tags
-    text = re.sub(r"<[^>]+>", " ", text)
-    # Remove Hugo shortcodes
-    text = re.sub(r"{{[<%].*?[%>]}}", " ", text)
+    # Remove bare URLs
+    text = re.sub(r"https?://\S+", " ", text)
+    # Remove file paths
+    text = re.sub(r"(?<!\w)/[\w./-]+", " ", text)
+    # Remove hex strings and hashes
+    text = re.sub(r"\b[0-9a-f]{8,}\b", " ", text)
+    # Strip markdown formatting but keep heading text
+    text = re.sub(r"(?m)^#+\s*", "", text)
+    text = re.sub(r"\*{1,3}|_{1,3}", "", text)
+    text = re.sub(r"(?m)^>\s*", "", text)
+    text = re.sub(r"(?m)^[\s]*[-*+]\s+", "", text)
+    text = re.sub(r"(?m)^[\s]*\d+\.\s+", "", text)
     # Collapse whitespace
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
 
-def is_section_index(filepath, section_dir):
-    """Check if a file is a section-level _index.md (should be skipped)."""
-    return filepath == os.path.join(section_dir, "_index.md")
+def content_hash(text):
+    """Compute a hash of content for cache invalidation."""
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
-def content_path_for_hugo(filepath):
-    """Compute the content path that Hugo uses for .File.Path.
+def should_display_related(content_path, fname):
+    """Determine if a page should display its own related content list.
 
-    For _index.md in bundles, Hugo uses the directory path.
-    For regular .md files, Hugo uses the file path.
-    Both are relative to the content directory.
+    Display rules:
+    - Blog leaf pages: yes
+    - Notes leaf pages: yes
+    - Project log posts (posts/*.md but not _index.md): yes
+    - Everything else (root pages, project index, project reference pages,
+      section indexes, _index.md files): no
     """
-    rel = os.path.relpath(filepath, CONTENT_DIR)
-    return rel
+    parts = content_path.split(os.sep)
+    section = parts[0] if parts else ""
+
+    if section == "blog":
+        return fname != "_index.md"
+    elif section == "notes":
+        return fname != "_index.md"
+    elif section == "projects":
+        # Project log posts live under projects/<name>/posts/<file>.md
+        if len(parts) >= 3 and parts[-2] == "posts" and fname != "_index.md":
+            return True
+        return False
+    else:
+        return False
 
 
 def collect_pages():
-    """Walk content directories and collect page data."""
+    """Walk all content and collect page data for embedding."""
     pages = []
 
-    for section in SECTIONS:
+    # Walk section directories (blog, notes, projects)
+    for section in ["blog", "notes", "projects"]:
         section_dir = os.path.join(CONTENT_DIR, section)
         if not os.path.isdir(section_dir):
             continue
@@ -95,120 +130,178 @@ def collect_pages():
 
                 filepath = os.path.join(root, fname)
 
-                if is_section_index(filepath, section_dir):
+                # Skip section-level _index.md
+                if filepath == os.path.join(section_dir, "_index.md"):
                     continue
 
-                with open(filepath, "r", encoding="utf-8") as f:
-                    text = f.read()
+                _add_page(pages, filepath, fname)
 
-                fm, body = parse_frontmatter(text)
+    # Walk root-level pages (about.md, security.md, etc.) as target-only
+    for fname in os.listdir(CONTENT_DIR):
+        if not fname.endswith(".md"):
+            continue
+        if fname in EXCLUDED_FILES:
+            continue
 
-                # Skip drafts and non-public pages
-                if fm.get("draft", False):
-                    continue
-                if fm.get("public") is False:
-                    continue
+        filepath = os.path.join(CONTENT_DIR, fname)
+        if not os.path.isfile(filepath):
+            continue
 
-                title = fm.get("title", "")
-                tags = fm.get("tags", []) or []
-                content_path = content_path_for_hugo(filepath)
-
-                # Build document text with title weighting
-                cleaned = clean_body(body)
-                doc_text = f"{title} {title} {title} {cleaned}"
-
-                # Determine if this is a leaf page (content that should
-                # display related links) vs a branch/index page. Only leaf
-                # pages in display sections get related content shown.
-                is_leaf = fname != "_index.md"
-                shows_related = section in DISPLAY_SECTIONS and is_leaf
-
-                pages.append({
-                    "content_path": content_path,
-                    "title": title,
-                    "tags": [t.lower() for t in tags],
-                    "doc_text": doc_text,
-                    "shows_related": shows_related,
-                })
+        _add_page(pages, filepath, fname)
 
     return pages
 
 
-def compute_related(pages):
-    """Compute TF-IDF similarity and select related pages."""
-    if len(pages) < 2:
-        return {}
+def _add_page(pages, filepath, fname):
+    """Parse a content file and add it to the pages list."""
+    with open(filepath, "r", encoding="utf-8") as f:
+        raw = f.read()
 
-    corpus = [p["doc_text"] for p in pages]
+    fm, body = parse_frontmatter(raw)
 
-    vectorizer = TfidfVectorizer(
-        max_df=0.7,
-        min_df=2,
-        ngram_range=(1, 2),
-        stop_words="english",
-        sublinear_tf=True,
-    )
-    tfidf_matrix = vectorizer.fit_transform(corpus)
-    sim_matrix = cosine_similarity(tfidf_matrix)
+    if fm.get("draft", False):
+        return
+    if fm.get("public") is False:
+        return
+
+    title = fm.get("title", "")
+    content_path = os.path.relpath(filepath, CONTENT_DIR)
+    prose = extract_prose(body)
+
+    embed_text = f"{title}. {prose}" if prose else title
+
+    pages.append({
+        "content_path": content_path,
+        "title": title,
+        "embed_text": embed_text,
+        "hash": content_hash(raw),
+        "shows_related": should_display_related(content_path, fname),
+    })
+
+
+def load_cached_embeddings():
+    """Load cached embeddings if available."""
+    cache_file = os.path.join(CACHE_DIR, "embeddings.npz")
+    meta_file = os.path.join(CACHE_DIR, "meta.json")
+
+    if not os.path.exists(cache_file) or not os.path.exists(meta_file):
+        return None, None
+
+    with open(meta_file, "r") as f:
+        meta = json.load(f)
+
+    data = np.load(cache_file)
+    return meta, data["embeddings"]
+
+
+def save_cached_embeddings(meta, embeddings):
+    """Save embeddings to cache."""
+    os.makedirs(CACHE_DIR, exist_ok=True)
+
+    cache_file = os.path.join(CACHE_DIR, "embeddings.npz")
+    meta_file = os.path.join(CACHE_DIR, "meta.json")
+
+    np.savez_compressed(cache_file, embeddings=embeddings)
+    with open(meta_file, "w") as f:
+        json.dump(meta, f, indent=2)
+
+
+def compute_embeddings(pages):
+    """Compute embeddings, using cache where possible."""
+    cached_meta, cached_embeddings = load_cached_embeddings()
+
+    cached_lookup = {}
+    if cached_meta and cached_embeddings is not None:
+        if cached_meta.get("model") == EMBEDDING_MODEL:
+            for i, entry in enumerate(cached_meta.get("pages", [])):
+                key = (entry["content_path"], entry["hash"])
+                cached_lookup[key] = cached_embeddings[i]
+
+    to_embed = []
+    to_embed_indices = []
+    embeddings = [None] * len(pages)
+
+    for i, page in enumerate(pages):
+        key = (page["content_path"], page["hash"])
+        if key in cached_lookup:
+            embeddings[i] = cached_lookup[key]
+        else:
+            to_embed.append(page["embed_text"])
+            to_embed_indices.append(i)
+
+    cache_hits = len(pages) - len(to_embed)
+    print(f"Embedding cache: {cache_hits} hits, {len(to_embed)} to compute")
+
+    if to_embed:
+        from sentence_transformers import SentenceTransformer
+
+        model = SentenceTransformer(EMBEDDING_MODEL)
+        new_embeddings = model.encode(to_embed, show_progress_bar=len(to_embed) > 20)
+
+        for idx, emb in zip(to_embed_indices, new_embeddings):
+            embeddings[idx] = emb
+
+    embeddings = np.array(embeddings)
+
+    meta = {
+        "model": EMBEDDING_MODEL,
+        "pages": [{"content_path": p["content_path"], "hash": p["hash"]} for p in pages],
+    }
+    save_cached_embeddings(meta, embeddings)
+
+    return embeddings
+
+
+def compute_related(pages, embeddings):
+    """Compute cosine similarity and select related pages."""
+    from sklearn.metrics.pairwise import cosine_similarity
+
+    sim_matrix = cosine_similarity(embeddings)
 
     related = {}
 
     for i, page in enumerate(pages):
-        # Only generate related entries for pages that should display them
         if not page["shows_related"]:
             continue
 
         scores = []
-        for j, other in enumerate(pages):
+        for j in range(len(pages)):
             if i == j:
                 continue
-
-            score = float(sim_matrix[i][j])
-
-            # Tag overlap bonus
-            shared_tags = set(page["tags"]) & set(other["tags"])
-            if shared_tags:
-                bonus = min(len(shared_tags) * TAG_BONUS_PER_TAG, TAG_BONUS_CAP)
-                score += bonus
-
-            scores.append((score, other["content_path"]))
+            scores.append((float(sim_matrix[i][j]), pages[j]["content_path"]))
 
         scores.sort(reverse=True)
 
-        # Always take top 3, then include 4th/5th if above cutoff
         selected = []
-        for rank, (score, path) in enumerate(scores):
-            if rank < MIN_RELATED:
-                selected.append(path)
-            elif rank < MAX_RELATED and score >= SIMILARITY_CUTOFF:
-                selected.append(path)
-            else:
-                break
+        for score, path in scores[:MAX_RELATED]:
+            if score >= SIMILARITY_CUTOFF:
+                selected.append({"path": path, "score": round(score * 100)})
 
-        related[page["content_path"]] = selected
+        if selected:
+            related[page["content_path"]] = selected
 
     return related
 
 
 def main():
     pages = collect_pages()
-    print(f"Collected {len(pages)} pages from {', '.join(SECTIONS)}")
+    display_count = sum(1 for p in pages if p["shows_related"])
+    target_count = len(pages) - display_count
+    print(f"Collected {len(pages)} pages ({display_count} display, {target_count} target-only)")
 
-    related = compute_related(pages)
+    embeddings = compute_embeddings(pages)
+    related = compute_related(pages, embeddings)
 
-    # Ensure output directory exists
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(related, f, indent=2, sort_keys=True)
 
-    # Stats
     counts = [len(v) for v in related.values()]
-    with_3_plus = sum(1 for c in counts if c >= 3)
     print(f"Wrote {len(related)} entries to {os.path.relpath(OUTPUT_PATH)}")
-    print(f"Pages with 3+ related: {with_3_plus}/{len(related)}")
-    print(f"Pages with 4+ related: {sum(1 for c in counts if c >= 4)}/{len(related)}")
-    print(f"Pages with 5 related: {sum(1 for c in counts if c >= 5)}/{len(related)}")
+    print(f"Display pages with related content: {len(related)}/{display_count}")
+    print(f"  3+ related: {sum(1 for c in counts if c >= 3)}")
+    print(f"  4+ related: {sum(1 for c in counts if c >= 4)}")
+    print(f"  5  related: {sum(1 for c in counts if c >= 5)}")
 
 
 if __name__ == "__main__":
