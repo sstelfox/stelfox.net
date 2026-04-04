@@ -6,6 +6,6 @@ title: Home
 
 # Home
 
-This is the digital home of Sam Stelfox, a staff software engineer with a focus on security, data analytics, and backend processing. I keep my [thoughts](blog) on various things as they come up in my blog posts as well as [publish notes](notes) on tasks, service configuration, systems, and hobbies.
+Welcome! I'm Sam Stelfox, a security engineer and operations leader with a long-standing habit of taking things apart to see how they work. The best of my time belongs to my wife Hannah, our daughter Zelda, and our pup Cookie, with whatever is left going to tinkering with compilers, knowledge graphs, genetic algorithms, and whatever else catches my attention.
 
-I've also written a little bit [about myself](about) if you'd like to learn more about me.
+This site is where I keep my [notes](notes) on anything I'm researching as well as longer [blog posts](blog) when I have something worth writing up. You can learn more [about me](about) and how to get in touch there as well.
