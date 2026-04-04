@@ -1,0 +1,259 @@
+{{ define "head_extra" }}
+{{- if eq .File.Path "blog/_index.md" }}
+<link rel="stylesheet" href="/css/blog.css">
+{{- end }}
+{{ end }}
+
+{{ define "main" }}
+<div class="container">
+  {{- partial "breadcrumbs.html" . -}}
+
+  {{- if eq .File.Path "blog/_index.md" }}
+  {{- /* Top-level blog section index */ -}}
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+    </header>
+
+    {{- if .Content }}
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+    {{- end }}
+
+    {{- $allPosts := .RegularPagesRecursive.ByDate.Reverse }}
+
+    {{- /* Compute stats */ -}}
+    {{- $totalWords := 0 }}
+    {{- $totalReadingTime := 0 }}
+    {{- $codeBlocks := 0 }}
+    {{- $maxWords := 0 }}
+    {{- $longestPost := "" }}
+    {{- range $allPosts }}
+      {{- $totalWords = add $totalWords .WordCount }}
+      {{- $totalReadingTime = add $totalReadingTime .ReadingTime }}
+      {{- $blocks := len (findRE "(?m)^```" .RawContent) }}
+      {{- $codeBlocks = add $codeBlocks $blocks }}
+      {{- if gt .WordCount $maxWords }}
+        {{- $maxWords = .WordCount }}
+        {{- $longestPost = .Title }}
+      {{- end }}
+    {{- end }}
+
+    {{- $postCount := len $allPosts }}
+    {{- $latestPost := index $allPosts 0 }}
+    {{- $oldestPost := index $allPosts (sub $postCount 1) }}
+    {{- $firstYear := $oldestPost.Date.Year }}
+    {{- $spanYears := sub now.Year $firstYear }}
+    {{- $avgPerYear := 0 }}
+    {{- if gt $spanYears 0 }}
+      {{- $avgPerYear = div $postCount $spanYears }}
+    {{- end }}
+    {{- $daysSinceLastPost := div (sub now.Unix $latestPost.Date.Unix) 86400 }}
+    {{- $avgWords := 0 }}
+    {{- if gt $postCount 0 }}
+      {{- $avgWords = div $totalWords $postCount }}
+    {{- end }}
+    {{- $readingHours := div $totalReadingTime 60 }}
+    {{- $readingMins := mod $totalReadingTime 60 }}
+
+    <section class="blog-stats">
+      <div class="blog-stat">
+        <div class="blog-stat-number">{{ $postCount }}</div>
+        <div class="blog-stat-label">Posts</div>
+      </div>
+      <div class="blog-stat">
+        <div class="blog-stat-number">{{ lang.FormatNumber 0 $totalWords }}</div>
+        <div class="blog-stat-label">Words</div>
+      </div>
+      <div class="blog-stat">
+        <div class="blog-stat-number">~{{ $avgPerYear }}/yr</div>
+        <div class="blog-stat-label">Avg Posts</div>
+      </div>
+      <div class="blog-stat">
+        <div class="blog-stat-number">{{ $daysSinceLastPost }}d</div>
+        <div class="blog-stat-label">Since Last Post</div>
+      </div>
+      <div class="blog-stat">
+        <div class="blog-stat-number">{{ lang.FormatNumber 0 $avgWords }}</div>
+        <div class="blog-stat-label">Avg Words</div>
+      </div>
+      <div class="blog-stat">
+        <div class="blog-stat-number">{{ $readingHours }}h {{ $readingMins }}m</div>
+        <div class="blog-stat-label">Reading Time</div>
+      </div>
+    </section>
+
+    {{- /* Latest post highlight */ -}}
+    {{- if $latestPost }}
+    <section class="blog-latest">
+      <h2>Latest</h2>
+      <a href="{{ $latestPost.RelPermalink }}" class="blog-latest-card">
+        <div class="blog-latest-meta">
+          <time>{{ $latestPost.Date.Format "January 2, 2006" }}</time>
+          {{- if $latestPost.Params.tags }}
+          <div class="blog-latest-tags">
+            {{- range first 3 $latestPost.Params.tags }}
+            <span class="tag">{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </div>
+        <h3 class="blog-latest-title">{{ $latestPost.Title }}</h3>
+        <p class="blog-latest-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
+      </a>
+    </section>
+    {{- end }}
+
+    {{- /* Random selection of older posts */ -}}
+    {{- $olderPosts := after 1 $allPosts }}
+    {{- if $olderPosts }}
+    <section class="blog-discover">
+      <h2>From the Archives</h2>
+      <div class="blog-discover-grid">
+        {{- $featured := first 3 (shuffle $olderPosts) }}
+        {{- range $featured }}
+        <a href="{{ .RelPermalink }}" class="discover-card">
+          <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+          <h3 class="discover-card-title">{{ .Title }}</h3>
+          <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
+          {{- if .Params.tags }}
+          <div class="discover-card-tags">
+            {{- range first 3 .Params.tags }}
+            <span class="tag">{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </a>
+        {{- end }}
+      </div>
+    </section>
+
+    {{- /* Related posts drawn from the featured posts' related content */ -}}
+    {{- $relatedData := index hugo.Data "related" }}
+    {{- $relatedPosts := slice }}
+    {{- $seenPaths := slice }}
+    {{- range $featured }}
+      {{- $seenPaths = $seenPaths | append .File.Path }}
+    {{- end }}
+    {{- $seenPaths = $seenPaths | append $latestPost.File.Path }}
+    {{- if $relatedData }}
+      {{- range $featured }}
+        {{- $entries := index $relatedData .File.Path }}
+        {{- if $entries }}
+          {{- range $entries }}
+            {{- $page := site.GetPage .path }}
+            {{- if and $page (eq $page.Section "blog") (not (in $seenPaths .path)) }}
+              {{- $seenPaths = $seenPaths | append .path }}
+              {{- $relatedPosts = $relatedPosts | append $page }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- $relatedPosts = first 3 $relatedPosts }}
+    {{- if $relatedPosts }}
+    <section class="blog-related">
+      <h2>You Might Also Enjoy</h2>
+      <div class="blog-discover-grid">
+        {{- range $relatedPosts }}
+        <a href="{{ .RelPermalink }}" class="discover-card">
+          <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+          <h3 class="discover-card-title">{{ .Title }}</h3>
+          <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
+          {{- if .Params.tags }}
+          <div class="discover-card-tags">
+            {{- range first 3 .Params.tags }}
+            <span class="tag">{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </a>
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+    {{- end }}
+
+    {{- /* Paginated full listing */ -}}
+    {{- $paginator := .Paginate $allPosts }}
+    {{- if $paginator.Pages }}
+    <section class="blog-listing">
+      <h2>All Posts</h2>
+      <ul class="post-list">
+        {{- range $paginator.Pages }}
+        <li class="post-item">
+          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+          <a href="{{ .RelPermalink }}" class="post-link">
+            <span class="post-title">{{ .Title }}</span>
+            {{- if .Params.tags }}
+            <span class="post-tags">{{ delimit .Params.tags ", " }}</span>
+            {{- end }}
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+
+      {{- if gt $paginator.TotalPages 1 }}
+      <nav class="pagination" aria-label="Blog pagination">
+        {{- if $paginator.HasPrev }}
+        <a href="{{ $paginator.Prev.URL }}" class="pagination-link pagination-prev">Newer</a>
+        {{- end }}
+        <span class="pagination-info">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+        {{- if $paginator.HasNext }}
+        <a href="{{ $paginator.Next.URL }}" class="pagination-link pagination-next">Older</a>
+        {{- end }}
+      </nav>
+      {{- end }}
+    </section>
+    {{- end }}
+
+    <section class="blog-search">
+      <h2>Search Posts</h2>
+      <form class="blog-search-form" action="/search/" method="get">
+        <input type="hidden" name="section" value="blog">
+        <input
+          type="text"
+          name="q"
+          class="blog-search-input"
+          placeholder="Search across all blog posts..."
+          autocomplete="off"
+        >
+      </form>
+    </section>
+  </article>
+
+  {{- else }}
+  {{- /* Nested blog pages (page bundles) - use default rendering */ -}}
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+    </header>
+
+    {{- if .Content }}
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+    {{- end }}
+
+    {{- if .Pages }}
+    <section class="page-list">
+      <ul class="post-list">
+        {{- range .Pages }}
+        <li class="post-item">
+          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+          <a href="{{ .RelPermalink }}" class="post-link">
+            <span class="post-title">{{ .Title }}</span>
+            {{- if .Params.tags }}
+            <span class="post-tags">{{ delimit .Params.tags ", " }}</span>
+            {{- end }}
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+    </section>
+    {{- end }}
+  </article>
+  {{- end }}
+</div>
+{{ end }}

@@ -288,9 +288,23 @@
     return div.textContent || div.innerText || '';
   }
 
-  // Check for query parameter on page load
+  // Check for query parameters on page load
   function checkQueryParameter() {
     const urlParams = new URLSearchParams(window.location.search);
+
+    // Apply section filter if specified
+    const section = urlParams.get('section');
+    if (section) {
+      const validSections = ['all', 'blog', 'notes', 'projects'];
+      if (validSections.includes(section)) {
+        currentSection = section;
+        const sectionFilters = document.querySelectorAll('.section-filter');
+        sectionFilters.forEach(f => {
+          f.classList.toggle('active', f.dataset.section === section);
+        });
+      }
+    }
+
     const query = urlParams.get('q');
     if (query && searchInput) {
       searchInput.value = query;

@@ -1,0 +1,107 @@
+{{ define "head_extra" }}
+<link rel="stylesheet" href="/css/notes.css">
+{{ end }}
+
+{{ define "main" }}
+<div class="container">
+  {{- partial "breadcrumbs.html" . -}}
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+    </header>
+
+    {{- if .Content }}
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+    {{- end }}
+
+    {{- $allNotes := .RegularPagesRecursive }}
+
+    {{- /* Compute stats */ -}}
+    {{- $totalWords := 0 }}
+    {{- $totalReadingTime := 0 }}
+    {{- $codeBlocks := 0 }}
+    {{- $maxWords := 0 }}
+    {{- $longestNote := "" }}
+    {{- $totalLinks := 0 }}
+    {{- range $allNotes }}
+      {{- $totalWords = add $totalWords .WordCount }}
+      {{- $totalReadingTime = add $totalReadingTime .ReadingTime }}
+      {{- $blocks := len (findRE "(?m)^```" .RawContent) }}
+      {{- $codeBlocks = add $codeBlocks $blocks }}
+      {{- $links := len (findRE `https?://` .RawContent) }}
+      {{- $totalLinks = add $totalLinks $links }}
+      {{- if gt .WordCount $maxWords }}
+        {{- $maxWords = .WordCount }}
+        {{- $longestNote = .Title }}
+      {{- end }}
+    {{- end }}
+    {{- $tagCount := len .Site.Taxonomies.tags }}
+    {{- $readingHours := div $totalReadingTime 60 }}
+    {{- $readingMins := mod $totalReadingTime 60 }}
+
+    <section class="notes-stats">
+      <div class="notes-stat">
+        <div class="notes-stat-number">{{ len $allNotes }}</div>
+        <div class="notes-stat-label">Notes</div>
+      </div>
+      <div class="notes-stat">
+        <div class="notes-stat-number">{{ lang.FormatNumber 0 $totalWords }}</div>
+        <div class="notes-stat-label">Words</div>
+      </div>
+      <div class="notes-stat">
+        <div class="notes-stat-number">{{ lang.FormatNumber 0 $codeBlocks }}</div>
+        <div class="notes-stat-label">Code Blocks</div>
+      </div>
+      <div class="notes-stat">
+        <div class="notes-stat-number">{{ $readingHours }}h {{ $readingMins }}m</div>
+        <div class="notes-stat-label">Reading Time</div>
+      </div>
+      <div class="notes-stat">
+        <div class="notes-stat-number">{{ lang.FormatNumber 0 $totalLinks }}</div>
+        <div class="notes-stat-label">Links Out</div>
+      </div>
+      <div class="notes-stat">
+        <div class="notes-stat-number">{{ $tagCount }}</div>
+        <div class="notes-stat-label">Tags</div>
+      </div>
+    </section>
+
+    {{- if $allNotes }}
+    <section class="notes-discover">
+      <h2>Explore</h2>
+      <div class="notes-grid">
+        {{- range first 9 (shuffle $allNotes) }}
+        <a href="{{ .RelPermalink }}" class="discover-card">
+          <h3 class="discover-card-title">{{ .Title }}</h3>
+          <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 200 }}</p>
+          {{- if .Params.tags }}
+          <div class="discover-card-tags">
+            {{- range first 3 .Params.tags }}
+            <span class="tag">{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </a>
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+
+    <section class="notes-search">
+      <h2>Search Notes</h2>
+      <form class="notes-search-form" action="/search/" method="get">
+        <input type="hidden" name="section" value="notes">
+        <input
+          type="text"
+          name="q"
+          class="notes-search-input"
+          placeholder="Search across all notes..."
+          autocomplete="off"
+        >
+      </form>
+    </section>
+  </article>
+</div>
+{{ end }}
