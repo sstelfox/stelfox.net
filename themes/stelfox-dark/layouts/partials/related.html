@@ -1,0 +1,31 @@
+{{- $validSections := slice "blog" "notes" "projects" -}}
+{{- $isValidSection := in $validSections .Section -}}
+{{- $isRegularPage := .IsPage -}}
+
+{{- if and $isValidSection $isRegularPage -}}
+  {{- $maxItems := 5 -}}
+  {{- $allRelated := .Site.RegularPages.Related . -}}
+  {{- $sameSection := where $allRelated "Section" .Section -}}
+  {{- $crossSection := where $allRelated "Section" "ne" .Section -}}
+  {{- $related := $sameSection -}}
+  {{- range $crossSection -}}
+    {{- $related = $related | append . -}}
+  {{- end -}}
+  {{- $related = first $maxItems $related -}}
+
+  {{- if ge (len $related) 3 -}}
+  <nav class="related-content" aria-label="Related content">
+    <h3>Related Content</h3>
+    <ul>
+      {{- range $related }}
+      <li>
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{- if ne $.Section .Section }}
+        <span class="related-section">{{ .Section }}</span>
+        {{- end }}
+      </li>
+      {{- end }}
+    </ul>
+  </nav>
+  {{- end -}}
+{{- end -}}

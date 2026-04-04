@@ -21,7 +21,7 @@
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
   --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
 
-  --max-width: 800px;
+  --max-width: 1200px;
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
   --spacing-md: 1.5rem;
@@ -152,7 +152,7 @@ main {
 }
 
 .site-header .container {
-  max-width: 1200px;
+  max-width: var(--max-width);
 }
 
 .header-content {
@@ -256,6 +256,43 @@ input[type="text"].header-search-input {
   font-size: 0.85rem;
 }
 
+/* === Breadcrumbs === */
+.breadcrumbs {
+  margin-bottom: var(--spacing-sm);
+}
+
+.breadcrumbs ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.breadcrumbs li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  content: "/";
+  margin: 0 0.5em;
+  color: var(--text-tertiary);
+}
+
+.breadcrumbs a {
+  color: var(--text-secondary);
+}
+
+.breadcrumbs a:hover {
+  color: var(--accent-primary);
+}
+
+.breadcrumbs [aria-current="page"] {
+  color: var(--text-secondary);
+}
+
 /* === Content === */
 .content {
   margin-bottom: var(--spacing-xl);
@@ -346,6 +383,51 @@ input[type="text"].header-search-input {
 
 .content-nav .next {
   text-align: right;
+}
+
+/* === Related Content === */
+.related-content {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--border-color);
+}
+
+.related-content h3 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-sm);
+  font-size: 1rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.related-content ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.related-content li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-xs);
+}
+
+.related-content a {
+  color: var(--accent-primary);
+}
+
+.related-content a:hover {
+  color: var(--accent-hover);
+}
+
+.related-section {
+  background-color: var(--bg-tertiary);
+  padding: 0.1em 0.5em;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
 }
 
 /* === Home Page === */
@@ -465,6 +547,11 @@ tr:nth-child(even) {
   .content-nav .next {
     text-align: left;
   }
+
+  .related-content li {
+    flex-direction: column;
+    gap: 0;
+  }
 }
 
 /* === Syntax Highlighting Override === */
@@ -474,4 +561,55 @@ tr:nth-child(even) {
 
 .highlight pre {
   margin: 0;
+}
+
+.highlight .lntable {
+  width: 100%;
+  border: none;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+}
+
+.highlight .lntable tr {
+  background-color: transparent;
+}
+
+.highlight .lntable td {
+  border: none;
+  padding: 0;
+}
+
+.highlight .lntable .lntd:first-child {
+  width: 1%;
+  min-width: fit-content;
+  user-select: none;
+  vertical-align: top;
+}
+
+.highlight .lntable .lntd:first-child pre {
+  text-align: right;
+  border: none;
+  background: transparent;
+  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
+  border-right: 1px solid var(--border-color);
+}
+
+.highlight .lntable .lntd:last-child {
+  vertical-align: top;
+}
+
+.highlight .lntable .lntd:last-child pre {
+  border: none;
+  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
+}
+
+.highlight .lnlinks {
+  color: var(--text-tertiary);
+  text-decoration: none;
+}
+
+.highlight .lnlinks:hover {
+  color: var(--text-secondary);
+  text-decoration: none;
 }

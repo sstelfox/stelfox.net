@@ -1,5 +1,6 @@
 {{ define "main" }}
 <div class="container">
+  {{- partial "breadcrumbs.html" . -}}
   <article class="content">
     <header class="content-header">
       <h1>{{ .Title }}</h1>
@@ -31,16 +32,7 @@
       {{ .Content }}
     </div>
 
-    {{- if and $isBlogPost (or .NextInSection .PrevInSection) }}
-    <nav class="content-nav">
-      {{- if .PrevInSection }}
-      <a href="{{ .PrevInSection.RelPermalink }}" class="prev">← {{ .PrevInSection.Title }}</a>
-      {{- end }}
-      {{- if .NextInSection }}
-      <a href="{{ .NextInSection.RelPermalink }}" class="next">{{ .NextInSection.Title }} →</a>
-      {{- end }}
-    </nav>
-    {{- end }}
+    {{- partial "related.html" . -}}
   </article>
 </div>
 {{ end }}

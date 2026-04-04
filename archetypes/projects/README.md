@@ -43,7 +43,7 @@ Edit `_index.md` to configure your project:
 - **title**: Project name
 - **status**: One of: `planning`, `active`, `on-hold`, `maintenance`, `archived`
 - **source_url**: Optional link to source code repository
-- **demo_url**: Optional link to live demo/running instance
+- **demo_url**: Optional link to project / running instance
 - **tech_stack**: Array of technologies used
 
 ### Example

@@ -1,5 +1,6 @@
 {{ define "main" }}
 <div class="container">
+  {{- partial "breadcrumbs.html" . -}}
   <article class="content project">
     <header class="content-header">
       <h1>{{ .Title }}</h1>
@@ -29,7 +30,7 @@
         {{- end }}
         {{- if .Params.demo_url }}
         <a href="{{ .Params.demo_url }}" class="project-link demo-link" rel="noopener noreferrer" target="_blank">
-          <span>Live Demo</span>
+          <span>Visit Project</span>
         </a>
         {{- end }}
       </div>
@@ -41,6 +42,22 @@
     </div>
 
     {{- $posts := .Resources.Match "posts/*.md" }}
+    {{- if $posts }}
+    {{- $latest := index $posts.Reverse 0 }}
+    {{- if $latest }}
+    <section class="latest-log-entry">
+      <h2>Latest Update</h2>
+      <article class="log-entry-preview">
+        <div class="log-entry-header">
+          <a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a>
+          <time>{{ $latest.Date.Format "January 2, 2006" }}</time>
+        </div>
+        <div class="log-entry-summary">{{ $latest.Summary }}</div>
+      </article>
+    </section>
+    {{- end }}
+    {{- end }}
+
     {{- if $posts }}
     <section class="project-posts">
       <h2>Project Log</h2>
@@ -66,6 +83,8 @@
       </ul>
     </section>
     {{- end }}
+
+    {{- partial "related.html" . -}}
   </article>
 </div>
 {{ end }}

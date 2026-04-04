@@ -8,7 +8,7 @@ tags: []
 # Project metadata
 status: "planning"  # planning | active | on-hold | maintenance | archived
 source_url: ""      # Optional: GitHub/GitLab URL
-demo_url: ""        # Optional: Running instance URL
+demo_url: ""        # Optional: Running instance / project URL
 tech_stack: []      # Technologies used (e.g., ["Go", "PostgreSQL", "React"])
 ---
 

@@ -1,0 +1,18 @@
+{{- if and .Parent (not .IsHome) -}}
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {{- $ancestors := slice -}}
+    {{- $current := . -}}
+    {{- range seq 10 -}}
+      {{- if and $current $current.Parent -}}
+        {{- $ancestors = $ancestors | append $current.Parent -}}
+        {{- $current = $current.Parent -}}
+      {{- end -}}
+    {{- end -}}
+    {{- range $ancestors | collections.Reverse }}
+    <li><a href="{{ .RelPermalink }}">{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }}</a></li>
+    {{- end }}
+    <li aria-current="page">{{ .Title }}</li>
+  </ol>
+</nav>
+{{- end -}}
