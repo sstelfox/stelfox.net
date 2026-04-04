@@ -68,36 +68,22 @@
     <header class="content-header">
       <h1>{{ .Title }}</h1>
 
-      {{- if .Params.status }}
       <div class="project-meta">
+        {{- if .Params.source_url }}
+        <a href="{{ .Params.source_url }}" class="project-link source-link" rel="noopener noreferrer" target="_blank">View Source</a>
+        {{- end }}
+        {{- if .Params.demo_url }}
+        <a href="{{ .Params.demo_url }}" class="project-link demo-link" rel="noopener noreferrer" target="_blank">Visit Project</a>
+        {{- end }}
+        {{- if .Params.status }}
         <span class="project-status status-{{ .Params.status }}">
           {{ .Params.status | humanize | title }}
         </span>
-
-        {{- if .Params.tech_stack }}
-        <div class="tech-stack">
-          {{- range .Params.tech_stack }}
-          <span class="tech-tag">{{ . }}</span>
-          {{- end }}
-        </div>
+        {{- end }}
+        {{- range .Params.tech_stack }}
+        <span class="tech-tag">{{ . }}</span>
         {{- end }}
       </div>
-      {{- end }}
-
-      {{- if or .Params.source_url .Params.demo_url }}
-      <div class="project-links">
-        {{- if .Params.source_url }}
-        <a href="{{ .Params.source_url }}" class="project-link source-link" rel="noopener noreferrer" target="_blank">
-          <span>View Source</span>
-        </a>
-        {{- end }}
-        {{- if .Params.demo_url }}
-        <a href="{{ .Params.demo_url }}" class="project-link demo-link" rel="noopener noreferrer" target="_blank">
-          <span>Visit Project</span>
-        </a>
-        {{- end }}
-      </div>
-      {{- end }}
     </header>
 
     <div class="content-body">
@@ -123,36 +109,38 @@
     {{- end }}
 
     {{- $postsSection = .GetPage "posts" }}
-    {{- if $postsSection }}
-    {{- $posts := $postsSection.RegularPages }}
-    {{- if $posts }}
-    <section class="project-posts">
-      <h2>Project Log</h2>
-      <ul class="post-list">
-        {{- range $posts.Reverse }}
-        <li class="post-item">
-          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
-          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-        </li>
-        {{- end }}
-      </ul>
-    </section>
-    {{- end }}
-    {{- end }}
-
+    {{- $posts := slice }}
+    {{- if $postsSection }}{{ $posts = $postsSection.RegularPages }}{{ end }}
     {{- $pagesSection := .GetPage "pages" }}
-    {{- if $pagesSection }}
-    {{- $refPages := $pagesSection.RegularPages }}
-    {{- if $refPages }}
-    <section class="project-pages">
-      <h2>Reference Pages</h2>
-      <ul class="page-list">
-        {{- range $refPages }}
-        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-        {{- end }}
-      </ul>
-    </section>
-    {{- end }}
+    {{- $refPages := slice }}
+    {{- if $pagesSection }}{{ $refPages = $pagesSection.RegularPages }}{{ end }}
+    {{- if or $posts $refPages }}
+    <div class="project-bottom-columns">
+      {{- if $posts }}
+      <section class="project-posts">
+        <h2>Project Log</h2>
+        <ul class="post-list">
+          {{- range $posts.Reverse }}
+          <li class="post-item">
+            <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+
+      {{- if $refPages }}
+      <section class="project-pages">
+        <h2>Reference Pages</h2>
+        <ul class="page-list">
+          {{- range $refPages }}
+          <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+    </div>
     {{- end }}
   </article>
   {{- end }}
