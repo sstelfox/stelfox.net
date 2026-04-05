@@ -21,12 +21,14 @@
   {{- if $latestPost }}
   <section class="latest-highlight">
     <h2>Latest</h2>
-    <a href="{{ $latestPost.RelPermalink }}" class="latest-card">
-      <div class="latest-card-meta">
-        <time>{{ $latestPost.Date.Format "January 2, 2006" }}</time>
+    <a href="{{ $latestPost.RelPermalink }}" class="discover-card latest-card">
+      <div class="discover-card-meta">
+        <time class="discover-card-date">{{ $latestPost.Date.Format "2006-01-02" }}</time>
+        <span class="reading-time">{{ $latestPost.ReadingTime }} min read</span>
       </div>
-      <h3 class="latest-card-title">{{ $latestPost.Title }}</h3>
-      <div class="latest-card-tags">
+      <h3 class="discover-card-title">{{ $latestPost.Title }}</h3>
+      <p class="discover-card-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
+      <div class="discover-card-tags">
         {{- if ne $latestPost.Section "blog" }}
         <span class="tag tag-project">{{ $latestPost.Parent.Parent.Title }}</span>
         {{- end }}
@@ -34,7 +36,6 @@
         <span class="tag">{{ . }}</span>
         {{- end }}
       </div>
-      <p class="latest-card-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
     </a>
   </section>
   {{- end }}

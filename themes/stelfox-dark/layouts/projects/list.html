@@ -77,7 +77,11 @@
       <article class="log-entry-full">
         <header class="log-entry-header">
           <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-          <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+          <div class="content-meta">
+            <span class="content-author">{{ .Site.Params.author }}</span>
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+            <span class="reading-time">{{ .ReadingTime }} min read</span>
+          </div>
           {{- if .Params.tags }}
           <div class="post-tags">
             {{- range .Params.tags }}

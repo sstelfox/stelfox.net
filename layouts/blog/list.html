@@ -88,19 +88,20 @@
     {{- if $latestPost }}
     <section class="latest-highlight">
       <h2>Latest</h2>
-      <a href="{{ $latestPost.RelPermalink }}" class="latest-card">
-        <div class="latest-card-meta">
-          <time>{{ $latestPost.Date.Format "January 2, 2006" }}</time>
+      <a href="{{ $latestPost.RelPermalink }}" class="discover-card latest-card">
+        <div class="discover-card-meta">
+          <time class="discover-card-date">{{ $latestPost.Date.Format "2006-01-02" }}</time>
+          <span class="reading-time">{{ $latestPost.ReadingTime }} min read</span>
         </div>
-        <h3 class="latest-card-title">{{ $latestPost.Title }}</h3>
+        <h3 class="discover-card-title">{{ $latestPost.Title }}</h3>
+        <p class="discover-card-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
         {{- if $latestPost.Params.tags }}
-        <div class="latest-card-tags">
+        <div class="discover-card-tags">
           {{- range $latestPost.Params.tags }}
           <span class="tag">{{ . }}</span>
           {{- end }}
         </div>
         {{- end }}
-        <p class="latest-card-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
       </a>
     </section>
     {{- end }}
@@ -114,7 +115,10 @@
         {{- $featured := first 3 (shuffle $olderPosts) }}
         {{- range $featured }}
         <a href="{{ .RelPermalink }}" class="discover-card">
-          <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+          <div class="discover-card-meta">
+            <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+            <span class="reading-time">{{ .ReadingTime }} min read</span>
+          </div>
           <h3 class="discover-card-title">{{ .Title }}</h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- if .Params.tags }}
@@ -158,7 +162,10 @@
       <div class="blog-discover-grid">
         {{- range $relatedPosts }}
         <a href="{{ .RelPermalink }}" class="discover-card">
-          <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+          <div class="discover-card-meta">
+            <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+            <span class="reading-time">{{ .ReadingTime }} min read</span>
+          </div>
           <h3 class="discover-card-title">{{ .Title }}</h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- if .Params.tags }}
