@@ -21,22 +21,7 @@
     </div>
     {{- end }}
 
-    {{- $blogPosts := .RegularPagesRecursive }}
-    {{- $logPosts := slice }}
-    {{- range site.Sections }}
-      {{- if eq .Section "projects" }}
-        {{- range .Sections }}
-          {{- $logs := .GetPage "logs" }}
-          {{- if $logs }}
-            {{- range $logs.RegularPages }}
-              {{- $logPosts = $logPosts | append . }}
-            {{- end }}
-          {{- end }}
-        {{- end }}
-      {{- end }}
-    {{- end }}
-    {{- $allPosts := union $blogPosts $logPosts }}
-    {{- $allPosts = $allPosts.ByDate.Reverse }}
+    {{- $allPosts := .RegularPagesRecursive.ByDate.Reverse }}
 
     {{- /* Compute stats */ -}}
     {{- $totalWords := 0 }}
@@ -101,24 +86,21 @@
 
     {{- /* Latest post highlight */ -}}
     {{- if $latestPost }}
-    <section class="blog-latest">
+    <section class="latest-highlight">
       <h2>Latest</h2>
-      <a href="{{ $latestPost.RelPermalink }}" class="blog-latest-card">
-        <div class="blog-latest-meta">
+      <a href="{{ $latestPost.RelPermalink }}" class="latest-card">
+        <div class="latest-card-meta">
           <time>{{ $latestPost.Date.Format "January 2, 2006" }}</time>
-          {{- if $latestPost.Params.tags }}
-          <div class="blog-latest-tags">
-            {{- range first 3 $latestPost.Params.tags }}
-            <span class="tag">{{ . }}</span>
-            {{- end }}
-          </div>
+        </div>
+        <h3 class="latest-card-title">{{ $latestPost.Title }}</h3>
+        {{- if $latestPost.Params.tags }}
+        <div class="latest-card-tags">
+          {{- range $latestPost.Params.tags }}
+          <span class="tag">{{ . }}</span>
           {{- end }}
         </div>
-        {{- if ne $latestPost.Section "blog" }}
-        <span class="post-project">{{ $latestPost.Parent.Parent.Title }}</span>
         {{- end }}
-        <h3 class="blog-latest-title">{{ $latestPost.Title }}</h3>
-        <p class="blog-latest-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
+        <p class="latest-card-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
       </a>
     </section>
     {{- end }}
@@ -133,9 +115,6 @@
         {{- range $featured }}
         <a href="{{ .RelPermalink }}" class="discover-card">
           <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
-          {{- if ne .Section "blog" }}
-          <span class="post-project">{{ .Parent.Parent.Title }}</span>
-          {{- end }}
           <h3 class="discover-card-title">{{ .Title }}</h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- if .Params.tags }}
@@ -164,7 +143,7 @@
         {{- if $entries }}
           {{- range $entries }}
             {{- $page := site.GetPage .path }}
-            {{- if and $page (or (eq $page.Section "blog") (eq $page.Section "projects")) (not (in $seenPaths .path)) }}
+            {{- if and $page (eq $page.Section "blog") (not (in $seenPaths .path)) }}
               {{- $seenPaths = $seenPaths | append .path }}
               {{- $relatedPosts = $relatedPosts | append $page }}
             {{- end }}
@@ -180,9 +159,6 @@
         {{- range $relatedPosts }}
         <a href="{{ .RelPermalink }}" class="discover-card">
           <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
-          {{- if ne .Section "blog" }}
-          <span class="post-project">{{ .Parent.Parent.Title }}</span>
-          {{- end }}
           <h3 class="discover-card-title">{{ .Title }}</h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- if .Params.tags }}
@@ -210,9 +186,6 @@
           <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
           <a href="{{ .RelPermalink }}" class="post-link">
             <span class="post-title">{{ .Title }}</span>
-            {{- if ne .Section "blog" }}
-            <span class="post-project">{{ .Parent.Parent.Title }}</span>
-            {{- end }}
             {{- if .Params.tags }}
             <span class="post-tags">{{ delimit .Params.tags ", " }}</span>
             {{- end }}
