@@ -6,7 +6,7 @@
     {{- $fileParts := split .File.Path "/" -}}
     {{- if ge (len $fileParts) 3 -}}
       {{- $subdir := index $fileParts (sub (len $fileParts) 2) -}}
-      {{- if eq $subdir "posts" -}}
+      {{- if eq $subdir "logs" -}}
         {{- $showRelated = true -}}
       {{- end -}}
     {{- end -}}
@@ -40,7 +40,7 @@
         {{- $fileParts := split .page.File.Path "/" -}}
         {{- if ge (len $fileParts) 3 -}}
           {{- $subdir := index $fileParts (sub (len $fileParts) 2) -}}
-          {{- if eq $subdir "posts" }}{{ $label = "project log" }}
+          {{- if eq $subdir "logs" }}{{ $label = "project log" }}
           {{- else if eq $subdir "pages" }}{{ $label = "project page" }}
           {{- end -}}
         {{- end -}}

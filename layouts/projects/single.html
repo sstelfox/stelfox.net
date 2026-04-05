@@ -21,58 +21,17 @@
         <span class="tech-tag">{{ . }}</span>
         {{- end }}
       </div>
+
+      {{- if .Date }}
+      {{- if not .Date.IsZero }}
+      <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      {{- end }}
+      {{- end }}
     </header>
 
     <div class="content-body">
       {{ .Content }}
     </div>
-
-    {{- $posts := .Resources.Match "posts/*.md" }}
-    {{- if $posts }}
-    {{- $latest := index $posts.Reverse 0 }}
-    {{- if $latest }}
-    <section class="latest-log-entry">
-      <h2>Latest Update</h2>
-      <article class="log-entry-preview">
-        <div class="log-entry-header">
-          <a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a>
-          <time>{{ $latest.Date.Format "January 2, 2006" }}</time>
-        </div>
-        <div class="log-entry-summary">{{ $latest.Summary }}</div>
-      </article>
-    </section>
-    {{- end }}
-    {{- end }}
-
-    {{- $pages := .Resources.Match "pages/*.md" }}
-    {{- if or $posts $pages }}
-    <div class="project-bottom-columns">
-      {{- if $posts }}
-      <section class="project-posts">
-        <h2>Project Log</h2>
-        <ul class="post-list">
-          {{- range $posts.Reverse }}
-          <li class="post-item">
-            <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
-            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-          </li>
-          {{- end }}
-        </ul>
-      </section>
-      {{- end }}
-
-      {{- if $pages }}
-      <section class="project-pages">
-        <h2>Reference Pages</h2>
-        <ul class="page-list">
-          {{- range $pages }}
-          <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-          {{- end }}
-        </ul>
-      </section>
-      {{- end }}
-    </div>
-    {{- end }}
 
     {{- partial "related.html" . -}}
   </article>

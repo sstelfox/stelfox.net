@@ -10,7 +10,9 @@
       {{- end -}}
     {{- end -}}
     {{- range $ancestors | collections.Reverse }}
+    {{- if not .Draft }}
     <li><a href="{{ .RelPermalink }}">{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }}</a></li>
+    {{- end }}
     {{- end }}
     <li aria-current="page">{{ .Title }}</li>
   </ol>

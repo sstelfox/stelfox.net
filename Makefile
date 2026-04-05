@@ -1,4 +1,4 @@
-build:
+build: related
 	rm -rf public/*
 	@hugo --environment production --logLevel info --minify --printI18nWarnings --printPathWarnings
 	@echo "Search index generated at public/search_index.json"
@@ -11,7 +11,7 @@ logo: static/favicon.ico static/favicon-32x32.png static/apple-touch-icon.png st
 preview:
 	hugo server --bind 0.0.0.0 --baseURL http://0.0.0.0:8000 --environment production --port 8000 --logLevel info --printI18nWarnings --printPathWarnings --disableFastRender --disableLiveReload
 
-server:
+server: related
 	hugo server --bind 0.0.0.0 --baseURL http://0.0.0.0:8000 --environment development --port 8000 --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --disableFastRender --disableLiveReload
 
 setup:

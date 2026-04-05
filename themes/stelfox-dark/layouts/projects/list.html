@@ -62,6 +62,52 @@
     </section>
   </article>
 
+  {{- else if .Parent.Params.status }}
+  {{- /* Sub-section of a project (logs, pages, etc.) - paginated listing */ -}}
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Parent.Title }}: {{ .Title }}</h1>
+    </header>
+
+    {{- $allEntries := .RegularPages.ByDate.Reverse }}
+    {{- $paginator := .Paginate $allEntries 5 }}
+    {{- if $paginator.Pages }}
+    <section class="blog-listing">
+      {{- range $paginator.Pages }}
+      <article class="log-entry-full">
+        <header class="log-entry-header">
+          <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+          <time class="post-date" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+          {{- if .Params.tags }}
+          <div class="post-tags">
+            {{- range .Params.tags }}
+            <span class="tag">{{ . }}</span>
+            {{- end }}
+          </div>
+          {{- end }}
+        </header>
+        <div class="content-body">
+          {{ .Summary }}
+        </div>
+        <a href="{{ .RelPermalink }}" class="read-more">Read More</a>
+      </article>
+      {{- end }}
+    </section>
+
+    {{- if gt $paginator.TotalPages 1 }}
+    <nav class="pagination" aria-label="Log pagination">
+      {{- if $paginator.HasPrev }}
+      <a href="{{ $paginator.Prev.URL }}" class="pagination-link pagination-prev">Newer</a>
+      {{- end }}
+      <span class="pagination-info">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+      {{- if $paginator.HasNext }}
+      <a href="{{ $paginator.Next.URL }}" class="pagination-link pagination-next">Older</a>
+      {{- end }}
+    </nav>
+    {{- end }}
+    {{- end }}
+  </article>
+
   {{- else }}
   {{- /* Individual project page */ -}}
   <article class="content project">
@@ -90,10 +136,10 @@
       {{ .Content }}
     </div>
 
-    {{- $postsSection := .GetPage "posts" }}
-    {{- if $postsSection }}
-    {{- $latestPosts := $postsSection.RegularPages.Reverse }}
-    {{- $latest := index $latestPosts 0 }}
+    {{- $logsSection := .GetPage "logs" }}
+    {{- if $logsSection }}
+    {{- $latestLogs := $logsSection.RegularPages.Reverse }}
+    {{- $latest := index $latestLogs 0 }}
     {{- if $latest }}
     <section class="latest-log-entry">
       <h2>Latest Update</h2>
@@ -108,23 +154,29 @@
     {{- end }}
     {{- end }}
 
-    {{- $postsSection = .GetPage "posts" }}
-    {{- $posts := slice }}
-    {{- if $postsSection }}{{ $posts = $postsSection.RegularPages }}{{ end }}
+    {{- $logsSection = .GetPage "logs" }}
+    {{- $logs := slice }}
+    {{- if $logsSection }}{{ $logs = $logsSection.RegularPages }}{{ end }}
+    {{- $allLogs := $logs }}
     {{- $pagesSection := .GetPage "pages" }}
     {{- $refPages := slice }}
     {{- if $pagesSection }}{{ $refPages = $pagesSection.RegularPages }}{{ end }}
-    {{- if or $posts $refPages }}
+    {{- if or $logs $refPages }}
     <div class="project-bottom-columns">
-      {{- if $posts }}
+      {{- if gt (len $allLogs) 1 }}
       <section class="project-posts">
-        <h2>Project Log</h2>
+        <h2>Build Log</h2>
         <ul class="post-list">
-          {{- range $posts.Reverse }}
+          {{- $latestPermalink := "" }}
+          {{- $reversed := $allLogs.Reverse }}
+          {{- with index $reversed 0 }}{{ $latestPermalink = .RelPermalink }}{{ end }}
+          {{- range $reversed }}
+          {{- if ne .RelPermalink $latestPermalink }}
           <li class="post-item">
             <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
             <a href="{{ .RelPermalink }}">{{ .Title }}</a>
           </li>
+          {{- end }}
           {{- end }}
         </ul>
       </section>
