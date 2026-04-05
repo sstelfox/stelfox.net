@@ -21,7 +21,22 @@
     </div>
     {{- end }}
 
-    {{- $allPosts := .RegularPagesRecursive.ByDate.Reverse }}
+    {{- $blogPosts := .RegularPagesRecursive }}
+    {{- $logPosts := slice }}
+    {{- range site.Sections }}
+      {{- if eq .Section "projects" }}
+        {{- range .Sections }}
+          {{- $logs := .GetPage "logs" }}
+          {{- if $logs }}
+            {{- range $logs.RegularPages }}
+              {{- $logPosts = $logPosts | append . }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- $allPosts := union $blogPosts $logPosts }}
+    {{- $allPosts = $allPosts.ByDate.Reverse }}
 
     {{- /* Compute stats */ -}}
     {{- $totalWords := 0 }}
@@ -99,6 +114,9 @@
           </div>
           {{- end }}
         </div>
+        {{- if ne $latestPost.Section "blog" }}
+        <span class="post-project">{{ $latestPost.Parent.Parent.Title }}</span>
+        {{- end }}
         <h3 class="blog-latest-title">{{ $latestPost.Title }}</h3>
         <p class="blog-latest-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
       </a>
@@ -115,6 +133,9 @@
         {{- range $featured }}
         <a href="{{ .RelPermalink }}" class="discover-card">
           <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+          {{- if ne .Section "blog" }}
+          <span class="post-project">{{ .Parent.Parent.Title }}</span>
+          {{- end }}
           <h3 class="discover-card-title">{{ .Title }}</h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- if .Params.tags }}
@@ -143,7 +164,7 @@
         {{- if $entries }}
           {{- range $entries }}
             {{- $page := site.GetPage .path }}
-            {{- if and $page (eq $page.Section "blog") (not (in $seenPaths .path)) }}
+            {{- if and $page (or (eq $page.Section "blog") (eq $page.Section "projects")) (not (in $seenPaths .path)) }}
               {{- $seenPaths = $seenPaths | append .path }}
               {{- $relatedPosts = $relatedPosts | append $page }}
             {{- end }}
@@ -159,6 +180,9 @@
         {{- range $relatedPosts }}
         <a href="{{ .RelPermalink }}" class="discover-card">
           <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+          {{- if ne .Section "blog" }}
+          <span class="post-project">{{ .Parent.Parent.Title }}</span>
+          {{- end }}
           <h3 class="discover-card-title">{{ .Title }}</h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- if .Params.tags }}
@@ -186,6 +210,9 @@
           <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
           <a href="{{ .RelPermalink }}" class="post-link">
             <span class="post-title">{{ .Title }}</span>
+            {{- if ne .Section "blog" }}
+            <span class="post-project">{{ .Parent.Parent.Title }}</span>
+            {{- end }}
             {{- if .Params.tags }}
             <span class="post-tags">{{ delimit .Params.tags ", " }}</span>
             {{- end }}
