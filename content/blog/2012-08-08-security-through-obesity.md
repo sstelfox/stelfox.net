@@ -32,15 +32,15 @@ require "scrypt"
 DataMapper.setup :default, "sqlite:hash.db"
 
 class User
-  include DataMapper::Resource 
+  include DataMapper::Resource
 
   property :id,             Serial
   property :username,       String, :required => true,
-                                    :unique => true 
+                                    :unique => true
   property :crypt_hash,     String, :required => true,
                                     :length => 64
   property :salt,           String, :required => true,
-                                    :length => 25 
+                                    :length => 25
 
   def check_password(plaintext_password)
     encrypted_hash = scrypt_helper(plaintext_password, self.salt)

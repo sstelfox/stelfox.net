@@ -69,7 +69,7 @@ module Example
     end
 
     # Pass any other calls (most likely attribute setters/getters on to the
-    # configuration as a way to easily set/get attribute values 
+    # configuration as a way to easily set/get attribute values
     def self.method_missing(method, *args, &block)
       if @@config.respond_to?(method)
         @@config.send(method, *args, &block)

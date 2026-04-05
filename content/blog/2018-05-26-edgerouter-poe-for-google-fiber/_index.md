@@ -173,4 +173,3 @@ You can [find the complete config I built up in this post here](./edgerouter-poe
 * https://netswat.com/blog/google-fiber-ubiquitis-edgerouter/
 * https://netswat.com/blog/wp-content/uploads/2016/07/Edge-Setup-Interfacesv3.txt
 * https://netswat.com/blog/wp-content/uploads/2016/07/EdgeRouter-TVScript6.txt
-

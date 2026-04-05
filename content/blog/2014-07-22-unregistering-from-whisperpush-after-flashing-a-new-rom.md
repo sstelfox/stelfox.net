@@ -91,12 +91,12 @@ with a status code of 204. The output will look something like the following
 > User-Agent: curl/7.29.0
 > Host: whisperpush.cyanogenmod.org
 > Accept: */*
-> 
+>
 < HTTP/1.1 204 No Content
 < Server: nginx/1.1.19
 < Date: Wed, 23 Jul 2014 01:45:25 GMT
 < Connection: keep-alive
-< 
+<
 * Connection #0 to host whisperpush.cyanogenmod.org left intact
 ```
 

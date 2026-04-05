@@ -32,5 +32,3 @@ ip route del 192.168.10.0/24
 # Likely:
 ip -6 route del 2001:db9:9::/64
 ```
-
-

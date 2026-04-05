@@ -48,7 +48,7 @@ you put whatever server into production you're working on it will be behind a
 reverse proxy like Nginx. Using it as our front end will likely get you closer
 to how it will be running production.
 
-Setting up an Nginx server 
+Setting up an Nginx server
 
 <small>
 1. This was tested on Nginx version 1.12.1 on Fedora 28
