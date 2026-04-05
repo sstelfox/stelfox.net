@@ -1,6 +1,0 @@
-MathJax = {
-  tex: {
-    displayMath: [['$$', '$$']],
-    inlineMath: [['$', '$']]
-  }
-};

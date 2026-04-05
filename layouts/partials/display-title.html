@@ -1,0 +1,11 @@
+{{- $title := .Title -}}
+{{- if and .IsPage (eq .Section "projects") -}}
+  {{- $fileParts := split .File.Path "/" -}}
+  {{- if ge (len $fileParts) 3 -}}
+    {{- $subdir := index $fileParts (sub (len $fileParts) 2) -}}
+    {{- if eq $subdir "pages" -}}
+      {{- $title = printf "%s - %s" .Parent.Parent.Title .Title -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $title -}}

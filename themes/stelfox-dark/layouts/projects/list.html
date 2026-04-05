@@ -29,7 +29,7 @@
 
           {{- if .Summary }}
           <div class="project-card-summary">
-            {{ .Summary }}
+            {{ .Summary | plainify }}
           </div>
           {{- end }}
 
@@ -87,7 +87,7 @@
           {{- end }}
         </header>
         <div class="content-body">
-          {{ .Summary }}
+          {{ .Summary | plainify }}
         </div>
         <a href="{{ .RelPermalink }}" class="read-more">Read More</a>
       </article>
@@ -148,7 +148,7 @@
           <a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a>
           <time>{{ $latest.Date.Format "January 2, 2006" }}</time>
         </div>
-        <div class="log-entry-summary">{{ $latest.Summary }}</div>
+        <div class="log-entry-summary">{{ $latest.Summary | plainify }}</div>
       </article>
     </section>
     {{- end }}
