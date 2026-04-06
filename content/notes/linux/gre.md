@@ -3,6 +3,7 @@ date: 2017-10-09 22:14:23+00:00
 tags:
 - linux
 - networking
+- vpn
 title: GRE Tunnel
 slug: gre-tunnel
 aliases:
@@ -63,33 +64,6 @@ To remove the tunnels you can run this on both machines:
 ```
 ip link set gre0 down
 ip tunnel del gre0
-```
-
-## CentOS / Fedora / RHEL Config
-
-A simple point to point tunnel can be established using the standard CentOS
-network config pretty straight forward. I believe the `MY_OUTER_IPADDR` is
-optional (just like the 'local' field in the manual setup).
-
-For a single host to host connection it seems like it's pretty straight
-forward. You'll need to pick IPs for the inside of the tunnel for both the
-local and remote side and place a file on both hosts with a file at
-`/etc/sysconfig/network-scripts/ifcfg-gre0` with contents like the following
-(replacing the addresses with appropriate ones).
-
-```
-# /etc/sysconfig/network-scripts/ifcfg-gre0
-
-DEVICE=gre0
-BOOTPROTO=none
-ONBOOT=yes
-TYPE=GRE
-
-MY_INNER_IPADDR=10.98.0.1
-#MY_OUTER_IPADDR=192.168.76.3
-
-PEER_INNER_IPADDR=10.98.0.2
-PEER_OUTER_IPADDR=192.168.56.72
 ```
 
 ## Other Notes

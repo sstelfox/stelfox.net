@@ -2,6 +2,7 @@
 date: 2017-10-25 01:56:02-04:00
 tags:
 - linux
+- logging
 - security
 title: Syslog-NG
 aliases:

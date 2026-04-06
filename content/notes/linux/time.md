@@ -2,13 +2,14 @@
 date: 2017-10-13 12:30:23-04:00
 tags:
 - linux
+- tips
 title: Time
 aliases:
   - /notes/time/
 ---
 
 This is a very basic operation on a Linux system, but I have to interact with
-it so rarely since I run either [chronyd][1] or [ntpd][2] on all of machines.
+it so rarely since I run chrony on all my machines.
 Occasionally, I find a device that needs a helping hand.
 
 On a device with a known good time (or approximate enough):
@@ -32,6 +33,3 @@ Ensure both clocks are updated:
 date
 hwclock --show
 ```
-
-[1]: {{< ref "./chronyd.md" >}}
-[2]: {{< ref "./ntpd.md" >}}

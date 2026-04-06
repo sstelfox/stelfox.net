@@ -5,6 +5,7 @@ evergreen: true
 public: true
 tags:
   - linux
+  - operations
 title: Cron Daemon
 slug: cron
 aliases:
@@ -105,7 +106,7 @@ One trick I've picked up to ensure that a periodically running long command does
 
 This can be done with the flock utility, it creates an empty file with a lock on it that is released when your command or script is finished executing. If it can't obtain the lock, it simply won't run your script and return a bad exit code. Be sure to use a unique lock file for each task.
 
-An example of how to do this would look in a user's crontab would look like the following:
+An example of how to do this in a user's crontab would look like the following:
 
 ```cron
 0 0 * * * /usr/bin/flock --nonblock /tmp/backup.lock $HOME/scripts/full_backup.sh

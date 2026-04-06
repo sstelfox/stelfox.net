@@ -1,5 +1,9 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+tags:
+  - linux
+  - security
+  - cli
 title: Gatekeeper Script for SSH
 slug: gatekeeper-script-for-ssh
 aliases:

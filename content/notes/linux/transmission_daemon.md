@@ -1,5 +1,9 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+tags:
+  - linux
+  - services
+  - networking
 title: Transmission Daemon
 aliases:
   - /notes/transmission-daemon/

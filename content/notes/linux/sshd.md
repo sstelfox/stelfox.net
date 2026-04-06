@@ -1,5 +1,10 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+tags:
+  - linux
+  - security
+  - networking
+  - hardening
 title: SSHd
 aliases:
   - /notes/sshd/
@@ -25,7 +30,7 @@ real attacks to stand out more clearly in your logs.
 
 ## Firewall Adjustments
 
-My default [IPTables][1] firewall already has the following rules in place to
+My default IPTables firewall already has the following rules in place to
 allow access to SSH by default while still providing a modicum of protection
 from attackers.
 
@@ -273,6 +278,5 @@ I've play around with implementing a [gatekeeper style script][3] to provide an
 additional layer of security. In practice real multi-factor authentication is
 more reliable and should be used instead.
 
-[1]: {{< ref "./iptables.md" >}}
 [2]: {{< ref "./partitioning.md" >}}
 [3]: {{< ref "./sshd_gatekeeper.md" >}}

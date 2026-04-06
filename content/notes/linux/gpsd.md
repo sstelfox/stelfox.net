@@ -1,21 +1,22 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: GPSd
+tags:
+  - linux
+  - hardware
+  - services
 aliases:
   - /notes/gpsd/
 ---
 ## Installation
 
-I've been using a BU-353 which if I remember correctly was ~$20 and has been
-fairly reliable. It's also got a magnetic base allowing you to attach it to the
-roof of a car when war-driving.
+Install gpsd and optionally the client tools. On a headless server you'll probably want to skip `gpsd-clients` as they pull in X dependencies for `xgps`.
 
+```console
+$ pacman -S gpsd          # Arch
+$ apt install gpsd        # Debian/Ubuntu
+$ dnf install gpsd        # Fedora
 ```
-yum install gpsd gpsd-clients -y
-```
-
-If you want to use gpsd on a headless server you'll want to exclude the
-`gpsd-clients` as they will install `xgps` and all of X as a dependency.
 
 ## Configuration
 
@@ -111,16 +112,11 @@ well as a fix of your location with `xgps` which is installed with the
 
 ## Using as a Time Source
 
-TODO
+GPSd can feed time data to chrony or ntpd via shared memory (SHM) or socket. This is useful for building a stratum 1 NTP server with a cheap GPS receiver. Check the gpsd time service HOWTO for setup details.
 
 ## Extending Accuracy with NTRIP / RTCM data
 
-TODO
-
-* http://en.wikipedia.org/wiki/Networked_Transport_of_RTCM_via_Internet_Protocol
-* http://igs.bkg.bund.de/ntrip/caster
-* http://www.linuxcertif.com/man/5/rtcm-104/173922/
-* http://software.rtcm-ntrip.org/ (BNC is the relevant one)
+NTRIP (Networked Transport of RTCM via Internet Protocol) can provide differential correction data to improve GPS accuracy significantly. The gpsd ecosystem supports RTCM data through the `gpsd` daemon itself.
 
 ## Profiling Accuracy of GPS Receivers
 
@@ -132,8 +128,10 @@ Since NMEA specifies producing 1/sample/sec this will by default take 100
 seconds or 1 minute 40 seconds to complete. It outputs the information in
 gnuplot format so we'll need that to view the data:
 
-```
-yum install gnuplot -y
+```console
+$ pacman -S gnuplot       # Arch
+$ apt install gnuplot     # Debian/Ubuntu
+$ dnf install gnuplot     # Fedora
 ```
 
 During the test you'll want to ensure that the GPS receiver is in a fixed

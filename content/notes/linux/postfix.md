@@ -1,34 +1,15 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: Postfix
+tags:
+  - linux
+  - email
+  - security
+  - services
 aliases:
   - /notes/postfix/
 ---
-By default Fedora/CentOS come with sendmail. Postfix is preferable as it was
-written with security in mind.
-
-[Something that would be good][1] to port over to Fedora/Postfix with a nice
-Stelfox spin, and it's [follow up][2].
-
-[This][3] is what originally turned me on to that.
-
-[This][4] will help setup a mail gateway.
-
-I can use [this][5] to centralize my email.
-
-This [site][6] has some diagnostic information that may be useful.
-
-If I have rate limit issues sending too Yahoo, [this article][11] can help
-solve it.
-
-As for Dovecot, while not being Postfix, is still an important piece of this
-puzzle. The [Mail Location][7] for Dovecot will need to be considered, so far
-I'm leaning towards [sdbox][8], however, it is not compatible with mutt which
-is my ideal client. My next alternative would be the [Maildir][9].
-
-## General Host MTA
-
-## Local Network Mail Relay
+Postfix is a mail transfer agent written with security as a primary design goal. It handles mail delivery, relaying, and can be configured for everything from a simple local-only MTA to a full internet-facing mail server.
 
 ## Generic Mail Relay
 
@@ -237,10 +218,6 @@ Dir.glob('lib/capistrano/tasks/*.cap').each { |r| import r }
 EOS
 ```
 
-## Potentially Useful Links
-
-* http://library.edgecase.com/configuring-postfix-to-deliver-email-to-ruby
-
 ## Diagnosing Mail Issues
 
 To check the current state of the mail queue on a server you can run the
@@ -273,14 +250,9 @@ postsuper -d ALL deferred
 postsuper -d ALL
 ```
 
-## Authenticated Mail Relay
-
-* http://www.anthonyldechiaro.com/blog/2008/10/17/postfix-authenticated-smtp-relayhost/
-
 ## Greylisting
 
-* milter-greylist
-* sqlgrey
+Greylisting temporarily rejects mail from unknown senders, forcing a retry. Legitimate mail servers will retry while most spam bots won't. Common implementations include milter-greylist and sqlgrey.
 
 ## SSL
 
@@ -537,15 +509,3 @@ transport_maps = hash:/etc/postfix/transport
 
 Reload your postfix configuration and your script should now be handling all
 mail sent too 'bounce@example.tld'.
-
-[1]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email
-[2]: https://grepular.com/Automatically_Encrypting_all_Incoming_Email_Part_2
-[3]: https://grepular.com/Protecting_a_Laptop_from_Simple_and_Sophisticated_Attacks
-[4]: http://library.linode.com/email/postfix/dovecot-mysql-centos-5
-[5]: http://library.linode.com/email/fetchmail
-[6]: http://rimuhosting.com/support/settingupemail.jsp?mta=postfix
-[7]: http://wiki.dovecot.org/MailLocation/
-[8]: http://wiki2.dovecot.org/MailboxFormat/dbox
-[9]: http://wiki.dovecot.org/MailboxFormat/Maildir
-[10]: http://cr.yp.to/proto/verp.txt
-[11]: http://stevejenkins.com/blog/2012/08/how-to-postfix-configuration-to-reduce-yahoo-deferrals-using-transport-maps/

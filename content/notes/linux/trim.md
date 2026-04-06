@@ -3,9 +3,9 @@ created_at: 2013-01-01T00:00:01-0000
 evergreen: false
 public: true
 tags:
-  - disk
   - encryption
   - linux
+  - storage
 title: Trim
 aliases:
   - /notes/trim/

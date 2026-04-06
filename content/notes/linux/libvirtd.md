@@ -1,6 +1,10 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: libvirtd
+tags:
+  - linux
+  - virtualization
+  - networking
 aliases:
   - /notes/libvirtd/
 ---
@@ -28,10 +32,10 @@ Privilege separation is very important. In the event that a guest gets
 compromised and the attacker finds a way to break the virtualization's jail,
 they should not immediately gain root privileges.
 
-Luckily this is already covered by default (at least with Fedora 12 installs)
-in which libvirt will drop it's privileges to the qemu user for every guest
-that it spawns. Each guest is also automatically given it's own SELinux label.
-This will further isolate each guest.
+Luckily this is already covered by default in most distributions where libvirt
+will drop its privileges to the qemu user for every guest that it spawns. Each
+guest is also automatically given its own SELinux label (on SELinux-enabled
+systems). This will further isolate each guest.
 
 ## Firewall Adjustments
 
@@ -39,7 +43,7 @@ Regardless of the type of network that is chosen for guests all of their
 traffic goes through the forwarding chain of iptables. While I really strongly
 advocate against any default allow policies on anything, this is one place
 where I personally am willing to make an exception. To allow guests to talk to
-the network make the following change to the default [IPTables][1] rules:
+the network make the following change to the default IPTables rules:
 
 ```
 :FORWARD DROP [0:0]
@@ -79,7 +83,6 @@ The provided controllers are:
 Under KVM all of these are not supported, however cpu, devices and memory are.
 Which are in my humble opinion the most important for our task.
 
-http://berrange.com/posts/2009/12/03/using-cgroups-with-libvirt-and-lxckvm-guests-in-fedora-12/
 
 ## Initial Setup
 
@@ -385,5 +388,3 @@ virt-install --connect qemu:///system \
 ## LXC
 
 * https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/
-
-[1]: {{< ref "./iptables.md" >}}

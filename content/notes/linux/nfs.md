@@ -1,46 +1,84 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: NFS
+tags:
+  - linux
+  - storage
+  - networking
+  - services
 aliases:
   - /notes/nfs/
 ---
-Install packages `nfs-utils` and `nfs4-acl-tools`
 
-This installation sets `rpcbind`, `rpcgssd`, `rpcidmapd` and `nfslock` to all
-automatically start on boot... That pisses me off properly, so I set them all
-too disabled for testing... I'll turn them back on as needed (hopefully I won't
-have too).
+# NFS
 
-I started `nfs` and `rpcbind`... lets see if thats enough.
+NFS (Network File System) allows sharing directories between Linux systems over a network. NFSv4 is the current recommended version and simplifies things by only requiring a single port (2049/tcp).
 
-/etc/exports on server:
+## Server Setup
 
-```
-/media/storage/Media           10.13.37.51(rw,sync)
-/media/storage/HomeDrives      10.13.37.51(rw,sync)
-/media/storage/SharedDocuments 10.13.37.51(rw,sync)
-```
+Install the NFS utilities (package name varies by distro: `nfs-utils` on Fedora/Arch, `nfs-kernel-server` on Debian/Ubuntu).
 
-Run the following
+Define exports in `/etc/exports`:
 
-```
-exportfs -rv
+```text
+/srv/shared    10.0.0.0/24(rw,sync,no_subtree_check)
+/srv/readonly  10.0.0.0/24(ro,sync,no_subtree_check)
 ```
 
-Apparently the client needs the `nfs-utils` installed as well, if the client
-doesn't have it they'll receive this error:
+Common export options:
+* `rw` / `ro` - Read-write or read-only access
+* `sync` - Write data to disk before replying (safer, slower)
+* `no_subtree_check` - Disables subtree checking, improves reliability
+* `no_root_squash` - Allows root on the client to act as root on the server (use cautiously)
+* `root_squash` - Maps root to nobody (default, more secure)
 
-```
-mount: wrong fs type, bad option, bad superblock on 10.1.1.1:/home/nfs,
-missing codepage or helper program, or other error
-(for several filesystems (e.g. nfs, cifs) you might
-need a /sbin/mount. helper program)
-In some cases useful info is found in syslog - try
-dmesg | tail  or so
+Apply changes and start the service:
+
+```console
+# exportfs -rv
+# systemctl enable --now nfs-server
 ```
 
-* http://www.cyberciti.biz/faq/centos-fedora-rhel-nfs-v4-configuration/
-* http://www.server-world.info/en/note?os=Fedora_15&p=nfs
-* http://tldp.org/HOWTO/NFS-HOWTO/security.html
-* http://www.linuxjournal.com/article/4880
-* `http://www.copiouscom.com/2010/05/open-directory-kerberos-single-sign-on-sso-and-centos-with-ssh-and-kerberized-nfs-home-directories/` (Dead link)
+Verify what's being exported:
+
+```console
+$ exportfs -v
+```
+
+## Client Setup
+
+Install `nfs-utils` (or `nfs-common` on Debian/Ubuntu) on the client.
+
+Mount an NFS share:
+
+```console
+# mount -t nfs4 server:/srv/shared /mnt/shared
+```
+
+For persistent mounts, add to `/etc/fstab`:
+
+```text
+server:/srv/shared  /mnt/shared  nfs4  defaults,_netdev  0  0
+```
+
+The `_netdev` option tells the system to wait for network availability before attempting to mount.
+
+## Firewall
+
+NFSv4 only needs port 2049/tcp. Older versions (v2/v3) require additional ports for rpcbind, mountd, and lockd which makes firewall configuration more complex. Stick with v4 if possible.
+
+## Troubleshooting
+
+If the client gets a "wrong fs type" error, make sure `nfs-utils` is installed on the client side.
+
+Check what a server is exporting from the client:
+
+```console
+$ showmount -e server
+```
+
+Debug mount issues with verbose output:
+
+```console
+# mount -t nfs4 -v server:/srv/shared /mnt/shared
+```

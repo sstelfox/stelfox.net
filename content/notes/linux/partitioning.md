@@ -1,6 +1,10 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: Partitioning
+tags:
+  - linux
+  - storage
+  - encryption
 aliases:
   - /notes/partitioning/
 ---
@@ -32,27 +36,19 @@ pvcreate /dev/sdc1 (assuming /dev/sdc1 was the partition just created)
 
 ### Volume Group Creation
 
-This point needs a bit of thinking before doing. There is a limit on the number
-of physical extents that can be accessed. This in turn limits the size of the
-volume group. This limit is 65,536 extents.
+The default physical extent size is 4MB. Modern LVM no longer has the 65,536 extent limit that old versions did, so the default extent size is fine for most use cases. You can still increase it if you want slightly less metadata overhead on very large volumes.
 
-The default size is 4MB/extent. This by default leads to a limit of 256GB per
-volume group. 8MB/extent gets you 512GB. The maximum size I see needing is
-32MB/extent for a size of 2TB. The following example uses an extent size of
-16MB and assumes the partition is `/dev/sdc1`.
-
-```
-vgcreate -s 16M vg_test /dev/sdc1
+```console
+$ vgcreate vg_test /dev/sdc1
 ```
 
 ### Logical Volume Creation
 
-The following creates a 1GB logical volume group, there does not seem to be a
-way to create a logical volume with all the remaining space in the volume
-group.
+The following creates a 1GB logical volume. To use all remaining space, use `-l 100%FREE` instead of `-L`.
 
-```
-lvcreate -L 1G -n lv_test vg_test
+```console
+$ lvcreate -L 1G -n lv_test vg_test
+$ lvcreate -l 100%FREE -n lv_rest vg_test  # use all remaining space
 ```
 
 ## Securing Partitions
@@ -68,12 +64,13 @@ lvcreate -L 1G -n lv_test vg_test
 
 ## Encrypting Additional Partitions
 
+```console
+$ cryptsetup luksFormat /dev/vg_test/lv_test
+$ cryptsetup luksOpen /dev/vg_test/lv_test cryptTest
+$ mkfs.ext4 /dev/mapper/cryptTest
+$ cryptsetup luksClose /dev/mapper/cryptTest
 ```
-cryptsetup luksFormat -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test
-cryptsetup luksOpen -c aes-xts-plain -s 256 -h sha256 /dev/vg_test/lv_test \
-  cryptTest
-mkfs.ext4 /dev/mapper/cryptTest
-cryptsetup luksClose /dev/mapper/cryptTest
-```
+
+Modern `cryptsetup` defaults to strong cipher settings (aes-xts-plain64, 256-bit key, argon2id for key derivation), so explicit cipher options are rarely needed.
 
 [1]: {{< ref "./swap.md" >}}

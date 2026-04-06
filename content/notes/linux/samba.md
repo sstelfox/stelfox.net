@@ -1,6 +1,11 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: Samba
+tags:
+  - linux
+  - networking
+  - security
+  - services
 aliases:
   - /notes/samba/
 ---

@@ -1,6 +1,10 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: Session Recording
+tags:
+  - linux
+  - cli
+  - tips
 aliases:
   - /notes/session-recording/
 ---

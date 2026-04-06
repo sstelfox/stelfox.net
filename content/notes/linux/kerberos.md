@@ -1,14 +1,19 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: Kerberos
+tags:
+  - linux
+  - security
+  - networking
+  - services
 aliases:
   - /notes/kerberos/
 ---
 Kerberos is a secure network authentication system.
 
 It is very important that system times are all very close for successful
-authentication. You should configure [NTPd][1] or [Chronyd][2] to ensure the
-systems stay in sync.
+authentication. You should configure NTP synchronization (chrony, ntpd, etc.)
+to ensure the systems stay in sync.
 
 ## Master Configuration
 
@@ -29,16 +34,7 @@ keys.
 kadmin.local -q "addprinc <<username>>/admin"
 ```
 
-Set the services to startup automatically and start them up:
-
-```
-chkconfig krb5kdc on
-chkconfig kadmin on
-/etc/init.d/krb5kdc start
-/etc/init.d/kadmin start
-```
-
-After the database has been started you'll need to create at least one normal
+Enable and start the KDC and kadmin services, then after the database has been started you'll need to create at least one normal
 user, it will ask for a password for the account.
 
 ```
@@ -84,14 +80,7 @@ encrypted transfer mechanism such as SCP.
 ```
 
 At this point you'll want to restart the master's service and then start up the
-kdc on the slave server:
-
-```
-[root@slave ~]# chkconfig krb5kdc start
-[root@slave ~]# /etc/init.d/krb5kdc start
-```
-
-Once the Slave is setup you'll need to modify the `/etc/krb5.conf` on the
+kdc on the slave server. Once the slave is setup you'll need to modify the `/etc/krb5.conf` on the
 client machines and the master machine to include the FQDN of the slave in the
 `[realms]` section for the appropriate domain. The `[realms]` section would
 then look like:
@@ -107,10 +96,7 @@ then look like:
 
 ## Adding a New Host to the Domain
 
-Hosts need `krb5-workstation` and `krb5-libs` installed. Make sure the client
-firewall rules have been applied.
-
-Be sure to copy the config file `/etc/krb5.conf` mentioned on this page to each
+Hosts need the Kerberos client libraries and workstation tools installed. Be sure to copy the config file `/etc/krb5.conf` mentioned on this page to each
 client machine.
 
 ```
@@ -122,31 +108,12 @@ kadmin:  ktadd -k /etc/krb5.keytab host/<<FQDN>>
 You'll need to replace `<<FQDN>>` with the domain name of the host you're adding.
 It will need a DNS entry matching this hostname.
 
-## Firewall Configuration
+## Network Ports
 
-### Server Adjustments
+Kerberos uses the following ports that need to be accessible through any firewalls:
 
-```
-# Allow authentication to the KDC
--A INPUT -m tcp -p tcp --dport 88 -j ACCEPT
-# Allow remote kerberos administration. This should probably be restricted more
--A INPUT -m tcp -p tcp --dport 749 -j ACCEPT
-```
-
-### Client Adjustments
-
-```
-# Allow authentication to the KDC
--A OUTPUT -m tcp -p tcp --dport 88 -j ACCEPT
-```
-
-Setting up a client machine to talk to the KDC will initially require this rule
-as well:
-
-```
-# Temporarily need this to setup the connection with the KDC
--A OUTPUT -m tcp -p tcp --dport 749 -j ACCEPT
-```
+* **Port 88/tcp** - KDC authentication (needed by both servers and clients)
+* **Port 749/tcp** - Kerberos administration (kadmin, should be restricted to admin hosts)
 
 ## Configuration Files
 
@@ -204,10 +171,4 @@ as well:
 
 ## Notes on Cached Client Login
 
-* http://redhatcat.blogspot.com/2008/07/caching-kerberos-credentials-for.html
-* http://ubuntuforums.org/showthread.php?t=1205604
-* http://www.techrepublic.com/blog/opensource/authentication-caching-with-nscd/127
-* http://people.skolelinux.org/pere/blog/Caching_password__user_and_group_on_a_roaming_Debian_laptop.html
-
-[1]: {{< ref "./ntpd.md" >}}
-[2]: {{< ref "./chronyd.md" >}}
+For roaming clients that may not always have connectivity to the KDC, SSSD can cache Kerberos credentials locally. This allows users to authenticate even when the KDC is unreachable, using previously cached tickets.

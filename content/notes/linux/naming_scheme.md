@@ -2,6 +2,10 @@
 date: 2017-10-20 19:59:02-04:00
 title: Server Naming Convention
 slug: naming-scheme
+tags:
+  - linux
+  - operations
+  - dns
 aliases:
   - /notes/server-naming-convention/
 ---

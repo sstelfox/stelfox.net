@@ -3,6 +3,7 @@ created_at: 2017-10-10T00:28:32-0000
 evergreen: true
 public: true
 tags:
+  - hardware
   - linux
   - operations
   - security

@@ -1,6 +1,10 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
 title: Software RAID
+tags:
+  - linux
+  - storage
+  - cli
 aliases:
   - /notes/software-raid/
 ---

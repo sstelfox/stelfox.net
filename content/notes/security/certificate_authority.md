@@ -1,5 +1,9 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+tags:
+  - security
+  - certificates
+  - encryption
 title: Building a Certificate Authority
 slug: certificate-authority
 aliases:
