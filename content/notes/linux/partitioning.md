@@ -59,8 +59,7 @@ $ lvcreate -l 100%FREE -n lv_rest vg_test  # use all remaining space
 * If removable storage is enabled add `nodev`, `nosuid`, `noexec` to their
   partitions
 * Disable auto mounter (autofs)
-* Dynamically [encrypt the swap partition][1] (not for any machine that will be
-  hibernated)
+* Dynamically encrypt the swap partition (not for any machine that will be hibernated)
 
 ## Encrypting Additional Partitions
 
@@ -72,5 +71,3 @@ $ cryptsetup luksClose /dev/mapper/cryptTest
 ```
 
 Modern `cryptsetup` defaults to strong cipher settings (aes-xts-plain64, 256-bit key, argon2id for key derivation), so explicit cipher options are rarely needed.
-
-[1]: {{< ref "./swap.md" >}}
