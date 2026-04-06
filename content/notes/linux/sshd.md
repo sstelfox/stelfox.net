@@ -1,5 +1,6 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+updated_at: 2026-04-05T00:00:00-0000
 tags:
   - linux
   - security
@@ -24,28 +25,24 @@ letting an attacker have physical access to the box.
 
 Generally it's recommended to run any instances of SSH exposed to the public
 internet on an alternate port. Alternate ports won't protect you against
-vulnerabilities but it will drastrically reduce the number of automated and
+vulnerabilities but it will drastically reduce the number of automated and
 scripted attacks your server will be subjected to. If nothing else it will allow
 real attacks to stand out more clearly in your logs.
 
 ## Firewall Adjustments
 
-My default IPTables firewall already has the following rules in place to
-allow access to SSH by default while still providing a modicum of protection
-from attackers.
+SSH requires the following network access:
 
-```
-# Allow SSH, but no more than 5 new connections every minute Note: This has
-# extreme repercussions if I was to use sftp as each file transfer initiates a
-# new connection. Since it's rare for me to use sftp this isn't really an
-# issue, however, when I do want to use it this rule will be the cause of
-# failed transfers. Hopefully I will save myself the diagnostic nightmare
-# scenario I went through last time
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --name SSH --set
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j LOG --log-prefix "SSH Brute Force"
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 60 --hitcount 5 --rttl --name SSH -j DROP
--A INPUT -m tcp -p tcp --dport 22 -m state --state NEW -j ACCEPT
-```
+| Port | Protocol | Direction | Description |
+|------|----------|-----------|-------------|
+| 22 | TCP | Inbound | SSH access (consider using an alternate port for public-facing servers) |
+
+Rather than implementing connection rate limiting at the firewall level, consider
+using [fail2ban](https://github.com/fail2ban/fail2ban) or a similar tool.
+Firewall-based rate limiting (such as iptables recent module rules) can cause
+problems with legitimate use cases like sftp file transfers and multiplexed
+connections. Dedicated brute-force protection tools offer smarter detection and
+more granular control over blocking behavior.
 
 ## Configuration
 
@@ -117,7 +114,6 @@ entry into this system you expect no privacy from monitoring.
 Host *
   Compression yes
   HashKnownHosts yes
-  Protocol 2
   SendEnv LC_ALL
   VerifyHostKeyDNS ask
   VisualHostKey yes
@@ -131,21 +127,24 @@ is left without a pass-phrase, anyone who manages to get access to the system
 can immediately login as that user anywhere they have deployed the key. Ensure
 there is a strong pass-phrase on the key.
 
-The keys are normally created as `~/.ssh/id_rsa` and `~/.ssh/id_rsa.pub`,
-however I like to physically separate my keys from my computers so I'll give my
-keys a descriptive name of `username@host.key` and put them on a pendrive
-located at `/media/pendrive`. Personally I to use keys with 4096 bits. The
-following command will create the public / private keys:
+ED25519 is the recommended key type for SSH keys today. It offers better
+security properties and performance compared to RSA. RSA 4096-bit keys are
+still acceptable if you need compatibility with older systems, but ED25519
+should be your default choice.
+
+The keys are normally created as `~/.ssh/id_ed25519` and
+`~/.ssh/id_ed25519.pub`, however I like to physically separate my keys from my
+computers so I'll give my keys a descriptive name of `username@host.key` and put
+them on a pendrive located at `/media/pendrive`. The following command will
+create the public / private keys:
 
 ```
-[user@localhost ~]$ ssh-keygen -t rsa -b 4096 -f /media/pendrive/username@host.key
-Generating public/private rsa key pair.
+$ ssh-keygen -t ed25519 -f /media/pendrive/username@host.key
+Generating public/private ed25519 key pair.
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
 Your identification has been saved in /media/pendrive/username@host.key.
 Your public key has been saved in /media/pendrive/username@host.key.pub.
-The key fingerprint is:
-xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx user@localhost
 ```
 
 Now that we have a strong key we just need to place it on the servers we want
@@ -159,7 +158,7 @@ You can use the utility by performing the following command, replacing
 `remoteuser@remotehost` with a valid username and hostname for the remote host.
 
 ```
-[user@localhost ~]$ ssh-copy-id -i /media/pendrive/username@host.key.pub remoteuser@remotehost
+$ ssh-copy-id -i /media/pendrive/username@host.key.pub remoteuser@remotehost
 remoteuser@remotehost's password:
 Now try logging into the machine, with "ssh 'remoteuser@remotehost'", and check in:
 
@@ -167,9 +166,8 @@ Now try logging into the machine, with "ssh 'remoteuser@remotehost'", and check 
 
 to make sure we haven't added extra keys that you weren't expecting.
 
-[user@localhost ~]$ ssh -i /media/pendrive/username@host.key remoteuser@remotehost
+$ ssh -i /media/pendrive/username@host.key remoteuser@remotehost
 Enter passphrase for key '/media/pendrive/username@remotehost.key':
-[remoteuser@remotehost ~]$
 ```
 
 Once your sure that the key based login is working you can safely disable
@@ -223,9 +221,9 @@ access too and copy the appropriate binaries into place. You can use the
 within the jail. The following is an example for moving `bash` over.
 
 ```
-[root@localhost]# which bash
+$ which bash
 /bin/bash
-[root@localhost]# cp /bin/bash /var/jail/bin/
+$ cp /bin/bash /var/jail/bin/
 ```
 
 The trickiest part of setting up a jail is the required libraries for the
@@ -252,15 +250,6 @@ running you can use this command to track down what it has actually loaded:
 ```
 lsof -P -T -p Application_PID
 ```
-
-A few references:
-
-* http://www.fuschlberger.net/programs/ssh-scp-sftp-chroot-jail/
-* http://allanfeid.com/content/creating-chroot-jail-ssh-access
-
-## Multiplex-Sessions & Signed PubKeys
-
-* http://comments.gmane.org/gmane.network.openssh.general/8269
 
 ## Published SSH Host Keys
 

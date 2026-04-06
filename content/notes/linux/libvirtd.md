@@ -1,5 +1,6 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+updated_at: 2026-04-05T00:00:00-0000
 title: libvirtd
 tags:
   - linux
@@ -39,24 +40,25 @@ systems). This will further isolate each guest.
 
 ## Firewall Adjustments
 
-Regardless of the type of network that is chosen for guests all of their
-traffic goes through the forwarding chain of iptables. While I really strongly
-advocate against any default allow policies on anything, this is one place
-where I personally am willing to make an exception. To allow guests to talk to
-the network make the following change to the default IPTables rules:
+Modern distributions use nftables as the packet filtering backend, often
+managed through firewalld. Libvirt integrates directly with firewalld and
+creates its own zone for managing guest traffic. If you're using firewalld,
+libvirt will automatically add its bridges to the appropriate zone and handle
+forwarding rules for you.
 
-```
-:FORWARD DROP [0:0]
---- Replace with ---
-:FORWARD ACCEPT [0:0]
-```
+If you're running nftables directly without firewalld, you'll need to ensure
+your ruleset allows forwarding for the bridge interfaces used by your guests.
+Libvirt's nftables backend will manage its own chains, but your base policy
+needs to permit the traffic to flow.
 
 ## CGroup Configuration
 
 At a high level, CGroups are a generic mechanism the kernel provides for
 grouping of processes and applying controls to those groups. Tunables within a
 cgroup are provided by what the kernel calls 'controllers', with each
-controller able to expose one or more tunable or control.
+controller able to expose one or more tunable or control. Modern systems use
+cgroups v2 (the unified hierarchy) by default, though the concepts remain the
+same.
 
 When mounting the cgroups filesystem it is possible to indicate what
 controllers are to be activated. This makes it possible to mount the filesystem
@@ -68,28 +70,27 @@ The provided controllers are:
 * memory: Memory controller - Allows for setting limits on RAM and swap usage
   and querying cumulative usage of all processes in the group
 * cpuset: CPU set controller - Binding of processes within a group to a set of
-  CPUs and controlling migration between CPus
+  CPUs and controlling migration between CPUs
 * cpuacct: CPU accounting controller - Information about CPU usage for a group
   of processes
-* cpu: CPU schedular controller - Controlling the priorization of processes in
+* cpu: CPU scheduler controller - Controlling the prioritization of processes in
   the group. Think of it as a more advanced nice level
 * devices: Devices controller - Access control lists on character and block
   devices
 * freezer: Freezer controller - Pause and resume execution of processes in the
   group. Think of it as SIGSTOP for the whole group
 * net_cls: Network class controller - Control network utilization by associating
-  processes with a ‘tc’ network class
+  processes with a 'tc' network class
 
 Under KVM all of these are not supported, however cpu, devices and memory are.
 Which are in my humble opinion the most important for our task.
-
 
 ## Initial Setup
 
 Before creating your first guest there are a few things that I like to do.
 These include setting up additional storage pools and configuring networking.
 This section covers anything that hasn't been done in the config files and I'll
-save the majority of the networking information for it's own section as most of
+save the majority of the networking information for its own section as most of
 it is done outside of the virtualization console.
 
 Since I use bridge networking and that is the only way I want my guests to talk
@@ -97,20 +98,13 @@ to each other and the rest of the world, I want to get rid of the default
 network which performs NAT'ing so that the VMs don't suddenly get a second
 network interface that I don't know about.
 
-To do this I'll want to drop into a virsh shell and issue a few commands. You
-can see an entire session of me removing the default network here:
+To do this you'll want to run a few virsh commands to remove the default network:
 
 ```
-[root@localhost ~]# virsh
-Welcome to virsh, the virtualization interactive terminal.
-
-Type:  'help' for help with commands
-       'quit' to quit
-
-virsh # net-destroy default
+# virsh net-destroy default
 Network default destroyed
 
-virsh # net-undefine default
+# virsh net-undefine default
 Network default has been undefined
 ```
 
@@ -125,7 +119,7 @@ until after that VM has booted it needs to be on an unencrypted partition which
 I still use the default for.
 
 The rest of the VMs will live in a storage pool named "secure" mounted at
-"/var/lib/libvirt/images/secure". I'm using the the subdirectory of
+"/var/lib/libvirt/images/secure". I'm using the subdirectory of
 "/var/lib/libvirt/images" so that I won't have to add additional SELinux
 policies which is potentially very messy and could present additional security
 risks.
@@ -151,22 +145,16 @@ Next you need to tell libvirt about the pool. You can do this with the
 following series of commands:
 
 ```
-[root@legba ~]# virsh
-Welcome to virsh, the virtualization interactive terminal.
-
-Type:  'help' for help with commands
-       'quit' to quit
-
-virsh # virsh pool-define secure.xml
+# virsh pool-define secure.xml
 Pool secure defined from secure.xml
 
-virsh # pool-start secure
+# virsh pool-start secure
 Pool secure started
 
-virsh # pool-autostart secure
+# virsh pool-autostart secure
 Pool secure marked as autostarted
 
-virsh # pool-refresh secure
+# virsh pool-refresh secure
 Pool secure refreshed
 ```
 
@@ -180,87 +168,38 @@ While Linux has long supported tagged VLANs and been able to hop on different
 segments as defined by the system administrator, libvirt's virtual network does
 not support trunking. This means that the interfaces need to be setup on the
 host and bridged through to the guest. I'm going to provide a working example
-that passes VLAN20 into a guest as it's native network card.
+that passes VLAN20 into a guest as its native network card.
 
 I'm assuming the trunked port on the host is eth1, please adjust the following
-configuration to match what your network has. This example is also specific to
-the Red Hat architecture. The configuration will be different than it is here
-(and I have not documented it).
+configuration to match what your network has.
 
-You will need to make sure that the package `bridge-utils` is installed on the
-server. I think this is a dependency of libvirt but I could be wrong so it's
-best to double check.
+### Bridge and VLAN Setup
 
-First eth1 needs to be configured (or unconfigured in this case). This can be
-done by editing `/etc/sysconfig/network-scripts/ifcfg-eth1`. The entirety of
-the files contents should be replaced with the following:
+On modern systems, use `nmcli` (NetworkManager) or `systemd-networkd` to
+configure bridge and VLAN interfaces. The old
+`/etc/sysconfig/network-scripts/` approach is deprecated and no longer
+available on most current distributions.
 
-```
-DEVICE=eth1
-BOOTPROTO=none
-HWADDR=XX:XX:XX:XX:XX:XX
-ONBOOT=yes
-```
-
-Next we need to tell the server about the VLAN. Create the file
-`/etc/sysconfig/network-scripts/ifcfg-vlan20` if it doesn't exist already, and
-populate it with the following:
+Here's how to set it up with nmcli:
 
 ```
-VLAN=yes
-VLAN_NAME_TYPE=VLAN_PLUS_VID_NO_PAD
-DEVICE=vlan20
-PHYSDEV=eth1
-BOOTPROTO=none
-ONBOOT=yes
-TYPE=Ethernet
-BRIDGE=br20
+# nmcli con add type bridge ifname br20
+# nmcli con add type vlan ifname vlan20 dev eth1 id 20 master br20
 ```
 
-Note above that I've specified which bridge the vlan device is going to be
-connected to. The 20 in br20 can be changed to any other number you'd like,
-however for simplicity sake I like to have the bridge reflect what VLAN it is
-connected to.
-
-The last step is to configure the bridge interface. This is needed so that a
-guest may make a connection to it. Create the file
-`/etc/sysconfig/network-scripts/ifcfg-br20` if it doesn't already exist and
-replace the contents with the following:
-
-```
-# br20 - vlan20 - Some non-existant subnet
-DEVICE=br20
-NM_CONTROLLED=no
-ONBOOT=yes
-TYPE=Bridge
-BOOTPROTO=static
-
-IPADDR="10.13.37.30"
-NETMASK="255.255.255.0"
-GATEWAY="10.13.37.1"
-
-DEFROUTE=yes
-
-DNS1="10.13.37.1"
-DNS2="10.13.37.2"
-
-IPV4_FAILURE_FATAL=yes
-IPV6INIT=no
-
-NAME="Some Bridged Network"
-```
-
-Careful with this one, the value for TYPE is case sensitive. Putting 'bridge'
-or 'BRIDGE' will cause the scripts to ignore that this is a bridge and the
-interface will not come up.
+If you're using systemd-networkd instead, you'd create corresponding `.netdev`
+and `.network` unit files for the bridge and VLAN devices. Either approach gets
+you to the same result.
 
 In my experience adding a VLAN (and it's the same for each one after) adds a
 couple seconds to the boot process each time the server boots up. If
 uptime/downtime is important and you need servers coming back up as fast as
 they can a large number of VLANs can significantly delay the process.
 
-When creating a guest you'll want to add the following line to the command to
-give the guest an interface on the appropriate VLAN:
+### Connecting Guests to Bridges
+
+When creating a guest you'll want to add the following flag to give
+the guest an interface on the appropriate VLAN:
 
 ```
 --network=bridge:br20
@@ -281,17 +220,13 @@ for this bridge below:
 </network>
 ```
 
-### IPv6 Pass Through
-
-https://www.berrange.com/posts/2011/06/16/providing-ipv6-connectivity-to-virtual-guests-with-libvirt-and-kvm/
-
 ## Devices
 
-### USB Devices
-
-http://david.wragg.org/blog/2009/03/using-usb-pass-through-under-libvirt.html
-
 ### PCI Devices
+
+PCI passthrough allows guests to directly access host PCI devices for
+near-native performance. Use `virsh nodedev-list --cap pci` to discover
+available devices and `virsh nodedev-dettach` to prepare them for passthrough.
 
 ## Creating New Guests
 
@@ -316,7 +251,7 @@ well. Depending on the function of the server I usually give my guests between
 128 and 384Mb of RAM.
 
 Disk space will have to be determined on a guest by guest basis, however I do
-like to the qcow2 image for my disk images for a variety of reasons. Snapshots,
+like to use the qcow2 image for my disk images for a variety of reasons. Snapshots,
 compression, encryption, and copy-on-write images are all handy little features
 of the qcow2 image format.
 
@@ -341,13 +276,13 @@ what type of OS is going to be run in the guest during the initial creation.
 I don't normally need a graphical environment from my guests, preferring to
 administer from the command line as it is more powerful and less resource
 hungry. In some cases it is unavoidable. You'll notice in the example I give
-that the creation commands has the following in it:
+that the creation command has the following in it:
 
 ```
 --graphics none --serial pty --extra-args="console=ttyS0 serial"
 ```
 
-If your going to be using graphics you will want to omit those two options and
+If you're going to be using graphics you will want to omit those two options and
 replace them with:
 
 ```
@@ -362,29 +297,22 @@ contain any special characters as they may interfere with issuing commands. I
 like the names to be short and descriptive referring to either the name of the
 server or the primary purpose.
 
-The following command creates a Fedora 16 guest with the name 'example', with 1
+The following command creates a guest with the name 'example', with 1
 CPU, 512Mb of RAM, no graphics, a network card on the LANBridge network, and a
-20Gb raw sparse hard disk image.
+20Gb raw sparse hard disk image. It uses a local ISO for installation.
 
 ```
-virt-install --connect qemu:///system \
+$ virt-install --connect qemu:///system \
     --name example \
     --description="This is an example VM intended for the wiki" \
     --ram 512 \
     --arch=x86_64 \
     --vcpus=1,maxvcpus=2 \
-    --check-cpu \
-    --os-type=linux \
-    --os-variant=fedora16 \
-    --hvm \
+    --osinfo detect=on \
     --graphics none \
     --serial pty \
-    --location="http://mirror.chpc.utah.edu/pub/fedora/linux/releases/17/Fedora/x86_64/os" \
+    --cdrom /var/lib/libvirt/images/install.iso \
     --extra-args="console=ttyS0 serial ks=http://example.org/kickstarts/ks.cfg" \
     --disk path=/var/lib/libvirt/images/example.img,format=raw,size=20,sparse=true \
     --network=network:LANBridge
 ```
-
-## LXC
-
-* https://www.berrange.com/posts/2011/09/27/getting-started-with-lxc-using-libvirt/

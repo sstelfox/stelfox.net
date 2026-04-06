@@ -1,5 +1,6 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+updated_at: 2026-04-05T00:00:00-0000
 title: PAM
 tags:
   - linux
@@ -75,8 +76,7 @@ The credit system works by treating different character classes as contributing 
 
 ## pam_passwdqc
 
-`pam_passwdqc` replaces `pam_cracklib` in checking the quality of the password.
-To use it you need to comment out `pam_cracklib` in `/etc/pam.d/system-auth`.
+`pam_passwdqc` is an alternative to `pam_pwquality` for password quality checking. If you use it, make sure `pam_pwquality` (or the legacy `pam_cracklib`) is not also configured in `/etc/pam.d/system-auth`.
 
 You'll need to add this line to the `/etc/pam.d/system-auth`:
 

@@ -1,5 +1,6 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+updated_at: 2026-04-05T00:00:00-0000
 tags:
   - linux
   - security
@@ -10,24 +11,22 @@ aliases:
   - /notes/gatekeeper-script-for-ssh/
 ---
 
-If you've already implemented the SSH keys for authentication and have a
-password on your key then you've already achieved multi-factor authentication
-to a certain degree.
+The gatekeeper pattern adds a post-authentication challenge to SSH sessions
+using ForceCommand. The concept was inspired by a scene in a movie where a
+system required answering riddles before granting access. While not a substitute
+for proper multi-factor authentication, it adds a lightweight additional
+verification step.
 
-The gatekeeper script is something that I haven't come across on any other
-systems that other people administer. Perhaps it's too much trouble for them
-without much gain. I had the idea for this while watching a James Bond movie.
-
-A Russian systems engineer put riddles on one of his machines that you had to
-go through in order to access the system, while this alone isn't secure, asking
-the user random questions after authentication couldn't hurt security. I highly
-recommend using some logic that changes periodically, but the client can
-remotely deduce.
+If you have already set up SSH key authentication with a passphrase on your key,
+you have a decent form of multi-factor authentication already. The gatekeeper
+script layers on one more check by prompting the user with a challenge after
+they have authenticated.
 
 First we need to make a script to handle the additional authentication. Please
-note that the following script is just an example, most of the security is in
-place but you'll want to implement your own logic for the questions and
-answers.
+note that the following script is just an example. Most of the security is in
+place but you will want to implement your own logic for the questions and
+answers. I highly recommend using logic that changes periodically but can be
+deduced remotely by the client.
 
 ```bash
 #!/bin/sh
@@ -88,16 +87,16 @@ kill -9 $PPID
 exit 0
 ```
 
-Put this script in `/etc/ssh/gatekeeper.sh` and change it's permissions to 755
+Put this script in `/etc/ssh/gatekeeper.sh` and change its permissions to 755
 with the owner being root. To make the SSH server pass off control to the
-Gatekeeper script once it's done authenticating a user, we'll use the
-'ForceCommand' command in SSHd's config file (`/etc/ssh/sshd_config`). Add the
-following line to the end of the config and restart the SSH daemon.
+Gatekeeper script once its done authenticating a user, use the `ForceCommand`
+directive in the SSHd config file (`/etc/ssh/sshd_config`). Add the following
+line to the end of the config and restart the SSH daemon.
 
 ```
 ForceCommand /etc/ssh/gatekeeper.sh
 ```
 
 Assuming everything went according to plan, when you SSH into the remote server
-once your done authenticating it'll ask for the token. Putting in 'muffins'
+once you are done authenticating it will ask for the token. Putting in 'muffins'
 should get you to your shell, while anything else will kill the connection.

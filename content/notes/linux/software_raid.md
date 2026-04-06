@@ -1,5 +1,6 @@
 ---
 created_at: 2013-01-01T00:00:01-0000
+updated_at: 2026-04-05T00:00:00-0000
 title: Software RAID
 tags:
   - linux
@@ -12,9 +13,7 @@ aliases:
 
 The mdadm package is required for software RAID:
 
-```
-yum install mdadm -y
-```
+The `mdadm` package is available on most distributions (`mdadm` on Fedora/Arch/Debian).
 
 ## Array Creation
 
