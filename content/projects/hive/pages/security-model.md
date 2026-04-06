@@ -5,13 +5,13 @@ draft: false
 url: /projects/hive/security-model/
 ---
 
-Hive's security model is organized around two principles: defense in depth and risk tracing. Multiple independent enforcement layers mean no single mechanism has to be the whole story. Information flow tracking means you can reason about where data came from, how trusted it is, and where it's allowed to go.
+Hive's security model is built around defense in depth and information flow tracking. Multiple independent enforcement layers mean no single mechanism has to carry all the weight. Trust tracking on data means you can reason about where information came from and where it's allowed to go.
 
 ## Enforcement Layers
 
 Security enforcement happens at three independent levels.
 
-At the **application level**, every action an agent takes is gated by typed capabilities declared in its manifest. The capability system supports glob patterns for scoping: `ToolInvoke("file_*")` allows file tools but not shell tools, `NetConnect("*.openai.com:443")` allows connections to OpenAI but nothing else, `MemoryRead("project-alpha")` restricts which memory namespace an agent can see. Capabilities are validated at spawn time and a child agent can never have more capabilities than its parent.
+At the **application level**, every action an agent takes is gated by typed capabilities declared in its manifest. The capability system supports glob patterns for scoping: `ToolInvoke("file_*")` allows file tools but not shell tools, `NetConnect("*.openai.com:443")` allows connections to OpenAI but nothing else, `MemoryRead("project-alpha")` restricts which memory namespace an agent can see. Capabilities are validated at spawn time and a child agent can never hold more capabilities than its parent.
 
 At the **kernel level**, Linux eBPF programs provide a second enforcement layer that operates independently of Hive's own code. Syscall filters restrict what system calls agent subprocesses can make. Executable restrictions control which binaries can run. Per-agent network firewall rules constrain network access. If the application-level checks have a bug, the eBPF filters still hold because they're enforced by the kernel itself.
 
@@ -27,7 +27,7 @@ Memory namespaces, channel bindings, and knowledge graph scoping create hard bou
 
 Data flowing through the system carries a trust level based on its origin. External network responses, raw user input, and output from untrusted agents all enter at a low trust level. As data moves through the pipeline, its trust level reflects the least trusted source that contributed to it. When two pieces of data combine, the result inherits the lower trust level.
 
-Some operations can mechanically increase trust. Parsing structured data, validating against a known schema, or sanitizing content through well-defined transformations produce output that can be tagged with an updated trust level. This isn't automatic promotion. The operation itself has to be one the system recognizes as genuinely reducing risk. A JSON parser that successfully extracts a known field produces more trustworthy output than the raw HTTP response it came from.
+Some operations can mechanically increase trust. Parsing structured data, validating against a known schema, or sanitizing content through well-defined transformations produce output that can be tagged with a higher trust level. This isn't automatic promotion. The operation itself has to be one the system recognizes as genuinely reducing risk. A JSON parser that successfully extracts a known field produces more trustworthy output than the raw HTTP response it came from.
 
 Before data reaches a sensitive operation (a "sink"), the system checks whether the data's trust level meets the minimum threshold for that destination. Shell execution requires high trust. Network requests that could carry secrets require high trust. Inter-agent messages have their own thresholds. Violations produce clear errors identifying the data source, its trust level, and why the destination rejected it.
 
@@ -47,19 +47,7 @@ On top of the ontology layer, a reasoning skill takes an agent's structured onto
 
 Human users authenticate through a web interface with username/password and mandatory MFA. CLI tools and service integrations authenticate using short-lived mutual TLS certificates that are automatically renewed. This keeps long-lived secrets out of config files and lets you revoke access instantly by refusing to renew a cert.
 
-The role system maps directly to the same capability model that agents use, so human operators get fine-grained capability sets rather than coarse role tiers. An operator who manages deployment agents gets the capabilities relevant to that work without automatically getting access to agents handling personal communications. The same permission model governs both human and agent access, which simplifies reasoning about who can do what.
-
-## Task Coordination
-
-Hive includes a project-based ticketing system that goes beyond a simple task queue. Projects organize work into boards where tasks flow through swim lanes by status. The progression is familiar if you've used Linear or similar tools: backlog, in progress, review, done, with customizable states.
-
-Workflow triggers tied to state transitions connect the ticketing system to the agent orchestration layer. Moving a ticket to "in review" can spawn a QA agent. Moving it to "ready for deploy" can trigger a deployment workflow. These transitions are defined per-project.
-
-Agents can search and reference tickets intelligently. When an agent is working on a task, it can pull up the ticket's full history, read comments from other agents and human operators, and understand the context of what's been done. This uses a model similar to the "beads" concept from some agent frameworks, where task references keep agents focused and on-track with or without persistent memory.
-
-Tickets carry full comment history and change tracking, allowing progressive work across multiple sessions and agents. A development agent can start work on a ticket, leave notes about what was attempted and what's still open, and a different agent or a human can pick it up later with full context.
-
-The tooling, agents, and CLI are all git-aware. Projects connect to git repositories and work happens in git worktrees scoped to specific tasks. References between tickets, commits, and agent sessions are all captured in the audit log.
+The role system maps directly to the same capability model that agents use. Human operators get fine-grained capability sets rather than coarse role tiers. The same permission model governs both human and agent access, which simplifies reasoning about who can do what.
 
 ## WASM Sandbox
 
@@ -69,7 +57,7 @@ Skills can run in a WASM sandbox powered by Wasmtime with dual metering. Fuel me
 
 Each agent instantiation gets a transparent writable overlay filesystem. The agent sees a normal filesystem rooted at its project directory, but all writes go to a private overlay layer unique to that instance. The underlying project files are never modified directly.
 
-The overlay is snapshotable, making agent handoffs clean and reproducible. A QA agent can start in exactly the state a development agent left behind, even if the dev agent didn't commit their work. The snapshot captures the full overlay including in-progress changes, temporary files, and build artifacts. Two agents working on the same project in parallel can't step on each other's changes because each has its own overlay layer.
+The overlay is snapshotable, making agent handoffs clean and reproducible. A QA agent can start in exactly the state a development agent left behind, even if the dev agent didn't commit their work. Two agents working on the same project in parallel can't step on each other's changes because each has its own overlay layer.
 
 ## Audit Trail
 
@@ -85,7 +73,7 @@ All outbound HTTP requests pass through SSRF validation that blocks private IP r
 
 ## Malicious Behavior Detection
 
-The BPF monitoring system extends beyond allow/deny filtering into active detection of suspicious behavior patterns. Combined with a transparent intercepting HTTPS proxy, it forms a per-agent host intrusion detection system (HIDS).
+The BPF monitoring system extends beyond allow/deny filtering into active detection of suspicious behavior patterns. Combined with a transparent intercepting HTTPS proxy, it forms a per-agent host intrusion detection system.
 
 File access monitoring tracks when processes touch sensitive content in ways that don't match expected usage patterns. A non-SSH client reading an SSH private key, or something other than the AWS CLI accessing AWS credentials, triggers alerts. When sensitive files are accessed, their content can be masked with convincing fake values that the system tracks. If those fake values later appear in outgoing HTTP or HTTPS request bodies (visible through the intercepting proxy), that's a strong signal something is trying to exfiltrate credentials.
 
