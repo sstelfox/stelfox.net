@@ -1,9 +1,10 @@
 ---
 created_at: 2017-10-12T15:33:21-0400
-evergreen: false
+evergreen: true
 public: true
 tags:
   - linux
+  - logging
   - operations
   - security
 title: Auditd
@@ -18,7 +19,7 @@ Auditd collects any configured syscall execution with critical security metadata
 
 For reliable operation the rules should be carefully tuned to your system. Tracking every write to disk will generate an unreasonable amount of events and depending on the configuration of the kernel's audit subsystem, may trigger a kernel panic.
 
-Auditd will also identify the IP address a remote user is connecting in allow cross system tracing of events.
+Auditd will also identify the IP address a remote user is connecting from, allowing cross-system tracing of events.
 
 ## Recommended Events to Audit
 
@@ -62,16 +63,6 @@ Auditd comes with a dispatcher with the ability to send the messages directly to
 
 If you use another dispatcher other than the one that comes with auditd, be aware that it will be started up with root privileges.
 
-Unfortunately it seems like the dispatcher that comes with auditd 2.6.4 is broken. With all plugins disabled (to eliminate them as a source of an issue), I was still receiving the following message in syslog:
-
-```text
-Dispatcher protocol mismatch, exiting
-```
-
-Which of course, hasn't seemed to have been encountered by anyone else online. Digging through the source code, it seems "audispd" hasn't been updated for an update to the protocol built into auditd. I'll have to look into either fixing the source or writing my own dispatcher...
-
-I wasn't able to find anything about fixes that may be related so I'm unsure when it was fixed. I updated to 2.7.1 and it seemed to resolve that issue.
-
 To get the information going to syslog I made two relatively small changes to the existing configurations. You really only need to set 'active' to yes in "/etc/audisp/plugins.d/syslog.conf". I made minor tweaks to the configuration to better support my logging environment (I keep "local6" reserved for auditd
 records). These two files include my relevant changes:
 
@@ -82,7 +73,6 @@ If you reliably have your audit records going to syslog, you may want to conside
 
 ## More References
 
-* <https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/6/html/Security_Guide/chap-system_auditing.html>
-* <http://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf>
+* <https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/9/html/security_hardening/auditing-the-system_security-hardening>
+* <https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-123.pdf>
 * <https://security.stackexchange.com/questions/4629/simple-example-auditd-configuration>
-* <https://linux-audit.com/tuning-auditd-high-performance-linux-auditing/>

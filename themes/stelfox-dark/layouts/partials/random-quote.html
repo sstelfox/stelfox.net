@@ -1,0 +1,14 @@
+{{- $quotes := index hugo.Data "quotes" -}}
+{{- if $quotes -}}
+  {{- $pool := $quotes -}}
+  {{- if .featured_only -}}
+    {{- $pool = where $quotes "featured" true -}}
+  {{- end -}}
+  {{- if $pool -}}
+    {{- $quote := index (shuffle $pool) 0 -}}
+    <aside class="random-quote">
+      <blockquote class="random-quote-text">{{ $quote.text }}</blockquote>
+      <cite class="random-quote-attribution">&mdash; {{ $quote.attribution }}</cite>
+    </aside>
+  {{- end -}}
+{{- end -}}

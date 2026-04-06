@@ -4,8 +4,8 @@ evergreen: true
 public: true
 tags:
   - linux
+  - monitoring
   - security
-  - services
 title: AIDE
 slug: aide
 aliases:
@@ -20,20 +20,6 @@ This can be run periodically to detect manipulation of critical system files, th
 
 For this to be effective this process needs to be added to the systems update process and the database should be backed up immediately after being updated. With good backups in place this can help identify what changes were made by an attacker after a breach which can be invaluable in knowing both the impact and intent of a security incident.
 
-## Important Caveat
-
-There does seems to be an issue that causes core dumps like so:
-
-```text
-Floating point exception (core dumped)
-```
-
-I initially suspected UTF-8 characters in the path name or to many files. Both I was able to disprove. I can enable all checks on an effected directory except for any of the hashes (I tested all the ones available to me individually).
-
-The issue itself could be with the specific compiled version (community/aide 0.16-1 on Arch Linux) I was testing with.
-
-After strace'ing down the files it was having issues with I simply excluded the files that were triggering the issue from checksum validation. I couldn't find anything unusual about the files themselves though... No extended attributes, normal permissions, readable... Maybe a bug in "libmhash"?
-
 ## Secure Usage
 
 While this utility provides no preventative defense measures, it is extremely useful in the detection of malicious behavior on the host. To perform this detection, a cron job should periodically have AIDE analyze the files it is monitoring and report the findings. A central logging system should be setup to consume these reports.
@@ -47,7 +33,7 @@ This database will likely need to be updated after every system update as critic
 The defaults are reasonably sane so you can continue with the default configuration that ships with several distributions, but there are several things it will miss. Arch Linux's default doesn't catch:
 
 * SELinux and extended attributes (though SELinux doesn't apply)
-* Permissions and security hearings under /dev
+* Permissions and security attributes under /dev
 * Any of the content or security attributes for most files under /etc
 * /lib64 (though if it's a symlink it's likely covered)
 * /srv (though it's not commonly used)
@@ -89,4 +75,4 @@ $ aide --config-check
 
 It will produce no output and exit with a zero status if the configuration is valid.
 
-I have a modified configuration file covering my general use case [available](aide.conf), a slightly tweaked [cron job](aide.cron) ([original here](http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/app-forensics/aide/files/aide.cron)), and slightly [modified script](sshaide.sh) to check AIDE integrity remotely using SSH (original in the "contrib" directory of the AIDE source). If you use any of these you will likely need to adjust paths to match the configuration.
+I have a modified configuration file covering my general use case [available](aide.conf), a slightly tweaked [cron job](aide.cron), and a [modified script](sshaide.sh) to check AIDE integrity remotely using SSH (original in the "contrib" directory of the AIDE source). If you use any of these you will likely need to adjust paths to match the configuration.

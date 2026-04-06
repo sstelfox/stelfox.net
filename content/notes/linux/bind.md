@@ -3,6 +3,7 @@ created_at: 2013-01-01T00:00:01-0000
 evergreen: false
 public: true
 tags:
+  - dns
   - linux
   - operations
   - security
@@ -53,7 +54,7 @@ acl "trusted" {
 };
 
 key "control-key" {
-  algorithm hmac-md5;
+  algorithm hmac-sha256;
   secret "##!!pulled-from-rndc.conf-generation!!##";
 };
 
@@ -113,12 +114,8 @@ options {
   // With no dynamic interfaces, bind doesn't need to poll for interface state
   interface-interval 0;
 
-  dnssec-enable     yes;
-  dnssec-validation yes;
-  dnssec-lookaside  auto;
+  dnssec-validation auto;
 
-  // ISC DLV key
-  bindkeys-file           "/etc/named.iscdlv.key";
   managed-keys-directory  "/var/named/dynamic";
 
   // Only accept queries and cached queries from the trusted ACL
@@ -143,19 +140,19 @@ view "internal-in" in {
   };
 
   zone "1057.name" IN {
-    type master;
+    type primary;
     file "data/internal/1057.name.zone.db";
     allow-update { none; };
   };
 
   zone "19.87.10.in-addr.arpa" IN {
-    type master;
+    type primary;
     file "data/internal/19.87.10.in-addr.arpa.zone.db";
     allow-update { none; };
   };
 
   zone "0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa" IN {
-    type master;
+    type primary;
     file "data/internal/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db";
     allow-update { none; };
   };
@@ -177,14 +174,14 @@ view "external-in" in {
   };
 
   zone "1057.name" IN {
-    type master;
+    type primary;
     file "data/public/1057.name.zone.db";
     allow-query   { any; };
     allow-update  { none; };
   };
 
   zone "0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.ip6.arpa" IN {
-    type master;
+    type primary;
     file "data/public/0.0.0.0.f.e.0.0.d.c.b.a.1.0.0.2.arpa.zone.db";
     allow-query   { any; };
     allow-update  { none; };
@@ -198,7 +195,7 @@ view "bind-chaos" chaos {
   recursion no;
 
   zone "bind" {
-    type master;
+    type primary;
     file "db.bind";
 
     allow-query     { trusted; };
@@ -221,7 +218,7 @@ The commented out code belongs in "/etc/named.conf", just replace the following 
 ## INCLUDE KEY AND CONFIG FROM /etc/rndc.conf ##
 ```
 
-512 is unfortunately the strongest bit size available for authentication so it is strongly recommended to firewall off and limit the IP addresses the control channel is running on. By default this is exclusively the IPv4 loopback address.
+It is strongly recommended to firewall off and limit the IP addresses the control channel is running on. By default this is exclusively the IPv4 loopback address. Modern versions of BIND support stronger algorithms like hmac-sha256 for rndc key generation.
 
 ### /var/named/db.bind
 
@@ -347,14 +344,3 @@ With this configuration, the LDAP back-end will try to connect to server ldap.ex
 For each entry it will find, it will register a new zone with BIND. The LDAP back-end will keep each record it gets from LDAP in its cache for 5 minutes.
 
 It also supports SASL authentication methods which means we can use encrypted authentication and/or kerberos.
-
-## IPv6 Slow down
-
-If there is a local IPv6 network but it is unrouted bind will regularily attempt to contact other nameservers using IPv6 and doesn't seem to cache whether it was able to reach them or not.
-
-This has a dramatically visible impact on the time it takes to query for a name. To prevent this there are really only two options, the first is to make the IPv6 network routeable, and the second is to put bind in IPv4 only mode. Neither solution is good, but the latter is the only feasible one (This does mean it won't even listen on an IPv6 port).
-
-```console
-$ echo 'OPTIONS="-4"' >> /etc/sysconfig/named
-$ service named restart
-```
