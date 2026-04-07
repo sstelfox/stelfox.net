@@ -19,15 +19,17 @@
   {{- $latestPost := index $allContent 0 }}
 
   {{- if $latestPost }}
-  <section class="latest-highlight">
-    <h2>Latest</h2>
-    <a href="{{ $latestPost.RelPermalink }}" class="discover-card latest-card">
-      <div class="discover-card-meta">
-        <time class="discover-card-date">{{ $latestPost.Date.Format "2006-01-02" }}</time>
-        <span class="reading-time">{{ $latestPost.ReadingTime }} min read</span>
-      </div>
-      <h3 class="discover-card-title">{{ $latestPost.Title }}</h3>
-      <p class="discover-card-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
+</div>
+<section class="latest-highlight">
+  <div class="container">
+    <h3 class="discover-card-title"><a href="{{ $latestPost.RelPermalink }}">{{ $latestPost.Title }}</a></h3>
+    <div class="discover-card-meta">
+      <time class="discover-card-date">{{ $latestPost.Date.Format "2006-01-02" }}</time>
+      <span class="latest-author">Sam Stelfox</span>
+      <span class="reading-time">{{ $latestPost.ReadingTime }} min read</span>
+    </div>
+    <div class="discover-card-excerpt">{{ $latestPost.Summary }}</div>
+    <div class="latest-footer">
       <div class="discover-card-tags">
         {{- if ne $latestPost.Section "blog" }}
         <span class="tag tag-project">{{ $latestPost.Parent.Parent.Title }}</span>
@@ -36,8 +38,11 @@
         <span class="tag">{{ . }}</span>
         {{- end }}
       </div>
-    </a>
-  </section>
+      <a href="{{ $latestPost.RelPermalink }}" class="latest-read-more">Read More &raquo;</a>
+    </div>
+  </div>
+</section>
+<div class="container">
   {{- end }}
 
   <section class="recent-posts">

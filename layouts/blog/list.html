@@ -88,24 +88,29 @@
 
     {{- /* Latest post highlight */ -}}
     {{- if $latestPost }}
-    <section class="latest-highlight">
-      <h2>Latest</h2>
-      <a href="{{ $latestPost.RelPermalink }}" class="discover-card latest-card">
-        <div class="discover-card-meta">
-          <time class="discover-card-date">{{ $latestPost.Date.Format "2006-01-02" }}</time>
-          <span class="reading-time">{{ $latestPost.ReadingTime }} min read</span>
-        </div>
-        <h3 class="discover-card-title">{{ $latestPost.Title }}</h3>
-        <p class="discover-card-excerpt">{{ $latestPost.Plain | truncate 600 }}</p>
-        {{- if $latestPost.Params.tags }}
-        <div class="discover-card-tags">
-          {{- range $latestPost.Params.tags }}
-          <span class="tag">{{ . }}</span>
-          {{- end }}
-        </div>
+</div>
+<section class="latest-highlight">
+  <div class="container">
+    <h3 class="discover-card-title"><a href="{{ $latestPost.RelPermalink }}">{{ $latestPost.Title }}</a></h3>
+    <div class="discover-card-meta">
+      <time class="discover-card-date">{{ $latestPost.Date.Format "2006-01-02" }}</time>
+      <span class="latest-author">Sam Stelfox</span>
+      <span class="reading-time">{{ $latestPost.ReadingTime }} min read</span>
+    </div>
+    <div class="discover-card-excerpt">{{ $latestPost.Summary }}</div>
+    <div class="latest-footer">
+      {{- if $latestPost.Params.tags }}
+      <div class="discover-card-tags">
+        {{- range $latestPost.Params.tags }}
+        <span class="tag">{{ . }}</span>
         {{- end }}
-      </a>
-    </section>
+      </div>
+      {{- end }}
+      <a href="{{ $latestPost.RelPermalink }}" class="latest-read-more">Read More &raquo;</a>
+    </div>
+  </div>
+</section>
+<div class="container">
     {{- end }}
 
     {{- /* Random selection of older posts */ -}}

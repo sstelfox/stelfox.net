@@ -506,24 +506,89 @@ input[type="text"].header-search-input {
   margin-bottom: var(--spacing-md);
 }
 
-/* === Latest Card === */
+/* === Latest Highlight === */
 .latest-highlight {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-lg) 0;
   margin-bottom: var(--spacing-xl);
 }
 
-.latest-highlight h2 {
-  margin-top: 0;
+.latest-highlight .discover-card-title {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.latest-highlight .discover-card-title a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.latest-highlight .discover-card-title a:hover {
+  color: var(--accent-primary);
+}
+
+.latest-highlight .discover-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
   margin-bottom: var(--spacing-md);
-  font-size: 1.25rem;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
 }
 
-.latest-card {
-  height: auto;
+.latest-highlight .discover-card-meta > * {
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
 }
 
-.latest-card .discover-card-excerpt {
+.latest-highlight .discover-card-meta > *:not(:last-child)::after {
+  content: "\00b7";
+  margin-left: var(--spacing-xs);
+  color: var(--text-tertiary);
+}
+
+.latest-highlight .discover-card-date,
+.latest-highlight .latest-author,
+.latest-highlight .reading-time {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  line-height: 1;
+}
+
+.latest-highlight .discover-card-excerpt {
   -webkit-line-clamp: unset;
+  display: block;
+  overflow: visible;
+  color: var(--text-primary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.latest-highlight .discover-card-excerpt p {
+  margin: 0 0 0.75rem 0;
+}
+
+.latest-highlight .discover-card-excerpt p:last-child {
+  margin-bottom: 0;
+}
+
+.latest-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--spacing-md);
+}
+
+.latest-read-more {
+  color: var(--accent-primary);
+  text-decoration: none;
+  margin-left: auto;
+}
+
+.latest-read-more:hover {
+  text-decoration: underline;
 }
 
 .recent-posts h2 {
@@ -649,10 +714,6 @@ input[type="text"].header-search-input {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   color: var(--text-tertiary);
-}
-
-.discover-card-meta .reading-time {
-  font-size: 0.8rem;
 }
 
 /* === Tables === */
