@@ -75,11 +75,11 @@
       <h2>Explore</h2>
       <div class="notes-grid">
         {{- range first 9 (shuffle $allNotes) }}
-        <a href="{{ .RelPermalink }}" class="discover-card">
-          <h3 class="discover-card-title">{{ .Title }}</h3>
+        <div class="discover-card">
+          <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 200 }}</p>
           {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
-        </a>
+        </div>
         {{- end }}
       </div>
     </section>

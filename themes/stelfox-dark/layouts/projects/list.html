@@ -181,13 +181,7 @@
       <h2>Build Log</h2>
       <ul class="post-list">
         {{- range $allLogs }}
-        <li class="post-item">
-          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
-          <a href="{{ .RelPermalink }}" class="post-link">
-            <span class="post-title">{{ .Title }}</span>
-            {{- partial "tags.html" (dict "page" . "style" "inline") }}
-          </a>
-        </li>
+        {{- partial "post-list-item.html" (dict "page" .) }}
         {{- end }}
       </ul>
     </section>

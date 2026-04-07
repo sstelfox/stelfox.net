@@ -12,19 +12,26 @@
     </div>
     {{- end }}
 
-    {{- if .Pages }}
+    {{- $paginator := .Paginate .Pages }}
+    {{- if $paginator.Pages }}
     <section class="page-list">
       <ul class="post-list">
-        {{- range .Pages }}
-        <li class="post-item">
-          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
-          <a href="{{ .RelPermalink }}" class="post-link">
-            <span class="post-title">{{ .Title }}</span>
-            {{- partial "tags.html" (dict "page" . "style" "delimit") }}
-          </a>
-        </li>
+        {{- range $paginator.Pages }}
+        {{- partial "post-list-item.html" (dict "page" .) }}
         {{- end }}
       </ul>
+
+      {{- if gt $paginator.TotalPages 1 }}
+      <nav class="pagination" aria-label="Pagination">
+        {{- if $paginator.HasPrev }}
+        <a href="{{ $paginator.Prev.URL }}" class="pagination-link pagination-prev">Newer</a>
+        {{- end }}
+        <span class="pagination-info">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+        {{- if $paginator.HasNext }}
+        <a href="{{ $paginator.Next.URL }}" class="pagination-link pagination-next">Older</a>
+        {{- end }}
+      </nav>
+      {{- end }}
     </section>
     {{- end }}
   </article>

@@ -12,29 +12,29 @@
   {{- if eq $style "badge" -}}
     <div class="{{ default "discover-card-tags" $class }}">
       {{- if $projectTag }}
-      <span class="tag tag-project">{{ $projectTag }}</span>
+      <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
       {{- end }}
       {{- range $tags }}
-      <span class="tag">{{ . }}</span>
+      <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
       {{- end }}
     </div>
   {{- else if eq $style "inline" -}}
     <span class="{{ default "post-tags" $class }}">
       {{- if $projectTag }}
-      <span class="tag tag-project">{{ $projectTag }}</span>
+      <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
       {{- end }}
       {{- range $tags }}
-      <span class="tag">{{ . }}</span>
+      <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
       {{- end }}
     </span>
   {{- else if eq $style "delimit" -}}
-    {{- $allTags := slice -}}
-    {{- if $projectTag -}}
-      {{- $allTags = $allTags | append $projectTag -}}
-    {{- end -}}
-    {{- range $tags -}}
-      {{- $allTags = $allTags | append . -}}
-    {{- end -}}
-    <span class="{{ default "post-tags" $class }}">{{ delimit $allTags ", " }}</span>
+    <span class="{{ default "post-tags" $class }}">
+      {{- if $projectTag -}}
+      <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
+      {{- end -}}
+      {{- range $tags -}}
+      <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
+      {{- end -}}
+    </span>
   {{- end -}}
 {{- end -}}

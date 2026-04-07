@@ -1,0 +1,9 @@
+{{- $page := .page -}}
+{{- $style := default "inline" .tagStyle -}}
+<li class="post-item">
+  <time class="post-date">{{ $page.Date.Format "2006-01-02" }}</time>
+  <a href="{{ $page.RelPermalink }}" class="post-link">
+    <span class="post-title">{{ $page.Title }}</span>
+  </a>
+  {{- partial "tags.html" (dict "page" $page "style" $style) }}
+</li>

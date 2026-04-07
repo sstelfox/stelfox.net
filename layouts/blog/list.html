@@ -115,15 +115,15 @@
       <div class="blog-discover-grid">
         {{- $featured := first 3 (shuffle $olderPosts) }}
         {{- range $featured }}
-        <a href="{{ .RelPermalink }}" class="discover-card">
+        <div class="discover-card">
           <div class="discover-card-meta">
             <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
             <span class="reading-time">{{ .ReadingTime }} min read</span>
           </div>
-          <h3 class="discover-card-title">{{ .Title }}</h3>
+          <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
-        </a>
+        </div>
         {{- end }}
       </div>
     </section>
@@ -156,15 +156,15 @@
       <h2>You Might Also Enjoy</h2>
       <div class="blog-discover-grid">
         {{- range $relatedPosts }}
-        <a href="{{ .RelPermalink }}" class="discover-card">
+        <div class="discover-card">
           <div class="discover-card-meta">
             <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
             <span class="reading-time">{{ .ReadingTime }} min read</span>
           </div>
-          <h3 class="discover-card-title">{{ .Title }}</h3>
+          <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
-        </a>
+        </div>
         {{- end }}
       </div>
     </section>
@@ -178,13 +178,7 @@
       <h2>All Posts</h2>
       <ul class="post-list">
         {{- range $paginator.Pages }}
-        <li class="post-item">
-          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
-          <a href="{{ .RelPermalink }}" class="post-link">
-            <span class="post-title">{{ .Title }}</span>
-            {{- partial "tags.html" (dict "page" . "style" "delimit") }}
-          </a>
-        </li>
+        {{- partial "post-list-item.html" (dict "page" .) }}
         {{- end }}
       </ul>
 
@@ -234,13 +228,7 @@
     <section class="page-list">
       <ul class="post-list">
         {{- range .Pages }}
-        <li class="post-item">
-          <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
-          <a href="{{ .RelPermalink }}" class="post-link">
-            <span class="post-title">{{ .Title }}</span>
-            {{- partial "tags.html" (dict "page" . "style" "delimit") }}
-          </a>
-        </li>
+        {{- partial "post-list-item.html" (dict "page" .) }}
         {{- end }}
       </ul>
     </section>
