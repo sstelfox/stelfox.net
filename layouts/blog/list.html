@@ -182,17 +182,7 @@
         {{- end }}
       </ul>
 
-      {{- if gt $paginator.TotalPages 1 }}
-      <nav class="pagination" aria-label="Blog pagination">
-        {{- if $paginator.HasPrev }}
-        <a href="{{ $paginator.Prev.URL }}" class="pagination-link pagination-prev">Newer</a>
-        {{- end }}
-        <span class="pagination-info">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
-        {{- if $paginator.HasNext }}
-        <a href="{{ $paginator.Next.URL }}" class="pagination-link pagination-next">Older</a>
-        {{- end }}
-      </nav>
-      {{- end }}
+      {{- partial "pagination.html" (dict "paginator" $paginator "label" "Blog pagination") }}
     </section>
     {{- end }}
 

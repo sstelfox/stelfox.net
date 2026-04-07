@@ -1,0 +1,48 @@
+{{- $paginator := .paginator -}}
+{{- $label := default "Pagination" .label -}}
+{{- if gt $paginator.TotalPages 1 }}
+<nav class="pagination" aria-label="{{ $label }}">
+  {{- if $paginator.HasPrev }}
+  <a href="{{ $paginator.Prev.URL }}" class="pagination-link pagination-prev" aria-label="Previous page">Prev</a>
+  {{- else }}
+  <span class="pagination-link pagination-prev pagination-disabled" aria-hidden="true">Prev</span>
+  {{- end }}
+
+  <span class="pagination-pages">
+    {{- $current := $paginator.PageNumber -}}
+    {{- $total := $paginator.TotalPages -}}
+    {{- $pagers := $paginator.Pagers -}}
+
+    {{- /* Always show first page */ -}}
+    {{- range $pagers -}}
+      {{- $pageNum := .PageNumber -}}
+
+      {{- /* Show page if: first, last, or within 2 of current */ -}}
+      {{- $show := or (eq $pageNum 1) (eq $pageNum $total) -}}
+      {{- $show = or $show (and (ge $pageNum (sub $current 2)) (le $pageNum (add $current 2))) -}}
+
+      {{- if $show -}}
+        {{- if eq $pageNum $current }}
+    <span class="pagination-page pagination-current" aria-current="page">{{ $pageNum }}</span>
+        {{- else }}
+    <a href="{{ .URL }}" class="pagination-page">{{ $pageNum }}</a>
+        {{- end -}}
+      {{- else -}}
+        {{- /* Show ellipsis at boundaries */ -}}
+        {{- $prevNum := sub $pageNum 1 -}}
+        {{- $prevShow := or (eq $prevNum 1) (eq $prevNum $total) -}}
+        {{- $prevShow = or $prevShow (and (ge $prevNum (sub $current 2)) (le $prevNum (add $current 2))) -}}
+        {{- if $prevShow }}
+    <span class="pagination-ellipsis" aria-hidden="true">&hellip;</span>
+        {{- end -}}
+      {{- end -}}
+    {{- end }}
+  </span>
+
+  {{- if $paginator.HasNext }}
+  <a href="{{ $paginator.Next.URL }}" class="pagination-link pagination-next" aria-label="Next page">Next</a>
+  {{- else }}
+  <span class="pagination-link pagination-next pagination-disabled" aria-hidden="true">Next</span>
+  {{- end }}
+</nav>
+{{- end }}

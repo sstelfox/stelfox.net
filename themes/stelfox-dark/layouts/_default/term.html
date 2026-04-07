@@ -12,7 +12,7 @@
     </div>
     {{- end }}
 
-    {{- $paginator := .Paginate .Pages }}
+    {{- $paginator := .Paginate (.Pages.ByLastmod.Reverse) }}
     {{- if $paginator.Pages }}
     <section class="page-list">
       <ul class="post-list">
@@ -21,7 +21,7 @@
         {{- end }}
       </ul>
 
-      {{- partial "pagination.html" (dict "paginator" $paginator) }}
+      {{- partial "pagination.html" (dict "paginator" $paginator "label" "Tag pagination") }}
     </section>
     {{- end }}
   </article>

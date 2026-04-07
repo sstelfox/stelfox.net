@@ -3,16 +3,20 @@
 {{- $limit := default 0 .limit -}}
 {{- $class := .class -}}
 {{- $projectTag := partial "project-name.html" $page -}}
+{{- $isNote := eq $page.Section "notes" -}}
 {{- $tags := $page.Params.tags | default slice -}}
 {{- if and (gt $limit 0) (gt (len $tags) $limit) -}}
   {{- $tags = first $limit $tags -}}
 {{- end -}}
-{{- $hasTags := or (gt (len $tags) 0) (ne $projectTag "") -}}
+{{- $hasTags := or (gt (len $tags) 0) (ne $projectTag "") $isNote -}}
 {{- if $hasTags -}}
   {{- if eq $style "badge" -}}
     <div class="{{ default "discover-card-tags" $class }}">
       {{- if $projectTag }}
       <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
+      {{- end }}
+      {{- if $isNote }}
+      <a href="/notes/" class="tag tag-section">note</a>
       {{- end }}
       {{- range $tags }}
       <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
@@ -23,6 +27,9 @@
       {{- if $projectTag }}
       <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
       {{- end }}
+      {{- if $isNote }}
+      <a href="/notes/" class="tag tag-section">note</a>
+      {{- end }}
       {{- range $tags }}
       <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
       {{- end }}
@@ -31,6 +38,9 @@
     <span class="{{ default "post-tags" $class }}">
       {{- if $projectTag -}}
       <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
+      {{- end -}}
+      {{- if $isNote -}}
+      <a href="/notes/" class="tag tag-section">note</a>
       {{- end -}}
       {{- range $tags -}}
       <a href="/tags/{{ . | urlize }}/" class="tag">{{ . }}</a>
