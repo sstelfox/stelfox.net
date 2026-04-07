@@ -20,7 +20,15 @@
   "summary": {{ $summary | jsonify }},
   "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
   "section": {{ $page.Section | jsonify }},
-  "tags": {{ $page.Params.tags | jsonify }}
+  {{- $projectName := partial "project-name.html" $page -}}
+  {{- $searchTags := slice -}}
+  {{- if $projectName -}}
+    {{- $searchTags = $searchTags | append $projectName -}}
+  {{- end -}}
+  {{- range $page.Params.tags -}}
+    {{- $searchTags = $searchTags | append . -}}
+  {{- end -}}
+  "tags": {{ $searchTags | jsonify }}
 }
 {{- end -}}
 ]

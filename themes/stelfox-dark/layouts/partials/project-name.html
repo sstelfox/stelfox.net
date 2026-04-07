@@ -1,0 +1,11 @@
+{{- $projectName := "" -}}
+{{- if eq .Section "projects" -}}
+  {{- with .Parent -}}
+    {{- with .Parent -}}
+      {{- if eq .Kind "section" -}}
+        {{- $projectName = .Title -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $projectName -}}

@@ -11,22 +11,15 @@
         <span class="content-author">{{ .Site.Params.author }}</span>
         <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 2, 2006" }}</time>
         <span class="reading-time">{{ .ReadingTime }} min read</span>
-        {{- if .Params.tags }}
-        <span class="tags">
-          {{- range .Params.tags }}
-          <span class="tag">{{ . }}</span>
-          {{- end }}
-        </span>
-        {{- end }}
+        {{- partial "tags.html" (dict "page" . "style" "inline" "class" "tags") }}
       </div>
-      {{- else if .Params.tags }}
+      {{- else }}
+      {{- $projectTag := partial "project-name.html" . -}}
+      {{- if or .Params.tags (ne $projectTag "") }}
       <div class="content-meta">
-        <span class="tags">
-          {{- range .Params.tags }}
-          <span class="tag">{{ . }}</span>
-          {{- end }}
-        </span>
+        {{- partial "tags.html" (dict "page" . "style" "inline" "class" "tags") }}
       </div>
+      {{- end }}
       {{- end }}
     </header>
 

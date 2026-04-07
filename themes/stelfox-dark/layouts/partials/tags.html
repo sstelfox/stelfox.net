@@ -1,0 +1,40 @@
+{{- $page := .page -}}
+{{- $style := .style -}}
+{{- $limit := default 0 .limit -}}
+{{- $class := .class -}}
+{{- $projectTag := partial "project-name.html" $page -}}
+{{- $tags := $page.Params.tags | default slice -}}
+{{- if and (gt $limit 0) (gt (len $tags) $limit) -}}
+  {{- $tags = first $limit $tags -}}
+{{- end -}}
+{{- $hasTags := or (gt (len $tags) 0) (ne $projectTag "") -}}
+{{- if $hasTags -}}
+  {{- if eq $style "badge" -}}
+    <div class="{{ default "discover-card-tags" $class }}">
+      {{- if $projectTag }}
+      <span class="tag tag-project">{{ $projectTag }}</span>
+      {{- end }}
+      {{- range $tags }}
+      <span class="tag">{{ . }}</span>
+      {{- end }}
+    </div>
+  {{- else if eq $style "inline" -}}
+    <span class="{{ default "post-tags" $class }}">
+      {{- if $projectTag }}
+      <span class="tag tag-project">{{ $projectTag }}</span>
+      {{- end }}
+      {{- range $tags }}
+      <span class="tag">{{ . }}</span>
+      {{- end }}
+    </span>
+  {{- else if eq $style "delimit" -}}
+    {{- $allTags := slice -}}
+    {{- if $projectTag -}}
+      {{- $allTags = $allTags | append $projectTag -}}
+    {{- end -}}
+    {{- range $tags -}}
+      {{- $allTags = $allTags | append . -}}
+    {{- end -}}
+    <span class="{{ default "post-tags" $class }}">{{ delimit $allTags ", " }}</span>
+  {{- end -}}
+{{- end -}}

@@ -82,13 +82,7 @@
             <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
             <span class="reading-time">{{ .ReadingTime }} min read</span>
           </div>
-          {{- if .Params.tags }}
-          <div class="post-tags">
-            {{- range .Params.tags }}
-            <span class="tag">{{ . }}</span>
-            {{- end }}
-          </div>
-          {{- end }}
+          {{- partial "tags.html" (dict "page" . "style" "badge" "class" "post-tags") }}
         </header>
         <div class="content-body">
           {{ .Summary | plainify }}
@@ -143,18 +137,25 @@
     {{- $logsSection := .GetPage "logs" }}
     {{- if $logsSection }}
     {{- $latestLogs := $logsSection.RegularPages.Reverse }}
-    {{- $latest := index $latestLogs 0 }}
-    {{- if $latest }}
-    <section class="latest-log-entry">
-      <h2>Latest Update</h2>
-      <article class="log-entry-preview">
-        <div class="log-entry-header">
-          <a href="{{ $latest.RelPermalink }}">{{ $latest.Title }}</a>
-          <time>{{ $latest.Date.Format "January 2, 2006" }}</time>
-        </div>
-        <div class="log-entry-summary">{{ $latest.Summary | plainify }}</div>
-      </article>
-    </section>
+    {{- if $latestLogs }}
+    {{- $latestPost := index $latestLogs 0 }}
+</div>
+<section class="latest-highlight">
+  <div class="container">
+    <h3 class="discover-card-title"><a href="{{ $latestPost.RelPermalink }}">{{ $latestPost.Title }}</a></h3>
+    <div class="discover-card-meta">
+      <time class="discover-card-date">{{ $latestPost.Date.Format "2006-01-02" }}</time>
+      <span class="latest-author">Sam Stelfox</span>
+      <span class="reading-time">{{ $latestPost.ReadingTime }} min read</span>
+    </div>
+    <div class="discover-card-excerpt">{{ $latestPost.Summary }}</div>
+    <div class="latest-footer">
+      {{- partial "tags.html" (dict "page" $latestPost "style" "badge") }}
+      <a href="{{ $latestPost.RelPermalink }}" class="latest-read-more">Read More &raquo;</a>
+    </div>
+  </div>
+</section>
+<div class="container">
     {{- end }}
     {{- end }}
 

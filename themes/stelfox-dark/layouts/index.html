@@ -30,14 +30,7 @@
     </div>
     <div class="discover-card-excerpt">{{ $latestPost.Summary }}</div>
     <div class="latest-footer">
-      <div class="discover-card-tags">
-        {{- if ne $latestPost.Section "blog" }}
-        <span class="tag tag-project">{{ $latestPost.Parent.Parent.Title }}</span>
-        {{- end }}
-        {{- range $latestPost.Params.tags }}
-        <span class="tag">{{ . }}</span>
-        {{- end }}
-      </div>
+      {{- partial "tags.html" (dict "page" $latestPost "style" "badge") }}
       <a href="{{ $latestPost.RelPermalink }}" class="latest-read-more">Read More &raquo;</a>
     </div>
   </div>
@@ -53,14 +46,7 @@
         <time class="post-date">{{ .Date.Format "2006-01-02" }}</time>
         <a href="{{ .RelPermalink }}" class="post-link">
           <span class="post-title">{{ .Title }}</span>
-          <span class="post-tags">
-            {{- if ne .Section "blog" }}
-            <span class="tag tag-project">{{ .Parent.Parent.Title }}</span>
-            {{- end }}
-            {{- range .Params.tags }}
-            <span class="tag">{{ . }}</span>
-            {{- end }}
-          </span>
+          {{- partial "tags.html" (dict "page" . "style" "inline") }}
         </a>
       </li>
       {{- end }}

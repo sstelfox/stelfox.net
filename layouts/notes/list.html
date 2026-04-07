@@ -78,13 +78,7 @@
         <a href="{{ .RelPermalink }}" class="discover-card">
           <h3 class="discover-card-title">{{ .Title }}</h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 200 }}</p>
-          {{- if .Params.tags }}
-          <div class="discover-card-tags">
-            {{- range first 3 .Params.tags }}
-            <span class="tag">{{ . }}</span>
-            {{- end }}
-          </div>
-          {{- end }}
+          {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
         </a>
         {{- end }}
       </div>
