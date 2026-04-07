@@ -3,7 +3,7 @@
   {{- with .Parent -}}
     {{- with .Parent -}}
       {{- if eq .Kind "section" -}}
-        {{- $projectName = .Title -}}
+        {{- $projectName = .Slug | default (.Title | urlize) -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
