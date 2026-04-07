@@ -12,9 +12,12 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 {{- end }}
 
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/syntax.css">
-<link rel="stylesheet" href="/css/projects.css">
+{{- $style := resources.Get "css/style.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+{{- $syntax := resources.Get "css/syntax.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $syntax.RelPermalink }}" integrity="{{ $syntax.Data.Integrity }}">
+{{- $projects := resources.Get "css/projects.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $projects.RelPermalink }}" integrity="{{ $projects.Data.Integrity }}">
 
 {{- if .Params.customCSS }}
 {{- range .Params.customCSS }}
