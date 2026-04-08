@@ -2,17 +2,14 @@
 (function() {
   'use strict';
 
-  function emojiCursor(emoji) {
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28">' +
-      '<text y="22" font-size="22">' + emoji + '</text></svg>';
-    return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '") 4 4, auto';
-  }
+  var el = document.querySelector('script[data-sam]');
+  if (!el) return;
 
   var NAMES = [
-    { pattern: /\bSam\b/g, emoji: '🦊' },
-    { pattern: /\bHannah\b/g, emoji: '🌻' },
-    { pattern: /\bZelda\b/g, emoji: '🐝' },
-    { pattern: /\bCookie\b/g, emoji: '🍪' }
+    { pattern: /\bSam\b/g, cursor: el.dataset.sam },
+    { pattern: /\bHannah\b/g, cursor: el.dataset.hannah },
+    { pattern: /\bZelda\b/g, cursor: el.dataset.zelda },
+    { pattern: /\bCookie\b/g, cursor: el.dataset.cookie }
   ];
 
   var containers = document.querySelectorAll('.content-body, .home-intro');
@@ -64,7 +61,7 @@
 
       var span = document.createElement('span');
       span.textContent = earliest[0];
-      span.style.cursor = emojiCursor(matchedEntry.emoji);
+      span.style.cursor = 'url("' + matchedEntry.cursor + '") 4 4, auto';
       frag.appendChild(span);
 
       remaining = remaining.slice(earliestIdx + earliest[0].length);

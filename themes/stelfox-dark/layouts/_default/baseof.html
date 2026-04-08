@@ -13,7 +13,15 @@
   {{- partial "mathjax.html" . -}}
   {{- partial "mermaid.html" . -}}
   {{- $emojiCursor := resources.Get "js/emoji-cursor.js" | fingerprint }}
-  <script src="{{ $emojiCursor.RelPermalink }}" integrity="{{ $emojiCursor.Data.Integrity }}" defer></script>
+  {{- $fox := resources.Get "cursors/fox.svg" | fingerprint }}
+  {{- $sunflower := resources.Get "cursors/sunflower.svg" | fingerprint }}
+  {{- $bee := resources.Get "cursors/bee.svg" | fingerprint }}
+  {{- $cookie := resources.Get "cursors/cookie.svg" | fingerprint }}
+  <script src="{{ $emojiCursor.RelPermalink }}" integrity="{{ $emojiCursor.Data.Integrity }}" defer
+    data-sam="{{ $fox.RelPermalink }}"
+    data-hannah="{{ $sunflower.RelPermalink }}"
+    data-zelda="{{ $bee.RelPermalink }}"
+    data-cookie="{{ $cookie.RelPermalink }}"></script>
   {{- block "scripts" . }}{{- end }}
 </body>
 </html>
