@@ -1,5 +1,6 @@
 {{ define "head_extra" }}
-<link rel="stylesheet" href="/css/notes.css">
+{{- $notesCss := resources.Get "css/notes.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $notesCss.RelPermalink }}" integrity="{{ $notesCss.Data.Integrity }}">
 {{ end }}
 
 {{ define "main" }}

@@ -10,5 +10,6 @@ MathJax = {
   }
 };
 </script>
-<script src="/js/mathjax.tex-svg.dist.min.js"></script>
+{{- $mathjax := resources.Get "js/mathjax.tex-svg.dist.min.js" | fingerprint }}
+<script src="{{ $mathjax.RelPermalink }}" integrity="{{ $mathjax.Data.Integrity }}"></script>
 {{- end }}

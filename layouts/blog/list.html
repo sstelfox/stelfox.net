@@ -1,6 +1,7 @@
 {{ define "head_extra" }}
 {{- if eq .File.Path "blog/_index.md" }}
-<link rel="stylesheet" href="/css/blog.css">
+{{- $blogCss := resources.Get "css/blog.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $blogCss.RelPermalink }}" integrity="{{ $blogCss.Data.Integrity }}">
 {{- end }}
 {{ end }}
 

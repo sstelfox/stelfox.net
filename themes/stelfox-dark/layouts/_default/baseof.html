@@ -12,7 +12,8 @@
   {{- partial "footer.html" . -}}
   {{- partial "mathjax.html" . -}}
   {{- partial "mermaid.html" . -}}
-  <script src="/js/emoji-cursor.js" defer></script>
+  {{- $emojiCursor := resources.Get "js/emoji-cursor.js" | fingerprint }}
+  <script src="{{ $emojiCursor.RelPermalink }}" integrity="{{ $emojiCursor.Data.Integrity }}" defer></script>
   {{- block "scripts" . }}{{- end }}
 </body>
 </html>

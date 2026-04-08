@@ -1,4 +1,6 @@
 {{- if or .Params.mermaid (findRE "```mermaid" .RawContent 1) }}
-<script src="/js/mermaid-10.9.1.dist.min.js"></script>
-<script src="/js/mermaid-init.js"></script>
+{{- $mermaid := resources.Get "js/mermaid-10.9.1.dist.min.js" | fingerprint }}
+<script src="{{ $mermaid.RelPermalink }}" integrity="{{ $mermaid.Data.Integrity }}"></script>
+{{- $mermaidInit := resources.Get "js/mermaid-init.js" | fingerprint }}
+<script src="{{ $mermaidInit.RelPermalink }}" integrity="{{ $mermaidInit.Data.Integrity }}"></script>
 {{- end }}

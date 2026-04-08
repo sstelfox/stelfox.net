@@ -1,5 +1,6 @@
 {{ define "head_extra" }}
-<link rel="stylesheet" href="/css/search.css">
+{{- $searchCss := resources.Get "css/search.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $searchCss.RelPermalink }}" integrity="{{ $searchCss.Data.Integrity }}">
 {{ end }}
 
 {{ define "main" }}
@@ -43,6 +44,8 @@
 {{ end }}
 
 {{ define "scripts" }}
-<script src="/js/lunr.min.js"></script>
-<script src="/js/search.js"></script>
+{{- $lunr := resources.Get "js/lunr.min.js" | fingerprint }}
+<script src="{{ $lunr.RelPermalink }}" integrity="{{ $lunr.Data.Integrity }}"></script>
+{{- $searchJs := resources.Get "js/search.js" | fingerprint }}
+<script src="{{ $searchJs.RelPermalink }}" integrity="{{ $searchJs.Data.Integrity }}"></script>
 {{ end }}

@@ -21,4 +21,5 @@
     </div>
   </div>
 </header>
-<script src="/js/header-search.js" defer></script>
+{{- $headerSearch := resources.Get "js/header-search.js" | fingerprint }}
+<script src="{{ $headerSearch.RelPermalink }}" integrity="{{ $headerSearch.Data.Integrity }}" defer></script>
