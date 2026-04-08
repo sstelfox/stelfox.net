@@ -1,6 +1,6 @@
 ---
 title: "API Security Hardening"
-date: 2026-04-08T17:00:00-04:00
+date: 2026-04-08T16:09:31-04:00
 draft: false
 tags: [security, rust, api, authentication]
 url: /projects/hive/logs/api-security-hardening/
