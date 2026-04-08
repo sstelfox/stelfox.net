@@ -45,9 +45,17 @@ On top of the ontology layer, a reasoning skill takes an agent's structured onto
 
 ## Authentication and Authorization
 
-Human users authenticate through a web interface with username/password and mandatory MFA. CLI tools and service integrations authenticate using short-lived mutual TLS certificates that are automatically renewed. This keeps long-lived secrets out of config files and lets you revoke access instantly by refusing to renew a cert.
+Authentication is mandatory on all non-public endpoints. The public surface is intentionally small (around 10 endpoints), everything else requires authentication before it will respond with anything other than a redirect to login.
+
+Human users authenticate through the web interface with username and password. Passwords are hashed with Argon2id. The initial user is created server-side with `hive security set-password`. Session cookies require a CSRF token on all mutating requests, and logout fully revokes the server-side session rather than just clearing the cookie. Query parameter tokens are not supported since they leak into logs, referrer headers, and browser history.
+
+The CLI authenticates using persistent credentials similar to the AWS CLI model, with first-class support for remote servers both in the config and via a `--host` flag. Each user gets per-user API keys prefixed with `hive_` so they're easy to identify if they show up somewhere they shouldn't.
 
 The role system maps directly to the same capability model that agents use. Human operators get fine-grained capability sets rather than coarse role tiers. The same permission model governs both human and agent access, which simplifies reasoning about who can do what.
+
+## Transport and Request Hardening
+
+Security headers are set on all responses: HSTS, CSP, CORP, and Permissions-Policy. CORS is locked to explicit method and header allow-lists rather than wildcards. A GCRA rate limiter protects against request flooding. Non-streaming endpoints enforce a 2MB body size limit and a 120-second request timeout.
 
 ## WASM Sandbox
 
