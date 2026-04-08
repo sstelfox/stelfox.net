@@ -2,6 +2,12 @@
 (function() {
   'use strict';
 
+  function emojiCursor(emoji) {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28">' +
+      '<text y="22" font-size="22">' + emoji + '</text></svg>';
+    return 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '") 4 4, auto';
+  }
+
   var NAMES = [
     { pattern: /\bSam\b/g, emoji: '🦊' },
     { pattern: /\bHannah\b/g, emoji: '🌻' },
@@ -58,8 +64,7 @@
 
       var span = document.createElement('span');
       span.textContent = earliest[0];
-      span.className = 'emoji-cursor';
-      span.dataset.emoji = matchedEntry.emoji;
+      span.style.cursor = emojiCursor(matchedEntry.emoji);
       frag.appendChild(span);
 
       remaining = remaining.slice(earliestIdx + earliest[0].length);
