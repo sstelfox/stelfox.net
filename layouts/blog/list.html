@@ -58,35 +58,6 @@
     {{- $readingHours := div $totalReadingTime 60 }}
     {{- $readingMins := mod $totalReadingTime 60 }}
 
-    <section class="blog-stats">
-      <div class="blog-stat">
-        <div class="blog-stat-number">{{ $postCount }}</div>
-        <div class="blog-stat-label">Posts</div>
-      </div>
-      <div class="blog-stat">
-        <div class="blog-stat-number">{{ lang.FormatNumber 0 $totalWords }}</div>
-        <div class="blog-stat-label">Words</div>
-      </div>
-      <div class="blog-stat">
-        <div class="blog-stat-number">~{{ $avgPerYear }}/yr</div>
-        <div class="blog-stat-label">Avg Posts</div>
-      </div>
-      <div class="blog-stat">
-        <div class="blog-stat-number">{{ $daysSinceLastPost }}d</div>
-        <div class="blog-stat-label">Since Last Post</div>
-      </div>
-      <div class="blog-stat">
-        <div class="blog-stat-number">{{ lang.FormatNumber 0 $avgWords }}</div>
-        <div class="blog-stat-label">Avg Words</div>
-      </div>
-      <div class="blog-stat">
-        <div class="blog-stat-number">{{ $readingHours }}h {{ $readingMins }}m</div>
-        <div class="blog-stat-label">Total Reading Time</div>
-      </div>
-    </section>
-
-    {{- partial "random-quote.html" (dict "featured_only" true) -}}
-
     {{- /* Latest post highlight */ -}}
     {{- if $latestPost }}
 </div>
@@ -141,33 +112,20 @@
     </section>
     {{- end }}
 
-    {{- /* Paginated full listing */ -}}
     {{- $paginator := .Paginate $allPosts }}
-    {{- if $paginator.Pages }}
-    <section class="blog-listing">
-      <ul class="post-list">
-        {{- range $paginator.Pages }}
-        {{- partial "post-list-item.html" (dict "page" .) }}
-        {{- end }}
-      </ul>
-
-      {{- partial "pagination.html" (dict "paginator" $paginator "label" "Blog pagination") }}
-    </section>
-    {{- end }}
-
-    <section class="blog-search">
-      <p class="blog-nudge">Looking for something specific?</p>
-      <form class="blog-search-form" action="/search/" method="get">
-        <input type="hidden" name="section" value="blog">
-        <input
-          type="text"
-          name="q"
-          class="blog-search-input"
-          placeholder="Search across all blog posts..."
-          autocomplete="off"
-        >
-      </form>
-    </section>
+    {{- partial "section-index-footer.html" (dict
+      "section" "blog"
+      "placeholder" "Search across all blog posts..."
+      "stats" (slice
+        (dict "number" $postCount "label" "Posts")
+        (dict "number" (lang.FormatNumber 0 $totalWords) "label" "Words")
+        (dict "number" (printf "~%d/yr" $avgPerYear) "label" "Avg Posts")
+        (dict "number" (printf "%dd" $daysSinceLastPost) "label" "Since Last Post")
+        (dict "number" (lang.FormatNumber 0 $avgWords) "label" "Avg Words")
+        (dict "number" (printf "%dh %dm" $readingHours $readingMins) "label" "Time to Read")
+      )
+      "paginator" $paginator
+    ) }}
   </article>
 
   {{- else }}

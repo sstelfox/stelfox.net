@@ -1,0 +1,22 @@
+{{- $section := .section -}}
+{{- $placeholder := .placeholder -}}
+{{- $stats := .stats -}}
+{{- $paginator := .paginator -}}
+
+{{- partial "section-search.html" (dict "section" $section "placeholder" $placeholder) }}
+
+{{- partial "section-stats.html" (dict "stats" $stats) }}
+
+{{- partial "random-quote.html" (dict "featured_only" true) -}}
+
+{{- if $paginator.Pages }}
+<section class="section-listing">
+  <ul class="post-list">
+    {{- range $paginator.Pages }}
+    {{- partial "post-list-item.html" (dict "page" .) }}
+    {{- end }}
+  </ul>
+
+  {{- partial "pagination.html" (dict "paginator" $paginator "label" (printf "%s pagination" $section)) }}
+</section>
+{{- end }}

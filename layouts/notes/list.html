@@ -42,35 +42,6 @@
     {{- $readingHours := div $totalReadingTime 60 }}
     {{- $readingMins := mod $totalReadingTime 60 }}
 
-    <section class="notes-stats">
-      <div class="notes-stat">
-        <div class="notes-stat-number">{{ len $allNotes }}</div>
-        <div class="notes-stat-label">Notes</div>
-      </div>
-      <div class="notes-stat">
-        <div class="notes-stat-number">{{ lang.FormatNumber 0 $totalWords }}</div>
-        <div class="notes-stat-label">Words</div>
-      </div>
-      <div class="notes-stat">
-        <div class="notes-stat-number">{{ lang.FormatNumber 0 $codeBlocks }}</div>
-        <div class="notes-stat-label">Code Blocks</div>
-      </div>
-      <div class="notes-stat">
-        <div class="notes-stat-number">{{ $readingHours }}h {{ $readingMins }}m</div>
-        <div class="notes-stat-label">Total Reading Time</div>
-      </div>
-      <div class="notes-stat">
-        <div class="notes-stat-number">{{ lang.FormatNumber 0 $totalLinks }}</div>
-        <div class="notes-stat-label">Links Out</div>
-      </div>
-      <div class="notes-stat">
-        <div class="notes-stat-number">{{ $tagCount }}</div>
-        <div class="notes-stat-label">Tags</div>
-      </div>
-    </section>
-
-    {{- partial "random-quote.html" (dict "featured_only" true) -}}
-
     {{- if $allNotes }}
     <section class="notes-discover">
       <h2>Explore</h2>
@@ -86,19 +57,20 @@
     </section>
     {{- end }}
 
-    <section class="notes-search">
-      <p class="notes-nudge">Looking for something specific?</p>
-      <form class="notes-search-form" action="/search/" method="get">
-        <input type="hidden" name="section" value="notes">
-        <input
-          type="text"
-          name="q"
-          class="notes-search-input"
-          placeholder="Search across all notes..."
-          autocomplete="off"
-        >
-      </form>
-    </section>
+    {{- $paginator := .Paginate ($allNotes.ByTitle) }}
+    {{- partial "section-index-footer.html" (dict
+      "section" "notes"
+      "placeholder" "Search across all notes..."
+      "stats" (slice
+        (dict "number" (len $allNotes) "label" "Notes")
+        (dict "number" (lang.FormatNumber 0 $totalWords) "label" "Words")
+        (dict "number" (lang.FormatNumber 0 $codeBlocks) "label" "Code Blocks")
+        (dict "number" (printf "%dh %dm" $readingHours $readingMins) "label" "Time to Read")
+        (dict "number" (lang.FormatNumber 0 $totalLinks) "label" "Links Out")
+        (dict "number" $tagCount "label" "Tags")
+      )
+      "paginator" $paginator
+    ) }}
   </article>
 </div>
 {{ end }}
