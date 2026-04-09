@@ -3,13 +3,15 @@ title: "Raw Kale and Brussels Sprout Salad with Tahini-Maple Dressing"
 created_at: 2024-06-15T14:12:32-0400
 evergreen: true
 public: true
+recipe:
+  yield: "2 large salads or 4 side salads"
 tags:
   - cooking
   - salad
   - kale
 ---
 
-A simple, filling kale salad with creamy tahini dressing. Thinly sliced Brussels sprouts and toasted slivered almonds lend slaw-like crunch, while Parmesan and miso contribute savoriness. Yields 2 large salads or 4 side salads.
+A simple, filling kale salad with creamy tahini dressing. Thinly sliced Brussels sprouts and toasted slivered almonds lend slaw-like crunch, while Parmesan and miso contribute savoriness.
 
 ## Salad
 

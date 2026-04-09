@@ -3,14 +3,14 @@ title: "Stinky Salad (Mediterranean Lentil Salad)"
 created_at: 2024-06-15T14:27:05-0400
 evergreen: true
 public: true
+recipe:
+  yield: "6 to 8 servings"
 tags:
   - cooking
   - salad
   - lentils
   - mediterranean
 ---
-
-Yield: 6 to 8 servings
 
 ## Salad
 

@@ -1,0 +1,120 @@
+{{ define "head_extra" }}
+{{- $isRecipe := false -}}
+{{- with .CurrentSection }}{{ with .File }}{{ if eq .ContentBaseName "cooking" }}{{ $isRecipe = true }}{{ end }}{{ end }}{{ end -}}
+{{- if $isRecipe }}
+{{- $recipeCss := resources.Get "css/recipe.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $recipeCss.RelPermalink }}" integrity="{{ $recipeCss.Data.Integrity }}" crossorigin="anonymous">
+{{- end }}
+{{ end }}
+
+{{ define "main" }}
+{{- $isRecipe := false -}}
+{{- with .CurrentSection }}{{ with .File }}{{ if eq .ContentBaseName "cooking" }}{{ $isRecipe = true }}{{ end }}{{ end }}{{ end -}}
+<div class="container">
+  {{- partial "breadcrumbs.html" . -}}
+  {{- if $isRecipe }}
+  <article class="content recipe">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+      {{- $hasValidDate := and .Date (not (eq (.Date.Format "2006") "0001")) -}}
+      {{- $recipe := .Params.recipe -}}
+      {{- if or $hasValidDate $recipe }}
+      <div class="content-meta">
+        {{- if $hasValidDate }}
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
+        {{- end }}
+        {{- with $recipe }}
+        {{- with .yield }}
+        <span>{{ . }}</span>
+        {{- end }}
+        {{- with .prep_time }}
+        <span>Prep: {{ . }}</span>
+        {{- end }}
+        {{- with .cook_time }}
+        <span>Cook: {{ . }}</span>
+        {{- end }}
+        {{- end }}
+      </div>
+      {{- end }}
+      {{- partial "tags.html" (dict "page" . "style" "badge") }}
+    </header>
+
+    {{- $instructionsMarker := `<h2 id="instructions">` -}}
+    {{- $content := .Content -}}
+    {{- if in $content $instructionsMarker }}
+    {{- $parts := split $content $instructionsMarker -}}
+    {{- $beforeInstructions := index $parts 0 -}}
+    {{- $instructionsHTML := printf "%s%s" $instructionsMarker (index $parts 1) -}}
+
+    {{- /* Split intro paragraphs from ingredient headings/lists.
+           Find the first <h2 or <h3 in the pre-instructions content.
+           Everything before that is "notes", everything from there on is ingredients. */ -}}
+    {{- $notesHTML := "" -}}
+    {{- $ingredientsHTML := $beforeInstructions -}}
+    {{- $headingMatch := findRE `<h[23] id="` $beforeInstructions 1 -}}
+    {{- if $headingMatch }}
+      {{- $firstHeading := index $headingMatch 0 -}}
+      {{- $splitParts := split $beforeInstructions $firstHeading -}}
+      {{- $notesHTML = index $splitParts 0 -}}
+      {{- $ingredientsHTML = printf "%s%s" $firstHeading (index $splitParts 1) -}}
+    {{- end }}
+
+    <div class="recipe-grid">
+      <div class="recipe-ingredients-panel">
+        {{ $ingredientsHTML | safeHTML }}
+      </div>
+      <div class="recipe-instructions-panel">
+        {{- if $notesHTML }}
+        <div class="recipe-notes">
+          {{ $notesHTML | safeHTML }}
+        </div>
+        {{- end }}
+        {{ $instructionsHTML | safeHTML }}
+      </div>
+    </div>
+    {{- else }}
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+    {{- end }}
+
+    {{- partial "related.html" . -}}
+  </article>
+  {{- else }}
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+      {{- $isBlogPost := or (eq .Section "blog") (eq .Section "projects") -}}
+      {{- $hasValidDate := and .Date (not (eq (.Date.Format "2006") "0001")) -}}
+      {{- if and $isBlogPost $hasValidDate }}
+      <div class="content-meta">
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
+        <span class="content-author">{{ .Site.Params.author }}</span>
+        <span class="reading-time">{{ .ReadingTime }} min read</span>
+      </div>
+      {{- partial "tags.html" (dict "page" . "style" "badge") }}
+      {{- else }}
+      {{- $projectTag := partial "project-name.html" . -}}
+      {{- if or .Params.tags (ne $projectTag "") }}
+      {{- partial "tags.html" (dict "page" . "style" "badge") }}
+      {{- end }}
+      {{- end }}
+    </header>
+
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+
+    {{- partial "related.html" . -}}
+  </article>
+  {{- end }}
+</div>
+{{ end }}
+
+{{ define "scripts" }}
+{{- if .Params.customJS }}
+{{- range .Params.customJS }}
+<script src="{{ . }}"></script>
+{{- end }}
+{{- end }}
+{{ end }}

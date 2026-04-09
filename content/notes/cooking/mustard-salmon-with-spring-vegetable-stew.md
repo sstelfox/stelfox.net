@@ -4,6 +4,8 @@ created_at: 2026-04-09T12:00:00-0500
 evergreen: true
 public: true
 source: "https://cooking.nytimes.com/recipes/1022169-mustard-salmon-with-spring-vegetable-stew"
+recipe:
+  yield: "4 servings"
 tags:
   - cooking
   - fish
@@ -12,9 +14,7 @@ tags:
   - spring
 ---
 
-Yield: 4 servings.
-
-Adapted from the [original NYT Cooking recipe](https://cooking.nytimes.com/recipes/1022169-mustard-salmon-with-spring-vegetable-stew) and adapted to our own tastes.
+Adapted from the [original NYT Cooking recipe](https://cooking.nytimes.com/recipes/1022169-mustard-salmon-with-spring-vegetable-stew) to our own tastes.
 
 ## Ingredients
 
