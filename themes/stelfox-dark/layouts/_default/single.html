@@ -8,17 +8,15 @@
       {{- $hasValidDate := and .Date (not (eq (.Date.Format "2006") "0001")) -}}
       {{- if and $isBlogPost $hasValidDate }}
       <div class="content-meta">
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
         <span class="content-author">{{ .Site.Params.author }}</span>
-        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "January 2, 2006" }}</time>
         <span class="reading-time">{{ .ReadingTime }} min read</span>
-        {{- partial "tags.html" (dict "page" . "style" "inline" "class" "tags") }}
       </div>
+      {{- partial "tags.html" (dict "page" . "style" "badge") }}
       {{- else }}
       {{- $projectTag := partial "project-name.html" . -}}
       {{- if or .Params.tags (ne $projectTag "") }}
-      <div class="content-meta">
-        {{- partial "tags.html" (dict "page" . "style" "inline" "class" "tags") }}
-      </div>
+      {{- partial "tags.html" (dict "page" . "style" "badge") }}
       {{- end }}
       {{- end }}
     </header>

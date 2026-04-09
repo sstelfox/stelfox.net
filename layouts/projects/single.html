@@ -25,11 +25,11 @@
       {{- if .Date }}
       {{- if not .Date.IsZero }}
       <div class="content-meta">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
         <span class="content-author">{{ .Site.Params.author }}</span>
-        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
         <span class="reading-time">{{ .ReadingTime }} min read</span>
-        {{- partial "tags.html" (dict "page" . "style" "inline" "class" "tags") }}
       </div>
+      {{- partial "tags.html" (dict "page" . "style" "badge") }}
       {{- end }}
       {{- end }}
     </header>

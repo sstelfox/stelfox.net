@@ -108,45 +108,16 @@
 <div class="container">
     {{- end }}
 
-    {{- /* Random selection of older posts */ -}}
-    {{- $olderPosts := after 1 $allPosts }}
-    {{- if $olderPosts }}
-    <section class="blog-discover">
-      <h2>From the Archives</h2>
-      <div class="blog-discover-grid">
-        {{- $featured := first 3 (shuffle $olderPosts) }}
-        {{- range $featured }}
-        <div class="discover-card">
-          <div class="discover-card-meta">
-            <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
-            <span class="reading-time">{{ .ReadingTime }} min read</span>
-          </div>
-          <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
-          {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
-        </div>
-        {{- end }}
-      </div>
-    </section>
-
-    {{- /* Related posts drawn from the featured posts' related content */ -}}
+    {{- /* Related posts drawn from the latest post's related content */ -}}
     {{- $relatedData := index hugo.Data "related" }}
     {{- $relatedPosts := slice }}
-    {{- $seenPaths := slice }}
-    {{- range $featured }}
-      {{- $seenPaths = $seenPaths | append .File.Path }}
-    {{- end }}
-    {{- $seenPaths = $seenPaths | append $latestPost.File.Path }}
     {{- if $relatedData }}
-      {{- range $featured }}
-        {{- $entries := index $relatedData .File.Path }}
-        {{- if $entries }}
-          {{- range $entries }}
-            {{- $page := site.GetPage .path }}
-            {{- if and $page (eq $page.Section "blog") (not (in $seenPaths .path)) }}
-              {{- $seenPaths = $seenPaths | append .path }}
-              {{- $relatedPosts = $relatedPosts | append $page }}
-            {{- end }}
+      {{- $entries := index $relatedData $latestPost.File.Path }}
+      {{- if $entries }}
+        {{- range $entries }}
+          {{- $page := site.GetPage .path }}
+          {{- if and $page (eq $page.Section "blog") }}
+            {{- $relatedPosts = $relatedPosts | append $page }}
           {{- end }}
         {{- end }}
       {{- end }}
@@ -154,15 +125,14 @@
     {{- $relatedPosts = first 3 $relatedPosts }}
     {{- if $relatedPosts }}
     <section class="blog-related">
-      <h2>You Might Also Enjoy</h2>
       <div class="blog-discover-grid">
         {{- range $relatedPosts }}
         <div class="discover-card">
+          <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
           <div class="discover-card-meta">
             <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
             <span class="reading-time">{{ .ReadingTime }} min read</span>
           </div>
-          <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
           <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
           {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
         </div>
@@ -170,13 +140,11 @@
       </div>
     </section>
     {{- end }}
-    {{- end }}
 
     {{- /* Paginated full listing */ -}}
     {{- $paginator := .Paginate $allPosts }}
     {{- if $paginator.Pages }}
     <section class="blog-listing">
-      <h2>All Posts</h2>
       <ul class="post-list">
         {{- range $paginator.Pages }}
         {{- partial "post-list-item.html" (dict "page" .) }}

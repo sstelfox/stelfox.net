@@ -27,33 +27,21 @@
     {{- end -}}
   {{- end -}}
 
-  {{- if ge (len $entries) 3 -}}
+  {{- if gt (len $entries) 0 -}}
   <nav class="related-content" aria-label="Related content">
-    <h3>Related Content</h3>
-    <ul>
-      {{- range $entries }}
-      {{- $label := "page" -}}
-      {{- if eq .page.Section "blog" }}{{ $label = "blog" }}
-      {{- else if eq .page.Section "notes" }}{{ $label = "note" }}
-      {{- else if eq .page.Section "projects" }}
-        {{- $label = "project" -}}
-        {{- $fileParts := split .page.File.Path "/" -}}
-        {{- if ge (len $fileParts) 3 -}}
-          {{- $subdir := index $fileParts (sub (len $fileParts) 2) -}}
-          {{- if eq $subdir "logs" }}{{ $label = "project log" }}
-          {{- else if eq $subdir "pages" }}{{ $label = "project page" }}
-          {{- end -}}
-        {{- end -}}
+    <div class="blog-discover-grid">
+      {{- range first 3 $entries }}
+      <div class="discover-card">
+        <h3 class="discover-card-title"><a href="{{ .page.RelPermalink }}">{{ partial "display-title.html" .page }}</a></h3>
+        <div class="discover-card-meta">
+          <time class="discover-card-date">{{ .page.Date.Format "2006-01-02" }}</time>
+          <span class="reading-time">{{ .page.ReadingTime }} min read</span>
+        </div>
+        <p class="discover-card-excerpt">{{ .page.Summary | plainify | truncate 160 }}</p>
+        {{- partial "tags.html" (dict "page" .page "style" "badge" "limit" 3) }}
+      </div>
       {{- end }}
-      <li>
-        <a href="{{ .page.RelPermalink }}">{{ partial "display-title.html" .page }}</a>
-        <span class="related-meta">
-          <span class="related-section">{{ $label }}</span>
-          <span class="related-score">{{ .score }}%</span>
-        </span>
-      </li>
-      {{- end }}
-    </ul>
+    </div>
   </nav>
   {{- end -}}
 {{- end -}}

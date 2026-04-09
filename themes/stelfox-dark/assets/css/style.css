@@ -351,25 +351,18 @@ input[type="text"].header-search-input {
 
 .content-meta {
   display: flex;
-  gap: var(--spacing-md);
-  color: var(--text-secondary);
+  gap: var(--spacing-xs);
+  color: var(--text-tertiary);
   font-size: 0.9rem;
+  font-family: var(--font-sans);
   flex-wrap: wrap;
   align-items: center;
+  margin-bottom: var(--spacing-sm);
 }
 
-.content-author {
-  font-weight: 500;
-}
-
-.content-meta time {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-}
-
-.reading-time {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+.content-meta > *:not(:last-child)::after {
+  content: "\00b7";
+  margin-left: var(--spacing-xs);
   color: var(--text-tertiary);
 }
 
@@ -465,52 +458,7 @@ a.tag-project:hover {
 
 /* Related Content */
 .related-content {
-  margin-top: var(--spacing-xl);
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--border-color);
-}
-
-.related-content h3 {
-  margin-top: 0;
-  margin-bottom: var(--spacing-sm);
-  font-size: 1rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.related-content ul {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.related-content li {
-  display: list-item;
-}
-
-.related-content a {
-  color: var(--accent-primary);
-}
-
-.related-content a:hover {
-  color: var(--accent-hover);
-}
-
-.related-meta {
-  margin-left: var(--spacing-xs);
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-}
-
-.related-section {
-  background-color: var(--bg-tertiary);
-  padding: 0.1em 0.5em;
-  border-radius: 3px;
-}
-
-.related-score {
-  margin-left: 0.25em;
+  margin-top: var(--spacing-lg);
 }
 
 /* Home Page */
@@ -550,32 +498,7 @@ a.tag-project:hover {
 }
 
 .latest-highlight .discover-card-meta {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  flex-wrap: wrap;
-  margin-bottom: var(--spacing-md);
-  color: var(--text-tertiary);
-}
-
-.latest-highlight .discover-card-meta > * {
-  font-size: 0.9rem;
-  font-family: var(--font-sans);
-}
-
-.latest-highlight .discover-card-meta > *:not(:last-child)::after {
-  content: "\00b7";
-  margin-left: var(--spacing-xs);
-  color: var(--text-tertiary);
-}
-
-.latest-highlight .discover-card-date,
-.latest-highlight .latest-author,
-.latest-highlight .reading-time {
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  color: var(--text-tertiary);
-  line-height: 1;
+  margin-bottom: var(--spacing-sm);
 }
 
 .latest-highlight .discover-card-excerpt {
@@ -613,10 +536,7 @@ a.tag-project:hover {
   text-decoration: underline;
 }
 
-.recent-posts h2 {
-  margin-top: 0;
-  margin-bottom: var(--spacing-md);
-}
+
 
 /* Post Lists */
 .post-list {
@@ -684,14 +604,14 @@ a.tag-section:hover {
 
 /* Discover Cards */
 .discover-card {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: var(--spacing-md);
   transition: all 0.1s;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--spacing-xs);
   text-decoration: none;
   color: inherit;
   height: 100%;
@@ -711,6 +631,8 @@ a.tag-section:hover {
   color: var(--text-primary);
   margin: 0;
   line-height: 1.3;
+  text-transform: none;
+  letter-spacing: normal;
 }
 
 .discover-card:hover .discover-card-title {
@@ -731,6 +653,7 @@ a.tag-section:hover {
   font-size: 0.9rem;
   line-height: 1.6;
   flex: 1;
+  margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -743,15 +666,29 @@ a.tag-section:hover {
   flex-wrap: wrap;
 }
 
+.blog-discover-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+}
+
 .discover-card-meta {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-xs);
+  color: var(--text-tertiary);
 }
 
-.discover-card-date {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
+.discover-card-meta > * {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  line-height: 1;
+}
+
+.discover-card-meta > *:not(:last-child)::after {
+  content: "\00b7";
+  margin-left: var(--spacing-xs);
   color: var(--text-tertiary);
 }
 
@@ -815,9 +752,8 @@ tr:nth-child(even) {
     text-align: left;
   }
 
-  .related-meta {
-    display: block;
-    margin-left: 0;
+  .blog-discover-grid {
+    grid-template-columns: 1fr;
   }
 
   .random-quote {

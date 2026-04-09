@@ -36,7 +36,7 @@ CACHE_DIR = os.path.join(PROJECT_DIR, ".cache", "embeddings")
 
 EMBEDDING_MODEL = "all-mpnet-base-v2"
 SIMILARITY_CUTOFF = 0.35
-MAX_RELATED = 5
+MAX_RELATED = 3
 
 # Files that should never be included in the corpus (no meaningful content)
 EXCLUDED_FILENAMES = {"search.md", "design_reference.md"}
@@ -234,9 +234,9 @@ def main():
 
     counts = [len(v) for v in related.values()]
     print(f"Wrote {len(related)} entries to {os.path.relpath(OUTPUT_PATH)}")
-    print(f"  3+ related: {sum(1 for c in counts if c >= 3)}")
-    print(f"  4+ related: {sum(1 for c in counts if c >= 4)}")
-    print(f"  5  related: {sum(1 for c in counts if c >= 5)}")
+    print(f"  1+ related: {sum(1 for c in counts if c >= 1)}")
+    print(f"  2+ related: {sum(1 for c in counts if c >= 2)}")
+    print(f"  3  related: {sum(1 for c in counts if c >= 3)}")
 
 
 if __name__ == "__main__":
