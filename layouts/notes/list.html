@@ -18,6 +18,46 @@
     {{- end }}
 
     {{- $allNotes := .RegularPagesRecursive }}
+    {{- $isLeafNote := and (eq (len .Sections) 0) (eq (len .RegularPages) 0) }}
+
+    {{- if $isLeafNote }}
+    {{- /* Leaf note page: show related content cards */ -}}
+    {{- $relatedData := index hugo.Data "related" -}}
+    {{- $entries := slice -}}
+    {{- if $relatedData -}}
+      {{- $pageEntries := index $relatedData .File.Path -}}
+      {{- if $pageEntries -}}
+        {{- range $pageEntries -}}
+          {{- $page := site.GetPage .path -}}
+          {{- if $page -}}
+            {{- $entries = $entries | append (dict "page" $page "score" .score) -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if gt (len $entries) 0 -}}
+    <nav class="related-content" aria-label="Related content">
+      <div class="blog-discover-grid">
+        {{- range first 3 $entries }}
+        <div class="discover-card">
+          <h3 class="discover-card-title"><a href="{{ .page.RelPermalink }}">{{ partial "display-title.html" .page }}</a></h3>
+          <div class="discover-card-meta">
+            <time class="discover-card-date">{{ .page.Date.Format "2006-01-02" }}</time>
+            <span class="reading-time">{{ .page.ReadingTime }} min read</span>
+          </div>
+          <div class="discover-card-body">
+            <p class="discover-card-excerpt">{{ .page.Summary | plainify | truncate 160 }}</p>
+            {{- partial "tags.html" (dict "page" .page "style" "badge" "limit" 3) }}
+          </div>
+        </div>
+        {{- end }}
+      </div>
+    </nav>
+    {{- end -}}
+
+    {{- else }}
+    {{- /* Section index: show explore grid, stats, and search */ -}}
 
     {{- /* Compute stats */ -}}
     {{- $totalWords := 0 }}
@@ -73,6 +113,8 @@
       )
       "paginator" $paginator
     ) }}
+
+    {{- end }}
   </article>
 </div>
 {{ end }}
