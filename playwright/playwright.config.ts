@@ -6,7 +6,7 @@ export default defineConfig({
   testDir: "./tests",
   timeout: 30_000,
   retries: 1,
-  workers: 1,
+  fullyParallel: true,
   reporter: "list",
 
   use: {
