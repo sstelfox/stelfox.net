@@ -37,8 +37,10 @@
           <time class="discover-card-date">{{ .page.Date.Format "2006-01-02" }}</time>
           <span class="reading-time">{{ .page.ReadingTime }} min read</span>
         </div>
-        <p class="discover-card-excerpt">{{ .page.Summary | plainify | truncate 160 }}</p>
-        {{- partial "tags.html" (dict "page" .page "style" "badge" "limit" 3) }}
+        <div class="discover-card-body">
+          <p class="discover-card-excerpt">{{ .page.Summary | plainify | truncate 160 }}</p>
+          {{- partial "tags.html" (dict "page" .page "style" "badge" "limit" 3) }}
+        </div>
       </div>
       {{- end }}
     </div>

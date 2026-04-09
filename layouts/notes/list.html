@@ -49,8 +49,10 @@
         {{- range first 9 (shuffle $allNotes) }}
         <div class="discover-card">
           <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-          <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 200 }}</p>
-          {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
+          <div class="discover-card-body">
+            <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 200 }}</p>
+            {{- partial "tags.html" (dict "page" . "style" "badge" "limit" 3) }}
+          </div>
         </div>
         {{- end }}
       </div>

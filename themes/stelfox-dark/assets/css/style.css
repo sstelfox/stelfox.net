@@ -20,6 +20,7 @@
   --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
 
   --max-width: 1200px;
+  --spacing-2xs: 0.75rem;
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
   --spacing-md: 1.5rem;
@@ -545,16 +546,16 @@ a.tag-project:hover {
 }
 
 .post-item {
-  padding: var(--spacing-sm) 0;
-  border-bottom: 1px solid var(--border-color);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  border-radius: 6px;
   display: flex;
   gap: var(--spacing-sm);
   flex-wrap: wrap;
   align-items: baseline;
 }
 
-.post-item:last-child {
-  border-bottom: none;
+.post-item:nth-child(even) {
+  background-color: var(--bg-secondary);
 }
 
 .post-date {
@@ -589,7 +590,7 @@ a.tag-project:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
+  gap: var(--spacing-sm);
   margin-top: var(--spacing-sm);
   padding-top: var(--spacing-sm);
 }
@@ -620,7 +621,7 @@ a.tag-project:hover {
 .pagination-pages {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--spacing-sm);
 }
 
 .pagination-page {
@@ -794,11 +795,17 @@ a.tag-section:hover {
   color: var(--accent-primary);
 }
 
+.discover-card-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
 .discover-card-excerpt {
   color: var(--text-secondary);
   font-size: 0.9rem;
   line-height: 1.6;
-  flex: 1;
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -810,6 +817,7 @@ a.tag-section:hover {
   display: flex;
   gap: var(--spacing-xs);
   flex-wrap: wrap;
+  margin-top: auto;
 }
 
 .blog-discover-grid {
@@ -919,6 +927,10 @@ tr:nth-child(even) {
 
   .section-stat-label {
     font-size: 0.65rem;
+  }
+
+  .pagination-pages {
+    display: none;
   }
 
   .random-quote {
