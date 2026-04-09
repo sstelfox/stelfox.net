@@ -1,0 +1,30 @@
+{{ define "main" }}
+<div class="container error-page">
+  <div class="error-hero">
+    <span class="error-code">404</span>
+    <h1>Well, this is awkward.</h1>
+    <p class="error-message">
+      Whatever was here before has wandered off into the void. It might have been moved,
+      renamed, or it never existed in the first place. The internet is weird like that.
+    </p>
+  </div>
+
+  <div class="error-search">
+    <p class="error-search-nudge">Maybe you can find what you're looking for?</p>
+    <form class="section-search-form" action="/search/" method="get">
+      <input
+        type="text"
+        name="q"
+        class="section-search-input"
+        placeholder="Search the site..."
+        autocomplete="off"
+        autofocus
+      >
+    </form>
+  </div>
+
+  <div class="error-quote">
+    {{- partial "random-quote.html" (dict "featured_only" false) -}}
+  </div>
+</div>
+{{ end }}

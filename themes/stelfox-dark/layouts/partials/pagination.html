@@ -1,9 +1,11 @@
 {{- $paginator := .paginator -}}
 {{- $label := default "Pagination" .label -}}
+{{- $anchor := default "posts" .anchor -}}
+{{- $frag := printf "#%s" $anchor -}}
 {{- if gt $paginator.TotalPages 1 }}
 <nav class="pagination" aria-label="{{ $label }}">
   {{- if $paginator.HasPrev }}
-  <a href="{{ $paginator.Prev.URL }}" class="pagination-link pagination-prev" aria-label="Previous page">Prev</a>
+  <a href="{{ $paginator.Prev.URL }}{{ $frag }}" class="pagination-link pagination-prev" aria-label="Previous page">Prev</a>
   {{- else }}
   <span class="pagination-link pagination-prev pagination-disabled" aria-hidden="true">Prev</span>
   {{- end }}
@@ -25,7 +27,7 @@
         {{- if eq $pageNum $current }}
     <span class="pagination-page pagination-current" aria-current="page">{{ $pageNum }}</span>
         {{- else }}
-    <a href="{{ .URL }}" class="pagination-page">{{ $pageNum }}</a>
+    <a href="{{ .URL }}{{ $frag }}" class="pagination-page">{{ $pageNum }}</a>
         {{- end -}}
       {{- else -}}
         {{- /* Show ellipsis at boundaries */ -}}
@@ -40,7 +42,7 @@
   </span>
 
   {{- if $paginator.HasNext }}
-  <a href="{{ $paginator.Next.URL }}" class="pagination-link pagination-next" aria-label="Next page">Next</a>
+  <a href="{{ $paginator.Next.URL }}{{ $frag }}" class="pagination-link pagination-next" aria-label="Next page">Next</a>
   {{- else }}
   <span class="pagination-link pagination-next pagination-disabled" aria-hidden="true">Next</span>
   {{- end }}
