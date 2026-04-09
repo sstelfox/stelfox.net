@@ -958,7 +958,7 @@ tr:nth-child(even) {
 /* Syntax Highlighting Override */
 .highlight {
   margin-bottom: var(--spacing-sm);
-  overflow-x: auto;
+  position: relative;
 }
 
 .highlight pre {
@@ -966,7 +966,6 @@ tr:nth-child(even) {
 }
 
 .highlight .lntable {
-  width: 100%;
   border: none;
   border-collapse: collapse;
   margin: 0;
@@ -983,28 +982,21 @@ tr:nth-child(even) {
 }
 
 .highlight .lntable .lntd:first-child {
-  width: 1%;
-  min-width: fit-content;
+  position: absolute;
+  right: 100%;
   user-select: none;
-  vertical-align: top;
 }
 
 .highlight .lntable .lntd:first-child pre {
   text-align: right;
   border: none;
+  border-radius: 0;
   background: transparent;
-  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
-  border-right: 1px solid var(--border-color);
+  padding: var(--spacing-sm) 0.5rem var(--spacing-sm) 0;
 }
 
 .highlight .lntable .lntd:last-child {
-  vertical-align: top;
-  overflow-x: auto;
-}
-
-.highlight .lntable .lntd:last-child pre {
-  border: none;
-  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-sm);
+  width: 100%;
 }
 
 .highlight .lnlinks {
