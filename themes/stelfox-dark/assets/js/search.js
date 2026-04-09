@@ -149,6 +149,9 @@
       const resultsHTML = filteredResults.slice(0, 20).map(result => {
         const doc = searchDocuments[result.ref];
         const excerpt = createExcerpt(doc.summary, query, 60);
+        // Map lunr's raw score to a percentage using log scale.
+        // score ~1 -> 39%, ~5 -> 64%, ~20 -> 81%, ~50 -> 89%, ~100 -> 94%
+        const relevancePercent = Math.min(99, Math.round(Math.log(1 + result.score) / Math.log(1 + 100) * 100));
 
         return `
           <article class="search-result">
@@ -157,8 +160,9 @@
                 <a href="${escapeHtml(doc.url)}">${highlightMatches(escapeHtml(doc.title), query)}</a>
               </h3>
               <span class="search-result-section section-${escapeHtml(doc.section)}">${escapeHtml(doc.section)}</span>
+              <span class="search-result-relevance">${relevancePercent}%</span>
             </div>
-            ${doc.date ? `<time class="search-result-date">${escapeHtml(doc.date)}</time>` : ''}
+            ${doc.date && doc.date !== '0001-01-01' ? `<time class="search-result-date">${escapeHtml(doc.date)}</time>` : ''}
             <p class="search-result-excerpt">${excerpt}</p>
             ${doc.tags && doc.tags.length > 0 ? `
               <div class="search-result-tags">
@@ -190,9 +194,9 @@
       return `__CODEBLOCK_${codeBlocks.length - 1}__`;
     });
 
-    // Extract and preserve inline code
+    // Extract and preserve inline code, decoding any HTML entities within
     processedText = processedText.replace(/<code[^>]*>(.*?)<\/code>/gi, (match, content) => {
-      inlineCode.push(content);
+      inlineCode.push(stripHtml('<span>' + content + '</span>'));
       return `__INLINECODE_${inlineCode.length - 1}__`;
     });
 

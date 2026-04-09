@@ -7,13 +7,13 @@
 
 .search-input-wrapper {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-xs);
 }
 
 .search-input {
-  background-color: #161b22;
-  border: 1px solid #30363d;
-  color: #c9d1d9;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
   padding: 0.75rem 3rem 0.75rem 1rem;
   font-size: 1rem;
   width: 100%;
@@ -21,9 +21,9 @@
 }
 
 .search-input:focus {
-  outline: 2px solid #58a6ff;
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
-  border-color: #58a6ff;
+  border-color: var(--accent-primary);
 }
 
 .search-input:disabled {
@@ -38,7 +38,7 @@
   transform: translateY(-50%);
   background: transparent;
   border: none;
-  color: #8b949e;
+  color: var(--text-secondary);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
@@ -47,21 +47,22 @@
 }
 
 .search-clear:hover {
-  background: #30363d;
-  color: #c9d1d9;
+  background: var(--border-color);
+  color: var(--text-primary);
 }
 
 .search-filters {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .section-filter {
-  background-color: #21262d;
-  border: 1px solid #30363d;
-  color: #8b949e;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
   padding: 0.5rem 1rem;
   border-radius: 6px;
   cursor: pointer;
@@ -70,36 +71,40 @@
 }
 
 .section-filter:hover {
-  background-color: #30363d;
-  color: #c9d1d9;
+  background-color: var(--border-color);
+  color: var(--text-primary);
 }
 
 .section-filter.active {
-  background-color: #58a6ff;
-  border-color: #58a6ff;
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
   color: #ffffff;
 }
 
 .search-count {
-  color: #8b949e;
+  color: var(--text-secondary);
   font-size: 0.9rem;
-  margin-bottom: 1rem;
+  margin-left: auto;
 }
 
 .search-results {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
 }
 
 .search-result {
-  /* No bottom border or padding */
+  padding: var(--spacing-md) var(--spacing-sm);
+  border-radius: 6px;
+}
+
+.search-result:nth-child(odd) {
+  background-color: var(--bg-secondary);
 }
 
 .search-result-header {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: var(--spacing-xs);
   margin-bottom: 0.5rem;
   flex-wrap: wrap;
 }
@@ -114,23 +119,23 @@
 }
 
 .search-result-title a {
-  color: #58a6ff;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
 .search-result-title a:hover {
-  color: #79c0ff;
+  color: var(--accent-primary);
   text-decoration: underline;
 }
 
 .search-result-section {
-  background-color: #21262d;
-  color: #8b949e;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
   padding: 0.25rem 0.625rem;
   border-radius: 3px;
   font-size: 0.8125rem;
   text-transform: capitalize;
-  border: 1px solid #30363d;
+  border: 1px solid var(--border-color);
   white-space: nowrap;
 }
 
@@ -152,40 +157,52 @@
   color: #a371f7;
 }
 
+.search-result-relevance {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+  padding: 0.25rem 0.625rem;
+  border-radius: 3px;
+  font-size: 0.8125rem;
+  border: 1px solid var(--border-color);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+}
+
 .search-result-date {
-  color: #8b949e;
+  color: var(--text-secondary);
   font-size: 0.875rem;
   display: block;
   margin-bottom: 0.5rem;
 }
 
 .search-result-excerpt {
-  color: #8b949e;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
   line-height: 1.6;
   margin: 0.5rem 0;
 }
 
 .search-result-excerpt mark {
   background-color: #388bfd26;
-  color: #79c0ff;
+  color: var(--accent-hover);
   padding: 0.1em 0.25em;
   border-radius: 3px;
   font-weight: 500;
 }
 
 .search-result-excerpt code {
-  background-color: #161b22;
+  background-color: var(--bg-secondary);
   color: #e6edf3;
   padding: 0.2em 0.4em;
   border-radius: 3px;
   font-size: 0.9em;
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-  border: 1px solid #30363d;
+  font-family: var(--font-mono);
+  border: 1px solid var(--border-color);
 }
 
 .search-result-excerpt pre {
-  background-color: #161b22;
-  border: 1px solid #30363d;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   padding: 0.75rem;
   overflow-x: auto;
@@ -209,17 +226,17 @@
 }
 
 .search-result-tags .tag {
-  background-color: #21262d;
-  color: #8b949e;
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
   padding: 0.25rem 0.625rem;
   border-radius: 3px;
   font-size: 0.8125rem;
-  border: 1px solid #30363d;
+  border: 1px solid var(--border-color);
 }
 
 .search-no-results,
 .search-error {
-  color: #8b949e;
+  color: var(--text-secondary);
   padding: 2rem 0;
   text-align: center;
 }
