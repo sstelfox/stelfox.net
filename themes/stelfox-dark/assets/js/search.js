@@ -21,24 +21,13 @@
   }
 
   function initializeSearch() {
-    console.log('Initializing Lunr search...');
-
     searchInput = document.getElementById('search-input');
     searchResults = document.getElementById('search-results');
     searchCount = document.getElementById('search-count');
     const searchClear = document.getElementById('search-clear');
     const sectionFilters = document.querySelectorAll('.section-filter');
 
-    console.log('Search elements found:', {
-      searchInput: !!searchInput,
-      searchResults: !!searchResults,
-      searchCount: !!searchCount,
-      searchClear: !!searchClear,
-      sectionFilters: sectionFilters.length
-    });
-
     if (!searchInput || !searchResults) {
-      console.error('Search elements not found - missing required elements');
       return;
     }
 
@@ -61,15 +50,13 @@
           });
         });
 
-        console.log(`Search index built with ${documents.length} documents`);
         searchInput.removeAttribute('disabled');
         searchInput.placeholder = 'Search across all posts, notes, and projects...';
 
         // Check if there's a query parameter to search for
         checkQueryParameter();
       })
-      .catch(error => {
-        console.error('Failed to load search index:', error);
+      .catch(() => {
         searchInput.placeholder = 'Search unavailable';
       });
 
@@ -191,8 +178,7 @@
       }).join('');
 
       searchResults.innerHTML = resultsHTML;
-    } catch (error) {
-      console.error('Search error:', error);
+    } catch (_) {
       searchResults.innerHTML = '<p class="search-error">Search error occurred. Please try a different query.</p>';
     }
   }
