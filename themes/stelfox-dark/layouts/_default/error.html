@@ -1,0 +1,42 @@
+{{ define "main" }}
+<div class="container error-page">
+  {{- if eq .File.BaseFileName "403" }}
+  <div class="error-hero">
+    <span class="error-code">403</span>
+    <h1>Hey. Hey! Don't touch that.</h1>
+    <p class="error-message">
+      I'm not mad, I'm just disappointed. You know you're not supposed to be in here.
+      This is exactly like that time you tried to eat cookies before dinner. Go on,
+      back the way you came. I'll talk to you about this later.
+    </p>
+  </div>
+  {{- else if eq .File.BaseFileName "500" }}
+  <div class="error-hero">
+    <span class="error-code">500</span>
+    <h1>You weren't supposed to see this.</h1>
+    <p class="error-message">
+      Something broke on my end and honestly I'm a little embarrassed about it.
+      You've caught me with my pants down. I'm scrambling to get things back together
+      so maybe just... look away for a moment and try again in a bit?
+    </p>
+  </div>
+  {{- end }}
+
+  <div class="error-search">
+    <p class="error-search-nudge">Maybe you can find what you're looking for?</p>
+    <form class="section-search-form" action="/search/" method="get">
+      <input
+        type="text"
+        name="q"
+        class="section-search-input"
+        placeholder="Search the site..."
+        autocomplete="off"
+      >
+    </form>
+  </div>
+
+  <div class="error-quote">
+    {{- partial "random-quote.html" (dict "featured_only" false) -}}
+  </div>
+</div>
+{{ end }}
