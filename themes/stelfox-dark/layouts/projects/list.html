@@ -27,6 +27,14 @@
             {{- end }}
           </header>
 
+          {{- $logsSection := .GetPage "logs" -}}
+          {{- if and $logsSection ($logsSection.RegularPages) }}
+          {{- $latestLog := index ($logsSection.RegularPages.ByDate.Reverse) 0 }}
+          <span class="project-card-date">{{ $latestLog.Date.Format "2006-01-02" }}</span>
+          {{- else }}
+          <span class="project-card-date">Not started</span>
+          {{- end }}
+
           {{- if .Summary }}
           <div class="project-card-summary">
             {{ .Summary | plainify | truncate 500 }}
@@ -149,34 +157,76 @@
     {{- end }}
     {{- end }}
 
+    {{- /* Gather all project content for stats */ -}}
+    {{- $logsSection = .GetPage "logs" }}
+    {{- $allLogs := slice }}
+    {{- if $logsSection }}
+      {{- $allLogs = $logsSection.RegularPages.ByDate.Reverse }}
+    {{- end }}
+
     {{- $pagesSection := .GetPage "pages" }}
     {{- $refPages := slice }}
     {{- if $pagesSection }}{{ $refPages = $pagesSection.RegularPages }}{{ end }}
-    {{- if $refPages }}
-    <section class="project-pages">
-      <h2>Reference Pages</h2>
-      <ul class="page-list">
-        {{- range $refPages }}
-        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-        {{- end }}
-      </ul>
-    </section>
+
+    {{- /* Compute project-specific stats */ -}}
+    {{- $logCount := len $allLogs }}
+    {{- $refCount := len $refPages }}
+    {{- $totalWords := 0 }}
+    {{- $totalReadingTime := 0 }}
+    {{- $codeBlocks := 0 }}
+    {{- $tagSet := slice }}
+    {{- range $allLogs }}
+      {{- $totalWords = add $totalWords .WordCount }}
+      {{- $totalReadingTime = add $totalReadingTime .ReadingTime }}
+      {{- $blocks := len (findRE "(?m)^```" .RawContent) }}
+      {{- $codeBlocks = add $codeBlocks $blocks }}
+      {{- range .Params.tags }}
+        {{- $tagSet = $tagSet | append . }}
+      {{- end }}
+    {{- end }}
+    {{- range $refPages }}
+      {{- $totalWords = add $totalWords .WordCount }}
+      {{- $totalReadingTime = add $totalReadingTime .ReadingTime }}
+      {{- $blocks := len (findRE "(?m)^```" .RawContent) }}
+      {{- $codeBlocks = add $codeBlocks $blocks }}
+    {{- end }}
+    {{- $totalWords = add $totalWords .WordCount }}
+    {{- $totalReadingTime = add $totalReadingTime .ReadingTime }}
+
+    {{- $readingHours := div $totalReadingTime 60 }}
+    {{- $readingMins := mod $totalReadingTime 60 }}
+    {{- $techCount := 0 }}
+    {{- if .Params.tech_stack }}{{ $techCount = len .Params.tech_stack }}{{ end }}
+    {{- $tagCount := len (uniq $tagSet) }}
+
+    {{- /* Build span info */ -}}
+    {{- $spanLabel := "No logs yet" }}
+    {{- if gt $logCount 1 }}
+      {{- $oldest := index (last 1 $allLogs) 0 }}
+      {{- $spanDays := div (sub (index $allLogs 0).Date.Unix $oldest.Date.Unix) 86400 }}
+      {{- if gt $spanDays 0 }}
+        {{- $spanLabel = printf "%dd" $spanDays }}
+      {{- else }}
+        {{- $spanLabel = "<1d" }}
+      {{- end }}
+    {{- else if eq $logCount 1 }}
+      {{- $spanLabel = "Day one" }}
     {{- end }}
 
-    {{- $logsSection = .GetPage "logs" }}
-    {{- if $logsSection }}
-    {{- $allLogs := $logsSection.RegularPages.ByDate.Reverse }}
-    {{- if $allLogs }}
-    <section class="recent-posts">
-      <h2>Build Log</h2>
-      <ul class="post-list">
-        {{- range $allLogs }}
-        {{- partial "post-list-item.html" (dict "page" .) }}
-        {{- end }}
-      </ul>
-    </section>
-    {{- end }}
-    {{- end }}
+    {{- $paginator := .Paginate $allLogs }}
+    {{- partial "section-index-footer.html" (dict
+      "section" "projects"
+      "placeholder" (printf "Search %s..." .Title)
+      "stats" (slice
+        (dict "number" $logCount "label" "Log Entries")
+        (dict "number" $refCount "label" "Ref Pages")
+        (dict "number" (lang.FormatNumber 0 $totalWords) "label" "Words")
+        (dict "number" $codeBlocks "label" "Code Blocks")
+        (dict "number" $spanLabel "label" "Build Span")
+        (dict "number" (printf "%dh %dm" $readingHours $readingMins) "label" "Time to Read")
+      )
+      "paginator" $paginator
+    ) }}
   </article>
   {{- end }}
 </div>

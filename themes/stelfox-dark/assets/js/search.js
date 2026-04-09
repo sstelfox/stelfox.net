@@ -9,6 +9,17 @@
   let searchResults;
   let searchCount;
 
+  // Keep all other search fields on the page in sync with the main input
+  function syncSearchFields(query) {
+    var headerInput = document.getElementById('header-search-input');
+    if (headerInput) {
+      headerInput.value = query;
+    }
+    document.querySelectorAll('.section-search-input').forEach(function(input) {
+      input.value = query;
+    });
+  }
+
   function initializeSearch() {
     console.log('Initializing Lunr search...');
 
@@ -69,6 +80,7 @@
       if (query.length < 2) {
         searchResults.innerHTML = '';
         searchCount.textContent = '';
+        syncSearchFields(e.target.value);
         // Clear query parameter
         const url = new URL(window.location);
         url.searchParams.delete('q');
@@ -76,6 +88,7 @@
         return;
       }
 
+      syncSearchFields(query);
       performSearch(query);
 
       // Update URL with query parameter
@@ -111,6 +124,10 @@
         searchInput.value = '';
         searchResults.innerHTML = '';
         searchCount.textContent = '';
+        syncSearchFields('');
+        var url = new URL(window.location);
+        url.searchParams.delete('q');
+        window.history.replaceState({}, '', url);
         searchInput.focus();
       });
     }

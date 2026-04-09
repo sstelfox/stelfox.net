@@ -1,20 +1,31 @@
-// Simple header search - navigates to search page
+// Header search and cross-page query sync
 (function() {
   'use strict';
 
-  const searchInput = document.getElementById('header-search-input');
+  var headerInput = document.getElementById('header-search-input');
+  var sectionInputs = document.querySelectorAll('.section-search-input');
+  var urlParams = new URLSearchParams(window.location.search);
+  var query = urlParams.get('q');
 
-  if (!searchInput) {
-    return;
+  // Populate all search fields from ?q= param
+  if (query) {
+    if (headerInput) {
+      headerInput.value = query;
+    }
+    sectionInputs.forEach(function(input) {
+      input.value = query;
+    });
   }
 
-  // Navigate to search page on Enter key
-  searchInput.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      const query = searchInput.value.trim();
-      if (query) {
-        window.location.href = '/search/?q=' + encodeURIComponent(query);
+  // Header input navigates to search page on Enter
+  if (headerInput) {
+    headerInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var q = headerInput.value.trim();
+        if (q) {
+          window.location.href = '/search/?q=' + encodeURIComponent(q);
+        }
       }
-    }
-  });
+    });
+  }
 })();
