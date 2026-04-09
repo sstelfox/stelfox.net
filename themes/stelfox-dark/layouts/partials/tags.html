@@ -8,12 +8,14 @@
 {{- if and (gt $limit 0) (gt (len $tags) $limit) -}}
   {{- $tags = first $limit $tags -}}
 {{- end -}}
-{{- $hasTags := or (gt (len $tags) 0) (ne $projectTag "") $isNote -}}
+{{- $isProject := ne $projectTag "" -}}
+{{- $hasTags := or (gt (len $tags) 0) $isProject $isNote -}}
 {{- if $hasTags -}}
   {{- if eq $style "badge" -}}
     <div class="{{ default "discover-card-tags" $class }}">
-      {{- if $projectTag }}
+      {{- if $isProject }}
       <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
+      <a href="/projects/" class="tag tag-section">project</a>
       {{- end }}
       {{- if $isNote }}
       <a href="/notes/" class="tag tag-section">note</a>
@@ -24,8 +26,9 @@
     </div>
   {{- else if eq $style "inline" -}}
     <span class="{{ default "post-tags" $class }}">
-      {{- if $projectTag }}
+      {{- if $isProject }}
       <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
+      <a href="/projects/" class="tag tag-section">project</a>
       {{- end }}
       {{- if $isNote }}
       <a href="/notes/" class="tag tag-section">note</a>
@@ -36,8 +39,9 @@
     </span>
   {{- else if eq $style "delimit" -}}
     <span class="{{ default "post-tags" $class }}">
-      {{- if $projectTag -}}
+      {{- if $isProject -}}
       <a href="/projects/{{ $projectTag }}/" class="tag tag-project">{{ $projectTag }}</a>
+      <a href="/projects/" class="tag tag-section">project</a>
       {{- end -}}
       {{- if $isNote -}}
       <a href="/notes/" class="tag tag-section">note</a>
