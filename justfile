@@ -14,7 +14,7 @@ related:
     ./bin/generate_related.py
 
 deploy: build e2e
-    rsync -rczi --delete --cvs-exclude public/ singing-evening-road.stelfox.net:/var/www/stelfox.net/root/
+    rsync -rczi --delete --cvs-exclude --include='tags/' --include='tags/**' public/ singing-evening-road.stelfox.net:/var/www/stelfox.net/root/
 
 e2e:
     cd playwright && npx playwright test
