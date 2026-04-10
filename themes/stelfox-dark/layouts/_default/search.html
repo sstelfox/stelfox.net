@@ -43,6 +43,9 @@
 {{ end }}
 
 {{ define "scripts" }}
+{{- $indexTpl := resources.Get "js/search-index.js.tpl" -}}
+{{- $searchIndex := $indexTpl | resources.ExecuteAsTemplate "js/search-index.js" . | fingerprint }}
+<script src="{{ $searchIndex.RelPermalink }}" integrity="{{ $searchIndex.Data.Integrity }}"></script>
 {{- $lunr := resources.Get "js/lunr.min.js" | fingerprint }}
 <script src="{{ $lunr.RelPermalink }}" integrity="{{ $lunr.Data.Integrity }}"></script>
 {{- $searchJs := resources.Get "js/search.js" | fingerprint }}

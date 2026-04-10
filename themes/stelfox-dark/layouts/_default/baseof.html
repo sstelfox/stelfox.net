@@ -22,6 +22,9 @@
     data-hannah="{{ $sunflower.RelPermalink }}"
     data-zelda="{{ $bee.RelPermalink }}"
     data-cookie="{{ $cookie.RelPermalink }}"></script>
+  {{- $pageListTpl := resources.Get "js/page-list.js.tpl" -}}
+  {{- $pageList := $pageListTpl | resources.ExecuteAsTemplate "js/page-list.js" . | fingerprint }}
+  <script src="{{ $pageList.RelPermalink }}" integrity="{{ $pageList.Data.Integrity }}"></script>
   {{- $randomPage := resources.Get "js/random-page.js" | fingerprint }}
   <script src="{{ $randomPage.RelPermalink }}" integrity="{{ $randomPage.Data.Integrity }}" defer></script>
   {{- block "scripts" . }}{{- end }}

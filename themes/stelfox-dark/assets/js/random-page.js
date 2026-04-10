@@ -1,4 +1,4 @@
-// Random page navigation via search index
+// Random page navigation via page list
 (function() {
   'use strict';
 
@@ -8,15 +8,10 @@
   link.addEventListener('click', function(e) {
     e.preventDefault();
 
-    fetch('/search_index.json')
-      .then(function(response) { return response.json(); })
-      .then(function(documents) {
-        if (documents.length === 0) return;
-        var pick = documents[Math.floor(Math.random() * documents.length)];
-        window.location.href = pick.url;
-      })
-      .catch(function(err) {
-        console.error('Failed to load search index for random page:', err);
-      });
+    var pages = window.__pageList;
+    if (!pages || pages.length === 0) return;
+
+    var pick = pages[Math.floor(Math.random() * pages.length)];
+    window.location.href = pick;
   });
 })();

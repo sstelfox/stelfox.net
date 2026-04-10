@@ -17,9 +17,7 @@ test.describe("random page dice link", () => {
   test("clicking dice navigates to a page from the search index", async ({ page }) => {
     await page.goto("/");
 
-    const indexResponse = await page.request.get("/search_index.json");
-    const documents = await indexResponse.json();
-    const validUrls = documents.map((doc: { url: string }) => doc.url);
+    const validUrls = await page.evaluate(() => (window as any).__pageList) as string[];
 
     expect(validUrls.length).toBeGreaterThan(0);
 

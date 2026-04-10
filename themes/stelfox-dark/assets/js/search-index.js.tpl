@@ -6,7 +6,7 @@
   {{- end -}}
 {{- end -}}
 {{- $pages := union $regular $bundles -}}
-[
+window.__searchIndex = [
 {{- range $index, $page := $pages -}}
 {{- if $index }},{{ end }}
 {{- $summary := $page.Summary -}}
@@ -31,4 +31,4 @@
   "tags": {{ $searchTags | jsonify }}
 }
 {{- end -}}
-]
+];

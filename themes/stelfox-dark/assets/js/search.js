@@ -31,34 +31,32 @@
       return;
     }
 
-    // Load search index
-    fetch('/search_index.json')
-      .then(response => response.json())
-      .then(documents => {
-        searchDocuments = documents;
+    // Search index is loaded via a script tag that sets window.__searchIndex
+    if (!window.__searchIndex) {
+      searchInput.placeholder = 'Search unavailable';
+      return;
+    }
 
-        // Build Lunr index with field boosting
-        searchIndex = lunr(function() {
-          this.ref('id');
-          this.field('title', { boost: 10 });
-          this.field('summary', { boost: 5 });
-          this.field('tags', { boost: 7 });
-          this.field('section');
+    searchDocuments = window.__searchIndex;
 
-          documents.forEach(doc => {
-            this.add(doc);
-          });
-        });
+    // Build Lunr index with field boosting
+    searchIndex = lunr(function() {
+      this.ref('id');
+      this.field('title', { boost: 10 });
+      this.field('summary', { boost: 5 });
+      this.field('tags', { boost: 7 });
+      this.field('section');
 
-        searchInput.removeAttribute('disabled');
-        searchInput.placeholder = 'Search across all posts, notes, and projects...';
-
-        // Check if there's a query parameter to search for
-        checkQueryParameter();
-      })
-      .catch(() => {
-        searchInput.placeholder = 'Search unavailable';
+      searchDocuments.forEach(doc => {
+        this.add(doc);
       });
+    });
+
+    searchInput.removeAttribute('disabled');
+    searchInput.placeholder = 'Search across all posts, notes, and projects...';
+
+    // Check if there's a query parameter to search for
+    checkQueryParameter();
 
     // Handle search input
     searchInput.addEventListener('input', function(e) {
