@@ -1,0 +1,32 @@
+{{ define "main" }}
+<div class="container">
+  {{- partial "breadcrumbs.html" . -}}
+  <article class="content">
+    <header class="content-header">
+      <h1>{{ .Title }}</h1>
+    </header>
+
+    {{- if .Content }}
+    <div class="content-body">
+      {{ .Content }}
+    </div>
+    {{- end }}
+
+    {{- $withCount := slice }}
+    {{- range .Pages }}
+      {{- $withCount = $withCount | append (dict "page" . "count" (len .Pages)) }}
+    {{- end }}
+    {{- $sorted := sort $withCount "count" "desc" }}
+    {{- if $sorted }}
+    <div class="tag-cloud">
+      {{- range $sorted }}
+      <a href="{{ .page.RelPermalink }}" class="tag-cloud-item">
+        <span class="tag-cloud-name">{{ .page.Title | lower }}</span>
+        <span class="tag-cloud-count">{{ .count }}</span>
+      </a>
+      {{- end }}
+    </div>
+    {{- end }}
+  </article>
+</div>
+{{ end }}

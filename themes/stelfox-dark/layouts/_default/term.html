@@ -12,17 +12,10 @@
     </div>
     {{- end }}
 
-    {{- $paginator := .Paginate (.Pages.ByLastmod.Reverse) }}
+    {{- $paginator := .Paginate (.Pages.ByLastmod.Reverse) 9 }}
     {{- if $paginator.Pages }}
-    <section class="page-list" id="posts">
-      <ul class="post-list">
-        {{- range $paginator.Pages }}
-        {{- partial "post-list-item.html" (dict "page" .) }}
-        {{- end }}
-      </ul>
-
-      {{- partial "pagination.html" (dict "paginator" $paginator "label" "Tag pagination") }}
-    </section>
+    {{- partial "paginated-cards.html" (dict "pages" $paginator.Pages "label" "Tag pagination" "anchor" "posts") }}
+    {{- partial "pagination.html" (dict "paginator" $paginator "label" "Tag pagination") }}
     {{- end }}
   </article>
 </div>

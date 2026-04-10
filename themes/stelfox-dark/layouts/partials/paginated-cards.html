@@ -1,0 +1,20 @@
+{{- $pages := .pages -}}
+{{- $label := default "Pagination" .label -}}
+{{- $anchor := default "cards" .anchor -}}
+{{- if $pages -}}
+<section class="blog-discover-grid" id="{{ $anchor }}">
+  {{- range $pages }}
+  <div class="discover-card">
+    <h3 class="discover-card-title"><a href="{{ .RelPermalink }}">{{ partial "display-title.html" . }}</a></h3>
+    <div class="discover-card-meta">
+      <time class="discover-card-date">{{ .Date.Format "2006-01-02" }}</time>
+      <span class="reading-time">{{ .ReadingTime }} min read</span>
+    </div>
+    <div class="discover-card-body">
+      <p class="discover-card-excerpt">{{ .Summary | plainify | truncate 160 }}</p>
+      {{- partial "tags.html" (dict "page" . "style" "badge") }}
+    </div>
+  </div>
+  {{- end }}
+</section>
+{{- end -}}
