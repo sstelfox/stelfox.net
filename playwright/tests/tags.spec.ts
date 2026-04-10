@@ -41,42 +41,50 @@ test.describe("tags", () => {
     await expect(grid).toBeVisible();
   });
 
-  test("tags overview shows tag cloud sorted by count", async ({ page }) => {
+  test("tags overview shows categorized directory", async ({ page }) => {
     await page.goto("/tags/");
 
-    const cloud = page.locator(".tag-cloud");
-    await expect(cloud).toBeVisible();
+    // Should have category sections
+    const sections = page.locator(".tag-directory-section");
+    const sectionCount = await sections.count();
+    expect(sectionCount).toBeGreaterThan(0);
 
-    const items = page.locator(".tag-cloud-item");
-    const count = await items.count();
-    expect(count).toBeGreaterThan(0);
-
-    // Each item should have a name and count
-    const firstItem = items.first();
-    await expect(firstItem.locator(".tag-cloud-name")).toBeVisible();
-    await expect(firstItem.locator(".tag-cloud-count")).toBeVisible();
-
-    // First tag should have the highest count (sorted descending)
-    const firstCount = Number(await items.first().locator(".tag-cloud-count").textContent());
-    const secondCount = Number(await items.nth(1).locator(".tag-cloud-count").textContent());
-    expect(firstCount).toBeGreaterThanOrEqual(secondCount);
+    // Each section should have a heading
+    const firstHeading = sections.first().locator(".tag-directory-heading");
+    await expect(firstHeading).toBeVisible();
   });
 
-  test("tags overview items are lowercase", async ({ page }) => {
+  test("tags directory entries have name, count, and description", async ({ page }) => {
     await page.goto("/tags/");
 
-    const name = await page.locator(".tag-cloud-name").first().textContent();
-    expect(name).toBe(name!.toLowerCase());
+    const row = page.locator(".tag-directory-row").first();
+    await expect(row.locator(".tag-directory-name")).toBeVisible();
+    await expect(row.locator(".tag-directory-count")).toBeVisible();
+    await expect(row.locator(".tag-directory-desc")).toBeVisible();
   });
 
-  test("tags overview links to individual tag pages", async ({ page }) => {
+  test("tags directory entries are sorted by count within categories", async ({ page }) => {
     await page.goto("/tags/");
 
-    const firstItem = page.locator(".tag-cloud-item").first();
-    const href = await firstItem.getAttribute("href");
+    // Check the first section's entries are sorted descending by count
+    const firstSection = page.locator(".tag-directory-section").first();
+    const counts = firstSection.locator(".tag-directory-count");
+    const countValues = await counts.allTextContents();
+
+    const nums = countValues.map(Number);
+    for (let i = 1; i < nums.length; i++) {
+      expect(nums[i]).toBeLessThanOrEqual(nums[i - 1]);
+    }
+  });
+
+  test("tags directory links to individual tag pages", async ({ page }) => {
+    await page.goto("/tags/");
+
+    const firstLink = page.locator(".tag-directory-name a").first();
+    const href = await firstLink.getAttribute("href");
     expect(href).toMatch(/^\/tags\/.+\//);
 
-    await firstItem.click();
+    await firstLink.click();
     await expect(page).toHaveURL(/\/tags\/.+\//);
     await expect(page.locator(".discover-card").first()).toBeVisible();
   });

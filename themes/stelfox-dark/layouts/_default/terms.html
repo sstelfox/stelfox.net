@@ -12,20 +12,44 @@
     </div>
     {{- end }}
 
-    {{- $withCount := slice }}
+    {{- $tagMeta := hugo.Data.tags.tags }}
+    {{- $categories := hugo.Data.tags.categories }}
+
+    {{/* Build a lookup from tag name to its taxonomy page and post count */}}
+    {{- $tagPages := dict }}
     {{- range .Pages }}
-      {{- $withCount = $withCount | append (dict "page" . "count" (len .Pages)) }}
+      {{- $tagPages = merge $tagPages (dict (.Title | lower) (dict "page" . "count" (len .Pages))) }}
     {{- end }}
-    {{- $sorted := sort $withCount "count" "desc" }}
-    {{- if $sorted }}
-    <div class="tag-cloud">
-      {{- range $sorted }}
-      <a href="{{ .page.RelPermalink }}" class="tag-cloud-item">
-        <span class="tag-cloud-name">{{ .page.Title | lower }}</span>
-        <span class="tag-cloud-count">{{ .count }}</span>
-      </a>
+
+    {{/* Group tags by category */}}
+    {{- range $cat := $categories }}
+      {{- $catTags := slice }}
+      {{- range $name, $meta := $tagMeta }}
+        {{- if eq $meta.category $cat }}
+          {{- $info := index $tagPages $name }}
+          {{- if $info }}
+            {{- $catTags = $catTags | append (dict "name" $name "meta" $meta "page" $info.page "count" $info.count) }}
+          {{- end }}
+        {{- end }}
       {{- end }}
-    </div>
+
+      {{- if $catTags }}
+      {{- $sorted := sort $catTags "count" "desc" }}
+      <section class="tag-directory-section">
+        <h2 class="tag-directory-heading">{{ $cat }}</h2>
+        <table class="tag-directory-table">
+          <tbody>
+          {{- range $sorted }}
+            <tr class="tag-directory-row">
+              <td class="tag-directory-name"><a href="{{ .page.RelPermalink }}">{{ .name }}</a></td>
+              <td class="tag-directory-count">{{ .count }}</td>
+              <td class="tag-directory-desc">{{ .meta.description }}</td>
+            </tr>
+          {{- end }}
+          </tbody>
+        </table>
+      </section>
+      {{- end }}
     {{- end }}
   </article>
 </div>

@@ -4,7 +4,6 @@ evergreen: false
 public: true
 tags:
   - blender
-  - cinnamon
   - linux
   - tips
 title: Blender Loop Select in Cinnamon

@@ -3,7 +3,6 @@ created_at: 2020-02-18T18:42:02-0500
 public: true
 evergreen: false
 tags:
-  - dracut
   - linux
 title: Extracting Dracut Built initramfs
 slug: extracting-dracut-initramfs

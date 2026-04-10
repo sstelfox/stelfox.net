@@ -3,7 +3,6 @@ created_at: 2018-03-24T20:20:22-0600
 evergreen: true
 public: true
 tags:
-  - openldap
   - linux
   - tips
 title: Converting OpenLDAP Schemas to LDIF
