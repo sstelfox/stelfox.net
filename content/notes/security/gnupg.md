@@ -18,9 +18,11 @@ quiz:
       - "Certify"
       - "Authenticate"
     answer: 2
+    explanation: "The master key should only retain the Certify capability. Sign, Encrypt, and Authenticate are delegated to subkeys so the master can stay offline and safe."
   - question: "The `keytocard` command copies key material to the smartcard while keeping the original in your local keyring."
     type: true-false
     answer: false
+    explanation: "keytocard is destructive. It moves the key to the card and replaces the local copy with a stub pointing to the card. The original private key material is gone from disk."
   - question: "Which of the following are valid reasons to prefer WKD over traditional keyservers for key distribution?"
     type: multi-select
     options:
@@ -29,9 +31,11 @@ quiz:
       - "It eliminates the need to publish keys to any keyserver"
       - "It avoids leaking your social graph through centralized lookup patterns"
     answer: [0, 1, 3]
+    explanation: "WKD gives you control over distribution and provides implicit domain validation, but it doesn't eliminate keyservers entirely. It does help avoid leaking your social graph since lookups go directly to the domain rather than a central server."
   - question: "Refreshing all keys in your keyring at once from a keyserver is safe because HKPS encrypts the transport."
     type: true-false
     answer: false
+    explanation: "HKPS encrypts the connection but the keyserver operator still sees every key you request. Refreshing your full keyring reveals your entire contact list to whoever runs the server."
   - question: "Which of the following are advantages of generating new subkeys at renewal time instead of extending expiration on existing ones?"
     type: multi-select
     options:
@@ -40,6 +44,7 @@ quiz:
       - "Protects against unknown key compromises"
       - "Avoids requiring contacts to refresh their copy of your key"
     answer: [0, 2]
+    explanation: "New subkeys give you forward secrecy and protect against undetected compromises. The tradeoff is that contacts do need to refresh your key, and there is some workflow disruption when the new subkeys take over."
 ---
 
 These are my working notes on GnuPG key management, smartcard workflows, and

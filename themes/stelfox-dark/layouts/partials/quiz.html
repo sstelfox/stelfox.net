@@ -15,7 +15,7 @@
       <span class="quiz-progress-text"></span>
     </div>
     {{- range $i, $q := first 10 . }}
-    <fieldset class="quiz-question" data-question-index="{{ $i }}">
+    <fieldset class="quiz-question" data-question-index="{{ $i }}"{{ with $q.explanation }} data-explanation="{{ . }}"{{ end }}>
       <legend>{{ $q.question }}</legend>
       {{- $type := $q.type | default "multiple-choice" }}
       {{- if eq $type "true-false" }}

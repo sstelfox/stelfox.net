@@ -193,6 +193,8 @@
         opt.classList.remove("quiz-wrong", "quiz-correct-hint");
       });
       fieldset.classList.remove("correct", "incorrect", "quiz-correct-pulse");
+      var expEl = fieldset.querySelector(".quiz-explanation");
+      if (expEl) expEl.remove();
     }
 
     function markWrong(fieldset) {
@@ -209,6 +211,17 @@
         });
       }
       fieldset.classList.add("incorrect");
+
+      var explanation = fieldset.getAttribute("data-explanation");
+      if (explanation) {
+        var expEl = fieldset.querySelector(".quiz-explanation");
+        if (!expEl) {
+          expEl = document.createElement("p");
+          expEl.className = "quiz-explanation";
+          fieldset.appendChild(expEl);
+        }
+        expEl.textContent = explanation;
+      }
     }
 
     function markCorrect(fieldset) {
@@ -260,7 +273,8 @@
       } else {
         wrongOnce = true;
         markWrong(fieldset);
-        jiggle(advanceBtn);
+        resultsDiv.textContent = "Change your answer or click again to continue.";
+        resultsDiv.className = "quiz-results quiz-results-warning";
       }
     }
 
