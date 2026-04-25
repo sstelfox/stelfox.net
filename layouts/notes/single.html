@@ -1,4 +1,6 @@
 {{ define "head_extra" }}
+{{- $notesCss := resources.Get "css/notes.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $notesCss.RelPermalink }}" integrity="{{ $notesCss.Data.Integrity }}">
 {{- $isRecipe := false -}}
 {{- with .CurrentSection }}{{ with .File }}{{ if eq .ContentBaseName "cooking" }}{{ $isRecipe = true }}{{ end }}{{ end }}{{ end -}}
 {{- if $isRecipe }}
@@ -91,22 +93,37 @@
   <article class="content">
     <header class="content-header">
       <h1>{{ .Title }}</h1>
-      {{- $isBlogPost := or (eq .Section "blog") (eq .Section "projects") -}}
       {{- $hasValidDate := and .Date (not (eq (.Date.Format "2006") "0001")) -}}
-      {{- if and $isBlogPost $hasValidDate }}
+      {{- $hasValidLastmod := and .Lastmod (not (eq (.Lastmod.Format "2006") "0001")) -}}
+      {{- $datesAreDifferent := and $hasValidDate $hasValidLastmod (ne (.Date.Format "2006-01-02") (.Lastmod.Format "2006-01-02")) -}}
+      {{- if or $hasValidDate $hasValidLastmod }}
       <div class="content-meta">
+        {{- if $datesAreDifferent }}
+        <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">Created: {{ .Date.Format "2006-01-02" }}</time>
+        <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">Updated: {{ .Lastmod.Format "2006-01-02" }}</time>
+        {{- else if $hasValidLastmod }}
+        <time datetime="{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Lastmod.Format "2006-01-02" }}</time>
+        {{- else }}
         <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
-        <span class="content-author">{{ .Site.Params.author }}</span>
+        {{- end }}
         <span class="reading-time">{{ .ReadingTime }} min read</span>
       </div>
-      {{- partial "tags.html" (dict "page" . "style" "badge") }}
-      {{- else }}
+      {{- end }}
       {{- $projectTag := partial "project-name.html" . -}}
       {{- if or .Params.tags (ne $projectTag "") }}
       {{- partial "tags.html" (dict "page" . "style" "badge") }}
       {{- end }}
-      {{- end }}
     </header>
+
+    {{- $toc := .TableOfContents -}}
+    {{- if findRE "<li>" $toc }}
+    <nav class="table-of-contents" aria-label="Table of contents">
+      <details open>
+        <summary>Table of Contents</summary>
+        {{ $toc }}
+      </details>
+    </nav>
+    {{- end }}
 
     <div class="content-body">
       {{ .Content }}

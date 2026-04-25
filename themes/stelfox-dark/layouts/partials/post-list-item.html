@@ -1,7 +1,8 @@
 {{- $page := .page -}}
 {{- $style := default "inline" .tagStyle -}}
+{{- $useLastmod := default false .useLastmod -}}
 <li class="post-item">
-  <time class="post-date">{{ $page.Date.Format "2006-01-02" }}</time>
+  <time class="post-date">{{ if $useLastmod }}{{ $page.Lastmod.Format "2006-01-02" }}{{ else }}{{ $page.Date.Format "2006-01-02" }}{{ end }}</time>
   <a href="{{ $page.RelPermalink }}" class="post-link">
     <span class="post-title">{{ $page.Title }}</span>
   </a>

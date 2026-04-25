@@ -50,7 +50,7 @@
         <div class="discover-card">
           <h3 class="discover-card-title"><a href="{{ .page.RelPermalink }}">{{ partial "display-title.html" .page }}</a></h3>
           <div class="discover-card-meta">
-            <time class="discover-card-date">{{ .page.Date.Format "2006-01-02" }}</time>
+            <time class="discover-card-date">{{ .page.Lastmod.Format "2006-01-02" }}</time>
             <span class="reading-time">{{ .page.ReadingTime }} min read</span>
           </div>
           <div class="discover-card-body">
@@ -106,10 +106,11 @@
     </section>
     {{- end }}
 
-    {{- $paginator := .Paginate ($allNotes.ByDate.Reverse) }}
+    {{- $paginator := .Paginate ($allNotes.ByLastmod.Reverse) }}
     {{- partial "section-index-footer.html" (dict
       "section" "notes"
       "placeholder" "Search across all notes..."
+      "useLastmod" true
       "stats" (slice
         (dict "number" (len $allNotes) "label" "Notes")
         (dict "number" (lang.FormatNumber 0 $totalWords) "label" "Words")
