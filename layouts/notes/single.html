@@ -5,6 +5,10 @@
 {{- $recipeCss := resources.Get "css/recipe.css" | fingerprint }}
 <link rel="stylesheet" href="{{ $recipeCss.RelPermalink }}" integrity="{{ $recipeCss.Data.Integrity }}" crossorigin="anonymous">
 {{- end }}
+{{- if .Params.quiz }}
+{{- $quizCss := resources.Get "css/quiz.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $quizCss.RelPermalink }}" integrity="{{ $quizCss.Data.Integrity }}" crossorigin="anonymous">
+{{- end }}
 {{ end }}
 
 {{ define "main" }}
@@ -78,6 +82,9 @@
     </div>
     {{- end }}
 
+    {{- with .Params.quiz }}
+    {{- partial "quiz.html" $ }}
+    {{- end }}
     {{- partial "related.html" . -}}
   </article>
   {{- else }}
@@ -105,6 +112,9 @@
       {{ .Content }}
     </div>
 
+    {{- with .Params.quiz }}
+    {{- partial "quiz.html" $ }}
+    {{- end }}
     {{- partial "related.html" . -}}
   </article>
   {{- end }}
@@ -112,6 +122,10 @@
 {{ end }}
 
 {{ define "scripts" }}
+{{- if .Params.quiz }}
+{{- $quizJs := resources.Get "js/quiz.js" | fingerprint }}
+<script src="{{ $quizJs.RelPermalink }}" integrity="{{ $quizJs.Data.Integrity }}" defer></script>
+{{- end }}
 {{- if .Params.customJS }}
 {{- range .Params.customJS }}
 <script src="{{ . }}"></script>

@@ -1,0 +1,56 @@
+{{- $quizTitle := .Params.quiz_title | default "Gut Check" }}
+{{- with .Params.quiz }}
+{{- $answerParts := slice }}
+{{- range first 10 . }}
+  {{- $answerParts = $answerParts | append (jsonify .answer) }}
+{{- end }}
+{{- $answersJson := printf "[%s]" (delimit $answerParts ",") }}
+<section class="quiz">
+  <h2>{{ $quizTitle }}</h2>
+  <form class="quiz-form" data-quiz-answers="{{ $answersJson }}" autocomplete="off">
+    <div class="quiz-progress">
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill"></div>
+      </div>
+      <span class="quiz-progress-text"></span>
+    </div>
+    {{- range $i, $q := first 10 . }}
+    <fieldset class="quiz-question" data-question-index="{{ $i }}">
+      <legend>{{ $q.question }}</legend>
+      {{- $type := $q.type | default "multiple-choice" }}
+      {{- if eq $type "true-false" }}
+      <label class="quiz-option">
+        <input type="radio" name="q{{ $i }}" value="true">
+        <span>True</span>
+      </label>
+      <label class="quiz-option">
+        <input type="radio" name="q{{ $i }}" value="false">
+        <span>False</span>
+      </label>
+      {{- else if eq $type "multi-select" }}
+      <p class="quiz-hint">Select all that apply</p>
+      {{- range $j, $opt := first 5 $q.options }}
+      <label class="quiz-option">
+        <input type="checkbox" name="q{{ $i }}" value="{{ $j }}">
+        <span>{{ $opt }}</span>
+      </label>
+      {{- end }}
+      {{- else }}
+      {{- range $j, $opt := first 5 $q.options }}
+      <label class="quiz-option">
+        <input type="radio" name="q{{ $i }}" value="{{ $j }}">
+        <span>{{ $opt }}</span>
+      </label>
+      {{- end }}
+      {{- end }}
+    </fieldset>
+    {{- end }}
+    <div class="quiz-nav">
+      <button type="button" class="quiz-prev" disabled>Back</button>
+      <button type="button" class="quiz-next">Next</button>
+      <button type="button" class="quiz-submit" style="display:none">Submit</button>
+    </div>
+    <div class="quiz-results" aria-live="polite"></div>
+  </form>
+</section>
+{{- end }}

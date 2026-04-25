@@ -8,7 +8,7 @@ build: related
 preview port="8000": related
     hugo server --bind 0.0.0.0 --baseURL http://0.0.0.0:{{port}} --environment production --port {{port}} --logLevel info --printI18nWarnings --printPathWarnings --disableFastRender --disableLiveReload
 
-server port="8000":
+serve port="8000":
     hugo server --bind 0.0.0.0 --baseURL http://0.0.0.0:{{port}} --environment development --port {{port}} --logLevel info --buildDrafts --buildExpired --buildFuture --printI18nWarnings --printPathWarnings --disableFastRender --disableLiveReload
 
 related:

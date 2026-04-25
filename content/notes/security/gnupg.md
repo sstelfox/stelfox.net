@@ -9,6 +9,37 @@ title: GPG Process Notes
 slug: gpg-process-notes
 aliases:
   - /notes/gpg-process-notes/
+quiz:
+  - question: "When creating a master key with custom capabilities, which single capability should it retain?"
+    type: multiple-choice
+    options:
+      - "Sign"
+      - "Encrypt"
+      - "Certify"
+      - "Authenticate"
+    answer: 2
+  - question: "The `keytocard` command copies key material to the smartcard while keeping the original in your local keyring."
+    type: true-false
+    answer: false
+  - question: "Which of the following are valid reasons to prefer WKD over traditional keyservers for key distribution?"
+    type: multi-select
+    options:
+      - "You control the key distribution infrastructure yourself"
+      - "It provides built-in domain validation since only the domain operator can place keys"
+      - "It eliminates the need to publish keys to any keyserver"
+      - "It avoids leaking your social graph through centralized lookup patterns"
+    answer: [0, 1, 3]
+  - question: "Refreshing all keys in your keyring at once from a keyserver is safe because HKPS encrypts the transport."
+    type: true-false
+    answer: false
+  - question: "Which of the following are advantages of generating new subkeys at renewal time instead of extending expiration on existing ones?"
+    type: multi-select
+    options:
+      - "Provides forward secrecy over long time scales"
+      - "No disruption to existing workflows"
+      - "Protects against unknown key compromises"
+      - "Avoids requiring contacts to refresh their copy of your key"
+    answer: [0, 2]
 ---
 
 These are my working notes on GnuPG key management, smartcard workflows, and
@@ -20,14 +51,14 @@ through daily use, maintenance, and diagnostics.
 Start with a clean GnuPG directory. Modern GnuPG uses the keybox format
 internally so there's no need to worry about legacy keyring files.
 
-```console
+```bash
 rm -rf ~/.gnupg/*
 ```
 
 Drop in your preferred `gpg.conf` from your dotfiles, then begin key
 generation:
 
-```console
+```bash
 gpg --expert --full-generate-key
 ```
 
@@ -41,13 +72,13 @@ generate.
 
 Once the master key exists, we need subkeys. Edit the key:
 
-```console
+```bash
 gpg --expert --edit-key sam@stelfox.net
 ```
 
 Add any additional UIDs you need:
 
-```console
+```text
 gpg> adduid
 gpg> uid 1
 gpg> primary
@@ -56,7 +87,7 @@ gpg> primary
 Now generate subkeys. Run `addkey` three times to create separate subkeys for
 signing, encryption, and authentication:
 
-```console
+```text
 gpg> addkey
 ```
 
@@ -71,13 +102,13 @@ Optionally attach a photo ID. Crop and scale an image to 240x288 max (smaller
 is better, must be under 4KB). Strip metadata with `jpegoptim -s` before
 adding:
 
-```console
+```text
 gpg> addphoto
 ```
 
 Save everything:
 
-```console
+```text
 gpg> save
 ```
 
@@ -85,7 +116,7 @@ gpg> save
 
 Before doing anything else, create comprehensive backups of the key material.
 
-```console
+```bash
 mkdir ~/gpg_backups
 
 gpg -a --export-secret-key sam@stelfox.net > ~/gpg_backups/secret_key.gpg
@@ -99,7 +130,7 @@ somewhere extremely safe.
 
 Create a `paperkey` backup of the secret key material:
 
-```console
+```bash
 gpg --export-secret-key sam@stelfox.net | paperkey > ~/gpg_backups/paperkey.bak
 ```
 
@@ -107,7 +138,7 @@ Print `paperkey.bak` on acid-free paper and store it in a secure location. If
 the worst happens and you need to recover from the paper backup, you'll need to
 type it back into a text file and then reconstruct the key:
 
-```console
+```bash
 paperkey --pubring ~/gpg_backups/publickey.gpg \
   --secrets ~/gpg_backups/paperkey.bak --output ~/recovered_secret.gpg
 ```
@@ -123,40 +154,40 @@ subkeys, or modifying UIDs.
 
 Export just the subkeys:
 
-```console
+```bash
 gpg -a --export-secret-subkeys sam@stelfox.net > ~/gpg_backups/subkey_secrets.gpg
 ```
 
 Delete all secret keys from the working keyring:
 
-```console
+```bash
 gpg --delete-secret-keys sam@stelfox.net
 ```
 
 Confirm the deletion (double confirmation required). Now reimport only the
 subkeys:
 
-```console
+```bash
 gpg --import ~/gpg_backups/subkey_secrets.gpg
 ```
 
 Verify that only subkeys are present in the secret keyring. The master key
 should show `sec#` (the `#` means the secret key is missing):
 
-```console
+```bash
 gpg -K
 ```
 
 Export the subkey-only keyring for transfer to other machines:
 
-```console
+```bash
 gpg -a --export-secret-keys sam@stelfox.net > ~/gpg_backups/laptop_keys_secret.gpg
 gpg -a --export sam@stelfox.net > ~/gpg_backups/laptop_keys_public.gpg
 ```
 
 On a new machine, import both files:
 
-```console
+```bash
 gpg --import laptop_keys_public.gpg
 gpg --import laptop_keys_secret.gpg
 ```
@@ -185,7 +216,7 @@ permanently destroys the card.
 
 Change the PINs:
 
-```console
+```text
 gpg --card-edit
 gpg/card> admin
 gpg/card> passwd
@@ -195,14 +226,14 @@ Change the user PIN (option 1) then the admin PIN (option 3).
 
 While you're in card-edit, set some useful metadata:
 
-```console
+```text
 gpg/card> url
 ```
 
 Set this to the URL where your public key can be downloaded (e.g.
 `https://stelfox.net/publickey.gpg`). Also set your name and language:
 
-```console
+```text
 gpg/card> name
 gpg/card> lang
 ```
@@ -225,7 +256,7 @@ physical touch for each cryptographic operation. This way you enter your PIN
 once for the cache window, but an attacker who has access to your session still
 can't use the key without physical presence at the device.
 
-```console
+```bash
 ykman openpgp keys set-touch sig on
 ykman openpgp keys set-touch aut on
 ykman openpgp keys set-touch enc on
@@ -238,13 +269,13 @@ every operation requires physical confirmation.
 
 With the card configured, transfer the subkeys onto it. Edit your key:
 
-```console
+```bash
 gpg --edit-key sam@stelfox.net
 ```
 
 For each of the three subkeys (numbered 1-3), select, transfer, and deselect:
 
-```console
+```text
 gpg> key 1
 gpg> keytocard
 gpg> key 1
@@ -269,7 +300,7 @@ your backups are solid before doing this.
 
 On a new machine where you need to use the smartcard, insert the card and run:
 
-```console
+```text
 gpg --card-edit
 gpg/card> fetch
 gpg/card> quit
@@ -278,7 +309,7 @@ gpg/card> quit
 The `fetch` command downloads your public key from the URL stored on the card
 and creates the local stubs. Verify everything looks correct:
 
-```console
+```bash
 gpg -K
 gpg --card-status
 ```
@@ -290,15 +321,14 @@ card.
 
 Verify the card is working end-to-end:
 
-```console
+```bash
 echo "Just a secret test message..." > message.txt
-
 gpg -esar sam@stelfox.net message.txt
 ```
 
 This should prompt for your PIN. Decrypt it back:
 
-```console
+```bash
 gpg -d message.txt.asc
 ```
 
@@ -312,7 +342,7 @@ The gpg-agent handles this through its built-in SSH support.
 
 Add the following to `~/.gnupg/gpg-agent.conf`:
 
-```
+```ini
 enable-ssh-support
 default-cache-ttl 600
 max-cache-ttl 7200
@@ -331,13 +361,13 @@ gpgconf --launch gpg-agent
 Restart your agent or open a new shell, then verify the card's authentication
 key shows up:
 
-```console
+```bash
 ssh-add -l
 ```
 
 To get the public key in a format suitable for `authorized_keys`:
 
-```console
+```bash
 ssh-add -L
 ```
 
@@ -348,13 +378,13 @@ separate package on some distributions (e.g. `gnupg-scdaemon` or similar).
 
 Get the key ID of your primary key from `gpg -k` and push it to the keyserver:
 
-```console
+```bash
 gpg --keyserver keys.openpgp.org --send-keys 0xYOURKEYID
 ```
 
 Also export for hosting on your website:
 
-```console
+```bash
 gpg --armor --export 0xYOURKEYID > publickey.gpg
 ```
 
@@ -377,16 +407,17 @@ method using an `openpgpkey` subdomain).
 Export your key in the WKD format. You need the WKD hash of your email's local
 part:
 
-```console
+```bash
 gpg --with-wkd-hash --fingerprint sam@stelfox.net
 ```
 
 This will show a line like `wks-hash: abc123...@stelfox.net`. Use that hash to
 place the key:
 
-```console
+```bash
 mkdir -p /path/to/webroot/.well-known/openpgpkey/hu/
-gpg --no-armor --export sam@stelfox.net > /path/to/webroot/.well-known/openpgpkey/hu/<wkd-hash>
+gpg --no-armor --export sam@stelfox.net \
+  > /path/to/webroot/.well-known/openpgpkey/hu/<wkd-hash>
 touch /path/to/webroot/.well-known/openpgpkey/policy
 ```
 
@@ -395,7 +426,7 @@ this path over HTTPS with the correct content type (`application/octet-stream`).
 
 Alternatively, the `gpg-wks-client` tool can generate the correct structure:
 
-```console
+```bash
 gpg --list-options show-only-fpr-mbox -k sam@stelfox.net | \
   gpg-wks-client --install-key -C /path/to/webroot/.well-known/openpgpkey/
 ```
@@ -418,7 +449,7 @@ only published to SKS pool servers, they need to be migrated to
 
 If you still have the key locally:
 
-```console
+```bash
 gpg --keyserver keys.openpgp.org --send-keys 0xYOURKEYID
 ```
 
@@ -429,7 +460,7 @@ If you're trying to find someone else's key that was only on SKS, you may be
 able to find cached copies on `keyserver.ubuntu.com` (which still runs but is
 read-only for new uploads in practice). Import it locally and then republish:
 
-```console
+```bash
 gpg --keyserver keyserver.ubuntu.com --recv-keys 0xTHEIRKEYID
 gpg --keyserver keys.openpgp.org --send-keys 0xTHEIRKEYID
 ```
@@ -440,7 +471,7 @@ email-based UIDs won't be discoverable until they verify themselves.
 
 Update your `gpg.conf` to use the modern keyserver:
 
-```
+```ini
 keyserver hkps://keys.openpgp.org
 ```
 
@@ -450,14 +481,14 @@ Remove any references to `hkps.pool.sks-keyservers.net` or other defunct pools.
 
 Generate a fingerprint summary to print and distribute to participants:
 
-```console
+```bash
 gpg --fingerprint sam@stelfox.net > key_for_partying.txt
 ```
 
 After the event, pull each participant's key by ID, verify it matches what they
 presented in person, sign it, and publish the signature:
 
-```console
+```bash
 gpg --keyserver keys.openpgp.org --recv-keys 0x12345678
 gpg --list-keys 0x12345678
 gpg --sign-key 0x12345678
@@ -471,20 +502,20 @@ Email the `.asc` file to one of the email addresses listed in their key.
 
 When someone sends you their signature of your key:
 
-```console
+```bash
 gpg --import your-id.signed-by.0x12345678.asc
 ```
 
 View your collected signatures:
 
-```console
+```bash
 gpg --list-sigs sam@stelfox.net
 ```
 
 After importing new signatures, push your updated key so others can see the
 web of trust:
 
-```console
+```bash
 gpg --keyserver keys.openpgp.org --send-keys 0xYOURKEYID
 ```
 
@@ -492,13 +523,13 @@ gpg --keyserver keys.openpgp.org --send-keys 0xYOURKEYID
 
 Find your signing key ID:
 
-```console
+```bash
 gpg --list-secret-keys --keyid-format long
 ```
 
 Configure git to use it:
 
-```console
+```bash
 git config --global user.signingkey 0xYOURKEYID
 git config --global commit.gpgsign true
 ```
@@ -527,7 +558,7 @@ The transition statement should include:
 
 Cross-sign both keys so the trust relationship is bidirectional:
 
-```console
+```bash
 gpg --local-user $OLD_KEY_ID --sign-key $NEW_KEY_ID
 gpg --local-user $NEW_KEY_ID --sign-key $OLD_KEY_ID
 gpg --keyserver keys.openpgp.org --send-keys $OLD_KEY_ID $NEW_KEY_ID
@@ -535,7 +566,7 @@ gpg --keyserver keys.openpgp.org --send-keys $OLD_KEY_ID $NEW_KEY_ID
 
 Sign the transition statement with both keys:
 
-```console
+```bash
 gpg --local-user $OLD_KEY_ID --local-user $NEW_KEY_ID --clearsign key-transition.txt
 ```
 
@@ -587,7 +618,7 @@ Steps:
 
 Bring out the master key and extend each subkey:
 
-```console
+```text
 gpg --edit-key 0xYOURKEYID
 gpg> key 1
 gpg> expire
@@ -601,7 +632,11 @@ gpg> key 3
 gpg> expire
 ...
 gpg> save
+```
 
+Then publish the updated key:
+
+```bash
 gpg --keyserver keys.openpgp.org --send-keys 0xYOURKEYID
 ```
 
@@ -613,13 +648,13 @@ one.
 Periodically refresh the keys in your keyring to pick up updated expiration
 dates, new subkeys, and revocation announcements:
 
-```console
+```bash
 gpg --refresh-keys
 ```
 
 After modifying your own key, push the updates:
 
-```console
+```bash
 gpg --keyserver keys.openpgp.org --send-keys 0xYOURKEYID
 ```
 
@@ -651,7 +686,7 @@ owner's domain rather than a centralized server.
 
 If you get an error like:
 
-```
+```text
 $ gpg -esar sam@stelfox.net sample-file
 gpg: no default secret key: Unusable secret key
 gpg: sample-file: sign+encrypt failed: Unusable secret key
@@ -664,7 +699,7 @@ subkeys and didn't update this machine).
 Running `gpg --card-edit` and `fetch` might not be enough if the issue is with
 signatures or expiration on the public key. Refresh from the keyserver:
 
-```console
+```text
 gpg --keyserver keys.openpgp.org --refresh-keys 0xYOURKEYID
 gpg --edit-key 0xYOURKEYID
 gpg> trust
@@ -678,7 +713,7 @@ If the smartcard is visible to root but not your user account, the `pcscd`
 service probably isn't running or has permissions issues. Start the service and
 replug the device:
 
-```console
+```bash
 sudo systemctl start pcscd
 sudo systemctl enable pcscd
 ```
@@ -690,14 +725,14 @@ package provides `pcsc_scan` which is useful for debugging card detection.
 
 If you see:
 
-```
+```text
 gpg: connecting dirmngr at '/run/user/1000/gnupg/S.dirmngr' failed: IPC connect call failed
 ```
 
 This is usually a permissions or ownership issue on the GnuPG directory. Try
 restarting the agent components:
 
-```console
+```bash
 gpgconf --kill all
 gpgconf --launch gpg-agent
 ```
@@ -714,7 +749,7 @@ allowing you to use your local smartcard for GPG operations on the remote host.
 This relies on the gpg-agent extra socket. Make sure it's enabled in
 `~/.gnupg/gpg-agent.conf`:
 
-```
+```ini
 extra-socket /run/user/1000/gnupg/S.gpg-agent.extra
 ```
 
@@ -722,14 +757,14 @@ extra-socket /run/user/1000/gnupg/S.gpg-agent.extra
 
 Forward the socket when connecting:
 
-```console
+```bash
 ssh -R /run/user/1000/gnupg/S.gpg-agent:/run/user/1000/gnupg/S.gpg-agent.extra \
   -o "StreamLocalBindUnlink=yes" remote-host
 ```
 
 Or configure it in `~/.ssh/config`:
 
-```
+```sshconfig
 Host remote
   RemoteForward /run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra
   StreamLocalBindUnlink yes
@@ -737,7 +772,7 @@ Host remote
 
 On the remote host, verify the agent is reachable:
 
-```console
+```bash
 gpg-connect-agent /bye
 ```
 
@@ -760,7 +795,7 @@ different machines.
 If both private keys are available on the same machine, just specify
 `--local-user` multiple times:
 
-```console
+```bash
 gpg --local-user pers1 --local-user pers2 --clearsign content
 ```
 
@@ -774,7 +809,7 @@ the signatures are combined.
 
 Create the content to sign:
 
-```console
+```bash
 echo 'A very important statement about a very important topic.' > content
 ```
 
@@ -782,48 +817,48 @@ Each signatory receives a copy of the content (transport it securely, e.g.
 encrypted with `gpg -esa -r pers1 -r pers2 content`), verifies it, and
 produces a clearsigned version:
 
-```console
+```bash
 gpg --clearsign content
 ```
 
 Collect the signed files (e.g. `content.pers1.asc` and `content.pers2.asc`).
 Verify both:
 
-```console
+```bash
 gpg --verify content.pers1.asc
 gpg --verify content.pers2.asc
 ```
 
 Confirm the content is identical in both signed messages:
 
-```console
+```bash
 sed -n '1,/SIGNATURE/ p' content.pers1.asc | sha1sum
 sed -n '1,/SIGNATURE/ p' content.pers2.asc | sha1sum
 ```
 
 Extract the raw signature packets from each:
 
-```console
+```bash
 sed -n '/SIGNATURE/,$ p' content.pers1.asc | gpg --dearmor | gpgsplit --no-split > pers1.sig
 sed -n '/SIGNATURE/,$ p' content.pers2.asc | gpg --dearmor | gpgsplit --no-split > pers2.sig
 ```
 
 Combine them into one armored signature block:
 
-```console
+```bash
 cat pers1.sig pers2.sig | gpg --enarmor | sed -n '5,$ p' | grep -v -- ----- > combo.sig
 ```
 
 Reassemble the signed document:
 
-```console
+```bash
 (sed -n '1,/SIGNATURE/ p' content.pers1.asc; echo; cat combo.sig; \
   echo '-----END PGP SIGNATURE-----') > content.combo.asc
 ```
 
 Verify the combined signatures:
 
-```console
+```bash
 gpg --verify content.combo.asc
 ```
 
@@ -832,7 +867,7 @@ gpg --verify content.combo.asc
 Detached signatures can also be combined and don't require the sed manipulation
 of the clearsigned format:
 
-```console
+```bash
 gpg --armor --detach-sign content
 ```
 
