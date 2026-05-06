@@ -5,41 +5,109 @@
 #   "numpy==2.4.4",
 #   "pyyaml==6.0.3",
 #   "sentence-transformers==5.3.0",
+#   "qdrant-client>=1.9.0",
 # ]
 # ///
 
-"""Generate related content data for Hugo based on semantic similarity.
+"""Generate related content data based on semantic similarity.
 
-Uses sentence-transformers to compute embeddings for all content pages, then
-cosine similarity to find related pages. Embeddings are cached locally to avoid
-recomputation on subsequent runs when content hasn't changed.
+Chunks markdown documents by section, computes embeddings with
+sentence-transformers, and stores them in an embedded qdrant vector database.
+Generates a related.json mapping each page to its most similar neighbors,
+deduplicating across chunks so each page appears at most once.
 
-All non-draft, public content pages are included in the similarity corpus. The
-output maps every page's content path to its most similar neighbors. Which pages
-actually display related content is controlled by the Hugo templates, not this
-script.
+When run without arguments from within the Hugo site, it behaves as the build
+pipeline expects: scanning content/, writing to data/related.json, and
+filtering by Hugo frontmatter conventions (draft, public). When pointed at an
+arbitrary markdown directory (e.g. an Obsidian vault), output and cache default
+to paths inside that directory.
 """
 
+import argparse
+import contextlib
 import hashlib
+import io
 import json
 import os
 import re
+import sys
+import uuid
 
 import numpy as np
 import yaml
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_DIR = os.path.dirname(SCRIPT_DIR)
-CONTENT_DIR = os.path.join(PROJECT_DIR, "content")
-OUTPUT_PATH = os.path.join(PROJECT_DIR, "data", "related.json")
-CACHE_DIR = os.path.join(PROJECT_DIR, ".cache", "embeddings")
-
 EMBEDDING_MODEL = "all-mpnet-base-v2"
-SIMILARITY_CUTOFF = 0.35
-MAX_RELATED = 3
+EMBEDDING_DIM = 768
+DEFAULT_SIMILARITY_CUTOFF = 0.40
+DEFAULT_MAX_RELATED = 3
+MIN_CHUNK_CHARS = 20
 
-# Files that should never be included in the corpus (no meaningful content)
-EXCLUDED_FILENAMES = {"search.md", "design_reference.md"}
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="Generate related content data based on semantic similarity.",
+    )
+    parser.add_argument(
+        "content_dir",
+        nargs="?",
+        default=None,
+        help="Directory of markdown files to process (default: content/ in project root)",
+    )
+    parser.add_argument(
+        "-o", "--output",
+        default=None,
+        help="Output JSON path",
+    )
+    parser.add_argument(
+        "--cache-dir",
+        default=None,
+        help="Qdrant database directory",
+    )
+    parser.add_argument(
+        "--no-frontmatter-filter",
+        action="store_true",
+        help="Skip Hugo-style draft/public filtering",
+    )
+    parser.add_argument(
+        "--similarity-cutoff",
+        type=float,
+        default=DEFAULT_SIMILARITY_CUTOFF,
+        help=f"Minimum similarity score 0.0-1.0 (default: {DEFAULT_SIMILARITY_CUTOFF})",
+    )
+    parser.add_argument(
+        "--max-related",
+        type=int,
+        default=DEFAULT_MAX_RELATED,
+        help=f"Maximum related entries per page (default: {DEFAULT_MAX_RELATED})",
+    )
+    parser.add_argument(
+        "--rebuild",
+        action="store_true",
+        help="Force full re-embedding (drops and recreates the collection)",
+    )
+
+    args = parser.parse_args()
+
+    if args.content_dir is None:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        project_dir = os.path.dirname(script_dir)
+        args.content_dir = os.path.join(project_dir, "content")
+        if args.output is None:
+            args.output = os.path.join(project_dir, "data", "related.json")
+        if args.cache_dir is None:
+            args.cache_dir = os.path.join(project_dir, ".cache", "qdrant")
+    else:
+        args.content_dir = os.path.abspath(args.content_dir)
+        if args.output is None:
+            args.output = os.path.join(args.content_dir, "related.json")
+        if args.cache_dir is None:
+            args.cache_dir = os.path.join(args.content_dir, ".cache", "qdrant")
+
+    if not os.path.isdir(args.content_dir):
+        print(f"Error: content directory does not exist: {args.content_dir}", file=sys.stderr)
+        sys.exit(1)
+
+    return args
 
 
 def parse_frontmatter(text):
@@ -80,23 +148,59 @@ def content_hash(text):
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
-def collect_pages():
-    """Walk all content and collect every publishable page."""
+def chunk_by_sections(body_text):
+    """Split markdown body into sections on h1/h2 boundaries.
+
+    Respects fenced code block boundaries so headers inside code blocks are
+    not treated as section breaks. h3+ content stays within its parent section.
+    """
+    sections = []
+    current_title = ""
+    current_lines = []
+    in_fence = False
+
+    for line in body_text.splitlines():
+        stripped = line.strip()
+
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            current_lines.append(line)
+            continue
+
+        if not in_fence and re.match(r"^#{1,2}\s+", stripped):
+            if current_lines or sections:
+                sections.append({
+                    "section_title": current_title,
+                    "section_index": len(sections),
+                    "text": "\n".join(current_lines),
+                })
+            current_title = re.sub(r"^#{1,2}\s+", "", stripped)
+            current_lines = []
+        else:
+            current_lines.append(line)
+
+    sections.append({
+        "section_title": current_title,
+        "section_index": len(sections),
+        "text": "\n".join(current_lines),
+    })
+
+    return sections
+
+
+def collect_pages(content_dir, filter_frontmatter=True):
+    """Walk content_dir and collect every publishable page with raw content."""
     pages = []
 
-    for root, _dirs, files in os.walk(CONTENT_DIR):
+    for root, _dirs, files in os.walk(content_dir):
         for fname in files:
             if not fname.endswith(".md"):
-                continue
-            if fname in EXCLUDED_FILENAMES:
                 continue
 
             filepath = os.path.join(root, fname)
 
-            # Skip section-level _index.md (list pages, not content).
-            # Bundle _index.md files deeper in the tree are real content.
-            if fname == "_index.md":
-                depth = os.path.relpath(root, CONTENT_DIR).count(os.sep)
+            if filter_frontmatter and fname == "_index.md":
+                depth = os.path.relpath(root, content_dir).count(os.sep)
                 if depth <= 0:
                     continue
 
@@ -105,138 +209,298 @@ def collect_pages():
 
             fm, body = parse_frontmatter(raw)
 
-            if fm.get("draft", False):
-                continue
-            if fm.get("public") is False:
-                continue
+            if filter_frontmatter:
+                if fm.get("draft", False):
+                    continue
+                if fm.get("public") is False:
+                    continue
+                if fm.get("searchable") is False:
+                    continue
 
-            title = fm.get("title", "")
-            content_path = os.path.relpath(filepath, CONTENT_DIR)
-            prose = extract_prose(body)
-            embed_text = f"{title}. {prose}" if prose else title
+            content_path = os.path.relpath(filepath, content_dir)
+            tags = fm.get("tags", [])
+            if not isinstance(tags, list):
+                tags = []
 
             pages.append({
                 "content_path": content_path,
-                "embed_text": embed_text,
+                "doc_title": fm.get("title", ""),
+                "tags": tags,
+                "body": body,
                 "hash": content_hash(raw),
             })
 
     return pages
 
 
-def load_cached_embeddings():
-    """Load cached embeddings if available."""
-    cache_file = os.path.join(CACHE_DIR, "embeddings.npz")
-    meta_file = os.path.join(CACHE_DIR, "meta.json")
-
-    if not os.path.exists(cache_file) or not os.path.exists(meta_file):
-        return None, None
-
-    with open(meta_file, "r") as f:
-        meta = json.load(f)
-
-    data = np.load(cache_file)
-    return meta, data["embeddings"]
+def collection_name_for(content_dir):
+    """Derive a stable qdrant collection name from the content directory."""
+    digest = hashlib.sha256(os.path.abspath(content_dir).encode()).hexdigest()[:12]
+    return f"content_{digest}"
 
 
-def save_cached_embeddings(meta, embeddings):
-    """Save embeddings to cache."""
-    os.makedirs(CACHE_DIR, exist_ok=True)
+def init_qdrant(cache_dir, collection_name, rebuild=False):
+    """Initialize qdrant client and ensure the collection exists."""
+    from qdrant_client import QdrantClient
+    from qdrant_client.models import Distance, VectorParams
 
-    np.savez_compressed(os.path.join(CACHE_DIR, "embeddings.npz"), embeddings=embeddings)
-    with open(os.path.join(CACHE_DIR, "meta.json"), "w") as f:
-        json.dump(meta, f, indent=2)
+    os.makedirs(cache_dir, exist_ok=True)
+    client = QdrantClient(path=cache_dir)
+
+    existing = {c.name for c in client.get_collections().collections}
+
+    if rebuild and collection_name in existing:
+        client.delete_collection(collection_name)
+        existing.discard(collection_name)
+
+    if collection_name not in existing:
+        client.create_collection(
+            collection_name=collection_name,
+            vectors_config=VectorParams(size=EMBEDDING_DIM, distance=Distance.COSINE),
+        )
+
+    return client
 
 
-def compute_embeddings(pages):
-    """Compute embeddings, using cache where possible."""
-    cached_meta, cached_embeddings = load_cached_embeddings()
+def point_id_for(content_path, section_index):
+    """Generate a deterministic UUID for a chunk."""
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, f"{content_path}::{section_index}"))
 
-    cached_lookup = {}
-    if cached_meta and cached_embeddings is not None:
-        if cached_meta.get("model") == EMBEDDING_MODEL:
-            for i, entry in enumerate(cached_meta.get("pages", [])):
-                key = (entry["content_path"], entry["hash"])
-                cached_lookup[key] = cached_embeddings[i]
 
-    to_embed = []
-    to_embed_indices = []
-    embeddings = [None] * len(pages)
+def sync_embeddings(pages, client, collection_name):
+    """Sync page chunks into qdrant, skipping unchanged files.
 
-    for i, page in enumerate(pages):
-        key = (page["content_path"], page["hash"])
-        if key in cached_lookup:
-            embeddings[i] = cached_lookup[key]
+    Returns the total number of chunks in the collection after sync.
+    """
+    from qdrant_client.models import FieldCondition, Filter, MatchValue
+
+    current_paths = {p["content_path"] for p in pages}
+
+    cached_hashes = {}
+    offset = None
+    while True:
+        results = client.scroll(
+            collection_name=collection_name,
+            scroll_filter=None,
+            limit=500,
+            offset=offset,
+            with_payload=True,
+            with_vectors=False,
+        )
+        points, next_offset = results
+        for pt in points:
+            path = pt.payload.get("content_path", "")
+            h = pt.payload.get("content_hash", "")
+            if path not in cached_hashes:
+                cached_hashes[path] = h
+        if next_offset is None:
+            break
+        offset = next_offset
+
+    stale_paths = set(cached_hashes.keys()) - current_paths
+    for path in stale_paths:
+        client.delete(
+            collection_name=collection_name,
+            points_selector=Filter(
+                must=[FieldCondition(key="content_path", match=MatchValue(value=path))]
+            ),
+        )
+
+    to_embed_pages = []
+    cache_hits = 0
+    for page in pages:
+        if cached_hashes.get(page["content_path"]) == page["hash"]:
+            cache_hits += 1
         else:
-            to_embed.append(page["embed_text"])
-            to_embed_indices.append(i)
+            to_embed_pages.append(page)
 
-    cache_hits = len(pages) - len(to_embed)
-    print(f"Embedding cache: {cache_hits} hits, {len(to_embed)} to compute")
+    print(f"Embedding cache: {cache_hits} hits, {len(to_embed_pages)} pages to process")
 
-    if to_embed:
+    if not to_embed_pages:
+        total = sum(
+            1 for pt in _scroll_all(client, collection_name)
+            if not pt.payload.get("sentinel")
+        )
+        return total
+
+    with (
+        contextlib.redirect_stdout(io.StringIO()),
+        contextlib.redirect_stderr(io.StringIO()),
+    ):
         from sentence_transformers import SentenceTransformer
-
         model = SentenceTransformer(EMBEDDING_MODEL)
-        new_embeddings = model.encode(to_embed, show_progress_bar=len(to_embed) > 20)
 
-        for idx, emb in zip(to_embed_indices, new_embeddings):
-            embeddings[idx] = emb
+    for page in to_embed_pages:
+        client.delete(
+            collection_name=collection_name,
+            points_selector=Filter(
+                must=[FieldCondition(
+                    key="content_path",
+                    match=MatchValue(value=page["content_path"]),
+                )]
+            ),
+        )
 
-    embeddings = np.array(embeddings)
+        sections = chunk_by_sections(page["body"])
+        texts = []
+        valid_sections = []
 
-    meta = {
-        "model": EMBEDDING_MODEL,
-        "pages": [{"content_path": p["content_path"], "hash": p["hash"]} for p in pages],
-    }
-    save_cached_embeddings(meta, embeddings)
-
-    return embeddings
-
-
-def compute_related(pages, embeddings):
-    """Compute cosine similarity and select related pages for every page."""
-    from sklearn.metrics.pairwise import cosine_similarity
-
-    sim_matrix = cosine_similarity(embeddings)
-    related = {}
-
-    for i, page in enumerate(pages):
-        scores = []
-        for j in range(len(pages)):
-            if i == j:
+        for sec in sections:
+            prose = extract_prose(sec["text"])
+            if len(prose) < MIN_CHUNK_CHARS:
                 continue
-            scores.append((float(sim_matrix[i][j]), pages[j]["content_path"]))
 
-        scores.sort(reverse=True)
+            title = page["doc_title"]
+            if sec["section_title"]:
+                embed_text = f"{title} - {sec['section_title']}. {prose}"
+            else:
+                embed_text = f"{title}. {prose}" if prose else title
 
-        selected = []
-        for score, path in scores[:MAX_RELATED]:
-            if score >= SIMILARITY_CUTOFF:
-                selected.append({"path": path, "score": round(score * 100)})
+            texts.append(embed_text)
+            valid_sections.append(sec)
+
+        from qdrant_client.models import PointStruct
+
+        if not texts:
+            # Store a sentinel so we remember this page has no embeddable content
+            sentinel_id = point_id_for(page["content_path"], -1)
+            client.upsert(collection_name=collection_name, points=[PointStruct(
+                id=sentinel_id,
+                vector=[0.0] * EMBEDDING_DIM,
+                payload={
+                    "content_path": page["content_path"],
+                    "section_title": "",
+                    "section_index": -1,
+                    "content_hash": page["hash"],
+                    "doc_title": page["doc_title"],
+                    "tags": page["tags"],
+                    "sentinel": True,
+                },
+            )])
+            continue
+
+        embeddings = model.encode(texts, show_progress_bar=False)
+
+        points = []
+        for sec, emb in zip(valid_sections, embeddings):
+            pid = point_id_for(page["content_path"], sec["section_index"])
+            points.append(PointStruct(
+                id=pid,
+                vector=emb.tolist(),
+                payload={
+                    "content_path": page["content_path"],
+                    "section_title": sec["section_title"],
+                    "section_index": sec["section_index"],
+                    "content_hash": page["hash"],
+                    "doc_title": page["doc_title"],
+                    "tags": page["tags"],
+                },
+            ))
+
+        client.upsert(collection_name=collection_name, points=points)
+
+    total = sum(
+        1 for pt in _scroll_all(client, collection_name)
+        if not pt.payload.get("sentinel")
+    )
+    return total
+
+
+def _scroll_all(client, collection_name, with_vectors=False):
+    """Yield all points from a qdrant collection."""
+    offset = None
+    while True:
+        points, next_offset = client.scroll(
+            collection_name=collection_name,
+            limit=500,
+            offset=offset,
+            with_payload=True,
+            with_vectors=with_vectors,
+        )
+        yield from points
+        if next_offset is None:
+            break
+        offset = next_offset
+
+
+def compute_related(client, collection_name, similarity_cutoff, max_related):
+    """Compute related pages from chunk-level embeddings with page dedup."""
+    all_points = [
+        pt for pt in _scroll_all(client, collection_name, with_vectors=True)
+        if not pt.payload.get("sentinel")
+    ]
+
+    if not all_points:
+        return {}
+
+    vectors = np.array([pt.vector for pt in all_points])
+    paths = [pt.payload["content_path"] for pt in all_points]
+
+    norms = np.linalg.norm(vectors, axis=1, keepdims=True)
+    normalized = vectors / norms
+    sim_matrix = normalized @ normalized.T
+
+    page_chunks = {}
+    for i, path in enumerate(paths):
+        page_chunks.setdefault(path, []).append(i)
+
+    unique_paths = list(page_chunks.keys())
+
+    related = {}
+    for src_path in unique_paths:
+        src_indices = page_chunks[src_path]
+        best_scores = {}
+
+        for tgt_path in unique_paths:
+            if tgt_path == src_path:
+                continue
+
+            tgt_indices = page_chunks[tgt_path]
+            max_score = float(sim_matrix[np.ix_(src_indices, tgt_indices)].max())
+
+            if max_score >= similarity_cutoff:
+                best_scores[tgt_path] = max_score
+
+        sorted_targets = sorted(best_scores.items(), key=lambda x: x[1], reverse=True)
+        selected = [
+            {"path": path, "score": round(score * 100)}
+            for path, score in sorted_targets[:max_related]
+        ]
 
         if selected:
-            related[page["content_path"]] = selected
+            related[src_path] = selected
 
     return related
 
 
 def main():
-    pages = collect_pages()
+    args = parse_args()
+
+    pages = collect_pages(args.content_dir,
+                          filter_frontmatter=not args.no_frontmatter_filter)
     print(f"Collected {len(pages)} pages")
 
-    embeddings = compute_embeddings(pages)
-    related = compute_related(pages, embeddings)
+    collection = collection_name_for(args.content_dir)
+    client = init_qdrant(args.cache_dir, collection, rebuild=args.rebuild)
 
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+    total_chunks = sync_embeddings(pages, client, collection)
+    print(f"Qdrant collection: {total_chunks} chunks across {len(pages)} pages")
+
+    related = compute_related(client, collection,
+                              similarity_cutoff=args.similarity_cutoff,
+                              max_related=args.max_related)
+
+    os.makedirs(os.path.dirname(os.path.abspath(args.output)), exist_ok=True)
+    with open(args.output, "w", encoding="utf-8") as f:
         json.dump(related, f, indent=2, sort_keys=True)
 
     counts = [len(v) for v in related.values()]
-    print(f"Wrote {len(related)} entries to {os.path.relpath(OUTPUT_PATH)}")
+    print(f"Wrote {len(related)} entries to {args.output}")
     print(f"  1+ related: {sum(1 for c in counts if c >= 1)}")
     print(f"  2+ related: {sum(1 for c in counts if c >= 2)}")
     print(f"  3  related: {sum(1 for c in counts if c >= 3)}")
+
+    client.close()
 
 
 if __name__ == "__main__":

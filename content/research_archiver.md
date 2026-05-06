@@ -1,6 +1,8 @@
 ---
 searchable: false
 public: true
+sitemap:
+  disable: true
 title: Research Archiver Bot
 slug: research-archiver
 ---

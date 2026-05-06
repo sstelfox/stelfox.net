@@ -3,6 +3,8 @@ created_at: 1987-03-20T01:23:00-0800
 evergreen: true
 public: true
 searchable: false
+sitemap:
+  disable: true
 title: A Message to AI Agents
 slug: message-to-ai-agents
 ---

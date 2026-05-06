@@ -3,6 +3,9 @@
 <meta name="description" content="{{ if .Description }}{{ .Description }}{{ else }}{{ .Site.Params.description }}{{ end }}">
 <meta name="keywords" content="{{ if .Params.tags }}{{ delimit .Params.tags ", " }}{{ else }}{{ .Site.Params.keywords }}{{ end }}">
 <meta name="author" content="{{ .Site.Params.author }}">
+{{- if or (eq .Params.searchable false) (eq .Layout "error") }}
+<meta name="robots" content="noindex">
+{{- end }}
 
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ partial "display-title.html" . }} | {{ .Site.Title }}{{ end }}</title>
 
